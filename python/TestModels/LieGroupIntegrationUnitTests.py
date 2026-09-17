@@ -13,7 +13,12 @@
 
 
 import numpy as np
-from timeIntegrationOfRotationVectorFormulas import *
+#the module timeIntegrationOfRotationVectorFormulas was never committed; both functions it
+#provided live in the package today - ComposeRotationVectors under its current name (#2377)
+from exudyn.lieGroupBasics import CompositionRuleForRotationVectors as ComposeRotationVectors
+from exudyn.rigidBodyUtilities import ComputeRotationAxisFromRotationVector, Skew
+from exudyn.lieGroupBasics import TExpSO3Inv as TSO3Inv          #old name of the same function
+from exudyn.lieGroupIntegration import ComputeStepWithRK1, ComputeStepWithRK4
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker

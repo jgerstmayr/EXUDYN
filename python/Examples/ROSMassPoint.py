@@ -29,7 +29,7 @@ from geometry_msgs.msg import WrenchStamped, Twist
 from std_msgs.msg import String
 
 # import new exudyn ROS interface class
-import rosInterface as exuROS
+import exudyn.robotics.rosInterface as exuROS #not a bare 'rosInterface', which only works if that directory happens to be on sys.path (#2377)
 
 # here build inherited class and using within a simple exudyn simulation of one mass spring-damper 
 class MyExudynROSInterface(exuROS.ROSInterface):

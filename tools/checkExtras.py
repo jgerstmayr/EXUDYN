@@ -91,13 +91,6 @@ exemptImports = {
 knownMissingLocalModules = {
     'RL_Spot': 'Examples/FurtherExamples/spotReinforcementLearning.py imports it, but no such '
                'file is in the repository - the model module was never committed',
-    'timeIntegrationOfRotationVectorFormulas':
-               'TestModels/LieGroupIntegrationUnitTests.py does "from ... import *", but no such '
-               'file is in the repository',
-    'rosInterface':
-               'Examples/ROSMassPoint.py imports it by bare name; the module is actually '
-               'exudyn/robotics/rosInterface.py, so the import only works if that directory '
-               'happens to be on sys.path',
     }
 
 #the [rl] extra is deliberately NOT part of [all]: torch is multi-GB and the CPU/CUDA choice is

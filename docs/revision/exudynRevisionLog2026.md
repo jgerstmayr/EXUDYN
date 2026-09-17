@@ -5095,6 +5095,56 @@ Folded in, since they touch the same log and the same code:
     in the header, and a per-test overview table. → [log](exudynRevisionLog2026.md#r5-10)
 
 
+<a id="r5-12"></a>
+### R5.12 - test and example hygiene
+
+**DONE 2026-09-17** (#2368, #2377).
+
+**ANCFbeltDrive.** The maintainer retuned the model - 16 elements per section, a faster drive,
+`tEnd=0.1` instead of 10 - took the result from the sensor rather than an ODE2 coordinate, and
+measured a new value into the model file. Finalizing it turned up one thing that had to be settled
+before it could be a reference:
+
+```
+three headless runs, numberOfThreads = 4:
+  -0.0011715990134785748
+  -0.0011715990134243959      <- 5.4e-14 away, past the 5e-14 suite tolerance
+  -0.0011715990134786303
+```
+
+The multithreaded assembly sums in a non-deterministic order. Single-threaded the same model is
+**bit-identical** across runs - and at 16 elements per section it is also *faster*, 0.36 s against
+0.69 s, because the threading overhead dominates. So the model runs with
+`parallel.numberOfThreads = 1`, the comment says why and that more threads are fine as long as the
+value is not used as a reference, and the value was re-measured single-threaded in **both** places
+(the model file and `runTestSuiteRefSol.py`).
+
+`ANCFbeltDrive.py` then left `DeliberatelyNotRun()` and is judged by the suite:
+
+```
+ANCFbeltDrive.py    ok    -0.001171588532499213    0.000e+00    5.0e-14    0.35
+```
+
+28 s before the retune, 0.35 s now.
+
+**The phantom imports** (#2377). Two of the three are repaired rather than removed:
+
+- **`rosInterface`**: `ROSMassPoint.py` *and* `ROSTurtle.py` imported it by bare name, which works
+  only if `exudyn/robotics/` happens to be on `sys.path`. Their sibling `ROSMobileManipulator.py`
+  already did it right; both now import `exudyn.robotics.rosInterface`. (The plan said one file;
+  the checker found the second.)
+- **`timeIntegrationOfRotationVectorFormulas`**: never committed - but everything it provided lives
+  in the package today under current names. `ComposeRotationVectors` is
+  `CompositionRuleForRotationVectors`, `TSO3Inv` is `TExpSO3Inv`, plus `Skew` and the two RK step
+  functions of `lieGroupIntegration`. With those imports the file runs and **9 of its 10 tests
+  pass**; TEST 2 fails on a real defect, now #2494 (R5.12.1). The entry in `DeliberatelyNotRun()`
+  says that instead of "the module does not exist".
+- **`RL_Spot`** stays: the module was never committed, so `spotReinforcementLearning.py` cannot
+  run. Deleting the example or adding the module is the maintainer's decision, and the entry in
+  `knownMissingLocalModules` is the honest record until then.
+
+`tools/checkExtras.py` now exits 0 with one warning instead of three.
+
 <a id="r5-13"></a>
 ### R5.13 - test-suite output goes to its own directory
 

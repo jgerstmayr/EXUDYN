@@ -9,15 +9,31 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.131.dev1, 
+  \item Exudyn version = 1.11.133.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2494, 
-  \item Number of resolved issues = 2204 (131 in current version), 
+  \item Number of issues = 2495, 
+  \item Number of resolved issues = 2206 (133 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.133}: {\bf \color{warningRed}  resolved BUG 2377}: {\bf three imports refer to modules that exist nowhere}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: found by tools/checkExtras.py (revision2026 step R2.12). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL\_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import *" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps}
+    \item {\bf notes: rosInterface: ROSMassPoint.py and ROSTurtle.py imported it by bare name; both now import exudyn.robotics.rosInterface as their sibling ROSMobileManipulator.py already did. timeIntegrationOfRotationVectorFormulas: the module was never committed; but both functions it provided exist in the package today - ComposeRotationVectors is now CompositionRuleForRotationVectors; plus Skew; TSO3Inv (TExpSO3Inv) and the two RK step functions; LieGroupIntegrationUnitTests.py imports them and 9 of its 10 tests pass (TEST 2 fails on the separate \#2494). Both entries are gone from knownMissingLocalModules in tools/checkExtras.py; which now exits 0. RL\_Spot remains: the module was never committed and the decision - delete the example or add the module - is the maintainers. revision2026 step R5.12}
+    \item   date resolved: {\bf 2026-09-17 21:26},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.132}: {\bf \color{warningRed}  resolved BUG 2368}: {\bf ANCFbeltDrive result contradicts its own recorded reference}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision2026 step R5.9. Not added to the test suite: adding the measured value would enshrine whatever changed.}
+    \item {\bf notes: The maintainer retuned the model on 2026-09-17 (16 elements per section; faster drive; tEnd=0.1 instead of 10) and took the result from the sensor instead of an ODE2 coordinate; measuring a new value in the model file. Finalized here: the model ran with parallel.numberOfThreads=4 and was therefore NOT reproducible - three headless runs spread over 5.4e-14; past the 5e-14 suite tolerance - so it now runs single-threaded; which is bit-identical across runs and at this size also faster (0.36s vs 0.69s). The reference was re-measured single-threaded in the model file and in runTestSuiteRefSol.py; the model left DeliberatelyNotRun and runs in the suite with error 0.0 in 0.35s (it was 28s).}
+    \item   date resolved: {\bf 2026-09-17 21:26},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.131}: {\bf \color{warningRed}  resolved BUG 2493}: {\bf every Exudyn writer should create its output directory itself}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13318,6 +13334,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2494}:  {\bf CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Composing the rotation vector pi*n with itself gives a vector of norm 2*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1}
+    \item date raised: 2026-09-17 
+  \ei
   \item open {\bf BUG 2463}:  {\bf the two GitHub workflows pin different action versions}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13335,18 +13357,6 @@ date raised: 2020-07-20
     \item issue author: Claude-JG
     \item {description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10}
     \item date raised: 2026-09-12 
-  \ei
-  \item open {\bf BUG 2377}:  {\bf three imports refer to modules that exist nowhere}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: found by tools/checkExtras.py (revision2026 step R2.12). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL\_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import *" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps}
-    \item date raised: 2026-09-11 
-  \ei
-  \item open {\bf BUG 2368}:  {\bf ANCFbeltDrive result contradicts its own recorded reference}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision2026 step R5.9. Not added to the test suite: adding the measured value would enshrine whatever changed.}
-    \item date raised: 2026-09-11 
   \ei
   \item open {\bf BUG 2127}:  {\bf ContactSphereTorus}
   \begin{itemize} \setlength\itemsep{-1pt}

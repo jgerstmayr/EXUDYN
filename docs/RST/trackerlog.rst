@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.131.dev1, 
++  Exudyn version = 1.11.133.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2494, 
-+  Number of resolved issues = 2204 (131 in current version), 
++  Number of issues = 2495, 
++  Number of resolved issues = 2206 (133 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.133: :textred:`resolved BUG 2377` : three imports refer to modules that exist nowhere 
+    - issue author: Claude-JG
+    - description:  found by tools/checkExtras.py (revision2026 step R2.12). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import \*" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps
+    - **notes:** rosInterface: ROSMassPoint.py and ROSTurtle.py imported it by bare name; both now import exudyn.robotics.rosInterface as their sibling ROSMobileManipulator.py already did. timeIntegrationOfRotationVectorFormulas: the module was never committed; but both functions it provided exist in the package today - ComposeRotationVectors is now CompositionRuleForRotationVectors; plus Skew; TSO3Inv (TExpSO3Inv) and the two RK step functions; LieGroupIntegrationUnitTests.py imports them and 9 of its 10 tests pass (TEST 2 fails on the separate #2494). Both entries are gone from knownMissingLocalModules in tools/checkExtras.py; which now exits 0. RL_Spot remains: the module was never committed and the decision - delete the example or add the module - is the maintainers. revision2026 step R5.12
+    - date resolved: **2026-09-17 21:26**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
+ * Version 1.11.132: :textred:`resolved BUG 2368` : ANCFbeltDrive result contradicts its own recorded reference 
+    - issue author: Claude-JG
+    - description:  Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision2026 step R5.9. Not added to the test suite: adding the measured value would enshrine whatever changed.
+    - **notes:** The maintainer retuned the model on 2026-09-17 (16 elements per section; faster drive; tEnd=0.1 instead of 10) and took the result from the sensor instead of an ODE2 coordinate; measuring a new value in the model file. Finalized here: the model ran with parallel.numberOfThreads=4 and was therefore NOT reproducible - three headless runs spread over 5.4e-14; past the 5e-14 suite tolerance - so it now runs single-threaded; which is bit-identical across runs and at this size also faster (0.36s vs 0.69s). The reference was re-measured single-threaded in the model file and in runTestSuiteRefSol.py; the model left DeliberatelyNotRun and runs in the suite with error 0.0 in 0.35s (it was 28s).
+    - date resolved: **2026-09-17 21:26**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.131: :textred:`resolved BUG 2493` : every Exudyn writer should create its output directory itself 
     - issue author: Claude-JG
     - description:  SaveDictToHDF5 fails with FileNotFoundError if the directory does not exist; while FEMinterface.SaveToFile; PlotSensor; PlotImage and the parameter variation results file each carry their own copy of the same try/except os.makedirs block - five copies of four lines. One function CreateDirectoryForFile in basicUtilities replaces them; and SaveDictToHDF5 gets the behaviour it was missing. revision2026 step R5.13.4
@@ -8629,6 +8641,11 @@ Open issues
 Known bugs
 **********
 
+ * :textred:`open BUG 2494:` CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns
+    - issue author: Claude-JG
+    - description:  Composing the rotation vector pi\*n with itself gives a vector of norm 2\*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2\*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1
+    - date raised: 2026-09-17 
+
  * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
     - issue author: Claude-JG
     - description:  .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.
@@ -8643,16 +8660,6 @@ Known bugs
     - issue author: Claude-JG
     - description:  measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
     - date raised: 2026-09-12 
-
- * :textred:`open BUG 2377:` three imports refer to modules that exist nowhere
-    - issue author: Claude-JG
-    - description:  found by tools/checkExtras.py (revision2026 step R2.12). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import \*" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps
-    - date raised: 2026-09-11 
-
- * :textred:`open BUG 2368:` ANCFbeltDrive result contradicts its own recorded reference
-    - issue author: Claude-JG
-    - description:  Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision2026 step R5.9. Not added to the test suite: adding the measured value would enshrine whatever changed.
-    - date raised: 2026-09-11 
 
  * :textred:`open BUG 2127:` ContactSphereTorus  
     - description:  check torques on both bodies, as there seems to be momentum conservation issues in ball bearings

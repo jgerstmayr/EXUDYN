@@ -26,6 +26,9 @@ def TestExamplesReferenceSolution():
         'ANCFBeamTest.py': 1.0104863123004104,                       #new 2023-04-04, after resolving local kappa bug
         'ANCFcable2DuserFunction.py': 0.6015588367721973,           #new 2023-12-13
         'ANCFCableBeamDampingTest.py': 0.18992335572077274,         #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam
+        'ANCFbeltDrive.py': -0.0011715885324992126,               #new 2026-09-17: the model was retuned (16 elements
+                                                                #per section, tEnd=0.1) and the result now comes from the
+                                                                #sensor rather than an ODE2 coordinate (#2368)
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
         'ANCFgeneralContactCircle.py':-0.581654253165756,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
@@ -243,11 +246,10 @@ def DeliberatelyNotRun():
         #--- broken or drifted: they run, but what they produce cannot be used as a reference
         'ANCFBeamEigTest.py':
             'runs clean in 0.23s but its testError/testResult lines are commented out (line 232)',
-        'ANCFbeltDrive.py':
-            'result 0.0 against the recorded -0.4842656133238705; the model was retuned to a '
-            'dynamic run and the reference in the comment was not; also 28s',
         'LieGroupIntegrationUnitTests.py':
-            'imports timeIntegrationOfRotationVectorFormulas, which no longer exists',
+            'runs since the imports were repaired (#2377) and 9 of its 10 tests pass, but TEST 2 '
+            'fails on #2494 - composing pi+pi about one axis gives 2pi instead of 0 - and it '
+            'prints its results rather than setting testResult',
         'createContactSphereSphere.py':
             'calls SolutionViewer although writeSolutionToFile=useGraphics, so it raises when '
             'run headless; the value -0.21704884156413973 is computed before the crash',

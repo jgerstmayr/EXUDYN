@@ -15,6 +15,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/ANCFBeamTest
    TestModels/ANCFcable2DuserFunction
    TestModels/ANCFCableBeamDampingTest
+   TestModels/ANCFbeltDrive
    TestModels/ANCFcontactCircleTest
    TestModels/ANCFcontactFrictionTest
    TestModels/ANCFgeneralContactCircle

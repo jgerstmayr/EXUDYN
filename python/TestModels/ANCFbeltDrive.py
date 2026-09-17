@@ -69,7 +69,7 @@ torque=10*2
 dampingWheel1 = 1  #5 #add breaking torque, to limit velocity
 #cable:
 
-numberOfElements = 32    # per section
+numberOfElements = 16   # per section; 32 recommended
 curvedRefConf=False     # this flag could initialize the elements to be produced curved -> not suitable for belt drive!
 L=2                     # length of ANCF element in m
 E=1e10                  # Young's modulus of ANCF element in N/m^2
@@ -176,8 +176,8 @@ if True:
 
 def UFvelocityDrive(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
     vMax = 10 #5m/s
-    if 0.5*t < vMax:
-        return 0.5*t
+    if 2*t < vMax:
+        return 2*t
     return vMax
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -282,11 +282,15 @@ simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the 
 simulationSettings.solutionSettings.solutionWritePeriod = 0.005
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
 #simulationSettings.displayComputationTime = True
-simulationSettings.parallel.numberOfThreads = 6 #use 4 to speed up for > 100 ANCF elements
+#1 thread, because the multithreaded assembly sums in a non-deterministic order: with 4
+#threads the result of this model moved by up to 5.4e-14 between runs, past the 5e-14 test
+#tolerance, and at 16 elements per section 1 thread is also FASTER (0.36s vs 0.69s). Use more
+#threads for > 100 ANCF elements, but then the value is not a reference any more (#2368)
+simulationSettings.parallel.numberOfThreads = 1
 simulationSettings.displayStatistics = True
 
 doDynamic = True
-tEnd = 10#0.25
+tEnd = 0.1
 h = 0.5e-3
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -328,7 +332,7 @@ else:
     mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 
-if useGraphics and True:
+if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     
@@ -341,17 +345,20 @@ if useGraphics:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     
-    if True:
-        
-        mbs.PlotSensor(sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
-        mbs.PlotSensor(sensorNumbers=sMeasureRoll, components=1)
+    mbs.PlotSensor(sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
+    mbs.PlotSensor(sensorNumbers=sMeasureRoll, components=1)
         
 
 #print representative result:
-sol = mbs.systemData.GetODE2Coordinates()
-n = len(sol)
-exu.Print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
-exudynTestGlobals.testError = sol[n-3] - (-0.4842656133238705) #2021-05-07 (deactivated StaticSolveOldSolver):-0.4842656133238705  #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
-exudynTestGlobals.testResult = sol[n-3]
+#sol = mbs.systemData.GetODE2Coordinates()
+#n = len(sol)
+measurePos = mbs.GetSensorValues(sMeasureRoll)
+
+exu.Print('solution of ANCFbeltDrive (sensor y-disp): ',measurePos[1]) 
+#updated 2026-09-17; the old value was not reproducible - missing simulation parameters.
+#Re-measured single-threaded (see numberOfThreads above), which IS reproducible bit for bit;
+#the 4-thread value was -0.0011715990134786858 (#2368)
+exudynTestGlobals.testError = measurePos[1] + 0.0011715885324992126
+exudynTestGlobals.testResult = measurePos[1] # use y-coordinate
 
 

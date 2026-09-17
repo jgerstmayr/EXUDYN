@@ -809,12 +809,19 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     *and* covered.
 
 <a id="r5-12"></a>
-**R5.12** *(phase R5, small)* **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive.py` yields 0.0
-    against its recorded reference -0.484 since it was retuned to a 10 s run - find which is
-    right before it enters the suite (#2368). Three imports name modules that exist nowhere or
-    only by accident of `sys.path` (`RL_Spot`, `timeIntegrationOfRotationVectorFormulas`, a bare
-    `rosInterface`); fix or remove them and shrink `knownMissingLocalModules` in
-    `tools/checkExtras.py` accordingly (#2377).
+**R5.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-12) — *(phase R5, small)*
+    **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive` was retuned by the maintainer and
+    enters the suite - single-threaded, because with 4 threads it was not reproducible to the suite
+    tolerance. Two of the three phantom imports are repaired and gone from
+    `knownMissingLocalModules`; `RL_Spot` remains and needs a decision.
+
+<a id="r5-12-1"></a>
+**R5.12.1** *(sub-step of R5.12; found 2026-09-17)* **`CompositionRuleForRotationVectors` returns
+    2π instead of 0** (#2494): composing π·n with itself gives a vector of norm 2π. It describes
+    the identity rotation - `ExpSO3` of it IS the identity - but it lies outside the principal
+    range and exactly on the singularity of the tangent operator: `TExpSO3Inv` there returns
+    entries of order 1e15. Found by TEST 2 of `LieGroupIntegrationUnitTests.py`, which compares
+    against Matlab results that give 0.
 
 <a id="r5-13"></a>
 **R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
