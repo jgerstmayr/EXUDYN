@@ -6138,3 +6138,74 @@ PASSED with exit 0 and in `venvP313` FAILED with exit 1; `test --fast` loading `
 `perf` judged `ok` from the log it wrote; `docs` in 36 s; a real build with and without `--fast`,
 installed and version-checked; `--verbose` flipping all three kinds of quiet; `--env` honoured on
 `test`/`examples`/`perf`/`env` and refused on `build` with the reason.
+
+
+<a id="r5-6"></a>
+### R5.6 - the sanitizer job
+
+**DONE 2026-09-18** - issue #2506 fixed on the way. `tools/ci/buildSanitizers.sh` and the
+`sanitizers_linux` job in `.gitlab-ci.yml`.
+
+Exudyn calls arbitrary user callbacks from C++ and hands out references into its own storage. The
+failure mode a user reports is *"it crashed with no message"*, and neither the test suite nor the
+compiler sees it: the read past the end of a vector produces a plausible number, and the crash
+happens three models later. AddressSanitizer and UndefinedBehaviorSanitizer turn that into a file
+and a line.
+
+**It is a GitLab job, not a GitHub one.** GitHub Actions fire only on pushes to master and on pull
+requests, so during the freeze they never run (R1.7); `.gitlab-ci.yml` is where CI actually happens.
+No file under `.github/workflows/` was touched.
+
+**`setup.py` needed no change.** The flags travel in `EXUDYN_EXTRA_COMPILE_ARGS` and
+`EXUDYN_EXTRA_LINK_ARGS`, which `setup.py` already appends to every extension (`setup.py:683-689`);
+`CFLAGS` does not work there. The fast module is not built - it is compiled with
+`__FAST_EXUDYN_LINALG`, which removes exactly the range checks this run is looking for.
+
+**The step found a real bug before a single sanitizer check ran** (#2506). At `-O1` the instrumented
+module would not load at all:
+
+```
+ImportError: exudynCPP...so: undefined symbol: _ZN18RaytracingSettings11maxNThreadsE
+```
+
+`Raytracing.h:136` declares `static const Index maxNThreads = 256;` with an in-class initializer and
+no out-of-class definition, and `Raytracing.cpp:913` passes it to
+`EXUstd::Clamp(const T&, const T&, const T&)` - binding a reference to it, which is an odr-use and
+does require a definition. At `-O3` the compiler folds the constant, nothing references the symbol,
+and every release build has linked on that accident. Fixed by making it (and its neighbour
+`RTcolorDepth`) `constexpr`, which in C++17 is implicitly inline - matching `materialOffset`, which
+two lines above was already written that way.
+
+**Two things had to be learned about running a sanitized extension under Python**, both now in the
+script's header so nobody has to learn them twice:
+
+- `LD_PRELOAD` must carry libasan, because Python is not instrumented and the ASan runtime has to be
+  first in the process; and it must **also** carry the compiler's libstdc++, because an interpreter
+  that brings its own C++ runtime - every conda python does - makes ASan intercept `__cxa_throw`
+  against the wrong one and abort with `CHECK failed: ... real___cxa_throw != 0`. That looks exactly
+  like a finding and is nothing but a mismatch; without the second entry the run died in its first
+  model.
+- `detect_leaks=0`: CPython and numpy hold allocations until exit by design. Memory *errors* are
+  still caught; only the exit-time leak report is off.
+
+**The result, measured on the whole suite in WSL (gcc 13, Python 3.13):**
+
+| | |
+|---|---|
+| AddressSanitizer errors | **0** |
+| UndefinedBehaviorSanitizer reports | **0** |
+| test models run | 114, plus 23 mini examples |
+
+That is a real statement about the code base, not a run that ended early: the log reaches
+`velocityVerletTest.py`, the last model, and the mini examples all pass.
+
+**What the job deliberately does NOT fail on**: the test suite's own exit code. This build is `-O1`,
+on Linux, in a throwaway environment - reference values differ and around ten models need scipy or
+NGsolve and cannot run at all. Failing on that would make the job red for reasons unrelated to
+memory safety, which is the one thing it exists to check; the numbers are `wheels_linux`' business.
+An exit code that is neither 0 nor 1 does fail, because that is a crash rather than a comparison.
+
+**`allow_failure: true`, on purpose and temporarily** (step R5.6.1): the local run is clean, but the
+CI image is a different compiler and libc and installs scipy, so it reaches code the local run did
+not. After the first scheduled runs it flips to `false` or the findings are baselined. A job that
+may be red forever teaches people to ignore it.

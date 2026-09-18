@@ -262,6 +262,37 @@ exudev linux            # all five, via docker + WSL; exudev -n linux prints the
 Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
 build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
 
+### The sanitizer job
+
+`sanitizers_linux` builds Exudyn with **AddressSanitizer and UndefinedBehaviorSanitizer** and runs
+the test suite against it (revision2026 step R5.6). For a library that calls arbitrary user
+callbacks from C++ and hands out references into its own storage, this is the job that turns
+*"it crashed with no message"* into a file and a line.
+
+```bash
+bash tools/ci/buildSanitizers.sh python3          # also runs locally, in WSL
+```
+
+Four things about it are worth knowing before reading a red run:
+
+- **No `setup.py` change was needed.** The flags travel in `EXUDYN_EXTRA_COMPILE_ARGS` and
+  `EXUDYN_EXTRA_LINK_ARGS`, which `setup.py` already appends to every extension. `CFLAGS` does not
+  work there.
+- **`-O1`, not `-O3`.** That alone found #2506 on the first build, before a single sanitizer check
+  ran: `RaytracingSettings::maxNThreads` had no out-of-class definition, which `-O3` hid by folding
+  the constant and `-O1` turned into a module that would not load.
+- **`LD_PRELOAD` carries libasan *and* the compiler's libstdc++.** Python is not instrumented, so
+  the ASan runtime has to come first; and if the interpreter brings its own C++ runtime - every
+  conda python does - ASan intercepts `__cxa_throw` against the wrong libstdc++ and aborts with
+  `CHECK failed: ... real___cxa_throw != 0`, which looks like a finding and is only a mismatch.
+- **`detect_leaks=0`.** CPython and numpy hold allocations until exit by design; memory *errors*
+  are still caught, only the exit-time leak report is off.
+
+The job is `allow_failure: true` **on purpose and temporarily**: a first sanitizer pass over 107k
+lines of C++ finds things, and a job that stays red trains people to ignore it. It flips to `false`
+when the findings are triaged (step R5.6.1). The run log is kept as an artifact whether the job
+passes or fails - the log *is* the result.
+
 ### Which tests run when
 
 | run | what | how |

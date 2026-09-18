@@ -141,6 +141,44 @@ check_sources:
   script:
     - python tools/gen_sources.py --check
 
+# Build with AddressSanitizer and UndefinedBehaviorSanitizer and run the test suite against it
+# (revision2026 step R5.6). Exudyn calls arbitrary user callbacks from C++ and hands out references
+# into its own storage; the failure the user reports is "it crashed with no message". A sanitizer
+# run turns that class of bug into a file and a line.
+#
+# WHY NOT THE MANYLINUX IMAGE: the sanitizer runtime has to match the compiler exactly, and
+# manylinux compiles with a gcc toolset while the distribution's libasan belongs to the base gcc.
+# Debian's python:3.13 ships g++ 12 with the matching libasan8, so nothing has to be reconciled.
+#
+# The job is SLOW by nature: -O1 with instrumentation, and every allocation checked. It therefore
+# runs on the same weekly schedule as everything else, not per push - which is already this
+# repository's cadence.
+#
+# allow_failure IS DELIBERATE, and temporary: the first runs of a sanitizer over a 107k-line C++
+# code base find things, and a job that is red for weeks trains people to ignore it. The findings
+# are triaged in revision2026 step R5.6.1; this flips to false when the list is empty or baselined.
+sanitizers_linux:
+  stage: build
+  image: python:3.13
+  allow_failure: true
+  variables:
+    GIT_DEPTH: "1"
+  before_script:
+    # g++ pulls libasan8/libubsan1; the graphics packages are what setup.py links against
+    - apt-get update -qq
+    - apt-get install -y -qq --no-install-recommends g++ libglfw3-dev libgl1-mesa-dev libx11-dev
+    # scipy and matplotlib are optional for exudyn but decide whether ~10 test models run at
+    # all; without them the sanitizers never see the code those models exercise
+    - pip install --no-cache-dir --upgrade pip setuptools wheel
+    - pip install --no-cache-dir numpy matplotlib "scipy==1.15.2"
+  script:
+    - bash tools/ci/buildSanitizers.sh python3
+  artifacts:
+    when: always                                # the log IS the result, pass or fail
+    paths:
+      - dist/sanitizers/sanitizerRun.log
+    expire_in: 30 days
+
 # Catch documentation breakage during the freeze. This does NOT deploy: GitHub Pages correctly
 # stays at 1.11.0 while the public release is 1.11.0.
 docs:

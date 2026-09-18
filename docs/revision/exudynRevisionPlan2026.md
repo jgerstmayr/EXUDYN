@@ -758,8 +758,37 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     returning an undefined name - the same pattern as R5.5.5, one function further.
 
 <a id="r5-6"></a>
-**R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches
-    the class of bug users report as "it crashed with no message".
+**R5.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6) — *(phase R5)* **An ASan/UBSan
+    Linux job.** For a C++ library invoking arbitrary user callbacks this catches the class of bug
+    users report as "it crashed with no message".
+
+    `tools/ci/buildSanitizers.sh` builds with `-fsanitize=address,undefined -O1 -g` and runs the
+    full test suite against the result; `sanitizers_linux` in `.gitlab-ci.yml` runs it weekly. The
+    job is **GitLab**, not GitHub: GitHub Actions only fire on pushes to master and on pull
+    requests, so during the freeze they never run (step R1.7).
+
+    **No `setup.py` change was needed**: the flags travel through `EXUDYN_EXTRA_COMPILE_ARGS` and
+    `EXUDYN_EXTRA_LINK_ARGS`, which `setup.py` already appends to every extension.
+
+    **The step paid for itself before a single sanitizer check ran** (#2506, fixed here): at `-O1`
+    the module would not even load, because `RaytracingSettings::maxNThreads` is declared
+    `static const` with an in-class initializer and never defined, while `Clamp()` binds a
+    reference to it. `-O3` folds the constant and hides it; every release build has been linking on
+    that accident.
+
+    **Measured 2026-09-18**, the whole suite under both sanitizers, in WSL: **0 AddressSanitizer
+    errors and 0 UndefinedBehaviorSanitizer reports** over 114 test models and 23 mini examples.
+    The suite's own failures in that run are **not** memory findings - the build is `-O1` on Linux
+    in an environment without scipy/NGsolve, so reference values differ and ~10 models cannot run -
+    and the script therefore reports the suite exit code without failing on it. Correctness is
+    `wheels_linux`' job; memory safety is this one's.
+
+<a id="r5-6-1"></a>
+**R5.6.1** *(sub-step of R5.6)* **Let the sanitizer job go red.** It is `allow_failure: true` for
+    now: the local run is clean, but the CI image is a different compiler and libc and installs
+    scipy, so it reaches code the local run did not. After the first scheduled runs, either flip
+    `allow_failure` to `false` or baseline what is found - a job that may be red forever teaches
+    people to ignore it, which is worse than not having it.
 
 <a id="r5-7"></a>
 **R5.7** **DONE** — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`). → [log](exudynRevisionLog2026.md#r5-7)

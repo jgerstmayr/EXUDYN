@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.161.dev1, 
+  \item Exudyn version = 1.11.162.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2506, 
-  \item Number of resolved issues = 2234 (161 in current version), 
+  \item Number of issues = 2507, 
+  \item Number of resolved issues = 2235 (162 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.162}: {\bf \color{warningRed}  resolved BUG 2506}: {\bf RaytracingSettings::maxNThreads has no definition}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: src/Graphics/Raytracing.h:136 declares "static const Index maxNThreads = 256;" with an in-class initializer but no out-of-class definition. Raytracing.cpp:913 passes it to EXUstd::Clamp(const T\& x; const T\& lower; const T\& upper); binding a reference to it - which is an odr-use; so a definition IS required. At -O3 the compiler folds the constant and nothing is referenced; so every release build links and loads. At -O1 it does not fold; the symbol stays undefined and importing the module fails outright with "undefined symbol: \_ZN18RaytracingSettings11maxNThreadsE". Found 2026-09-18 on the FIRST build of revision2026 step R5.6 (sanitizers; which use -O1); before a single sanitizer check had run. The neighbouring materialOffset is already "static constexpr"; which in C++17 is implicitly inline and needs no definition; RTcolorDepth on the next line has the same latent pattern. Fix: make them constexpr.}
+    \item {\bf notes: Fixed in revision2026 step R5.6: src/Graphics/Raytracing.h:136 - maxNThreads and its neighbour RTcolorDepth are now "static constexpr"; which in C++17 is implicitly inline and therefore needs no out-of-class definition; matching materialOffset two lines above. Verified: before the change the -O1 sanitizer build produced a module that failed to import with "undefined symbol: \_ZN18RaytracingSettings11maxNThreadsE"; after it the same build imports and the whole test suite runs. The MSVC release build was rebuilt and the test suite passed in venvExuP313 with unchanged values; so nothing about the behaviour moved - at -O3 the constant was folded all along; which is why no Windows or manylinux release ever showed this.}
+    \item   date resolved: {\bf 2026-09-18 02:47},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.161}:  resolved Issue 2503: {\bf the build and test scripts are 18 batch files without help}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

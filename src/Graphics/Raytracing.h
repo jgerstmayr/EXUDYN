@@ -130,10 +130,14 @@ public:
 	
 	Index lightRadiusVariations; //same for all lights
 	static constexpr Index materialOffset = 1000;
-	static const Index RTcolorDepth = 4;
+	static constexpr Index RTcolorDepth = 4;
 
 	SearchTreeBase<RTfloat> searchTree;
-	static const Index maxNThreads = 256;
+	//constexpr; not const: Clamp() takes its arguments by const reference; so passing maxNThreads
+	//binds a reference to it and that is an odr-use; which a plain in-class initializer does not
+	//satisfy. At -O3 the value is folded and nothing notices; at -O1 the symbol stays undefined and
+	//the module does not even load (#2506). constexpr is implicitly inline in C++17.
+	static constexpr Index maxNThreads = 256;
 	mutable ArrayIndex tempTrigIndices[maxNThreads];
 	mutable ArrayIndex tempSearchTreeBins[maxNThreads];
 

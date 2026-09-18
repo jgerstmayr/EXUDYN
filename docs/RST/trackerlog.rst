@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.161.dev1, 
++  Exudyn version = 1.11.162.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2506, 
-+  Number of resolved issues = 2234 (161 in current version), 
++  Number of issues = 2507, 
++  Number of resolved issues = 2235 (162 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.162: :textred:`resolved BUG 2506` : RaytracingSettings::maxNThreads has no definition 
+    - issue author: Claude-JG
+    - description:  src/Graphics/Raytracing.h:136 declares "static const Index maxNThreads = 256;" with an in-class initializer but no out-of-class definition. Raytracing.cpp:913 passes it to EXUstd::Clamp(const T& x; const T& lower; const T& upper); binding a reference to it - which is an odr-use; so a definition IS required. At -O3 the compiler folds the constant and nothing is referenced; so every release build links and loads. At -O1 it does not fold; the symbol stays undefined and importing the module fails outright with "undefined symbol: _ZN18RaytracingSettings11maxNThreadsE". Found 2026-09-18 on the FIRST build of revision2026 step R5.6 (sanitizers; which use -O1); before a single sanitizer check had run. The neighbouring materialOffset is already "static constexpr"; which in C++17 is implicitly inline and needs no definition; RTcolorDepth on the next line has the same latent pattern. Fix: make them constexpr.
+    - **notes:** Fixed in revision2026 step R5.6: src/Graphics/Raytracing.h:136 - maxNThreads and its neighbour RTcolorDepth are now "static constexpr"; which in C++17 is implicitly inline and therefore needs no out-of-class definition; matching materialOffset two lines above. Verified: before the change the -O1 sanitizer build produced a module that failed to import with "undefined symbol: _ZN18RaytracingSettings11maxNThreadsE"; after it the same build imports and the whole test suite runs. The MSVC release build was rebuilt and the test suite passed in venvExuP313 with unchanged values; so nothing about the behaviour moved - at -O3 the constant was folded all along; which is why no Windows or manylinux release ever showed this.
+    - date resolved: **2026-09-18 02:47**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.161: resolved Issue 2503: the build and test scripts are 18 batch files without help (extension)
     - issue author: Claude-JG
     - description:  tools/buildAndGenerate/ holds 18 files; 5 of which exist only to find conda and to loop over the Python versions. A .bat file cannot print a --help; cannot validate an option and cannot pass an unknown option on: every new runner option has to be threaded through by hand - which is how --fast-module stayed unreachable from runTestSuite.bat until #2500. The scripts are also the place where the maintainer looks up HOW the build works; so they carry a documentation duty that comment headers serve badly. Replace them with one Python driver with subcommands; a --help per subcommand and a --dry-run that prints the commands instead of running them; keeping only the scripts that must stay shell (manylinuxBuild.sh runs inside the docker image). revision2026 step R5.18
