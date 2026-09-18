@@ -7065,6 +7065,96 @@ example, `TypeError` for a wrong type (string, list, `None`, an item index into 
 `ValueError` for a range violation or a wrong size, raised from `PyConversion.h`. Applied as its own
 reference update of `parameterConversionTest.py`.
 
+<a id="r8-7"></a>
+### R8.7 — the issue types, and what 2519 issues say about them
+
+**DONE 2026-09-18** (#2519). Maintainer request. There were **three** lists of issue types — the
+header of `issueTracker.py`, the header of `trackerlog.txt`, and what people actually typed — and
+no two of them agreed. Nothing validated the value, so the third list won.
+
+**What was in the file** (2519 issues): **39 distinct type spellings**. `EXTENSION` 1101,
+`CHANGE` 370, `FIX` 230, `BUG` 226, `NEW FEATURE` 182, `DOCU` 125, `CHECK` 110, `TESTING` 58,
+and then a tail of 31 spellings with fewer than 25 uses between them: `EXTENSON`, `EXTENTSION`,
+`EXTENISON`, `EXTNESION`, `CHEKCK`, `CHEKC`, `TESTINT`, and singletons like `RELEASE`,
+`CORRECT`, `WARNING`, `COMPATIBILITY`. **`NEW FEATURE` is not a tail:** it is 181 issues below
+#342 and exactly one above it. It was renamed to `EXTENSION` in 2019 and the old name was never
+migrated — the same concept under two names for six years.
+
+**Statuses**: `RAISED` 268, `RESOLVED` 2251. `WORK` and `TESTING` stood in the documented list
+and were used **zero** times in 2519 issues. What was missing is the one the maintainer asked
+for: a way to close an issue that will not be done. Without it those issues had to be written
+as `RESOLVED`, which is untrue, and the notes are full of the evidence: *"not needed for now"*,
+*"not possible"*, *"abandoned; because makes no sense with RBE2 modes"*.
+
+#### The ten types
+
+The maintainer's own criteria, written down, plus the one he identified as missing:
+
+| type | what it means for a user |
+|---|---|
+| `BUG` | something goes really wrong, in particular **wrong results**; a user may not notice |
+| `FIX` | something goes wrong **and says so** — an exception, a crash, a file not written |
+| `CHANGE` | behaviour or the interface changes; users have to be careful |
+| `EXTENSION` | a new feature, parameter or flag; changes no behaviour |
+| `IMPROVEMENT` | **new** — the code gets better and the user sees nothing: readability, cleanup, speed |
+| `TESTING` | a new or extended test |
+| `DOCU` | documentation, description or tutorial |
+| `EXAMPLE` | an example model |
+| `CHECK` | something to investigate; may become another issue |
+| `IDEA` | not yet a feature: how something could look |
+
+`IDEA` was in the documented list and had **never been used**; `DISCUSSION`, which was not in
+the list, had been used 8 times for exactly that. So the name that was used lost and the
+definition that was written won, and the type is no longer empty.
+
+#### The migration
+
+**277 type changes**, none of them a judgement about what an issue was: 182 `NEW FEATURE`
+—> `EXTENSION`, 15 `TEST` + 2 `TESTINT` + 1 `NEW TEST` + 1 `VERIFICATION` —> `TESTING`, 13
+`CLEANUP` + 6 `OPTIMIZE` + 2 `PERFORMANCE` + 1 `CLEAN` + 7 lowercase `improvement` —>
+`IMPROVEMENT`, 8 `DISCUSSION` —> `IDEA`, 9 misspellings of `EXTENSION`, and 13 singletons read
+one at a time (`DESCRIPTION` alone covered four meanings and was split accordingly).
+
+**15 issues moved to `ABANDONED`**, each because its own resolve note says the work was not
+done. *"Superseded by"* is deliberately **not** in that set when the concern was actually
+addressed elsewhere — #1085 and #1861 stay `RESOLVED`; #1988, whose note says *"the change was
+never made"*, does not.
+
+**17 of the bad spellings were mine**, raised in the last two days (`bug`, `change`,
+`improvement` in lower case). The check that now rejects them did not exist, which is the whole
+finding: a list of valid values that nothing enforces is a comment.
+
+#### Two things this uncovered
+
+**The version must count CLOSED issues, not resolved ones.** Step R8.3.1 states the opposite
+— and it cannot hold. The micro version is a running count of resolved issues, so abandoning
+an issue that is already `RESOLVED` would move `version.txt` backwards and make a released
+version number irreproducible. Worse, the **release notes** derive each past issue's version
+from the same counter, so the first attempt renumbered roughly 2000 historical entries by up to
+15 — a fix that shipped in 1.11.147 would have started claiming 1.11.146. Both counters now
+count closed issues; `version.txt` stayed at **1.11.178** and every historical version line is
+byte-identical. The distinction lives where it is read instead: an abandoned issue is listed in
+the release notes neither as resolved nor as open.
+
+**`RAISED` is stored as `'RAISED  '`.** The status column is padded to 8 characters, and
+`'RESOLVED'` is exactly 8 long — which is why every comparison in the converters was written
+against `RESOLVED` and worked. Changing one of them to `== 'RAISED'` silently emptied the
+*Open issues* section, 261 entries down to 1, and it was caught by counting the output rather
+than by reading the diff. Both readers now strip the column.
+
+Also in this step: `AbandonIssue(number, reason, author)` — the reason is not optional, because
+an abandoned issue without one is worse than an open one; `RaiseIssue` rejects a type the
+tracker does not know and prints the ten with their meanings; and the header of `trackerlog.txt`
+is written from `issueTypes`/`issueStatuses`, so the three lists are one list.
+
+What is **not** done, and deliberately: no issue was re-judged between `BUG`, `FIX` and
+`CHANGE`. Those distinctions are about what actually happened, a one-line description does not
+decide them, and a script guessing at 226 bugs would produce a file that looks authoritative
+and is not.
+
+---
+
+
 <a id="r8-3-2"></a>
 ### R8.3.2 - the old backlog, checked against what the revision did
 

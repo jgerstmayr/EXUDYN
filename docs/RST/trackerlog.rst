@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.178.dev1, 
++  Exudyn version = 1.11.179.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2519, 
-+  Number of resolved issues = 2251 (178 in current version), 
++  Number of issues = 2520, 
++  Number of resolved issues = 2252 (179 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.179: resolved Issue 2519: issue types and statuses are three lists that disagree (improvement)
+    - issue author: Claude-JG
+    - description:  trackerlog.txt and issueTracker.py each carry a comment listing the issue types and statuses, neither matches the other and neither matches what is in the file: 39 distinct type spellings in 2519 issues\, 20 of them typos or singletons\, NEW FEATURE and EXTENSION for the same thing\, NEW TEST written as TESTING. The statuses WORK and TESTING were never used once, ABANDONED is missing. Nothing validates the value on RaiseIssue. revision2026 step R8.7.
+    - **notes:** issueTypes and issueStatuses in issueTracker.py are now the only list, the trackerlog.txt header is written from them and RaiseIssue rejects an unknown type. 39 spellings became 10 types (IMPROVEMENT is new, NEW FEATURE merged into EXTENSION, DISCUSSION into IDEA), 277 type changes. WORK and TESTING left the status list (never used once), ABANDONED joined it with AbandonIssue() and a mandatory reason, 15 issues migrated. Both the version counter and the release-note version index count CLOSED issues\, so version.txt stayed at 1.11.178 and no historical version line changed. revision2026 step R8.7.
+    - date resolved: **2026-09-18 15:40**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.178: resolved Issue 2518: exudev build refuses --env (extension)
     - issue author: Claude-JG
     - description:  exudev build --env NAME exits with an error because the wheel to install is selected by its cp3xx tag and the environment NAME does not say which Python it has. The environment itself does say: ask its interpreter. Maintainer request 2026-09-18: venvExuP313 should be usable for building. revision2026 step R5.18.6.
@@ -40,7 +46,7 @@ Version 1.11
     - **notes:** nine exception classes registered on the exudyn module, each derives from ExudynError and from the built-in that fits (tuple base). One call site converted to prove that a C++ throw keeps its type - which found a third instance of the flattening trap of #2432, pass-through added in all six places. Tested by python/testing/test_exceptions.py. revision2026 step R6.3.1.
     - date resolved: **2026-09-18 15:03**\ , date raised: 2026-09-18 
     - resolved by: Claude-JG
- * Version 1.11.176: resolved Issue 2515: stub gate fails on a wheel without the fast module (bug)
+ * Version 1.11.176: :textred:`resolved BUG 2515` : stub gate fails on a wheel without the fast module 
     - issue author: Claude-JG
     - description:  checkPython.py --stubs --check reports 'unused allowlist entry exudyn.exudynCPPfast' as an error when the installed wheel was built without the fast module (the default of exudev build; revision2026 step R5.18). Nothing is wrong with the stubs. revision2026 step R5.5.7.
     - **notes:** stubtest no longer judges unused allowlist entries; the generated backlog is compared against a --generate-allowlist run instead - a new entry fails the gate, a stale one is reported. revision2026 step R5.5.7.
@@ -52,7 +58,7 @@ Version 1.11
     - **notes:** A parameter error now raises TypeError when the object cannot be that parameter at all (None; a string for a number; a list for a scalar; an item index of the wrong kind) and ValueError when the kind is right and the value is not (out of range; wrong size; a must-be-given placeholder). Three mechanisms had to change: PyError takes a PyErrorType and throws py::type_error or py::value_error (default unchanged; so the other 577 call sites are untouched); all 20 PyError sites in PyConversion.h name their type (12/8); and the casts that see user input go through Conversion::CastOrRaise; which turns a pybind11 cast_error - the third path this issue names - into a TypeError naming the parameter. Two layers flattened the type back to RuntimeError and had to be found: EXUexception is a define for std::runtime_error (ReleaseAssert.h:30) and py::builtin_exception derives from it; so catch(EXUexception) in the five AddX wrappers and in GenericExceptionHandling caught the new types first - a pass-through now comes before it. Two defects surfaced: three messages built their text with py::cast<std::string>(value); which throws for exactly the values that reach that line; and a 0-d numpy array (what an itemInterface class makes of a scalar in a vector parameter) fails the cast as a Python error; not a cast_error - which is why the class and dict paths disagreed. Recorded in parameterConversionTestReference.txt: of 966 rows every changed outcome is RuntimeError to TypeError (6898) or to ValueError (785); nothing moved the other way and no successful conversion changed. The MESSAGE is deliberately unchanged and belongs to revision2026 step R6.3.
     - date resolved: **2026-09-18 12:50**\ , date raised: 2026-09-15 
     - resolved by: Claude-JG
- * Version 1.11.174: resolved Issue 2514: checkExtras does not know python/testing (bug)
+ * Version 1.11.174: :textred:`resolved BUG 2514` : checkExtras does not know python/testing 
     - issue author: Claude-JG
     - description:  After revision2026 step R3.9 the runners live in python/testing/ and are no longer siblings of the models. checkExtras.LocalModuleNames() only knows the shipped packages and the siblings of the scanned directory; so modelUnitTests and testRunnerTools were reported as UNCOVERED IMPORTS needed by [tests] - although they are project files and not packages at all. revision2026 step R3.9.1.
     - **notes:** LocalModuleNames() also counts the tracked .py of python/testing/ as local names for every scanned directory; because every runner puts that directory on sys.path before it executes a model (testRunnerTools.WorkInModelsDirectory). Verified: checkExtras --check green again; the four UNCOVERED IMPORTS were modelUnitTests and testRunnerTools; imported by name from TestModels/; PerformanceModels/ and MiniExamples/.
@@ -70,7 +76,7 @@ Version 1.11
     - **notes:** The four log directories became python/logs/{testmodels; examples; performance; tmp}. 62 tracked logs moved with git mv so history follows them; decision D7 unchanged - they stay tracked. Four logFileName expressions and testRunnerTools.tmpLogDir updated. The -local CI copy still goes to the working directory python/TestModels/; so both artifact globs stayed correct and no workflow file was touched. Verified: ResolveLogFile found the existing performance log under ../logs/performance/ and diverted to ../logs/tmp/.
     - date resolved: **2026-09-18 11:00**\ , date raised: 2026-09-18 
     - resolved by: Claude-JG
- * Version 1.11.171: resolved Issue 2505: a test model page is in no toctree (documentation)
+ * Version 1.11.171: resolved Issue 2505: a test model page is in no toctree (docu)
     - issue author: Claude-JG
     - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.
     - **notes:** Fixed in revision2026 step R7.1.2: docs/RST/TestModels/sphereTriangleTest.rst was a STALE generated file; not a missing index entry. TestModelsIndex.rst is generated from the keys of TestExamplesReferenceSolution(); and sphereTriangleTest.py moved into DeliberatelyNotRun() (unstable explicit integrator; phase R10); so the generator stopped listing it and stopped writing its page - the old page stayed behind. Verified by deleting it and re-running the generators: it is not recreated. sphinx-build -W --keep-going now succeeds; and exudev docs is strict by default so the local build applies the same gate as the GitLab docs job.
@@ -205,11 +211,6 @@ Version 1.11
     - **notes:** Resolved differently and the goal is met: instead of exposing MainSystemBase and deriving a Python MainSystem from it; a function is marked where it is defined with @extends(exudyn.MainSystem) and exudyn.extensionRegistry.install() attaches it to the C++ class (revision2026 phase R4). Python-side MainSystem code is therefore visible in the class; in the stub file and in the documentation; without a second class in the hierarchy.
     - date resolved: **2026-09-17 22:43**\ , date raised: 2025-05-06 
     - resolved by: Claude-JG
- * Version 1.11.147: resolved Issue 1988: exceptions (extension)
-    - description:  change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes
-    - **notes:** Superseded by #2497: the change was never made; but every one of the 59 bare "except:" in the shipped package is now listed with file and message in tools/ci/ruffBaseline.txt (revision2026 step R5.5.3) and a new one fails the check. See the successor issue.
-    - date resolved: **2026-09-17 22:43**\ , date raised: 2025-04-10 
-    - resolved by: Claude-JG
  * Version 1.11.146: resolved Issue 1861: exceptions and ValueError (extension)
     - description:  check all ValueError exceptions and change to appropriate error handling, like importerror, runtime error or value error!
     - **notes:** Superseded by #2432; which records the same problem with measurements: parameterConversionTest.py shows that a wrong parameter raises RuntimeError; TypeError or ValueError depending on which path rejected it. The taxonomy itself is revision2026 steps R6.3; R6.4 and R6.7. Individual cases found on the way were fixed with the right type - for instance ValueError for an unknown solver in lieGroupIntegration.py and ImportError for a missing roboticstoolbox (#2488; #2489).
@@ -255,12 +256,12 @@ Version 1.11
     - **notes:** Resolved by revision2026 step R5.4.1: src/Tests/AllMatrixVariantsUnitTests.h tests ConstSizeMatrix and ResizableMatrix - the two classes this issue named - including the SparseTripletMatrix constructor fixed in step R5.4.6 (#2476).
     - date resolved: **2026-09-17 22:43**\ , date raised: 2019-05-13 
     - resolved by: Claude-JG
- * Version 1.11.137: resolved Issue 0005: finish (new feature)
+ * Version 1.11.137: resolved Issue 0005: finish (extension)
     - description:  finish tests for all matrix classes    
     - **notes:** Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllMatrixUnitTests.h and AllMatrixVariantsUnitTests.h cover Matrix; ResizableMatrix; ConstSizeMatrix and the linked-data variants; step R5.4.1 completed the variants that had none.
     - date resolved: **2026-09-17 22:43**\ , date raised: 2019-04-01 
     - resolved by: Claude-JG
- * Version 1.11.136: resolved Issue 0002: finish (new feature)
+ * Version 1.11.136: resolved Issue 0002: finish (extension)
     - description:  finish tests for all vector classes    
     - **notes:** Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllVectorUnitTests.h; TemplatedVectorArrayUnitTests.h; AllBasicLinalgUnitTests.h and AVXVectorUnitTests.h cover Vector; ResizableVector; SlimVector; ConstSizeVector and LinkedDataVector; run by exu.special.RunCppUnitTests() in every build with EXUDYN_PERFORM_UNIT_TESTS and by the test suite.
     - date resolved: **2026-09-17 22:43**\ , date raised: 2019-04-01 
@@ -355,25 +356,25 @@ Version 1.11
     - **notes:** Documentation only, as corrected by the maintainer: the behaviour is deliberate (FullPivLU is the ignoreSingularJacobian least-squares path; PartialPivLU has no invertibility check in Eigen). The LinearSolverType.EigenDense description in definitions/enumTypes.py now states that in the default partial pivoting mode a singular matrix is NOT detected and the solver continues with an undefined result, and points at EXUdense/EigenSparse if that must be reported or at full pivot if the singular system should be resolved by least squares on purpose. The sentence propagates to EnumTypes.h, the stubs and the documentation. The judging comment in LinearSolverUnitTests.h was corrected as well. revision2026 step R5.4.10.
     - date resolved: **2026-09-17 17:20**\ , date raised: 2026-09-17 
     - resolved by: Claude-JG
- * Version 1.11.120: resolved Issue 2482: the sparse FactorizeNew does not return the causing row it promises (bug)
+ * Version 1.11.120: :textred:`resolved BUG 2482` : the sparse FactorizeNew does not return the causing row it promises 
     - issue author: Claude-JG
     - description:  GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.
     - **notes:** GeneralMatrixEigenSparse::FactorizeNew() now returns NumberOfRows() on failure - the value the caller already treats as "causing row unknown" - instead of solver.info()-1, which was an Eigen ComputationInfo and therefore always 0. The comment that described SuperLU info semantics is replaced by what Eigen actually returns. Measured on a redundantly constrained system with EigenSparse: before, the solver printed "causing system equation number (coordinate number) = 0" and "The causing system equation 0 belongs to a ODE2 coordinate"; after, the singularity is reported with no row claimed. The symmetric branch always behaved this way. The R5.4.3 unit test asserts the exact return value. revision2026 step R5.4.9.
     - date resolved: **2026-09-17 17:20**\ , date raised: 2026-09-17 
     - resolved by: Claude-JG
- * Version 1.11.119: resolved Issue 2481: a symbolic vector product with inconsistent sizes leaks its nodes (bug)
+ * Version 1.11.119: :textred:`resolved BUG 2481` : a symbolic vector product with inconsistent sizes leaks its nodes 
     - issue author: Claude-JG
     - description:  Symbolic::operator\*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase\*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.
     - **notes:** SReal(ExpressionBase\*) now takes ownership first and evaluates in the constructor body, with a catch(...) that releases the tree exactly as the destructor would (DecreaseReferenceCounter, then Destroy and delete at zero, counting the delete) and rethrows. One place, because every operator returns through it. Measured: a failed vector product used to leak 1 Real and 2 Vector nodes, now new==delete. The R5.4.2 test case requires OpenNodes()==0 instead of documenting the leak, and symbolicModuleTest.py no longer has to save and restore the counters around its error paths; its reference value is unchanged. Mutation check: the eager member-initializer form produces 1 failure. revision2026 step R5.4.8.
     - date resolved: **2026-09-17 16:43**\ , date raised: 2026-09-17 
     - resolved by: Claude-JG
- * Version 1.11.118: resolved Issue 2480: SymbolicVector.h and SymbolicMatrix.h do not include what they use (bug)
+ * Version 1.11.118: :textred:`resolved BUG 2480` : SymbolicVector.h and SymbolicMatrix.h do not include what they use 
     - issue author: Claude-JG
     - description:  Both headers use py::list, py::array_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.
     - **notes:** Symbolic.h now includes BasicLinalg.h, <unordered_map> and <typeinfo>; SymbolicVector.h includes Symbolic.h and PybindUtilities.h; SymbolicMatrix.h includes those plus SymbolicVector.h. PybindUtilities.h brings the pybind headers, the py alias and EPyUtils in one line and includes nothing symbolic, so there is no cycle. The proof is a deletion: the four-line include workaround in SymbolicUnitTests.h is gone and the tests compile with the headers in any order. revision2026 step R5.4.7.
     - date resolved: **2026-09-17 16:43**\ , date raised: 2026-09-17 
     - resolved by: Claude-JG
- * Version 1.11.117: resolved Issue 2476: SparseTripletMatrix(rows, columns, triplets) throws its size arguments away (bug)
+ * Version 1.11.117: :textred:`resolved BUG 2476` : SparseTripletMatrix(rows, columns, triplets) throws its size arguments away 
     - issue author: Claude-JG
     - description:  The three-argument constructor initialises numberOfRows(0) and numberOfColumns(0) and never assigns numberOfRowsInit or numberOfColumnsInit, so a matrix built with it reports 0 x 0 while holding the triplets. Nothing in the code base calls it - it was found while fixing #2474, which makes the size fields load-bearing for MultMatrixVector. Either assign them or delete the constructor. revision2026 step R5.4.6.
     - **notes:** The three-argument constructor now assigns numberOfRowsInit and numberOfColumnsInit; fixed and kept rather than deleted, on the maintainer decision. It also gets its first caller: a case in AllMatrixVariantsUnitTests.h builds a 2x3 matrix through it and asks a MatrixContainer for a matrix-vector product, which since #2474 sizes its result from exactly those fields. Mutation check: putting the zeros back produces 1 failure. revision2026 step R5.4.6.
@@ -493,13 +494,13 @@ Version 1.11
     - **notes:** revision2026 step R5.15: testRunnerTools.AddTiming records solver.timer.total; the result and a run name per simulation in exudynTestGlobals.timings; runPerformanceTests.py prints and judges the 13 single runs; perfLargeMassSpringChain is a rigid body chain over 1000/5000/20000 bodies (explicit and implicit; computeMassMatrixInversePerBody on); generalContactSpheresTest runs with 1/4/8 threads in the performance path only; new reference values for the reworked models and for perf3DRigidBodies and perfSpringDamperExplicit.
     - date resolved: **2026-09-16 17:51**\ , date raised: 2026-09-16 
     - resolved by: Claude-JG
- * Version 1.11.97: resolved Issue 2459: no way to run a fast subset of the test models (add)
+ * Version 1.11.97: resolved Issue 2459: no way to run a fast subset of the test models (extension)
     - issue author: Claude-JG
     - description:  revision2026 step R5.2: every runner was all-or-nothing, so a pull-request run had to include the models that take longest and those needing optional packages (ngsolve, stable-baselines3). Added SlowTests() and OptionalPackageTests() as data in runTestSuiteRefSol.py, runTestSuite.py --fast and pytest markers slow/optionalPackage/sensitive/unresolvedOnLinux reading the same data
     - **notes:** revision2026 step R5.2: SlowTests/OptionalPackageTests as data; runTestSuite.py --fast (12 s) and pytest markers; nightly unchanged
     - date resolved: **2026-09-16 17:09**\ , date raised: 2026-09-16 
     - resolved by: Claude-JG
- * Version 1.11.96: resolved Issue 2457: test models are not available as pytest cases (add)
+ * Version 1.11.96: resolved Issue 2457: test models are not available as pytest cases (extension)
     - issue author: Claude-JG
     - description:  revision2026 step R5.1: runTestSuite.py was the only way to run the test models, so there was no selection by name, no IDE or CI reporting and no standard parallel runner; added python/TestModels/test_testModels.py with one parametrized case per model and mini example, sharing reference values and tolerances with the suite
     - **notes:** revision2026 step R5.1: test_testModels.py, 137 cases, shared reference values and tolerances (testRunnerTools.BaseTolerance); found and fixed a masked defect in plotSensorTest.py
@@ -511,7 +512,7 @@ Version 1.11
     - **notes:** revision2026 step R5.8: --parallel[=N] runs each model in its own interpreter (22 s -> 11 s with 8 workers); results reported in reference-list order; serial remains the default
     - date resolved: **2026-09-16 14:24**\ , date raised: 2026-09-16 
     - resolved by: Claude-JG
- * Version 1.11.94: resolved Issue 2454: exudyn.config.outputDirectory: global output directory for solver written files (add)
+ * Version 1.11.94: resolved Issue 2454: exudyn.config.outputDirectory: global output directory for solver written files (extension)
     - issue author: Claude-JG
     - description:  revision2026 step R5.13: solver written files (coordinates solution; solver information; sensor files; exported images) are prefixed with exudyn.config.outputDirectory when it is set. An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. The setting is global and lives as long as the module is loaded; it is meant for test runners and batch scripts; users should put the folder into the file names. Needed so that the test suite can give every model its own output directory (#2418) - the prerequisite for running the suite in parallel
     - **notes:** revision2026 step R5.13: ResolveOutputFileName() in Stdoutput.cpp, applied to solution, solver information, sensor and image files; absolute names raise on open
@@ -613,7 +614,7 @@ Version 1.11
     - **notes:** duplicate of #2417 (raised by mistake for revision2026 step R4.13)
     - date resolved: **2026-09-15 20:15**\ , date raised: 2026-09-15 
     - resolved by: Claude-JG
- * Version 1.11.77: resolved Issue 2417: remove the CFOptional flag once phase 3 is done (cleanup)
+ * Version 1.11.77: resolved Issue 2417: remove the CFOptional flag once phase 3 is done (improvement)
     - issue author: Claude-JG
     - description:  CFOptional marks 448 of 985 item parameters and generates if (EPyUtils::DictItemExists(d; "x")) around the dictionary read; so a parameter that is absent keeps its C++ default. It still catches today - the test suite creates items from raw dicts; e.g. modelUnitTests.py:184 calls mbs.AddObject with objectType Ground and referencePosition only; and ObjectGround has four optional parameters that the call omits. Maintainer decision 2026-09-13: remove it after phase 3 anyway. The reasoning: there are practically no tests for this behaviour; so the flag is worthless as a guarantee; and the dict path works if every parameter is optional. Where a parameter really cannot be omitted; the failing default value is the right place to say so - a construction that cannot produce a usable object should fail on its default; not on a hand-written flag that nothing checks. Do this AFTER phase 3; and add tests for the raw-dict creation path at the same time; since that is what the flag silently protects today.
     - **notes:** revision2026 step R4.13: CFOptional removed; every dictionary write guarded; must-be-given parameters raise when left out; omit probe in parameterConversionTest
@@ -699,13 +700,13 @@ Version 1.11
     - description:  revision2026 step R4.5: mainSystemExtensions.py becomes ordinary package source; functions bind to MainSystem via @extends(exudyn.MainSystem) and install() which raises on a collision with a C++ method; mainSystemExtensionsEmitter.py and mainSystemExtensionsHeader.py are deleted; the docs parsers read the decorator instead of #\*\*belongsTo
     - date resolved: **2026-09-15 12:22**\ , date raised: 2026-09-15 
     - resolved by: Claude-JG
- * Version 1.11.61: resolved Issue 2433: generated item headers carry wrong and stray comments (cleanup)
+ * Version 1.11.61: resolved Issue 2433: generated item headers carry wrong and stray comments (improvement)
     - issue author: Claude-JG
     - description:  Reported by the maintainer 2026-09-15: MainLoadCoordinate.h and all other Main headers write /\* AUTO: read out dictionary and cast to C++ type\*/ inside SetParameter and label every SetParameter line get parameter; GetParameter of user functions ends with ;; ; the visualization pointer is commented as computational object; CNodeGeneric{AE-ODE1-ODE2} return ...;; from their definitions; lines carry trailing whitespace. revision2026 step R4.21.
     - **notes:** itemHeaderEmitter.py: write statements carry no comment (SetWithDictionary lines plain - SetParameter lines end with //! AUTO: set parameter); no ;; in GetParameter; BodyGraphicsData and SetInternal statements without /\*! \*/ comments; else {PyError without double space; visualization pointer comment corrected; trailing whitespace removed from C/Main/Visu headers (the 7 header lines kept by the file comparison are unchanged); ;; removed from the three CNodeGeneric definitions. 291 generated headers changed; parameterConversionTest 0 differences; suite passed.
     - date resolved: **2026-09-15 11:15**\ , date raised: 2026-09-15 
     - resolved by: Claude-JG
- * Version 1.11.60: resolved Issue 2431: src/Autogenerated/StructuralElementsDataStructures.h has no generator and no user (cleanup)
+ * Version 1.11.60: resolved Issue 2431: src/Autogenerated/StructuralElementsDataStructures.h has no generator and no user (improvement)
     - issue author: Claude-JG
     - description:  Found in revision2026 step R4.4.3.5a: the tracked generated header src/Autogenerated/StructuralElementsDataStructures.h is not rewritten by tools/regenerate.py (unchanged since the step-25 move) and no file includes it; all includes use the hand-written src/Main/StructuralElementsDataStructures.h. It still contains the old EXUstd::GetSafely setters. Same kind of leftover as #2428. Deleting a tracked file needs the maintainer; the check of revision2026 step R4.18 covers item headers only. revision2026 step R4.20.
     - **notes:** src/Autogenerated/StructuralElementsDataStructures.h deleted (maintainer approval 2026-09-15); nothing included it.
@@ -717,7 +718,7 @@ Version 1.11
     - **notes:** revision2026 steps R4.4.3.1-R4.4.3.6: parameterConversionTest.py records the behaviour; src/Pymodules/PyConversion.h (FromPython/ToPython/ItemIndexFromPython/ItemIndexToPython/MemberGetter/MemberSetter) is the one conversion layer for generated item headers - structure members and the hand-written callers (MainSystem.cpp - MainSystemContainer.cpp - PyGeneralContact.h - solvers - symbolic); range checks in C++ with exudyn.special.exceptions.parameterRangeChecks; typeModel.py renders all type spellings; PybindUtilities.h 1104 -> 344 lines (forwarding block and 30 unused helpers deleted; kept: dict and type tests - GetSTDfunction - SetMatrixSafely - SetListOfArraysSafely - SetSlimArraySafely - reference numpy views).
     - date resolved: **2026-09-15 10:52**\ , date raised: 2026-09-14 
     - resolved by: Claude-JG
- * Version 1.11.58: resolved Issue 2429: unify the item/structure type exceptions of typeModel.py (cleanup)
+ * Version 1.11.58: resolved Issue 2429: unify the item/structure type exceptions of typeModel.py (improvement)
     - issue author: Claude-JG
     - description:  tools/generators/typeModel.py holds 36 spellings the rules do not produce (revision2026 step R4.4.3.3) - the same definition type is spelled differently for items and structures: Int is int for items and Index for structures; Float3/Float4 are exchanged as std::vector<float> for items and std::array<float n> for structures; NumpyVector/NumpyMatrix are stored as Vector/Matrix in items and py::array_t<Real> in structures; Vector2DList vs Vector3DList wrappers; Matrix2D reads Matrix2D in docs while the other fixed matrices read array_like; stub and dictType special names. Unify as far as possible - one spelling per type and destination - keeping each unification only if the full test suite and parameterConversionTest.py (apart from intended reference changes) do not fail; what must remain gets a comment with the reason. revision2026 step R4.19.
     - **notes:** typeModel.py exceptions reduced from 36 to 4: spellings that are the same for items and structures moved to a context-free names table (Int->Index; Py wrapper lists; dict type and stub vocabularies); KeyPressUserFunction joined definitionTypes.userFunctionSignatures; cppExchange has one rule for both contexts (variable sizes std::vector - fixed sizes std::array); item Float3/Float4 - ArrayIndex and Vector parameters convert through the same FromPython overloads as structure members (tuples accepted as before). Remaining: NumpyVector/NumpyMatrix storage (items store Vector/Matrix - structures only return py::array_t from solver functions). parameterConversionTest 0 differences; suite passed.
@@ -747,7 +748,7 @@ Version 1.11
     - **notes:** exudyn.special.exceptions.parameterRangeChecks (default True) switches off the range checks of item parameters (all write paths; revision2026 step R4.4.3.4b) and of simulation/visualization settings (EXUstd::GetSafely...); the Python checks in itemInterface.py are gone
     - date resolved: **2026-09-15 00:00**\ , date raised: 2026-09-14 
     - resolved by: Claude-JG
- * Version 1.11.53: resolved Issue 2428: four generated item headers in src/Autogenerated have no generator and no user (cleanup)
+ * Version 1.11.53: resolved Issue 2428: four generated item headers in src/Autogenerated have no generator and no user (improvement)
     - issue author: Claude-JG
     - description:  MainMarkerBody.h - MainMarkerGenericBodyPosition.h - MainObjectContactFrictionCircleCable2DOld.h - MainObjectJointSliding2DNew.h are tracked but no longer written by itemHeaderEmitter.py (their items are not in definitions/) and no .h or .cpp includes them; MainMarkerBody.h still calls HPyUtils::SetStringSafely. Found in revision2026 step R4.4.3.4 when counting the helper calls left in the generated headers. Deleting tracked files needs the maintainer; the drift gate should also report generated files that no generator writes. revision2026 step R4.18.
     - **notes:** the twelve C/Main/Visu headers of MarkerBody - MarkerGenericBodyPosition - ObjectContactFrictionCircleCable2DOld - ObjectJointSliding2DNew deleted; itemHeaderEmitter.py now raises for any item header in src/Autogenerated whose item has no definition
@@ -891,19 +892,19 @@ Version 1.11
     - **notes:** the ten static settings moved to [tool.cibuildwheel] in main/pyproject.toml; with linux; macos and windows subtables for the per platform test-command; before-all and environment. Only CIBW_BUILD stays in the workflow; because it is built from the matrix entry. build-verbosity = 1 now actually applies. Verified with the pinned cibuildwheel 3.4.1: --print-build-identifiers returns the same set for all three platforms as the old environment variables did (cp313-manylinux_x86_64, cp313-macosx_universal2, cp313-win_amd64), the resolved options show build-verbosity 1, the test requirements, the dnf before-all on linux only and the cd /d form of the test command on windows, and a deliberately misspelled key is rejected with "Option build-verbosityy not supported in a config file" instead of being ignored
     - date resolved: **2026-09-12 10:01**\ , date raised: 2026-09-12 
     - resolved by: Claude-JG
- * Version 1.11.29: resolved Issue 2389: remove 32 bit support: libs/libs32 and the bitness branch in setup.py (cleanup)
+ * Version 1.11.29: resolved Issue 2389: remove 32 bit support: libs/libs32 and the bitness branch in setup.py (improvement)
     - issue author: Claude-JG
     - description:  follow up to issue 2386; whose resolution note still says setup.py keeps its is32bits branch - that is no longer true. On the maintainer instruction the 32 bit support is removed outright: main/libs/libs32 (glfw.pdb; glfw3.lib; glfw3_d.lib; openvr_api.dll; openvr_api.lib) and the is32bits/is64bits branch in setup.py; whose only remaining effect was to choose that directory. revision2026 step R2.6
     - **notes:** the five libs32 files deleted and the bitness branch replaced by an explicit failure: a 32 bit interpreter now raises immediately with the reason; instead of falling through to the 64 bit import libraries and producing "DLL load failed: 
     - date resolved: **2026-09-12 00:08**\ , date raised: 2026-09-12 
     - resolved by: Claude-JG
- * Version 1.11.28: resolved Issue 2386: drop the ReleaseP37 and Win32/x86 build configurations (cleanup)
+ * Version 1.11.28: resolved Issue 2386: drop the ReleaseP37 and Win32/x86 build configurations (improvement)
     - issue author: Claude-JG
     - description:  the solution and cppsrc.vcxproj carried six configurations: Debug; Release and ReleaseP37 times Win32 and x64. ReleaseP37 is the last artefact of Python 3.7 support and no 32 bit wheel has been built for years; so four of the six were dead weight that every vcxproj edit had to be repeated in. revision2026 step R2.6
     - **notes:** six configurations reduced to two; Debug|x64 and Release|x64. Removed from cppsrc.vcxproj the four ProjectConfiguration declarations and every PropertyGroup; ImportGroup and ItemDefinitionGroup conditioned on them (853 -> 660 lines); rewrote both GlobalSections of main_sln_Template.sln; and dropped the ReleaseP37 PropertyGroup from pythonDev.pyproj. Verified: all three files still parse as XML; the 133 ClCompile entries are untouched and still match sources.json; and MSBuild evaluates both surviving configurations without error - Release|x64 resolving to ConfigurationType DynamicLibrary; TargetExt .pyd; PlatformToolset v143 and OutDir bin/x64/Release. requires-python also moved from >=3.6 to >=3.10; which revision2026 step R2.11 had deferred to here: CI builds cp310-cp314 and no 3.6 wheel has existed for years. setup.py keeps its is32bits branch; it reacts to the running interpreter rather than to a VS configuration; and removing 32 bit support outright is not part of this step
     - date resolved: **2026-09-12 00:01**\ , date raised: 2026-09-12 
     - resolved by: Claude-JG
- * Version 1.11.27: resolved Issue 2385: remove the three dead CMakeLists files (cleanup)
+ * Version 1.11.27: resolved Issue 2385: remove the three dead CMakeLists files (improvement)
     - issue author: Claude-JG
     - description:  none of the three could configure; let alone build. main/CMakeLists.txt was a fourth complete copy of the 133 file source list and called add_subdirectory(pybind11) on a directory that does not exist; its own header said "CMakeLists for Exudyn are not complete". main/src/CMakeLists.txt and main/obj/autoCMakeLists.txt listed 63 of 133 files; missed 74; referenced sources deleted years ago (StaticSolver.cpp; CNodeRigidBody.cpp; solver/TimeIntegrationSolver.cpp) and used add_executable although exudyn is a Python module. Decision D3 keeps the .sln and .vcxproj and drops CMake. revision2026 step R2.5
     - **notes:** all three deleted (405 lines). main/include/Eigen/CMakeLists.txt is vendored third-party and was left untouched. No generator recreates them. The only reference in the documentation was one passing mention in docs/theDoc/gettingStarted.tex; which now names scikit-build-core alone rather than pointing at files that no longer exist. This also removes the last duplicate of the source list that revision2026 step R2.4 consolidated into main/sources.json
@@ -975,7 +976,7 @@ Version 1.11
     - **notes:** Overlay hoisted into Python36NonAVXOverrides() so its keys can be validated; spelling fixed; CheckTestCoverage reports any future dead override.
     - date resolved: **2026-09-10 22:31**\ , date raised: 2026-09-10 
     - resolved by: Claude-JG
- * Version 1.11.15: resolved Issue 2365: Clean up docs/howTo and remove the doxygen configuration (cleanup)
+ * Version 1.11.15: resolved Issue 2365: Clean up docs/howTo and remove the doxygen configuration (improvement)
     - issue author: Claude-JG
     - description:  docs/howTo held 26 loose .txt files, most describing VS2017/VS2019, 32-bit builds, Python 3.6/3.7 or the pre-WSLg X-server era, plus two exact duplicates. docs/doxygen held a 111 KB Doxyfile for a tool that broke on project size, whose PDF path never worked and whose graph generation had already been switched off. Also: no experimental folder remains in the tracked tree, so revision2026 step R1.4 has nothing to move. revision2026 steps R1.4, 30, 79.
     - **notes:** howTo cut 26 files to 8 all in .md, with the hard-won specifics salvaged into buildQuirks.md; doxygen removed; new docs/dev/ARCHITECTURE.md replaces what doxygen was wanted for. Experimental.h identified as a deliberate feature-flag mechanism and kept
@@ -1011,7 +1012,7 @@ Version 1.11
     - **notes:** GitLab rejects shallow pushes and caps packs at 1.17 GiB; seeded master from an existing full clone in 50-commit chunks, then v2-dev pushed from the shallow clone in 373 KB. Verified 30 refs matching by SHA. Local .git stays at 65 MB
     - date resolved: **2026-09-09 22:27**\ , date raised: 2026-09-09 
     - resolved by: Claude-JG
- * Version 1.11.9: resolved Issue 2359: Add pre-push hook guarding the public repository (new feature)
+ * Version 1.11.9: resolved Issue 2359: Add pre-push hook guarding the public repository (extension)
     - issue author: Claude-JG
     - description:  Nothing mechanically prevented pushing v2-dev to public GitHub; only memory. Add tools/hooks/pre-push refusing any ref but master, release/\* and tags when the target is GitHub, matched on both remote name and github.com URL. Activated per clone with git config core.hooksPath tools/hooks. Also verified that pushing from this shallow clone requires receive.shallowUpdate=true on the receiving repository. revision2026 steps R1.5 and R1.1.
     - **notes:** Verified with four cases against local throwaway repositories: v2-dev to github refused, master to github allowed, v2-dev to internal allowed, bare github.com URL refused before network access
@@ -1441,7 +1442,7 @@ Version 1.10
     - description:  compare Tait-Bryan and RotationVector cases with Euler parameters
     - **notes:** already resolved earlier
     - date resolved: **2026-01-04 11:23**\ , date raised: 2021-03-18 
- * Version 1.10.41: resolved Issue 0643: ObjectFFRFreducedOrder / CMS (tutorial)
+ * Version 1.10.41: resolved Issue 0643: ObjectFFRFreducedOrder / CMS (docu)
     - description:  create tutorial with two bodies (crank, connecting rod, rigid piston)
     - **notes:** already resolved earlier with FFRF tutorial
     - date resolved: **2026-01-04 11:22**\ , date raised: 2021-04-30 
@@ -1567,10 +1568,6 @@ Version 1.10
     - description:  check MacOS implementation if glfw works with saving PNG files
     - **notes:** resolved earlier; works with Exudyn 1.10.0
     - date resolved: **2025-07-11 15:58**\ , date raised: 2022-04-02 
- * Version 1.10.3: resolved Issue 0865: multithreaded solver (extension)
-    - description:  test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False
-    - **notes:** not relevant any more
-    - date resolved: **2025-07-11 15:49**\ , date raised: 2022-01-15 
  * Version 1.10.2: resolved Issue 2141: CreateDistanceSensor (fix)
     - description:  args storeInternal and fileName not used
     - date resolved: **2025-07-10 16:53**\ , date raised: 2025-07-10 
@@ -1587,10 +1584,6 @@ Version 1.10
 Version 1.9
 ***********
 
- * Version 1.9.235: resolved Issue 1959: SphereSphereContact (check)
-    - description:  check that position marker works without friction
-    - **notes:** not needed any more as mass points and point nodes include rotation matrix and angular velocity
-    - date resolved: **2025-07-09 18:12**\ , date raised: 2025-02-24 
  * Version 1.9.234: resolved Issue 2122: Mechanisms (extension)
     - description:  Add example for two gears mounted on a body with revolute joints, using CoordinateSpringDamperExt
     - **notes:** see Example involuteGearGraphics.py
@@ -1952,7 +1945,7 @@ Version 1.9
     - description:  add graphics function for torus
     - **notes:** using graphics.Tube function
     - date resolved: **2025-05-17 21:48**\ , date raised: 2025-05-17 
- * Version 1.9.122: resolved Issue 1922: ContactSphereSphere (testint)
+ * Version 1.9.122: resolved Issue 1922: ContactSphereSphere (testing)
     - description:  add test model with various contact models
     - date resolved: **2025-05-17 00:15**\ , date raised: 2024-11-02 
  * Version 1.9.121: resolved Issue 2023: graphics.Cylinder (extension)
@@ -2222,7 +2215,7 @@ Version 1.9
  * Version 1.9.38: resolved Issue 1930: Solver (change)
     - description:  change message when solver finishes, distinguishing between solver success and failure: 'Solver terminated unsuccessfully' or 'Solver terminated unsuccessfully'
     - date resolved: **2024-11-09 17:32**\ , date raised: 2024-11-09 
- * Version 1.9.37: resolved Issue 1928: URDF (chekc)
+ * Version 1.9.37: resolved Issue 1928: URDF (check)
     - description:  check import from roboticstoolbox-python and pymeshlab
     - date resolved: **2024-11-08 22:31**\ , date raised: 2024-11-08 
  * Version 1.9.36: resolved Issue 1927: SaveDictToHDF5 (extension)
@@ -2624,7 +2617,7 @@ Version 1.8
  * Version 1.8.2: resolved Issue 1803: MarkerSuperElementRigid (extension)
     - description:  add option for tangent operator in alternativeFormulation
     - date resolved: **2024-03-13 13:09**\ , date raised: 2024-03-13 
- * Version 1.8.1: resolved Issue 0734: continuous integration (coding)
+ * Version 1.8.1: resolved Issue 0734: continuous integration (testing)
     - description:  test CI capabilities with GitHub and MacOS compilation
     - **notes:** resolved with issue 1792
     - date resolved: **2024-03-09 16:04**\ , date raised: 2021-08-12 
@@ -2730,7 +2723,7 @@ Version 1.7
  * Version 1.7.94: resolved Issue 1759: Renderer (fix)
     - description:  there is an issue when restarting the renderer, which displays previous (old) data; requires to add some function which erases stored graphics data on call of StartRenderer()
     - date resolved: **2024-02-03 23:53**\ , date raised: 2024-01-31 
- * Version 1.7.93: resolved Issue 1770: mainsystem extensions (extensions)
+ * Version 1.7.93: resolved Issue 1770: mainsystem extensions (extension)
     - description:  add user function to mbs.Create...() functions
     - date resolved: **2024-02-03 22:50**\ , date raised: 2024-02-03 
  * Version 1.7.92: resolved Issue 1763: Python user functions (extension)
@@ -3026,7 +3019,7 @@ Version 1.7
  * Version 1.7.1: resolved Issue 1652: rosInterface.py (fix)
     - description:  add (missing) file to DOCU
     - date resolved: **2023-08-08 17:53**\ , date raised: 2023-08-08 
- * Version 1.7.0: resolved Issue 1649: release (release)
+ * Version 1.7.0: resolved Issue 1649: release (change)
     - description:  switch to new release 1.7
     - date resolved: **2023-07-19 16:07**\ , date raised: 2023-07-19 
 
@@ -3380,10 +3373,6 @@ Version 1.6
  * Version 1.6.84: resolved Issue 1543: systemData (extension)
     - description:  add InfoLTG function which outputs LTG lists and load dependencies
     - date resolved: **2023-04-29 22:03**\ , date raised: 2023-04-29 
- * Version 1.6.83: resolved Issue 0483: URDF file (extension)
-    - description:  check importing an URDF file for robots, urdf_parser_py
-    - **notes:** not done: should be done instead by Corke robotics-toolbox
-    - date resolved: **2023-04-29 20:20**\ , date raised: 2020-12-04 
  * Version 1.6.82: resolved Issue 1542: HydraulicsActuator (change)
     - description:  changing referenceVolume0 and referenceVolume1 to hoseVolume0 and hoseVolume1 with different meaning according to referenced paper; adjust your models!
     - **notes:** thanks to Qasim Khadim for provigind the model
@@ -3436,7 +3425,7 @@ Version 1.6
  * Version 1.6.67: resolved Issue 1525: output.finishedSuccessfully (extension)
     - description:  flag is now set both in SolveSteps(...) as well in SolveSystem(...) to indicate if solver has been successful or failed; practical flag for lateron determination of solver errors
     - date resolved: **2023-04-23 11:46**\ , date raised: 2023-04-23 
- * Version 1.6.66: resolved Issue 1524: netgen STL file (examples)
+ * Version 1.6.66: resolved Issue 1524: netgen STL file (example)
     - description:  add example with netgen and STL files with meshing
     - date resolved: **2023-04-21 17:51**\ , date raised: 2023-04-21 
  * Version 1.6.65: resolved Issue 1521: ObjectFFRFreducedOrderInterface (extension)
@@ -3464,7 +3453,7 @@ Version 1.6
  * Version 1.6.59: resolved Issue 1517: ImportFromAbaqusInputFile (extension)
     - description:  extended for Tet4 and Tet10 as well as C3D20R elements and added function ConvertTetToTrigs(...)
     - date resolved: **2023-04-19 18:14**\ , date raised: 2023-04-19 
- * Version 1.6.58: resolved Issue 1515: unused header files (cleanup)
+ * Version 1.6.58: resolved Issue 1515: unused header files (improvement)
     - description:  remove unused header files for C, Main and Visu: JointPrismatic.h, JointRevolute.h
     - date resolved: **2023-04-16 13:03**\ , date raised: 2023-04-16 
  * Version 1.6.57: resolved Issue 1269: LaserSensor (extension)
@@ -3855,7 +3844,7 @@ Version 1.5
  * Version 1.5.62: resolved Issue 1388: configuration checks (extension)
     - description:  IsConfigurationInitialCurrentReferenceVisualization and IsConfigurationInitialCurrentVisualization shall be extended for StartOfStep; add hint that a calling function may have used an illegal configuration or None
     - date resolved: **2023-01-12 22:03**\ , date raised: 2023-01-12 
- * Version 1.5.61: resolved Issue 1396: Demo (extnesion)
+ * Version 1.5.61: resolved Issue 1396: Demo (extension)
     - description:  add a two demos included into the python module; put into exudyn.demos; add hint for larger examples; Demo1() = without graphics, just creating output file; Demo2() is rigid3Dexample with SolutionViewer
     - date resolved: **2023-01-12 18:51**\ , date raised: 2023-01-12 
  * Version 1.5.60: resolved Issue 1385: help (extension)
@@ -3984,10 +3973,6 @@ Version 1.5
     - description:  Add access functions for jacobians and other marker data: SetPositionJacobian, GetPositionJacobian, etc.; add jacobian types = markertypes, which check if wrong jacobian is accessed
     - **notes:** not suitable anymore
     - date resolved: **2023-01-02 00:56**\ , date raised: 2019-09-11 
- * Version 1.5.22: resolved Issue 1331: exudyn cpp (extension)
-    - description:  add __repr__ and help which writes some information on workflow (github, theDoc, Examples, ...)
-    - **notes:** not possible
-    - date resolved: **2023-01-02 00:51**\ , date raised: 2022-12-21 
  * Version 1.5.21: resolved Issue 1323: AVX2 (extension)
     - description:  update documentation for improved functionality with AVX2 code
     - **notes:** already done when resolving #1330
@@ -5014,7 +4999,7 @@ Version 1.2
  * Version 1.2.33: resolved Issue 1034: solution and sensor files (extension)
     - description:  add Python version to e.g. Exudyn version = 1.x.y Python3.9 / Python3.6(32bits) in coordinatesSolutionFile and sensor output files to identify exactly the versions and platform used for computation; check also Parameter and optimization output files for updated information
     - date resolved: **2022-04-07 12:02**\ , date raised: 2022-04-07 
- * Version 1.2.32: resolved Issue 1033: InteractiveDialog (extenison)
+ * Version 1.2.32: resolved Issue 1033: InteractiveDialog (extension)
     - description:  also add tkInter DoubleVar for sliders to make bi-directional interaction simpler (but not needed)
     - date resolved: **2022-04-04 21:26**\ , date raised: 2022-04-04 
  * Version 1.2.31: resolved Issue 1031: InteractiveDialog (extension)
@@ -5162,7 +5147,7 @@ Version 1.1
     - description:  add function to create plot-ready data from mbs.GetObjectOutputBody for a list of consecutive beams, e.g., axial force, displacement or curvature along axial reference coordinate
     - **notes:** added function DataArrayFromSensorList which allows to create data from a list of sensors
     - date resolved: **2022-03-14 20:41**\ , date raised: 2022-03-11 
- * Version 1.1.166: resolved Issue 0982: PlotSensor (extentsion)
+ * Version 1.1.166: resolved Issue 0982: PlotSensor (extension)
     - description:  add option to plot 2D arrays
     - **notes:** numpy arrays are used instead of sensorNumbers; these arrays must have the same format as data stored in sensor files; this data format does not create any labels
     - date resolved: **2022-03-14 16:24**\ , date raised: 2022-03-11 
@@ -5239,7 +5224,7 @@ Version 1.1
  * Version 1.1.143: resolved Issue 0952: rolling joints (extension)
     - description:  ConnectorRollingDiscPenalty and JointRollingDisc now add a OutputVariable RotationMatrix, containing the J1 to global transformation
     - date resolved: **2022-03-01 19:35**\ , date raised: 2022-02-25 
- * Version 1.1.142: resolved Issue 0951: Friction (test)
+ * Version 1.1.142: resolved Issue 0951: Friction (testing)
     - description:  test LuGre friction model as ODE1 model versus position/history based model
     - **notes:** added lugreFrictionODE1.py as a demo showing the LuGre model based on a ODE1 user function
     - date resolved: **2022-03-01 19:34**\ , date raised: 2022-02-24 
@@ -5545,7 +5530,7 @@ Version 1.1
     - description:  Added a additional argument parameterFunctionData={} to function ParameterVariation(). The argument parameterFunctionData can be used to make global data available inside the parameterFunction.
     - date resolved: **2021-11-26 12:57**\ , date raised: 2021-11-26 
     - resolved by: S. Holzinger
- * Version 1.1.49: resolved Issue 0808: Performance test for GeneralContact (testint)
+ * Version 1.1.49: resolved Issue 0808: Performance test for GeneralContact (testing)
     - description:  added test with sphere contact
     - date resolved: **2021-11-26 10:49**\ , date raised: 2021-11-26 
  * Version 1.1.48: resolved Issue 0802: GeneralContact (testing)
@@ -5661,7 +5646,7 @@ Version 1.1
  * Version 1.1.13: resolved Issue 0763: ComputeMassMatrix (extension)
     - description:  add sparse mode with MatrixContainer
     - date resolved: **2021-09-26 18:01**\ , date raised: 2021-09-26 
- * Version 1.1.12: resolved Issue 0762: MatrixBase (performance)
+ * Version 1.1.12: resolved Issue 0762: MatrixBase (improvement)
     - description:  remove virtual from begin/end operators
     - date resolved: **2021-09-26 17:36**\ , date raised: 2021-09-26 
  * Version 1.1.11: :textred:`resolved BUG 0750` : ANCF/ALE contour plot 
@@ -5691,7 +5676,7 @@ Version 1.1
  * Version 1.1.4: resolved Issue 0755: GetKinematicTree66 in robotics (extension)
     - description:  add function to export KinematicTree66 from Robotic class
     - date resolved: **2021-09-22 18:06**\ , date raised: 2021-09-22 
- * Version 1.1.3: resolved Issue 0754: performance tests (test)
+ * Version 1.1.3: resolved Issue 0754: performance tests (testing)
     - description:  add automated performance tests for solver speed to determine significant drop of performance
     - date resolved: **2021-09-22 10:10**\ , date raised: 2021-09-22 
  * Version 1.1.2: resolved Issue 0620: TorsionalSpringDamper (extension)
@@ -5740,10 +5725,6 @@ Version 1.0
  * Version 1.0.286: resolved Issue 0733: ContactCoordinate (extension)
     - description:  add recommendedStepSize to ContactCoordinate and find optimal solution with data variable from StartOfStep configuration; check if step size is permanently reduced with recommendedStepSize; check a way of an overall recommendedStepSize (with filter) or allow a single event not to change global step size
     - date resolved: **2021-08-13 13:23**\ , date raised: 2021-08-12 
- * Version 1.0.285: resolved Issue 0313: Add user node ODE2 (extension)
-    - description:  add user node with getposition, rotation, access functions
-    - **notes:** not needed: GenericNodes can be used for that
-    - date resolved: **2021-08-10 12:57**\ , date raised: 2020-01-10 
  * Version 1.0.284: resolved Issue 0730: RigidBody tutorial (docu)
     - description:  add tutorial for rigid body with AddRigidBody(...), AddRevoluteJoint(...) functionalities
     - date resolved: **2021-08-06 20:05**\ , date raised: 2021-08-05 
@@ -5753,7 +5734,7 @@ Version 1.0
  * Version 1.0.282: :textred:`resolved BUG 0731` : AddRevoluteJoint 
     - description:  AddRevoluteJoint shows error in axis definition
     - date resolved: **2021-08-05 13:40**\ , date raised: 2021-08-05 
- * Version 1.0.281: resolved Issue 0704: Optimization2 (optimize)
+ * Version 1.0.281: resolved Issue 0704: Optimization2 (improvement)
     - description:  add direct function to NodeRigidBody to retrieve essential data for rigid body EOM and MarkerRigidBody; add flag, if rotation matrix and other quantities needed
     - **notes:** still no optimization for Lie group nodes, which however have simpler matrices
     - date resolved: **2021-07-31 22:33**\ , date raised: 2021-07-04 
@@ -5810,7 +5791,7 @@ Version 1.0
     - description:  OutputVariable Displacement includes localPosition, but should not
     - **notes:** GetMeshNodeLocalPosition included reference position twice
     - date resolved: **2021-07-11 16:33**\ , date raised: 2021-07-10 
- * Version 1.0.265: resolved Issue 0706: ConstSizeVector (optimize)
+ * Version 1.0.265: resolved Issue 0706: ConstSizeVector (improvement)
     - description:  decouple ConstSizeVector and ConstSizeMatrix from Vector / Matrix and avoid virtual calls, erase all rule of 5 member functions, optimize algebra
     - **notes:** improved speed up to factor 2 for some items!
     - date resolved: **2021-07-11 15:06**\ , date raised: 2021-07-06 
@@ -5824,7 +5805,7 @@ Version 1.0
  * Version 1.0.262: resolved Issue 0711: generator files (change)
     - description:  changed backslash to slash in generator files such that they can also be executed on Linux and MacOS
     - date resolved: **2021-07-09 12:18**\ , date raised: 2021-07-09 
- * Version 1.0.261: resolved Issue 0699: CMarkerBodyRigid::ComputeMarkerData (optimize)
+ * Version 1.0.261: resolved Issue 0699: CMarkerBodyRigid::ComputeMarkerData (improvement)
     - description:  implement optimized version for Rigid node and ObjectRigidBody and avoid repeated computation of rotation matrix, etc.
     - date resolved: **2021-07-08 00:46**\ , date raised: 2021-07-01 
  * Version 1.0.260: :textred:`resolved BUG 0709` : Linux/MacOS compile error 
@@ -5833,7 +5814,7 @@ Version 1.0
  * Version 1.0.259: resolved Issue 0708: preprocessor flags (change)
     - description:  move EXUDYN_RELEASE to preprocessor flags in setup.py
     - date resolved: **2021-07-07 08:53**\ , date raised: 2021-07-07 
- * Version 1.0.258: resolved Issue 0705: Optimization3 (optimize)
+ * Version 1.0.258: resolved Issue 0705: Optimization3 (improvement)
     - description:  optimize ObjectRigidBody EOM, take Glocal columns instead numberOfRotationCoordinates, move rot_t into loop, etc.
     - date resolved: **2021-07-06 23:04**\ , date raised: 2021-07-04 
  * Version 1.0.257: resolved Issue 0703: ComputeOrthonormalBasis (change)
@@ -5923,17 +5904,13 @@ Version 1.0
  * Version 1.0.231: resolved Issue 0630: HurtyCraigBampton (extension)
     - description:  extend computation to work with 0 eigenmodes
     - date resolved: **2021-05-12 23:51**\ , date raised: 2021-04-23 
- * Version 1.0.230: resolved Issue 0642: ComputeHurtyCraigBamptonModes (extension)
-    - description:  add possibility to add position only interfaces
-    - **notes:** abandoned, because makes no sense with RBE2 modes
-    - date resolved: **2021-05-12 23:35**\ , date raised: 2021-04-30 
  * Version 1.0.229: :textred:`resolved BUG 0674` : OutputVariable.StressLocal 
     - description:  norm of OutputVariable stresses does not work
     - date resolved: **2021-05-12 23:21**\ , date raised: 2021-05-12 
  * Version 1.0.228: :textred:`resolved BUG 0456` : ObjectFFRF bug with GenericJoint 
     - description:  raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity_qt not implemented; cannot compute jacobian for orientation
     - date resolved: **2021-05-12 22:27**\ , date raised: 2020-10-13 
- * Version 1.0.226: resolved Issue 0100: UPDATE Lest tests (new feature)
+ * Version 1.0.226: resolved Issue 0100: UPDATE Lest tests (extension)
     - description:  update lest tests (select C++ vs. python tests)    
     - date resolved: **2021-05-12 22:21**\ , date raised: 2019-04-01 
  * Version 1.0.225: resolved Issue 0372: add manual solver example (extension)
@@ -6132,7 +6109,7 @@ Version 1.0
  * Version 1.0.165: resolved Issue 0609: SolveDynamic, SolveStatic (change)
     - description:  store dynamicSolver and staticSolver in mbs.sys dictionary immediately after creation, which allows to use these structures in user functions during static or dynamic solution
     - date resolved: **2021-03-20 23:23**\ , date raised: 2021-03-20 
- * Version 1.0.164: resolved Issue 0607: test recommendedStepSize (test)
+ * Version 1.0.164: resolved Issue 0607: test recommendedStepSize (testing)
     - description:  test recommendedStepSize and PostNewtonUserFunction with simple elastic contact example
     - date resolved: **2021-03-20 23:23**\ , date raised: 2021-03-20 
  * Version 1.0.163: resolved Issue 0605: UIndex, UReal (extension)
@@ -6149,7 +6126,7 @@ Version 1.0
     - description:  change Index to (signed) int and use UIndex in python interface for unsigned parameters
     - **notes:** \ \*\*ATTENTION\*\*\ : this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.
     - date resolved: **2021-03-20 23:21**\ , date raised: 2019-05-20 
- * Version 1.0.159: resolved Issue 0606: resolve errors 32bit testsuite (test)
+ * Version 1.0.159: resolved Issue 0606: resolve errors 32bit testsuite (testing)
     - description:  add extra tolerances for 32bit
     - date resolved: **2021-03-20 23:19**\ , date raised: 2021-03-20 
  * Version 1.0.158: :textred:`resolved BUG 0575` : new genAlpha solver 
@@ -6162,7 +6139,7 @@ Version 1.0
  * Version 1.0.156: resolved Issue 0601: mbs.postNewtonUserFunction (extension)
     - description:  add function PostNewton(...) to be called after step update (Newton or explicit step)
     - date resolved: **2021-03-18 21:33**\ , date raised: 2021-03-18 
- * Version 1.0.155: resolved Issue 0600: ImplicitSecondOrderSolver (cleanup)
+ * Version 1.0.155: resolved Issue 0600: ImplicitSecondOrderSolver (improvement)
     - description:  remove old solver
     - date resolved: **2021-03-18 21:33**\ , date raised: 2021-03-18 
  * Version 1.0.154: resolved Issue 0598: rigidBodyUtilities (extension)
@@ -6171,17 +6148,17 @@ Version 1.0
  * Version 1.0.153: resolved Issue 0594: CMS rotations (extension)
     - description:  test and extend CMS / ObjectFFRFreducedOrder object for other rotation parameterizations (Tait-Bryan and rotation vector/Lie group) such that they work with explicit codes
     - date resolved: **2021-03-18 17:04**\ , date raised: 2021-02-24 
- * Version 1.0.152: resolved Issue 0597: ObjectRigidBody (description)
+ * Version 1.0.152: resolved Issue 0597: ObjectRigidBody (docu)
     - description:  fix description of equations of motion (missing m) and add steps in derivation
     - date resolved: **2021-03-18 08:22**\ , date raised: 2021-03-18 
- * Version 1.0.151: resolved Issue 0283: cylinder with hole (new feature)
+ * Version 1.0.151: resolved Issue 0283: cylinder with hole (extension)
     - description:  add TriangleList for cylinder with hole
     - **notes:** not implemented, because it can be easily created with GraphicsDataSolidOfRevolution
     - date resolved: **2021-03-16 16:59**\ , date raised: 2019-12-07 
- * Version 1.0.150: resolved Issue 0396: description (description)
+ * Version 1.0.150: resolved Issue 0396: description (docu)
     - description:  add latex description for ObjectFFRF
     - date resolved: **2021-03-16 16:57**\ , date raised: 2020-05-16 
- * Version 1.0.149: resolved Issue 0394: description (description)
+ * Version 1.0.149: resolved Issue 0394: description (docu)
     - description:  add latex description for ObjectSuperElement
     - date resolved: **2021-03-16 16:57**\ , date raised: 2020-05-16 
  * Version 1.0.148: resolved Issue 0595: ObjectFFRFreducedOrder (extension)
@@ -6292,7 +6269,7 @@ Version 1.0
     - description:  add CoordinateConstraints to explict Runge-Kutta solvers
     - **notes:** only ground constraints included for now
     - date resolved: **2021-01-27 17:38**\ , date raised: 2021-01-26 
- * Version 1.0.113: resolved Issue 0558: Lie group tests (test)
+ * Version 1.0.113: resolved Issue 0558: Lie group tests (testing)
     - description:  add Lie group integrator simple tests
     - date resolved: **2021-01-27 12:00**\ , date raised: 2021-01-26 
  * Version 1.0.112: resolved Issue 0550: GraphicsDataArrow (extension)
@@ -6302,7 +6279,7 @@ Version 1.0
  * Version 1.0.111: resolved Issue 0495: add ODE1 coordinates (extension)
     - description:  extend system (Jacobian, etc.) for ODE1 coordinates
     - date resolved: **2021-01-26 13:21**\ , date raised: 2020-12-09 
- * Version 1.0.110: resolved Issue 0556: explicit RK tests (test)
+ * Version 1.0.110: resolved Issue 0556: explicit RK tests (testing)
     - description:  add tests for explicit Runge Kutta integrators to TestModels
     - date resolved: **2021-01-26 13:17**\ , date raised: 2021-01-25 
  * Version 1.0.109: resolved Issue 0555: explicit Lie group integrator (extension)
@@ -6400,7 +6377,7 @@ Version 1.0
  * Version 1.0.80: resolved Issue 0527: faces transparent (extension)
     - description:  add general transparency flag for faces in visualizationSettings.openGL, switchable with button "T"; allows to make node/marker/object numbers visible
     - date resolved: **2021-01-03 21:53**\ , date raised: 2021-01-03 
- * Version 1.0.79: resolved Issue 0509: ComputeODE2Eigenvalues (test)
+ * Version 1.0.79: resolved Issue 0509: ComputeODE2Eigenvalues (testing)
     - description:  add example in TestModels
     - date resolved: **2021-01-03 10:44**\ , date raised: 2020-12-18 
  * Version 1.0.78: resolved Issue 0528: textured fonts (extension)
@@ -6438,10 +6415,10 @@ Version 1.0
     - description:  include windows display (screen) scaling into drawing of texts to increase visibility on high dpi screens
     - **notes:** added flag in visualizationSettings: general.useWindowsDisplayScaleFactor
     - date resolved: **2020-12-24 00:22**\ , date raised: 2020-12-24 
- * Version 1.0.67: resolved Issue 0511: GeneticOptimization (test)
+ * Version 1.0.67: resolved Issue 0511: GeneticOptimization (testing)
     - description:  add example in TestModels
     - date resolved: **2020-12-19 23:31**\ , date raised: 2020-12-19 
- * Version 1.0.66: resolved Issue 0510: ParameterVariation (test)
+ * Version 1.0.66: resolved Issue 0510: ParameterVariation (testing)
     - description:  add example in TestModels
     - date resolved: **2020-12-19 23:31**\ , date raised: 2020-12-19 
  * Version 1.0.65: resolved Issue 0502: rigidbodyinertia (docu)
@@ -6478,7 +6455,7 @@ Version 1.0
  * Version 1.0.55: :textred:`resolved BUG 0498` : SensorObject position 
     - description:  wrong position shown in sensor
     - date resolved: **2020-12-10**\ , date raised: 2020-12-10 
- * Version 1.0.54: resolved Issue 0484: test DEAP (test)
+ * Version 1.0.54: resolved Issue 0484: test DEAP (testing)
     - description:  test genetic optimization with DEAP
     - **notes:** too many parameters and too involved to simply include
     - date resolved: **2020-12-10**\ , date raised: 2020-12-04 
@@ -6488,7 +6465,7 @@ Version 1.0
  * Version 1.0.52: :textred:`resolved BUG 0490` : keypress crash 
     - description:  find out causes for crash in keyPress user function; find way to deactivate the user function (set it to 0)
     - date resolved: **2020-12-09**\ , date raised: 2020-12-07 
- * Version 1.0.51: resolved Issue 0389: MainSystem includes (cleanup)
+ * Version 1.0.51: resolved Issue 0389: MainSystem includes (improvement)
     - description:  put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file
     - date resolved: **2020-12-09**\ , date raised: 2020-05-13 
  * Version 1.0.50: resolved Issue 0357: solver flag prolong solution (extension)
@@ -6516,7 +6493,7 @@ Version 1.0
  * Version 1.0.43: resolved Issue 0325: key callback (extension)
     - description:  add key callback function into graphics module to enable interactive settings, etc.; transfer latin letters, SHIFT, CTRL, ALT, 0-9,A-Z,.,SPACE as ASCII code
     - date resolved: **2020-12-05**\ , date raised: 2020-01-26 
- * Version 1.0.42: resolved Issue 0460: test accelerations (test)
+ * Version 1.0.42: resolved Issue 0460: test accelerations (testing)
     - description:  test GetODE2Coordinates_tt, nodal accelerations and rigidbody2D/3D accelerations
     - date resolved: **2020-12-04**\ , date raised: 2020-11-12 
  * Version 1.0.41: resolved Issue 0482: store model view (extension)
@@ -6570,25 +6547,13 @@ Version 1.0
  * Version 1.0.26: resolved Issue 0472: examples in utilities (extension)
     - description:  activate lstlisting for examples
     - date resolved: **2020-11-25**\ , date raised: 2020-11-25 
- * Version 1.0.25: resolved Issue 0468: test WSL2 (test)
+ * Version 1.0.25: resolved Issue 0468: test WSL2 (testing)
     - description:  test compilation on WSL2 - Windows subsystem for Linux
     - **notes:** WSL2 now used to automatically create linux wheels
     - date resolved: **2020-11-21**\ , date raised: 2020-11-19 
  * Version 1.0.24: :textred:`resolved BUG 0465` : SC.GetSystem(..) 
     - description:  raises RuntimeError: should return reference instead of copy
     - date resolved: **2020-11-21**\ , date raised: 2020-11-18 
- * Version 1.0.23: resolved Issue 0446: NodeIndex in arrays (check)
-    - description:  use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers
-    - **notes:** not needed for now
-    - date resolved: **2020-11-21**\ , date raised: 2020-09-09 
- * Version 1.0.22: resolved Issue 0383: pybind11 submodule (extension)
-    - description:  used for advanced functions, not necessarily included in exudyn or make other module
-    - **notes:** not needed for now
-    - date resolved: **2020-11-21**\ , date raised: 2020-05-06 
- * Version 1.0.21: resolved Issue 0191: Newton lambda (check)
-    - description:  Check whether Newton can be implemented as lambda-function
-    - **notes:** not needed for now
-    - date resolved: **2020-11-21**\ , date raised: 2019-06-17 
  * Version 1.0.20: resolved Issue 0466: main/bin (change)
     - description:  remove main/bin from github and from Tools folder
     - date resolved: **2020-11-19**\ , date raised: 2020-11-19 
@@ -6626,7 +6591,7 @@ Version 1.0
     - description:  Disable Item::CallFunction functionality from EXUDYN; either outputvariables can be used, or some functions are automatically created including the documentation
     - **notes:** already removed from python interface earlier
     - date resolved: **2020-09-08**\ , date raised: 2019-12-10 
- * Version 1.0.9: resolved Issue 0443: SensorObject (warning)
+ * Version 1.0.9: resolved Issue 0443: SensorObject (extension)
     - description:  add error message, if sensorobject is used for a body (and check if SensorBody excepts object other than body
     - **notes:** added test for SensorObject if attached to body
     - date resolved: **2020-09-04**\ , date raised: 2020-09-03 
@@ -6640,7 +6605,7 @@ Version 1.0
  * Version 1.0.6: resolved Issue 0439: setuptools (extension)
     - description:  use setuptools for installation
     - date resolved: **2020-08-17**\ , date raised: 2020-08-13 
- * Version 1.0.5: resolved Issue 0381: test pybind11_2020 (test)
+ * Version 1.0.5: resolved Issue 0381: test pybind11_2020 (testing)
     - description:  downloaded in Download folder
     - date resolved: **2020-08-17**\ , date raised: 2020-05-06 
  * Version 1.0.4: resolved Issue 0378: setup tools (extension)
@@ -6699,7 +6664,7 @@ Version 0.1
  * Version 0.1.356: resolved Issue 0405: MarkerSuperElementReducedOrderRigidBody (extension)
     - description:  Implement averaging multinode marker for position and orientation for reduced order elements
     - date resolved: **2020-06-09**\ , date raised: 2020-05-21 
- * Version 0.1.355: resolved Issue 0281: add STL import (new feature)
+ * Version 0.1.355: resolved Issue 0281: add STL import (extension)
     - description:  add exudynGraphics function for STL faces import
     - date resolved: **2020-06-09**\ , date raised: 2019-12-05 
  * Version 0.1.354: resolved Issue 0422: contour maxValue (extension)
@@ -6723,7 +6688,7 @@ Version 0.1
  * Version 0.1.348: resolved Issue 0404: MarkerSuperElementRigidBody (extension)
     - description:  Implement averaging multinode maker for position and orientation
     - date resolved: **2020-06-01**\ , date raised: 2020-05-21 
- * Version 0.1.347: resolved Issue 0395: description (description)
+ * Version 0.1.347: resolved Issue 0395: description (docu)
     - description:  add latex description for MarkerSuperElementPosition
     - date resolved: **2020-06-01**\ , date raised: 2020-05-16 
  * Version 0.1.346: resolved Issue 0414: ObjectFFRFreducedOrder EP (extension)
@@ -6735,10 +6700,6 @@ Version 0.1
  * Version 0.1.344: resolved Issue 0329: check markers (extension)
     - description:  add integrity check if node/body implements necessary access functions for marker
     - date resolved: **2020-05-28**\ , date raised: 2020-02-02 
- * Version 0.1.343: resolved Issue 0416: check Markers (extension)
-    - description:  add check (WARNING) if joint is applied to two markers directing to identical nodes or bodies
-    - **notes:** not possible for FFRF and generic objects
-    - date resolved: **2020-05-27**\ , date raised: 2020-05-27 
  * Version 0.1.342: :textred:`resolved BUG 0415` : CNodeRigidBody2D bug 
     - description:  CNodeRigidBody2D misses OutputVariables Rotation, RotationMatrix, AngularVelocity(Local)
     - date resolved: **2020-05-26**\ , date raised: 2020-05-26 
@@ -6761,16 +6722,16 @@ Version 0.1
  * Version 0.1.336: resolved Issue 0402: add NGsolve interface (extension)
     - description:  add NGsolve to FEMinterface to create mechanical body from geo, some options; create M, K, nodeList, elements and surface; add surfaces for specific boundaries
     - date resolved: **2020-05-22**\ , date raised: 2020-05-21 
- * Version 0.1.335: resolved Issue 0399: ObjectContactFrictionCircleCable2D (correct)
+ * Version 0.1.335: resolved Issue 0399: ObjectContactFrictionCircleCable2D (docu)
     - description:  ObjectContactFrictionCircleCable2D: contact stiffness wrong comment
     - date resolved: **2020-05-22**\ , date raised: 2020-05-20 
- * Version 0.1.334: resolved Issue 0393: clean up ObjectGenericODE2 (cleanup)
+ * Version 0.1.334: resolved Issue 0393: clean up ObjectGenericODE2 (improvement)
     - description:  remove ffrf from ObjectGenericODE2
     - date resolved: **2020-05-21**\ , date raised: 2020-05-16 
- * Version 0.1.333: resolved Issue 0398: FEM interface (description)
+ * Version 0.1.333: resolved Issue 0398: FEM interface (extension)
     - description:  add FEMinterface python class for mesh and system matrix import, surface mesh extraction, mode computation, export to ObjectFFRF etc.
     - date resolved: **2020-05-17**\ , date raised: 2020-05-16 
- * Version 0.1.332: resolved Issue 0397: tests FFRF (description)
+ * Version 0.1.332: resolved Issue 0397: tests FFRF (testing)
     - description:  add TestModels for FFRF and FFRFreducedOrder
     - date resolved: **2020-05-17**\ , date raised: 2020-05-16 
  * Version 0.1.331: resolved Issue 0392: MarkerSuperElementRigidReducedOrder (extension)
@@ -6779,7 +6740,7 @@ Version 0.1
  * Version 0.1.330: resolved Issue 0391: add MarkerSuperElementPosition (extension)
     - description:  add MarkerSuperElementPosition
     - date resolved: **2020-05-16**\ , date raised: 2020-05-16 
- * Version 0.1.329: resolved Issue 0125: LinkedDataMatrix (new feature)
+ * Version 0.1.329: resolved Issue 0125: LinkedDataMatrix (extension)
     - description:  Implement LinkedDataMatrix
     - date resolved: **2020-05-16**\ , date raised: 2019-05-13 
  * Version 0.1.328: resolved Issue 0386: add superelement (extension)
@@ -6854,14 +6815,10 @@ Version 0.1
     - description:  check if mass terms in ALEANCFCable2D (9th column/row)
     - **notes:** terms are correct, but lead to instability at high velocities
     - date resolved: **2020-04-10**\ , date raised: 2019-12-16 
- * Version 0.1.305: resolved Issue 0225: SlidingJointRigid (extension)
-    - description:  Add functionality for rigid sliding joint or add a flag for sliding joint to do both options
-    - **notes:** not needed for now
-    - date resolved: **2020-04-10**\ , date raised: 2019-07-10 
  * Version 0.1.304: resolved Issue 0356: sensor tutorial (extension)
     - description:  add sensor to tutorial
     - date resolved: **2020-03-13**\ , date raised: 2020-03-08 
- * Version 0.1.303: resolved Issue 0302: benchmark problems (verification)
+ * Version 0.1.303: resolved Issue 0302: benchmark problems (testing)
     - description:  implement benchmark problems of iftomm web page and from papers Bruls/Arnold, Terze, etc.
     - date resolved: **2020-03-08**\ , date raised: 2019-12-26 
  * Version 0.1.302: resolved Issue 0352: exceptions pybind (extension)
@@ -6904,7 +6861,7 @@ Version 0.1
  * Version 0.1.288: resolved Issue 0344: initialDisplacements (change)
     - description:  change the misleading name initialDisplacements to initialCoordinates in all nodes for consitency reasons
     - date resolved: **2020-02-21**\ , date raised: 2020-02-21 
- * Version 0.1.287: resolved Issue 0342: add load sensor (new feature)
+ * Version 0.1.287: resolved Issue 0342: add load sensor (extension)
     - description:  add load sensor which measures loads especially if modified in user defined loads
     - date resolved: **2020-02-19**\ , date raised: 2020-02-19 
  * Version 0.1.286: resolved Issue 0341: add bodyFixed loads (extension)
@@ -6920,7 +6877,7 @@ Version 0.1
  * Version 0.1.283: resolved Issue 0301: exudynUtilities (extension)
     - description:  split up exudynUtilities into separate files
     - date resolved: **2020-02-14**\ , date raised: 2019-12-26 
- * Version 0.1.282: resolved Issue 0334: add RigidBodySpringDamper (new feature)
+ * Version 0.1.282: resolved Issue 0334: add RigidBodySpringDamper (extension)
     - description:  add a generalization for CartesianSpringDamper, using local coordinate systems and coupling all local translations and rotations
     - date resolved: **2020-02-12**\ , date raised: 2020-02-12 
  * Version 0.1.281: resolved Issue 0319: PyError in C++ (check)
@@ -6933,7 +6890,7 @@ Version 0.1
  * Version 0.1.279: resolved Issue 0310: GenericRigidBodyJoint3D (extension)
     - description:  Add generic joint with local transformation matrix of marker1; enable fixed or free tranlatory motion (ux,uy,uz) and rotations (phix,phiy,phiz) in the joint, relative to marker1 coordinate system
     - date resolved: **2020-02-12**\ , date raised: 2020-01-10 
- * Version 0.1.278: resolved Issue 0304: time in constraints (extensions)
+ * Version 0.1.278: resolved Issue 0304: time in constraints (extension)
     - description:  consistently add time to constraint evaluation; add flag to mark time dependency of constraints (influence on velocity level and on initial conditions)
     - date resolved: **2020-02-12**\ , date raised: 2019-12-28 
  * Version 0.1.277: resolved Issue 0331: correct Rigid3DEP (check)
@@ -6965,7 +6922,7 @@ Version 0.1
  * Version 0.1.269: resolved Issue 0227: IntegrityNodeCheck (extension)
     - description:  add integrity check that correct node type is supplied to object; use an additional function for RequiredNodeType(); use none for special elements or mixed node types --> check needs to be put into element specific checks
     - date resolved: **2020-01-25**\ , date raised: 2019-07-13 
- * Version 0.1.268: resolved Issue 0216: Sensors (new feature)
+ * Version 0.1.268: resolved Issue 0216: Sensors (extension)
     - description:  Add sensor concept and add simple sensors for postprocessing; e.g. add simple sensors to cSystemData, which are written to prescribed sensor file or global sensor file; sensors have [marker, OutputVariableType, coordinate1, coordinate2=0]
     - date resolved: **2020-01-25**\ , date raised: 2019-06-29 
  * Version 0.1.267: :textred:`resolved BUG 0321` : RenderWindow focus 
@@ -6981,22 +6938,22 @@ Version 0.1
  * Version 0.1.264: resolved Issue 0318: sparse init acc (extension)
     - description:  compute initial accelerations with sparse solver
     - date resolved: **2020-01-21**\ , date raised: 2020-01-15 
- * Version 0.1.263: resolved Issue 0268: Export M, D, K, Cq (new feature)
+ * Version 0.1.263: resolved Issue 0268: Export M, D, K, Cq (extension)
     - description:  Make (linearized/constant) mass, damping, stiffness and constraint matrices available in python
     - date resolved: **2020-01-08**\ , date raised: 2019-10-10 
- * Version 0.1.262: resolved Issue 0269: Export residuals (new feature)
+ * Version 0.1.262: resolved Issue 0269: Export residuals (extension)
     - description:  Make residuals available in python
     - date resolved: **2020-01-06**\ , date raised: 2019-10-10 
- * Version 0.1.261: resolved Issue 0190: PybindMatrix (new feature)
+ * Version 0.1.261: resolved Issue 0190: PybindMatrix (extension)
     - description:  Use Pybind to bind matrices and vectors to numpy (simplify interface); copy all matrix/vector contents for now; only lateron, an option without copying would be nice; link to pybind example see https://github.com/pybind/pybind11/blob/master/tests/test_buffers.cpp as well as the pybind reference section about numpy
     - date resolved: **2020-01-06**\ , date raised: 2019-06-16 
- * Version 0.1.259: resolved Issue 0276: PySolver (new feature)
+ * Version 0.1.259: resolved Issue 0276: PySolver (extension)
     - description:  Link data structures and functions of solver to python; use new MainSolver object for that reason
     - date resolved: **2020-01-05**\ , date raised: 2019-12-01 
- * Version 0.1.258: resolved Issue 0290: SetOutputToConsole (new feature)
+ * Version 0.1.258: resolved Issue 0290: SetOutputToConsole (extension)
     - description:  SetOutputToConsole(flag): add functionality to write activate/deactivate console output
     - date resolved: **2020-01-04**\ , date raised: 2019-12-13 
- * Version 0.1.257: resolved Issue 0289: SetOutputToFile (new feature)
+ * Version 0.1.257: resolved Issue 0289: SetOutputToFile (extension)
     - description:  SetOutputToFile(flage, fileName): add functionality to write all console output to file
     - date resolved: **2020-01-04**\ , date raised: 2019-12-13 
  * Version 0.1.256: resolved Issue 0307: Add flowcharts (docu)
@@ -7014,13 +6971,13 @@ Version 0.1
  * Version 0.1.252: resolved Issue 0300: exudyn rules (extension)
     - description:  add name conventions, code style and rules, etc. to docu
     - date resolved: **2019-12-26**\ , date raised: 2019-12-25 
- * Version 0.1.251: resolved Issue 0256: cleanup solvers (clean)
+ * Version 0.1.251: resolved Issue 0256: cleanup solvers (improvement)
     - description:  cleanup and unify initialization and computation iterations for solvers; add solver data structure accessible via pybind
     - date resolved: **2019-12-25**\ , date raised: 2019-08-28 
  * Version 0.1.250: resolved Issue 0254: CircleContact (extension)
     - description:  pre-check possible region of contact
     - date resolved: **2019-12-25**\ , date raised: 2019-08-28 
- * Version 0.1.249: resolved Issue 0244: RecordFrames (new feature)
+ * Version 0.1.249: resolved Issue 0244: RecordFrames (extension)
     - description:  grap openGL snapshot with glReadPixels and store frame to image file
     - date resolved: **2019-12-25**\ , date raised: 2019-08-22 
  * Version 0.1.248: resolved Issue 0208: Check diff rel eps (check)
@@ -7042,7 +6999,7 @@ Version 0.1
  * Version 0.1.243: resolved Issue 0294: improve impl. solver (extension)
     - description:  compute correct initial conditions, add new convergence criteria (residuum/nCoords and newtonDecrement.norm2/nCoords)
     - date resolved: **2019-12-15**\ , date raised: 2019-12-15 
- * Version 0.1.242: resolved Issue 0275: solver_data (new feature)
+ * Version 0.1.242: resolved Issue 0275: solver_data (extension)
     - description:  restructure solver data structure: computation data, temporary data, system matrices, functions
     - date resolved: **2019-12-15**\ , date raised: 2019-12-01 
  * Version 0.1.241: resolved Issue 0293: disc.iteration (change)
@@ -7057,10 +7014,10 @@ Version 0.1
  * Version 0.1.238: resolved Issue 0187: GetAccessFunctionBody (change)
     - description:  Use ResizableMatrix in GetAccessFunctionBody and Resizable Vector in GetOutputVariableBody; add templated fill-in function to ResizableVector/Matrix to be able to copy data more easy from other types
     - date resolved: **2019-12-11 13:27**\ , date raised: 2019-06-13 
- * Version 0.1.237: resolved Issue 0099: split marker/load (new feature)
+ * Version 0.1.237: resolved Issue 0099: split marker/load (extension)
     - description:  split Marker and Load into .h and .cpp AND reduce dependencies on Nodes, body, etc.    
     - date resolved: **2019-12-11**\ , date raised: 2019-04-01 
- * Version 0.1.236: resolved Issue 0006: link (new feature)
+ * Version 0.1.236: resolved Issue 0006: link (extension)
     - description:  link to matrix/vector classes to Eigen OR MKL solvers    
     - date resolved: **2019-12-11**\ , date raised: 2019-04-01 
  * Version 0.1.235: resolved Issue 0286: check visualization (check)
@@ -7069,13 +7026,13 @@ Version 0.1
  * Version 0.1.234: resolved Issue 0235: CqTLambda (extension)
     - description:  ComputeODE2RHS (=CqT\*lambda) based on single constraint object jacobians instead of global matrix multiply
     - date resolved: **2019-12-09**\ , date raised: 2019-08-19 
- * Version 0.1.233: resolved Issue 0158: SuperLU (new feature)
+ * Version 0.1.233: resolved Issue 0158: SuperLU (extension)
     - description:  Link SuperLU to linalg
     - date resolved: **2019-12-09**\ , date raised: 2019-05-28 
- * Version 0.1.232: resolved Issue 0157: EigenTriple (new feature)
+ * Version 0.1.232: resolved Issue 0157: EigenTriple (extension)
     - description:  Add Eigentriple to mass matrix and jacobian computation
     - date resolved: **2019-12-09**\ , date raised: 2019-05-28 
- * Version 0.1.231: resolved Issue 0155: Joints (new feature)
+ * Version 0.1.231: resolved Issue 0155: Joints (extension)
     - description:  Add 2D spherical and prismatic joint
     - date resolved: **2019-12-09**\ , date raised: 2019-05-28 
  * Version 0.1.230: :textred:`resolved BUG 0285` : rigidbody2D 
@@ -7087,37 +7044,37 @@ Version 0.1
  * Version 0.1.228: resolved Issue 0271: referenceCoordsRigid2D (check)
     - description:  check whether all reference coordinates in NodeRigid2D are correctly considered
     - date resolved: **2019-12-07**\ , date raised: 2019-10-19 
- * Version 0.1.227: resolved Issue 0280: add OpenGL settings (new feature)
+ * Version 0.1.227: resolved Issue 0280: add OpenGL settings (extension)
     - description:  add settings for lights, material, normals and faces
     - date resolved: **2019-12-05**\ , date raised: 2019-12-05 
- * Version 0.1.226: resolved Issue 0279: add .py cube and cylinder (new feature)
+ * Version 0.1.226: resolved Issue 0279: add .py cube and cylinder (extension)
     - description:  add functions in EXUDYN utilities for creation of 3D cube and cylinder with GLTriangles
     - date resolved: **2019-12-05**\ , date raised: 2019-12-05 
- * Version 0.1.225: resolved Issue 0265: Graphics Faces (new feature)
+ * Version 0.1.225: resolved Issue 0265: Graphics Faces (extension)
     - description:  Add triangular faces for 3D graphics
     - date resolved: **2019-12-05**\ , date raised: 2019-10-10 
- * Version 0.1.224: resolved Issue 0278: PyFunctions test (new feature)
+ * Version 0.1.224: resolved Issue 0278: PyFunctions test (extension)
     - description:  Test PyFunctions for SpringDamper, CoordinateSpringDamper, CoordinateConstraint and CoordinateLoad
     - date resolved: **2019-12-02**\ , date raised: 2019-12-01 
- * Version 0.1.223: resolved Issue 0277: PyFunctions (new feature)
+ * Version 0.1.223: resolved Issue 0277: PyFunctions (extension)
     - description:  finalize PyFunctions for SpringDamper, CoordinateSpringDamper, CoordinateConstraint and CoordinateLoad
     - date resolved: **2019-12-02**\ , date raised: 2019-12-01 
- * Version 0.1.222: resolved Issue 0274: SparseLU (new feature)
+ * Version 0.1.222: resolved Issue 0274: SparseLU (extension)
     - description:  Add sparse matrices and sparse solver to static and dynamic solvers
     - date resolved: **2019-12-01**\ , date raised: 2019-11-14 
  * Version 0.1.221: resolved Issue 0273: constraint action (extension)
     - description:  Add constraint action forces \ :math:`Cq^T \cdot lambda`\  via a function in csystem; eliminates need for computation of separate matrix during computation
     - date resolved: **2019-12-01**\ , date raised: 2019-11-14 
- * Version 0.1.220: resolved Issue 0270: Intro to theDoc (new feature)
+ * Version 0.1.220: resolved Issue 0270: Intro to theDoc (extension)
     - description:  write introductory sections and tutorials for theDoc
     - date resolved: **2019-12-01**\ , date raised: 2019-10-19 
- * Version 0.1.219: resolved Issue 0267: GitLab (new feature)
+ * Version 0.1.219: resolved Issue 0267: GitLab (extension)
     - description:  Put EXUDYN on UIBK/GitLab
     - date resolved: **2019-12-01**\ , date raised: 2019-10-10 
- * Version 0.1.218: resolved Issue 0086: use (new feature)
+ * Version 0.1.218: resolved Issue 0086: use (extension)
     - description:  use pybind/functional.h (see pybind11.readthedocs.io) to: use python functions / classes in C++; also use classes to define functions (+parameters); user defined python objects!!!; see refToFunctionsClasses.py    
     - date resolved: **2019-12-01**\ , date raised: 2019-04-01 
- * Version 0.1.217: resolved Issue 0264: Rigid 3D (new feature)
+ * Version 0.1.217: resolved Issue 0264: Rigid 3D (extension)
     - description:  include rigid body, add graphics
     - date resolved: **2019-11-26**\ , date raised: 2019-10-10 
  * Version 0.1.216: :textred:`resolved BUG 0272` : maximumSolutionNorm 
@@ -7137,7 +7094,7 @@ Version 0.1
  * Version 0.1.212: resolved Issue 0230: CircleContact2D (extension)
     - description:  add friction
     - date resolved: **2019-09-12**\ , date raised: 2019-07-23 
- * Version 0.1.211: resolved Issue 0257: color bar (new feature)
+ * Version 0.1.211: resolved Issue 0257: color bar (extension)
     - description:  add color bar for contour plots
     - date resolved: **2019-08-30**\ , date raised: 2019-08-30 
  * Version 0.1.210: resolved Issue 0253: outputvariables (extension)
@@ -7159,19 +7116,19 @@ Version 0.1
     - description:  multiple use of graphics in testsuite leads to crashes; inconsistent cSystem and vSystem containers; check mbs.Reset() function
     - **notes:** added missing call to visualizationSystemData.Reset() in mbs.Reset()
     - date resolved: **2019-08-25**\ , date raised: 2019-08-25 
- * Version 0.1.204: resolved Issue 0249: user stopflag python (new feature)
+ * Version 0.1.204: resolved Issue 0249: user stopflag python (extension)
     - description:  add read and write access to stopSimulation flag in python; this allows to interrupt python loops - e.g. for static loading or for animation
     - date resolved: **2019-08-25**\ , date raised: 2019-08-25 
- * Version 0.1.203: resolved Issue 0248: visualize solution (new feature)
+ * Version 0.1.203: resolved Issue 0248: visualize solution (extension)
     - description:  set visualization state and time with pybind interface and send renderer update flag
     - date resolved: **2019-08-25**\ , date raised: 2019-08-25 
- * Version 0.1.202: resolved Issue 0247: animateSolution (new feature)
+ * Version 0.1.202: resolved Issue 0247: animateSolution (extension)
     - description:  load solution file and consecutively set visualization state to loaded states; implement in python
     - date resolved: **2019-08-25**\ , date raised: 2019-08-25 
- * Version 0.1.201: resolved Issue 0240: TimeIntegrationCPU (new feature)
+ * Version 0.1.201: resolved Issue 0240: TimeIntegrationCPU (extension)
     - description:  add CPU statistics accoding to static solver (with common data structure) to time integration; this will be needed to check performance of sparse matrix versions
     - date resolved: **2019-08-25**\ , date raised: 2019-08-21 
- * Version 0.1.200: resolved Issue 0232: LoadSolution (new feature)
+ * Version 0.1.200: resolved Issue 0232: LoadSolution (extension)
     - description:  Add functionality to load solution from coordinates solution file
     - date resolved: **2019-08-25**\ , date raised: 2019-07-23 
  * Version 0.1.199: :textred:`resolved BUG 0246` : ActivateConnector 
@@ -7184,7 +7141,7 @@ Version 0.1
     - description:  Unify markerData computation in CSystem and in GetOutputVariableConnector at different places using a CSystem function
     - **notes:** not fully checked
     - date resolved: **2019-08-22**\ , date raised: 2019-08-22 
- * Version 0.1.196: resolved Issue 0233: Get/SetParameters (new feature)
+ * Version 0.1.196: resolved Issue 0233: Get/SetParameters (extension)
     - description:  add functionality to set single parameters of items via pybind interface
     - date resolved: **2019-08-22**\ , date raised: 2019-07-23 
  * Version 0.1.195: resolved Issue 0239: PybindInterface (extension)
@@ -7193,10 +7150,10 @@ Version 0.1
  * Version 0.1.194: resolved Issue 0238: JacobianODE2RHS_t (extension)
     - description:  add object-wise computation to NumericalJacobianODE2RHS_t in System.cpp
     - date resolved: **2019-08-21**\ , date raised: 2019-08-21 
- * Version 0.1.193: resolved Issue 0237: CoordinateSpringDamper (new feature)
+ * Version 0.1.193: resolved Issue 0237: CoordinateSpringDamper (extension)
     - description:  add new scalar (coordinate) spring damper for action on arbitrary objects; include dry friction as option
     - date resolved: **2019-08-21**\ , date raised: 2019-08-20 
- * Version 0.1.192: resolved Issue 0221: LoadCoordinate (new feature)
+ * Version 0.1.192: resolved Issue 0221: LoadCoordinate (extension)
     - description:  Add a load which is attached to a single MarkerCoordinate
     - date resolved: **2019-08-21**\ , date raised: 2019-07-04 
  * Version 0.1.191: resolved Issue 0131: ResizableMatrix (check)
@@ -7214,14 +7171,14 @@ Version 0.1
  * Version 0.1.187: resolved Issue 0222: RequestedMarkerType (extension)
     - description:  Add RequestedMarkerType check to SystemIntegrity checks; specific marker type checks (e.g. SlidingJoint) are done in the element-specific checks ==> requestedMarkertype=None
     - date resolved: **2019-08-19**\ , date raised: 2019-07-06 
- * Version 0.1.186: resolved Issue 0092: add args (new feature)
+ * Version 0.1.186: resolved Issue 0092: add args (extension)
     - description:  add args to pybind interface: m.def("add", &add, "A function which adds two numbers", py::arg("i") = 1, py::arg("j") = 2);    
     - date resolved: **2019-08-19**\ , date raised: 2019-04-01 
- * Version 0.1.185: resolved Issue 0091: Objects: (new feature)
+ * Version 0.1.185: resolved Issue 0091: Objects: (extension)
     - description:  Objects: add to GetOutputVariableTypes(): GetAccessibleMarkerTypes() ==> returns all MarkerFlags, which can be used with body ...   
     - **notes:** already available via GetAccessFunctionTypes and GetOutputVariableTypes
     - date resolved: **2019-08-19**\ , date raised: 2019-04-01 
- * Version 0.1.184: resolved Issue 0085: Add (new feature)
+ * Version 0.1.184: resolved Issue 0085: Add (extension)
     - description:  Add Test suite for Python side (test all interface functions)    
     - date resolved: **2019-08-19**\ , date raised: 2019-04-01 
  * Version 0.1.183: resolved Issue 0228: TimeIntNewton (check)
@@ -7230,70 +7187,70 @@ Version 0.1
  * Version 0.1.182: resolved Issue 0223: Pendulum (check)
     - description:  Pendulum example with constraint does not work any more. check jacobian and algebraic equations
     - date resolved: **2019-08-18**\ , date raised: 2019-07-08 
- * Version 0.1.181: resolved Issue 0229: AxiallyMovingJoint (new feature)
+ * Version 0.1.181: resolved Issue 0229: AxiallyMovingJoint (extension)
     - description:  add prescribed sliding of point along ALECable2D
     - date resolved: **2019-07-24**\ , date raised: 2019-07-23 
- * Version 0.1.180: resolved Issue 0219: AxiallyMovingCable2D (new feature)
+ * Version 0.1.180: resolved Issue 0219: AxiallyMovingCable2D (extension)
     - description:  Add ALE cable element with axially moving component; derive this class from ANCFCable2D; in this way parameters of ANCFCable2D are hidden, but all functions can be reused; direct access to parameters. must be removed in all ANCFCable2D implementation
     - date resolved: **2019-07-24**\ , date raised: 2019-07-04 
  * Version 0.1.179: resolved Issue 0226: SlidingJoint2D (extension)
     - description:  Add jacobian function
     - date resolved: **2019-07-23**\ , date raised: 2019-07-10 
- * Version 0.1.178: resolved Issue 0220: NodeGenericODE2 (new feature)
+ * Version 0.1.178: resolved Issue 0220: NodeGenericODE2 (extension)
     - description:  Add generic node for ODE2 coordinates, used for AxiallyMovingCable2D
     - date resolved: **2019-07-23**\ , date raised: 2019-07-04 
- * Version 0.1.177: resolved Issue 0217: ContactFrictionCircle2D (new feature)
+ * Version 0.1.177: resolved Issue 0217: ContactFrictionCircle2D (extension)
     - description:  Add a circular contact+friction; same as ObjectContactCircleCable2D
     - date resolved: **2019-07-23**\ , date raised: 2019-06-28 
  * Version 0.1.176: resolved Issue 0218: numDiff (check)
     - description:  Check whether the reference coordinates should be added to current coordinates for the size of the differentiation parameter
     - date resolved: **2019-07-12**\ , date raised: 2019-07-04 
- * Version 0.1.175: resolved Issue 0213: ObjectSlidingJoint2D (new feature)
+ * Version 0.1.175: resolved Issue 0213: ObjectSlidingJoint2D (extension)
     - description:  add sliding joint and according marker(s): one marker for set  of cable elements or a list of markers (needs to update ltg list)
     - date resolved: **2019-07-12**\ , date raised: 2019-06-28 
- * Version 0.1.174: resolved Issue 0210: LoadMassProportional (new feature)
+ * Version 0.1.174: resolved Issue 0210: LoadMassProportional (extension)
     - description:  Add mass proportional vector loading: body marker + according load
     - date resolved: **2019-07-12**\ , date raised: 2019-06-28 
- * Version 0.1.173: resolved Issue 0185: User system function (new feature)
+ * Version 0.1.173: resolved Issue 0185: User system function (extension)
     - description:  Add user-defined system function to every end of step in time integration; use separate User-structure in settings
     - date resolved: **2019-07-10**\ , date raised: 2019-06-13 
- * Version 0.1.172: resolved Issue 0153: StaticSolver (new feature)
+ * Version 0.1.172: resolved Issue 0153: StaticSolver (extension)
     - description:  Add nonlinear iteration for contact
     - date resolved: **2019-07-09**\ , date raised: 2019-05-28 
  * Version 0.1.171: resolved Issue 0214: Numerical Jacobian (extension)
     - description:  Add numerical jacobian for every object / constraint instead of global jacobian
     - date resolved: **2019-07-04**\ , date raised: 2019-06-28 
- * Version 0.1.170: resolved Issue 0212: ObjectContactCircleANCF2D (new feature)
+ * Version 0.1.170: resolved Issue 0212: ObjectContactCircleANCF2D (extension)
     - description:  add a circular contact with centerpoint, radius and range of according angle of a circle segment
     - date resolved: **2019-07-04**\ , date raised: 2019-06-28 
- * Version 0.1.169: resolved Issue 0211: MarkerANCFCable2DShape (new feature)
+ * Version 0.1.169: resolved Issue 0211: MarkerANCFCable2DShape (extension)
     - description:  Add a marker to measure 2D/3D? ANCF shapes
     - date resolved: **2019-07-04**\ , date raised: 2019-06-28 
  * Version 0.1.168: resolved Issue 0193: Item names (extension)
     - description:  Add name tag to class interfaces for objects, nodes, ... to add item names; use empty string ("") to identify that default names shall be generated
     - date resolved: **2019-07-04**\ , date raised: 2019-06-19 
- * Version 0.1.167: resolved Issue 0166: ODE2CoordinatesNode (new feature)
+ * Version 0.1.167: resolved Issue 0166: ODE2CoordinatesNode (extension)
     - description:  Replaced by new issue 220
     - date resolved: **2019-07-04**\ , date raised: 2019-06-03 
- * Version 0.1.166: resolved Issue 0207: ObjectContactCoordinate (new feature)
+ * Version 0.1.166: resolved Issue 0207: ObjectContactCoordinate (extension)
     - description:  add functionality for nonlinear iterations in objects and in static solver
     - date resolved: **2019-06-28**\ , date raised: 2019-06-28 
- * Version 0.1.165: resolved Issue 0206: ObjectContactCoordinate (new feature)
+ * Version 0.1.165: resolved Issue 0206: ObjectContactCoordinate (extension)
     - description:  Add a contact connector for single coordinates
     - date resolved: **2019-06-28**\ , date raised: 2019-06-28 
- * Version 0.1.164: resolved Issue 0183: MarkerNodeCoordinate (new feature)
+ * Version 0.1.164: resolved Issue 0183: MarkerNodeCoordinate (extension)
     - description:  A marker which addresses a certain nodal coordinate for Issue #165 NodalConstraint
     - date resolved: **2019-06-28**\ , date raised: 2019-06-12 
  * Version 0.1.163: resolved Issue 0145: Jacobian (extension)
     - description:  Compute jacobian in timeintegration also with respect to velocities
     - date resolved: **2019-06-28**\ , date raised: 2019-05-23 
- * Version 0.1.162: resolved Issue 0093: SystemChecks (new feature)
+ * Version 0.1.162: resolved Issue 0093: SystemChecks (extension)
     - description:  check system consistency/integrity before Assemble: objects->nodes, marker<->objects/nodes, marker<->constraints, marker<->loads
     - date resolved: **2019-06-28**\ , date raised: 2019-04-01 
- * Version 0.1.161: resolved Issue 0205: ObjectConnectorCartesianSpringDamper (new feature)
+ * Version 0.1.161: resolved Issue 0205: ObjectConnectorCartesianSpringDamper (extension)
     - description:  Add a cartesian spring damper, which acts with certain parameters in x,y, and z-direction; can be used for 2D and 3D elements
     - date resolved: **2019-06-27**\ , date raised: 2019-06-27 
- * Version 0.1.160: resolved Issue 0204: NodeGenericData (new feature)
+ * Version 0.1.160: resolved Issue 0204: NodeGenericData (extension)
     - description:  Add new node with data coordinates; generic size
     - date resolved: **2019-06-26**\ , date raised: 2019-06-26 
  * Version 0.1.159: resolved Issue 0189: PythonClassNames (change)
@@ -7305,13 +7262,13 @@ Version 0.1
  * Version 0.1.157: resolved Issue 0169: graphics (extension)
     - description:  Add graphics representation for ForceVector
     - date resolved: **2019-06-26**\ , date raised: 2019-06-05 
- * Version 0.1.156: resolved Issue 0165: ConstraintNodeCoord (new feature)
+ * Version 0.1.156: resolved Issue 0165: ConstraintNodeCoord (extension)
     - description:  ObjectConstraintNodeCoordinate: used to directly constrain two nodal coordinates
     - date resolved: **2019-06-26**\ , date raised: 2019-06-03 
- * Version 0.1.155: resolved Issue 0154: RigidBody (new feature)
+ * Version 0.1.155: resolved Issue 0154: RigidBody (extension)
     - description:  Add 2D rigid body
     - date resolved: **2019-06-26**\ , date raised: 2019-05-28 
- * Version 0.1.154: resolved Issue 0152: CData (new feature)
+ * Version 0.1.154: resolved Issue 0152: CData (extension)
     - description:  Couple CData, initialState, etc. to pybind DIRECTLY as state structure --> enable multiple computations
     - date resolved: **2019-06-26**\ , date raised: 2019-05-28 
  * Version 0.1.153: resolved Issue 0140: enum Index (change)
@@ -7323,43 +7280,43 @@ Version 0.1
  * Version 0.1.151: resolved Issue 0129: Solve:MarkerData (extension)
     - description:  Implement a GetMarkerData() function for markers
     - date resolved: **2019-06-26**\ , date raised: 2019-05-14 
- * Version 0.1.150: resolved Issue 0090: integrate (new feature)
+ * Version 0.1.150: resolved Issue 0090: integrate (extension)
     - description:  integrate rigid body (3D/2D) and according constraints    
     - date resolved: **2019-06-26**\ , date raised: 2019-04-01 
- * Version 0.1.149: resolved Issue 0203: LoadTorqueVector (new feature)
+ * Version 0.1.149: resolved Issue 0203: LoadTorqueVector (extension)
     - description:  Add new load TorqueVector
     - date resolved: **2019-06-25**\ , date raised: 2019-06-25 
- * Version 0.1.148: resolved Issue 0202: MarkerBodyRigid (new feature)
+ * Version 0.1.148: resolved Issue 0202: MarkerBodyRigid (extension)
     - description:  Create a rigid body marker for application of torques
     - date resolved: **2019-06-24**\ , date raised: 2019-06-24 
- * Version 0.1.147: resolved Issue 0201: ObjectANCFCable2D (new feature)
+ * Version 0.1.147: resolved Issue 0201: ObjectANCFCable2D (extension)
     - description:  Add kappa0 and eps0
     - date resolved: **2019-06-23**\ , date raised: 2019-06-23 
- * Version 0.1.146: resolved Issue 0200: ObjectANCFCable2D (new feature)
+ * Version 0.1.146: resolved Issue 0200: ObjectANCFCable2D (extension)
     - description:  Create 2D ancf Bernoulli-Euler beam elements
     - date resolved: **2019-06-22**\ , date raised: 2019-06-28 
- * Version 0.1.145: resolved Issue 0199: NodePoint2DSlope1 (new feature)
+ * Version 0.1.145: resolved Issue 0199: NodePoint2DSlope1 (extension)
     - description:  Create node for 2D ancf Bernoulli-Euler beam elements
     - date resolved: **2019-06-18**\ , date raised: 2019-06-18 
- * Version 0.1.144: resolved Issue 0198: 2D Nodes/Objects (new feature)
+ * Version 0.1.144: resolved Issue 0198: 2D Nodes/Objects (extension)
     - description:  Add NodePoint2D, NodeRigidBody2D, ObjectMassPoint2D, ObjectRigidBody2D, ObjectJointRevolute2D
     - date resolved: **2019-06-17**\ , date raised: 2019-06-17 
- * Version 0.1.143: resolved Issue 0197: ObjectConstraintCoordinate (new feature)
+ * Version 0.1.143: resolved Issue 0197: ObjectConstraintCoordinate (extension)
     - description:  constrain two coordinates; possibly add an offset (modifyable?)
     - date resolved: **2019-06-16**\ , date raised: 2019-06-16 
- * Version 0.1.142: resolved Issue 0196: MarkerNodeCoordinate (new feature)
+ * Version 0.1.142: resolved Issue 0196: MarkerNodeCoordinate (extension)
     - description:  DE2/ODE1 coordinate at displacement or velocity level; extend MarkerType/OutputVariable interface
     - date resolved: **2019-06-15**\ , date raised: 2019-06-15 
- * Version 0.1.141: resolved Issue 0195: NodePointGround (new feature)
+ * Version 0.1.141: resolved Issue 0195: NodePointGround (extension)
     - description:  Add node similar to nodepoint, but no action and zero coordinates
     - date resolved: **2019-06-14**\ , date raised: 2019-06-14 
- * Version 0.1.140: resolved Issue 0186: MarkerNodePoint (new feature)
+ * Version 0.1.140: resolved Issue 0186: MarkerNodePoint (extension)
     - description:  Add a Marker to Node point; extend according assemble and computation functions
     - date resolved: **2019-06-13**\ , date raised: 2019-06-13 
  * Version 0.1.139: resolved Issue 0184: GeneralizedAlpha (extension)
     - description:  Extend Newmark to generalized alpha
     - date resolved: **2019-06-13**\ , date raised: 2019-06-13 
- * Version 0.1.136: resolved Issue 0089: create (new feature)
+ * Version 0.1.136: resolved Issue 0089: create (extension)
     - description:  create .tex reference pages for objects    
     - date resolved: **2019-06-13**\ , date raised: 2019-04-01 
  * Version 0.1.135: resolved Issue 0182: Item Dicts (extension)
@@ -7374,7 +7331,7 @@ Version 0.1
  * Version 0.1.132: resolved Issue 0176: Python Interface (check)
     - description:  Check if it is better to add python classes for objects with according init function (can they be converted implicitly to dict and used in current AddNode(py::dict) function - or to use additional AddNode(...) function interfaces in MainSystem
     - date resolved: **2019-06-12**\ , date raised: 2019-06-09 
- * Version 0.1.131: resolved Issue 0175: Interface class (new feature)
+ * Version 0.1.131: resolved Issue 0175: Interface class (extension)
     - description:  Add interface Python classes which return a dictionary for items; this enables autocompletion in editor ...
     - date resolved: **2019-06-12**\ , date raised: 2019-06-07 
  * Version 0.1.130: resolved Issue 0179: GLFW client (extension)
@@ -7392,13 +7349,13 @@ Version 0.1
  * Version 0.1.126: resolved Issue 0115: ComputationSystem (extension)
     - description:  Extend static computation for AE equations (DistanceConstraint)
     - date resolved: **2019-06-11**\ , date raised: 2019-05-13 
- * Version 0.1.125: resolved Issue 0156: Graphics (new feature)
+ * Version 0.1.125: resolved Issue 0156: Graphics (extension)
     - description:  Add basic graphics elements (Line, Polygon, Circle) to bodies and ground visualization objects ==> for moving and static objects
     - date resolved: **2019-06-05**\ , date raised: 2019-05-28 
- * Version 0.1.124: resolved Issue 0167: Newton AE (new feature)
+ * Version 0.1.124: resolved Issue 0167: Newton AE (extension)
     - description:  Extend Newton for algebraic equations
     - date resolved: **2019-06-04**\ , date raised: 2019-06-03 
- * Version 0.1.123: resolved Issue 0163: FinishDistance (new feature)
+ * Version 0.1.123: resolved Issue 0163: FinishDistance (extension)
     - description:  Finish algebraic equations for static and dynamic solver with distance
     - date resolved: **2019-06-04**\ , date raised: 2019-06-03 
  * Version 0.1.122: resolved Issue 0162: LagrangeMult (check)
@@ -7407,13 +7364,13 @@ Version 0.1
  * Version 0.1.121: resolved Issue 0160: GraphicsUpdate (extension)
     - description:  Write GraphicsUpdate for nodes and SpringDamper
     - date resolved: **2019-06-03**\ , date raised: 2019-05-29 
- * Version 0.1.120: resolved Issue 0151: OpenGL options (new feature)
+ * Version 0.1.120: resolved Issue 0151: OpenGL options (extension)
     - description:  Add opengl options to pybind: Visualization:General,Window(mouse move, zoom),OpenGL,System(Objects,Nodes,...),Text
     - date resolved: **2019-05-29**\ , date raised: 2019-05-28 
  * Version 0.1.119: resolved Issue 0149: StaticSolver (extension)
     - description:  Static solver: add time to state structure and file output
     - date resolved: **2019-05-29**\ , date raised: 2019-05-27 
- * Version 0.1.118: resolved Issue 0159: StopComputation (new feature)
+ * Version 0.1.118: resolved Issue 0159: StopComputation (extension)
     - description:  Add shortcut (CTRL Q) to OpenGL to quit simulation
     - date resolved: **2019-05-28**\ , date raised: 2019-05-28 
  * Version 0.1.117: resolved Issue 0150: OpenGLText (extension)
@@ -7437,10 +7394,10 @@ Version 0.1
  * Version 0.1.111: resolved Issue 0143: Newmark (extension)
     - description:  Add coefficients to Implicit Trapezoidal rule interface
     - date resolved: **2019-05-27**\ , date raised: 2019-05-23 
- * Version 0.1.110: resolved Issue 0083: graphics (new feature)
+ * Version 0.1.110: resolved Issue 0083: graphics (extension)
     - description:  Link GLFW: Add library; add VisualizationSystem; link to MainSystem; add data structure (linked to pybind); Initialization; add FLAG to deactivate    
     - date resolved: **2019-05-27**\ , date raised: 2019-04-01 
- * Version 0.1.109: resolved Issue 0138: Discussion (new feature)
+ * Version 0.1.109: resolved Issue 0138: Discussion (extension)
     - description:  Add new label DISCUSSION with blue color to issue tracker
     - date resolved: **2019-05-23**\ , date raised: 2019-05-19 
  * Version 0.1.108: :textred:`resolved BUG 0137` : StaticSolver 
@@ -7449,16 +7406,16 @@ Version 0.1
  * Version 0.1.107: resolved Issue 0134: SpringDamper (extension)
     - description:  Add velocities to Bodies / Markers and to SpringDamperActuator
     - date resolved: **2019-05-23**\ , date raised: 2019-05-19 
- * Version 0.1.106: resolved Issue 0113: ComputationSystem (new test)
+ * Version 0.1.106: resolved Issue 0113: ComputationSystem (testing)
     - description:  Test Loads
     - date resolved: **2019-05-23**\ , date raised: 2019-05-13 
- * Version 0.1.105: resolved Issue 0096: check Timeint (new feature)
+ * Version 0.1.105: resolved Issue 0096: check Timeint (extension)
     - description:  check TimeIntegration to work with new objects    
     - date resolved: **2019-05-23**\ , date raised: 2019-04-01 
  * Version 0.1.104: resolved Issue 0128: CMarker::GetPosJac (change)
     - description:  Remove return value Matrix and use Matrix& in arguments to avoid memory allocation
     - date resolved: **2019-05-19**\ , date raised: 2019-05-14 
- * Version 0.1.103: resolved Issue 0114: StaticSolver (new feature)
+ * Version 0.1.103: resolved Issue 0114: StaticSolver (extension)
     - description:  Add Static (Nonlinear) Solver
     - date resolved: **2019-05-19**\ , date raised: 2019-05-13 
  * Version 0.1.102: resolved Issue 0112: ComputationSystem (extension)
@@ -7467,37 +7424,37 @@ Version 0.1
  * Version 0.1.101: resolved Issue 0110: ComputationSystem (extension)
     - description:  Add/merge system level computation functions: ComputeMass, ComputeODE2RHS, ...
     - date resolved: **2019-05-19**\ , date raised: 2019-05-13 
- * Version 0.1.100: resolved Issue 0084: Setup (new feature)
+ * Version 0.1.100: resolved Issue 0084: Setup (extension)
     - description:  Setup static solver (use Matrix-solver OR eigen-SuperLU)    
     - date resolved: **2019-05-19**\ , date raised: 2019-04-01 
- * Version 0.1.99: resolved Issue 0082: Add (new feature)
+ * Version 0.1.99: resolved Issue 0082: Add (extension)
     - description:  Add CObjectGround to objects    
     - date resolved: **2019-05-19**\ , date raised: 2019-04-01 
- * Version 0.1.98: resolved Issue 0132: MatrixInvert (new feature)
+ * Version 0.1.98: resolved Issue 0132: MatrixInvert (extension)
     - description:  Implement simple matrix inversion for simpler tetss without making use of Eigen library
     - date resolved: **2019-05-17**\ , date raised: 2019-05-17 
  * Version 0.1.97: resolved Issue 0127: constraint ODE2RHS (change)
     - description:  add new interface for ComputeODE2RHS and ComputeAlgebraicEquations; add Array<MarkerData>, which is prefilled during computation; MarkerData=Position,Velocity,PosJacobian,RotJacobian; 
     - date resolved: **2019-05-17**\ , date raised: 2019-05-14 
- * Version 0.1.96: resolved Issue 0122: ResizableMatrix (new feature)
+ * Version 0.1.96: resolved Issue 0122: ResizableMatrix (extension)
     - description:  Implement resizable matrix for temporary data structures in solver/time integration
     - date resolved: **2019-05-17**\ , date raised: 2019-05-13 
  * Version 0.1.95: resolved Issue 0111: ComputationSystem (extension)
     - description:  Add temporary evaluation structures (Matrices/Vectors) for system evaluation functions (Contraints/Markers)
     - date resolved: **2019-05-17**\ , date raised: 2019-05-13 
- * Version 0.1.94: resolved Issue 0004: Finish (new feature)
+ * Version 0.1.94: resolved Issue 0004: Finish (extension)
     - description:  Finish functions for all matrix classes    
     - date resolved: **2019-05-17**\ , date raised: 2019-04-01 
- * Version 0.1.93: resolved Issue 0003: set (new feature)
+ * Version 0.1.93: resolved Issue 0003: set (extension)
     - description:  set up all matrix classes    
     - date resolved: **2019-05-17**\ , date raised: 2019-04-01 
- * Version 0.1.92: resolved Issue 0001: Finish (new feature)
+ * Version 0.1.92: resolved Issue 0001: Finish (extension)
     - description:  Finish functions for all vector classes    
     - date resolved: **2019-05-17**\ , date raised: 2019-04-01 
  * Version 0.1.91: resolved Issue 0130: Eigen (check)
     - description:  perform eigen tests in separate console project
     - date resolved: **2019-05-16**\ , date raised: 2019-05-16 
- * Version 0.1.90: resolved Issue 0109: Solver (new feature)
+ * Version 0.1.90: resolved Issue 0109: Solver (extension)
     - description:  count memory allocations (=new) during solving; eliminate memory allocation
     - date resolved: **2019-05-15**\ , date raised: 2019-05-12 
  * Version 0.1.89: resolved Issue 0107: SpringDamper (change)
@@ -7506,279 +7463,270 @@ Version 0.1
  * Version 0.1.88: resolved Issue 0120: release assert (check)
     - description:  check if release assert works correctly in release and debug mode (check with invalid vector access)
     - date resolved: **2019-05-13**\ , date raised: 2019-05-13 
- * Version 0.1.87: resolved Issue 0119: available types (new feature)
+ * Version 0.1.87: resolved Issue 0119: available types (extension)
     - description:  Show available types in GetObject/Node/Marker/...Defaults() function, if args are used: GetNodeDefault()
     - date resolved: **2019-05-13**\ , date raised: 2019-05-13 
- * Version 0.1.86: resolved Issue 0108: Matrix/Vector (new feature)
+ * Version 0.1.86: resolved Issue 0108: Matrix/Vector (extension)
     - description:  add global counter for memory allocations (=new)
     - date resolved: **2019-05-13**\ , date raised: 2019-05-12 
- * Version 0.1.85: resolved Issue 0106: VS2017_PYPLOT (compatibility)
+ * Version 0.1.85: resolved Issue 0106: VS2017_PYPLOT (fix)
     - description:  matplotlib.pyplot does not work in VS2017 - installation fails, while matplotlib is installed; upgrade of pip installer does not help
     - **notes:** restart of VS2017 solved problem
     - date resolved: **2019-05-12**\ , date raised: 2019-05-12 
- * Version 0.1.84: resolved Issue 0103: dict access (new feature)
+ * Version 0.1.84: resolved Issue 0103: dict access (extension)
     - description:  Lateron: Add dict access to functions (NodeAccessFunction({'name':node_name, 'function':'Stress','position':[0,1,2,0.5],'option':'Cauchy'})    
     - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
- * Version 0.1.83: resolved Issue 0102: dict access (new feature)
+ * Version 0.1.83: resolved Issue 0102: dict access (extension)
     - description:  Lateron: Add dict access to functions (NodeAccessFunction({'index':ind, 'function':'CurrentPosition'})    
     - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
- * Version 0.1.82: resolved Issue 0101: Add (new feature)
-    - description:  Add representation and mainobject.help()") # add latex description ... for Reference manual    
-    - **notes:** NOT NEEDED: help already included in pybind/Python
-    - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
- * Version 0.1.81: resolved Issue 0095: MainSystemContainer (new feature)
+ * Version 0.1.81: resolved Issue 0095: MainSystemContainer (extension)
     - description:  move MainSystemContainer to own class    
     - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
- * Version 0.1.80: resolved Issue 0081: Debug: (new feature)
+ * Version 0.1.80: resolved Issue 0081: Debug: (extension)
     - description:  Debug: CMarkerBodyPosition::GetPositionJacobian    
     - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
- * Version 0.1.79: resolved Issue 0105: issue tracker (new feature)
+ * Version 0.1.79: resolved Issue 0105: issue tracker (extension)
     - description:  add filename and line number to issue tracker
     - date resolved: **2019-05-11**\ , date raised: 2019-05-11 
- * Version 0.1.78: resolved Issue 0104: issue tracker (new feature)
+ * Version 0.1.78: resolved Issue 0104: issue tracker (extension)
     - description:  set up issue tracking system
     - date resolved: **2019-05-10**\ , date raised: 2019-05-10 
- * Version 0.1.77: resolved Issue 0136: Differentiate (new feature)
+ * Version 0.1.77: resolved Issue 0136: Differentiate (extension)
     - description:  Add class function for numerical differentiation of a member function of CSystem
     - **notes:** first tests did not work ==> added manually
     - date raised: 2019-05-19 
- * Version 0.1.76: resolved Issue 0087: Data dependency (new feature)
+ * Version 0.1.76: resolved Issue 0087: Data dependency (extension)
     - description:  For the moment: use CSystemData\* in all objects, ...    
     - date raised: 2019-02-01 
- * Version 0.1.75: resolved Issue 0080: Setup (new feature)
+ * Version 0.1.75: resolved Issue 0080: Setup (extension)
     - description:  Setup time integration    
     - date raised: 2019-02-01 
- * Version 0.1.74: resolved Issue 0079: Assemble (new feature)
+ * Version 0.1.74: resolved Issue 0079: Assemble (extension)
     - description:  Assemble function renewed(split into nodes-section, etc.): assign node coordinates, initialize global coordinate vectors    
     - date raised: 2019-02-01 
- * Version 0.1.73: resolved Issue 0078: def_readwrite (new feature)
+ * Version 0.1.73: resolved Issue 0078: def_readwrite (extension)
     - description:  def_readwrite used to access SystemStates initial, current, ...    
     - date raised: 2019-02-01 
- * Version 0.1.72: resolved Issue 0077: Add (new feature)
+ * Version 0.1.72: resolved Issue 0077: Add (extension)
     - description:  Add pybinding to CData as well ==> but only for read access    
     - date raised: 2019-02-01 
- * Version 0.1.71: resolved Issue 0076: Python: (new feature)
+ * Version 0.1.71: resolved Issue 0076: Python: (extension)
     - description:  Python: add pybinding to SystemState .def_property and get/set functions; then access initial, current, etc. via separate functions, e.g.    
     - date raised: 2019-02-01 
- * Version 0.1.70: resolved Issue 0075: CData (new feature)
+ * Version 0.1.70: resolved Issue 0075: CData (extension)
     - description:  CData --> class SystemState; change to individual SystemState for current, initial, reference, etc.    
     - date raised: 2019-02-01 
- * Version 0.1.69: resolved Issue 0074: change (new feature)
+ * Version 0.1.69: resolved Issue 0074: change (extension)
     - description:  change ...ObjectType(), NodeType() in object/node to Type(); unified with CMarker!    
     - date raised: 2019-02-01 
- * Version 0.1.68: resolved Issue 0073: change (new feature)
+ * Version 0.1.68: resolved Issue 0073: change (extension)
     - description:  change ...CObjectType to ObjectType (same as nodes, markers, outputvariabletype...); NO "C"    
     - date raised: 2019-02-01 
- * Version 0.1.67: resolved Issue 0072: Use (new feature)
+ * Version 0.1.67: resolved Issue 0072: Use (extension)
     - description:  Use consistently "Get..." in function (C++: always; py interface: discuss)    
     - date raised: 2019-02-01 
- * Version 0.1.66: resolved Issue 0071: add (new feature)
+ * Version 0.1.66: resolved Issue 0071: add (extension)
     - description:  add error handling for AddMainNode/Object/... according to AddMainMarker    
     - date raised: 2019-02-01 
- * Version 0.1.65: resolved Issue 0070: add (new feature)
+ * Version 0.1.65: resolved Issue 0070: add (extension)
     - description:  add GetLoadVector() for LoadForceVector    
     - date raised: 2019-02-01 
- * Version 0.1.64: resolved Issue 0069: DONE: (new feature)
+ * Version 0.1.64: resolved Issue 0069: DONE: (extension)
     - description:  DONE: size=1 or 3; add dimensionality of Load==>corresponds to dim of Marker; remove loadVector default from CLoad    
     - date raised: 2019-02-01 
- * Version 0.1.63: resolved Issue 0068: no: (new feature)
+ * Version 0.1.63: resolved Issue 0068: no: (extension)
     - description:  no: marker can have variable dimension; add dimensionality of Marker (MarkerBodyPosition=3, MarkerBodyCoordinate=1, MarkerBodyRigid=6, MarkerNodePoint=3, etc.)    
     - date raised: 2019-02-01 
- * Version 0.1.62: resolved Issue 0067: finish (new feature)
+ * Version 0.1.62: resolved Issue 0067: finish (extension)
     - description:  finish constraints, markers and loads    
     - date raised: 2019-02-01 
- * Version 0.1.61: resolved Issue 0066: integrate (new feature)
+ * Version 0.1.61: resolved Issue 0066: integrate (extension)
     - description:  integrate markers and loads    
     - date raised: 2019-02-01 
- * Version 0.1.60: resolved Issue 0065: constraint (new feature)
+ * Version 0.1.60: resolved Issue 0065: constraint (extension)
     - description:  constraint integration: .cpp file, object factory    
     - date raised: 2019-02-01 
- * Version 0.1.59: resolved Issue 0064: sys.InfoDetailed() (new feature)
+ * Version 0.1.59: resolved Issue 0064: sys.InfoDetailed() (extension)
     - description:  sys.InfoDetailed() ==> Dicts of all objects, nodes, markers, ...    
     - date raised: 2019-02-01 
- * Version 0.1.58: resolved Issue 0063: sys.InfoSummary(): (new feature)
+ * Version 0.1.58: resolved Issue 0063: sys.InfoSummary(): (extension)
     - description:  sys.InfoSummary(): __repr__ of sys ==> shows lists and CData;    
     - date raised: 2019-02-01 
- * Version 0.1.57: resolved Issue 0062: GetNumberOfNodes() (new feature)
+ * Version 0.1.57: resolved Issue 0062: GetNumberOfNodes() (extension)
     - description:  sys.GetNumberOfNodes(), etc.    
     - date raised: 2019-02-01 
- * Version 0.1.56: resolved Issue 0061: Test (new feature)
+ * Version 0.1.56: resolved Issue 0061: Test (extension)
     - description:  Test CallObjectFunction(...) ==> error in sys.PyGetOutputVariable(0,ht.OutputVariableType.Position)     
     - date raised: 2019-02-01 
- * Version 0.1.55: resolved Issue 0060: change (new feature)
+ * Version 0.1.55: resolved Issue 0060: change (extension)
     - description:  change marker->body/load->body/... references from pointers to numbers    
     - date raised: 2019-02-01 
- * Version 0.1.54: resolved Issue 0059: GetOutputVariableBod (new feature)
+ * Version 0.1.54: resolved Issue 0059: GetOutputVariableBod (extension)
     - description:  GetOutputVariableBody(variableType, localPosition, configuration, value)    
     - date raised: 2019-02-01 
- * Version 0.1.53: resolved Issue 0058: GetOutputVariable (new feature)
+ * Version 0.1.53: resolved Issue 0058: GetOutputVariable (extension)
     - description:  GetOutputVariable(variableType, value)    
     - date raised: 2019-02-01 
- * Version 0.1.52: resolved Issue 0057: Vector: (new feature)
+ * Version 0.1.52: resolved Issue 0057: Vector: (extension)
     - description:  Vector: add .cpp file and resolve SlimVector compiler conflict    
     - date raised: 2019-02-01 
- * Version 0.1.51: resolved Issue 0056: CallFunction(...) (new feature)
+ * Version 0.1.51: resolved Issue 0056: CallFunction(...) (extension)
     - description:  MainObject::CallFunction(...)    
     - date raised: 2019-02-01 
- * Version 0.1.50: resolved Issue 0055: PyCallObjectFunction (new feature)
+ * Version 0.1.50: resolved Issue 0055: PyCallObjectFunction (extension)
     - description:  MainSystem::PyCallObjectFunction(...) --> py::object    
     - date raised: 2019-02-01 
- * Version 0.1.49: resolved Issue 0054: add (new feature)
+ * Version 0.1.49: resolved Issue 0054: add (extension)
     - description:  add CObjectMassPoint.cpp and copy functions from COMassPoint.h    
     - date raised: 2019-02-01 
- * Version 0.1.48: resolved Issue 0053: resolve (new feature)
+ * Version 0.1.48: resolved Issue 0053: resolve (extension)
     - description:  resolve includes for Node, Body, MainSystem, ObjectFactory, TimeIntegrationSolver    
     - date raised: 2019-02-01 
- * Version 0.1.47: resolved Issue 0052: add (new feature)
+ * Version 0.1.47: resolved Issue 0052: add (extension)
     - description:  add addProtected/Public to python autoGenerator    
     - date raised: 2019-02-01 
- * Version 0.1.46: resolved Issue 0051: migrate (new feature)
+ * Version 0.1.46: resolved Issue 0051: migrate (extension)
     - description:  migrate from COBody to CObjectBody and MainObjectBody (COMMENT OUT main.cpp and similar implementations...)    
     - date raised: 2019-02-01 
- * Version 0.1.45: resolved Issue 0050: put (new feature)
+ * Version 0.1.45: resolved Issue 0050: put (extension)
     - description:  put CSystemData\* into CObject    
     - date raised: 2019-02-01 
- * Version 0.1.44: resolved Issue 0049: add (new feature)
+ * Version 0.1.44: resolved Issue 0049: add (extension)
     - description:  add pybindings to Marker-/Load-/OuputVariable-/...types;     
     - date raised: 2019-02-01 
- * Version 0.1.43: resolved Issue 0048: add (new feature)
+ * Version 0.1.43: resolved Issue 0048: add (extension)
     - description:  add MainMassPoint, ...    
     - date raised: 2019-02-01 
- * Version 0.1.42: resolved Issue 0047: add (new feature)
+ * Version 0.1.42: resolved Issue 0047: add (extension)
     - description:  add MainMarker, MainObject, ...    
     - date raised: 2019-02-01 
- * Version 0.1.41: resolved Issue 0046: finish (new feature)
+ * Version 0.1.41: resolved Issue 0046: finish (extension)
     - description:  finish MainNodePoint and access classes of Node     
     - date raised: 2019-02-01 
- * Version 0.1.40: resolved Issue 0045: ModifyNode(node (new feature)
+ * Version 0.1.40: resolved Issue 0045: ModifyNode(node (extension)
     - description:  ModifyNode(node, dict)    
     - date raised: 2019-02-01 
- * Version 0.1.39: resolved Issue 0044: AddNode('nodeType' (new feature)
+ * Version 0.1.39: resolved Issue 0044: AddNode('nodeType' (extension)
     - description:  AddNode('nodeType':'...', ...), GetNode(number or nodeName), GetDefaultNode('nodeType')    
     - date raised: 2019-02-01 
- * Version 0.1.38: resolved Issue 0043: Objects (new feature)
+ * Version 0.1.38: resolved Issue 0043: Objects (extension)
     - description:  Objects available in Python vs. Dict-Interface    
     - date raised: 2019-02-01 
- * Version 0.1.37: resolved Issue 0042: create (new feature)
+ * Version 0.1.37: resolved Issue 0042: create (extension)
     - description:  create concept for python integration:system    
     - date raised: 2019-02-01 
- * Version 0.1.36: resolved Issue 0041: create (new feature)
+ * Version 0.1.36: resolved Issue 0041: create (extension)
     - description:  create concept for python integration:specific objects: RigidBody, ...    
     - date raised: 2019-02-01 
- * Version 0.1.35: resolved Issue 0040: create (new feature)
+ * Version 0.1.35: resolved Issue 0040: create (extension)
     - description:  create concept for python integration:core objects: Node, Marker, ...    
     - date raised: 2019-02-01 
- * Version 0.1.34: resolved Issue 0039: move (new feature)
+ * Version 0.1.34: resolved Issue 0039: move (extension)
     - description:  move masspoint and other objects to objects directory    
     - date raised: 2019-02-01 
- * Version 0.1.33: resolved Issue 0038: create (new feature)
+ * Version 0.1.33: resolved Issue 0038: create (extension)
     - description:  create Object factory: objects added to specified CSystem    
     - date raised: 2019-02-01 
- * Version 0.1.32: resolved Issue 0037: access (new feature)
+ * Version 0.1.32: resolved Issue 0037: access (extension)
     - description:  access item in CSystem (test)    
     - date raised: 2019-02-01 
- * Version 0.1.31: resolved Issue 0036: add (new feature)
+ * Version 0.1.31: resolved Issue 0036: add (extension)
     - description:  add python access to CSystem members (obtain a certain CSystem as a copy?)    
     - date raised: 2019-02-01 
- * Version 0.1.30: resolved Issue 0035: AddPyfunction (new feature)
+ * Version 0.1.30: resolved Issue 0035: AddPyfunction (extension)
     - description:  AddPyfunction add pyFunction (which is global in module.cpp) to create a CSystem in SC    
     - date raised: 2019-02-01 
- * Version 0.1.29: resolved Issue 0034: define (new feature)
+ * Version 0.1.29: resolved Issue 0034: define (extension)
     - description:  define python dict structure (folders) for object definition:     
     - date raised: 2019-02-01 
- * Version 0.1.28: resolved Issue 0033: special (new feature)
+ * Version 0.1.28: resolved Issue 0033: special (extension)
     - description:  special function headers in MainObject (compute specific things, postprocessing of stresses?)    
     - date raised: 2019-02-01 
- * Version 0.1.27: resolved Issue 0032: MainObject (new feature)
+ * Version 0.1.27: resolved Issue 0032: MainObject (extension)
     - description:  MainObject links to functions of CObject, as far as needed    
     - date raised: 2019-02-01 
- * Version 0.1.26: resolved Issue 0031: ObjectFactory (new feature)
+ * Version 0.1.26: resolved Issue 0031: ObjectFactory (extension)
     - description:  ObjectFactory function    
     - date raised: 2019-02-01 
- * Version 0.1.25: resolved Issue 0030: GetDict (new feature)
+ * Version 0.1.25: resolved Issue 0030: GetDict (extension)
     - description:  GetDict / SetDict for MainObject types; all MAINObjects have this functionality?; this means a very deep integration of pybind11!; but not needed in base class, because all pybindings in derived class; all communication at 'dict' level, ; MainSystem.SetObjectDict(objectID[Name], dict); MainSystem.SetNodeDict(nodeID[Name], dict), etc.    
     - date raised: 2019-02-01 
- * Version 0.1.24: resolved Issue 0029: dict (new feature)
+ * Version 0.1.24: resolved Issue 0029: dict (extension)
     - description:  dict access to MainObject for every chosen parameter or function (put into pymodule-part)    
     - date raised: 2019-02-01 
- * Version 0.1.23: resolved Issue 0028: (B) (new feature)
+ * Version 0.1.23: resolved Issue 0028: (B) (extension)
     - description:  (B) bind-only functions of mother class (without definition in Main/CObject)    
     - date raised: 2019-02-01 
- * Version 0.1.22: resolved Issue 0027: (D) (new feature)
+ * Version 0.1.22: resolved Issue 0027: (D) (extension)
     - description:  (D) function can have declaration only    
     - date raised: 2019-02-01 
- * Version 0.1.21: resolved Issue 0026: chose (new feature)
+ * Version 0.1.21: resolved Issue 0026: chose (extension)
     - description:  chose, which parameter goes into CObject or MainObject (no doubling!)    
     - date raised: 2019-02-01 
- * Version 0.1.20: resolved Issue 0025: creates (new feature)
+ * Version 0.1.20: resolved Issue 0025: creates (extension)
     - description:  creates CObject, MainObject, etc. classes    
     - date raised: 2019-02-01 
- * Version 0.1.19: resolved Issue 0024: write (new feature)
+ * Version 0.1.19: resolved Issue 0024: write (extension)
     - description:  write new pythonAutoGenerateObjects.py file for Objects, Nodes, Markers, etc.    
     - date raised: 2019-02-01 
- * Version 0.1.18: resolved Issue 0023: Create (new feature)
+ * Version 0.1.18: resolved Issue 0023: Create (extension)
     - description:  Create -py multibody system according to CreateMultibodySystem() ==> what is done there to add objects?    
     - date raised: 2019-02-01 
- * Version 0.1.17: resolved Issue 0022: MainObject (new feature)
+ * Version 0.1.17: resolved Issue 0022: MainObject (extension)
     - description:  MainObject setter function, using Python dictionary    
     - date raised: 2019-02-01 
- * Version 0.1.16: resolved Issue 0021: MainObject (new feature)
+ * Version 0.1.16: resolved Issue 0021: MainObject (extension)
     - description:  MainObject getter function, using Python dictionary    
     - date raised: 2019-02-01 
- * Version 0.1.15: resolved Issue 0020: MainObjectFactory (new feature)
+ * Version 0.1.15: resolved Issue 0020: MainObjectFactory (extension)
     - description:  MainObjectFactory function, using Python dictionary    
     - date raised: 2019-02-01 
- * Version 0.1.14: resolved Issue 0019: MainObject: (new feature)
+ * Version 0.1.14: resolved Issue 0019: MainObject: (extension)
     - description:  MainObject: Pointer to CObject, Pointer to VObject, MainObjectParameters, special member variables, access functions, initialization    
     - date raised: 2019-02-01 
- * Version 0.1.13: resolved Issue 0018: CObject: (new feature)
+ * Version 0.1.13: resolved Issue 0018: CObject: (extension)
     - description:  CObject: CObjectParameters (currently all public), special member variables, compute functions    
     - date raised: 2019-02-01 
- * Version 0.1.12: resolved Issue 0017: Access (new feature)
+ * Version 0.1.12: resolved Issue 0017: Access (extension)
     - description:  Access to all objects (nodes, markers, etc) independent of class hierarchy: with a Dictionary() access    
     - date raised: 2019-02-01 
- * Version 0.1.11: resolved Issue 0016: change (new feature)
+ * Version 0.1.11: resolved Issue 0016: change (extension)
     - description:  change pythonAutoGenerator Setter/Getter functions to Pybind default: Set...(const Value& value) {...}    
     - date raised: 2019-02-01 
- * Version 0.1.10: resolved Issue 0015: extend (new feature)
+ * Version 0.1.10: resolved Issue 0015: extend (extension)
     - description:  extend pythonAutoGenerationInterfaces for python+Main-interface classes (flag p?)    
     - date raised: 2019-02-01 
- * Version 0.1.9: resolved Issue 0014: rename (new feature)
+ * Version 0.1.9: resolved Issue 0014: rename (extension)
     - description:  rename PyCNode, PyCSystem, etc. to MainNode, etc.    
     - date raised: 2019-02-01 
- * Version 0.1.8: resolved Issue 0013: add (new feature)
+ * Version 0.1.8: resolved Issue 0013: add (extension)
     - description:  add MainSystem to CSystem and add functionality for object factory    
     - date raised: 2019-02-01 
- * Version 0.1.7: resolved Issue 0012: check (new feature)
+ * Version 0.1.7: resolved Issue 0012: check (extension)
     - description:  check how derived classes work in pybind (need for trampoline?) ==> use Test class    
     - date raised: 2019-02-01 
- * Version 0.1.6: resolved Issue 0011: Add (new feature)
+ * Version 0.1.6: resolved Issue 0011: Add (extension)
     - description:  Add global stream which always goes to Python    
     - date raised: 2019-02-01 
- * Version 0.1.5: resolved Issue 0010: create (new feature)
+ * Version 0.1.5: resolved Issue 0010: create (extension)
     - description:  create PySystemContainer:SystemContainer which adds the Python components to SystemContainer    
     - date raised: 2019-02-01 
- * Version 0.1.4: resolved Issue 0009: create (new feature)
+ * Version 0.1.4: resolved Issue 0009: create (extension)
     - description:  create SystemContainer as basis for all Comptational (MBS) System objects    
     - date raised: 2019-02-01 
- * Version 0.1.3: resolved Issue 0008: access (new feature)
+ * Version 0.1.3: resolved Issue 0008: access (extension)
     - description:  access to system and objects, but objects still live in C++ world    
     - date raised: 2019-02-01 
- * Version 0.1.2: resolved Issue 0007: decide: (new feature)
+ * Version 0.1.2: resolved Issue 0007: decide: (extension)
     - description:  decide: where do objects live?: objects + system live in C++ (otherwise parallelization inefficient)    
     - date raised: 2019-02-01 
- * Version 0.1.1: resolved Issue 0000: Test (new feature)
+ * Version 0.1.1: resolved Issue 0000: Test (extension)
     - description:  Test efficiency of virtual function calls in current Vector/Matrix library ==> already done earlier ==> will be efficient for AVX implementation (small overhead accepted)    
     - date raised: 2019-02-01 
 
 ***********
 Open issues
 ***********
-
- * :textred:`open issue 2517:` the gate environment can hold a stale exudyn wheel
-    - issue author: Claude-JG
-    - description:  The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.
-    - date raised: 2026-09-18 
 
  * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG
@@ -8828,6 +8776,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2517:` the gate environment can hold a stale exudyn wheel
+    - issue author: Claude-JG
+    - description:  The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.
+    - date raised: 2026-09-18 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG

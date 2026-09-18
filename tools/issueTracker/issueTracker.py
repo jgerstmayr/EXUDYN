@@ -6,9 +6,8 @@
 # Issue tracker
 
 # line format: number, issue name, issue author, status, description, type, priority, date raised, deadline, date resolved, resolved author, file, line, notes
-# - type: BUG, FIX, NEW FEATURE, EXTENSION, CHANGE, PERFORMANCE, IDEA, CHECK, 
-#         CLEANUP, DOCU, TUTORIAL, TESTING, EXAMPLE
-# - status: RAISED, RESOLVED, WORK
+# - type and status: see issueTypes and issueStatuses below - that is the ONLY list of them
+#   (revision2026 step R8.7, #2519), and the header of trackerlog.txt is written from it
 # - priority: NO (empty: ''), LOW, NORMAL, HIGH
 
 # NOTE: in 'trackerlog.txt', the text fields may not use ',', but '\;' is used instead!
@@ -72,6 +71,47 @@ versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis
                 '1.13':'Newborn', '1.14':'Parker'} #(Phineas) Newborn, (Charlie) Parker, (Jaco) Pastorius, (Oscar) Peterson, #3xP for missing O and Q
                 #(Django) Reinhardt, Scofield, Thielemans, (Steve) Vai, (Sarah) Vaughan
 # +++++++++++++++++++++++++++++++++++++++++++++
+
+#+++++++++++++++++++++++++++++++++++++++++++++
+#THE ISSUE TYPES, in one place (revision2026 step R8.7, #2519). Before this there were three lists -
+#the header of this file, the header of trackerlog.txt and what people actually typed - and all
+#three disagreed: 39 distinct spellings in 2519 issues, 20 of them typos or singletons, and the
+#same meaning under both 'NEW FEATURE' (used until #342) and 'EXTENSION' (used ever since).
+#What each type answers is "what does this mean for a USER", which is why BUG and FIX are separate
+#and why IMPROVEMENT exists.
+issueTypes = {
+    'BUG':         'something goes really wrong, in particular WRONG RESULTS; a user may not notice',
+    'FIX':         'something goes wrong and says so - an exception, a crash, a file not written',
+    'CHANGE':      'behaviour or interface changes; users have to be careful about this one',
+    'EXTENSION':   'a new feature, parameter or flag; good for users and changes no behaviour',
+    'IMPROVEMENT': 'the code gets better without the user seeing it: readability, cleanup, speed',
+    'TESTING':     'a new or extended test',
+    'DOCU':        'documentation, description or tutorial',
+    'EXAMPLE':     'an example model',
+    'CHECK':       'something to investigate or verify; it may turn into another issue',
+    'IDEA':        'not yet a feature: how something COULD look. Becomes another issue, or is abandoned',
+}
+
+#THE STATUSES. WORK and TESTING stood in the old list and were never used once in 2519 issues, so
+#they are gone; ABANDONED is what was missing - "decided against", "no longer applies", "not
+#possible" - and without it such issues had to be written as RESOLVED, which is untrue.
+issueStatuses = {
+    'RAISED':    'open',
+    'RESOLVED':  'done',
+    'ABANDONED': 'closed WITHOUT being done; the reason belongs in the notes',
+}
+
+#Both count for the version number. The micro version is the count of CLOSED issues, not of
+#resolved ones: if abandoning did not count, then abandoning an already-resolved issue would move
+#version.txt BACKWARDS and a released version number would stop being reproducible from this file.
+#The difference shows in the release notes instead - only RESOLVED is listed there as resolved,
+#and ABANDONED is listed nowhere, neither as resolved nor as open.
+closedStatuses = ['RESOLVED', 'ABANDONED']
+
+#types that are not announced as resolved issues: an idea that became a real issue would otherwise
+#be reported twice
+typesNotInReleaseNotes = ['IDEA']
+#+++++++++++++++++++++++++++++++++++++++++++++
 
 trackerItems = ['number', 'issue', 'author', 'status', 'description', 
                 'type', 'priority', 'date raised', 'deadline', 'date resolved', 
@@ -216,6 +256,10 @@ def GetIssue(number): #0-based, get dictionary of issue with number
         cnt = 0;
         for s in items: 
             txt = s.replace('\\;',',')
+            if trackerItems[cnt] == 'status':
+                #the column is padded to 8 characters in the file. That 'RESOLVED' happens to be
+                #exactly 8 long is why comparing IT worked and comparing 'RAISED' did not (#2519)
+                txt = txt.strip()
             d[trackerItems[cnt]] = txt
             cnt += 1
     else:
@@ -247,6 +291,10 @@ def GetIssues(): #get list of dictionaries of all issues
         cnt = 0;
         for s in items: 
             txt = s.replace('\\;',',')
+            if trackerItems[cnt] == 'status':
+                #the column is padded to 8 characters in the file. That 'RESOLVED' happens to be
+                #exactly 8 long is why comparing IT worked and comparing 'RAISED' did not (#2519)
+                txt = txt.strip()
             d[trackerItems[cnt]] = txt
             cnt += 1
         issuesList += [d]
@@ -320,12 +368,12 @@ def GetMajorMinorMicroVersion(): #convert all issues to a .html file
     fileRead.close()
 
     numberOfResolved = 0
-    #count resolved issues
+    #count CLOSED issues - resolved and abandoned alike, see closedStatuses (#2519)
     for line in fileLines:
-        
+
         items = line.split(',')
         if len(items) == numberOfItems: #only count in valid lines; error will be reported lateron
-            if (items[indexStatus].find('RESOLVED') != -1):
+            if items[indexStatus].strip() in closedStatuses:
                 numberOfResolved += 1
     
     #print('numberOfResolved=',numberOfResolved)
@@ -750,8 +798,7 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
             si += '\n  \\ei\n'
             rst += '\n'
             
-            # if issue['status'] == 'RESOLVED' and issue['type'] != 'DISCUSSION' and vIssue >= 0:
-            if issue['status'] == 'RESOLVED' and issue['type'] != 'DISCUSSION':
+            if issue['status'] == 'RESOLVED' and issue['type'] not in typesNotInReleaseNotes:
                 s2 = '  \\item[] {\\bf Version '+str(release)+'.'+str(vIssueMinor)+'.'+str(vIssueMicro)+'}:' #' \\vspace{-6pt} \n'
                 rst2 = ' * Version '+str(rNew[0])+'.'+str(rNew[1])+'.'+str(vIssueMicro) + ': '
                 # attrPre = ''
@@ -781,13 +828,13 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
                     fileWrite.write(s2+si) #latex does not include 0.1 issues
                 sRST += rst2 + rst
                 issueCnt += 1
-            elif issue['status'] != 'RESOLVED' and issue['type'] == 'BUG':
+            elif issue['status'] == 'RAISED' and issue['type'] == 'BUG':
                 bugstr += '  \\item open {\\bf BUG '+issue['number'] + '}: '
                 bugstr += ' {\\bf '+ToLatex(issue['issue']).strip(' ')+'}\n'
                 bugstr += si
                 bugRST += ' * :textred:`open BUG '+issue['number'] +':` ' + EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True)) + '\n'
                 bugRST += rst + '\n'
-            elif issue['status'] != 'RESOLVED':
+            elif issue['status'] == 'RAISED':               #an ABANDONED issue is not an open one
                 preRST = '**'
                 postRST = '**'
     
@@ -804,7 +851,10 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
                 openRST += ' * '+preRST+'open issue '+issue['number'] + ':' + postRST + ' ' + EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True)) + '\n'
                 openRST += rst + '\n'
                 
-            if issue['status'] == 'RESOLVED':
+            #CLOSED, not resolved: the version a past issue is listed under is derived from this
+            #counter, so counting only RESOLVED would renumber every historical entry as soon as
+            #one issue is abandoned. An abandoned issue keeps its place and is simply not printed
+            if issue['status'] in closedStatuses:
                 resolvedCnt += 1        
         
         if issueCnt == 0:
@@ -878,6 +928,15 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
 
     issueDict['status'] = 'RAISED'
     issueDict['date raised'] = GetDateStr()
+
+    #the type is checked HERE, at the one place where an issue is born. Without this the list of
+    #types is only a comment, which is how 39 spellings got into 2519 issues (#2519)
+    issueDict['type'] = issueDict.get('type', '').strip().upper()
+    if issueDict['type'] not in issueTypes:
+        raise ValueError('RaiseIssue: unknown issue type "' + issueDict['type']
+                         + '". Use one of:\n  '
+                         + '\n  '.join(name.ljust(12) + ' ' + issueTypes[name]
+                                       for name in issueTypes))
 
     listDest = IssueDictToList(issueDict)
     numStr = str(NumberOfIssues())
@@ -1009,6 +1068,44 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
     ConvertToLatex() #update html version of issue tracker
 
     return issueNumber
+
+#%%******************************************************************************************************
+#use this to close an issue that will NOT be done
+def AbandonIssue(issueNumber, reason, author='JG'):
+    """Close an issue without doing it: decided against, no longer applies, not possible. The
+    reason is not optional - an abandoned issue with no reason is worse than an open one, because
+    the next person cannot tell whether it was judged or forgotten. The issue keeps its place in
+    the version count (see closedStatuses) and appears in the release notes neither as resolved nor
+    as open."""
+    IssueTrackerBackup()
+
+    if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
+        print('Issue: invalid number! Nothing done')
+        return None
+
+    if reason.strip() == '':
+        raise ValueError('AbandonIssue: say WHY in "reason"; it is the only record of the decision')
+
+    d = GetIssue(issueNumber)
+
+    d['status'] = 'ABANDONED'
+    d['date resolved'] = GetDateTimeStr()
+    d['resolved author'] = author
+    if d['notes'] != '':
+        reason = d['notes'] + '; ' + reason
+    d['notes'] = reason
+
+    ModifyDictIssue(d)
+
+    print('issue abandoned: #' + str(issueNumber) + ' "' + str(d['issue']).strip() + '"')
+    print(d)
+
+    UpdateDateAndVersion()
+    ConvertToHTML()
+    ConvertToLatex()
+
+    return issueNumber
+
 
 #%%******************************************************************************************************
 #use this to quickly raise a new issue

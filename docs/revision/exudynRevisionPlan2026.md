@@ -881,12 +881,31 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     in `issueTracker.py`, the RST/LaTeX/HTML converters, the CLI of R8.3 (`close <n> --reason ...`),
     and the JSON schema of R8.5. Also check `ChangeIssue` cannot set it silently.
 
+    **The status itself was built in R8.7** (2026-09-18) - as `ABANDONED`, with `AbandonIssue()` and
+    a mandatory reason. What remains here is the `close` verb of the R8.3 CLI and the JSON schema of
+    R8.5.
+
+    **And the constraint stated above does not hold; the opposite does.** "A closed-not-fixed issue
+    must not count as resolved" sounds right and is unimplementable: the micro version is a running
+    count, so if abandoning did not count, then abandoning an issue that is already RESOLVED - which
+    is exactly what a migration of the 2019-2022 backlog does - moves `version.txt` **backwards**,
+    and a released version number stops being reproducible from the file. The rule is therefore
+    that the version counts **closed** issues, resolved and abandoned alike, and the distinction
+    lives where it is actually read: the release notes list an abandoned issue neither as resolved
+    nor as open. Measured: 15 issues moved to `ABANDONED` and `version.txt` stayed at 1.11.178.
+
 <a id="r8-3-2"></a>
 **R8.3.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r8-3-2) — *(sub-step of R8.3;
     maintainer request 2026-09-17)* **The old backlog was checked against what the revision actually
     did.** 29 issues from 2016-2026 were read and verified one by one; 23 are resolved by later
     work, 2 were partially covered and got successors (#2497, #2498), 6 stay open because nothing
     has been done about them.
+
+<a id="r8-7"></a>
+**R8.7** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r8-7) — *(phase R8; maintainer
+    request 2026-09-18)* **One list of issue types and one list of statuses, and the tracker
+    enforces them** (#2519). 39 spellings became 10 types; `IMPROVEMENT` is new; `WORK` and
+    `TESTING` leave the status list and `ABANDONED` joins it.
 
 <a id="r8-4"></a>
 **R8.4** *(phase R8)* **Fold minor-version bumps into the tracker.** A 1.11 → 1.12 bump currently means

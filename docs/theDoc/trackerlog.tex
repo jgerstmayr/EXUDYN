@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.178.dev1, 
+  \item Exudyn version = 1.11.179.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2519, 
-  \item Number of resolved issues = 2251 (178 in current version), 
+  \item Number of issues = 2520, 
+  \item Number of resolved issues = 2252 (179 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.179}:  resolved Issue 2519: {\bf issue types and statuses are three lists that disagree}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: trackerlog.txt and issueTracker.py each carry a comment listing the issue types and statuses, neither matches the other and neither matches what is in the file: 39 distinct type spellings in 2519 issues\, 20 of them typos or singletons\, NEW FEATURE and EXTENSION for the same thing\, NEW TEST written as TESTING. The statuses WORK and TESTING were never used once, ABANDONED is missing. Nothing validates the value on RaiseIssue. revision2026 step R8.7.}
+    \item {\bf notes: issueTypes and issueStatuses in issueTracker.py are now the only list, the trackerlog.txt header is written from them and RaiseIssue rejects an unknown type. 39 spellings became 10 types (IMPROVEMENT is new, NEW FEATURE merged into EXTENSION, DISCUSSION into IDEA), 277 type changes. WORK and TESTING left the status list (never used once), ABANDONED joined it with AbandonIssue() and a mandatory reason, 15 issues migrated. Both the version counter and the release-note version index count CLOSED issues\, so version.txt stayed at 1.11.178 and no historical version line changed. revision2026 step R8.7.}
+    \item   date resolved: {\bf 2026-09-18 15:40},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.178}:  resolved Issue 2518: {\bf exudev build refuses --env}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -36,8 +45,7 @@ date raised: 2026-09-18 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-18 15:03},
 date raised: 2026-09-18 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.176}:  resolved Issue 2515: {\bf stub gate fails on a wheel without the fast module}
-(bug)
+  \item[] {\bf Version 1.11.176}: {\bf \color{warningRed}  resolved BUG 2515}: {\bf stub gate fails on a wheel without the fast module}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: checkPython.py --stubs --check reports 'unused allowlist entry exudyn.exudynCPPfast' as an error when the installed wheel was built without the fast module (the default of exudev build; revision2026 step R5.18). Nothing is wrong with the stubs. revision2026 step R5.5.7.}
@@ -54,8 +62,7 @@ date raised: 2026-09-18 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-18 12:50},
 date raised: 2026-09-15 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.174}:  resolved Issue 2514: {\bf checkExtras does not know python/testing}
-(bug)
+  \item[] {\bf Version 1.11.174}: {\bf \color{warningRed}  resolved BUG 2514}: {\bf checkExtras does not know python/testing}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: After revision2026 step R3.9 the runners live in python/testing/ and are no longer siblings of the models. checkExtras.LocalModuleNames() only knows the shipped packages and the siblings of the scanned directory; so modelUnitTests and testRunnerTools were reported as UNCOVERED IMPORTS needed by [tests] - although they are project files and not packages at all. revision2026 step R3.9.1.}
@@ -82,7 +89,7 @@ date raised: 2026-09-18 (resolved by: Claude-JG)
 date raised: 2026-09-18 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.171}:  resolved Issue 2505: {\bf a test model page is in no toctree}
-(documentation)
+(docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.}
@@ -283,14 +290,6 @@ date raised: 2026-01-16 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-17 22:43},
 date raised: 2025-05-06 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.147}:  resolved Issue 1988: {\bf exceptions}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes}
-    \item {\bf notes: Superseded by \#2497: the change was never made; but every one of the 59 bare "except:" in the shipped package is now listed with file and message in tools/ci/ruffBaseline.txt (revision2026 step R5.5.3) and a new one fails the check. See the successor issue.}
-    \item   date resolved: {\bf 2026-09-17 22:43},
-date raised: 2025-04-10 (resolved by: Claude-JG)
-  \ei
   \item[] {\bf Version 1.11.146}:  resolved Issue 1861: {\bf exceptions and ValueError}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -362,7 +361,7 @@ date raised: 2020-01-24 (resolved by: Claude-JG)
 date raised: 2019-05-13 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.137}:  resolved Issue 0005: {\bf finish}
-(new feature)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: finish tests for all matrix classes    }
     \item {\bf notes: Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllMatrixUnitTests.h and AllMatrixVariantsUnitTests.h cover Matrix; ResizableMatrix; ConstSizeMatrix and the linked-data variants; step R5.4.1 completed the variants that had none.}
@@ -370,7 +369,7 @@ date raised: 2019-05-13 (resolved by: Claude-JG)
 date raised: 2019-04-01 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.136}:  resolved Issue 0002: {\bf finish}
-(new feature)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: finish tests for all vector classes    }
     \item {\bf notes: Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllVectorUnitTests.h; TemplatedVectorArrayUnitTests.h; AllBasicLinalgUnitTests.h and AVXVectorUnitTests.h cover Vector; ResizableVector; SlimVector; ConstSizeVector and LinkedDataVector; run by exu.special.RunCppUnitTests() in every build with EXUDYN\_PERFORM\_UNIT\_TESTS and by the test suite.}
@@ -501,8 +500,7 @@ date raised: 2026-09-17 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-17 17:20},
 date raised: 2026-09-17 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.120}:  resolved Issue 2482: {\bf the sparse FactorizeNew does not return the causing row it promises}
-(bug)
+  \item[] {\bf Version 1.11.120}: {\bf \color{warningRed}  resolved BUG 2482}: {\bf the sparse FactorizeNew does not return the causing row it promises}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.}
@@ -510,8 +508,7 @@ date raised: 2026-09-17 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-17 17:20},
 date raised: 2026-09-17 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.119}:  resolved Issue 2481: {\bf a symbolic vector product with inconsistent sizes leaks its nodes}
-(bug)
+  \item[] {\bf Version 1.11.119}: {\bf \color{warningRed}  resolved BUG 2481}: {\bf a symbolic vector product with inconsistent sizes leaks its nodes}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: Symbolic::operator*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.}
@@ -519,8 +516,7 @@ date raised: 2026-09-17 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-17 16:43},
 date raised: 2026-09-17 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.118}:  resolved Issue 2480: {\bf SymbolicVector.h and SymbolicMatrix.h do not include what they use}
-(bug)
+  \item[] {\bf Version 1.11.118}: {\bf \color{warningRed}  resolved BUG 2480}: {\bf SymbolicVector.h and SymbolicMatrix.h do not include what they use}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: Both headers use py::list, py::array\_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.}
@@ -528,8 +524,7 @@ date raised: 2026-09-17 (resolved by: Claude-JG)
     \item   date resolved: {\bf 2026-09-17 16:43},
 date raised: 2026-09-17 (resolved by: Claude-JG)
   \ei
-  \item[] {\bf Version 1.11.117}:  resolved Issue 2476: {\bf SparseTripletMatrix(rows, columns, triplets) throws its size arguments away}
-(bug)
+  \item[] {\bf Version 1.11.117}: {\bf \color{warningRed}  resolved BUG 2476}: {\bf SparseTripletMatrix(rows, columns, triplets) throws its size arguments away}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: The three-argument constructor initialises numberOfRows(0) and numberOfColumns(0) and never assigns numberOfRowsInit or numberOfColumnsInit, so a matrix built with it reports 0 x 0 while holding the triplets. Nothing in the code base calls it - it was found while fixing \#2474, which makes the size fields load-bearing for MultMatrixVector. Either assign them or delete the constructor. revision2026 step R5.4.6.}
@@ -702,7 +697,7 @@ date raised: 2026-09-16 (resolved by: Claude-JG)
 date raised: 2026-09-16 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.97}:  resolved Issue 2459: {\bf no way to run a fast subset of the test models}
-(add)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: revision2026 step R5.2: every runner was all-or-nothing, so a pull-request run had to include the models that take longest and those needing optional packages (ngsolve, stable-baselines3). Added SlowTests() and OptionalPackageTests() as data in runTestSuiteRefSol.py, runTestSuite.py --fast and pytest markers slow/optionalPackage/sensitive/unresolvedOnLinux reading the same data}
@@ -711,7 +706,7 @@ date raised: 2026-09-16 (resolved by: Claude-JG)
 date raised: 2026-09-16 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.96}:  resolved Issue 2457: {\bf test models are not available as pytest cases}
-(add)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: revision2026 step R5.1: runTestSuite.py was the only way to run the test models, so there was no selection by name, no IDE or CI reporting and no standard parallel runner; added python/TestModels/test\_testModels.py with one parametrized case per model and mini example, sharing reference values and tolerances with the suite}
@@ -729,7 +724,7 @@ date raised: 2026-09-16 (resolved by: Claude-JG)
 date raised: 2026-09-16 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.94}:  resolved Issue 2454: {\bf exudyn.config.outputDirectory: global output directory for solver written files}
-(add)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: revision2026 step R5.13: solver written files (coordinates solution; solver information; sensor files; exported images) are prefixed with exudyn.config.outputDirectory when it is set. An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. The setting is global and lives as long as the module is loaded; it is meant for test runners and batch scripts; users should put the folder into the file names. Needed so that the test suite can give every model its own output directory (\#2418) - the prerequisite for running the suite in parallel}
@@ -879,7 +874,7 @@ date raised: 2026-09-15 (resolved by: Claude-JG)
 date raised: 2026-09-15 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.77}:  resolved Issue 2417: {\bf remove the CFOptional flag once phase 3 is done}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: CFOptional marks 448 of 985 item parameters and generates if (EPyUtils::DictItemExists(d; "x")) around the dictionary read; so a parameter that is absent keeps its C++ default. It still catches today - the test suite creates items from raw dicts; e.g. modelUnitTests.py:184 calls mbs.AddObject with objectType Ground and referencePosition only; and ObjectGround has four optional parameters that the call omits. Maintainer decision 2026-09-13: remove it after phase 3 anyway. The reasoning: there are practically no tests for this behaviour; so the flag is worthless as a guarantee; and the dict path works if every parameter is optional. Where a parameter really cannot be omitted; the failing default value is the right place to say so - a construction that cannot produce a usable object should fail on its default; not on a hand-written flag that nothing checks. Do this AFTER phase 3; and add tests for the raw-dict creation path at the same time; since that is what the flag silently protects today.}
@@ -1012,7 +1007,7 @@ date raised: 2026-09-15 (resolved by: Claude-JG)
 date raised: 2026-09-15 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.61}:  resolved Issue 2433: {\bf generated item headers carry wrong and stray comments}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: Reported by the maintainer 2026-09-15: MainLoadCoordinate.h and all other Main headers write /* AUTO: read out dictionary and cast to C++ type*/ inside SetParameter and label every SetParameter line get parameter; GetParameter of user functions ends with ;; ; the visualization pointer is commented as computational object; CNodeGeneric{AE-ODE1-ODE2} return ...;; from their definitions; lines carry trailing whitespace. revision2026 step R4.21.}
@@ -1021,7 +1016,7 @@ date raised: 2026-09-15 (resolved by: Claude-JG)
 date raised: 2026-09-15 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.60}:  resolved Issue 2431: {\bf src/Autogenerated/StructuralElementsDataStructures.h has no generator and no user}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: Found in revision2026 step R4.4.3.5a: the tracked generated header src/Autogenerated/StructuralElementsDataStructures.h is not rewritten by tools/regenerate.py (unchanged since the step-25 move) and no file includes it; all includes use the hand-written src/Main/StructuralElementsDataStructures.h. It still contains the old EXUstd::GetSafely setters. Same kind of leftover as \#2428. Deleting a tracked file needs the maintainer; the check of revision2026 step R4.18 covers item headers only. revision2026 step R4.20.}
@@ -1039,7 +1034,7 @@ date raised: 2026-09-15 (resolved by: Claude-JG)
 date raised: 2026-09-14 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.58}:  resolved Issue 2429: {\bf unify the item/structure type exceptions of typeModel.py}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: tools/generators/typeModel.py holds 36 spellings the rules do not produce (revision2026 step R4.4.3.3) - the same definition type is spelled differently for items and structures: Int is int for items and Index for structures; Float3/Float4 are exchanged as std::vector<float> for items and std::array<float n> for structures; NumpyVector/NumpyMatrix are stored as Vector/Matrix in items and py::array\_t<Real> in structures; Vector2DList vs Vector3DList wrappers; Matrix2D reads Matrix2D in docs while the other fixed matrices read array\_like; stub and dictType special names. Unify as far as possible - one spelling per type and destination - keeping each unification only if the full test suite and parameterConversionTest.py (apart from intended reference changes) do not fail; what must remain gets a comment with the reason. revision2026 step R4.19.}
@@ -1082,7 +1077,7 @@ date raised: 2026-09-14 (resolved by: Claude-JG)
 date raised: 2026-09-14 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.53}:  resolved Issue 2428: {\bf four generated item headers in src/Autogenerated have no generator and no user}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: MainMarkerBody.h - MainMarkerGenericBodyPosition.h - MainObjectContactFrictionCircleCable2DOld.h - MainObjectJointSliding2DNew.h are tracked but no longer written by itemHeaderEmitter.py (their items are not in definitions/) and no .h or .cpp includes them; MainMarkerBody.h still calls HPyUtils::SetStringSafely. Found in revision2026 step R4.4.3.4 when counting the helper calls left in the generated headers. Deleting tracked files needs the maintainer; the drift gate should also report generated files that no generator writes. revision2026 step R4.18.}
@@ -1293,7 +1288,7 @@ date raised: 2026-09-12 (resolved by: Claude-JG)
 date raised: 2026-09-12 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.29}:  resolved Issue 2389: {\bf remove 32 bit support: libs/libs32 and the bitness branch in setup.py}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: follow up to issue 2386; whose resolution note still says setup.py keeps its is32bits branch - that is no longer true. On the maintainer instruction the 32 bit support is removed outright: main/libs/libs32 (glfw.pdb; glfw3.lib; glfw3\_d.lib; openvr\_api.dll; openvr\_api.lib) and the is32bits/is64bits branch in setup.py; whose only remaining effect was to choose that directory. revision2026 step R2.6}
@@ -1302,7 +1297,7 @@ date raised: 2026-09-12 (resolved by: Claude-JG)
 date raised: 2026-09-12 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.28}:  resolved Issue 2386: {\bf drop the ReleaseP37 and Win32/x86 build configurations}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: the solution and cppsrc.vcxproj carried six configurations: Debug; Release and ReleaseP37 times Win32 and x64. ReleaseP37 is the last artefact of Python 3.7 support and no 32 bit wheel has been built for years; so four of the six were dead weight that every vcxproj edit had to be repeated in. revision2026 step R2.6}
@@ -1311,7 +1306,7 @@ date raised: 2026-09-12 (resolved by: Claude-JG)
 date raised: 2026-09-12 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.27}:  resolved Issue 2385: {\bf remove the three dead CMakeLists files}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: none of the three could configure; let alone build. main/CMakeLists.txt was a fourth complete copy of the 133 file source list and called add\_subdirectory(pybind11) on a directory that does not exist; its own header said "CMakeLists for Exudyn are not complete". main/src/CMakeLists.txt and main/obj/autoCMakeLists.txt listed 63 of 133 files; missed 74; referenced sources deleted years ago (StaticSolver.cpp; CNodeRigidBody.cpp; solver/TimeIntegrationSolver.cpp) and used add\_executable although exudyn is a Python module. Decision D3 keeps the .sln and .vcxproj and drops CMake. revision2026 step R2.5}
@@ -1415,7 +1410,7 @@ date raised: 2026-09-10 (resolved by: Claude-JG)
 date raised: 2026-09-10 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.15}:  resolved Issue 2365: {\bf Clean up docs/howTo and remove the doxygen configuration}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: docs/howTo held 26 loose .txt files, most describing VS2017/VS2019, 32-bit builds, Python 3.6/3.7 or the pre-WSLg X-server era, plus two exact duplicates. docs/doxygen held a 111 KB Doxyfile for a tool that broke on project size, whose PDF path never worked and whose graph generation had already been switched off. Also: no experimental folder remains in the tracked tree, so revision2026 step R1.4 has nothing to move. revision2026 steps R1.4, 30, 79.}
@@ -1468,7 +1463,7 @@ date raised: 2026-09-09 (resolved by: Claude-JG)
 date raised: 2026-09-09 (resolved by: Claude-JG)
   \ei
   \item[] {\bf Version 1.11.9}:  resolved Issue 2359: {\bf Add pre-push hook guarding the public repository}
-(new feature)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: Nothing mechanically prevented pushing v2-dev to public GitHub; only memory. Add tools/hooks/pre-push refusing any ref but master, release/* and tags when the target is GitHub, matched on both remote name and github.com URL. Activated per clone with git config core.hooksPath tools/hooks. Also verified that pushing from this shallow clone requires receive.shallowUpdate=true on the receiving repository. revision2026 steps R1.5 and R1.1.}
@@ -2397,7 +2392,7 @@ date raised: 2022-07-11
 date raised: 2021-03-18 
   \ei
   \item[] {\bf Version 1.10.41}:  resolved Issue 0643: {\bf ObjectFFRFreducedOrder / CMS}
-(tutorial)
+(docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: create tutorial with two bodies (crank, connecting rod, rigid piston)}
     \item {\bf notes: already resolved earlier with FFRF tutorial}
@@ -2670,14 +2665,6 @@ date raised: 2023-07-20
     \item   date resolved: {\bf 2025-07-11 15:58},
 date raised: 2022-04-02 
   \ei
-  \item[] {\bf Version 1.10.3}:  resolved Issue 0865: {\bf multithreaded solver}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False}
-    \item {\bf notes: not relevant any more}
-    \item   date resolved: {\bf 2025-07-11 15:49},
-date raised: 2022-01-15 
-  \ei
   \item[] {\bf Version 1.10.2}:  resolved Issue 2141: {\bf CreateDistanceSensor}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -2699,14 +2686,6 @@ date raised: 2025-07-10
     \item {\bf notes: see Example involuteGearGraphics.py}
     \item   date resolved: {\bf 2025-07-09 18:43},
 date raised: 2025-07-02 
-  \ei
-  \item[] {\bf Version 1.9.235}:  resolved Issue 1959: {\bf SphereSphereContact}
-(check)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: check that position marker works without friction}
-    \item {\bf notes: not needed any more as mass points and point nodes include rotation matrix and angular velocity}
-    \item   date resolved: {\bf 2025-07-09 18:12},
-date raised: 2025-02-24 
   \ei
   \item[] {\bf Version 1.9.234}:  resolved Issue 2122: {\bf Mechanisms}
 (extension)
@@ -3513,7 +3492,7 @@ date raised: 2025-05-17
 date raised: 2025-05-17 
   \ei
   \item[] {\bf Version 1.9.122}:  resolved Issue 1922: {\bf ContactSphereSphere}
-(testint)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add test model with various contact models}
     \item   date resolved: {\bf 2025-05-17 00:15},
@@ -4118,7 +4097,7 @@ date raised: 2024-10-24
 date raised: 2024-11-09 
   \ei
   \item[] {\bf Version 1.9.37}:  resolved Issue 1928: {\bf URDF}
-(chekc)
+(check)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: check import from roboticstoolbox-python and pymeshlab}
     \item   date resolved: {\bf 2024-11-08 22:31},
@@ -4974,7 +4953,7 @@ date raised: 2024-03-07
 date raised: 2024-03-13 
   \ei
   \item[] {\bf Version 1.8.1}:  resolved Issue 0734: {\bf continuous integration}
-(coding)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: test CI capabilities with GitHub and MacOS compilation}
     \item {\bf notes: resolved with issue 1792}
@@ -5201,7 +5180,7 @@ date raised: 2024-01-29
 date raised: 2024-01-31 
   \ei
   \item[] {\bf Version 1.7.93}:  resolved Issue 1770: {\bf mainsystem extensions}
-(extensions)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add user function to mbs.Create...() functions}
     \item   date resolved: {\bf 2024-02-03 22:50},
@@ -5864,7 +5843,7 @@ date raised: 2023-09-03
 date raised: 2023-08-08 
   \ei
   \item[] {\bf Version 1.7.0}:  resolved Issue 1649: {\bf release}
-(release)
+(change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: switch to new release 1.7}
     \item   date resolved: {\bf 2023-07-19 16:07},
@@ -6629,14 +6608,6 @@ date raised: 2023-04-29
     \item   date resolved: {\bf 2023-04-29 22:03},
 date raised: 2023-04-29 
   \ei
-  \item[] {\bf Version 1.6.83}:  resolved Issue 0483: {\bf URDF file}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: check importing an URDF file for robots, urdf\_parser\_py}
-    \item {\bf notes: not done: should be done instead by Corke robotics-toolbox}
-    \item   date resolved: {\bf 2023-04-29 20:20},
-date raised: 2020-12-04 
-  \ei
   \item[] {\bf Version 1.6.82}:  resolved Issue 1542: {\bf HydraulicsActuator}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -6754,7 +6725,7 @@ date raised: 2023-04-23
 date raised: 2023-04-23 
   \ei
   \item[] {\bf Version 1.6.66}:  resolved Issue 1524: {\bf netgen STL file}
-(examples)
+(example)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add example with netgen and STL files with meshing}
     \item   date resolved: {\bf 2023-04-21 17:51},
@@ -6814,7 +6785,7 @@ date raised: 2023-04-19
 date raised: 2023-04-19 
   \ei
   \item[] {\bf Version 1.6.58}:  resolved Issue 1515: {\bf unused header files}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: remove unused header files for C, Main and Visu: JointPrismatic.h, JointRevolute.h}
     \item   date resolved: {\bf 2023-04-16 13:03},
@@ -7645,7 +7616,7 @@ date raised: 2023-01-12
 date raised: 2023-01-12 
   \ei
   \item[] {\bf Version 1.5.61}:  resolved Issue 1396: {\bf Demo}
-(extnesion)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add a two demos included into the python module; put into exudyn.demos; add hint for larger examples; Demo1() = without graphics, just creating output file; Demo2() is rigid3Dexample with SolutionViewer}
     \item   date resolved: {\bf 2023-01-12 18:51},
@@ -7925,14 +7896,6 @@ date raised: 2020-01-10
     \item {\bf notes: not suitable anymore}
     \item   date resolved: {\bf 2023-01-02 00:56},
 date raised: 2019-09-11 
-  \ei
-  \item[] {\bf Version 1.5.22}:  resolved Issue 1331: {\bf exudyn cpp}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: add \_\_repr\_\_ and help which writes some information on workflow (github, theDoc, Examples, ...)}
-    \item {\bf notes: not possible}
-    \item   date resolved: {\bf 2023-01-02 00:51},
-date raised: 2022-12-21 
   \ei
   \item[] {\bf Version 1.5.21}:  resolved Issue 1323: {\bf AVX2}
 (extension)
@@ -10131,7 +10094,7 @@ date raised: 2022-04-07
 date raised: 2022-04-07 
   \ei
   \item[] {\bf Version 1.2.32}:  resolved Issue 1033: {\bf InteractiveDialog}
-(extenison)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: also add tkInter DoubleVar for sliders to make bi-directional interaction simpler (but not needed)}
     \item   date resolved: {\bf 2022-04-04 21:26},
@@ -10444,7 +10407,7 @@ date raised: 2022-03-03
 date raised: 2022-03-11 
   \ei
   \item[] {\bf Version 1.1.166}:  resolved Issue 0982: {\bf PlotSensor}
-(extentsion)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add option to plot 2D arrays}
     \item {\bf notes: numpy arrays are used instead of sensorNumbers; these arrays must have the same format as data stored in sensor files; this data format does not create any labels}
@@ -10616,7 +10579,7 @@ date raised: 2022-02-28
 date raised: 2022-02-25 
   \ei
   \item[] {\bf Version 1.1.142}:  resolved Issue 0951: {\bf Friction}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: test LuGre friction model as ODE1 model versus position/history based model}
     \item {\bf notes: added lugreFrictionODE1.py as a demo showing the LuGre model based on a ODE1 user function}
@@ -11277,7 +11240,7 @@ date raised: 2021-11-26
 date raised: 2021-11-26 (resolved by: S. Holzinger)
   \ei
   \item[] {\bf Version 1.1.49}:  resolved Issue 0808: {\bf Performance test for GeneralContact}
-(testint)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: added test with sphere contact}
     \item   date resolved: {\bf 2021-11-26 10:49},
@@ -11536,7 +11499,7 @@ date raised: 2021-09-26
 date raised: 2021-09-26 
   \ei
   \item[] {\bf Version 1.1.12}:  resolved Issue 0762: {\bf MatrixBase}
-(performance)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: remove virtual from begin/end operators}
     \item   date resolved: {\bf 2021-09-26 17:36},
@@ -11599,7 +11562,7 @@ date raised: 2021-09-22
 date raised: 2021-09-22 
   \ei
   \item[] {\bf Version 1.1.3}:  resolved Issue 0754: {\bf performance tests}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add automated performance tests for solver speed to determine significant drop of performance}
     \item   date resolved: {\bf 2021-09-22 10:10},
@@ -11694,14 +11657,6 @@ date raised: 2021-08-18
     \item   date resolved: {\bf 2021-08-13 13:23},
 date raised: 2021-08-12 
   \ei
-  \item[] {\bf Version 1.0.285}:  resolved Issue 0313: {\bf Add user node ODE2}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: add user node with getposition, rotation, access functions}
-    \item {\bf notes: not needed: GenericNodes can be used for that}
-    \item   date resolved: {\bf 2021-08-10 12:57},
-date raised: 2020-01-10 
-  \ei
   \item[] {\bf Version 1.0.284}:  resolved Issue 0730: {\bf RigidBody tutorial}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -11723,7 +11678,7 @@ date raised: 2021-08-06
 date raised: 2021-08-05 
   \ei
   \item[] {\bf Version 1.0.281}:  resolved Issue 0704: {\bf Optimization2}
-(optimize)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add direct function to NodeRigidBody to retrieve essential data for rigid body EOM and MarkerRigidBody; add flag, if rotation matrix and other quantities needed}
     \item {\bf notes: still no optimization for Lie group nodes, which however have simpler matrices}
@@ -11838,7 +11793,7 @@ date raised: 2021-07-10
 date raised: 2021-07-10 
   \ei
   \item[] {\bf Version 1.0.265}:  resolved Issue 0706: {\bf ConstSizeVector}
-(optimize)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: decouple ConstSizeVector and ConstSizeMatrix from Vector / Matrix and avoid virtual calls, erase all rule of 5 member functions, optimize algebra}
     \item {\bf notes: improved speed up to factor 2 for some items!}
@@ -11867,7 +11822,7 @@ date raised: 2021-07-09
 date raised: 2021-07-09 
   \ei
   \item[] {\bf Version 1.0.261}:  resolved Issue 0699: {\bf CMarkerBodyRigid::ComputeMarkerData}
-(optimize)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: implement optimized version for Rigid node and ObjectRigidBody and avoid repeated computation of rotation matrix, etc.}
     \item   date resolved: {\bf 2021-07-08 00:46},
@@ -11887,7 +11842,7 @@ date raised: 2021-07-07
 date raised: 2021-07-07 
   \ei
   \item[] {\bf Version 1.0.258}:  resolved Issue 0705: {\bf Optimization3}
-(optimize)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: optimize ObjectRigidBody EOM, take Glocal columns instead numberOfRotationCoordinates, move rot\_t into loop, etc.}
     \item   date resolved: {\bf 2021-07-06 23:04},
@@ -12083,14 +12038,6 @@ date raised: 2021-05-14
     \item   date resolved: {\bf 2021-05-12 23:51},
 date raised: 2021-04-23 
   \ei
-  \item[] {\bf Version 1.0.230}:  resolved Issue 0642: {\bf ComputeHurtyCraigBamptonModes}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: add possibility to add position only interfaces}
-    \item {\bf notes: abandoned, because makes no sense with RBE2 modes}
-    \item   date resolved: {\bf 2021-05-12 23:35},
-date raised: 2021-04-30 
-  \ei
   \item[] {\bf Version 1.0.229}: {\bf \color{warningRed}  resolved BUG 0674}: {\bf OutputVariable.StressLocal}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: norm of OutputVariable stresses does not work}
@@ -12104,7 +12051,7 @@ date raised: 2021-05-12
 date raised: 2020-10-13 
   \ei
   \item[] {\bf Version 1.0.226}:  resolved Issue 0100: {\bf UPDATE Lest tests}
-(new feature)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: update lest tests (select C++ vs. python tests)    }
     \item   date resolved: {\bf 2021-05-12 22:21},
@@ -12542,7 +12489,7 @@ date raised: 2021-03-20
 date raised: 2021-03-20 
   \ei
   \item[] {\bf Version 1.0.164}:  resolved Issue 0607: {\bf test recommendedStepSize}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: test recommendedStepSize and PostNewtonUserFunction with simple elastic contact example}
     \item   date resolved: {\bf 2021-03-20 23:23},
@@ -12579,7 +12526,7 @@ date raised: 2020-02-18
 date raised: 2019-05-20 
   \ei
   \item[] {\bf Version 1.0.159}:  resolved Issue 0606: {\bf resolve errors 32bit testsuite}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add extra tolerances for 32bit}
     \item   date resolved: {\bf 2021-03-20 23:19},
@@ -12607,7 +12554,7 @@ date raised: 2021-03-18
 date raised: 2021-03-18 
   \ei
   \item[] {\bf Version 1.0.155}:  resolved Issue 0600: {\bf ImplicitSecondOrderSolver}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: remove old solver}
     \item   date resolved: {\bf 2021-03-18 21:33},
@@ -12628,14 +12575,14 @@ date raised: 2021-03-18
 date raised: 2021-02-24 
   \ei
   \item[] {\bf Version 1.0.152}:  resolved Issue 0597: {\bf ObjectRigidBody}
-(description)
+(docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: fix description of equations of motion (missing m) and add steps in derivation}
     \item   date resolved: {\bf 2021-03-18 08:22},
 date raised: 2021-03-18 
   \ei
   \item[] {\bf Version 1.0.151}:  resolved Issue 0283: {\bf cylinder with hole}
-(new feature)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add TriangleList for cylinder with hole}
     \item {\bf notes: not implemented, because it can be easily created with GraphicsDataSolidOfRevolution}
@@ -12643,14 +12590,14 @@ date raised: 2021-03-18
 date raised: 2019-12-07 
   \ei
   \item[] {\bf Version 1.0.150}:  resolved Issue 0396: {\bf description}
-(description)
+(docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add latex description for ObjectFFRF}
     \item   date resolved: {\bf 2021-03-16 16:57},
 date raised: 2020-05-16 
   \ei
   \item[] {\bf Version 1.0.149}:  resolved Issue 0394: {\bf description}
-(description)
+(docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add latex description for ObjectSuperElement}
     \item   date resolved: {\bf 2021-03-16 16:57},
@@ -12902,7 +12849,7 @@ date raised: 2021-01-13
 date raised: 2021-01-26 
   \ei
   \item[] {\bf Version 1.0.113}:  resolved Issue 0558: {\bf Lie group tests}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add Lie group integrator simple tests}
     \item   date resolved: {\bf 2021-01-27 12:00},
@@ -12924,7 +12871,7 @@ date raised: 2021-01-17
 date raised: 2020-12-09 
   \ei
   \item[] {\bf Version 1.0.110}:  resolved Issue 0556: {\bf explicit RK tests}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add tests for explicit Runge Kutta integrators to TestModels}
     \item   date resolved: {\bf 2021-01-26 13:17},
@@ -13141,7 +13088,7 @@ date raised: 2021-01-04
 date raised: 2021-01-03 
   \ei
   \item[] {\bf Version 1.0.79}:  resolved Issue 0509: {\bf ComputeODE2Eigenvalues}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add example in TestModels}
     \item   date resolved: {\bf 2021-01-03 10:44},
@@ -13226,14 +13173,14 @@ date raised: 2020-12-24
 date raised: 2020-12-24 
   \ei
   \item[] {\bf Version 1.0.67}:  resolved Issue 0511: {\bf GeneticOptimization}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add example in TestModels}
     \item   date resolved: {\bf 2020-12-19 23:31},
 date raised: 2020-12-19 
   \ei
   \item[] {\bf Version 1.0.66}:  resolved Issue 0510: {\bf ParameterVariation}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add example in TestModels}
     \item   date resolved: {\bf 2020-12-19 23:31},
@@ -13315,7 +13262,7 @@ date raised: 2020-12-10
 date raised: 2020-12-10 
   \ei
   \item[] {\bf Version 1.0.54}:  resolved Issue 0484: {\bf test DEAP}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: test genetic optimization with DEAP}
     \item {\bf notes: too many parameters and too involved to simply include}
@@ -13335,7 +13282,7 @@ date raised: 2020-12-09
 date raised: 2020-12-07 
   \ei
   \item[] {\bf Version 1.0.51}:  resolved Issue 0389: {\bf MainSystem includes}
-(cleanup)
+(improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file}
     \item   date resolved: {\bf 2020-12-09},
@@ -13398,7 +13345,7 @@ date raised: 2020-11-19
 date raised: 2020-01-26 
   \ei
   \item[] {\bf Version 1.0.42}:  resolved Issue 0460: {\bf test accelerations}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: test GetODE2Coordinates\_tt, nodal accelerations and rigidbody2D/3D accelerations}
     \item   date resolved: {\bf 2020-12-04},
@@ -13520,7 +13467,7 @@ date raised: 2020-11-07
 date raised: 2020-11-25 
   \ei
   \item[] {\bf Version 1.0.25}:  resolved Issue 0468: {\bf test WSL2}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: test compilation on WSL2 - Windows subsystem for Linux}
     \item {\bf notes: WSL2 now used to automatically create linux wheels}
@@ -13532,30 +13479,6 @@ date raised: 2020-11-19
     \item {description: raises RuntimeError: should return reference instead of copy}
     \item   date resolved: {\bf 2020-11-21},
 date raised: 2020-11-18 
-  \ei
-  \item[] {\bf Version 1.0.23}:  resolved Issue 0446: {\bf NodeIndex in arrays}
-(check)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers}
-    \item {\bf notes: not needed for now}
-    \item   date resolved: {\bf 2020-11-21},
-date raised: 2020-09-09 
-  \ei
-  \item[] {\bf Version 1.0.22}:  resolved Issue 0383: {\bf pybind11 submodule}
-(extension)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: used for advanced functions, not necessarily included in exudyn or make other module}
-    \item {\bf notes: not needed for now}
-    \item   date resolved: {\bf 2020-11-21},
-date raised: 2020-05-06 
-  \ei
-  \item[] {\bf Version 1.0.21}:  resolved Issue 0191: {\bf Newton lambda}
-(check)
-\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: Check whether Newton can be implemented as lambda-function}
-    \item {\bf notes: not needed for now}
-    \item   date resolved: {\bf 2020-11-21},
-date raised: 2019-06-17 
   \ei
   \item[] {\bf Version 1.0.20}:  resolved Issue 0466: {\bf main/bin}
 (change)
@@ -13638,7 +13561,7 @@ date raised: 2020-09-08
 date raised: 2019-12-10 
   \ei
   \item[] {\bf Version 1.0.9}:  resolved Issue 0443: {\bf SensorObject}
-(warning)
+(extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add error message, if sensorobject is used for a body (and check if SensorBody excepts object other than body}
     \item {\bf notes: added test for SensorObject if attached to body}
@@ -13667,7 +13590,7 @@ date raised: 2020-07-01
 date raised: 2020-08-13 
   \ei
   \item[] {\bf Version 1.0.5}:  resolved Issue 0381: {\bf test pybind11\_2020}
-(test)
+(testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: downloaded in Download folder}
     \item   date resolved: {\bf 2020-08-17},
@@ -13710,6 +13633,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2517}:  {\bf the gate environment can hold a stale exudyn wheel}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.}
+    \item date raised: 2026-09-18 
+  \ei
   \item open {\bf BUG 2398}:  {\bf explicit integration costs O(N^2) per step with the default dense linear solver}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
