@@ -83,6 +83,11 @@ exemptImports = {
                      'it into [tests] would be a large dependency for dead code',
     'mkl':           'optional performance tweak in a try/except with a working fallback; which '
                      'MKL build is correct depends on the BLAS the environment already has',
+    'pytest':        'a DEV tool, declared in [dependency-groups] lint/dev of pyproject.toml and '
+                     'not in any extra: the test suite runs without it (runTestSuite.py), and '
+                     'test_testModels.py is the optional pytest collector of revision2026 step '
+                     'R5.1. This entry also has to exist because the tool must not be told about '
+                     'it by the untracked scratch file python/pytest.py (#2508)',
     }
 
 #imports of modules that exist NOWHERE - neither on PyPI nor in this repository. These are real
@@ -165,25 +170,54 @@ def ReadExtras(pyprojectPath):
 
 
 #%%******************************************************************************************************
+def TrackedFiles(repositoryRoot):
+    """
+    Every file git tracks, as repository-relative paths with forward slashes.
+
+    Used so that this tool sees the SAME tree as CI does. An untracked file must never make an
+    import look local: python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did
+    exactly that, and made 'import pytest' in test_testModels.py look like a local module on the
+    development machine while CI, which has no such file, reported it as an uncovered import
+    (#2508). A check that is green locally and red in CI is worse than no check.
+    """
+    result = subprocess.run(['git', 'ls-files'], capture_output=True, text=True, cwd=repositoryRoot)
+    if result.returncode != 0:
+        raise RuntimeError('could not list the tracked files: ' + result.stderr.strip())
+
+    return set([line.strip() for line in result.stdout.splitlines() if line.strip() != ''])
+
+
+#%%******************************************************************************************************
 def LocalModuleNames(repositoryRoot, scanDirectory):
     """
     Top-level names that resolve inside the project rather than to a third-party package: the
     shipped packages under python/, and the sibling modules of the scanned directory
     (TestModels and Examples import their own helpers by bare name).
+
+    Only TRACKED files count - see TrackedFiles().
     """
+    tracked = TrackedFiles(repositoryRoot)
     localNames = set()
-    pythonDev = os.path.join(repositoryRoot, 'python')
-    for entry in os.listdir(pythonDev):
-        if entry.endswith('.py'):
-            localNames.add(entry[:-3])
-        elif os.path.isdir(os.path.join(pythonDev, entry)):
-            localNames.add(entry)
+
+    for path in tracked:
+        if not path.startswith('python/'):
+            continue
+        parts = path.split('/')
+        if len(parts) == 2 and parts[1].endswith('.py'):
+            localNames.add(parts[1][:-3])       #a module directly in python/
+        elif len(parts) > 2:
+            localNames.add(parts[1])            #a package directory in python/
 
     #recursive: a helper next to an example is imported by bare name, whatever depth it sits at
-    for currentDirectory, subDirectories, fileNames in os.walk(scanDirectory):
-        subDirectories[:] = [d for d in subDirectories if d != '__pycache__']
-        localNames |= set(subDirectories)
-        localNames |= set([f[:-3] for f in fileNames if f.endswith('.py')])
+    scanRelative = os.path.relpath(scanDirectory, repositoryRoot).replace(os.sep, '/') + '/'
+    for path in tracked:
+        if not path.startswith(scanRelative):
+            continue
+        parts = path[len(scanRelative):].split('/')
+        for directoryName in parts[:-1]:
+            localNames.add(directoryName)
+        if parts[-1].endswith('.py'):
+            localNames.add(parts[-1][:-3])
 
     return localNames
 

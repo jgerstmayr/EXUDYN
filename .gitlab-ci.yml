@@ -167,9 +167,11 @@ sanitizers_linux:
     # g++ pulls libasan8/libubsan1; the graphics packages are what setup.py links against
     - apt-get update -qq
     - apt-get install -y -qq --no-install-recommends g++ libglfw3-dev libgl1-mesa-dev libx11-dev
-    # scipy and matplotlib are optional for exudyn but decide whether ~10 test models run at
-    # all; without them the sanitizers never see the code those models exercise
-    - pip install --no-cache-dir --upgrade pip setuptools wheel
+    # the build dependencies have to be installed HERE: buildSanitizers.sh builds with
+    # --no-build-isolation, so pip does not fetch [build-system] requires itself. Without
+    # pybind11 the first run of this job died with "exudyn needs the pybind11 headers"
+    - pip install --no-cache-dir --upgrade pip "setuptools>=77" wheel "pybind11<3.0"
+    # scipy and matplotlib are optional for exudyn but decide whether ~10 test models run at all
     - pip install --no-cache-dir numpy matplotlib "scipy==1.15.2"
   script:
     - bash tools/ci/buildSanitizers.sh python3

@@ -337,6 +337,14 @@ def UnresolvedOnLinux():
         #already excluded; they are the same kind of reproducible platform difference (#2379).
         'sliderCrank3Dbenchmark.py',            #rel. 2.0e-10
         'generalContactImplicit1.py',           #rel. 6.8e-08
+        #added 2026-09-18 from the GitLab run of 1.11.162.dev1 (manylinux_2_28 / cp314 /
+        #numpy 2.5.3): absolute error -5.7e-11 against a 3e-11 tolerance, i.e. rel. 1.2e-11 - the
+        #smallest entry in this list and only 1.9x over. It is a contact model, the same family as
+        #the six above, BUT it may equally be the numpy-version effect of #2502 (fact 28) rather
+        #than a platform difference: this leg runs numpy 2.5.3 and the model builds its contact
+        #through the Create* helpers whose setup arithmetic that issue is about. Resolve it with
+        #R5.9.2 before spending time on it as a Linux question.
+        'createSphereTriangleContact.py',       #rel. 1.2e-11
         ])
 
     return unresolved

@@ -784,11 +784,17 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `wheels_linux`' job; memory safety is this one's.
 
 <a id="r5-6-1"></a>
-**R5.6.1** *(sub-step of R5.6)* **Let the sanitizer job go red.** It is `allow_failure: true` for
-    now: the local run is clean, but the CI image is a different compiler and libc and installs
-    scipy, so it reaches code the local run did not. After the first scheduled runs, either flip
-    `allow_failure` to `false` or baseline what is found - a job that may be red forever teaches
-    people to ignore it, which is worse than not having it.
+**R5.6.1** *(sub-step of R5.6; first CI run seen 2026-09-18)* **Let the sanitizer job go red.**
+    It is `allow_failure: true` for now. The **first GitLab run failed for a packaging reason, not
+    a sanitizer one**: the job installed `setuptools` and `wheel` but not `pybind11`, and
+    `buildSanitizers.sh` builds with `--no-build-isolation`, so pip does not fetch
+    `[build-system] requires` itself. Everything up to that point worked - `apt-get` brought in
+    gcc 14.2 and the matching libasan, and the script found both. Fixed by installing
+    `pybind11<3.0` in the job and by checking the three build modules up front, so the next such
+    failure is one line instead of line 443 of a pip traceback.
+
+    Still open: after a run that actually reaches the suite, either flip `allow_failure` to `false`
+    or baseline what is found. A job that may be red forever teaches people to ignore it.
 
 <a id="r5-7"></a>
 **R5.7** **DONE** — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`). → [log](exudynRevisionLog2026.md#r5-7)
@@ -1148,6 +1154,22 @@ here, because they describe the developer workflow rather than the user document
     them, so the fix is probably to **try the import** rather than to list file names - and then
     `numpy-stl` and `pymeshlab` belong in the `[all]` extra of `pyproject.toml`, so that a
     developer environment has them.
+
+<a id="r5-18-3"></a>
+**R5.18.3** **DONE 2026-09-18** — *(sub-step of R5.18; found by the first GitLab run after the
+    driver landed)* **A gate that was green locally and red in CI** (#2508).
+    `tools/checkExtras.py` decided which imports are "local" by listing `python/` with `os.listdir`
+    and `os.walk`, so **any file present on the development machine** made an import look local.
+    `python/pytest.py` - the gitignored scratch copy of `pytestTemplate.py` - did exactly that:
+    `import pytest` in `test_testModels.py` resolved to it, the local check said OK, and the GitLab
+    job, which has no such file, reported `UNCOVERED IMPORTS: pytest ... needed by [tests]` and
+    failed. The same trap applied to any untracked helper dropped into `python/` or `TestModels/`.
+
+    Fixed two ways, because both were wrong: the tool now lists **tracked files only**
+    (`git ls-files`), so it sees exactly what CI checks out; and `pytest` has a real exemption entry
+    saying what it is - a dev tool declared in `[dependency-groups]`, deliberately not in any extra,
+    because the test suite runs without it. Verified by removing the exemption again: the tool then
+    prints the CI message word for word, which it could not do before.
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 

@@ -67,6 +67,19 @@ if [ ! -e "$asanRuntime" ]; then
     exit 2
 fi
 
+#the build below uses --no-build-isolation, so pip does NOT fetch [build-system] requires and they
+#have to be present already. Checked here, because the alternative is a 200-line pip traceback
+#whose actual message - "exudyn needs the pybind11 headers" - is line 443 of it (seen on the first
+#CI run of this job, 2026-09-18)
+for buildModule in setuptools wheel pybind11; do
+    if ! "$basePython" -c "import $buildModule" >/dev/null 2>&1; then
+        echo "ERROR: $buildModule is not installed for $basePython, and this script builds with" >&2
+        echo "       --no-build-isolation, so pip will not fetch it." >&2
+        echo "       pip install 'setuptools>=77' wheel 'pybind11<3.0'" >&2
+        exit 2
+    fi
+done
+
 echo "=== exudyn sanitizer build"
 echo "    repository : $repoRoot"
 echo "    interpreter: $basePython"

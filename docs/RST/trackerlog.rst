@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.164.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2508, 
++  Number of issues = 2509, 
 +  Number of resolved issues = 2237 (164 in current version), 
 
 ************
@@ -7690,6 +7690,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textred:`open issue 2508:` checkExtras passed locally and failed in CI because of an untracked file
+    - issue author: Claude-JG
+    - description:  tools/checkExtras.py built its set of "local module names" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: "import pytest" in test_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported "UNCOVERED IMPORTS: pytest ... needed by [tests]" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in [dependency-groups]; not in any extra.
+    - date raised: 2026-09-18 
 
  * :textorange:`open issue 2507:` three examples FAIL for a missing optional package instead of being skipped
     - issue author: Claude-JG
