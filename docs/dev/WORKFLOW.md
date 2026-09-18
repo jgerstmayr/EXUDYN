@@ -300,7 +300,7 @@ passes or fails - the log *is* the result.
 | commit gate / pull request | test models without the slow ones and without optional packages | `runTestSuite.py --fast` (12 s) or `pytest -m "not slow and not optionalPackage"` (9 s with `-n 8`) |
 | full local check | all test models and mini examples | `runTestSuite.py` (22 s) or `pytest` |
 | nightly / release | models, performance tests and all examples | `exudev build --complete`, or `exudev release`, which calls the three runners |
-| examples | all 171 examples, in parallel, as an API check | `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`) |
+| examples | all 171 examples, in parallel, as an API check | `exudev examples`, i.e. `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`, `--exit-code`) |
 | C++ unit tests | the `lest` tests in `src/Tests/` | only in a build with the `performUnitTests` switch, or the VS `Debug` configuration; then `runTestSuite.py` runs them |
 
 The two lists behind this live in `runTestSuiteRefSol.py` as data - `SlowTests()` (measured,
@@ -351,8 +351,19 @@ inside their tolerance). Use `--parallel` while developing, and the serial run f
 
 ### Reproducible vs sensitive tests
 
-`runTestSuite.py --exit-code` returns non-zero when tests fail — CI depends on this, and without it
-CI cannot fail at all. But not every test is reproducible across machines:
+**All three runners take `--exit-code`** and return non-zero when something fails - CI depends on
+it, and without it CI cannot fail at all. `runTestExamples.py` and `runPerformanceTests.py` got
+theirs in revision2026 step R5.18.1 (#2504); until then they always returned 0 and a caller had
+to read the summary out of the log. The `exudev` driver passes the flag always, with no way to
+turn it off.
+
+Two of the three mean *nothing NEW broke* rather than *everything passed*. For the examples the
+exclusions are `testRunnerTools.KnownExampleFailures()` - five today, three of them missing an
+optional package (#2507) - and an entry that starts passing is reported as a **dead exclusion**
+by name, so the list shrinks instead of rotting. For the test suite it is the two sets below.
+`runPerformanceTests.py` excludes nothing: every performance test passes today.
+
+Not every test is reproducible across machines:
 
 - **contact and friction models** are chaotic; a different machine gives a materially different
   error, and the size of that error says nothing about correctness

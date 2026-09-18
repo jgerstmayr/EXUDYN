@@ -421,7 +421,14 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
                sumResults += np.linalg.norm(res[0])
                #if (res[0] != res[1]).any():  #problem with 1e-16 errors
                wrong = False
-               if np.linalg.norm(res[0] - res[1]) > 1e-15: 
+               #the tolerance is RELATIVE to the magnitude being compared; with the absolute 1e-15 that
+               #stood here, a value of magnitude 9.7476 was compared to within 1e-15 - less than one
+               #ulp (2*eps*9.75 = 4.3e-15), so whether the test passed depended on the last bit of a
+               #numpy sum. It did pass under numpy 2.4.6 and failed under 2.2.4 with a difference of
+               #1.78e-15, on a byte-identical exudyn binary (#2501). A real symbolic/numeric mismatch
+               #is O(1); the few ulp of a different summation order are not what this test is about.
+               scale = max(np.linalg.norm(res[0]), np.linalg.norm(res[1]), 1.)
+               if np.linalg.norm(res[0] - res[1]) > 1e-14*scale:
                    s = '\\diff:\n'
                    s += str(res[0]-res[1])
                    cntWrong+=1

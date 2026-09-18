@@ -69,24 +69,25 @@ Nothing is forwarded implicitly. The runners scan `sys.argv` by hand and only *p
 about an option they do not know, so a silently forwarded typo would run a full suite against the
 wrong thing and report success.
 
-## What the driver cannot tell you
+## How a step is judged
 
-`runTestSuite.py` returns a real exit code (the driver always passes `--exit-code`).
-**`runTestExamples.py` and `runPerformanceTests.py` do not** — they always return 0 — so their
-verdict is read from the summary line of the log they just wrote. Therefore:
+Every step is judged by its **exit code**; the driver adds `--exit-code` to all three runners and
+offers no way to turn that off. Until revision2026 step R5.18.1 that was not possible:
+`runTestExamples.py` and `runPerformanceTests.py` always returned 0, and the driver had to read the
+summary line out of the log they had just written. That guesswork is gone (#2504).
 
-- a run that died before writing its summary is reported **`unknown`**, not `FAILED`, and that is
-  indistinguishable from a log the driver could not find — `unknown` maps to exit code 2 and is
-  never rounded up to success;
-- a `FAILED` from those two may be a tolerance artifact rather than a regression; they have no
-  notion of a known-difference test, unlike the suite's `SensitiveTests()`;
-- if `EXUDYN_OUTPUTDIRECTORY` is set, their logs land outside the repository and the scan reports
-  `unknown`;
-- do not run two `exudev` processes at once: the log scan is by modification time and the two
-  windows would overlap.
+Two of the exit codes mean "nothing NEW broke", not "everything passed":
 
-Issue **#2504** gives both runners the `--exit-code` flag the test suite already has; when that is
-done, `tools/exudev/results.py` is deleted and every step becomes exit-code-honest.
+- `runTestSuite.py` excludes `SensitiveTests()` and, on Linux, `UnresolvedOnLinux()`;
+- `runTestExamples.py` excludes `testRunnerTools.KnownExampleFailures()` - five examples today, three
+  of them missing an optional package (#2507). A known failure that starts passing is reported as a
+  **dead exclusion** by name, so the list shrinks rather than rots.
+
+`runPerformanceTests.py` has no exclusions: every performance test passes, and one that does not is
+worth going red for.
+
+One thing the driver still cannot do: attribute a run if two `exudev` processes overlap. Don't run
+two at once.
 
 ## The files
 
@@ -95,7 +96,6 @@ done, `tools/exudev/results.py` is deleted and every step becomes exit-code-hone
 | `__main__.py` | every option, every spelling, every help text; dispatch |
 | `commands.py` | one function per subcommand — **read this to find out what a command does**. It builds `Step` objects and runs nothing |
 | `runner.py` | the only file that knows about processes, conda and the file system; executes or prints the steps |
-| `results.py` | the log scan described above; meant to be deleted |
 | `probe.py` | runs *inside* an environment and reports what is installed; the only part that imports exudyn |
 
 Nothing except `probe.py` imports exudyn — the driver selects the environment, so it must run in any

@@ -9,15 +9,33 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.162.dev1, 
+  \item Exudyn version = 1.11.164.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2507, 
-  \item Number of resolved issues = 2235 (162 in current version), 
+  \item Number of issues = 2508, 
+  \item Number of resolved issues = 2237 (164 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.164}:  resolved Issue 2504: {\bf runTestExamples and runPerformanceTests have no --exit-code}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: runTestSuite.py exits non-zero with --exit-code (and 0 without it); the other two runners have no such flag and ALWAYS return 0; however many examples or performance tests failed. Anything calling them - the exudev driver of revision2026 step R5.18; a CI job; a shell script - therefore cannot see a failure from the exit code and has to read the summary line out of the log instead; which is what tools/exudev/results.py does today. That scan cannot distinguish a run that died before writing its summary from a log it did not find; so it reports "unknown". Give both runners the same --exit-code flag runTestSuite.py has (about 10 lines each; the pattern already exists); then delete tools/exudev/results.py and let every step of the driver be judged by its exit code. revision2026 step R5.18.1}
+    \item {\bf notes: Fixed in revision2026 step R5.18.1: runTestExamples.py and runPerformanceTests.py both take --exit-code and return non-zero on a failure; tools/exudev/results.py - the log scan that existed only because they could not - is deleted; and the exudev driver passes the flag always. The examples needed an exclusion list first; testRunnerTools.KnownExampleFailures(); or the exit code would have been red on every run; it also reports dead exclusions so the list shrinks. Successor for the three entries that are really missing optional packages: \#2507.}
+    \item   date resolved: {\bf 2026-09-18 07:10},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.163}:  resolved Issue 2501: {\bf symbolicModuleTest counts 2 wrong results with numpy 2.2}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The vector/matrix section compares the symbolic result against the numpy result with an ABSOLUTE tolerance: np.linalg.norm(res[0]-res[1]) > 1e-15. One of the compared values has magnitude 9.7476; where 1 ulp is 1.8e-15; so the tolerance is below the representable resolution. Measured 2026-09-18 on one machine with the SAME exudyn binary (md5 identical in both environments) and the same source: numpy 2.4.6 gives 9.7476 on both sides and the test passes; numpy 2.2.4 gives 9.747600000000002 on the numpy side; a difference of 1.78e-15; counted once per recording mode. cntWrong is added to the test result since \#2479; so the model reports 2.948412957506974 against a reference of 0.9484129575069745 and the suite FAILS with error 2.0. The comparison needs a relative tolerance.}
+    \item {\bf notes: Fixed in revision2026 step R5.9.1: the vector/matrix comparison in symbolicModuleTest.py is now RELATIVE to the magnitude being compared - scale = max(norm(sym); norm(py); 1.) and a tolerance of 1e-14*scale - instead of an absolute 1e-15 on a value of magnitude 9.7476; where one ulp is 1.8e-15. Verified: the model returns exactly the committed reference 0.9484129575069745 in both venvP313 (numpy 2.2.4) and venvExuP313 (numpy 2.4.6); and a mutation making one symbolic result wrong by 1e-12 relative is still caught twice; so the test is not weakened in any way that matters.}
+    \item   date resolved: {\bf 2026-09-18 07:10},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.162}: {\bf \color{warningRed}  resolved BUG 2506}: {\bf RaytracingSettings::maxNThreads has no definition}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

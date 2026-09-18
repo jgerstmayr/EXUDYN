@@ -800,7 +800,8 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.9** **DONE 2026-09-11** — Complete and verify the test list. → [log](exudynRevisionLog2026.md#r5-9)
 
 <a id="r5-9-1"></a>
-**R5.9.1** *(sub-step of R5.9; found 2026-09-18)* **`symbolicModuleTest` fails with numpy 2.2**
+**R5.9.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-1) — *(sub-step of R5.9)*
+    **`symbolicModuleTest` fails with numpy 2.2**
     (#2501). The vector/matrix section compares the symbolic result against the numpy result with an
     **absolute** tolerance, `np.linalg.norm(res[0]-res[1]) > 1e-15`, on a value of magnitude
     `9.7476` - where one ulp is `1.8e-15`. The tolerance is below the representable resolution, so
@@ -1063,7 +1064,8 @@ than copy (rule 10). `docs/dev/WORKFLOW.md`, `docs/dev/README.md` and `CLAUDE.md
 here, because they describe the developer workflow rather than the user documentation.
 
 <a id="r5-18-1"></a>
-**R5.18.1** *(sub-step of R5.18; raised while doing it)* **The two runners without an exit code**
+**R5.18.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-1) — *(sub-step of
+    R5.18)* **The two runners without an exit code**
     (#2504). `runTestSuite.py` returns a real exit code with `--exit-code`; `runTestExamples.py` and
     `runPerformanceTests.py` **always return 0**, however many tests failed. Anything that calls them
     - the driver, a CI job, a shell script - therefore cannot see a failure from the exit code, and
@@ -1072,6 +1074,18 @@ here, because they describe the developer workflow rather than the user document
     maps it to exit code 2 - honest, but weaker than an exit code. Give both runners the same
     `--exit-code` flag (about 10 lines each; the pattern exists), then **delete `results.py`** and
     let every step of the driver be judged by its return code.
+
+<a id="r5-18-2"></a>
+**R5.18.2** *(sub-step of R5.18; found while giving the examples an exit code)* **Three examples
+    fail for a missing optional package instead of being skipped** (#2507).
+    `testRunnerTools.ExampleSkipReason()` already skips what cannot run - stable-baselines3, rospy,
+    a MATLAB peer - but does not cover `numpy-stl` (`humanRobotInteraction.py`,
+    `stlFileImport.py`) or `pymeshlab` (`pymeshlabFileImport.py`), so those three are counted as
+    failures. They are three of the five entries in `KnownExampleFailures()` today. The decision
+    this needs is why it is a step and not three lines: a machine that HAS the package *should* run
+    them, so the fix is probably to **try the import** rather than to list file names - and then
+    `numpy-stl` and `pymeshlab` belong in the `[all]` extra of `pyproject.toml`, so that a
+    developer environment has them.
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 

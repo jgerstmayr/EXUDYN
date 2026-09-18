@@ -18,7 +18,6 @@ import os
 import shutil
 import sys
 
-import results
 import runner
 
 from runner import Step
@@ -362,13 +361,15 @@ def Test(options):
 
 #%%******************************************************************************************************
 def Examples(options):
-    """The Examples set. It has no exit code, so the verdict comes from its log - see results.py."""
+    """The Examples set. '--exit-code' is always added: since #2504 the runner returns non-zero on
+    an UNEXPECTED failure - the known ones are listed in testRunnerTools.KnownExampleFailures()."""
     extra = ExtraArguments(options)
     steps = []
 
     #P312 as in the batch script this replaces
     for (pythonTag, environment) in TargetEnvironments(options, 'P312'):
         argv = ['python', 'runTestExamples.py'] + runner.QuietFlag('runTestExamples.py', options.verbose)
+        argv += ['--exit-code']
         if options.serial:
             argv += ['--serial']
         if options.parallel is not None:
@@ -379,25 +380,23 @@ def Examples(options):
             argv += ['--overwrite-log']
         argv += extra
 
-        (before, verdict) = results.MakeLogVerdict(runner.RepositoryRoot(), 'runTestExamples.py')
-        step = Step('examples in ' + environment,
-                    argv=runner.InEnvironment(environment, argv, options),
-                    cwd=ModelsDirectory(), verdict=verdict, check=False)
-        step.before = before
-        steps += [step]
+        steps += [Step('examples in ' + environment,
+                       argv=runner.InEnvironment(environment, argv, options),
+                       cwd=ModelsDirectory(), check=False)]
 
     return steps
 
 
 #%%******************************************************************************************************
 def Performance(options):
-    """The performance tests. No exit code either; judged from the log."""
+    """The performance tests, with '--exit-code' (#2504)."""
     extra = ExtraArguments(options)
     steps = []
 
     for (pythonTag, environment) in TargetEnvironments(options, 'P313'):
         argv = ['python', 'runPerformanceTests.py']
         argv += runner.QuietFlag('runPerformanceTests.py', options.verbose)
+        argv += ['--exit-code']
         if options.fast:
             argv += ['--fast-module']
         if options.overwrite_log:
@@ -408,13 +407,10 @@ def Performance(options):
         if options.machine_id:
             stepEnvironment['EXUDYN_MACHINE_ID'] = options.machine_id
 
-        (before, verdict) = results.MakeLogVerdict(runner.RepositoryRoot(), 'runPerformanceTests.py')
-        step = Step('performance tests in ' + environment
-                    + (' [fast module]' if options.fast else ''),
-                    argv=runner.InEnvironment(environment, argv, options),
-                    cwd=ModelsDirectory(), env=stepEnvironment, verdict=verdict, check=False)
-        step.before = before
-        steps += [step]
+        steps += [Step('performance tests in ' + environment
+                       + (' [fast module]' if options.fast else ''),
+                       argv=runner.InEnvironment(environment, argv, options),
+                       cwd=ModelsDirectory(), env=stepEnvironment, check=False)]
 
     return steps
 

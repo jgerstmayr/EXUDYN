@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.162.dev1, 
++  Exudyn version = 1.11.164.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2507, 
-+  Number of resolved issues = 2235 (162 in current version), 
++  Number of issues = 2508, 
++  Number of resolved issues = 2237 (164 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.164: resolved Issue 2504: runTestExamples and runPerformanceTests have no --exit-code (extension)
+    - issue author: Claude-JG
+    - description:  runTestSuite.py exits non-zero with --exit-code (and 0 without it); the other two runners have no such flag and ALWAYS return 0; however many examples or performance tests failed. Anything calling them - the exudev driver of revision2026 step R5.18; a CI job; a shell script - therefore cannot see a failure from the exit code and has to read the summary line out of the log instead; which is what tools/exudev/results.py does today. That scan cannot distinguish a run that died before writing its summary from a log it did not find; so it reports "unknown". Give both runners the same --exit-code flag runTestSuite.py has (about 10 lines each; the pattern already exists); then delete tools/exudev/results.py and let every step of the driver be judged by its exit code. revision2026 step R5.18.1
+    - **notes:** Fixed in revision2026 step R5.18.1: runTestExamples.py and runPerformanceTests.py both take --exit-code and return non-zero on a failure; tools/exudev/results.py - the log scan that existed only because they could not - is deleted; and the exudev driver passes the flag always. The examples needed an exclusion list first; testRunnerTools.KnownExampleFailures(); or the exit code would have been red on every run; it also reports dead exclusions so the list shrinks. Successor for the three entries that are really missing optional packages: #2507.
+    - date resolved: **2026-09-18 07:10**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.163: resolved Issue 2501: symbolicModuleTest counts 2 wrong results with numpy 2.2 (testing)
+    - issue author: Claude-JG
+    - description:  The vector/matrix section compares the symbolic result against the numpy result with an ABSOLUTE tolerance: np.linalg.norm(res[0]-res[1]) > 1e-15. One of the compared values has magnitude 9.7476; where 1 ulp is 1.8e-15; so the tolerance is below the representable resolution. Measured 2026-09-18 on one machine with the SAME exudyn binary (md5 identical in both environments) and the same source: numpy 2.4.6 gives 9.7476 on both sides and the test passes; numpy 2.2.4 gives 9.747600000000002 on the numpy side; a difference of 1.78e-15; counted once per recording mode. cntWrong is added to the test result since #2479; so the model reports 2.948412957506974 against a reference of 0.9484129575069745 and the suite FAILS with error 2.0. The comparison needs a relative tolerance.
+    - **notes:** Fixed in revision2026 step R5.9.1: the vector/matrix comparison in symbolicModuleTest.py is now RELATIVE to the magnitude being compared - scale = max(norm(sym); norm(py); 1.) and a tolerance of 1e-14\*scale - instead of an absolute 1e-15 on a value of magnitude 9.7476; where one ulp is 1.8e-15. Verified: the model returns exactly the committed reference 0.9484129575069745 in both venvP313 (numpy 2.2.4) and venvExuP313 (numpy 2.4.6); and a mutation making one symbolic result wrong by 1e-12 relative is still caught twice; so the test is not weakened in any way that matters.
+    - date resolved: **2026-09-18 07:10**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.162: :textred:`resolved BUG 2506` : RaytracingSettings::maxNThreads has no definition 
     - issue author: Claude-JG
     - description:  src/Graphics/Raytracing.h:136 declares "static const Index maxNThreads = 256;" with an in-class initializer but no out-of-class definition. Raytracing.cpp:913 passes it to EXUstd::Clamp(const T& x; const T& lower; const T& upper); binding a reference to it - which is an odr-use; so a definition IS required. At -O3 the compiler folds the constant and nothing is referenced; so every release build links and loads. At -O1 it does not fold; the symbol stays undefined and importing the module fails outright with "undefined symbol: _ZN18RaytracingSettings11maxNThreadsE". Found 2026-09-18 on the FIRST build of revision2026 step R5.6 (sanitizers; which use -O1); before a single sanitizer check had run. The neighbouring materialOffset is already "static constexpr"; which in C++17 is implicitly inline and needs no definition; RTcolorDepth on the next line has the same latent pattern. Fix: make them constexpr.
@@ -7679,24 +7691,19 @@ Version 0.1
 Open issues
 ***********
 
+ * :textorange:`open issue 2507:` three examples FAIL for a missing optional package instead of being skipped
+    - issue author: Claude-JG
+    - description:  ExampleSkipReason() in testRunnerTools.py skips an example that cannot run - it already does so for stable-baselines3; rospy and a MATLAB TCPIP peer. Three examples are not covered and are reported as FAILURES instead: humanRobotInteraction.py and stlFileImport.py need numpy-stl ("No module named ,stl,") and pymeshlabFileImport.py needs pymeshlab. Measured 2026-09-18; they are 3 of the 5 entries now in KnownExampleFailures() (revision2026 step R5.18.1). The decision this needs is not obvious and is why it is an issue rather than three lines: a machine that HAS the package should run them - so the right fix is probably to TRY the import rather than to list file names; and then numpy-stl and pymeshlab belong in the [all] extra of pyproject.toml so that a developer environment has them. The other two entries of the list are unrelated: NGsolveGeometry.py fails inside the geometry construction under exec(...) and rendererNOGLFWexample.py expects the renderer to be absent in a way the runner does not produce.
+    - date raised: 2026-09-18 
+
  * :textblue:`open issue 2505:` a test model page is in no toctree
     - issue author: Claude-JG
     - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.
     - date raised: 2026-09-18 
 
- * :textorange:`open issue 2504:` runTestExamples and runPerformanceTests have no --exit-code
-    - issue author: Claude-JG
-    - description:  runTestSuite.py exits non-zero with --exit-code (and 0 without it); the other two runners have no such flag and ALWAYS return 0; however many examples or performance tests failed. Anything calling them - the exudev driver of revision2026 step R5.18; a CI job; a shell script - therefore cannot see a failure from the exit code and has to read the summary line out of the log instead; which is what tools/exudev/results.py does today. That scan cannot distinguish a run that died before writing its summary from a log it did not find; so it reports "unknown". Give both runners the same --exit-code flag runTestSuite.py has (about 10 lines each; the pattern already exists); then delete tools/exudev/results.py and let every step of the driver be judged by its exit code. revision2026 step R5.18.1
-    - date raised: 2026-09-18 
-
  * :textred:`open issue 2502:` sliderCrank3Dbenchmark result depends on the numpy version
     - issue author: Claude-JG
     - description:  Measured 2026-09-18: with the SAME exudyn binary (exudynCPP.cp313-win_amd64.pyd md5 identical in both environments); the same source; the same machine and the same Python 3.13.15; the model returns 7.256859912845965 under numpy 2.4.6 - exactly the committed reference - and 7.256859914829453 under numpy 2.2.4; relative 2.7e-10. The suite tolerance is 5e-14; so the test FAILS wherever numpy is older; which is what the maintainer sees in venvP313. numpy enters through the model setup only; so a last-bit difference in the input data is amplified by the solver to 2.7e-10. The same model is already listed in UnresolvedOnLinux() with rel. 2.0e-10; which now looks like the same effect rather than a platform difference. Open questions: which numpy operation in the setup differs; whether other entries of UnresolvedOnLinux() are really numpy-version effects; and whether the suite should pin a minimum numpy for reference comparison or mark the model sensitive. revision2026 phase R10.
-    - date raised: 2026-09-18 
-
- * :textred:`open issue 2501:` symbolicModuleTest counts 2 wrong results with numpy 2.2
-    - issue author: Claude-JG
-    - description:  The vector/matrix section compares the symbolic result against the numpy result with an ABSOLUTE tolerance: np.linalg.norm(res[0]-res[1]) > 1e-15. One of the compared values has magnitude 9.7476; where 1 ulp is 1.8e-15; so the tolerance is below the representable resolution. Measured 2026-09-18 on one machine with the SAME exudyn binary (md5 identical in both environments) and the same source: numpy 2.4.6 gives 9.7476 on both sides and the test passes; numpy 2.2.4 gives 9.747600000000002 on the numpy side; a difference of 1.78e-15; counted once per recording mode. cntWrong is added to the test result since #2479; so the model reports 2.948412957506974 against a reference of 0.9484129575069745 and the suite FAILS with error 2.0. The comparison needs a relative tolerance.
     - date raised: 2026-09-18 
 
  * :textblue:`open issue 2498:` no test checks the member functions an item type must provide

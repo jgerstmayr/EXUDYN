@@ -62,6 +62,7 @@ mbs = SC.AddSystem()
 # -quiet
 writeToConsole = True  #do not output to console / shell
 overwriteLog = False   #--overwrite-log: replace an existing log instead of diverting to tmp
+useExitCode = False    #--exit-code: exit non-zero when a performance test failed (#2504)
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -72,6 +73,8 @@ if len(sys.argv) > 1:
             writeToConsole = False
         elif sys.argv[i+1] == '--overwrite-log':
             overwriteLog = True
+        elif sys.argv[i+1] == '--exit-code':
+            useExitCode = True
         elif sys.argv[i+1] == '--fast-module':
             pass #already acted upon, before the exudyn import; listed so it is not "unknown"
         # elif sys.argv[i+1] == '-copylog': #not needed any more
@@ -335,5 +338,13 @@ exu.Print('****************************************************')
 
     
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the exit code (#2504; revision2026 step R5.18.1). Until this existed the runner ALWAYS returned 0,
+#so a failed performance test was invisible to anything that called it. There is no known-failure
+#list here: unlike the examples, every performance test passes today, and one that does not is a
+#result worth going red for.
+if useExitCode:
+    sys.exit(1 if len(testsFailed) != 0 else 0)
 
 

@@ -55,6 +55,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     quietMode = True
     writeFileNames = False
     overwriteLog = False    #--overwrite-log: replace an existing log instead of diverting to tmp
+    useExitCode = False     #--exit-code: exit non-zero on an UNEXPECTED failure (#2504)
     #the examples are an API check, not a numerical one, so they run in parallel processes with a
     #short timeout (revision2026 step R5.16); --serial restores the old in-process run
     runParallel = True
@@ -71,6 +72,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
                 quietMode = True
             elif sys.argv[i+1] == '--overwrite-log':
                 overwriteLog = True
+            elif sys.argv[i+1] == '--exit-code':
+                useExitCode = True
             elif sys.argv[i+1] == '--serial':
                 runParallel = False
             elif sys.argv[i+1].startswith('--parallel'):
@@ -314,5 +317,39 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     exu.Print('Skipped '+str(nSkipped)+' examples')
     exu.Print('******************************************')
 
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #the exit code (#2504; revision2026 step R5.18.1). Until this existed the runner ALWAYS
+    #returned 0, so nothing calling it - CI, a shell script, the exudev driver - could see a
+    #failure without parsing the log. Known failures are excluded, the way the test suite excludes
+    #UnresolvedOnLinux(), because an exit code that is red on every run says nothing.
+    knownFailures = testRunnerTools.KnownExampleFailures()
+    failedNames = [entry.split(' : ')[-1] for entry in examplesFailed]
+    unexpectedFailures = [name for name in failedNames if name not in knownFailures]
+    deadExclusions = [name for name in knownFailures if name not in failedNames]
+
+    if len(failedNames) != len(unexpectedFailures):
+        exu.Print('')
+        exu.Print('known failures, excluded from the exit code:')
+        for name in failedNames:
+            if name in knownFailures:
+                exu.Print('  ' + name + ' - ' + knownFailures[name])
+
+    if len(deadExclusions) != 0:
+        exu.Print('')
+        exu.Print('dead exclusion(s) - listed in KnownExampleFailures() but they PASSED; remove them:')
+        for name in deadExclusions:
+            exu.Print('  ' + name)
+
+    if len(unexpectedFailures) == 0:
+        exu.Print('')
+        exu.Print('PASSED: no unexpected example failed')
+    else:
+        exu.Print('')
+        exu.Print('FAILED: ' + str(len(unexpectedFailures)) + ' unexpected example failure(s)')
+
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+
+if __name__ == '__main__':
+    if useExitCode:
+        sys.exit(1 if len(unexpectedFailures) != 0 else 0)
 

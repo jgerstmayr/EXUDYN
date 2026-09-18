@@ -6209,3 +6209,80 @@ An exit code that is neither 0 nor 1 does fail, because that is a crash rather t
 CI image is a different compiler and libc and installs scipy, so it reaches code the local run did
 not. After the first scheduled runs it flips to `false` or the findings are baselined. A job that
 may be red forever teaches people to ignore it.
+
+
+<a id="r5-9-1"></a>
+### R5.9.1 - a tolerance below one ulp
+
+**DONE 2026-09-18** - issue #2501.
+
+`symbolicModuleTest.py` compared the symbolic vector/matrix result against the numpy result with an
+**absolute** tolerance:
+
+```python
+if np.linalg.norm(res[0] - res[1]) > 1e-15:
+```
+
+One of the compared values has magnitude `9.7476`, where one ulp is `1.8e-15`. The test therefore
+demanded agreement to better than half a bit, and whether it passed depended on the summation order
+of a numpy release. It did pass under numpy 2.4.6 and failed under 2.2.4 - on a **byte-identical**
+exudyn binary, same machine, same Python - with a difference of `1.78e-15`, counted once per
+recording mode. Since #2479 `cntWrong` is added to the test result, so the model returned `2.948...`
+against a reference of `0.948...` and the suite failed with error 2.0, which reads like a broken
+symbolic module and was a tolerance.
+
+The comparison is now relative to the magnitude involved, with an absolute floor of 1:
+
+```python
+scale = max(np.linalg.norm(res[0]), np.linalg.norm(res[1]), 1.)
+if np.linalg.norm(res[0] - res[1]) > 1e-14*scale:
+```
+
+**Verified both ways**: the model now returns exactly the committed reference `0.9484129575069745`
+in `venvP313` (numpy 2.2.4) *and* `venvExuP313` (numpy 2.4.6); and a mutation that makes one
+symbolic result wrong by `1e-12` relative is still caught, twice. A real symbolic/numeric mismatch
+is O(1); the few ulp of a different summation order are not what this test is about.
+
+The exact comparison further up the file - scalars against Python's `math` module, `res[0] != res[1]`
+- is deliberately left alone: it holds under both numpy versions, and exact equality is the stronger
+statement where it is true.
+
+
+<a id="r5-18-1"></a>
+### R5.18.1 - the two runners that could not fail
+
+**DONE 2026-09-18** - issue #2504, successor #2507.
+
+`runTestSuite.py` has returned a real exit code with `--exit-code` for some time. The other two
+runners always returned **0**, however many tests failed, so nothing calling them could see a
+failure: not CI, not a shell script, and not the `exudev` driver, which had to find the log the run
+had just written and read its summary line. That scan could not distinguish a run that died before
+writing its summary from a log it failed to find, and answered `unknown` for both.
+
+Both runners now take `--exit-code`, and `tools/exudev/results.py` - 120 lines of log scanning
+written the same day - is **deleted**. The driver passes the flag always and offers no way to turn
+it off.
+
+**The examples needed an exclusion list first.** Five of 171 fail today for known reasons, so a bare
+`--exit-code` would have been red on every run and would have said nothing - the same trap
+`UnresolvedOnLinux()` exists to avoid for the test suite. `testRunnerTools.KnownExampleFailures()`
+is that list, each entry carrying its measured cause, and the runner now reports:
+
+- the known failures it excluded, by name and reason;
+- **dead exclusions** - an entry that PASSED, which must be removed - the way the suite reports a
+  dead entry of `DeliberatelyNotRun()`;
+- `PASSED: no unexpected example failed`, or the count of unexpected ones.
+
+Three of the five are a missing optional package (`numpy-stl`, `pymeshlab`) and ought to be *skips*
+rather than failures; `ExampleSkipReason()` already has that mechanism and does not cover them. That
+is #2507 and step R5.18.2 rather than three lines here, because the right fix is probably to try the
+import instead of listing file names - and then those two packages belong in the `[all]` extra.
+
+`runPerformanceTests.py` gets no exclusion list: all 7 tests and all 13 single runs pass, and one
+that does not is worth going red for.
+
+**Verified**: `exudev perf` exits 0 on a clean run; `exudev examples` exits 0 with the five known
+failures listed and excluded. Then, in one mutated run, both remaining branches at once - a known
+entry removed (`pymeshlabFileImport.py` -> `FAILED: 1 unexpected example failure(s)`, driver exit 1)
+and a passing example added to the list (`dead exclusion(s) ... fourBarMechanism.py`). The mutation
+was reverted.

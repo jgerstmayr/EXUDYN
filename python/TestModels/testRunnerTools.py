@@ -442,6 +442,35 @@ def ExampleSkipReason(exampleFileName, fileString):
 
 
 #%%******************************************************************************************************
+def KnownExampleFailures():
+    """
+    Examples that fail today for a known reason, excluded from the exit code of runTestExamples.py.
+
+    This is to the example runner what UnresolvedOnLinux() is to the test suite: without it
+    '--exit-code' would be red on every run and would say nothing. The list must SHRINK; an entry
+    that starts passing is reported as a dead exclusion, exactly as the suite reports one.
+
+    Measured 2026-09-18 on Windows, Python 3.13 (log of 1.11.119.dev1, 5 of 171):
+
+    Returns:
+        dict: file name -> the measured reason
+    """
+    return {
+        #three of these are missing OPTIONAL PACKAGES, which ought to be a SKIP rather than a
+        #failure - ExampleSkipReason() already has that mechanism and does not cover them. Whether
+        #a machine that HAS the package should run them is a decision, not an oversight, so it is
+        #issue #2507 rather than three lines added here
+        'humanRobotInteraction.py': "ModuleNotFoundError: No module named 'stl' (numpy-stl)",
+        'pymeshlabFileImport.py':   "ModuleNotFoundError: No module named 'pymeshlab'",
+        'stlFileImport.py':         "FileNotFoundError: solution/stlImport.stl - the file another "
+                                    "example writes with numpy-stl",
+        'NGsolveGeometry.py':       'fails inside the NGsolve geometry construction under exec(...)',
+        'rendererNOGLFWexample.py': 'expects the renderer to be absent; the runner suppresses it '
+                                    'differently',
+        }
+
+
+#%%******************************************************************************************************
 def PrepareExampleSource(fileString, quietMode=True):
     """
     Turn an example into something that can run unattended (revision2026 step R5.16).
