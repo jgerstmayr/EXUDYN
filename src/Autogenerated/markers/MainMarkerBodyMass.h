@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,7 +127,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { return py::cast((ObjectIndex)cMarkerBodyMass->GetParameters().bodyNumber); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerBodyMass->GetShow()); } //! AUTO: get parameter
-        else {PyError(STDstring("MarkerBodyMass::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("MarkerBodyMass::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -138,7 +138,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("bodyNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cMarkerBodyMass->GetParameters().bodyNumber); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerBodyMass->GetShow(), "MarkerBodyMass.Vshow"); } //! AUTO: set parameter
-        else {PyError(STDstring("MarkerBodyMass::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("MarkerBodyMass::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 
 };

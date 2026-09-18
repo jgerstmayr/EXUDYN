@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  21:59:30 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -170,7 +170,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFCable->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vradius") == 0) { return py::cast((float)visualizationObjectANCFCable->GetRadius()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectANCFCable->GetColor())); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectANCFCable::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectANCFCable::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -192,7 +192,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetShow(), "ObjectANCFCable.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vradius") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetRadius(), "ObjectANCFCable.Vradius"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetColor(), "ObjectANCFCable.Vcolor"); } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectANCFCable::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectANCFCable::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -137,7 +137,7 @@ public: // AUTO:
         else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cLoadTorqueVector->GetParameters().bodyFixed); } //! AUTO: get parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { return cLoadTorqueVector->GetParameters().loadVectorUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadTorqueVector->GetShow()); } //! AUTO: get parameter
-        else {PyError(STDstring("LoadTorqueVector::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("LoadTorqueVector::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -151,7 +151,7 @@ public: // AUTO:
         else if (parameterName.compare("bodyFixed") == 0) { EPyUtils::FromPython(value, cLoadTorqueVector->GetParameters().bodyFixed, "LoadTorqueVector.bodyFixed"); } //! AUTO: set parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationLoadTorqueVector->GetShow(), "LoadTorqueVector.Vshow"); } //! AUTO: set parameter
-        else {PyError(STDstring("LoadTorqueVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("LoadTorqueVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 
 };

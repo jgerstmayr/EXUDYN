@@ -280,7 +280,7 @@ namespace EXUstd {
 	{
 		if (!(value >= 0) && ParameterRangeChecksActive())
 		{
-			PyError(STDstring("integer parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
+			PyError(STDstring("integer parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value), PyErrorType::valueError);
 			return 0;
 		}
 		return value;
@@ -290,7 +290,7 @@ namespace EXUstd {
 	{
 		if (!(value > 0) && ParameterRangeChecksActive())
 		{
-			PyError(STDstring("integer parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
+			PyError(STDstring("integer parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value), PyErrorType::valueError);
 			return 1; //any positive value, should work in most cases as a backup
 		}
 		return value;
@@ -300,7 +300,7 @@ namespace EXUstd {
 	{
 		if (value < 0 && ParameterRangeChecksActive())
 		{
-			PyError(STDstring("Real parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
+			PyError(STDstring("Real parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value), PyErrorType::valueError);
 			return 0;
 		}
 		return value;
@@ -310,7 +310,7 @@ namespace EXUstd {
 	{
 		if (value <= 0 && ParameterRangeChecksActive())
 		{
-			PyError(STDstring("Real parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
+			PyError(STDstring("Real parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value), PyErrorType::valueError);
 			return 1; //any positive value, should work in most cases as a backup
 		}
 		return value;
@@ -320,7 +320,7 @@ namespace EXUstd {
 	{
 		if (value < 0 && ParameterRangeChecksActive())
 		{
-			PyError(STDstring("float parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
+			PyError(STDstring("float parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value), PyErrorType::valueError);
 			return 0;
 		}
 		return value;
@@ -330,7 +330,7 @@ namespace EXUstd {
 	{
 		if (value <= 0 && ParameterRangeChecksActive())
 		{
-			PyError(STDstring("float parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
+			PyError(STDstring("float parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value), PyErrorType::valueError);
 			return 1; //any positive value, should work in most cases as a backup
 		}
 		return value;

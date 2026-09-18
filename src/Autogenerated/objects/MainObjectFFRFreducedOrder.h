@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -212,7 +212,7 @@ public: // AUTO:
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectFFRFreducedOrder->GetColor())); } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::ToPython(visualizationObjectFFRFreducedOrder->GetTriangleMesh()); } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShowNodes()); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectFFRFreducedOrder::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectFFRFreducedOrder::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -247,7 +247,7 @@ public: // AUTO:
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetColor(), "ObjectFFRFreducedOrder.Vcolor"); } //! AUTO: set parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetTriangleMesh()); } //! AUTO: set parameter
         else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetShowNodes(), "ObjectFFRFreducedOrder.VshowNodes"); } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectFFRFreducedOrder::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectFFRFreducedOrder::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 

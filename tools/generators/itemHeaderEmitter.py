@@ -653,7 +653,9 @@ def ItemCppHeaders(definition):
     sList[3] += space4+'virtual py::object GetParameter(const STDstring& parameterName) const override \n'
     sList[3] += space4+'{\n        '
     sList[3] += parameterReadStr
-    sList[3] += '{PyError(STDstring("' + classStr + '::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user\n'
+    #a parameter name that does not exist on this item: a string of the right kind with the wrong
+    #value (#2528, step R6.3.6). 97 items x 2 = 194 generated sites follow this one line
+    sList[3] += '{PyError(STDstring("' + classStr + '::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user\n'
     sList[3] += space8+'return py::object();\n'
 #        if Header(definition, 'classType') == 'Object': #if parameters have changed, some functions may be necessary to be reset
 #            sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
@@ -663,7 +665,7 @@ def ItemCppHeaders(definition):
     sList[3] += space4+'virtual void SetParameter(const STDstring& parameterName, const py::object& value) override \n'
     sList[3] += space4+'{\n        '
     sList[3] += parameterWriteStr
-    sList[3] += '{PyError(STDstring("' + classStr + '::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user\n'
+    sList[3] += '{PyError(STDstring("' + classStr + '::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user\n'
     #notify object that parameters have changed
     if Header(definition, 'classType') == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
         sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
@@ -826,7 +828,7 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
         }
         else
         {
-            CHECKandTHROW(itemIndex.is_none(), "SetUserFunctionFromDict: if itemTypeName is provided, itemIndex must be None");
+            CHECKandTHROW(itemIndex.is_none(), "SetUserFunctionFromDict: if itemTypeName is provided, itemIndex must be None", ExudynValueError);
         }
 
 		SetupUserFunction(pyObject, itemTypeName, userFunctionName);
@@ -896,7 +898,8 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
     s+="""		else
 		{
 			PyError(STDstring("Symbolic::SetUserFunctionFromDict<") + itemTypeName + "," + userFunctionName +
-				">: invalid user object type or user function type; possibly, function is not available as symbolic user function");
+				">: invalid user object type or user function type; possibly, function is not available as symbolic user function",
+				PyErrorType::notImplementedError);
 		}
 
 	}

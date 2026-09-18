@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -179,7 +179,7 @@ public: // AUTO:
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::ToPython(visualizationObjectGenericODE2->GetTriangleMesh()); } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectGenericODE2->GetShowNodes()); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return visualizationObjectGenericODE2->GetGraphicsDataUserFunction().GetPythonDictionary(); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectGenericODE2::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectGenericODE2::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -201,7 +201,7 @@ public: // AUTO:
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE2->GetTriangleMesh()); } //! AUTO: set parameter
         else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE2->GetShowNodes(), "ObjectGenericODE2.VshowNodes"); } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = value; } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectGenericODE2::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectGenericODE2::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 

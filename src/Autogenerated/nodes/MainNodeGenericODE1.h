@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -154,7 +154,7 @@ public: // AUTO:
         else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("numberOfODE1Coordinates") == 0) { return py::cast((Index)cNodeGenericODE1->GetParameters().numberOfODE1Coordinates); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericODE1->GetShow()); } //! AUTO: get parameter
-        else {PyError(STDstring("NodeGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("NodeGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -167,7 +167,7 @@ public: // AUTO:
         else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates, "NodeGenericODE1.initialCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("numberOfODE1Coordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericODE1->GetParameters().numberOfODE1Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE1.numberOfODE1Coordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeGenericODE1->GetShow(), "NodeGenericODE1.Vshow"); } //! AUTO: set parameter
-        else {PyError(STDstring("NodeGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("NodeGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 
 };

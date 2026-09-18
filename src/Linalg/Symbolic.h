@@ -1694,13 +1694,13 @@ public:
 	{
 		if (!sreal.IsExpressionNamedReal())
 		{
-			PyError("VariableSet::AddVariable(symbolic.Real): only accepts named variables created as Real(value, name)");
+			PyError("VariableSet::AddVariable(symbolic.Real): only accepts named variables created as Real(value, name)", PyErrorType::valueError);
 		}
 
 		STDstring name = sreal.GetExpressionNamedReal().GetName();
 		if (HasVariable(name))
 		{
-			PyError("VariableSet::AddVariable(symbolic.Real): variable name already exists");
+			PyError("VariableSet::AddVariable(symbolic.Real): variable name already exists", PyErrorType::valueError);
 		}
 		variables[name] = sreal;
 	}
@@ -1717,7 +1717,7 @@ public:
 		auto search = variables.find(name);
 		if (search == variables.end())
 		{
-			PyError("VariableSet::GetVariable(name): name does not exist");
+			PyError("VariableSet::GetVariable(name): name does not exist", PyErrorType::valueError);
 		}
 		return variables[name];
 	}

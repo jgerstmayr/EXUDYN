@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -167,7 +167,7 @@ public: // AUTO:
         else if (parameterName.compare("VshowContactCircle") == 0) { return py::cast((bool)visualizationObjectContactCircleCable2D->GetShowContactCircle()); } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectContactCircleCable2D->GetDrawSize()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactCircleCable2D->GetColor())); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectContactCircleCable2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectContactCircleCable2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -188,7 +188,7 @@ public: // AUTO:
         else if (parameterName.compare("VshowContactCircle") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCircleCable2D->GetShowContactCircle(), "ObjectContactCircleCable2D.VshowContactCircle"); } //! AUTO: set parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCircleCable2D->GetDrawSize(), "ObjectContactCircleCable2D.VdrawSize"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCircleCable2D->GetColor(), "ObjectContactCircleCable2D.Vcolor"); } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectContactCircleCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectContactCircleCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 

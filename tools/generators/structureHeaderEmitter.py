@@ -537,7 +537,7 @@ def CreatePybindHeaders(parseInfo):
                 return py::make_tuple(EPyUtils::GetDictionary(self));
             },
             [](const py::tuple& t) {
-                CHECKandTHROW(t.size() == 1, "{ClassName}: loading data with pickle received invalid data structure!");
+                CHECKandTHROW(t.size() == 1, "{ClassName}: loading data with pickle received invalid data structure!", ExudynValueError);
                 {ClassName} self;
                 EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
                 return self;

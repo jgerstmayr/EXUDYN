@@ -46,7 +46,7 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType, Config
 	else
 	{
 		PyError(STDstring("Invalid OutputVariableType in MainObject::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + 
-			"'; the object '" + GetName() + "' cannot compute the requested variable type");
+			"'; the object '" + GetName() + "' cannot compute the requested variable type", PyErrorType::valueError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -73,7 +73,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 	else
 	{
 		//PyError(STDstring("Invalid OutputVariableType in MainObject::Object") + GetTypeName() + ": '" + GetOutputVariableTypeString(variableType) + "'");
-		PyError(STDstring("Object") + GetTypeName() + " has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'");
+		PyError(STDstring("Object") + GetTypeName() + " has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'", PyErrorType::valueError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -98,7 +98,7 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 		}
 		else
 		{
-			PyError(STDstring("Object") + GetTypeName() + " (a body) has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'");
+			PyError(STDstring("Object") + GetTypeName() + " (a body) has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'", PyErrorType::valueError);
 			//PyError(STDstring("Invalid OutputVariableType in MainObjectBody::GetOutputVariableBody: '") + GetOutputVariableTypeString(variableType) + "'");
 			return py::int_(EXUstd::InvalidIndex);
 			//return py::object();
@@ -106,7 +106,7 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 	}
 	else
 	{
-		PyError(STDstring("Incalid call to GetOutputVariableBody(...) for Object") + GetTypeName() + ": access to objects of type 'Body' only");
+		PyError(STDstring("Incalid call to GetOutputVariableBody(...) for Object") + GetTypeName() + ": access to objects of type 'Body' only", PyErrorType::typeError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -131,7 +131,7 @@ py::object MainObject::GetOutputVariableSuperElement(OutputVariableType variable
 		}
 		else
 		{
-			PyError(STDstring("Object") + GetTypeName() + " has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'");
+			PyError(STDstring("Object") + GetTypeName() + " has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'", PyErrorType::valueError);
 			//PyError(STDstring("Invalid OutputVariableType in MainObjectBody::GetOutputVariableBody: '") + GetOutputVariableTypeString(variableType) + "'");
 			return py::int_(EXUstd::InvalidIndex);
 			//return py::object();
@@ -139,7 +139,7 @@ py::object MainObject::GetOutputVariableSuperElement(OutputVariableType variable
 	}
 	else
 	{
-		PyError(STDstring("Incalid call to GetOutputVariableSuperElement(...) for Object") + GetTypeName() + ": access to objects of type 'SuperElement' only");
+		PyError(STDstring("Incalid call to GetOutputVariableSuperElement(...) for Object") + GetTypeName() + ": access to objects of type 'SuperElement' only", PyErrorType::typeError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}

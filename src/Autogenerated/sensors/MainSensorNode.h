@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -142,7 +142,7 @@ public: // AUTO:
         else if (parameterName.compare("outputVariableType") == 0) { return py::cast((OutputVariableType)cSensorNode->GetParameters().outputVariableType); } //! AUTO: get parameter
         else if (parameterName.compare("storeInternal") == 0) { return py::cast((bool)cSensorNode->GetParameters().storeInternal); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationSensorNode->GetShow()); } //! AUTO: get parameter
-        else {PyError(STDstring("SensorNode::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("SensorNode::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -157,7 +157,7 @@ public: // AUTO:
         else if (parameterName.compare("outputVariableType") == 0) { cSensorNode->GetParameters().outputVariableType = py::cast<OutputVariableType>(value); } //! AUTO: set parameter
         else if (parameterName.compare("storeInternal") == 0) { EPyUtils::FromPython(value, cSensorNode->GetParameters().storeInternal, "SensorNode.storeInternal"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationSensorNode->GetShow(), "SensorNode.Vshow"); } //! AUTO: set parameter
-        else {PyError(STDstring("SensorNode::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("SensorNode::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 
 };

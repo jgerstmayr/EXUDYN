@@ -215,29 +215,29 @@ public:
 		functionDict = py::cast<py::dict>(pyObject);
 		if (!functionDict.contains(keyFunction) || !py::isinstance<py::str>(functionDict[keyFunction.c_str()]))
 		{
-			PyError(STDstring(where() + "expected dict with key '") + keyFunction + "' representing a string");
+			PyError(STDstring(where() + "expected dict with key '") + keyFunction + "' representing a string", PyErrorType::valueError);
 		}
 		SetFunctionName(py::cast<STDstring>(functionDict[keyFunction.c_str()]));
 
 		if (!functionDict.contains(keyArgList) || !py::isinstance<py::list>(functionDict[keyArgList.c_str()]))
 		{
-			PyError(STDstring(where() + "expected dict with key '") + keyArgList + "' representing a list");
+			PyError(STDstring(where() + "expected dict with key '") + keyArgList + "' representing a list", PyErrorType::valueError);
 		}
 		py::list argList = py::cast<py::list>(functionDict[keyArgList.c_str()]);
 
 		if (!functionDict.contains(keyArgTypeList) || !py::isinstance<py::list>(functionDict[keyArgTypeList.c_str()]))
 		{
-			PyError(STDstring(where() + "expected dict with key '") + keyArgTypeList + "' representing a list");
+			PyError(STDstring(where() + "expected dict with key '") + keyArgTypeList + "' representing a list", PyErrorType::valueError);
 		}
 		py::list argTypeList = py::cast<py::list>(functionDict[keyArgTypeList.c_str()]);
 
 		if (!functionDict.contains(keyReturnValue) )
 		{
-			PyError(STDstring(where() + "expected dict with key '") + keyReturnValue + "'");
+			PyError(STDstring(where() + "expected dict with key '") + keyReturnValue + "'", PyErrorType::valueError);
 		}
 		if (!functionDict.contains(keyReturnType) || !py::isinstance<py::str>(functionDict[keyReturnType.c_str()]))
 		{
-			PyError(STDstring(where() + "expected dict with key '") + keyReturnType + "' representing a string");
+			PyError(STDstring(where() + "expected dict with key '") + keyReturnType + "' representing a string", PyErrorType::valueError);
 		}
 		STDstring returnTypeStr = py::cast<STDstring>(functionDict[keyReturnType.c_str()]);
 		py::object pyReturnValue = functionDict[keyReturnValue.c_str()];
@@ -454,7 +454,7 @@ public:
 				//argIndex++; //do nothing, as MainSystem is not stored for now
 			}
 			else {
-				PyError(STDstring("Symbolic::SymbolicFunction::Evaluate: invalid argument ") + EXUstd::ToString(argIndex) + ", type is not supported");
+				PyError(STDstring("Symbolic::SymbolicFunction::Evaluate: invalid argument ") + EXUstd::ToString(argIndex) + ", type is not supported", PyErrorType::valueError);
 			}
 		}
 
@@ -516,7 +516,7 @@ public:
 		}
 		else
 		{
-			PyError(STDstring("Symbolic::GetItemTypeName") + ": invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)");
+			PyError(STDstring("Symbolic::GetItemTypeName") + ": invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)", PyErrorType::typeError);
 		}
 	}
 

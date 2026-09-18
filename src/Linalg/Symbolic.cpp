@@ -118,7 +118,7 @@ void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit
 			ufType = UserFunctionType::Symbolic;
 			PyWarning("PythonUserFunctionBase::SetPythonObject: symbolic user functions are currently only copied as regular Python functions!");
 		}
-		else { PyError(STDstring("PythonUserFunctionBase::SetPythonObject: invalid function type: ") + typeString); }
+		else { PyError(STDstring("PythonUserFunctionBase::SetPythonObject: invalid function type: ") + typeString, PyErrorType::valueError); }
 		userFunction = py::cast<UFT>(pyDict["function"]);
 
 	}
@@ -133,7 +133,7 @@ void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit
 	{
 		if (py::cast<int>(pyObjectInit) != 0)
 		{
-			PyError(STDstring("PythonUserFunction: Failed to convert PyFunction: must be either valid Python function or 0, but got ") + EXUstd::ToString(pyObjectInit));
+			PyError(STDstring("PythonUserFunction: Failed to convert PyFunction: must be either valid Python function or 0, but got ") + EXUstd::ToString(pyObjectInit), PyErrorType::typeError);
 		}
 		ufType = UserFunctionType::_None;
 		*pyObject = py::cast<py::int_>(pyObjectInit); //cast for other int types
@@ -141,7 +141,11 @@ void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit
 	}
 	else //unknown
 	{
-		PyError(STDstring("PythonUserFunction: user function type currently not supported (only pure Python function)"));
+		//this branch fires for ANYTHING that is not a function, not an integer and not a symbolic
+		//function - a string, a list, a dict. That is a TypeError, whatever the message says; the
+		//reference of parameterConversionTest showed it reporting NotImplementedFeatureError for
+		//a list, which would be caught by "except NotImplementedError" (#2528)
+		PyError(STDstring("PythonUserFunction: user function type currently not supported (only pure Python function)"), PyErrorType::typeError);
 	}
 }
 

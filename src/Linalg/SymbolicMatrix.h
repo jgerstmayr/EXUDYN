@@ -627,12 +627,12 @@ public:
 		Index rows = (Index)matrixInit.size();
 		if (rows == 0)
 		{
-			PyError(STDstring("SymbolicRealMatrix init received list with size zero"));
+			PyError(STDstring("SymbolicRealMatrix init received list with size zero"), PyErrorType::valueError);
 		}
 
 		if (!py::isinstance<py::list>(matrixInit[0]))
 		{
-			PyError(STDstring("SymbolicRealMatrix init with Python list: expected list of lists, but received:\n") + EXUstd::ToString(matrixInit));
+			PyError(STDstring("SymbolicRealMatrix init with Python list: expected list of lists, but received:\n") + EXUstd::ToString(matrixInit), PyErrorType::typeError);
 		}
 		py::list column0 = py::cast<py::list>(matrixInit[0]);
 		Index columns = (Index)column0.size();

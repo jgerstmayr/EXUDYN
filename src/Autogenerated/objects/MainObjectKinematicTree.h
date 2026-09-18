@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -201,7 +201,7 @@ public: // AUTO:
         else if (parameterName.compare("VshowJoints") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShowJoints()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectKinematicTree->GetColor())); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataList") == 0) { return PyGetBodyGraphicsDataListOfLists(visualizationObjectKinematicTree->GetGraphicsDataList(), true); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectKinematicTree::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectKinematicTree::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -233,7 +233,7 @@ public: // AUTO:
         else if (parameterName.compare("VshowJoints") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShowJoints(), "ObjectKinematicTree.VshowJoints"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetColor(), "ObjectKinematicTree.Vcolor"); } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsDataList") == 0) { PyWriteBodyGraphicsDataListOfLists(value, visualizationObjectKinematicTree->GetGraphicsDataList()); } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectKinematicTree::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectKinematicTree::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 

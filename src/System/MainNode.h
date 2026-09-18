@@ -57,9 +57,9 @@ public:
 	virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) { SysError("Invalid call to MainNode::SetVisualizationNode"); }
 
 	//! Hook to initial values vector (displacements) implemented in derived class
-	virtual LinkedDataVector GetInitialCoordinateVector() const { PyError("Node does not support GetInitialCoordinateVector functionality"); return LinkedDataVector(); }
+	virtual LinkedDataVector GetInitialCoordinateVector() const { PyError("Node does not support GetInitialCoordinateVector functionality", PyErrorType::notImplementedError); return LinkedDataVector(); }
 	//! Hook to initial values vector (velocities) implemented in derived class
-	virtual LinkedDataVector GetInitialCoordinateVector_t() const { PyError("Node does not support GetInitialCoordinateVector_t functionality"); return LinkedDataVector(); }
+	virtual LinkedDataVector GetInitialCoordinateVector_t() const { PyError("Node does not support GetInitialCoordinateVector_t functionality", PyErrorType::notImplementedError); return LinkedDataVector(); }
 
 	//! set initial coordinates, usually using default; special classes (Lie group) override
 	virtual void SetInitialCoordinateVector(LinkedDataVector& initialVector) { initialVector = GetInitialCoordinateVector(); }
@@ -74,7 +74,7 @@ public:
 	virtual py::object GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration) const;
 
 	//! call pybind object function, possibly with arguments
-	virtual py::object CallFunction(STDstring functionName, py::dict args) const { PyError("Node does not support CallFunction(...) functionality"); return py::object(); }
+	virtual py::object CallFunction(STDstring functionName, py::dict args) const { PyError("Node does not support CallFunction(...) functionality", PyErrorType::notImplementedError); return py::object(); }
 
 	//! Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail; override by according classes
 	virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const { return true; }

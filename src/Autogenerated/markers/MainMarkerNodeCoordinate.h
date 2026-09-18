@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,7 +133,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cMarkerNodeCoordinate->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("coordinate") == 0) { return py::cast((Index)cMarkerNodeCoordinate->GetParameters().coordinate); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerNodeCoordinate->GetShow()); } //! AUTO: get parameter
-        else {PyError(STDstring("MarkerNodeCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("MarkerNodeCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -145,7 +145,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cMarkerNodeCoordinate->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("coordinate") == 0) { EPyUtils::FromPython(value, cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerNodeCoordinate->GetShow(), "MarkerNodeCoordinate.Vshow"); } //! AUTO: set parameter
-        else {PyError(STDstring("MarkerNodeCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("MarkerNodeCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 
 };

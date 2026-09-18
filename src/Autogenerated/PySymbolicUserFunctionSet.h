@@ -37,7 +37,7 @@ public:
         }
         else
         {
-            CHECKandTHROW(itemIndex.is_none(), "SetUserFunctionFromDict: if itemTypeName is provided, itemIndex must be None");
+            CHECKandTHROW(itemIndex.is_none(), "SetUserFunctionFromDict: if itemTypeName is provided, itemIndex must be None", ExudynValueError);
         }
 
 		SetupUserFunction(pyObject, itemTypeName, userFunctionName);
@@ -151,7 +151,8 @@ public:
 		else
 		{
 			PyError(STDstring("Symbolic::SetUserFunctionFromDict<") + itemTypeName + "," + userFunctionName +
-				">: invalid user object type or user function type; possibly, function is not available as symbolic user function");
+				">: invalid user object type or user function type; possibly, function is not available as symbolic user function",
+				PyErrorType::notImplementedError);
 		}
 
 	}

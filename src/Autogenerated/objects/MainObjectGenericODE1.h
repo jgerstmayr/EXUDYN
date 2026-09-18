@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -153,7 +153,7 @@ public: // AUTO:
         else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t()); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericODE1->GetShow()); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -167,7 +167,7 @@ public: // AUTO:
         else if (parameterName.compare("rhsVector") == 0) { EPyUtils::FromPython(value, cObjectGenericODE1->GetParameters().rhsVector); } //! AUTO: set parameter
         else if (parameterName.compare("rhsUserFunction") == 0) { cObjectGenericODE1->GetParameters().rhsUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE1->GetShow(), "ObjectGenericODE1.Vshow"); } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 

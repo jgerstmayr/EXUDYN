@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-18  21:48:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -171,7 +171,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorRigidBodySpringDamper->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorRigidBodySpringDamper->GetColor())); } //! AUTO: get parameter
-        else {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
 
@@ -194,7 +194,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetShow(), "ObjectConnectorRigidBodySpringDamper.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize(), "ObjectConnectorRigidBodySpringDamper.VdrawSize"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetColor(), "ObjectConnectorRigidBodySpringDamper.Vcolor"); } //! AUTO: set parameter
-        else {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        else {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
 
