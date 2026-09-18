@@ -487,6 +487,9 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 <a id="r5-18-4"></a>
 **R5.18.4** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-4) — *(sub-step of R5.18; maintainer supplied the files)* **The missing data files, restored and pruned** (#2510, #2511).
 
+<a id="r5-18-5"></a>
+**R5.18.5** *(sub-step of R5.18; found while building for step R6.3.1)* **The gate environment can hold a stale wheel** (#2517). The gates run in `venvExuP313`; `exudev build` installs into `venvP313`. So a C++ change can be built and every gate can still run against a wheel from an earlier version - a green result that means nothing. Seen for real: `venvExuP313` held `1.11.173.dev1` while the sources were at `1.11.176.dev1`, and the stub gate happily described a module that did not contain the nine new classes. Either `exudev build` installs into the generator environment as well, or the checks refuse to run when the installed version differs from `version.txt`. The second is the stronger rule and costs one comparison.
+
 <a id="r5-18-3"></a>
 **R5.18.3** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-3) — *(sub-step of R5.18; found by the first GitLab run after the driver landed)* **A gate that was green locally and red in CI** (#2508).
 
@@ -574,28 +577,55 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `throw py::error_already_set()`. Custom classes come from
     `py::register_exception<T>(scope, "Name", base)`.
 
-    **Decision (maintainer, 2026-09-18): Exudyn defines its own exception classes.** Built-in types
-    cannot express "the solver diverged" or "this combination of settings is illegal", and a user
-    who needs to tell them apart is left matching on message text. Each derives from the built-in
-    that fits, so every existing `except RuntimeError` keeps working:
+    **Decisions (maintainer, 2026-09-18).**
+
+    1. **Exudyn defines its own exception classes, and everything it raises from C++ is one of
+       them** ("wrapping everything as ExudynError sounds good"). Built-in types cannot express
+       "the solver diverged" or "this combination of settings is illegal", and a user who needs to
+       tell them apart is left matching on message text. Each class derives *additionally* from the
+       built-in that fits, so `except exudyn.ExudynError` catches everything Exudyn raises while
+       the built-in stays available. **This is not free of consequence, and the honest form of it
+       is**: a site that becomes `SolverError` or `InternalError` keeps being caught by an existing
+       `except RuntimeError`; a site that becomes `ModelError`, `ExudynIndexError` or
+       `ExudynValueError` is **not** a `RuntimeError` any more, and an `except RuntimeError` around
+       it stops catching. That is the intended change - the old type was wrong - but it is a
+       user-visible one, so R6.3.6 maps area by area and names what changes in each.
+    2. **Scope: the C++ side.** The Python utility modules (`FEM`, `robotics`, ...) keep raising
+       ordinary built-ins, the way numpy does. This taxonomy is for what crosses the C++/Python
+       boundary, which is where the message is otherwise the only clue.
+    3. **Nothing becomes fatal.** `CHECKandTHROW` today raises an exception a parameter variation
+       *can* catch, if the user writes the `try/except` - and it must stay that way, "because
+       otherwise the user may report some 0 or None values and does not see where it happens".
+       Internal errors are catchable like every other; the solver simply does not catch them.
+    4. **"Not implemented" is its own kind**, between user error and internal error. A feature
+       combination that does not exist is not a mistake and not a bug. It gets its own class, and
+       with it a documentation rule: **the docs do not enumerate which combinations work** - lists
+       like that go stale - the code says so when asked, and that matters most for experimental
+       parts.
+    5. **Internal errors stay diagnosable.** A developer reading a long, non-reproducible run out of
+       a user's feedback needs to know *what* failed, not only that something did: the internal type
+       keeps the check text and the source location. The type says "report this"; the message says
+       what to report.
+    6. **Deprecations become a real `DeprecationWarning`**, through one dedicated C++ function, so
+       that the 199 sites are unified and findable.
 
     ```
-    exudyn.ExudynError(Exception)            the root; catch this to catch everything
-      exudyn.ModelError(ExudynError, ValueError)     illegal combination, wrong setting
-      exudyn.SolverError(ExudynError, RuntimeError)  singular Jacobian, no convergence, divergence
-      exudyn.InternalError(ExudynError, RuntimeError) an Exudyn bug; please report it
+    exudyn.ExudynError(Exception)                           the root; catch this to catch everything
+      exudyn.ModelError(ExudynError, ValueError)            illegal combination, wrong setting
+      exudyn.SolverError(ExudynError, RuntimeError)         singular Jacobian, no convergence, divergence
+      exudyn.InternalError(ExudynError, RuntimeError)       an Exudyn bug; please report it
+      exudyn.NotImplementedFeatureError(ExudynError, NotImplementedError)
+      exudyn.ExudynIndexError(ExudynError, IndexError)      the built-in mirrors keep the Exudyn
+      exudyn.ExudynValueError(ExudynError, ValueError)      prefix on purpose: 'from exudyn import *'
+      exudyn.ExudynTypeError(ExudynError, TypeError)        must not shadow a built-in name
+      exudyn.ExudynArithmeticError(ExudynError, ArithmeticError)
     ```
 
-    The exact set is part of the step; what is settled is that there **is** a set, that it is
-    exported on the `exudyn` module, and that it derives from the matching built-in rather than
-    forming a parallel hierarchy.
-
-    One mechanism detail to confirm first, because the whole shape depends on it: pybind11's
-    `exception` constructor passes `base` straight to CPython's `PyErr_NewException`
-    (`pybind11.h:2616`), and that accepts **a class or a tuple of classes** - so two bases should
-    need nothing but `py::make_tuple(...)` as the `base` handle. Compile and run it before the
-    hierarchy is designed around it; if it does not hold, single inheritance from the built-in
-    plus an `ExudynError` marker is the fallback.
+    The mechanism this rests on: pybind11's `exception` constructor passes `base` straight to
+    CPython's `PyErr_NewException` (`pybind11.h:2616`), and that accepts **a class or a tuple of
+    classes** - so two bases need nothing but `py::make_tuple(...)` as the `base` handle. Confirmed
+    by building and running it, sub-step R6.3.1; the fallback, had it not held, was single
+    inheritance from the built-in plus an `ExudynError` marker.
 
     **Also the message.** `PyError` prints the detail to `pout` and then throws a fixed string,
     `"Exudyn: parsing of Python file terminated due to Python (user) error"` (`Stdoutput.cpp:333`),
@@ -608,7 +638,45 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     **The trap to respect throughout** (info fact 29): `EXUexception` is a `#define` for
     `std::runtime_error` and every pybind11 exception derives from it, so a
     `catch (const py::builtin_exception&) { throw; }` must come **before** any
-    `catch (const EXUexception&)` in the same try block.
+    `catch (const EXUexception&)` in the same try block. The new classes derive from
+    `EXUexception` as well, for exactly the same reason and with exactly the same consequence.
+
+    **Sub-steps.** 2249 call sites cannot be one commit; each of these is a gate-passing change on
+    its own, and the order is the order of dependency.
+
+<a id="r6-3-1"></a>
+**R6.3.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-1) — *(sub-step of R6.3)*
+    **The nine exception classes exist, are exported, and the mechanism holds** (#2516) — including
+    the third instance of the flattening trap, which the one converted call site caught at once.
+
+<a id="r6-3-2"></a>
+**R6.3.2** *(sub-step of R6.3)* **Triage user-facing against internal**, per file, over all 2249
+    sites, and commit the result as a reviewable table rather than a claim. The rule is the one the
+    evidence gives: Linalg and Autogenerated fire on an Exudyn bug; `src/Pymodules/` and the
+    interface layer fire on a user mistake; `src/Solver/` is its own kind. Anything the rule cannot
+    place is listed, not guessed.
+
+<a id="r6-3-3"></a>
+**R6.3.3** *(sub-step of R6.3)* **The helpers learn to carry a type.** `CHECKandTHROW`,
+    `CHECKandTHROWstring` and `SysError` gain an optional type, defaulting to the kind their
+    location says they are - so the 1194 macro sites stay one-liners, and a site that is something
+    else says so. `PyError` already has it (R6.7).
+
+<a id="r6-3-4"></a>
+**R6.3.4** *(sub-step of R6.3)* **Deprecations leave the error path.** One C++ function raising a
+    real `DeprecationWarning` through `PyErr_WarnEx`, the 184 generated
+    `VisualizationSettings` sites emitted to call it, and the 15 hand-written ones converted. A user
+    can then filter them, promote them with `-W error::DeprecationWarning`, or see each once.
+
+<a id="r6-3-5"></a>
+**R6.3.5** *(sub-step of R6.3)* **The message survives.** `PyError` throws a fixed string
+    (`Stdoutput.cpp:333`), so `str(exception)` never carries what went wrong; the detail goes into
+    the exception, including the Python file and line, in one common format. Chain
+    `py::error_already_set` as well, so a user-function traceback survives instead of being
+    stringified (`ExceptionsTemplates.h:50`).
+
+<a id="r6-3-6"></a>
+**R6.3.6** *(sub-step of R6.3)* **The mapping itself**, area by area, on the triage of R6.3.2.
 
 
 <a id="r6-4"></a>
@@ -632,6 +700,16 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
     after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
     The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
+
+    **What must not be lost** (maintainer, 2026-09-18): this mechanism is the reason an error inside
+    a *user function* - `springForceUserFunction` and its kin - reports the line inside that
+    function. `inspect.currentframe()` called from C++ returns the innermost **Python** frame, which
+    during a user-function callback is the user's own code; nothing else the C++ side can reach
+    knows that line. The same holds wherever C++ calls back into Python, the renderer's GUI
+    callbacks included. So the step replaces `getframeinfo` - which scans `sys.modules` and reads
+    the source file - with the two frame attributes, and keeps `currentframe()`. **A user-function
+    model that reports the wrong line, or no line, fails this step.** Outside that case the
+    mechanism may be dropped where it costs more than it says.
 
 <a id="r6-7"></a>
 **R6.7** **DONE 2026-09-18** — a wrong parameter raises `TypeError` when the object cannot be that

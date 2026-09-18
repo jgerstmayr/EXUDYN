@@ -163,6 +163,40 @@ PYBIND11_MODULE(exudynCPP, m) {
 	//py::dict exudynSystemVariables; //!< global dictionary which is used by system functions to store local variables
 
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//THE EXCEPTION CLASSES (#2516, revision2026 step R6.3.1); the C++ classes are in ReleaseAssert.h
+	//Each derives from ExudynError AND from the built-in that fits, which PyErr_NewException accepts
+	//as a TUPLE of bases (CPython documents it; pybind11 passes the handle through unchanged,
+	//pybind11.h:2616). So 'except exudyn.ExudynError' catches everything Exudyn raises from C++,
+	//and every 'except RuntimeError' or 'except IndexError' written before this still works.
+	//ORDER MATTERS: pybind11 tries the exception translators in REVERSE order of registration, and
+	//the classes are related by C++ inheritance - so the base must be registered FIRST, or its
+	//translator would catch every derived class and flatten the type.
+	{
+		py::object exudynError = py::register_exception<ExudynError>(m, "ExudynError");
+
+		py::register_exception<ExudynModelError>(m, "ModelError",
+			py::make_tuple(exudynError, py::handle(PyExc_ValueError)));
+		py::register_exception<ExudynSolverError>(m, "SolverError",
+			py::make_tuple(exudynError, py::handle(PyExc_RuntimeError)));
+		py::register_exception<ExudynInternalError>(m, "InternalError",
+			py::make_tuple(exudynError, py::handle(PyExc_RuntimeError)));
+		py::register_exception<ExudynNotImplementedError>(m, "NotImplementedFeatureError",
+			py::make_tuple(exudynError, py::handle(PyExc_NotImplementedError)));
+
+		//the mirrors of built-ins keep the Exudyn prefix on purpose: 'from exudyn import *' must not
+		//shadow a built-in name
+		py::register_exception<ExudynIndexError>(m, "ExudynIndexError",
+			py::make_tuple(exudynError, py::handle(PyExc_IndexError)));
+		py::register_exception<ExudynValueError>(m, "ExudynValueError",
+			py::make_tuple(exudynError, py::handle(PyExc_ValueError)));
+		py::register_exception<ExudynTypeError>(m, "ExudynTypeError",
+			py::make_tuple(exudynError, py::handle(PyExc_TypeError)));
+		py::register_exception<ExudynArithmeticError>(m, "ExudynArithmeticError",
+			py::make_tuple(exudynError, py::handle(PyExc_ArithmeticError)));
+	}
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 	// Create a submodule named "symbolic"
 	auto symbolic = m.def_submodule("symbolic", "A submodule for symbolic operations and mathematical expression trees for user functions and future symbolic operations in exudyn");
 	Init_Pybind_Symbolic(symbolic);

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.176.dev1, 
++  Exudyn version = 1.11.177.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2516, 
-+  Number of resolved issues = 2249 (176 in current version), 
++  Number of issues = 2518, 
++  Number of resolved issues = 2250 (177 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.177: resolved Issue 2516: add Exudyn exception classes to the Python module (change)
+    - issue author: Claude-JG
+    - description:  Exudyn raises RuntimeError for everything from C++, a user cannot tell a solver divergence from an illegal setting from an Exudyn bug without matching on message text. Add ExudynError and its subclasses, each derives additionally from the built-in that fits. revision2026 step R6.3.1.
+    - **notes:** nine exception classes registered on the exudyn module, each derives from ExudynError and from the built-in that fits (tuple base). One call site converted to prove that a C++ throw keeps its type - which found a third instance of the flattening trap of #2432, pass-through added in all six places. Tested by python/testing/test_exceptions.py. revision2026 step R6.3.1.
+    - date resolved: **2026-09-18 15:03**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.176: resolved Issue 2515: stub gate fails on a wheel without the fast module (bug)
     - issue author: Claude-JG
     - description:  checkPython.py --stubs --check reports 'unused allowlist entry exudyn.exudynCPPfast' as an error when the installed wheel was built without the fast module (the default of exudev build; revision2026 step R5.18). Nothing is wrong with the stubs. revision2026 step R5.5.7.
@@ -7762,6 +7768,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textred:`open issue 2517:` the gate environment can hold a stale exudyn wheel
+    - issue author: Claude-JG
+    - description:  The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.
+    - date raised: 2026-09-18 
 
  * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG

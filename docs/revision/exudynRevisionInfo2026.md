@@ -456,6 +456,15 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
     BEFORE any `catch (const EXUexception&)` in the same try block, and a new catch-all added
     anywhere in the C++/Python boundary has to be checked against it.
 
+    **It happened a third time, in step R6.3.1** (2026-09-18, #2516), and the way it was found is
+    the lesson: the nine new exception classes derive from `EXUexception` deliberately, so that
+    every existing catch site keeps working - and therefore they walked straight into the same
+    trap. The very first converted call site returned `builtins.RuntimeError`. Checking
+    `__bases__` had said the hierarchy was correct; only raising one for real showed that it was
+    not the class that arrived. **The rule now reads: a catch of an Exudyn exception class, or of
+    a pybind11 builtin, before any catch of `EXUexception` - and a mechanism is not confirmed
+    until something is thrown through it.**
+
     Related, and the reason the class and the dict paths disagreed for years without anyone being
     able to see it: a cast can fail as a **Python** error rather than a pybind11 one.
     `np.array(-1)` is a 0-d array and iterating it raises *"iteration over a 0-d array"*; that is

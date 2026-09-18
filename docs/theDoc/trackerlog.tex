@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.176.dev1, 
+  \item Exudyn version = 1.11.177.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2516, 
-  \item Number of resolved issues = 2249 (176 in current version), 
+  \item Number of issues = 2518, 
+  \item Number of resolved issues = 2250 (177 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.177}:  resolved Issue 2516: {\bf add Exudyn exception classes to the Python module}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Exudyn raises RuntimeError for everything from C++, a user cannot tell a solver divergence from an illegal setting from an Exudyn bug without matching on message text. Add ExudynError and its subclasses, each derives additionally from the built-in that fits. revision2026 step R6.3.1.}
+    \item {\bf notes: nine exception classes registered on the exudyn module, each derives from ExudynError and from the built-in that fits (tuple base). One call site converted to prove that a C++ throw keeps its type - which found a third instance of the flattening trap of \#2432, pass-through added in all six places. Tested by python/testing/test\_exceptions.py. revision2026 step R6.3.1.}
+    \item   date resolved: {\bf 2026-09-18 15:03},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.176}:  resolved Issue 2515: {\bf stub gate fails on a wheel without the fast module}
 (bug)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

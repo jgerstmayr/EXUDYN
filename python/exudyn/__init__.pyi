@@ -51,9 +51,6 @@ from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
 
 
 
-
-
-
 @overload
 def Help() -> None: 
     """Show basic help information."""
@@ -149,6 +146,29 @@ variables:dict
 """this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables['myvar'] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed."""
 sys:dict
 """this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations."""
+
+
+class ExudynError(Exception): ...
+
+class ModelError(ExudynError, ValueError): ...
+
+class SolverError(ExudynError, RuntimeError): ...
+
+class InternalError(ExudynError, RuntimeError): ...
+
+class NotImplementedFeatureError(ExudynError, NotImplementedError): ...
+
+class ExudynIndexError(ExudynError, IndexError): ...
+
+class ExudynValueError(ExudynError, ValueError): ...
+
+class ExudynTypeError(ExudynError, TypeError): ...
+
+class ExudynArithmeticError(ExudynError, ArithmeticError): ...
+
+
+
+
 
 
 class OutputVariableType(Enum):

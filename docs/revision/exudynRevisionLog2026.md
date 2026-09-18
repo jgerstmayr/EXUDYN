@@ -6913,6 +6913,64 @@ serial runner did, and tightening it is a separate question from this step.
 so the runner and the worker apply the same rules; `--serial` keeps the old in-process run for
 debugging a single example.
 
+<a id="r6-3-1"></a>
+### R6.3.1 — the exception classes, and the third time the type was flattened
+
+**DONE 2026-09-18** (#2516).
+
+Nine classes, in `ReleaseAssert.h` next to the `EXUexception` define they all derive from, and
+registered in `PybindModule.cpp`:
+
+| Python | also catchable as | for |
+|---|---|---|
+| `exudyn.ExudynError` | `Exception` | the root; never raised directly |
+| `exudyn.ModelError` | `ValueError` | an illegal model: wrong combination, illegal setting |
+| `exudyn.SolverError` | `RuntimeError` | singular matrix, no convergence, divergence |
+| `exudyn.InternalError` | `RuntimeError` | an Exudyn bug; the message is what a developer needs from a user's log |
+| `exudyn.NotImplementedFeatureError` | `NotImplementedError` | the combination does not exist |
+| `exudyn.ExudynIndexError` | `IndexError` | |
+| `exudyn.ExudynValueError` | `ValueError` | |
+| `exudyn.ExudynTypeError` | `TypeError` | |
+| `exudyn.ExudynArithmeticError` | `ArithmeticError` | |
+
+**The tuple base holds.** pybind11 passes `base` straight to `PyErr_NewException`
+(`pybind11.h:2616`), which accepts a class or a tuple of classes, so `py::make_tuple(root,
+builtin)` is all two bases need. Measured, not assumed: `ModelError.__bases__` is
+`(ExudynError, ValueError)` and an instance is caught by both.
+
+**The four mirrors of built-ins keep the `Exudyn` prefix on purpose.** `python/exudyn/__init__.py`
+does `from .exudynCPP import *`, so a class named `IndexError` in the module would shadow the
+built-in for anyone writing `from exudyn import *`. A test asserts that no name of the module
+shadows a built-in exception name.
+
+**One call site was converted, and it paid for itself immediately.**
+`PyMatrixContainer.cpp:191` — a `MatrixContainer` given one of the two sizes — is a user's value
+mistake by any reading, so it became `ExudynValueError`. The first run after the build returned
+`builtins.RuntimeError` with the message *"parsing of Python file terminated"*: the throw had
+passed through `GenericExceptionHandling`, whose `catch (const EXUexception&)` took it first and
+re-raised it through `PyError`. This is **the third** appearance of info fact 29 (R6.7 found the
+first two), and the reason a mechanism sub-step raises something for real instead of only
+checking `__bases__`: the hierarchy was right and the result was still a `RuntimeError`.
+A `catch (const ExudynError&) { throw; }` now stands next to the `py::builtin_exception`
+pass-through in all six places that have one — the five `MainSystem::Add*` wrappers and
+`GenericExceptionHandling`.
+
+After that, the same call returns `exudyn.exudynCPP.ExudynValueError`, catchable as
+`exudyn.ExudynError` and as `ValueError`, **and carrying its own message** — the detail that
+`PyError` replaces with a fixed string today, which is what step R6.3.5 is for.
+
+**`python/testing/test_exceptions.py`** (18 cases) keeps all three properties: the hierarchy, the
+absence of shadowing, and one real C++ throw arriving with its type and its message intact.
+
+**Incidental, and worth knowing.** The gates run in `venvExuP313`, which `exudev build` does not
+install into — it installs into `venvP313`. That environment still held a wheel from three
+versions back, so the stub gate was green on a module that did not contain any of this. Raised
+as #2517. Once the fresh wheel was installed there, the stub gate passed on a **non-fast** wheel
+with nine new classes described — which is step R5.5.7 doing its job on the first real occasion.
+
+---
+
+
 <a id="r6-5"></a>
 ### R6.5 — A user switch for parameter range checks
 

@@ -188,7 +188,13 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 
 				if (numberOfRowsInit == EXUstd::InvalidIndex || numberOfColumnsInit == EXUstd::InvalidIndex) 
 				{ 
-					CHECKandTHROW(numberOfRowsInit == numberOfColumnsInit, "MatrixContainer::SetWithSparseMatrix: rows / columns must be either both valid columns and rows or both having the exu.InvalidIndex().");
+					//the ONE site converted in revision2026 step R6.3.1 (#2516), to prove that a C++ throw
+					//arrives in Python as the class it names and not as its base; the triage of step R6.3.2
+					//decides the other 2248. A user passing one of the two is not making an Exudyn bug happen.
+					if (numberOfRowsInit != numberOfColumnsInit)
+					{
+						throw ExudynValueError("MatrixContainer::SetWithSparseMatrix: rows / columns must be either both valid columns and rows or both having the exu.InvalidIndex().");
+					}
 					//in case that both indices are invalid, we take the scipy - shape for initialization
 					numberOfRowsInit = numRows;
 					numberOfColumnsInit = numColumns;

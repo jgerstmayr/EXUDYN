@@ -34,6 +34,70 @@
 
 //#define __FAST_EXUDYN_LINALG //defined as preprocessor flags
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//THE KINDS OF ERROR EXUDYN REPORTS (#2516)
+//One C++ class per exception class of the exudyn Python module; PybindModule.cpp registers the
+//Python side, where each of them derives BOTH from exudyn.ExudynError and from the built-in that
+//fits - so 'except exudyn.ExudynError' catches everything Exudyn raises, while an existing
+//'except RuntimeError' or 'except IndexError' keeps working unchanged.
+//
+//They all derive from EXUexception, which is std::runtime_error (above). That is deliberate: every
+//existing catch site keeps catching them. It is also the trap of #2432 - a
+//'catch (const ExudynError&)' must come BEFORE any 'catch (const EXUexception&)' in the same try
+//block, or the base catch takes it first and the type is flattened back to RuntimeError.
+//
+//Which class a check raises is a property of the CHECK, not of the helper it is written with: the
+//same macro states a user's index mistake in one place and an Exudyn invariant in the next.
+class ExudynError : public EXUexception            //!< the root; never raised directly
+{
+public:
+	//EXUexception is a MACRO for std::runtime_error, so the inheriting-constructor form
+	//'using EXUexception::EXUexception' would expand to a doubly qualified name and not compile
+	explicit ExudynError(const std::string& message) : EXUexception(message) {}
+	explicit ExudynError(const char* message) : EXUexception(message) {}
+};
+
+class ExudynModelError : public ExudynError        //!< an illegal model: wrong combination, illegal setting
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynSolverError : public ExudynError       //!< the solver cannot continue: singular matrix, no convergence, divergence
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynInternalError : public ExudynError     //!< an Exudyn bug; the message is what a developer needs to see in a user's log
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynNotImplementedError : public ExudynError //!< the feature or the combination does not exist (yet); not a mistake and not a bug
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynIndexError : public ExudynError        //!< an index outside its range
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynValueError : public ExudynError        //!< right kind of value, wrong value: size, shape, range
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynTypeError : public ExudynError         //!< the object cannot be that parameter at all
+{
+public: using ExudynError::ExudynError;
+};
+
+class ExudynArithmeticError : public ExudynError   //!< division by zero, sqrt of a negative number, ...
+{
+public: using ExudynError::ExudynError;
+};
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 #ifndef __FAST_EXUDYN_LINALG
 	#define __PYTHON_USERFUNCTION_CATCH__  //performs try/catch in all python user functions
 	#define __EXUDYN_RUNTIME_CHECKS__  //performs several runtime checks, which slows down performance in release or debug mode
