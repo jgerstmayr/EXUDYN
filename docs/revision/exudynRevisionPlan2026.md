@@ -109,51 +109,22 @@ promise for no gain.
 **R2.9** **DONE 2026-09-12** — unaligned load/store in AVX loops over `LinkedDataVector`. → [log](exudynRevisionLog2026.md#r2-9)
 
 <a id="r2-10"></a>
-**R2.10** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-10) — **Two shipped variants,
-    one meaning on every platform** (#2466): `exudynCPP` is baseline ISA everywhere, `exudynCPPfast`
-    carries `__FAST_EXUDYN_LINALG` **and** AVX2, and `exudynCPPnoAVX` is gone together with the
-    `sys.exudynCPUhasAVX2` switch. All 113 Windows reference values were re-measured on the
-    baseline module: 85 moved, 33 of them past tolerance, which is the same set that
-    `UnresolvedOnLinux()` lists — the Windows/Linux differences of #2379 WERE the AVX2 asymmetry.
+**R2.10** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-10) — **Two shipped variants, one meaning on every platform** (#2466).
 
 <a id="r2-10-1"></a>
-**R2.10.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-1) — *(sub-step of R2.10)*
-    **`exudynCPPfast` no longer segfaults** (#2467). `MainObjectANCFThinPlate::SetWithDictionary`
-    called `ParametersHaveChanged()` before the factory validated the item, and that computed the
-    slope scaling from `GetCNodes()[-1]`. The regular module was saved by the array range check;
-    the fast module, which compiles those out, died. The suite now completes under both modules.
+**R2.10.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-1) — *(sub-step of R2.10)* **`exudynCPPfast` no longer segfaults** (#2467).
 
 <a id="r2-10-2"></a>
-**R2.10.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-2) — *(sub-step of R2.10)*
-    **`NGsolveCMStest` no longer rewrites its own committed input** (#2469). It saved the tracked
-    `testData/netgenTestMesh.pkl` whenever the LOAD raised - which happens for reasons unrelated to
-    the file being missing - and the result then moved by 2.4e-8. It now decides on
-    `os.path.isfile`: written only when absent, and a file that cannot be loaded raises with the
-    reason instead of being replaced. The tracked mesh is now an **`.npz`**, converted from the
-    `.pkl` so the reference value is unchanged (maintainer, 2026-09-17).
+**R2.10.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-2) — *(sub-step of R2.10)* **`NGsolveCMStest` no longer rewrites its own committed input** (#2469).
+
 <a id="r2-10-3"></a>
-**R2.10.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-3) — *(sub-step of R2.10)*
-    **A second reference set for the AVX2 module** (#2470), kept as an **update** to the baseline
-    values: `AVX2ReferenceSolutionUpdate()` at the end of `runTestSuiteRefSol.py` holds only the 32
-    values that actually move, so the other 100+ stay single-sourced. Both modules now pass the
-    suite from one file. **The list is meant to shrink** (maintainer, 2026-09-17): each entry is to
-    be removed either by finding the cause of the drift or by choosing model parameters that do not
-    amplify roundoff — phase R10. It is ordered by drift, largest first, which is that work list.
+**R2.10.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-3) — *(sub-step of R2.10)* **A second reference set for the AVX2 module**
 
 <a id="r2-10-4"></a>
-**R2.10.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-4) — *(sub-step of R2.10)*
-    **`FEMinterface` files can be read by any module** (#2471): `postProcessingModes` stores the
-    `outputVariableType` by name, so reading a file no longer imports `exudynCPP` to unpickle an
-    enum. `NGsolveCMStest` still cannot leave `NotJudgedOutsideRegularModule()` - its tracked
-    `testData/netgenTestMesh.pkl` was written in the old form and has to be regenerated first.
+**R2.10.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-4) — *(sub-step of R2.10)* **`FEMinterface` files can be read by any module** (#2471).
 
 <a id="r2-10-5"></a>
-**R2.10.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-5) — *(sub-step of R2.10;
-    maintainer request 2026-09-17)* **The platform string names the architecture** (#2499):
-    `Windows x86_64`, `MacOS arm64`, `MacOS x86_64`, `Linux arm64` instead of `Windows`, `MacOS`
-    and `MacOS(ARM)`. It goes into the header of every solution, sensor, parameter variation and
-    optimization file, so it is what a user sends with a bug report - and an Intel Mac could not be
-    told from an Apple silicon one. The same step writes down why macOS builds no fast module.
+**R2.10.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-5) — *(sub-step of R2.10; maintainer request 2026-09-17)* **The platform string names the architecture** (#2499).
 
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)
@@ -174,21 +145,10 @@ promise for no gain.
 **R2.16** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-16) — *(phase R2, with R2.10)* **AVX2 on Linux decided by measurement** (#2396, #2397): stays OFF for the default wheel; if R2.10 builds a fast variant, it must use `-ffp-contract=off`.
 
 <a id="r2-17"></a>
-**R2.17** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r2-17) — *(phase R2 tooling, before the next header-only change)* **The wheel build does not see header
-    changes** (#2427). setuptools recompiles a `.cpp` only when it is newer than its `.obj`, and it
-    does not track included headers. In R4.4.3.2, `pip wheel . -w dist --no-deps` after a rewrite of
-    `PybindUtilities.h` (included by 35 files) produced a `.pyd` with the same md5 as the build
-    before, and the test suite passed against the old binary. Deleting
-    `build/temp.win-amd64-cpython-313` forced the full compile (49 s). Until this is fixed, the build
-    gate must remove that directory after a header change (seen again in step R4.13, #2448, duplicate). Fix: pass `depends=` (the headers) to
-    the `Extension`, or let `setup.py` compare header times itself.
+**R2.17** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r2-17) — *(phase R2 tooling, before the next header-only change)* **The wheel build does not see header changes** (#2427).
 
 <a id="r2-17-1"></a>
-**R2.17.1** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-17-1) — *(sub-step of R2.17)*
-    **A compile-FLAG change now discards the previous build** (#2468). `setup.py` writes the
-    effective options to `build/exudynBuildFlags.txt` and, when they differ, deletes the object
-    files **and** the linked modules before compiling — #2427 covered headers, nothing covered
-    flags, and `build/lib.*` kept the old `.pyd`.
+**R2.17.1** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-17-1) — *(sub-step of R2.17)* **A compile-FLAG change now discards the previous build** (#2468).
 
 ## R3 — Repository shape (~1 week, one commit)  <!-- old Phase 2 -->
 
@@ -267,12 +227,7 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     copies with the switching removed (#2513). → [log](exudynRevisionLog2026.md#r3-9)
 
 <a id="r3-9-1"></a>
-**R3.9.1** **DONE 2026-09-18** — *(sub-step of R3.9, found by the gates of the next step)*
-    **`checkExtras.py` did not know `python/testing/`** (#2514). With the runners no longer siblings of
-    the models, `modelUnitTests` and `testRunnerTools` were reported as uncovered imports "needed by
-    [tests]" — although they are project files, not packages. `LocalModuleNames()` now also counts
-    the tracked modules of `python/testing/`, which every runner puts on `sys.path` before it executes
-    a model.
+**R3.9.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r3-9-1) — *(sub-step of R3.9, found by the gates of the next step)* **`checkExtras.py` did not know `python/testing/`** (#2514).
 
 <a id="r3-10"></a>
 **R3.10** **DONE 2026-09-10** — `docs/doxygen/` removed. → [log](exudynRevisionLog2026.md#r3-10)
@@ -297,41 +252,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R4.5** **DONE 2026-09-15** — MainSystem extensions bound by `@extends(exudyn.MainSystem)` and `install()` instead of copy-and-append (#2434). → [log](exudynRevisionLog2026.md#r4-5)
 
 <a id="r4-6"></a>
-**R4.6** **DONE 2026-09-15 (R4.6.1-R4.6.4, with 37).** Migrate the `#**` convention to **Google-style** docstrings across all 27 utility modules.
-    Google style is mandatory project-wide (issue #2412); the rule itself has to be written into
-    `docs/dev/CODING_STYLE.md`, `CONTRIBUTING.md`, `CLAUDE.md` and early in the user
-    documentation, which is that issue's work and not this step's. The text inside the sections
-    is Markdown (`$...$` math, no LaTeX macros; decision 2026-09-15, see step R7.1). Eight of the eleven tags map
-    to standard sections — `function`/`class`/`classFunction` → summary, `input` → `Args`,
-    `output` → `Returns`, `notes` → `Note`, `example` → `Example`. `belongsTo` disappears into
-    `@extends`.
-
-    **Reuse the converter that already exists.** `setup.py:476-527` loads
-    `src/pythonGenerator/autoGenerateDocstrings.py` and runs `TreeConvert2Temp` over
-    `python/exudyn/` at install time, converting the `#**` comments to docstrings on the way into
-    the wheel. It already encodes the tag mapping, so it is the natural mechanical first pass for
-    the migration: point it at the sources instead of a temporary tree, take the diff, hand-edit
-    only where the output is not what a human would have written. Step R4.9 (delete it) then
-    becomes the endpoint rather than a separate problem - once the sources hold real docstrings,
-    the install-time transform has nothing left to do.
-
-    **Sequence (maintainer decision 2026-09-15).** 36 cannot land alone: the docs emitters parse the
-    `#**` comments, and `MainSystemExt.rst` (read by `pybindEmitter.py` and the `.pyi` stubs) comes
-    from them. The `#**` sources at `158ccd9` are backed up outside the repository before any
-    conversion (they also stay in git history). Sub-steps:
-    - **R4.6.1 - malformed tags** (#2435). **DONE 2026-09-15.** Tags the parsers do not know were
-      silently dropped from the documentation: `#**note` (9), `#**nodes` (3), `#**examples`,
-      `#**compute`, `#**outputinput`, two `#**` continuation lines; five `#**function` without colon.
-    - **R4.6.2/36c - docstring reader and converted sources** (#2436). **DONE 2026-09-15.** All 31
-      modules (the 30 documented ones and `machines.py`) hold Google-style docstrings; `author`,
-      `date` and `status` moved into `@docmeta(...)` (step R4.7, pulled in), and 10 functions with an
-      untagged docstring are `@docmeta(public=False)`. `utilityDocsModel.py` reads docstrings and
-      decorators with the standard library `ast`, not `griffe`: the reader needs no more than
-      `ast` gives, and a dev dependency is not needed for it. Converted by a one-off lossless
-      converter instead of `autoGenerateDocstrings.py`, which normalises whitespace. Details in
-      the log.
-    - **R4.6.4 - LaTeX to Markdown** inside the docstrings (#2437). **DONE 2026-09-15.** Step R4.6 is
-      complete. → [log](exudynRevisionLog2026.md#r4-6-4)
+**R4.6** **DONE 2026-09-15 (R4.6.1-R4.6.4, with 37).** → [log](exudynRevisionLog2026.md#r4-6) — Migrate the `#` convention to Google-style docstrings across all 27 utility modules.
 
 <a id="r4-7"></a>
 **R4.7** **DONE 2026-09-15 with R4.6.2/36c** — `@docmeta(author, date, status, public)` in `exudyn/docmeta.py`. → [log](exudynRevisionLog2026.md#r4-6)
@@ -343,79 +264,19 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R4.9** **DONE 2026-09-15** — install-time docstring converter and `autoGenerateDocstrings.py` removed (#2439). → [log](exudynRevisionLog2026.md#r4-8)
 
 <a id="r4-10"></a>
-**R4.10** **DONE 2026-09-15 (R4.10.1-R4.10.4)** — *(phase R4, after R4.3)* **Expose the type information to Python** (issue #2411; was R4.1.6).
-    Structures have a generated `GetDictionaryWithTypeInfo()`
-    (`pythonAutoGenerateSystemStructures.py:531`) feeding the settings dialog (`GUI.py:323`);
-    items have no equivalent, so the items dialog shows no types at all. A generated
-    `python/exudyn/types/` subpackage carries, per parameter, the type, shape and range, plus
-    `nodeType`, `requestedNodeType`, `requestedMarkerType` and `outputVariables` - none of
-    which Python can see today. Generated from `definitions/`, so there is no second copy to
-    drift. It is **not** put in `itemInterface.py`: that module is 390 KB and sits on the
-    `exudyn.utilities` import path, so every user would pay for data wanted only by dialogs,
-    checks and queries. `setup.py:530` already uses `find_namespace_packages`, so packaging
-    needs no change.
-
-    Second half of the same step: **`requestedNodeType` and `requestedMarkerType` become
-    declared type lists** and the C++ accessor is generated from them, instead of being
-    written as C++ inside the definition as it is today. The additive case is the common one.
-    The known hard case must be designed for, not discovered later -
-    `ObjectContactSphereSphere` (`src/Autogenerated/CObjectContactSphereSphere.h:184`) returns
-    a base type plus **one conditional term governed by one parameter**:
-
-    ```cpp
-    return (Marker::Type)((Index)Marker::Position
-                          + (parameters.dynamicFriction!=0)*(Index)Marker::Orientation);
-    ```
-
-    so the declaration needs a base list and an optional conditional list, e.g.
-    `types=[MarkerPosition], conditional=[(MarkerOrientation, 'dynamicFriction != 0')]`.
-    **Survey first** whether any case in the tree needs more than one condition; if none does,
-    that is the whole grammar.
-    - **R4.10.1 - declared requested types** (#2450). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-10-1).
-      `ItemRequestedTypes(kind, types, conditional)`; one condition form in the tree.
-    - **R4.10.2 - `Marker::Type` and `AccessFunctionType` generated** (#2451, was step R4.10.2; maintainer
-      decision 2026-09-15: generated and in the Python interface, so that it becomes visible which
-      objects, markers, connectors and loads combine). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-10-2).
-      `LoadType`, `SensorType`, `CObjectType`, `JacobianType` stay hand-written.
-    - **R4.10.3 - item type facts declared** (#2452). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-10-3).
-      `ItemTypes` (34 nodes and markers), `ItemAccessFunctionTypes` (19 objects; the `.cpp` bodies
-      removed). A marker needs no declaration: its Position/Orientation bits select the access function.
-    - **R4.10.4 - `python/exudyn/types/`** (#2411). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-10-4).
-      Generated `types/items.py` and tested queries (`MarkersForObject`, `ConnectorsForMarkers`, ...).
+**R4.10** **DONE 2026-09-15 (R4.10.1-R4.10.4)** → [log](exudynRevisionLog2026.md#r4-10) — *(phase R4, after R4.3)* **Expose the type information to Python** (issue #2411; was R4.1.6).
 
 <a id="r4-11"></a>
-**R4.11** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-11) — *(phase R4, before R4.3, small)* **Generator correctness** (#2414, #2415). The generator compares
-    a C/Main/Visu header after cutting 7 lines, which removes `@class` and `@brief` as well as the
-    two `@date` lines - so a changed class description is never written and `regenerate.py
-    --check` cannot see it (#2415, `pythonAutoGenerateObjects.py:2029`); compare with
-    `IsEqualIgnoringDateStrings` instead. Four items describe `AngularVelocityLocal` as a "3D
-    velocity vector"; fix the text, check the neighbouring `AngularVelocity` texts (#2414). Both
-    move published documentation, so they are gated as documentation changes.
+**R4.11** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-11) — *(phase R4, before R4.3, small)* **Generator correctness** (#2414, #2415).
 
 <a id="r4-12"></a>
-**R4.12** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-12); done as a comment, not as typedefs (`PReal` is the AVX packed-real macro) — *(phase R4, with R4.3)* **Keep the constrained types at the C++ boundary** (#2409). `PReal`,
-    `UReal`, `PInt`, `UInt` are mapped to plain `Real` / `Index` in `typeConversion`, so the
-    generated headers lose the intent that the Python-side `CheckForValid*` guards enforce. Add the
-    four typedefs and emit the constrained name; no behaviour changes, the headers say more.
+**R4.12** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-12) — ; done as a comment, not as typedefs (`PReal` is the AVX packed-real macro) — *(phase R4, with R4.3)* **Keep the constrained types at the C++ boundary** (#2409).
 
 <a id="r4-13"></a>
-**R4.13** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-13) — *(phase R4, after it)* **Remove `CFOptional`** (#2417). It wraps 448 parameter reads in
-    `DictItemExists`, but nothing tests the behaviour, so it guarantees nothing. Parameters whose
-    default value is not usable are the place where "required" belongs - as a checked property,
-    not a hand-set flag. Update `modelUnitTests.py:184`, which relies on omitted parameters.
+**R4.13** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-13) — *(phase R4, after it)* **Remove `CFOptional`** (#2417).
 
 <a id="r4-14"></a>
-**R4.14** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-14) — *(phase R4, with a large file move - R4.3 or later)* **Group `src/Autogenerated/` by item type.**
-    The directory holds several hundred generated headers side by side. Item headers move into
-    subdirectories `nodes/`, `objects/`, `markers/`, `loads/`, `sensors/`; the common generated
-    files (`OutputVariableTypes.h`, `versionCpp.cpp`, the pybind and structure headers) stay in
-    `src/Autogenerated/`. Include paths, `msvc/cppsrc.vcxproj`, `sources.json` and the tier lists
-    in `tools/regenerate.py` follow. Do it when the generators are rewritten anyway, so the paths
-    change once. Maintainer suggestion 2026-09-14; moving the generated files approved 2026-09-15.
-
-> Migration note for 36: ~1,200 doc comments across 27 files. Convert mechanically with
-> `autoGenerateDocstrings.py`, diff the generated RST against the pre-migration output, and
-> hand-edit only where the diff is non-trivial.
+**R4.14** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-14) — *(phase R4, with a large file move - R4.3 or later)* **Group `src/Autogenerated/` by item type.** The directory holds several hundred generated headers side by side.
 
 <a id="r4-15"></a>
 **R4.15** **DONE 2026-09-15** — `None` raises instead of converting. → [log](exudynRevisionLog2026.md#r4-15)
@@ -439,55 +300,10 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R4.21** **DONE 2026-09-15** — Wrong and stray comments in the generated item headers. → [log](exudynRevisionLog2026.md#r4-21)
 
 <a id="r4-22"></a>
-**R4.22** **DONE 2026-09-15 (R4.22.1-R4.22.3)** — *(phase R4, after R4.6)* **Star-import surface of the utility modules** (#2438, maintainer request
-    2026-09-15). `from exudyn.utilities import *` exports everything `utilities.py` imports,
-    including helpers such as `extends` (step R4.5) and `docmeta` (step R4.7), `np`, `sqrt` and
-    `exudyn`, because no utility module has `__all__`; it also re-exports `basicUtilities`,
-    `advancedUtilities`, `rigidBodyUtilities`, `graphicsDataUtilities` and `itemInterface` by star
-    import, plus 23 deprecated `GraphicsData...` aliases. This is a v2.0 API change: user scripts
-    relying on removed names break, so every removal is listed in the changelog (step R7.4).
-    - **Ways to do it.** *Easy:* one `__all__` in `utilities.py` listing today's public names, helpers
-      left out - nothing else changes. *Long-term ideal:* every utility module has its own
-      `__all__`; `utilities.py` is a thin facade that only composes those lists; no module-level
-      compatibility aliases; users are steered to the topical modules (`exudyn.graphics`,
-      `exudyn.rigidBodyUtilities`, ...). *Recommended:* the ideal, reached in three sub-steps, each
-      with a full suite run and the Examples/TestModels switched in the same commit:
-    - **R4.22.1 - numpy-era vector helpers in `basicUtilities.py`** (#2442). **DONE 2026-09-15.**
-      → [log](exudynRevisionLog2026.md#r4-22-1)
-    - **R4.22.2 - `utilities.py`** (#2443). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-22-2).
-      Maintainer decisions 2026-09-15: (1) Remove the 23 deprecated
-      `GraphicsData...` aliases after replacing their uses by `exudyn.graphics.*`. (2) No new files;
-      module names are final, since removing a function from a module later breaks user scripts:
-      - the `@extends` functions (`CreateDistanceSensorGeometry`, `CreateDistanceSensor` with its
-        helper, `DrawSystemGraph`) move to `mainSystemExtensions.py`;
-      - the TCP/IP functions move to `advancedUtilities.py`;
-      - **all other functions move to `basicUtilities.py`**, which may import numpy and exudyn from
-        now on (so `exu.Print` stays), and becomes the module to import directly;
-      - `advancedUtilities.py` keeps its functions (moving them would break explicit imports).
-      `utilities.py` becomes the big import only: star imports and re-exports, no own functions,
-      no `extends`. Import order without cycles: `exudyn/__init__` loads the C++ module first, then
-      `mainSystemExtensions.py`, which imports `basicUtilities`/`advancedUtilities`/... but never
-      `utilities.py`; `utilities.py` imports everything, including `mainSystemExtensions.py`.
-      Signature defaults such as `exudyn.ConfigurationType.Current` are evaluated at import, which
-      works because the C++ module is loaded before any utility module.
-    - **R4.22.3 - `__all__`** (#2444). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-22-3). Measure which implicitly exported names (`np`, `pi`, `sqrt`, `exudyn`,
-      the itemInterface classes, ...) Examples and TestModels take from `from exudyn.utilities
-      import *` (some do use `np` and `sqrt` that way; they get explicit imports). Then give every
-      utility module an `__all__` and let `utilities.py` compose them. A checker keeps the lists
-      complete: a small `ast` tool (like `tools/checkExtras.py`, run in CI) that fails if a public
-      top-level function or class of a module - one with a docstring and not
-      `@docmeta(public=False)`, the same rule the documentation reader uses - is missing from its
-      `__all__`, or if `__all__` names something the module does not define.
-    - **For every sub-step:** moved or removed names are checked in the package, TestModels,
-      Examples and docs, and listed in the log table *API changes for the v2.0 release notes*,
-      which step R7.4 carries into `CHANGELOG.md`.
+**R4.22** **DONE 2026-09-15 (R4.22.1-R4.22.3)** → [log](exudynRevisionLog2026.md#r4-22) — *(phase R4, after R4.6)* **Star-import surface of the utility modules** (#2438, maintainer request 2026-09-15).
 
 <a id="r4-23"></a>
-**R4.23** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-23) — *(phase R4, with the item emitters)* **Generated `itemInterface.py` docstrings do not match the
-    signatures** (#2440). `pydoclint` reports 387 findings there: the `visualization` argument of
-    every item class is undocumented, and the arguments carry types (`name (str): ...`) although
-    the package convention has none. Fix in `itemInterfaceEmitter.py`, then drop the `exclude` in
-    `[tool.pydoclint]`.
+**R4.23** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-23) — *(phase R4, with the item emitters)* **Generated `itemInterface.py` docstrings do not match the signatures** (#2440).
 
 <a id="r4-24"></a>
 **R4.24** **DONE 2026-09-15** — development environments from `[dependency-groups]` in `pyproject.toml`; `docs/requirements.txt` removed (#2441, maintainer request). → [log](exudynRevisionLog2026.md#r4-24)
@@ -496,10 +312,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R4.25** **DONE 2026-09-15** — structure members are in the Python interface by default; `SFPybind` on 845 of 883 members replaced by `SFNoPybind` on the other 38 (#2445, maintainer request). → [log](exudynRevisionLog2026.md#r4-25)
 
 <a id="r4-26"></a>
-**R4.26** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-26) — *(phase R4)* **Super element `Vshow` is False when left out of the dict** (#2447). `ObjectFFRF`,
-    `ObjectFFRFreducedOrder`, `ObjectGenericODE2`, `ObjectKinematicTree`: `AddObject` without `Vshow`
-    gives `False`, although `definitions/`, `itemInterface.py` and the generated Visu constructor say
-    `True`. Found by the omit probe of `parameterConversionTest.py` (step R4.13), recorded in its reference.
+**R4.26** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r4-26) — *(phase R4)* **Super element `Vshow` is False when left out of the dict** (#2447).
 
 ## R5 — Testing (~3 weeks)  <!-- old Phase 4 -->
 
@@ -510,249 +323,67 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.2** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-2) — **Fast vs slow as data**: `SlowTests()` and `OptionalPackageTests()` in `runTestSuiteRefSol.py` drive both `runTestSuite.py --fast` and the pytest markers; nightly stays the full set.
 
 <a id="r5-3"></a>
-**R5.3** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-3) — **The lest C++ unit tests
+**R5.3** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-3) — **The last C++ unit tests
     can run again**: a `performUnitTests` build switch (off by default), `PERFORM_UNIT_TESTS` in the
     VS `Debug` configuration, and the two defects that would have skipped or crashed the suite's
     report (#2458).
 
 <a id="r5-4"></a>
-**R5.4** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-4) — **The AVX classes have
-    unit tests**: `ResizableVectorParallel` and `LinkedDataVectorParallel`, every operation over 19
-    lengths around the packet boundary and, for the linked one, every offset from 0 to `AVXRealSize`
-    — the #2394 case. Verified by mutation. The remaining backfill is R5.4.1.
+**R5.4** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-4) — **The AVX classes have unit tests**
 
 <a id="r5-4-1"></a>
-**R5.4.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-1) — *(sub-step of R5.4)*
-    **The matrix variants and the rigid-body/geometry group have unit tests** (#2472): 20 cases in
-    `AllMatrixVariantsUnitTests.h` and `RigidBodyMathUnitTests.h`, property-based where a property
-    exists, and validated by mutation — one of which the tests initially missed, which is how the
-    weak case was found. Two defects found on the way: #2473 and #2474.
+**R5.4.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-1) — *(sub-step of R5.4)* **The matrix variants and the rigid-body/geometry group have unit tests** (#2472).
 
 <a id="r5-4-2"></a>
-**R5.4.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-2) — *(sub-step of R5.4)*
-    **Symbolic has unit tests** (#2479): 11 cases in `SymbolicUnitTests.h` aimed at the expression
-    TREE, which is what Python cannot reach - `Diff` by pointer identity, the value accessors, the
-    non-recording path and the reference counting - plus an extension of `symbolicModuleTest.py`
-    that keeps its reference value byte-identical. Defects found: #2480 and #2481.
+**R5.4.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-2) — *(sub-step of R5.4)* **Symbolic has unit tests** (#2479).
 
 <a id="r5-4-3"></a>
-**R5.4.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-3) — *(sub-step of R5.4)*
-    **`LinearSolver.h` has unit tests** (#2479): 10 cases in `LinearSolverUnitTests.h`; one system
-    solved by all four variants (EXUdense, Eigen PartialPivLU, Eigen FullPivLU, EigenSparse), and
-    the places where they deliberately differ pinned down. Defects found: #2482 and #2483.
+**R5.4.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-3) — *(sub-step of R5.4)* **`LinearSolver.h` has unit tests** (#2479).
+
 <a id="r5-4-4"></a>
-**R5.4.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-4) — *(sub-step of R5.4,
-    from R5.4.1)* **`LinkedDataMatrix(const MatrixBase&)` did not compile** (#2473): it read the
-    protected members of another object through a base-class reference. It now uses the public
-    accessors, and the row-range constructor next to it has its first caller - the R5.4.1 test,
-    which had to do the pointer arithmetic itself.
+**R5.4.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-4) — *(sub-step of R5.4, from R5.4.1)* **`LinkedDataMatrix(const MatrixBase&)` did not compile** (#2473).
 
 <a id="r5-4-5"></a>
-**R5.4.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-5) — *(sub-step of R5.4,
-    from R5.4.1)* **`MatrixContainer::MultMatrixVector` had two preconditions** (#2474): the dense
-    path sized the result vector, the sparse path did not and then indexed into it. The sparse path
-    now sizes it as well, and both products check their sizes.
+**R5.4.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-5) — *(sub-step of R5.4, from R5.4.1)* **`MatrixContainer::MultMatrixVector` had two preconditions** (#2474).
 
 <a id="r5-4-6"></a>
-**R5.4.6** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-6) — *(sub-step of R5.4,
-    from R5.4.5)* **`SparseTripletMatrix(rows, columns, triplets)` kept its size arguments**
-    (#2476): it initialised both to 0 and never assigned them. Fixed and kept, per the maintainer,
-    with the R5.4.1 tests as its first caller.
+**R5.4.6** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-6) — *(sub-step of R5.4, from R5.4.5)* **`SparseTripletMatrix(rows, columns, triplets)` kept its size arguments** (#2476).
 
 <a id="r5-4-7"></a>
-**R5.4.7** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-7) — *(sub-step of R5.4,
-    from R5.4.2)* **The symbolic headers include what they use** (#2480): `Symbolic.h`,
-    `SymbolicVector.h` and `SymbolicMatrix.h` compiled only because `Symbolic.cpp` included
-    pybind11 and `BasicLinalg.h` before them. Each is now self-sufficient, and the workaround in
-    the R5.4.2 test header is gone - which is the proof.
+**R5.4.7** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-7) — *(sub-step of R5.4, from R5.4.2)* **The symbolic headers include what they use** (#2480).
 
 <a id="r5-4-8"></a>
-**R5.4.8** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-8) — *(sub-step of R5.4,
-    from R5.4.2)* **A failed symbolic operation frees its nodes** (#2481): `SReal(ExpressionBase*)`
-    evaluates eagerly to cache the value, and an error inside `Evaluate()` used to escape before
-    any object owned the allocation. It now releases the tree exactly as the destructor would.
+**R5.4.8** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-8) — *(sub-step of R5.4, from R5.4.2)* **A failed symbolic operation frees its nodes** (#2481).
+
 <a id="r5-4-9"></a>
-**R5.4.9** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-9) — *(sub-step of R5.4,
-    from R5.4.3)* **The sparse factorization stopped inventing a causing row** (#2482): it returned
-    `solver.info() - 1`, an Eigen status code, so the solver printed "causing system equation
-    number = 0" for every singular sparse system. It now returns `NumberOfRows()`, the documented
-    "row unknown" answer, and the solver prints no row.
+**R5.4.9** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-9) — *(sub-step of R5.4, from R5.4.3)* **The sparse factorization stopped inventing a causing row** (#2482).
 
 <a id="r5-4-10"></a>
-**R5.4.10** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-10) — *(sub-step of R5.4,
-    from R5.4.3)* **`LinearSolverType.EigenDense` says what it does not detect** (#2483). The
-    behaviour was never a defect - FullPivLU is the `ignoreSingularJacobian=True` least-squares
-    path and PartialPivLU has no invertibility check in Eigen - so the step became one sentence in
-    the enum description.
+**R5.4.10** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-10) — *(sub-step of R5.4, from R5.4.3)* **`LinearSolverType.EigenDense` says what it does not detect** (#2483).
+
 <a id="r5-4-11"></a>
-**R5.4.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-11) — *(sub-step of R5.4;
-    maintainer request 2026-09-17)* **`pythonTests.cpp` removed** (#2484): 849 lines of manual
-    development tests, of which `PyTest()` was commented out entirely and `CreateTestSystem` -
-    written before `exudyn.demos` existed - built a model from a `py::exec` string in the
-    pre-`exudyn` API. Both were bound only outside a release build. The file, its header
-    `PybindTests.h`, the two bindings and the project entries are gone.
+**R5.4.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-11) — *(sub-step of R5.4; maintainer request 2026-09-17)* **`pythonTests.cpp` removed** (#2484).
+
 <a id="r5-4-12"></a>
-**R5.4.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-12) — *(sub-step of R5.4;
-    maintainer request 2026-09-17)* **The C++ usage demo of the symbolic types became a readable
-    header** (#2485): `PyTest_unused()` - six `if(false)` blocks in one dead function at the end of
-    `Symbolic.cpp` - is now `src/Linalg/symbolicCppDemo.h`, one named function per topic, included
-    by `Symbolic.cpp` so that it keeps compiling, called by nothing.
+**R5.4.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-12) — *(sub-step of R5.4; maintainer request 2026-09-17)* **The C++ usage demo of the symbolic types became a readable header** (#2485).
+
 <a id="r5-5"></a>
-**R5.5** **DONE 2026-09-17** — *(phase R5, tooling; decisions D1-D5 answered by the maintainer on
-    2026-09-17)* **A linter and a type check for the Python side.** Half A is R5.5.3 (ruff), half B
-    is R5.5.4 (stubtest and the PEP 561 marker); R5.5.1, R5.5.2, R5.5.5 and R5.5.6 are the defects
-    the two halves uncovered. The text below is kept because it records what the decisions meant;
-    it was written earlier the same day, when neither half had been started, because the decisions
-    had been stated in a shorthand that assumed knowledge of the tools.
-
-    **Half A - ruff over the shipped package `python/exudyn/`**
-
-    *What ruff is.* One program that reads Python source and reports suspicious lines. It replaces
-    what used to be three separate tools - pyflakes (real mistakes), pycodestyle (layout) and isort
-    (import order) - by re-implementing their rules in Rust, fast enough to check all 34 000 lines
-    in well under a second. It **changes nothing**: `ruff check` only reports. (`ruff format` is a
-    separate, opt-in code formatter and is explicitly **not** part of this step - it would rewrite
-    every file in the package.) It is configured by a few lines in `pyproject.toml`, and a single
-    finding on a single line is silenced by a trailing `# noqa: F401`.
-
-    *What "the default E/F rule set" means.* Every rule has a letter prefix naming the tool it comes
-    from, plus a number:
-
-    | prefix | what it is | examples |
-    |---|---|---|
-    | **F** | pyflakes - *real defects* | **F821** an undefined name (a typo that only raises when that line is finally reached); **F811** a name defined twice, the second silently winning; **F401** imported and never used |
-    | **E4, E7, E9** | the part of pycodestyle that is not about whitespace | **E402** import not at the top of the file; **E711** `x == None` instead of `x is None`; **E722** a bare `except:`, which also swallows Ctrl+C and MemoryError; **E999** the file does not parse at all |
-    | E1, E2, E3 | pycodestyle layout: indentation, blank lines, spaces around operators | **off by default and they must stay off** - thousands of findings that say nothing about correctness |
-    | B, UP, I, N, ... | optional families: bugbear, pyupgrade, isort, naming, ... | opt-in; none active by default |
-
-    So **"the default" = F + E4 + E7 + E9**: what is broken or misleading, nothing about formatting.
-    That is what ruff checks when a project configures no rules at all.
-
-    *What it would find here.* ruff is not installed in `venvExuP313`, so this was estimated on
-    2026-09-17 with a stdlib-AST script over the 40 files of `python/exudyn/` (ruff's own count will
-    differ, mainly because it also finds F811/F821/E402, which the script does not look for):
-
-    | rule | count | character |
-    |---|---|---|
-    | E722 bare `except:` | 60 | **not mechanical** - each one needs a decision on which exception was meant |
-    | E711 / E712 `== None`, `== True` | 63 | mechanical and safe |
-    | F403 `from module import *` | 26 | mostly deliberate re-export inside the package |
-    | F401 unused import | 14 | mechanical |
-    | E731, F541 | 2 | cosmetic |
-    | **total** | **~165** | over 34 000 lines - the package is in good shape |
-
-    *The three decisions, restated as questions with what each answer costs* - **all five (D1-D5)
-    were answered by the maintainer on 2026-09-17 with the recommendation given in each case**:
-
-    - **D1 - which rules?** (a) the default F + E4/E7/E9, ~165 findings, all of them about
-      correctness; (b) the default plus a small opt-in family such as **B** (flake8-bugbear: mutable
-      default arguments, `except` order, loop-variable capture - real bug patterns, maybe 20-50 more
-      findings); (c) more than that. *Recommendation: (a) now, (b) as a later sub-step once the
-      default set is clean and stays clean.*
-    - **D2 - fix or freeze?** A *baseline* is the pattern already used for `pydoclint`: the current
-      findings are written to `tools/ci/pydoclintBaseline.txt` and the check fails only on findings
-      that are **not** in that file, so old debt is tolerated and new debt is blocked. The
-      alternative is to fix everything once and have no baseline file at all. *Recommendation:
-      split by character - fix the ~79 mechanical ones (E711/E712/F401) outright in one reviewable
-      commit, baseline the 60 bare `except:` and the 26 star-imports, and work the baseline down in
-      later steps.* A baseline that is never reduced is just a list of things nobody will fix.
-    - **D3 - where does it run?** (a) in the commit gate next to `checkAll.py --check`, so nothing
-      is committed that fails it; (b) in CI only; (c) both. The check takes well under a second, so
-      cost is not the argument - the argument is that a gate stops work, and a CI job does not.
-      *Recommendation: (a) - `tools/checkPython.py --check`, alongside the existing checkers, and
-      the same script in CI.*
-
-    **Half B - a type check whose purpose is the stubs**
-
-    *How the stubs are made today.* `python/exudyn/__init__.pyi` (249 KB) and
-    `python/exudyn/symbolic.pyi` (13 KB) are the files an IDE reads to know what the C++ module
-    offers. Five fragments feed them: the hand-written `tools/generators/stubHeader.pyi`, and four
-    generated from `definitions/` by `pybindEmitter.py` (`stubAutoBindings.pyi`, `stubEnums.pyi`,
-    `stubSymbolic.pyi`), `structureStubEmitter.py` (`stubSystemStructures.pyi`) and
-    `mainSystemExtensionDocsEmitter.py` (`stubAutoBindingsExt.pyi`).
-    `tools/generators/createStubFiles.py` (97 lines) then merges them **by string concatenation**:
-    a line-based state machine that starts collecting when a line begins with `class `, and decides
-    the class has ended as soon as it sees a non-empty line that does not start with four spaces.
-    Nothing parses the result.
-
-    *Measured 2026-09-17 - the merged stub is not valid Python.* All five fragments parse; the
-    merged `python/exudyn/__init__.pyi` does **not**:
-
-    ```
-    File "python/exudyn/__init__.pyi", line 67
-        """measure 3D position, e.g., of node or body"""
-                   ^ SyntaxError: invalid decimal literal
-    ```
-
-    The cause is one line of documentation text. The class docstring of `OutputVariableType` has a
-    continuation line starting at column 0 ("Available output variables and the interpreation ..."),
-    which inside a triple-quoted string is harmless - but the merger's rule sees a column-0 line and
-    concludes the class ended. The remaining class body is written to the top level, the class block
-    is closed mid-docstring, and the halves land in the merged file out of order. Indenting that
-    single line by four spaces makes the whole 249 KB file parse (verified by re-running the merge
-    in memory). `symbolic.pyi`, which is a plain two-file concatenation, is fine.
-
-    *Measured the same day - what the stubs do not describe.* Comparing the merged stub against the
-    imported module: classes are covered well (76 of them), **module-level functions are largely
-    absent** - `StartRenderer`, `StopRenderer`, `InfoStat`, `GetVersionString`,
-    `SetOutputPrecision`, `SetWriteToConsole`, `SuppressWarnings` and others appear nowhere in the
-    stub - the settings classes are missing `GetDictionary`/`SetDictionary` throughout, and
-    `exudyn.symbolic` is missing `atan2`, `variables`, `Matrix.Get` and `UserFunction.Evaluate`.
-
-    *The right tool is named.* `mypy` ships **`stubtest`** (`python -m mypy.stubtest exudyn`), whose
-    single purpose is to import a module and compare it against its stub, reporting names present in
-    one and not the other and signatures that disagree. That is exactly the job described here.
-    `pyright` is a different job: it type-checks *source*, which would mean type-checking the whole
-    utility package - valuable, but a much larger and noisier undertaking.
-
-    *The two decisions:*
-
-    - **D4 - which checker, and how much?** (a) `stubtest` only, i.e. stub-vs-module agreement, the
-      question the stubs exist to answer; (b) `pyright`/`mypy` over `python/exudyn/` as source as
-      well. *Recommendation: (a). (b) is a separate later step, because the utility package is
-      untyped and a source type check on untyped code mostly reports the absence of annotations.*
-    - **D5 - baseline again?** stubtest will report a few hundred names on the first run. Same
-      answer as D2: freeze the first run as a baseline, fix the classes of finding that are
-      systematic (the missing module-level functions, the missing `GetDictionary`/`SetDictionary`)
-      as their own sub-steps, and let the baseline shrink.
-
-    Sub-steps R5.5.1 and R5.5.2 below are defects found while writing this and are independent of
-    every decision above. Half A is carried out in R5.5.3, half B in R5.5.4.
+**R5.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5) — *(phase R5, tooling; decisions D1-D5 answered by the maintainer on 2026-09-17)* **A linter and a type check for the Python side.**
 
 <a id="r5-5-1"></a>
-**R5.5.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-1) — *(sub-step of R5.5)*
-    **The generated `__init__.pyi` parses again, and the generator now checks** (#2486). The cause
-    was not the documentation text but the emitter: a docstring *summary* was written without
-    indentation, and a summary ends at the first ". " - which may come after a line break.
-    `createStubFiles.py` now `ast.parse()`s both stub files and refuses to write an invalid one.
+**R5.5.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-1) — *(sub-step of R5.5)* **The generated `__init__.pyi` parses again, and the generator now checks** (#2486).
 
 <a id="r5-5-2"></a>
-**R5.5.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-2) — *(sub-step of R5.5)*
-    **The stubs describe the module-level functions and the settings dictionaries** (#2490). The
-    cause was `addDocu=False`, which suppressed the `.pyi` entry together with the documentation,
-    and a `GetDictionary`/`SetDictionary` pair that the C++ emitter adds but the stub emitter did
-    not mirror. 14 functions and 43 class pairs.
+**R5.5.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-2) — *(sub-step of R5.5)* **The stubs describe the module-level functions and the settings dictionaries** (#2490).
 
 <a id="r5-5-3"></a>
-**R5.5.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-3) — *(sub-step of R5.5,
-    half A; decisions D1-D3)* **ruff runs over `python/exudyn/`** (#2487): rule set written down in
-    `pyproject.toml`, `tools/checkPython.py` judging it against `tools/ci/ruffBaseline.txt`, in the
-    commit gate. 335 findings at introduction, **107 fixed outright**, 228 tolerated and meant to
-    shrink. The measured count was 565, not the ~165 estimated when R5.5 was written.
+**R5.5.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-3) — *(sub-step of R5.5, half A; decisions D1-D3)* **ruff runs over `python/exudyn/`** (#2487).
 
 <a id="r5-5-4"></a>
-**R5.5.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-4) — *(sub-step of R5.5,
-    half B; decisions D4-D5, and the `py.typed` question answered with option (a))* **`stubtest`
-    compares the stubs against the module**: `tools/checkPython.py --stubs`, two allowlists
-    (curated noise, generated backlog of 271), and the PEP 561 marker is shipped - **after** R5.5.2
-    closed the gaps that would have turned correct user code into reported errors.
+**R5.5.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-4) — *(sub-step of R5.5, half B; decisions D4-D5, and the `py.typed` question answered with option (a))* **`stubtest` compares the stubs against the module**: `tools.
 
 <a id="r5-5-5"></a>
-**R5.5.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-5) — *(sub-step of R5.5;
-    found by the linter of R5.5.3)* **Four undefined names that raise `NameError` when their code
-    path is reached** (#2488): three `exudyn.Print` in `lieGroupIntegration.py`, which imports the
-    module as `exu`, and `SC.renderer.Start()` in `roboticsCore.py`, where the member is `self.SC`.
-    Running the first path then showed a second defect behind it.
+**R5.5.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-5) — *(sub-step of R5.5; found by the linter of R5.5.3)* **Four undefined names that raise `NameError` when their code path is reached** (#2488).
 
 <a id="r5-5-6"></a>
 **R5.5.6** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-6) — *(sub-step of R5.5)*
@@ -781,51 +412,10 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     the backlog still shrinks visibly.
 
 <a id="r5-6"></a>
-**R5.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6) — *(phase R5)* **An ASan/UBSan
-    Linux job.** For a C++ library invoking arbitrary user callbacks this catches the class of bug
-    users report as "it crashed with no message".
-
-    `tools/ci/buildSanitizers.sh` builds with `-fsanitize=address,undefined -O1 -g` and runs the
-    full test suite against the result; `sanitizers_linux` in `.gitlab-ci.yml` runs it weekly. The
-    job is **GitLab**, not GitHub: GitHub Actions only fire on pushes to master and on pull
-    requests, so during the freeze they never run (step R1.7).
-
-    **No `setup.py` change was needed**: the flags travel through `EXUDYN_EXTRA_COMPILE_ARGS` and
-    `EXUDYN_EXTRA_LINK_ARGS`, which `setup.py` already appends to every extension.
-
-    **The step paid for itself before a single sanitizer check ran** (#2506, fixed here): at `-O1`
-    the module would not even load, because `RaytracingSettings::maxNThreads` is declared
-    `static const` with an in-class initializer and never defined, while `Clamp()` binds a
-    reference to it. `-O3` folds the constant and hides it; every release build has been linking on
-    that accident.
-
-    **Measured 2026-09-18**, the whole suite under both sanitizers, in WSL: **0 AddressSanitizer
-    errors and 0 UndefinedBehaviorSanitizer reports** over 114 test models and 23 mini examples.
-    The suite's own failures in that run are **not** memory findings - the build is `-O1` on Linux
-    in an environment without scipy/NGsolve, so reference values differ and ~10 models cannot run -
-    and the script therefore reports the suite exit code without failing on it. Correctness is
-    `wheels_linux`' job; memory safety is this one's.
+**R5.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6) — *(phase R5)* **An ASan/UBSan Linux job.** For a C++ library invoking arbitrary user callbacks this catches the class of bug users report as "it crashed with no message".
 
 <a id="r5-6-1"></a>
-**R5.6.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6-1) — *(sub-step of R5.6)*
-    **The sanitizer job is a gate.** It was introduced with `allow_failure: true`, because a
-    first sanitizer pass over 107k lines of C++ usually finds things and a job that stays red trains
-    people to ignore it.
-
-    Two runs decided it. The **first failed for a packaging reason, not a sanitizer one**: the job
-    installed `setuptools` and `wheel` but not `pybind11`, and `buildSanitizers.sh` builds with
-    `--no-build-isolation`, so pip does not fetch `[build-system] requires` itself. Everything up to
-    that point had worked - `apt-get` brought in gcc 14.2 and the matching libasan, and the script
-    found both. Fixed by installing `pybind11<3.0` in the job and by checking the three build
-    modules up front, so such a failure is one line instead of line 443 of a pip traceback.
-
-    The **second run was clean**: zero AddressSanitizer errors and zero UndefinedBehaviorSanitizer
-    reports over the whole suite, on Debian gcc 14.2 - matching the gcc 13 result measured in WSL.
-    The script exits non-zero on any finding, so a green job *is* the measurement.
-
-    There is therefore nothing to baseline, and `allow_failure` is **removed**: a finding from now
-    on is new, and is worth stopping the pipeline for. No job in `.gitlab-ci.yml` may fail silently
-    any more.
+**R5.6.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6-1) — *(sub-step of R5.6)* **The sanitizer job is a gate.** It was introduced with `allow_failure.
 
 <a id="r5-7"></a>
 **R5.7** **DONE** — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`). → [log](exudynRevisionLog2026.md#r5-7)
@@ -837,171 +427,49 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.9** **DONE 2026-09-11** — Complete and verify the test list. → [log](exudynRevisionLog2026.md#r5-9)
 
 <a id="r5-9-1"></a>
-**R5.9.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-1) — *(sub-step of R5.9)*
-    **`symbolicModuleTest` fails with numpy 2.2**
-    (#2501). The vector/matrix section compares the symbolic result against the numpy result with an
-    **absolute** tolerance, `np.linalg.norm(res[0]-res[1]) > 1e-15`, on a value of magnitude
-    `9.7476` - where one ulp is `1.8e-15`. The tolerance is below the representable resolution, so
-    whether the test passes depends on the last bit of a numpy sum. Measured with the **same exudyn
-    binary** (md5 identical in both environments): numpy 2.4.6 passes, numpy 2.2.4 differs by
-    `1.78e-15`, counted once per recording mode. `cntWrong` is added to the test result since #2479,
-    so the model returns `2.948...` against a reference of `0.948...` and the suite fails with error
-    2.0. The comparison needs a relative tolerance.
+**R5.9.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-1) — *(sub-step of R5.9)* **`symbolicModuleTest` fails with numpy 2.2** (#2501).
 
 <a id="r5-9-2"></a>
-**R5.9.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-2) — *(sub-step of R5.9)*
-    **A reference value depended on the numpy version** (#2502). Same binary (md5 identical),
-    same source, same machine, same Python: `sliderCrank3Dbenchmark.py` returned
-    `7.256859912845965` under numpy 2.4.6 and `7.256859914829453` under numpy 2.2.4, relative
-    `2.7e-10` against a tolerance of `5e-14`.
-
-    **Root cause.** Not the model and not the solver: the geometry setup and the whole assembled
-    system were bit-identical under both, and only two marker `localPosition` values differed. They
-    come from the 3x3 product every `Create*Joint` uses to convert the joint position into body
-    coordinates. numpy does not fix the summation order of a small matrix product and changed it
-    between releases - for a component that is analytically zero, 2.2.4 returns `0.0` and 2.4.6
-    returns `-2.9e-19`. Proved by running the model on ONE interpreter with the other numpy on
-    `PYTHONPATH`: the result flips. Recorded as fact 28.
-
-    **Fixed by option 1** (maintainer, 2026-09-18): the 22 products in the `Create*Joint` helpers go
-    through two private, written-out helpers, `_MatVec3` and `_MatMul3x3`, whose summation order is
-    fixed by the source instead of by whichever kernel numpy picks. Cost: a Python loop over nine
-    terms, once per joint at model-build time.
-
-    **Result**: the two marker positions are now **bit-identical** under both numpy versions, and so
-    is the model - `7.256859914829453` in `venvP313` (numpy 2.2.4) and `venvExuP313` (numpy 2.4.6)
-    alike. Exactly **one** reference value moved, as the experiment had predicted, plus its AVX2
-    counterpart, which the same Python-side change moves identically. Both suites now pass in both
-    environments and with both modules.
-
-    **Deliberately not changed**: the same pattern appears about eighty more times in `FEM.py`,
-    `kinematicTree.py` and elsewhere. Nothing measured makes them matter, and a public utility would
-    be new API - so the helpers stay private and local, with the reason written where they are.
+**R5.9.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-2) — *(sub-step of R5.9)* **A reference value depended on the numpy version** (#2502).
 
 <a id="r5-9-3"></a>
-**R5.9.3** **DONE 2026-09-18** — *(sub-step of R5.9; the other half of R5.9.1)*
-    **`symbolicModuleTest` compares scalars with exact equality** (#2509). R5.9.1 gave the
-    vector/matrix comparison a relative tolerance; the **scalar** loop a few hundred lines above
-    still used `if res[0] != res[1]` - exact equality between two independent implementations of a
-    transcendental function, the symbolic module's and Python's. That holds only by luck, and the
-    luck ran out with **numpy 2.5.3**, where `acosh(2)` comes out 1 ulp apart
-    (`1.3169578969248166` against `...68`), counted twice - so the model returned `2.948` against a
-    reference of `0.948` and the suite failed with error 2.0, the exact symptom of #2501 in another
-    branch of the same file.
-
-    Found by running the suite on **Linux in WSL** before telling the maintainer to restart the
-    GitLab pipeline: numpy 2.5.3 is what the manylinux job uses, so CI would have failed again on a
-    model that looked fixed. Same relative tolerance as R5.9.1; verified under numpy 2.2.4, 2.4.6
-    **and** 2.5.3, all returning the committed reference exactly, and a mutation of `1e-12` relative
-    still flags 498 of the ~796 comparisons.
+**R5.9.3** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-3) — *(sub-step of R5.9; the other half of R5.9.1)* **`symbolicModuleTest` compares scalars with exact equality** (#2509).
 
 <a id="r5-10"></a>
 **R5.10** **DONE 2026-09-10** — `testRunnerTools.ResolveLogFile()` decides the log target before the first write. → [log](exudynRevisionLog2026.md#r5-10)
 
 <a id="r5-11"></a>
-**R5.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11) — *(phase R5, release
-    testing)* **Every compiled variant is covered by the release tests** (#2495): `EXUDYN_MODULE=fast`
-    and `--fast-module` run the suite and the performance tests against `exudynCPPfast`, which had
-    never been tested. The `-noavx` half of the original step is **dropped**: step R2.10 removed
-    that module, so there are two variants, not three.
+**R5.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11) — *(phase R5, release testing)* **Every compiled variant is covered by the release tests** (#2495).
 
 <a id="r5-11-1"></a>
-**R5.11.1** **DONE 2026-09-17** — *(sub-step of R5.11; maintainer decision 2026-09-16)* **How much
-    of the matrix the fast variant needs.** The decision stands as made and is now written where it
-    is used, in `docs/dev/WORKFLOW.md` under "Release testing matrix", with `-noavx` removed: full
-    suite on the default module for every supported Python version, full suite `--fast-module` on
-    the oldest and the second newest (today 3.10 and 3.13), examples on one version, and
-    `runPerformanceTests.py` both ways. The newest version is deliberately not the fast-mode
-    target: right after a release its packages are the unstable part.
+**R5.11.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11-1) — *(sub-step of R5.11; maintainer decision 2026-09-16)* **How much of the matrix the fast variant needs.**
 
 <a id="r5-11-2"></a>
-**R5.11.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11-2) — *(sub-step of R5.11;
-    found by a maintainer question about the version string)* **"Is this the fast module" is not
-    "does it have AVX2"** (#2496): the guard and the log marker of R5.11 asked the second question,
-    so on macOS and in any `--no-avx2` build - where `exudynCPPfast` is built without vector
-    extensions - `--fast-module` would have aborted, and the log would have carried no marker.
+**R5.11.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11-2) — *(sub-step of R5.11; found by a maintainer question about the version string)* **"Is this the fast module" is not "does it have AVX2"** (#2496).
 
 <a id="r5-12"></a>
-**R5.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-12) — *(phase R5, small)*
-    **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive` was retuned by the maintainer and
-    enters the suite - single-threaded, because with 4 threads it was not reproducible to the suite
-    tolerance. Two of the three phantom imports are repaired and gone from
-    `knownMissingLocalModules`; `RL_Spot` remains and needs a decision.
+**R5.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-12) — *(phase R5, small)* **Test and example hygiene** (#2368, #2377).
 
 <a id="r5-12-1"></a>
-**R5.12.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-12-1) — *(sub-step of
-    R5.12)* **`CompositionRuleForRotationVectors` returns 2π instead of 0** (#2494):
-    composing π·n with itself gives a vector of norm 2π rather than 0. Both describe the identity
-    rotation; the 2π one is simply not the principal representative.
-
-    **The C++ was checked against, as the maintainer asked.**
-    `EXUlie::CompositionRotationVector` (`src/Linalg/RigidBodyMath.h:1171`) is the *same formula*,
-    term for term, and returns 2π as well: `w = pi - 2*atan2(x, xTemp)` is `2*acos(x)`, which for
-    `x = cos(w/2) = -1` is 2π. So this was never a Python port that drifted - it is a property both
-    share.
-
-    **Decision (maintainer, 2026-09-18): accept it and document it.** The formulas take noise and
-    pass it on rather than snapping to a boundary; that keeps every existing result unchanged, and
-    a caller who needs the principal range maps it himself - for `w > π`, use `2π - w` about the
-    negated axis. Written into the Python docstring and the C++ comment, each naming the other, so
-    neither can be "fixed" later in ignorance of the other.
-
-    **One real difference was found on the way and fixed**: the C++ computes
-    `sqrt(fabs(1 - x*x))` with the comment *"fabs added, because term may be slightly smaller than
-    zero"*, and the Python had no guard - so the shipped Python **raised
-    `ValueError: math domain error`** for exactly the case of #2494, where the C++ returned 2π·n.
-    Ported, with the C++ named in the comment.
-
-    **`LieGroupIntegrationUnitTests.py` now passes 10 of 10.** TEST 2 compared against the Matlab
-    principal-range answer `[0,0,0]`; it now checks what is actually being claimed - that the
-    composed vector describes the **identity rotation**, whatever representative it uses - which is
-    the statement with meaning and survives a later change of convention. Measured: for
-    `n = [1,1,1]/sqrt(3)` the norm is 2π to `8.9e-16` and `ExpSO3` is the identity to `3.7e-16`.
-    Accuracy at that singularity is axis-dependent (about `4e-8` for `n = [0,0,1]`), which the
-    docstring says. The file stays in `DeliberatelyNotRun()` for the one remaining reason: it
-    PRINTS its results instead of setting `testResult`.
+**R5.12.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-12-1) — *(sub-step of R5.12)* **`CompositionRuleForRotationVectors` returns 2π instead of 0** (#2494).
 
 <a id="r5-13"></a>
 **R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
 
 <a id="r5-13-1"></a>
-**R5.13.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-1) — *(sub-step of R5.13)*
-    **Stop writing what nothing reads** (#2492): fifteen models wrote the coordinates solution file
-    on every run although only the SolutionViewer reads it, and three sensors still wrote to files.
-    74 → 64 solution files and 11 MB → 8.0 MB per suite run. The sensor half of the original step
-    text turned out to be done already, by R5.13 and R5.13.2; the examples half became R5.13.3.
+**R5.13.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-1) — *(sub-step of R5.13)* **Stop writing what nothing reads** (#2492).
 
 <a id="r5-13-2"></a>
-**R5.13.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-2) — *(sub-step of R5.13)*
-    **Five examples wrote sensor output next to themselves** (#2475): `beltDriveALE` and
-    `beltDriveReevingSystem` into `solutionDelete/`, the latter also `solution_nosync/`,
-    `rigidBodyIMUtest` into `solutionIMU<mode>/`, and the two `sliderCrank3DwithANCFbeltDrive`
-    examples into the current directory plus `plots/`. Only `solution/` is ignored, so each direct
-    run left untracked, unignored files behind. All of it now goes through `solution/`, and the
-    reads through `OutputFilePath`.
+**R5.13.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-2) — *(sub-step of R5.13)* **Five examples wrote sensor output next to themselves** (#2475).
 
 <a id="r5-13-3"></a>
-**R5.13.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-3) — *(sub-step of R5.13,
-    split out of R5.13.1)* **Generated FEM data leaves the tracked input directory** (#2491): twelve
-    examples wrote meshes and FEM data into `testData/`, so every examples run left untracked
-    `.npz`/`.hdf5` files next to the tracked inputs. They now go through `OutputFilePath` into
-    `solution/`.
+**R5.13.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-3) — *(sub-step of R5.13, split out of R5.13.1)* **Generated FEM data leaves the tracked input directory** (#2491).
 
 <a id="r5-13-4"></a>
-**R5.13.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-4) — *(sub-step of R5.13;
-    maintainer request 2026-09-17)* **Every writer creates its own output directory** (#2493):
-    `SaveDictToHDF5` raised `FileNotFoundError` instead, while four other writers each carried
-    their own copy of the same `try/except os.makedirs` block. One function,
-    `basicUtilities.CreateDirectoryForFile`. The two tracked `.npy` reference meshes, which nothing
-    could load any more, are deleted (maintainer approval 2026-09-17).
+**R5.13.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-4) — *(sub-step of R5.13; maintainer request 2026-09-17)* **Every writer creates its own output directory** (#2493).
 
 <a id="r5-13-5"></a>
-**R5.13.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-5) — *(sub-step of R5.13;
-    found while answering a maintainer question)* **The suite log is one file again when
-    `EXUDYN_OUTPUTDIRECTORY` is set** (#2500): the body went to the output directory and the summary
-    to `python/TestSuiteLogs`, because the suite cleared `outputDirectory` before re-opening the log.
-    In the same step the three runner `.bat` files pass their extra arguments on, so `--fast-module`
-    and `--parallel` can be reached from them at all.
+**R5.13.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-5) — *(sub-step of R5.13; found while answering a maintainer question)* **The suite log is one file again when `EXUDYN_OUTPUTDIRECTORY` is set** (#2500).
 
 <a id="r5-14"></a>
 **R5.14** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-14) — **Dev tools are declared**:
@@ -1009,30 +477,10 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `build-system.requires` and to the cibuildwheel version CI pins.
 
 <a id="r5-14-1"></a>
-**R5.14.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-14-1) — *(sub-step of
-    R5.14; approved by the maintainer 2026-09-18)* **One set of action versions** (#2463).
-    `wheels.yml` used `actions/checkout@v6` and `actions/setup-python@v6`; `documentation.yaml` was
-    still on `@v3` and `@v4`. Both now use the same majors, and the file says why they are pinned at
-    all: an unpinned action follows its default branch, so a third party can change what runs
-    between two identical commits - and the major matters because GitHub deprecates whole majors
-    (the Node runtime they ship on), so one that falls behind eventually stops running at all. That
-    is the failure mode to avoid, not a patch difference.
-
-    `JamesIves/github-pages-deploy-action@v4` is left alone and the comment says why: v4 IS its
-    current major, and it is third-party rather than part of the `actions/*` set the rule is about.
-    `runs-on: ubuntu-latest` also stays, against the pinned images of `wheels.yml`: the wheel matrix
-    has to be reproducible across four platforms, while this job only renders documentation and
-    benefits from the newest image.
-
-    **Not verifiable here**: GitHub Actions fire only on pushes to master and on pull requests, so
-    nothing runs during the freeze (step R1.7). Both files were checked to parse; the real test is
-    the first run once GitHub is live again, which the maintainer accepted when approving.
+**R5.14.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-14-1) — *(sub-step of R5.14; approved by the maintainer 2026-09-18)* **One set of action versions** (#2463).
 
 <a id="r5-15"></a>
-**R5.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-15) — **Performance suite reports
-    single runs**: every run appends solver time, result and a run name to `exudynTestGlobals.timings`,
-    reported and judged one by one; `perfLargeMassSpringChain` is a rigid body chain over 1000/5000/20000
-    bodies, explicit and implicit; `generalContactSpheresTest` runs with 1, 4 and 8 threads.
+**R5.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-15) — **Performance suite reports single runs**
 
 <a id="r5-16"></a>
 **R5.16** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-16) — **Examples run in parallel**
@@ -1040,234 +488,25 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     after the solver was reached counts as a pass. 360 s → 49 s.
 
 <a id="r5-17"></a>
-**R5.17** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-17) — *(phase R5, after R5.16)* **A switch that stops Exudyn opening windows**, so that a model
-    or an example run outside the test suite does not pop up the renderer - and so that the runners
-    can stop rewriting the source to prevent it.
-
-    **Where it lives**: a new group `exu.special.userInterface`, next to the existing
-    `special.solver` and `special.exceptions` (`PySpecialSolver`, `PySpecialExceptions` in
-    `src/Main/Experimental.h`). Not for regular users - that is what `special` means.
-
-    **The flags**, all default `False`:
-
-    | flag | effect |
-    |---|---|
-    | `suppressRenderer` | `SC.renderer.Start()` returns at once, `IsActive()` is `False`, `DoIdleTasks()` is a no-op |
-    | `suppressSolutionViewer` | `mbs.SolutionViewer` and `AnimateModes` return immediately |
-    | `suppressPlots` | `PlotSensor` and the other plotting helpers skip `plt.show()`; a figure given a file name is still SAVED |
-    | `suppressDialogs` | `InteractiveDialog` and `GUI.py` return their defaults instead of opening a tk window |
-    | `SuppressAll(True)` | sets the four |
-
-    A suppressed call is a **silent no-op**, except that each kind prints **one** notice the first
-    time it is suppressed - a window-less session must never be a mystery. `IsActive()` returning
-    `False` is the load-bearing detail: it is what lets `while SC.renderer.IsActive():` end instead
-    of spinning, which is the only reason the example runner rewrites that line today.
-
-    Like its two neighbours the group is a C++ class in `Experimental.h`, so the flags are one
-    value read from both sides: the renderer (window and idle loop are C++) and the Python helpers,
-    which read `exu.special.userInterface.*`.
-
-    **Environment**: `python/exudyn/__init__.py` reads `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` (sets the
-    four flags) and `EXUDYN_OUTPUTDIRECTORY` (sets `exu.config.outputDirectory`, which today can
-    only be set from Python). **These would be the first environment variables Exudyn reads at
-    runtime** - `getenv` appears nowhere outside `setup.py` - so the step also documents them as
-    intended for AI tools and CI, not for users, and prints one line on import when either is
-    active. **Both reads are wrapped in `try/except`** and a failure never stops the import
-    (maintainer, 2026-09-17): `os.environ` itself is always present, but applying the value is not
-    free of risk - `config.outputDirectory` rejects some strings, and a frozen or embedded
-    interpreter may hand back something unexpected.
-
-    **How `suppressPlots` reaches scripts that do not use `PlotSensor`** (decided 2026-09-17).
-    `PlotSensor` calls `plt.show()` itself (`plot.py:761`), so the package side follows the flag
-    directly. But **29 examples and 9 test models call `plt.show()` directly**, having imported
-    matplotlib themselves. Those are covered by `matplotlib.use("Agg")`, applied once from the flag
-    rather than by editing 38 scripts: one place, and every script written later is covered too.
-    Figures are still drawn and still saved under Agg; only the window disappears. The limit worth
-    stating: the backend has to be chosen before the first figure is created, so a flag flipped in
-    the middle of a script cannot retro-fit it - which is precisely why the environment variable
-    exists.
-
-    **What this does NOT replace**: of the ~14 source substitutions in
-    `testRunnerTools.ExampleSkipReason`/the example bootstrap, roughly six are window-related and
-    can go; the rest cut WORK (`useGraphics = True` -> `False`, `numberOfGenerations`,
-    `useMultiProcessing`, `verbose`, `showProgress`) and stay. The step states which are removed.
+**R5.17** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-17) — *(phase R5, after R5.16)* **A switch that stops Exudyn opening windows**, so that a model or an example run outside the test suite does not pop up the renderer - and so that the runners can stop rewriting the source to prevent it.
 
 <a id="r5-17-1"></a>
-**R5.17.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-17-1) — *(sub-step of R5.17)*
-    **A script that draws its own plots ignored the flag** (#2478): `suppressPlots` reaches every
-    plot the package draws, but not the **36 models and examples** that import matplotlib
-    themselves and call `plt.show()`. Each now carries a two-line guard after its exudyn import,
-    and `CLAUDE.md` rule 11 says that a local run of an existing model sets
-    `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` and `EXUDYN_OUTPUTDIRECTORY`.
+**R5.17.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-17-1) — *(sub-step of R5.17)* **A script that draws its own plots ignored the flag** (#2478).
+
 <a id="r5-18"></a>
-**R5.18** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18) — *(phase R5, last step;
-maintainer request 2026-09-18)* **One driver instead of sixteen batch files** (#2503).
-`tools/buildAndGenerate/` held 18 files - **16 `.bat`**, a README and one shell script - of which
-**five existed only to find conda and to loop over the Python versions** (`condaActivate.bat`, `execWithPythonVersion.bat`,
-`execWithAllPythonVersions.bat`, plus the two thin wrappers `makeWindowsBinaries.bat` and
-`buildInstallSingleVersion.bat`). A `.bat` file cannot print a `--help`, cannot validate an option
-and cannot pass an option it does not know about: that is exactly why `--fast-module` - added in
-step R5.11 - could not be reached from `runTestSuite.bat` at all until step R5.13.5, and why the
-argument-forwarding loop added there needed a dry run to catch that `SHIFT` also shifts `%0`.
-The scripts are additionally **where the maintainer looks up how the build works**, a documentation
-duty that `REM` headers serve badly.
-
-**The replacement**: one dependency-free Python driver, `python tools/exudev` (a directory with
-`__main__.py`, so no `sys.path` manipulation and no installation), with a `.bat` one-liner
-`tools/buildAndGenerate/exudev.bat` so that `exudev test --fast` works from any shell. It imports
-only `argparse` and `subprocess`, **never `exudyn`**, so it runs under any interpreter - including
-the conda base - and can therefore be the thing that *selects* the environment.
-
-| command | what it does | replaces |
-|---|---|---|
-| `exudev generate [--docs]` | `tools/regenerate.py`, optionally the sphinx build | `runPythonScripts.bat` |
-| `exudev build [--py P313] [--fast] [--no-install] [--clean]` | wheel + reinstall for one version or `--py all` | `makeInstallBinaries`, `makeWindowsBinaries`, `buildInstallSingleVersion` |
-| `exudev test [--py] [--fast] [--parallel] [--exit-code]` | `runTestSuite.py` | `runTestSuite.bat` |
-| `exudev examples [--py]` | `runTestExamples.py` | `runTestExamples.bat` |
-| `exudev perf [--py] [--fast]` | `runPerformanceTests.py` | `runPerformanceTests.bat` |
-| `exudev docs [--pdf]` | sphinx html; `--pdf` the LaTeX `theDoc` while it still exists | `makeSphinxDoc.bat`, `makeDoc.bat` |
-| `exudev linux [--manylinux\|--wsl] [--no-fast]` | the linux wheels through WSL | `makeUbuntuManyLinuxWheels`, `makeUbuntuWheels` |
-| `exudev release [--fast] [--no-docs] [--no-tests] [--no-linux]` | the whole path: clean, generate, all wheels, all tests, docs, linux | `makeAndTestAllBinaries.bat` |
-| `exudev clean` | build directories and eggs | `removeBuildsAndEggs.bat` |
-| `exudev env` | which `venvP3xx` exist and which exudyn version each has | the README warning about stale installs |
-
-**Conventions**, all of them free from `argparse`: `--help` on the driver **and on every
-subcommand**; `-q/--quiet`; `--fast` is always **opt-in**; `--docs/--no-docs` and
-`--tests/--no-tests` come as a pair from `BooleanOptionalAction`; `--py` takes `P310`...`P314` or
-`all`; `--env NAME` overrides the environment (default `venvExuP313` for generation and docs,
-`venvP3xx` for the version matrix); **unknown options are forwarded** to the underlying runner, so
-a new runner option is usable the day it exists. An unknown *command* is an error with the list of
-commands - a `.bat` silently does nothing.
-
-**`-n/--dry-run` is the documentation feature**: it prints the exact command lines it would run and
-exits. That answers "how does this actually work" better than the `REM` headers ever did, and it is
-how the step is tested.
-
-**Environment selection uses `conda run -n <env> --no-capture-output`** instead of the
-activate/deactivate dance. Measured 2026-09-18: 1.8 s overhead per call, exit code propagated,
-output not buffered. This removes `condaActivate.bat` and both `execWith*` scripts; the base
-installation is still located by `EXUDYN_CONDA_ROOT`, then `CONDA_EXE`, then `PATH`, which is the
-logic of `condaActivate.bat` ported to Python.
-
-**Disposition of the 18 files** (the maintainer approved removing all of them, 2026-09-18).
-The 16 `.bat` files and the README moved to `tmp/oldScripts/` - `tmp/` is **gitignored**, so this
-removes them from the repository. Two corrections to the text above, both found while doing the
-work: it said *13* files, and it said `manylinuxBuild.sh` **stays** in the directory. In fact it
-moved to **`tools/ci/`**, next to the `buildManylinux.sh` it calls and which already lived there,
-and `tools/buildAndGenerate/` is therefore **retired**. `manylinuxBuild.sh` is still shell, because
-it runs inside the docker image. The dead `addTags.bat` reference in `makeAndTestAllBinaries.bat`
-disappeared with it - no such file exists anywhere in the repository.
-`src/pythonGenerator/makeAllBinariesScripts.py` (31 lines, writes `docs/theDoc/buildDate.tex`) is
-folded into `exudev release` when that directory is removed.
-
-**The LaTeX `theDoc` is not wrapped** (maintainer 2026-09-18): it has not built for many commits,
-paths are wrong and files are missing, and R7 replaces it. `makeDoc.bat` went to `tmp/oldScripts/`
-with the rest; no `exudev docs --pdf` was written.
-
-**Deferred on purpose - REMINDER for after the revision**: the **main `README.md`** and the build
-instructions in the user documentation still describe the batch files. They are **not** updated in
-this step, because R7.2 rewrites the per-platform build instructions anyway and the driver's own
-commands may still change; updating both now would mean writing them twice. R7.2 must pick this up,
-and [`tools/exudev/README.md`](../../tools/exudev/README.md) is the source it should link to rather
-than copy (rule 10). `docs/dev/WORKFLOW.md`, `docs/dev/README.md` and `CLAUDE.md` **were** updated
-here, because they describe the developer workflow rather than the user documentation.
+**R5.18** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18) — *(phase R5, last step; maintainer request 2026-09-18)* **One driver instead of sixteen batch files** (#2503).
 
 <a id="r5-18-1"></a>
-**R5.18.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-1) — *(sub-step of
-    R5.18)* **The two runners without an exit code**
-    (#2504). `runTestSuite.py` returns a real exit code with `--exit-code`; `runTestExamples.py` and
-    `runPerformanceTests.py` **always return 0**, however many tests failed. Anything that calls them
-    - the driver, a CI job, a shell script - therefore cannot see a failure from the exit code, and
-    `tools/exudev/results.py` reads the summary line out of the log instead. That scan cannot tell a
-    run that died before writing its summary from a log it did not find, so it answers `unknown` and
-    maps it to exit code 2 - honest, but weaker than an exit code. Give both runners the same
-    `--exit-code` flag (about 10 lines each; the pattern exists), then **delete `results.py`** and
-    let every step of the driver be judged by its return code.
+**R5.18.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-1) — *(sub-step of R5.18)* **The two runners without an exit code** (#2504).
 
 <a id="r5-18-2"></a>
-**R5.18.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-2) — *(sub-step of
-    R5.18)* **The examples decide by what the environment HAS** (#2507). Three examples were
-    counted as failures because an optional package was missing, although
-    `ExampleSkipReason()` already had a skip mechanism that simply did not cover them.
-
-    Implemented as the maintainer asked (2026-09-18): `testRunnerTools` probes the optional packages
-    **once** with `importlib.util.find_spec` - which does not execute them - into
-    `AvailablePackages()`, reads each example's imports from its **syntax tree**
-    (`ImportedTopLevelNames`), and skips it naming the distribution when one is absent. So the same
-    example is skipped where the package is missing and **runs where it is installed**, instead of
-    being decided by a list of file names.
-
-    **That immediately corrected the diagnoses**, which is the point of deciding by availability:
-
-    - `pymeshlabFileImport.py` had **two** problems stacked on top of each other. Running it instead
-      of skipping it showed the second: `File does not exists: ../Examples/testData/objImportTest.obj`
-      - a data file the repository did not contain. The maintainer supplied it the same day, and the
-      example now **runs and passes** where pymeshlab is installed and is skipped where it is not.
-      That needs one extra rule: exudyn imports pymeshlab *lazily* inside
-      `graphics.FromPyMeshlabFile()`, so the example's syntax tree shows nothing - such indirect
-      needs are listed in `indirectPackageNeeds`, and are still decided by availability.
-    - `humanRobotInteraction.py` reads the articulated-dummy STL files from an **absolute path on
-      the author machine**, and says in its own comment that they are not included and come from
-      GrabCAD. Never a package question at all.
-
-    `stlFileImport.py` joins them: it reads `solution/stlImport.stl`, which it only *writes* when
-    its `if False` branch is switched on by hand. `KnownExampleFailures()` is down from five entries
-    to **two**, both with causes of their own (`NGsolveGeometry.py`, `rendererNOGLFWexample.py`).
-
-    Measured with a current `venvP312`: 171 examples, **27 skipped, 2 failures, both known** -
-    `PASSED: no unexpected example failed`, and the runner returns 0. The stale exudyn **1.11.0**
-    that environment still carried was found by the same run and rebuilt.
-
-    Successor: **#2510**, the inventory of data files the repository never contained.
+**R5.18.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-2) — *(sub-step of R5.18)* **The examples decide by what the environment HAS** (#2507).
 
 <a id="r5-18-4"></a>
-**R5.18.4** **DONE 2026-09-18** — *(sub-step of R5.18; maintainer supplied the files)*
-    **The missing data files, restored and pruned** (#2510, #2511). The inventory of #2510 was
-    answered: the maintainer copied the old folders back, and this step kept what is referenced and
-    moved the rest out.
-
-    **`docs/verification/`** - 19 files arrived, **8 are referenced** and are now tracked: the six
-    IFTOMM slider-crank comparison solutions (Masarati, Masoudi, Chaojie, Gonzalez, KarthikBushan,
-    PingZhou) and the two heavy-top RK4 solutions. The other 11 - the `Pendulum/` folder, the
-    `GeneralizedAlpha` variants of the heavy top, the two Matlab generators and a paper PDF - are
-    referenced by nothing and went to `tmp/verification/`, which is gitignored, rather than being
-    deleted: the two `.m` files are how the reference solutions were produced, so they are
-    provenance rather than junk, and the maintainer should decide whether provenance belongs in the
-    repository.
-
-    **`gyro.stl`** was placed in `python/Examples/testData/`, but `netgenSTLtest.py` asked for
-    `testData/gyro.stl`, which the example runner resolves against `python/TestModels`. Changed to
-    `../Examples/testData/gyro.stl`, which resolves **from both directories** - that is why the
-    other examples are written that way - and verified by loading it with netgen from the runner's
-    working directory.
-
-    **The ROS examples** (#2511). Their supplementary files - two ROS nodes, a launch file and two
-    STL geometries - are in `python/Examples/testData/ROS/`; all five are referenced and all five
-    are kept. The headers still pointed at an `Examples/supplementary` folder that no longer
-    exists; they now name the real one. Each of the three examples gained a **STATUS note**: written
-    and tested in 2023 against ROS1 noetic, not run since, excluded from the automated run because
-    `rospy` is absent - a working illustration of how the coupling is put together, not something
-    that runs unchanged. ROS1 noetic reached end of life in May 2025, so whether these move to ROS2
-    or become historical is the open question of #2511, and needs somebody with an installation.
-
-    **`humanRobotInteraction.py`** stays excluded, as the maintainer confirmed: it says in its own
-    header where the geometry comes from (GrabCAD) and reads it from an absolute path.
+**R5.18.4** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-4) — *(sub-step of R5.18; maintainer supplied the files)* **The missing data files, restored and pruned** (#2510, #2511).
 
 <a id="r5-18-3"></a>
-**R5.18.3** **DONE 2026-09-18** — *(sub-step of R5.18; found by the first GitLab run after the
-    driver landed)* **A gate that was green locally and red in CI** (#2508).
-    `tools/checkExtras.py` decided which imports are "local" by listing `python/` with `os.listdir`
-    and `os.walk`, so **any file present on the development machine** made an import look local.
-    `python/pytest.py` - the gitignored scratch copy of `pytestTemplate.py` - did exactly that:
-    `import pytest` in `test_testModels.py` resolved to it, the local check said OK, and the GitLab
-    job, which has no such file, reported `UNCOVERED IMPORTS: pytest ... needed by [tests]` and
-    failed. The same trap applied to any untracked helper dropped into `python/` or `TestModels/`.
-
-    Fixed two ways, because both were wrong: the tool now lists **tracked files only**
-    (`git ls-files`), so it sees exactly what CI checks out; and `pytest` has a real exemption entry
-    saying what it is - a dev tool declared in `[dependency-groups]`, deliberately not in any extra,
-    because the test suite runs without it. Verified by removing the exemption again: the tool then
-    prints the CI message word for word, which it could not do before.
+**R5.18.3** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-3) — *(sub-step of R5.18; found by the first GitLab run after the driver landed)* **A gate that was green locally and red in CI** (#2508).
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
