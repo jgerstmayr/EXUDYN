@@ -818,57 +818,34 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     2.0. The comparison needs a relative tolerance.
 
 <a id="r5-9-2"></a>
-**R5.9.2** *(sub-step of R5.9; diagnosed 2026-09-18, the FIX is open and needs a decision)*
-    **A reference value depends on the numpy version** (#2502). Same binary (md5 identical), same
-    source, same machine, same Python: `sliderCrank3Dbenchmark.py` returns `7.256859912845965`
-    under numpy 2.4.6 - exactly the committed reference - and `7.256859914829453` under numpy
-    2.2.4, relative `2.7e-10` against a tolerance of `5e-14`.
+**R5.9.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-9-2) — *(sub-step of R5.9)*
+    **A reference value depended on the numpy version** (#2502). Same binary (md5 identical),
+    same source, same machine, same Python: `sliderCrank3Dbenchmark.py` returned
+    `7.256859912845965` under numpy 2.4.6 and `7.256859914829453` under numpy 2.2.4, relative
+    `2.7e-10` against a tolerance of `5e-14`.
 
-    **Root cause, measured 2026-09-18.** Not the model and not the solver. The geometry setup and
-    the whole assembled system - every node, object, reference and initial coordinate - are
-    **bit-identical** under both numpy versions; only two marker `localPosition` values differ, in
-    the last bits. They come from `mainSystemExtensions.py`, where every `Create*Joint` converts the
-    joint position into body coordinates with a 3x3 product:
+    **Root cause.** Not the model and not the solver: the geometry setup and the whole assembled
+    system were bit-identical under both, and only two marker `localPosition` values differed. They
+    come from the 3x3 product every `Create*Joint` uses to convert the joint position into body
+    coordinates. numpy does not fix the summation order of a small matrix product and changed it
+    between releases - for a component that is analytically zero, 2.2.4 returns `0.0` and 2.4.6
+    returns `-2.9e-19`. Proved by running the model on ONE interpreter with the other numpy on
+    `PYTHONPATH`: the result flips. Recorded as fact 28.
 
-    ```python
-    pJ0 = A0.T @ (np.array(pJoint) - p0)
-    ```
+    **Fixed by option 1** (maintainer, 2026-09-18): the 22 products in the `Create*Joint` helpers go
+    through two private, written-out helpers, `_MatVec3` and `_MatMul3x3`, whose summation order is
+    fixed by the source instead of by whichever kernel numpy picks. Cost: a Python loop over nine
+    terms, once per joint at model-build time.
 
-    numpy changed the rounding of small matrix products between the two releases. Isolated:
+    **Result**: the two marker positions are now **bit-identical** under both numpy versions, and so
+    is the model - `7.256859914829453` in `venvP313` (numpy 2.2.4) and `venvExuP313` (numpy 2.4.6)
+    alike. Exactly **one** reference value moved, as the experiment had predicted, plus its AVX2
+    counterpart, which the same Python-side change moves identically. Both suites now pass in both
+    environments and with both modules.
 
-    | | `A.T @ v`, third component |
-    |---|---|
-    | numpy 2.2.4 | `0.0` - and it equals an explicit `sum(A[k][i]*v[k])` |
-    | numpy 2.4.6 | `-2.930234083156181e-19` |
-
-    So the **newer** numpy is the one that deviates, and the committed reference values encode it.
-    Confirmed decisively by running the model on ONE interpreter (3.13.15) with the other numpy on
-    `PYTHONPATH`: the result flips to `7.256859914829453`, so it is numpy and not the interpreter.
-
-    **Scope, measured**: patching only the `pJ0`/`pJ1` sites to an explicit fixed-order sum moves
-    exactly **one** model in the whole suite - this one. But the rotation products
-    (`MR0 = A0.T @ AJ`) have the *same* exposure: a general `A.T @ B` differs between the two numpy
-    versions as well (`0.5633333333333334` vs `...32`); it did not matter here only because the
-    matrix involved is a permutation. Under numpy 2.2.4 the suite has exactly one failing model, so
-    nothing else is affected at the current tolerance.
-
-    **Not the same effect as `UnresolvedOnLinux()`**: those nine are contact and friction models and
-    a different compiler, not this.
-
-    **The decision this step needs** - it changes shipped numerics and at least one committed
-    reference value, so it is not taken in passing:
-
-    1. **Route every such product through one deterministic helper** in the rigid-body utilities -
-       about twenty call sites in `mainSystemExtensions.py`. It is *more* accurate, not less: a
-       component that is analytically zero comes out exactly zero. Cost: a reference update (one
-       model measured for the position sites; the matrix sites must be measured the same way), and
-       a Python loop instead of a matmul at model-build time, which is once per joint.
-    2. **Pin a minimum numpy** for reference comparison, and relax the tolerance below it.
-    3. **Loosen this one model** through the per-test tolerance factor - five orders of magnitude,
-       which makes a benchmark stop being one.
-
-    Option 1 is the recommendation: the other two accept that model input data wobbles with a
-    third-party release, which is what makes a 5e-14 comparison meaningless.
+    **Deliberately not changed**: the same pattern appears about eighty more times in `FEM.py`,
+    `kinematicTree.py` and elsewhere. Nothing measured makes them matter, and a public utility would
+    be new API - so the helpers stay private and local, with the reason written where they are.
 
 <a id="r5-10"></a>
 **R5.10** **DONE 2026-09-10** — `testRunnerTools.ResolveLogFile()` decides the log target before the first write. → [log](exudynRevisionLog2026.md#r5-10)

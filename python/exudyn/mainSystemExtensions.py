@@ -57,6 +57,36 @@ __all__ = [
     'CreateDistanceSensorGeometry', 'CreateDistanceSensor', 'DrawSystemGraph',
     ]
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#WHY THESE TWO EXIST (#2502, revision2026 step R5.9.2). Every Create*Joint below converts the joint
+#position and orientation into body coordinates with a 3x3 product. numpy does not guarantee the
+#summation order of a small matrix product, and it CHANGED between releases: for a component that
+#is analytically zero, numpy 2.2.4 returns exactly 0.0 while numpy 2.4.6 returns -2.9e-19. Those
+#last bits become the localPosition of a marker - solver INPUT - and a sensitive model amplifies
+#them: sliderCrank3Dbenchmark.py moved by a relative 2.7e-10 against a suite tolerance of 5e-14,
+#with a byte-identical C++ binary. A committed reference value was therefore only reproducible
+#with the numpy version that produced it (information document, fact 28).
+#
+#The products below are written out, so the order is fixed by the source and not by which kernel
+#numpy picks. Each term is one IEEE multiply and one IEEE add, which makes the result identical on
+#every numpy version - and exact where the answer is exact. The cost is a Python-level loop over
+#nine terms, paid once per joint at model-build time.
+#
+#Kept private and local: these twenty-odd call sites are the ones measured to matter. The same
+#pattern appears elsewhere in the package (FEM.py, kinematicTree.py); those are not touched here
+#because nothing measured makes them matter, and a public utility would be new API.
+@docmeta(public=False)
+def _MatVec3(A, v):
+    """A @ v for 3x3 by 3, with a summation order fixed by this source; see the note above."""
+    return np.array([A[i][0]*v[0] + A[i][1]*v[1] + A[i][2]*v[2] for i in range(3)])
+
+@docmeta(public=False)
+def _MatMul3x3(A, B):
+    """A @ B for 3x3 by 3x3, with a summation order fixed by this source; see the note above."""
+    return np.array([[A[i][0]*B[0][j] + A[i][1]*B[1][j] + A[i][2]*B[2][j]
+                      for j in range(3)] for i in range(3)])
+
+
 #internal function: do some pre-checks and calculations for joint
 #extended function which also accepts markers in bodyNumbers and returns new or existing markers
 #marker0 overrides the joint "position"
@@ -993,12 +1023,12 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 
     if useGlobalFrame:
         #compute joint marker orientations, rotationMatrixAxes represents global frame:
-        MR0 = A0.T @ rotationMatrixJoint
-        MR1 = A1.T @ rotationMatrixJoint
+        MR0 = _MatMul3x3(A0.T, rotationMatrixJoint)
+        MR1 = _MatMul3x3(A1.T, rotationMatrixJoint)
     else: #transform into global coordinates, then everything works same
         #compute joint marker orientations, rotationMatrixAxes represents local frame:
         MR0 = rotationMatrixJoint
-        MR1 = A1.T @ A0 @ rotationMatrixJoint
+        MR1 = _MatMul3x3(_MatMul3x3(A1.T, A0), rotationMatrixJoint)
 
             
     oConnector = mbs.AddObject(eii.ObjectConnectorRigidBodySpringDamper(name=name,markerNumbers = [mBody0,mBody1],
@@ -1119,12 +1149,12 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
     AJ[:,2]= B[:,0] #axis ==> rotation axis z for revolute joint ... 
     
     #compute joint position and axis in bodyNumber0 / 1 coordinates:
-    pJ0 = A0.T @ (np.array(pJoint) - p0)
-    pJ1 = A1.T @ (np.array(pJoint) - p1)
+    pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
+    pJ1 = _MatVec3(A1.T, np.array(pJoint) - p1)
 
     #compute joint marker orientations:
-    MR0 = A0.T @ AJ  
-    MR1 = A1.T @ AJ  
+    MR0 = _MatMul3x3(A0.T, AJ)  
+    MR1 = _MatMul3x3(A1.T, AJ)  
     
     mName0 = ''
     mName1 = ''
@@ -1238,12 +1268,12 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
     AJ[:,2]= B[:,0] #axis ==> rotation axis z for revolute joint ... 
     
     #compute joint position and axis in bodyNumber0 / 1 coordinates:
-    pJ0 = A0.T @ (np.array(pJoint) - p0)
-    pJ1 = A1.T @ (np.array(pJoint) - p1)
+    pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
+    pJ1 = _MatVec3(A1.T, np.array(pJoint) - p1)
 
     #compute joint marker orientations:
-    MR0 = A0.T @ AJ  
-    MR1 = A1.T @ AJ  
+    MR0 = _MatMul3x3(A0.T, AJ)  
+    MR1 = _MatMul3x3(A1.T, AJ)  
     
     mName0 = ''
     mName1 = ''
@@ -1332,12 +1362,12 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
     AJ = ComputeOrthonormalBasis(vAxis) #axis = x-axis
     
     #compute joint position and axis in bodyNumber0 / 1 coordinates:
-    pJ0 = A0.T @ (np.array(pJoint) - p0)
-    pJ1 = A1.T @ (np.array(pJoint) - p1)
+    pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
+    pJ1 = _MatVec3(A1.T, np.array(pJoint) - p1)
 
     #compute joint marker orientations:
-    MR0 = A0.T @ AJ  
-    MR1 = A1.T @ AJ  
+    MR0 = _MatMul3x3(A0.T, AJ)  
+    MR1 = _MatMul3x3(A1.T, AJ)  
     
     mName0 = ''
     mName1 = ''
@@ -1415,8 +1445,8 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
     [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame, requireRotMat=False)
         
     #compute joint position and axis in bodyNumber0 / 1 coordinates:
-    pJ0 = A0.T @ (np.array(pJoint) - p0)
-    pJ1 = A1.T @ (np.array(pJoint) - p1)
+    pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
+    pJ1 = _MatVec3(A1.T, np.array(pJoint) - p1)
 
     mName0 = ''
     mName1 = ''
@@ -1507,17 +1537,17 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         
     if useGlobalFrame:
         #compute joint marker orientations, rotationMatrixAxes represents global frame:
-        MR0 = A0.T @ rotationMatrixAxes
-        MR1 = A1.T @ rotationMatrixAxes
+        MR0 = _MatMul3x3(A0.T, rotationMatrixAxes)
+        MR1 = _MatMul3x3(A1.T, rotationMatrixAxes)
     else: #transform into global coordinates, then everything works same
         #compute joint marker orientations, rotationMatrixAxes represents local frame:
         MR0 = copy.copy(rotationMatrixAxes)
-        MR1 = A1.T @ A0 @ rotationMatrixAxes
+        MR1 = _MatMul3x3(_MatMul3x3(A1.T, A0), rotationMatrixAxes)
 
     
     #compute joint position and axis in bodyNumber0 / 1 coordinates:
-    pJ0 = A0.T @ (np.array(pJoint) - p0)
-    pJ1 = A1.T @ (np.array(pJoint) - p1)
+    pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
+    pJ1 = _MatVec3(A1.T, np.array(pJoint) - p1)
 
     
     mName0 = ''

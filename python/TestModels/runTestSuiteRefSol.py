@@ -123,7 +123,12 @@ def TestExamplesReferenceSolution():
         'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909844541,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
-        'sliderCrank3Dbenchmark.py':7.256859912845965,              #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 5->0.5, the value the file itself calls converged
+        #value changed 2026-09-18 by revision2026 step R5.9.2 (#2502): the joint helpers now
+        #convert the joint position with a fixed summation order, so this result no longer
+        #depends on which numpy release built the marker positions. It is the value numpy
+        #2.2.4 produced and the one an explicit sum produces; the old 7.256859912845965 was
+        #what numpy 2.4.6's matmul happened to give
+        'sliderCrank3Dbenchmark.py':7.256859914829453,              #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 5->0.5, the value the file itself calls converged
         'sliderCrank3Dtest.py':3.364276178092191,
         'sliderCrankFloatingTest.py':0.591649163378833,
         'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 
@@ -464,7 +469,9 @@ def AVX2ReferenceSolutionUpdate():
         'rollingDiscTangentialForces.py':         1.0342017388721547,        #drift 1.6e-09
         'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,       #drift 1.4e-09
         'coordinateSpringDamperExt.py':           17.084935539925155,        #drift 5.8e-10
-        'sliderCrank3Dbenchmark.py':              7.256859913349651,         #drift 5.0e-10
+        #re-measured 2026-09-18 with the deterministic joint setup of step R5.9.2 (#2502);
+        #the Python-side change moves the fast module exactly as it moves the regular one
+        'sliderCrank3Dbenchmark.py':              7.256859912756364,         #drift 2.9e-10
         'rigidBodySpringDamperIntrinsic.py':      0.5472368463500469,        #drift 5.2e-11
         'createSphereTriangleContact.py':         4.8409602192504355,        #drift 3.9e-11
         'fourBarMechanismIftomm.py':              0.1721665271840173,        #drift 6.2e-12

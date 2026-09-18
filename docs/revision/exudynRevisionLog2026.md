@@ -6286,3 +6286,69 @@ failures listed and excluded. Then, in one mutated run, both remaining branches 
 entry removed (`pymeshlabFileImport.py` -> `FAILED: 1 unexpected example failure(s)`, driver exit 1)
 and a passing example added to the list (`dead exclusion(s) ... fourBarMechanism.py`). The mutation
 was reverted.
+
+
+<a id="r5-9-2"></a>
+### R5.9.2 - the joint setup stops depending on which numpy built it
+
+**DONE 2026-09-18** - issue #2502.
+
+`sliderCrank3Dbenchmark.py` returned `7.256859912845965` under numpy 2.4.6 and `7.256859914829453`
+under numpy 2.2.4 - relative `2.7e-10` against a tolerance of `5e-14` - with a **byte-identical**
+`exudynCPP.pyd`, the same source, the same machine and the same Python.
+
+**Finding the cause was a process of elimination, and the elimination is the interesting part.**
+The geometry setup was bit-identical. The whole *assembled system* was bit-identical: every node,
+object, reference and initial coordinate. The model has no user function, so the solver never calls
+back into Python. What differed were **two marker `localPosition` values**, in the last bits - and
+those are solver input. They come from the line every `Create*Joint` uses:
+
+```python
+pJ0 = A0.T @ (np.array(pJoint) - p0)
+```
+
+numpy does not fix the summation order of a small matrix product, and it changed between the two
+releases. Isolated, for a component that is analytically zero:
+
+| | `A.T @ v`, third component |
+|---|---|
+| numpy 2.2.4 | `0.0` - equal to an explicit `sum(A[k][i]*v[k])` |
+| numpy 2.4.6 | `-2.930234083156181e-19` |
+
+So the **newer** numpy is the one that deviates, and the committed reference values encoded it.
+Proved by running the model on ONE interpreter (3.13.15) with the other numpy on `PYTHONPATH`: the
+result flips exactly. It is numpy, not the interpreter, and not the compiler.
+
+**The fix, chosen by the maintainer from three options.** The 22 products in the `Create*Joint`
+helpers now go through two private, written-out helpers in `mainSystemExtensions.py`:
+
+```python
+def _MatVec3(A, v):    return np.array([A[i][0]*v[0] + A[i][1]*v[1] + A[i][2]*v[2] for i in range(3)])
+def _MatMul3x3(A, B):  ...same, nine terms...
+```
+
+Each term is one IEEE multiply and one IEEE add in an order the source fixes, so no numpy release
+can reorder it. The cost is a Python-level loop over nine terms, paid once per joint at model-build
+time. The alternatives - pinning a minimum numpy, or loosening this benchmark's tolerance by five
+orders of magnitude - both accept that model input wobbles with a third-party release, which is
+what makes a 5e-14 comparison meaningless.
+
+**Result, measured:**
+
+- the two marker positions are **bit-identical** under numpy 2.2.4 and 2.4.6;
+- so is the model: `7.256859914829453` in both environments;
+- exactly **one** reference value moved - as the experiment run beforehand had predicted - plus its
+  AVX2 counterpart, `7.256859912756364`, because a Python-side change moves the fast module exactly
+  as it moves the regular one;
+- `venvP313`, which the maintainer reported as failing two models, now **passes the whole suite**,
+  with the regular and the fast module.
+
+Note what the fix does and does not do: it fixes the *order* of the summation, not the *input*. The
+small components of those marker positions are `-6.9e-18` rather than zero, because the rotation
+matrix they are built from carries round-off of its own. The point is that every numpy version now
+produces the same `-6.9e-18`.
+
+**Deliberately not changed**: the same pattern appears about eighty more times in `FEM.py`,
+`kinematicTree.py`, `lieGroupIntegration.py` and `rigidBodyUtilities.py`. Nothing measured makes
+them matter, and a public utility would be new API with stubs and documentation to match - so the
+helpers stay private and local, with the reason written where they are.

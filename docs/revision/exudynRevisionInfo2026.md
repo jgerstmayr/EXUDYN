@@ -432,8 +432,14 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
     step R5.9.2). One model in the suite is affected at the current tolerance; the rest of the
     assembled system is bit-identical.
 
-    The consequence when reading a failed comparison: **a committed reference value is only
-    reproducible for the numpy version it was produced with**, unless the setup arithmetic is made
+    **Resolved for the joint helpers on 2026-09-18** (step R5.9.2): their 22 products are written
+    out, so the summation order is fixed by the source. The two marker positions - and the model -
+    are now bit-identical under both numpy versions. One reference value moved, plus its AVX2
+    counterpart. The pattern remains in about eighty other places (`FEM.py`, `kinematicTree.py`),
+    where nothing measured makes it matter.
+
+    The consequence to keep in mind while that is true: **a committed reference value is only
+    reproducible for the numpy version it was produced with**, wherever the setup arithmetic is not
     order-deterministic. `exudev env` prints the numpy version of every environment for exactly this
     reason.
 

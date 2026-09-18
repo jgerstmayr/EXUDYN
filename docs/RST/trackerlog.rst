@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.164.dev1, 
++  Exudyn version = 1.11.165.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2509, 
-+  Number of resolved issues = 2237 (164 in current version), 
++  Number of resolved issues = 2238 (165 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.165: resolved Issue 2502: sliderCrank3Dbenchmark result depends on the numpy version (testing)
+    - issue author: Claude-JG
+    - description:  Measured 2026-09-18: with the SAME exudyn binary (exudynCPP.cp313-win_amd64.pyd md5 identical in both environments); the same source; the same machine and the same Python 3.13.15; the model returns 7.256859912845965 under numpy 2.4.6 - exactly the committed reference - and 7.256859914829453 under numpy 2.2.4; relative 2.7e-10. The suite tolerance is 5e-14; so the test FAILS wherever numpy is older; which is what the maintainer sees in venvP313. numpy enters through the model setup only; so a last-bit difference in the input data is amplified by the solver to 2.7e-10. The same model is already listed in UnresolvedOnLinux() with rel. 2.0e-10; which now looks like the same effect rather than a platform difference. Open questions: which numpy operation in the setup differs; whether other entries of UnresolvedOnLinux() are really numpy-version effects; and whether the suite should pin a minimum numpy for reference comparison or mark the model sensitive. revision2026 phase R10.
+    - **notes:** Fixed in revision2026 step R5.9.2 by the maintainer's option 1: the 22 products in the Create\*Joint helpers of mainSystemExtensions.py now go through two private written-out helpers _MatVec3 and _MatMul3x3; whose summation order is fixed by the source instead of by whichever kernel numpy picks. Root cause was NOT the model or the solver: the whole assembled system was bit-identical under numpy 2.2.4 and 2.4.6; only two marker localPosition values differed; and those come from A0.T @ (pJoint - p0). numpy 2.4.6 returns -2.9e-19 where 2.2.4 and an explicit sum return exactly 0.0; proved by running the model on ONE interpreter with the other numpy on PYTHONPATH. After the fix the marker positions and the model result are bit-identical under both numpy versions (7.256859914829453); exactly one reference value moved plus its AVX2 counterpart (7.256859912756364); and venvP313 - which failed two models - now passes the whole suite with both the regular and the fast module. The pattern remains in about eighty other places where nothing measured makes it matter; recorded as fact 28.
+    - date resolved: **2026-09-18 07:50**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.164: resolved Issue 2504: runTestExamples and runPerformanceTests have no --exit-code (extension)
     - issue author: Claude-JG
     - description:  runTestSuite.py exits non-zero with --exit-code (and 0 without it); the other two runners have no such flag and ALWAYS return 0; however many examples or performance tests failed. Anything calling them - the exudev driver of revision2026 step R5.18; a CI job; a shell script - therefore cannot see a failure from the exit code and has to read the summary line out of the log instead; which is what tools/exudev/results.py does today. That scan cannot distinguish a run that died before writing its summary from a log it did not find; so it reports "unknown". Give both runners the same --exit-code flag runTestSuite.py has (about 10 lines each; the pattern already exists); then delete tools/exudev/results.py and let every step of the driver be judged by its exit code. revision2026 step R5.18.1
@@ -7704,11 +7710,6 @@ Open issues
  * :textblue:`open issue 2505:` a test model page is in no toctree
     - issue author: Claude-JG
     - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.
-    - date raised: 2026-09-18 
-
- * :textred:`open issue 2502:` sliderCrank3Dbenchmark result depends on the numpy version
-    - issue author: Claude-JG
-    - description:  Measured 2026-09-18: with the SAME exudyn binary (exudynCPP.cp313-win_amd64.pyd md5 identical in both environments); the same source; the same machine and the same Python 3.13.15; the model returns 7.256859912845965 under numpy 2.4.6 - exactly the committed reference - and 7.256859914829453 under numpy 2.2.4; relative 2.7e-10. The suite tolerance is 5e-14; so the test FAILS wherever numpy is older; which is what the maintainer sees in venvP313. numpy enters through the model setup only; so a last-bit difference in the input data is amplified by the solver to 2.7e-10. The same model is already listed in UnresolvedOnLinux() with rel. 2.0e-10; which now looks like the same effect rather than a platform difference. Open questions: which numpy operation in the setup differs; whether other entries of UnresolvedOnLinux() are really numpy-version effects; and whether the suite should pin a minimum numpy for reference comparison or mark the model sensitive. revision2026 phase R10.
     - date raised: 2026-09-18 
 
  * :textblue:`open issue 2498:` no test checks the member functions an item type must provide
