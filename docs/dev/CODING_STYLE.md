@@ -208,3 +208,127 @@ Key body functions: `ComputeMassMatrix`, `ComputeODE2LHS`, `GetAccessFunctionTyp
 `GetAccessFunctionBody`, `GetAvailableJacobians`, `GetOutputVariableBody`, `HasConstantMassMatrix`,
 `GetNumberOfNodes`, `GetODE2Size`, `GetType`, `GetPosition` / `GetVelocity`.
 Connectors additionally: `ComputeJacobianODE2_ODE2`, `GetOutputVariableConnector`.
+
+## 10. Reporting an error from C++
+
+> Not a transcription of `introduction.tex`: this section is written here and nowhere else
+> (revision2026 step R6.3). The C++ side of it lives in the comments of
+> `src/Utilities/ReleaseAssert.h` and `src/Main/Stdoutput.h`, which say the same thing to
+> someone reading the code; this is the version for someone about to write a check.
+
+An Exudyn error carries a **type**, not only a message. The type is what lets a user write
+`except exudyn.NotImplementedFeatureError` instead of matching on message text, and it is what
+tells them whether the mistake was theirs.
+
+### 10.1 Which helper
+
+| helper | what it does | throws? |
+|---|---|---|
+| `CHECKandTHROW(condition, message[, class])` | a condition that must hold | yes, if false |
+| `CHECKandTHROWstring(message[, class])` | an unconditional throw: a `default:` branch, an unreachable case | always |
+| `CHECKandTHROWcond(condition)` | a condition with no message; always `ExudynInternalError` | yes, if false |
+| `PyError(message[, PyErrorType])` | prints a **User ERROR** block with the Python file and line, then throws | always |
+| `SysError(message[, PyErrorType])` | prints a **SYSTEM ERROR** block, then throws; defaults to `internalError` | always |
+| `PyWarning(message)` | prints a warning | no |
+| `PyDeprecated(message)` | a real Python `DeprecationWarning`, shown once per call site | no |
+
+**The three `CHECKandTHROW*` macros are compiled out** in `exudynCPPfast`
+(`__FAST_EXUDYN_LINALG`). `PyError` and `SysError` are not. So a validation the user must get in
+**every** module — a parameter check at the Python boundary — belongs in `PyError`,
+not in a macro. A macro is for a check that protects the computation and may cost a comparison
+per element.
+
+**The helper does not decide the type.** The same macro states a user's index mistake in one
+place and an Exudyn invariant in the next; that is measured, not assumed (`tools/errorTriage.py`,
+revision2026 step R6.3.2). Choose the type from what the check *means*.
+
+### 10.2 Which type
+
+The nine classes are declared in `src/Utilities/ReleaseAssert.h`. Each derives from
+`ExudynError` **and** from the Python built-in that fits, so `except exudyn.ExudynError` catches
+everything Exudyn raises while an existing `except IndexError` keeps working.
+
+| ask yourself | class | `PyErrorType` | Python base |
+|---|---|---|---|
+| the object cannot be that parameter at all | `ExudynTypeError` | `typeError` | `TypeError` |
+| the kind is right and the value is not (size, shape, range) | `ExudynValueError` | `valueError` | `ValueError` |
+| an index outside its range | `ExudynIndexError` | `indexError` | `IndexError` |
+| the model as built is illegal, or is being used in the wrong order | `ExudynModelError` | `modelError` | `ValueError` |
+| the solver cannot continue: singular, no convergence, divergence | `ExudynSolverError` | `solverError` | `RuntimeError` |
+| this feature or this combination does not exist (yet) | `ExudynNotImplementedError` | `notImplementedError` | `NotImplementedError` |
+| division by zero, root of a negative number | `ExudynArithmeticError` | `arithmeticError` | `ArithmeticError` |
+| an Exudyn invariant broke — **our** bug, not theirs | `ExudynInternalError` | `internalError` | `RuntimeError` |
+
+`ExudynError` itself is the root and is never raised directly.
+
+Three of these earn their place by what they save a user:
+
+- **`ExudynNotImplementedError`** answers *"is this my mistake, a bug, or simply not there?"* —
+  the question that otherwise costs an email.
+- **`ExudynModelError`** is for the model checked as a whole, typically at `Assemble()`. A message
+  naming an invalid marker number is still a model error, not an index error: the number is the
+  symptom, the model is what broke.
+- **`ExudynInternalError`** means *please report this*. Do not use it for anything a user can
+  provoke from Python.
+
+### 10.3 When to write no type at all
+
+Leave a `CHECKandTHROW*` **untyped** when the honest answer is `ExudynInternalError`. The
+untyped form is the default form, and the last move of revision2026 step R6.3.6 turns that
+default into `ExudynInternalError` for every macro site at once. Writing it out by hand adds a
+diff and changes nothing. The same holds for `SysError`, which already defaults to it.
+
+This does **not** hold for `PyError`, whose default is `runtimeError`. A `PyError` without a type
+is a site not yet decided.
+
+Also leave the type off where the code genuinely does not know it — a `catch` that restates
+someone else's exception. Putting a confident name on a lost type is worse than `RuntimeError`.
+
+### 10.4 Two traps that do not announce themselves
+
+**Catch order.** `EXUexception` is a macro for `std::runtime_error`, and every Exudyn class
+derives from it. So in any `try` block, `catch (const ExudynError&)` and
+`catch (const py::builtin_exception&)` must come **before** `catch (const EXUexception&)`, or the
+base catch takes it first and the type is silently flattened back to `RuntimeError`. This has
+been found four times (#2432, #2516).
+
+**Registration.** A class added to `ReleaseAssert.h` and not added to the registration block of
+`src/Pymodules/PybindModule.cpp` **compiles perfectly** and arrives in Python as a plain
+`RuntimeError`, because pybind11 translates it with its built-in `std::runtime_error` rule. The
+opposite direction does not compile, so only this one needs saying. In that block the base must
+be registered first: pybind11 tries translators in reverse order of registration.
+`python/testing/test_exceptions.py::test_everyCppClassIsRegistered` compares the two lists.
+
+### 10.5 Deprecating something
+
+Use `PyDeprecated(message)`, never `PyWarning`. It raises a real Python `DeprecationWarning`, so
+`-W error::DeprecationWarning` finds every use before a release removes the old name, and Python
+shows it once per call site instead of once per call (revision2026 step R6.3.4).
+
+### 10.6 Writing the message
+
+- Say what is wrong and what to change, not that something is wrong.
+- Put the information **into the exception**. Since revision2026 step R6.3.10 the exception is
+  the **only** thing the console shows: `PyError` and `SysError` write their block to the log
+  file and never to the console, because the exception already carries the same message and the
+  same location, and because a *caught* exception must not flood the terminal of a GUI or a
+  parameter variation that handles its own errors. So `str(exception)` has to be worth reading.
+- The location in both is the outermost frame outside the `exudyn` package, so a solver-time
+  error names the user's own line and not `solver.py`.
+- Two files can record an error: the `pout` log file (`exu.SetWriteToFile`), which is the only
+  record of a long unattended run, and the solver file passed to the `std::ofstream&` overloads.
+  Both write the identical text, from `ErrorMessageBlock` — do not add a sentence to one of
+  them.
+- Name the function: `MainSystem::GetObject: access to invalid object number 7`.
+- Do not write `ERROR:` or `Python ERROR:` — the helper adds the heading.
+
+### 10.7 Checking what is where
+
+```
+python tools/errorTriage.py                 every call site, by area, helper and kind
+python tools/errorTriage.py --sites UNPLACED the ones the rules cannot decide
+python tools/errorTriage.py --csv FILE       one row per site, for reading through
+```
+
+The tool classifies by text patterns, so it is repeatable rather than always right — its
+purpose is that a number in a plan can be re-derived.

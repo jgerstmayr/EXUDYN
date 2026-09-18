@@ -244,6 +244,26 @@ int OutputBuffer::overflowFlush(int c, bool flushOnly, bool clearBuffer)
 	return c;
 }
 
+//! write text to the log file and NOT to the console (#2530). An error block belongs in the file of a
+//! long unattended run, where it is the only record; on the console the exception says the same thing
+//! already, and printing it there means a CAUGHT exception still floods the terminal.
+void OutputBuffer::WriteToFileOnly(const std::string& text)
+{
+	if (!writeToFile) { return; }
+
+	//whatever is half-written must reach the file first, or the block lands in the middle of a line;
+	//overflowFlush takes the semaphore itself, so it may not be held here
+	overflowFlush(EOF, true);
+
+	EXUstd::WaitAndLockSemaphoreIgnore(outputBufferAtomicFlag); //lock outputBuffer
+	if (file.is_open())
+	{
+		file << text;
+		file.flush(); //an error is exactly what a truncated log loses
+	}
+	EXUstd::ReleaseSemaphore(outputBufferAtomicFlag); //clear outputBuffer
+}
+
 //! function which allows to write asynchronuously during visualization thread; requires lateron call of pout in main thread (to clear buffer!)
 void OutputBuffer::WriteVisualization(const STDstring& string)
 {
@@ -380,6 +400,20 @@ std::string ErrorMessageWithLocation(const std::string& message, const std::stri
 	return message + " [Python file '" + fileName + "', line " + EXUstd::ToString(lineNumber) + "]";
 }
 
+//! the block a log file records. Both channels - the pout log file and an explicit ofstream such as
+//! the solver file - write exactly this text, so a run cannot be reconstructed differently depending
+//! on which file is read (#2530). It replaces the old file-only sentence "Exudyn: parsing of Python
+//! file terminated due to python (user) error", which was the same fixed line that step R6.3.5 took
+//! out of the exception for saying nothing.
+std::string ErrorMessageBlock(const char* heading, const std::string& message,
+	const std::string& fileName, Index lineNumber)
+{
+	return STDstring("\n=========================================\n")
+		+ heading + " [file '" + fileName + "', line " + EXUstd::ToString(lineNumber) + "]: \n"
+		+ message + "\n"
+		+ "=========================================\n\n";
+}
+
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
 void PyError(std::string error_msg, PyErrorType errorType)
 {
@@ -396,17 +430,17 @@ void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
-	pout << "\n=========================================\n";
-	pout << "User ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
-	pout << error_msg << "\n";
-	pout << "=========================================\n\n";
+	//NOT to the console (#2530, revision2026 step R6.3.10): the exception thrown below carries the
+	//same message and the same location, so the console would say it twice - and a CAUGHT exception
+	//would still say it, which is what floods the terminal of a GUI or a parameter variation that
+	//handles its own errors. The log file is a different matter: on a long unattended run nothing
+	//else records that this happened.
+	STDstring block = ErrorMessageBlock("User ERROR", error_msg, fileName, lineNumber);
+	outputBuffer.WriteToFileOnly(block);
 
 	if (file.is_open())
 	{
-		file << "\nUser ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
-		file << error_msg << "\n\n";
-		file << "Exudyn: parsing of Python file terminated due to python (user) error\n\n";
-		file << "********************************************************************\n\n";
+		file << block;
 	}
 	//WHAT IS THROWN CARRIES THE DETAIL (#2527, revision2026 step R6.3.5). Until now it was the fixed
 	//sentence "Exudyn: parsing of Python file terminated due to Python (user) error", identical for
@@ -435,17 +469,13 @@ void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
-	pout << "\n=========================================\n";
-	pout << "SYSTEM ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
-	pout << error_msg << "\n";
-	pout << "=========================================\n\n";
+	//file only, for the reasons written at the same place in PyError (#2530)
+	STDstring block = ErrorMessageBlock("SYSTEM ERROR", error_msg, fileName, lineNumber);
+	outputBuffer.WriteToFileOnly(block);
 
 	if (file.is_open())
 	{
-		file << "\nSYSTEM ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
-		file << error_msg << "\n\n";
-		file << "Exudyn: parsing of python file terminated due to system error\n\n";
-		file << "********************************************************************\n\n";
+		file << block;
 	}
 	//an Exudyn invariant broke: exudyn.InternalError, which IS a RuntimeError, so an existing
 	//"except RuntimeError" keeps catching it while the type now says "please report this" (#2521).

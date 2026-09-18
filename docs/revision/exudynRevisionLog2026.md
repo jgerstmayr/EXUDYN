@@ -6981,6 +6981,103 @@ so cases 5 and 6 legitimately raise nothing there.
 ---
 
 
+<a id="r6-3-10"></a>
+### R6.3.10 — the error block belongs in the log file, not on the console
+
+**DONE 2026-09-18** (#2530). Maintainer decision, taken while reading `Stdoutput.cpp`.
+
+`PyError` and `SysError` printed a five-line banner to `pout`:
+
+```
+=========================================
+User ERROR [file 'model.py', line 42]:
+MainSystem::GetObject: access to invalid object number 99
+=========================================
+```
+
+Since step R6.3.5 the **exception** carries that same message and that same location. So an
+uncaught error was reported twice — banner, then traceback — and a **caught** error was
+reported anyway, which is the case that actually hurt: a GUI or a parameter variation that
+handles its own errors watched the terminal fill with `SYSTEM ERROR` blocks for things it had
+dealt with.
+
+The block now goes **only to the log file**, and never to the console.
+
+#### Why that needed a new function
+
+`pout` cannot separate its two destinations: `OutputBuffer::overflowFlush` writes the same text
+to the console and to the file, and the file is a private member. So `OutputBuffer` gained
+`WriteToFileOnly(text)`, which returns immediately when no log file is open, flushes whatever is
+half-written (or the block would land inside someone else's line), writes, and flushes again
+— an error is exactly what a truncated log loses.
+
+The reasoning behind the split, in the maintainer's terms: on a supercomputer run the file must
+get everything, because nobody is watching; in a GUI the terminal must stay clean, because the
+code is catching the errors on purpose. Those are not in conflict once the two channels are
+separate.
+
+#### The two files now say the same thing
+
+There are two file channels, and they had drifted. The `std::ofstream&` overloads — used by
+~22 sites in `src/Solver` with `file.solverFile` — wrote their own format, ending in
+
+```
+Exudyn: parsing of Python file terminated due to python (user) error
+********************************************************************
+```
+
+That sentence is the same fixed line step R6.3.5 removed from the exception for saying nothing,
+and it survived here. Both channels now write `ErrorMessageBlock(...)`, one function, one text,
+so a run cannot be reconstructed differently depending on which file is read. The solver file
+itself is untouched otherwise: it records the simulation, `pout` records the session, and both
+have their validity.
+
+#### What this does not change
+
+- `PyWarning` still prints to the console. A warning throws nothing, so the console is its only
+  channel.
+- The suite logs are unaffected: `runTestSuite.py`, `runTestExamples.py` and
+  `runPerformanceTests.py` all call `exu.SetWriteToFile`, so the blocks still land in
+  `python/logs/`. Verified: 115 + 23 tests, 162 pytest cases, examples with no unexpected
+  failure.
+- `globalPyRuntimeErrorFlag` is still set, so the renderer still stops.
+
+---
+
+
+<a id="r6-3-9"></a>
+### R6.3.9 — the error-reporting rules get a home
+
+**DONE 2026-09-18** (#2529). Added on the maintainer's request while R6.3.6 was in progress.
+
+By this point R6.3 had produced nine exception classes, seven reporting helpers, a rule for
+choosing between them and three rules about when **not** to write a type. All of it lived in two
+places: comments in `ReleaseAssert.h` and `Stdoutput.h`, which speak to someone already reading
+that code, and the revision log, which is a record of what was done and not a reference for what
+to do. Someone about to write a new check had nowhere to look.
+
+The rules are now **`docs/dev/CODING_STYLE.md` §10**, in seven short parts: which helper, which
+type, when to write no type, the two traps, deprecation, writing the message, and the triage
+tool. Three things in it are not restatements of the code comments:
+
+- **The macros are compiled out in `exudynCPPfast`; `PyError` and `SysError` are not.** So a
+  validation the user must get in every module belongs in `PyError`, not in a `CHECKandTHROW`.
+  That was true before R6.3 and was written nowhere.
+- **When to leave a site untyped**, which is a rule and not an omission: the untyped macro form
+  becomes `ExudynInternalError` in one move at the end of R6.3.6, so an internal check is
+  *supposed* to carry no class.
+- **Do not name a type you do not know** — the `catch` that restates someone else's exception
+  keeps `RuntimeError`.
+
+Per rule 10 (one place), the section is written once and linked three times: `CONTRIBUTING.md`
+gained its first pointer into the developer docs at all, `docs/dev/README.md` and `CLAUDE.md`
+name §10 in their table rows. The section carries a note that it is **not** a transcription of
+`introduction.tex`, unlike the rest of that file — so the R7.1 migration does not go looking
+for a LaTeX original that never existed.
+
+---
+
+
 <a id="r6-3-6-main"></a>
 ### R6.3.6 — the mapping, area by area: `src/Main`
 

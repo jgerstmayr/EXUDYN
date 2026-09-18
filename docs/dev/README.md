@@ -7,7 +7,7 @@ Developer-facing notes. Users start at [`README.rst`](../../README.rst) and
 | document | contents |
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | the C++ internals: items, the C/Main/Visualization split, the object factory, modules, solvers |
-| [CODING_STYLE.md](CODING_STYLE.md) | naming, abbreviations, file headers, what is deprecated |
+| [CODING_STYLE.md](CODING_STYLE.md) | naming, abbreviations, file headers, how to report an error from C++ (§10), what is deprecated |
 | [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |

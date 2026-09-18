@@ -10,7 +10,7 @@ Instructions for Claude Code sessions on this repository. Humans: see
 | [docs/revision/exudynRevisionInfo2026.md](docs/revision/exudynRevisionInfo2026.md) | **Standing context.** The v1.11.0 → v2.0 revision: rules and step numbering, measured facts, decisions taken, material for the user documentation. Correct a fact in place if it turns out wrong. |
 | [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **The steps**, by phase R0-R11, numbered `R<phase>.<step>` (sub-steps `R4.10.3`). Load it; cite steps by number. |
 | [docs/revision/exudynRevisionLog2026.md](docs/revision/exudynRevisionLog2026.md) | **What was already done**, in plan order. Consult it before re-deriving something; **never edit a closed entry** — if it turns out wrong, correct the facts in the info document and append a dated note. |
-| [docs/dev/CODING_STYLE.md](docs/dev/CODING_STYLE.md) | Naming, abbreviations, headers, what is deprecated |
+| [docs/dev/CODING_STYLE.md](docs/dev/CODING_STYLE.md) | Naming, abbreviations, headers, reporting errors from C++ (§10), what is deprecated |
 | [docs/dev/WORKFLOW.md](docs/dev/WORKFLOW.md) | Issue tracker, versioning, commit gates |
 
 ## What this project is

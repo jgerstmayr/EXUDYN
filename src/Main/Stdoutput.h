@@ -74,6 +74,9 @@ public:
 	virtual void SetWriteToConsole(bool flag) { writeToConsole = flag; }
 	virtual bool GetWriteToConsole() const { return writeToConsole; }
 
+	//! write text to the log file and NOT to the console; does nothing if no log file is open (#2530)
+	virtual void WriteToFileOnly(const std::string& text);
+
 	//! suspend writing to console/file with flag=true; needs to be set to false, otherwise writing to console is fully stopped
 	virtual void SetSuspendWriting(bool flag) { suspendWriting = flag; }
 };
@@ -99,6 +102,8 @@ enum class PyErrorType
 [[noreturn]] void ThrowPyErrorType(PyErrorType errorType, const char* message); //!< the one place that turns a PyErrorType into a throw (#2521); the classes are in ReleaseAssert.h
 
 std::string ErrorMessageWithLocation(const std::string& message, const std::string& fileName, Index lineNumber); //!< what an exception carries: the detail and the user's Python location (#2527)
+
+std::string ErrorMessageBlock(const char* heading, const std::string& message, const std::string& fileName, Index lineNumber); //!< the block a log file records; every channel writes exactly this text (#2530)
 
 void SysError(std::string error_msg, PyErrorType errorType = PyErrorType::internalError); //!< prints a formated system (internal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; errorType selects the Python exception and defaults to what SysError means (#2521)
 

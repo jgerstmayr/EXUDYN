@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.186.dev1, 
++  Exudyn version = 1.11.188.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2529, 
-+  Number of resolved issues = 2259 (186 in current version), 
++  Number of issues = 2531, 
++  Number of resolved issues = 2261 (188 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.188: resolved Issue 2530: the error block is printed to the console although the exception already says it (change)
+    - issue author: Claude-JG
+    - description:  Since revision2026 step R6.3.5 the exception carries the message and the location; the 5-line ==== block printed by PyError and SysError repeats it on the console. Worse: a caught exception still prints the block, so a GUI or a parameter variation that handles errors floods the terminal with SYSTEM ERROR text for something it handled. Print the block to the pout LOG FILE only (never to the console) - on a long unattended run the file is the only record, and the console has the traceback. Requires a file-only write on OutputBuffer, because pout cannot separate the two channels. Also make the ofstream overloads write the identical block: they currently append Exudyn: parsing of Python file terminated ... which is the fixed sentence that R6.3.5 already removed from the exception.
+    - **notes:** The ==== block is written to the pout log file only (new OutputBuffer::WriteToFileOnly) and never to the console: the exception carries the same message and location since #2527, and a caught exception used to print it anyway. Both file channels now write the identical text from the new ErrorMessageBlock(); the file-only sentence Exudyn: parsing of Python file terminated ... is gone. PyWarning is unchanged - a warning throws nothing, so the console is its only channel.
+    - date resolved: **2026-09-18 20:35**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.187: resolved Issue 2529: the rules for reporting an error from C++ have no home a human can find (docu)
+    - issue author: Claude-JG
+    - description:  The nine exception classes, the seven helpers and the rules for choosing between them exist only in code comments (ReleaseAssert.h, Stdoutput.h) and in the revision log, which is a record and not a reference. Someone about to write a new check has nowhere to look. Write the rules once, in docs/dev/CODING_STYLE.md, and point CONTRIBUTING.md, docs/dev/README.md and CLAUDE.md at that one place.
+    - **notes:** Written as docs/dev/CODING_STYLE.md section 10 (revision2026 step R6.3.9): which helper, which of the nine types, when to write no type at all, the two traps (catch order; a class not registered in PybindModule.cpp compiles and arrives as RuntimeError), deprecation via PyDeprecated, how to write the message, and tools/errorTriage.py. CONTRIBUTING.md, docs/dev/README.md and CLAUDE.md point at that one place; the section is marked as NOT a transcription of introduction.tex.
+    - date resolved: **2026-09-18 20:04**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.186: resolved Issue 2527: str(exception) carries no information (change)
     - issue author: Claude-JG
     - description:  PyError prints the explanation and then throws the fixed sentence Exudyn: parsing of Python file terminated due to Python (user) error - identical for a bad item number\, a string written into a number and a missing marker. The model of revision2026 step R6.3.7 shows six of ten user errors arriving that way. An except block that logs the message logs nothing\, and the detail is gone. SysError does the same. revision2026 step R6.3.5.
