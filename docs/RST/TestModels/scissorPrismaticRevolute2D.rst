@@ -5,7 +5,7 @@
 scissorPrismaticRevolute2D.py
 *****************************
 
-You can view and download this file on Github: `scissorPrismaticRevolute2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py>`_
+You can view and download this file on Github: `scissorPrismaticRevolute2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/scissorPrismaticRevolute2D.py>`_
 
 .. code-block:: python
    :linenos:

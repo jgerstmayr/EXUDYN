@@ -91,7 +91,7 @@ Detailed description coming later.
 
 Relevant Examples and TestModels with weblink:
 
-    \ `pendulumGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2D.py>`_\  (Examples/), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TestModels/), \ `geometricallyExactBeam2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py>`_\  (TestModels/), \ `gridGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/gridGeomExactBeam2D.py>`_\  (TestModels/), \ `LShapeGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LShapeGeomExactBeam2D.py>`_\  (TestModels/)
+    \ `pendulumGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py>`_\  (Examples/), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py>`_\  (TestModels/), \ `geometricallyExactBeam2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeam2Dtest.py>`_\  (TestModels/), \ `gridGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/gridGeomExactBeam2D.py>`_\  (TestModels/), \ `LShapeGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LShapeGeomExactBeam2D.py>`_\  (TestModels/)
 
 
 

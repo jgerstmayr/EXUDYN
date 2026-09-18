@@ -5,7 +5,7 @@
 rigidBodySpringDamperIntrinsic.py
 *********************************
 
-You can view and download this file on Github: `rigidBodySpringDamperIntrinsic.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rigidBodySpringDamperIntrinsic.py>`_
+You can view and download this file on Github: `rigidBodySpringDamperIntrinsic.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rigidBodySpringDamperIntrinsic.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 serialRobotTest.py
 ******************
 
-You can view and download this file on Github: `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/serialRobotTest.py>`_
+You can view and download this file on Github: `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/serialRobotTest.py>`_
 
 .. code-block:: python
    :linenos:

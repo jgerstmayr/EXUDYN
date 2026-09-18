@@ -5,7 +5,7 @@
 doublePendulum2D.py
 *******************
 
-You can view and download this file on Github: `doublePendulum2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/doublePendulum2D.py>`_
+You can view and download this file on Github: `doublePendulum2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/doublePendulum2D.py>`_
 
 .. code-block:: python
    :linenos:

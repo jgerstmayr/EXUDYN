@@ -5,7 +5,7 @@
 springDamperTutorialNew.py
 **************************
 
-You can view and download this file on Github: `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/springDamperTutorialNew.py>`_
+You can view and download this file on Github: `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/springDamperTutorialNew.py>`_
 
 .. code-block:: python
    :linenos:

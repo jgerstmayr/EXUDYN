@@ -5,7 +5,7 @@
 springMassFriction.py
 *********************
 
-You can view and download this file on Github: `springMassFriction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/springMassFriction.py>`_
+You can view and download this file on Github: `springMassFriction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/springMassFriction.py>`_
 
 .. code-block:: python
    :linenos:

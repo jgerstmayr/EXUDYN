@@ -5,7 +5,7 @@
 TCPIPserverTest.py
 ******************
 
-You can view and download this file on Github: `TCPIPserverTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/TCPIPserverTest.py>`_
+You can view and download this file on Github: `TCPIPserverTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/TCPIPserverTest.py>`_
 
 .. code-block:: python
    :linenos:

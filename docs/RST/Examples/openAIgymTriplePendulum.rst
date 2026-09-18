@@ -5,7 +5,7 @@
 openAIgymTriplePendulum.py
 **************************
 
-You can view and download this file on Github: `openAIgymTriplePendulum.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/openAIgymTriplePendulum.py>`_
+You can view and download this file on Github: `openAIgymTriplePendulum.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/openAIgymTriplePendulum.py>`_
 
 .. code-block:: python
    :linenos:

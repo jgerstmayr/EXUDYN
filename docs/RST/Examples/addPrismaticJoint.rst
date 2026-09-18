@@ -5,7 +5,7 @@
 addPrismaticJoint.py
 ********************
 
-You can view and download this file on Github: `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/addPrismaticJoint.py>`_
+You can view and download this file on Github: `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/addPrismaticJoint.py>`_
 
 .. code-block:: python
    :linenos:

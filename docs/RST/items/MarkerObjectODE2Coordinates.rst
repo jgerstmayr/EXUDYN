@@ -38,7 +38,7 @@ DESCRIPTION of MarkerObjectODE2Coordinates
 
 Relevant Examples and TestModels with weblink:
 
-    \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/)
+    \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/)
 
 
 

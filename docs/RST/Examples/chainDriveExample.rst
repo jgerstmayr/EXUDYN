@@ -5,7 +5,7 @@
 chainDriveExample.py
 ********************
 
-You can view and download this file on Github: `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/chainDriveExample.py>`_
+You can view and download this file on Github: `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/chainDriveExample.py>`_
 
 .. code-block:: python
    :linenos:

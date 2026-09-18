@@ -15,7 +15,7 @@ and for filtering result data.
 
 Function: FilterSensorOutput
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L25>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py\#L25>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
@@ -30,7 +30,7 @@ Function: FilterSensorOutput
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFoutputTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
+    \ `ANCFoutputTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFoutputTest.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
 
 
 
@@ -41,7 +41,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FilterSignal
 ^^^^^^^^^^^^^^^^^^^^^^
-`FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L83>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+`FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py\#L83>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter 1D signal (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
@@ -57,7 +57,7 @@ Function: FilterSignal
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
+    \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
 
 
 
@@ -68,7 +68,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeFFT
 ^^^^^^^^^^^^^^^^^^^^
-`ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L132>`__\ (\ ``time``\ , \ ``data``\ )
+`ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py\#L132>`__\ (\ ``time``\ , \ ``data``\ )
 
 - | \ *function description*\ :
   | computes fast-fourier-transform (FFT) resulting in frequency, magnitude and phase of signal data using numpy.fft of numpy
@@ -86,7 +86,7 @@ Function: ComputeFFT
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex)
+    \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex)
 
 
 
@@ -97,7 +97,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GetInterpolatedSignalValue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L171>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``dataArrayIndex = -1``\ , \ ``timeArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
+`GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py\#L171>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``dataArrayIndex = -1``\ , \ ``timeArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
 
 - | \ *function description*\ :
   | Interpolate signal having time values with constant sampling rate in timeArray and according data in dataArray

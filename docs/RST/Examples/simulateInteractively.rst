@@ -5,7 +5,7 @@
 simulateInteractively.py
 ************************
 
-You can view and download this file on Github: `simulateInteractively.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/simulateInteractively.py>`_
+You can view and download this file on Github: `simulateInteractively.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/simulateInteractively.py>`_
 
 .. code-block:: python
    :linenos:

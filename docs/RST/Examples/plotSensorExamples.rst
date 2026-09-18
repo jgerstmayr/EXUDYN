@@ -5,7 +5,7 @@
 plotSensorExamples.py
 *********************
 
-You can view and download this file on Github: `plotSensorExamples.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/plotSensorExamples.py>`_
+You can view and download this file on Github: `plotSensorExamples.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/plotSensorExamples.py>`_
 
 .. code-block:: python
    :linenos:

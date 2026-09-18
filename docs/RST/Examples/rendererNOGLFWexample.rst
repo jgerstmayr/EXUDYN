@@ -5,7 +5,7 @@
 rendererNOGLFWexample.py
 ************************
 
-You can view and download this file on Github: `rendererNOGLFWexample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rendererNOGLFWexample.py>`_
+You can view and download this file on Github: `rendererNOGLFWexample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rendererNOGLFWexample.py>`_
 
 .. code-block:: python
    :linenos:

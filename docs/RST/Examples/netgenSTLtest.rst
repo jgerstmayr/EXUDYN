@@ -5,7 +5,7 @@
 netgenSTLtest.py
 ****************
 
-You can view and download this file on Github: `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/netgenSTLtest.py>`_
+You can view and download this file on Github: `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/netgenSTLtest.py>`_
 
 .. code-block:: python
    :linenos:

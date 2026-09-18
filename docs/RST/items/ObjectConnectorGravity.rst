@@ -215,7 +215,7 @@ MINI EXAMPLE for ObjectConnectorGravity
 
 Relevant Examples and TestModels with weblink:
 
-    \ `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py>`_\  (TestModels/)
+    \ `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py>`_\  (TestModels/)
 
 
 

@@ -5,7 +5,7 @@
 sliderCrank3Dbenchmark.py
 *************************
 
-You can view and download this file on Github: `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py>`_
+You can view and download this file on Github: `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/sliderCrank3Dbenchmark.py>`_
 
 .. code-block:: python
    :linenos:

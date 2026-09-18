@@ -5,7 +5,7 @@
 camFollowerExample.py
 *********************
 
-You can view and download this file on Github: `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/camFollowerExample.py>`_
+You can view and download this file on Github: `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/camFollowerExample.py>`_
 
 .. code-block:: python
    :linenos:

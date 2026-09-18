@@ -5,7 +5,7 @@
 genericODE2test.py
 ******************
 
-You can view and download this file on Github: `genericODE2test.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/genericODE2test.py>`_
+You can view and download this file on Github: `genericODE2test.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/genericODE2test.py>`_
 
 .. code-block:: python
    :linenos:

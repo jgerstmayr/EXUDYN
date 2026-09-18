@@ -5,7 +5,7 @@
 loadUserFunctionTest.py
 ***********************
 
-You can view and download this file on Github: `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/loadUserFunctionTest.py>`_
+You can view and download this file on Github: `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/loadUserFunctionTest.py>`_
 
 .. code-block:: python
    :linenos:

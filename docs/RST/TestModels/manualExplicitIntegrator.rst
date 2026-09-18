@@ -5,7 +5,7 @@
 manualExplicitIntegrator.py
 ***************************
 
-You can view and download this file on Github: `manualExplicitIntegrator.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/manualExplicitIntegrator.py>`_
+You can view and download this file on Github: `manualExplicitIntegrator.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/manualExplicitIntegrator.py>`_
 
 .. code-block:: python
    :linenos:

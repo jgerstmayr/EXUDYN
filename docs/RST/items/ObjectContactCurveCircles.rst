@@ -119,7 +119,7 @@ tbd
 
 Relevant Examples and TestModels with weblink:
 
-    \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Examples/), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Examples/), \ `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurvePolynomial.py>`_\  (Examples/), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_\  (Examples/), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py>`_\  (TestModels/)
+    \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py>`_\  (Examples/), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py>`_\  (Examples/), \ `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py>`_\  (Examples/), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py>`_\  (Examples/), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py>`_\  (TestModels/)
 
 
 

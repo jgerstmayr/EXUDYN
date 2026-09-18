@@ -5,7 +5,7 @@
 laserScannerTest.py
 *******************
 
-You can view and download this file on Github: `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/laserScannerTest.py>`_
+You can view and download this file on Github: `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/laserScannerTest.py>`_
 
 .. code-block:: python
    :linenos:

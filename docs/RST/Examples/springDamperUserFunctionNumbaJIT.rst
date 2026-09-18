@@ -5,7 +5,7 @@
 springDamperUserFunctionNumbaJIT.py
 ***********************************
 
-You can view and download this file on Github: `springDamperUserFunctionNumbaJIT.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/springDamperUserFunctionNumbaJIT.py>`_
+You can view and download this file on Github: `springDamperUserFunctionNumbaJIT.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/springDamperUserFunctionNumbaJIT.py>`_
 
 .. code-block:: python
    :linenos:

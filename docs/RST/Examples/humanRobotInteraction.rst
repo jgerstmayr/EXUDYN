@@ -5,7 +5,7 @@
 humanRobotInteraction.py
 ************************
 
-You can view and download this file on Github: `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/humanRobotInteraction.py>`_
+You can view and download this file on Github: `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/humanRobotInteraction.py>`_
 
 .. code-block:: python
    :linenos:

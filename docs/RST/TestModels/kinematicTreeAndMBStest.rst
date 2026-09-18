@@ -5,7 +5,7 @@
 kinematicTreeAndMBStest.py
 **************************
 
-You can view and download this file on Github: `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_
+You can view and download this file on Github: `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/kinematicTreeAndMBStest.py>`_
 
 .. code-block:: python
    :linenos:

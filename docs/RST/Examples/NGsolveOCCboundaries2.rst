@@ -5,7 +5,7 @@
 NGsolveOCCboundaries2.py
 ************************
 
-You can view and download this file on Github: `NGsolveOCCboundaries2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolveOCCboundaries2.py>`_
+You can view and download this file on Github: `NGsolveOCCboundaries2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolveOCCboundaries2.py>`_
 
 .. code-block:: python
    :linenos:

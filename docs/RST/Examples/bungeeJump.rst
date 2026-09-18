@@ -5,7 +5,7 @@
 bungeeJump.py
 *************
 
-You can view and download this file on Github: `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/bungeeJump.py>`_
+You can view and download this file on Github: `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/bungeeJump.py>`_
 
 .. code-block:: python
    :linenos:

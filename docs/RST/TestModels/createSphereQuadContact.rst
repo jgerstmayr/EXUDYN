@@ -5,7 +5,7 @@
 createSphereQuadContact.py
 **************************
 
-You can view and download this file on Github: `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/createSphereQuadContact.py>`_
+You can view and download this file on Github: `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/createSphereQuadContact.py>`_
 
 .. code-block:: python
    :linenos:

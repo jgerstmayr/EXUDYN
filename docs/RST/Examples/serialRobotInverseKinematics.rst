@@ -5,7 +5,7 @@
 serialRobotInverseKinematics.py
 *******************************
 
-You can view and download this file on Github: `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_
+You can view and download this file on Github: `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotInverseKinematics.py>`_
 
 .. code-block:: python
    :linenos:

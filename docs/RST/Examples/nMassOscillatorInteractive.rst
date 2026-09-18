@@ -5,7 +5,7 @@
 nMassOscillatorInteractive.py
 *****************************
 
-You can view and download this file on Github: `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_
+You can view and download this file on Github: `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/nMassOscillatorInteractive.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 symbolicUserFunctionTest.py
 ***************************
 
-You can view and download this file on Github: `symbolicUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py>`_
+You can view and download this file on Github: `symbolicUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/symbolicUserFunctionTest.py>`_
 
 .. code-block:: python
    :linenos:

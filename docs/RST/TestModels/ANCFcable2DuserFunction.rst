@@ -5,7 +5,7 @@
 ANCFcable2DuserFunction.py
 **************************
 
-You can view and download this file on Github: `ANCFcable2DuserFunction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/ANCFcable2DuserFunction.py>`_
+You can view and download this file on Github: `ANCFcable2DuserFunction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/ANCFcable2DuserFunction.py>`_
 
 .. code-block:: python
    :linenos:

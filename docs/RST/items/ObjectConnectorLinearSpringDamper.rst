@@ -251,7 +251,7 @@ MINI EXAMPLE for ObjectConnectorLinearSpringDamper
 
 Relevant Examples and TestModels with weblink:
 
-    \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Examples/)
+    \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py>`_\  (Examples/)
 
 
 

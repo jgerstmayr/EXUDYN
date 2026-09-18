@@ -5,7 +5,7 @@
 pendulum2Dconstraint.py
 ***********************
 
-You can view and download this file on Github: `pendulum2Dconstraint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/pendulum2Dconstraint.py>`_
+You can view and download this file on Github: `pendulum2Dconstraint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/pendulum2Dconstraint.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 TestModels
 ==========
 
-This section includes all TestModels for Exudyn.They can also be found and downloaded at the `TestModels folder of Exudyn on Github <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels>`_
+This section includes all TestModels for Exudyn.They can also be found and downloaded at the `TestModels folder of Exudyn on Github <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels>`_
 
 .. toctree::
    :maxdepth: 2

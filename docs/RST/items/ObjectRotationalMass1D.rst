@@ -169,7 +169,7 @@ MINI EXAMPLE for ObjectRotationalMass1D
 
 Relevant Examples and TestModels with weblink:
 
-    \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TestModels/), \ `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py>`_\  (TestModels/), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TestModels/)
+    \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py>`_\  (TestModels/), \ `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateSpringDamperExt.py>`_\  (TestModels/), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py>`_\  (TestModels/)
 
 
 

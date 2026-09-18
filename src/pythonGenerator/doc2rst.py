@@ -572,7 +572,7 @@ if True:
         rstModelIndex += 'This section includes all '+fileTypeS+' for Exudyn.'
         rstModelIndex += 'They can also be found and downloaded at the '
         rstModelIndex += RSTurl(fileTypeS+' folder of Exudyn on Github', 
-                                'https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/'+fileTypeS)
+                                paths.githubSourceURL.replace('/blob/', '/tree/')+fileTypeS)
         rstModelIndex += """
 
 .. toctree::
@@ -594,7 +594,7 @@ if True:
     
             sRST += 'You can view and download this file on Github: '
             sRST += RSTurl(fileName, 
-                          'https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/'+fileTypeS+'/'+fileName)+'\n\n'
+                          paths.githubSourceURL.replace('/blob/', '/tree/')+fileTypeS+'/'+fileName)+'\n\n'
     
             sRST += RSTcodeBlock(s, typeString='python', addLineNumbers=True, indentation='   ') + '\n'
             

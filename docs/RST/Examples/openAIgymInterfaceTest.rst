@@ -5,7 +5,7 @@
 openAIgymInterfaceTest.py
 *************************
 
-You can view and download this file on Github: `openAIgymInterfaceTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/openAIgymInterfaceTest.py>`_
+You can view and download this file on Github: `openAIgymInterfaceTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/openAIgymInterfaceTest.py>`_
 
 .. code-block:: python
    :linenos:

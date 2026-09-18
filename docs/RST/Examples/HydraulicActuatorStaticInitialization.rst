@@ -5,7 +5,7 @@
 HydraulicActuatorStaticInitialization.py
 ****************************************
 
-You can view and download this file on Github: `HydraulicActuatorStaticInitialization.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/HydraulicActuatorStaticInitialization.py>`_
+You can view and download this file on Github: `HydraulicActuatorStaticInitialization.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/HydraulicActuatorStaticInitialization.py>`_
 
 .. code-block:: python
    :linenos:

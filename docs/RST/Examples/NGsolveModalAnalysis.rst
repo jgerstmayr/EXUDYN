@@ -5,7 +5,7 @@
 NGsolveModalAnalysis.py
 ***********************
 
-You can view and download this file on Github: `NGsolveModalAnalysis.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolveModalAnalysis.py>`_
+You can view and download this file on Github: `NGsolveModalAnalysis.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolveModalAnalysis.py>`_
 
 .. code-block:: python
    :linenos:

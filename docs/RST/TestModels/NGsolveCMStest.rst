@@ -5,7 +5,7 @@
 NGsolveCMStest.py
 *****************
 
-You can view and download this file on Github: `NGsolveCMStest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/NGsolveCMStest.py>`_
+You can view and download this file on Github: `NGsolveCMStest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/NGsolveCMStest.py>`_
 
 .. code-block:: python
    :linenos:

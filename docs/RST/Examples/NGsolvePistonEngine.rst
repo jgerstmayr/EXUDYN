@@ -5,7 +5,7 @@
 NGsolvePistonEngine.py
 **********************
 
-You can view and download this file on Github: `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_
+You can view and download this file on Github: `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolvePistonEngine.py>`_
 
 .. code-block:: python
    :linenos:

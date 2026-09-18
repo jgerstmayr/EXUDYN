@@ -5,7 +5,7 @@
 HydraulicActuator2Arms.py
 *************************
 
-You can view and download this file on Github: `HydraulicActuator2Arms.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/HydraulicActuator2Arms.py>`_
+You can view and download this file on Github: `HydraulicActuator2Arms.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/HydraulicActuator2Arms.py>`_
 
 .. code-block:: python
    :linenos:

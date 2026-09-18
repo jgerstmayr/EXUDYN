@@ -5,7 +5,7 @@
 objectFFRFreducedOrderNetgen.py
 *******************************
 
-You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/objectFFRFreducedOrderNetgen.py>`_
+You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/objectFFRFreducedOrderNetgen.py>`_
 
 .. code-block:: python
    :linenos:

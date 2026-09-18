@@ -5,7 +5,7 @@
 SpringWithConstraints.py
 ************************
 
-You can view and download this file on Github: `SpringWithConstraints.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/SpringWithConstraints.py>`_
+You can view and download this file on Github: `SpringWithConstraints.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/SpringWithConstraints.py>`_
 
 .. code-block:: python
    :linenos:

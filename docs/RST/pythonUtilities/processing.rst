@@ -16,7 +16,7 @@ It includes parameter variation and (genetic) optimization functionality.
 
 Function: GetVersionPlatformString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetVersionPlatformString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L36>`__\ ()
+`GetVersionPlatformString <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L36>`__\ ()
 
 - | \ *function description*\ :
   | internal function to return Exudyn version string, which allows to identify how results have been obtained
@@ -33,7 +33,7 @@ Function: GetVersionPlatformString
 
 Function: ProcessParameterList
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ProcessParameterList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L148>`__\ (\ ``parameterFunction``\ , \ ``parameterList``\ , \ ``useMultiProcessing``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
+`ProcessParameterList <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L148>`__\ (\ ``parameterFunction``\ , \ ``parameterList``\ , \ ``useMultiProcessing``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | processes parameterFunction for given parameters in parameterList, see ParameterVariation
@@ -77,7 +77,7 @@ Function: ProcessParameterList
 
 Function: ParameterVariation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L385>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
+`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L385>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
@@ -111,7 +111,7 @@ Function: ParameterVariation
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `dispyParameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py>`_\  (Ex), \ `mpi4pyExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mpi4pyExample.py>`_\  (Ex), \ `multiprocessingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiprocessingTest.py>`_\  (Ex), \ `parameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_\  (TM)
+    \ `dispyParameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/dispyParameterVariationExample.py>`_\  (Ex), \ `mpi4pyExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mpi4pyExample.py>`_\  (Ex), \ `multiprocessingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/multiprocessingTest.py>`_\  (Ex), \ `parameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/parameterVariationExample.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geneticOptimizationTest.py>`_\  (TM)
 
 
 
@@ -122,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GeneticOptimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L530>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``parameterFunctionData = {}``\ , \ ``**kwargs``\ )
+`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L530>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``parameterFunctionData = {}``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | compute minimum of given objectiveFunction
@@ -164,7 +164,7 @@ Function: GeneticOptimization
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py>`_\  (Ex), \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_\  (TM)
+    \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py>`_\  (Ex), \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/shapeOptimization.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geneticOptimizationTest.py>`_\  (TM)
 
 
 
@@ -175,7 +175,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Minimize
 ^^^^^^^^^^^^^^^^^^
-`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L899>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
+`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L899>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization(). Note that in special cases, you should copy this function and adapt to your needs.
@@ -203,7 +203,7 @@ Function: Minimize
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py>`_\  (Ex), \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex)
+    \ `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/minimizeExample.py>`_\  (Ex), \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/shapeOptimization.py>`_\  (Ex)
 
 
 
@@ -214,7 +214,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSensitivities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1107>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
+`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L1107>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments.
@@ -244,7 +244,7 @@ Function: ComputeSensitivities
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py>`_\  (Ex)
+    \ `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ComputeSensitivitiesExample.py>`_\  (Ex)
 
 
 
@@ -255,7 +255,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotOptimizationResults2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1240>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
+`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L1240>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
 
 - | \ *function description*\ :
   | visualize results of optimization for every parameter (2D plots)
@@ -269,7 +269,7 @@ Function: PlotOptimizationResults2D
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py>`_\  (Ex), \ `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py>`_\  (Ex), \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_\  (TM)
+    \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py>`_\  (Ex), \ `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/minimizeExample.py>`_\  (Ex), \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/shapeOptimization.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geneticOptimizationTest.py>`_\  (TM)
 
 
 
@@ -280,7 +280,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensitivityResults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1299>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
+`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py\#L1299>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
 
 - | \ *function description*\ :
   | visualize results of Sensitivityanalyis for every parameter (2D plots)
@@ -297,5 +297,5 @@ Function: PlotSensitivityResults
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py>`_\  (Ex)
+    \ `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ComputeSensitivitiesExample.py>`_\  (Ex)
 

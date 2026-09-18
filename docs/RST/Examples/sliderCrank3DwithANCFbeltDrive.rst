@@ -5,7 +5,7 @@
 sliderCrank3DwithANCFbeltDrive.py
 *********************************
 
-You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py>`_
+You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/sliderCrank3DwithANCFbeltDrive.py>`_
 
 .. code-block:: python
    :linenos:

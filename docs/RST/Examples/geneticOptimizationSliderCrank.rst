@@ -5,7 +5,7 @@
 geneticOptimizationSliderCrank.py
 *********************************
 
-You can view and download this file on Github: `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py>`_
+You can view and download this file on Github: `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/geneticOptimizationSliderCrank.py>`_
 
 .. code-block:: python
    :linenos:

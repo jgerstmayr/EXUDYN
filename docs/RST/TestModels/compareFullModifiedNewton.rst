@@ -5,7 +5,7 @@
 compareFullModifiedNewton.py
 ****************************
 
-You can view and download this file on Github: `compareFullModifiedNewton.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/compareFullModifiedNewton.py>`_
+You can view and download this file on Github: `compareFullModifiedNewton.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/compareFullModifiedNewton.py>`_
 
 .. code-block:: python
    :linenos:

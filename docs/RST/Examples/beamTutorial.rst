@@ -5,7 +5,7 @@
 beamTutorial.py
 ***************
 
-You can view and download this file on Github: `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/beamTutorial.py>`_
+You can view and download this file on Github: `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/beamTutorial.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 deleteItemsTest.py
 ******************
 
-You can view and download this file on Github: `deleteItemsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/deleteItemsTest.py>`_
+You can view and download this file on Github: `deleteItemsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/deleteItemsTest.py>`_
 
 .. code-block:: python
    :linenos:

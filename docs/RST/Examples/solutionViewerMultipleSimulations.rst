@@ -5,7 +5,7 @@
 solutionViewerMultipleSimulations.py
 ************************************
 
-You can view and download this file on Github: `solutionViewerMultipleSimulations.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/solutionViewerMultipleSimulations.py>`_
+You can view and download this file on Github: `solutionViewerMultipleSimulations.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/solutionViewerMultipleSimulations.py>`_
 
 .. code-block:: python
    :linenos:

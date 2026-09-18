@@ -5,7 +5,7 @@
 finiteSegmentMethod.py
 **********************
 
-You can view and download this file on Github: `finiteSegmentMethod.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/finiteSegmentMethod.py>`_
+You can view and download this file on Github: `finiteSegmentMethod.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/finiteSegmentMethod.py>`_
 
 .. code-block:: python
    :linenos:

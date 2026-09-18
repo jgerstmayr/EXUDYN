@@ -5,7 +5,7 @@
 ANCFtests2.py
 *************
 
-You can view and download this file on Github: `ANCFtests2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFtests2.py>`_
+You can view and download this file on Github: `ANCFtests2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFtests2.py>`_
 
 .. code-block:: python
    :linenos:

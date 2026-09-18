@@ -5,7 +5,7 @@
 contactCurvePolynomial.py
 *************************
 
-You can view and download this file on Github: `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/contactCurvePolynomial.py>`_
+You can view and download this file on Github: `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/contactCurvePolynomial.py>`_
 
 .. code-block:: python
    :linenos:

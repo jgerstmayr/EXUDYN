@@ -5,7 +5,7 @@
 CMSexampleCourse.py
 *******************
 
-You can view and download this file on Github: `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/CMSexampleCourse.py>`_
+You can view and download this file on Github: `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/CMSexampleCourse.py>`_
 
 .. code-block:: python
    :linenos:

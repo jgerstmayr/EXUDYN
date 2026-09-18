@@ -5,7 +5,7 @@
 geometricallyExactBeam2Dtest.py
 *******************************
 
-You can view and download this file on Github: `geometricallyExactBeam2Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py>`_
+You can view and download this file on Github: `geometricallyExactBeam2Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/geometricallyExactBeam2Dtest.py>`_
 
 .. code-block:: python
    :linenos:

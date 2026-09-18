@@ -5,7 +5,7 @@
 velocityVerletTest.py
 *********************
 
-You can view and download this file on Github: `velocityVerletTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/velocityVerletTest.py>`_
+You can view and download this file on Github: `velocityVerletTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/velocityVerletTest.py>`_
 
 .. code-block:: python
    :linenos:

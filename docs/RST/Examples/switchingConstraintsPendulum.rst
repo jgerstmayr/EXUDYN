@@ -5,7 +5,7 @@
 switchingConstraintsPendulum.py
 *******************************
 
-You can view and download this file on Github: `switchingConstraintsPendulum.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/switchingConstraintsPendulum.py>`_
+You can view and download this file on Github: `switchingConstraintsPendulum.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/switchingConstraintsPendulum.py>`_
 
 .. code-block:: python
    :linenos:

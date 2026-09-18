@@ -5,7 +5,7 @@
 multiMbsTest.py
 ***************
 
-You can view and download this file on Github: `multiMbsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/multiMbsTest.py>`_
+You can view and download this file on Github: `multiMbsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/multiMbsTest.py>`_
 
 .. code-block:: python
    :linenos:

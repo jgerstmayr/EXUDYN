@@ -5,7 +5,7 @@
 pickleCopyMbs.py
 ****************
 
-You can view and download this file on Github: `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/pickleCopyMbs.py>`_
+You can view and download this file on Github: `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/pickleCopyMbs.py>`_
 
 .. code-block:: python
    :linenos:

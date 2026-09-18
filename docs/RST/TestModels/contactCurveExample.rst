@@ -5,7 +5,7 @@
 contactCurveExample.py
 **********************
 
-You can view and download this file on Github: `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/contactCurveExample.py>`_
+You can view and download this file on Github: `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/contactCurveExample.py>`_
 
 .. code-block:: python
    :linenos:

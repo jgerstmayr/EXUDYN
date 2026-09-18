@@ -5,7 +5,7 @@
 ANCFALEtest.py
 **************
 
-You can view and download this file on Github: `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFALEtest.py>`_
+You can view and download this file on Github: `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFALEtest.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 ANCFCableBeamDampingTest.py
 ***************************
 
-You can view and download this file on Github: `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_
+You can view and download this file on Github: `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/ANCFCableBeamDampingTest.py>`_
 
 .. code-block:: python
    :linenos:

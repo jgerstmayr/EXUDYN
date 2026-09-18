@@ -5,7 +5,7 @@
 rigidBodyTutorial.py
 ********************
 
-You can view and download this file on Github: `rigidBodyTutorial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidBodyTutorial.py>`_
+You can view and download this file on Github: `rigidBodyTutorial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidBodyTutorial.py>`_
 
 .. code-block:: python
    :linenos:

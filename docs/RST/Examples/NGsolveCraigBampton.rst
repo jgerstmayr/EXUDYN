@@ -5,7 +5,7 @@
 NGsolveCraigBampton.py
 **********************
 
-You can view and download this file on Github: `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_
+You can view and download this file on Github: `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolveCraigBampton.py>`_
 
 .. code-block:: python
    :linenos:

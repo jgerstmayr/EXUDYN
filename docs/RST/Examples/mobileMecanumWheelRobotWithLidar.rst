@@ -5,7 +5,7 @@
 mobileMecanumWheelRobotWithLidar.py
 ***********************************
 
-You can view and download this file on Github: `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_
+You can view and download this file on Github: `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_
 
 .. code-block:: python
    :linenos:

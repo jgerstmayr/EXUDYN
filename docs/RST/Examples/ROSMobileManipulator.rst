@@ -5,7 +5,7 @@
 ROSMobileManipulator.py
 ***********************
 
-You can view and download this file on Github: `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSMobileManipulator.py>`_
+You can view and download this file on Github: `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ROSMobileManipulator.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 cartesianSpringDamper.py
 ************************
 
-You can view and download this file on Github: `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/cartesianSpringDamper.py>`_
+You can view and download this file on Github: `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/cartesianSpringDamper.py>`_
 
 .. code-block:: python
    :linenos:

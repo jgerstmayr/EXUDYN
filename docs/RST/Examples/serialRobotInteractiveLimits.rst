@@ -5,7 +5,7 @@
 serialRobotInteractiveLimits.py
 *******************************
 
-You can view and download this file on Github: `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_
+You can view and download this file on Github: `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotInteractiveLimits.py>`_
 
 .. code-block:: python
    :linenos:

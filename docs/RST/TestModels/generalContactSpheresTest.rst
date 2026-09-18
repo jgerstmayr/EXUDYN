@@ -5,7 +5,7 @@
 generalContactSpheresTest.py
 ****************************
 
-You can view and download this file on Github: `generalContactSpheresTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/generalContactSpheresTest.py>`_
+You can view and download this file on Github: `generalContactSpheresTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/generalContactSpheresTest.py>`_
 
 .. code-block:: python
    :linenos:

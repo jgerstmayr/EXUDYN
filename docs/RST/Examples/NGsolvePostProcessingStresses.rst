@@ -5,7 +5,7 @@
 NGsolvePostProcessingStresses.py
 ********************************
 
-You can view and download this file on Github: `NGsolvePostProcessingStresses.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py>`_
+You can view and download this file on Github: `NGsolvePostProcessingStresses.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolvePostProcessingStresses.py>`_
 
 .. code-block:: python
    :linenos:

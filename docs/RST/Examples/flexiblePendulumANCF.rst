@@ -5,7 +5,7 @@
 flexiblePendulumANCF.py
 ***********************
 
-You can view and download this file on Github: `flexiblePendulumANCF.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/flexiblePendulumANCF.py>`_
+You can view and download this file on Github: `flexiblePendulumANCF.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/flexiblePendulumANCF.py>`_
 
 .. code-block:: python
    :linenos:

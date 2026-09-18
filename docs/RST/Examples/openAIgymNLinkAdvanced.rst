@@ -5,7 +5,7 @@
 openAIgymNLinkAdvanced.py
 *************************
 
-You can view and download this file on Github: `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py>`_
+You can view and download this file on Github: `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/openAIgymNLinkAdvanced.py>`_
 
 .. code-block:: python
    :linenos:

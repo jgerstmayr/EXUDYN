@@ -251,7 +251,7 @@ Finally, the data coordinate is updated in order to provide the starting value f
 
 Relevant Examples and TestModels with weblink:
 
-    \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Examples/), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Examples/)
+    \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py>`_\  (Examples/), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Examples/)
 
 
 

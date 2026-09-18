@@ -5,7 +5,7 @@
 SpringDamperMasspointSystem.py
 ******************************
 
-You can view and download this file on Github: `SpringDamperMasspointSystem.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/SpringDamperMasspointSystem.py>`_
+You can view and download this file on Github: `SpringDamperMasspointSystem.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/SpringDamperMasspointSystem.py>`_
 
 .. code-block:: python
    :linenos:

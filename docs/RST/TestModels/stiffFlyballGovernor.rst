@@ -5,7 +5,7 @@
 stiffFlyballGovernor.py
 ***********************
 
-You can view and download this file on Github: `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_
+You can view and download this file on Github: `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/stiffFlyballGovernor.py>`_
 
 .. code-block:: python
    :linenos:

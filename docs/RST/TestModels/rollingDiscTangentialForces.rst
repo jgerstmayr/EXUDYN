@@ -5,7 +5,7 @@
 rollingDiscTangentialForces.py
 ******************************
 
-You can view and download this file on Github: `rollingDiscTangentialForces.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rollingDiscTangentialForces.py>`_
+You can view and download this file on Github: `rollingDiscTangentialForces.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rollingDiscTangentialForces.py>`_
 
 .. code-block:: python
    :linenos:

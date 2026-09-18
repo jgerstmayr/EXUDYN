@@ -5,7 +5,7 @@
 rollerBearningModel.py
 **********************
 
-You can view and download this file on Github: `rollerBearningModel.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rollerBearningModel.py>`_
+You can view and download this file on Github: `rollerBearningModel.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rollerBearningModel.py>`_
 
 .. code-block:: python
    :linenos:

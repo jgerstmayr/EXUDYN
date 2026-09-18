@@ -5,7 +5,7 @@
 carRollingDiscTest.py
 *********************
 
-You can view and download this file on Github: `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_
+You can view and download this file on Github: `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/carRollingDiscTest.py>`_
 
 .. code-block:: python
    :linenos:

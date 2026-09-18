@@ -5,7 +5,7 @@
 compareAbaqusAnsysRotorEigenfrequencies.py
 ******************************************
 
-You can view and download this file on Github: `compareAbaqusAnsysRotorEigenfrequencies.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py>`_
+You can view and download this file on Github: `compareAbaqusAnsysRotorEigenfrequencies.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py>`_
 
 .. code-block:: python
    :linenos:

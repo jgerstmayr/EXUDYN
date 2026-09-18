@@ -5,7 +5,7 @@
 mecanumWheelRollingDiscTest.py
 ******************************
 
-You can view and download this file on Github: `mecanumWheelRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py>`_
+You can view and download this file on Github: `mecanumWheelRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/mecanumWheelRollingDiscTest.py>`_
 
 .. code-block:: python
    :linenos:

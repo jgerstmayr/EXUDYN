@@ -1780,7 +1780,7 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
             if not ufMode:
                 sep = sepItem1
             for name in fileList:
-                fileURL = 'https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/'+folder+'/' + name
+                fileURL = paths.githubSourceURL+folder+'/' + name
                 s += sep+'\\exuUrl{'+fileURL+'}'
                 s += '{\\texttt{'+name.replace('_','\\_')+'}}' 
                 sRST += sepRST

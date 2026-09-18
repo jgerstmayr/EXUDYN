@@ -5,7 +5,7 @@
 createFunctionsTest.py
 **********************
 
-You can view and download this file on Github: `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/createFunctionsTest.py>`_
+You can view and download this file on Github: `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/createFunctionsTest.py>`_
 
 .. code-block:: python
    :linenos:

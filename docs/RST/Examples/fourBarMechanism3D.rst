@@ -5,7 +5,7 @@
 fourBarMechanism3D.py
 *********************
 
-You can view and download this file on Github: `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_
+You can view and download this file on Github: `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/fourBarMechanism3D.py>`_
 
 .. code-block:: python
    :linenos:

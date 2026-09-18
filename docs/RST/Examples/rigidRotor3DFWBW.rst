@@ -5,7 +5,7 @@
 rigidRotor3DFWBW.py
 *******************
 
-You can view and download this file on Github: `rigidRotor3DFWBW.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidRotor3DFWBW.py>`_
+You can view and download this file on Github: `rigidRotor3DFWBW.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidRotor3DFWBW.py>`_
 
 .. code-block:: python
    :linenos:

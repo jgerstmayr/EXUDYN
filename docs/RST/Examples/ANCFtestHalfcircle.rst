@@ -5,7 +5,7 @@
 ANCFtestHalfcircle.py
 *********************
 
-You can view and download this file on Github: `ANCFtestHalfcircle.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFtestHalfcircle.py>`_
+You can view and download this file on Github: `ANCFtestHalfcircle.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFtestHalfcircle.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 mpi4pyExample.py
 ****************
 
-You can view and download this file on Github: `mpi4pyExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/mpi4pyExample.py>`_
+You can view and download this file on Github: `mpi4pyExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/mpi4pyExample.py>`_
 
 .. code-block:: python
    :linenos:

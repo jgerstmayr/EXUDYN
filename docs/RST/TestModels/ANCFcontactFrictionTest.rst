@@ -5,7 +5,7 @@
 ANCFcontactFrictionTest.py
 **************************
 
-You can view and download this file on Github: `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py>`_
+You can view and download this file on Github: `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/ANCFcontactFrictionTest.py>`_
 
 .. code-block:: python
    :linenos:

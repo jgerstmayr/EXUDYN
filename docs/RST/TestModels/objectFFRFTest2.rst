@@ -5,7 +5,7 @@
 objectFFRFTest2.py
 ******************
 
-You can view and download this file on Github: `objectFFRFTest2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/objectFFRFTest2.py>`_
+You can view and download this file on Github: `objectFFRFTest2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/objectFFRFTest2.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 contactCurveWithLongCurve.py
 ****************************
 
-You can view and download this file on Github: `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_
+You can view and download this file on Github: `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/contactCurveWithLongCurve.py>`_
 
 .. code-block:: python
    :linenos:

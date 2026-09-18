@@ -5,7 +5,7 @@
 stiffFlyballGovernorKT.py
 *************************
 
-You can view and download this file on Github: `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py>`_
+You can view and download this file on Github: `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/stiffFlyballGovernorKT.py>`_
 
 .. code-block:: python
    :linenos:

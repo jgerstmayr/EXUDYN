@@ -5,7 +5,7 @@
 particlesTest.py
 ****************
 
-You can view and download this file on Github: `particlesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/particlesTest.py>`_
+You can view and download this file on Github: `particlesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/particlesTest.py>`_
 
 .. code-block:: python
    :linenos:

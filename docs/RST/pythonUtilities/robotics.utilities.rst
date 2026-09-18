@@ -13,7 +13,7 @@ The utilities contains general helper functions for the robotics module
 
 Function: AddLidar
 ^^^^^^^^^^^^^^^^^^
-`AddLidar <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L25>`__\ (\ ``mbs``\ , \ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``minDistance = 0``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``lineLength = 1``\ , \ ``numberOfSensors = 100``\ , \ ``angleStart = 0``\ , \ ``angleEnd = 2*np.pi``\ , \ ``inclination = 0``\ , \ ``rotation = np.eye(3)``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = True``\ , \ ``drawDisplaced = True``\ , \ ``color = [1.0, 0.0, 0.0, 1.0]``\ )
+`AddLidar <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py\#L25>`__\ (\ ``mbs``\ , \ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``minDistance = 0``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``lineLength = 1``\ , \ ``numberOfSensors = 100``\ , \ ``angleStart = 0``\ , \ ``angleEnd = 2*np.pi``\ , \ ``inclination = 0``\ , \ ``rotation = np.eye(3)``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = True``\ , \ ``drawDisplaced = True``\ , \ ``color = [1.0, 0.0, 0.0, 1.0]``\ )
 
 - | \ *function description*\ :
   | Function to add many distance sensors to represent Lidar; sensors can be either placed on absolute position or attached to rigid body marker
@@ -43,7 +43,7 @@ Function: AddLidar
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py>`_\  (TM)
+    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py>`_\  (TM)
 
 
 
@@ -54,7 +54,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GetRoboticsToolboxInternalModel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetRoboticsToolboxInternalModel <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L88>`__\ (\ ``modelName = ''``\ , \ ``ignoreURDFerrors = True``\ )
+`GetRoboticsToolboxInternalModel <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py\#L88>`__\ (\ ``modelName = ''``\ , \ ``ignoreURDFerrors = True``\ )
 
 - | \ *function description*\ :
   | Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in
@@ -70,7 +70,7 @@ Function: GetRoboticsToolboxInternalModel
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotURDF.py>`_\  (Ex)
+    \ `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py>`_\  (Ex)
 
 
 
@@ -81,7 +81,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadURDFrobot
 ^^^^^^^^^^^^^^^^^^^^^^^
-`LoadURDFrobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L166>`__\ (\ ``urdfFilePath``\ , \ ``urdfBasePath``\ , \ ``gripperLinks = None``\ , \ ``manufacturer = ''``\ )
+`LoadURDFrobot <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py\#L166>`__\ (\ ``urdfFilePath``\ , \ ``urdfBasePath``\ , \ ``gripperLinks = None``\ , \ ``manufacturer = ''``\ )
 
 - | \ *function description*\ :
   | Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
@@ -103,7 +103,7 @@ Function: LoadURDFrobot
 
 Function: GetURDFrobotData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetURDFrobotData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L212>`__\ (\ ``robot``\ , \ ``urdf = None``\ , \ ``linkColorList = None``\ , \ ``staticJointValues = None``\ , \ ``returnStaticGraphicsList = False``\ , \ ``exportMesh = False``\ , \ ``verbose = 1``\ )
+`GetURDFrobotData <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py\#L212>`__\ (\ ``robot``\ , \ ``urdf = None``\ , \ ``linkColorList = None``\ , \ ``staticJointValues = None``\ , \ ``returnStaticGraphicsList = False``\ , \ ``exportMesh = False``\ , \ ``verbose = 1``\ )
 
 - | \ *function description*\ :
   | Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
@@ -122,5 +122,5 @@ Function: GetURDFrobotData
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotURDF.py>`_\  (Ex)
+    \ `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py>`_\  (Ex)
 

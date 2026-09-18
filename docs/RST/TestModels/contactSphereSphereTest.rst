@@ -5,7 +5,7 @@
 contactSphereSphereTest.py
 **************************
 
-You can view and download this file on Github: `contactSphereSphereTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/contactSphereSphereTest.py>`_
+You can view and download this file on Github: `contactSphereSphereTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/contactSphereSphereTest.py>`_
 
 .. code-block:: python
    :linenos:

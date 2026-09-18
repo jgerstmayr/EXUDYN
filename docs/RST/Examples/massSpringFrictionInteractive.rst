@@ -5,7 +5,7 @@
 massSpringFrictionInteractive.py
 ********************************
 
-You can view and download this file on Github: `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_
+You can view and download this file on Github: `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/massSpringFrictionInteractive.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 superElementRigidJointTest.py
 *****************************
 
-You can view and download this file on Github: `superElementRigidJointTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/superElementRigidJointTest.py>`_
+You can view and download this file on Github: `superElementRigidJointTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/superElementRigidJointTest.py>`_
 
 .. code-block:: python
    :linenos:

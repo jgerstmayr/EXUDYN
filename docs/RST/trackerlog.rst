@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.183.dev1, 
++  Exudyn version = 1.11.184.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2526, 
-+  Number of resolved issues = 2256 (183 in current version), 
++  Number of issues = 2527, 
++  Number of resolved issues = 2257 (184 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.184: resolved Issue 2525: every generated GitHub weblink points at the old pythonDev tree (fix)
+    - issue author: Claude-JG
+    - description:  The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1\, R3.8 and R3.9\, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).
+    - **notes:** the prefix lives in generatorPaths.githubSourceURL and the four generators that built it by hand read it: autoGenerateHelper.py\, utilityDocsModel.py and doc2rst.py twice. 368 generated documentation files repaired. The URLs name master and the new layout\, so they are right once this work reaches master - one string to change at the release instead of four generators. Five files kept the old links because their generator writes nothing at all\, raised as #2526. revision2026 step R7.6.
+    - date resolved: **2026-09-18 18:27**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.183: resolved Issue 2523: no model shows what an Exudyn error looks like from Python (testing)
     - issue author: Claude-JG
     - description:  Nothing in the test suite provokes the errors a user actually meets, so there is no record of which exception class and which message reach Python\, and no way to look at an Exudyn error the way Spyder or VS Code shows it. Maintainer request 2026-09-18. revision2026 step R6.3.7.
@@ -7752,11 +7758,6 @@ Version 0.1
 Open issues
 ***********
 
- * :textorange:`open issue 2525:` every generated GitHub weblink points at the old pythonDev tree
-    - issue author: Claude-JG
-    - description:  The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1\, R3.8 and R3.9\, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).
-    - date raised: 2026-09-18 
-
  * :textred:`open issue 2524:` a user function error is reported as a SYSTEM ERROR
     - issue author: Claude-JG
     - description:  An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug\, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file\, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.
@@ -8810,6 +8811,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2526:` mainSystemExtensionDocsEmitter writes none of its five outputs
+    - issue author: Claude-JG
+    - description:  The file ends in the middle of main() - no write call and no __main__ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing #2525\, whose new link prefix could not reach those five files.
+    - date raised: 2026-09-18 
 
  * :textred:`open BUG 2517:` the gate environment can hold a stale exudyn wheel
     - issue author: Claude-JG

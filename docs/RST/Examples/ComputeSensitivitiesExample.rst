@@ -5,7 +5,7 @@
 ComputeSensitivitiesExample.py
 ******************************
 
-You can view and download this file on Github: `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py>`_
+You can view and download this file on Github: `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ComputeSensitivitiesExample.py>`_
 
 .. code-block:: python
    :linenos:

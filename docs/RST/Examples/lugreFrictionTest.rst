@@ -5,7 +5,7 @@
 lugreFrictionTest.py
 ********************
 
-You can view and download this file on Github: `lugreFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/lugreFrictionTest.py>`_
+You can view and download this file on Github: `lugreFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/lugreFrictionTest.py>`_
 
 .. code-block:: python
    :linenos:

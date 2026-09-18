@@ -5,7 +5,7 @@
 sparseMatrixSpringDamperTest.py
 *******************************
 
-You can view and download this file on Github: `sparseMatrixSpringDamperTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/sparseMatrixSpringDamperTest.py>`_
+You can view and download this file on Github: `sparseMatrixSpringDamperTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/sparseMatrixSpringDamperTest.py>`_
 
 .. code-block:: python
    :linenos:

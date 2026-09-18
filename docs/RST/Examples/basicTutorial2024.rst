@@ -5,7 +5,7 @@
 basicTutorial2024.py
 ********************
 
-You can view and download this file on Github: `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/basicTutorial2024.py>`_
+You can view and download this file on Github: `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/basicTutorial2024.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 rigidBody2Dtest.py
 ******************
 
-You can view and download this file on Github: `rigidBody2Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rigidBody2Dtest.py>`_
+You can view and download this file on Github: `rigidBody2Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rigidBody2Dtest.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 slidercrankWithMassSpring.py
 ****************************
 
-You can view and download this file on Github: `slidercrankWithMassSpring.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/slidercrankWithMassSpring.py>`_
+You can view and download this file on Github: `slidercrankWithMassSpring.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/slidercrankWithMassSpring.py>`_
 
 .. code-block:: python
    :linenos:

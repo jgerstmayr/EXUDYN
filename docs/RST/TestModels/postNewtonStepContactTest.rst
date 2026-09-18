@@ -5,7 +5,7 @@
 postNewtonStepContactTest.py
 ****************************
 
-You can view and download this file on Github: `postNewtonStepContactTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/postNewtonStepContactTest.py>`_
+You can view and download this file on Github: `postNewtonStepContactTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/postNewtonStepContactTest.py>`_
 
 .. code-block:: python
    :linenos:

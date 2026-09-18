@@ -75,7 +75,7 @@ create advanced mechanisms and gears.
 
 Relevant Examples and TestModels with weblink:
 
-    \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py>`_\  (Examples/), \ `relativeRotationTranslationMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/relativeRotationTranslationMechanism.py>`_\  (TestModels/)
+    \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py>`_\  (Examples/), \ `relativeRotationTranslationMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/relativeRotationTranslationMechanism.py>`_\  (TestModels/)
 
 
 

@@ -5,7 +5,7 @@
 reevingSystemSpringsTest.py
 ***************************
 
-You can view and download this file on Github: `reevingSystemSpringsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/reevingSystemSpringsTest.py>`_
+You can view and download this file on Github: `reevingSystemSpringsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/reevingSystemSpringsTest.py>`_
 
 .. code-block:: python
    :linenos:

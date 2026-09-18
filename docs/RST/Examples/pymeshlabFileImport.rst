@@ -5,7 +5,7 @@
 pymeshlabFileImport.py
 **********************
 
-You can view and download this file on Github: `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_
+You can view and download this file on Github: `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/pymeshlabFileImport.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 bicycleIftommBenchmark.py
 *************************
 
-You can view and download this file on Github: `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_
+You can view and download this file on Github: `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/bicycleIftommBenchmark.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 symbolicUserFunctionMasses.py
 *****************************
 
-You can view and download this file on Github: `symbolicUserFunctionMasses.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py>`_
+You can view and download this file on Github: `symbolicUserFunctionMasses.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/symbolicUserFunctionMasses.py>`_
 
 .. code-block:: python
    :linenos:

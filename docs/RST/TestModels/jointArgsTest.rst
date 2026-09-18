@@ -5,7 +5,7 @@
 jointArgsTest.py
 ****************
 
-You can view and download this file on Github: `jointArgsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/jointArgsTest.py>`_
+You can view and download this file on Github: `jointArgsTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/jointArgsTest.py>`_
 
 .. code-block:: python
    :linenos:

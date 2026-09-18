@@ -5,7 +5,7 @@
 minimizeExample.py
 ******************
 
-You can view and download this file on Github: `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/minimizeExample.py>`_
+You can view and download this file on Github: `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/minimizeExample.py>`_
 
 .. code-block:: python
    :linenos:

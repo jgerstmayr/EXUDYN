@@ -5,7 +5,7 @@
 PARTS_ATEs_moving.py
 ********************
 
-You can view and download this file on Github: `PARTS_ATEs_moving.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/PARTS_ATEs_moving.py>`_
+You can view and download this file on Github: `PARTS_ATEs_moving.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/PARTS_ATEs_moving.py>`_
 
 .. code-block:: python
    :linenos:

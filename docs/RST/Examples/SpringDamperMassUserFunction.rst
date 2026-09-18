@@ -5,7 +5,7 @@
 SpringDamperMassUserFunction.py
 *******************************
 
-You can view and download this file on Github: `SpringDamperMassUserFunction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py>`_
+You can view and download this file on Github: `SpringDamperMassUserFunction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/SpringDamperMassUserFunction.py>`_
 
 .. code-block:: python
    :linenos:

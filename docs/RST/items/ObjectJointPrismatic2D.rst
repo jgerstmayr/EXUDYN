@@ -53,7 +53,7 @@ DESCRIPTION of ObjectJointPrismatic2D
 
 Relevant Examples and TestModels with weblink:
 
-    \ `sliderCrank3DwithANCFbeltDrive2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py>`_\  (Examples/), \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py>`_\  (Examples/), \ `PARTS_ATEs_moving.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/PARTS_ATEs_moving.py>`_\  (TestModels/), \ `scissorPrismaticRevolute2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py>`_\  (TestModels/), \ `sliderCrankFloatingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py>`_\  (TestModels/)
+    \ `sliderCrank3DwithANCFbeltDrive2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py>`_\  (Examples/), \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py>`_\  (Examples/), \ `PARTS_ATEs_moving.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/PARTS_ATEs_moving.py>`_\  (TestModels/), \ `scissorPrismaticRevolute2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/scissorPrismaticRevolute2D.py>`_\  (TestModels/), \ `sliderCrankFloatingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrankFloatingTest.py>`_\  (TestModels/)
 
 
 

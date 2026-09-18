@@ -5,7 +5,7 @@
 taskmanagerTest.py
 ******************
 
-You can view and download this file on Github: `taskmanagerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/taskmanagerTest.py>`_
+You can view and download this file on Github: `taskmanagerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/taskmanagerTest.py>`_
 
 .. code-block:: python
    :linenos:

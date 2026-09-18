@@ -5,7 +5,7 @@
 openAIgymNLinkContinuous.py
 ***************************
 
-You can view and download this file on Github: `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/openAIgymNLinkContinuous.py>`_
+You can view and download this file on Github: `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/openAIgymNLinkContinuous.py>`_
 
 .. code-block:: python
    :linenos:

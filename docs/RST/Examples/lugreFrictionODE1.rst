@@ -5,7 +5,7 @@
 lugreFrictionODE1.py
 ********************
 
-You can view and download this file on Github: `lugreFrictionODE1.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/lugreFrictionODE1.py>`_
+You can view and download this file on Github: `lugreFrictionODE1.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/lugreFrictionODE1.py>`_
 
 .. code-block:: python
    :linenos:

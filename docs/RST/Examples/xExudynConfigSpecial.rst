@@ -5,7 +5,7 @@
 xExudynConfigSpecial.py
 ***********************
 
-You can view and download this file on Github: `xExudynConfigSpecial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/xExudynConfigSpecial.py>`_
+You can view and download this file on Github: `xExudynConfigSpecial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/xExudynConfigSpecial.py>`_
 
 .. code-block:: python
    :linenos:

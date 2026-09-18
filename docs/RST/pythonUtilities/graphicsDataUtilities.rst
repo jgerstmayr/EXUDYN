@@ -20,7 +20,7 @@ includes functionality like mesh manipulation and some helper functions
 
 Function: SwitchTripletOrder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SwitchTripletOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L95>`__\ (\ ``vector``\ )
+`SwitchTripletOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L95>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | helper function to switch order of three items in a list; mostly used for reverting normals in triangles
@@ -38,7 +38,7 @@ Function: SwitchTripletOrder
 
 Function: ComputeTriangleNormal
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeTriangleNormal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L110>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
+`ComputeTriangleNormal <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L110>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
 
 - | \ *function description*\ :
   | compute normalized normal for 3 triangle points
@@ -56,7 +56,7 @@ Function: ComputeTriangleNormal
 
 Function: ComputeTriangleArea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeTriangleArea <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L128>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
+`ComputeTriangleArea <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L128>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
 
 - | \ *function description*\ :
   | compute area of triangle given by 3 points
@@ -74,7 +74,7 @@ Function: ComputeTriangleArea
 
 Function: Compute6NodeTrigsNormals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Compute6NodeTrigsNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L140>`__\ (\ ``elementNodes``\ )
+`Compute6NodeTrigsNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L140>`__\ (\ ``elementNodes``\ )
 
 - | \ *function description*\ :
   | Internal function: compute normals to 6-node triangular surface given by elementNodes
@@ -91,7 +91,7 @@ Function: Compute6NodeTrigsNormals
 
 Function: RefineMesh
 ^^^^^^^^^^^^^^^^^^^^
-`RefineMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L211>`__\ (\ ``points``\ , \ ``triangles``\ )
+`RefineMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L211>`__\ (\ ``points``\ , \ ``triangles``\ )
 
 - | \ *function description*\ :
   | refine triangle mesh; every triangle is subdivided into 4 triangles
@@ -105,7 +105,7 @@ Function: RefineMesh
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `tippeTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTest.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM), \ `generalContactImplicit1.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit1.py>`_\  (TM), \ `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit2.py>`_\  (TM)
+    \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py>`_\  (Ex), \ `tippeTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tippeTop.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactCylinderTest.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py>`_\  (TM), \ `generalContactImplicit1.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactImplicit1.py>`_\  (TM), \ `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactImplicit2.py>`_\  (TM)
 
 
 
@@ -116,7 +116,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ShrinkMeshNormalToSurface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ShrinkMeshNormalToSurface <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L268>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``distance``\ )
+`ShrinkMeshNormalToSurface <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L268>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``distance``\ )
 
 - | \ *function description*\ :
   | shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
@@ -131,7 +131,7 @@ Function: ShrinkMeshNormalToSurface
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
+    \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py>`_\  (TM)
 
 
 
@@ -142,7 +142,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeTriangularMesh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeTriangularMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L305>`__\ (\ ``vertices``\ , \ ``segments``\ )
+`ComputeTriangularMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L305>`__\ (\ ``vertices``\ , \ ``segments``\ )
 
 - | \ *function description*\ :
   | helper function to compute triangular mesh from list of vertices (=points) and segments;
@@ -183,7 +183,7 @@ Function: ComputeTriangularMesh
 
 Function: SegmentsFromPoints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SegmentsFromPoints <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L397>`__\ (\ ``points``\ , \ ``pointIndexOffset = 0``\ , \ ``invert = False``\ , \ ``closeCurve = True``\ )
+`SegmentsFromPoints <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L397>`__\ (\ ``points``\ , \ ``pointIndexOffset = 0``\ , \ ``invert = False``\ , \ ``closeCurve = True``\ )
 
 - | \ *function description*\ :
   | convert point list into segments (indices to points); point indices start with pointIndexOffset
@@ -202,7 +202,7 @@ Function: SegmentsFromPoints
 
 Function: CirclePointsAndSegments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CirclePointsAndSegments <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L424>`__\ (\ ``center = [0,0]``\ , \ ``radius = 0.1``\ , \ ``invert = False``\ , \ ``pointIndexOffset = 0``\ , \ ``nTiles = 16``\ )
+`CirclePointsAndSegments <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L424>`__\ (\ ``center = [0,0]``\ , \ ``radius = 0.1``\ , \ ``invert = False``\ , \ ``pointIndexOffset = 0``\ , \ ``nTiles = 16``\ )
 
 - | \ *function description*\ :
   | create points and segments, used in SolidExtrusion(...) for circle with given parameters
@@ -226,7 +226,7 @@ Function: CirclePointsAndSegments
 
 Function: GraphicsDataRectangle
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GraphicsDataRectangle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L459>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`GraphicsDataRectangle <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L459>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for 2D rectangle
@@ -239,7 +239,7 @@ Function: GraphicsDataRectangle
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Ex), \ `ANCFswitchingSlidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py>`_\  (Ex), \ `lavalRotor2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py>`_\  (Ex), \ `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py>`_\  (TM), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TM), \ `ANCFslidingAndALEjointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py>`_\  (TM)
+    \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py>`_\  (Ex), \ `ANCFswitchingSlidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py>`_\  (Ex), \ `lavalRotor2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lavalRotor2Dtest.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py>`_\  (Ex), \ `particlesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest.py>`_\  (Ex), \ `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py>`_\  (TM), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TM), \ `ANCFslidingAndALEjointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py>`_\  (TM)
 
 
 
@@ -250,7 +250,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GraphicsDataOrthoCubeLines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GraphicsDataOrthoCubeLines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L478>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`GraphicsDataOrthoCubeLines <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py\#L478>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for orthogonal block drawn with lines
@@ -263,5 +263,5 @@ Function: GraphicsDataOrthoCubeLines
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `rigid3Dexample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py>`_\  (Ex), \ `genericJointUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py>`_\  (TM), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM), \ `sphericalJointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py>`_\  (TM)
+    \ `rigid3Dexample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py>`_\  (Ex), \ `genericJointUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py>`_\  (TM), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py>`_\  (TM), \ `sphericalJointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphericalJointTest.py>`_\  (TM)
 

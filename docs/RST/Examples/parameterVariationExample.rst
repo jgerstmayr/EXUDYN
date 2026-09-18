@@ -5,7 +5,7 @@
 parameterVariationExample.py
 ****************************
 
-You can view and download this file on Github: `parameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/parameterVariationExample.py>`_
+You can view and download this file on Github: `parameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/parameterVariationExample.py>`_
 
 .. code-block:: python
    :linenos:

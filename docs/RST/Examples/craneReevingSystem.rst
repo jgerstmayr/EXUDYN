@@ -5,7 +5,7 @@
 craneReevingSystem.py
 *********************
 
-You can view and download this file on Github: `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/craneReevingSystem.py>`_
+You can view and download this file on Github: `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/craneReevingSystem.py>`_
 
 .. code-block:: python
    :linenos:

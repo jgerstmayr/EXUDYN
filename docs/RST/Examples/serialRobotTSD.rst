@@ -5,7 +5,7 @@
 serialRobotTSD.py
 *****************
 
-You can view and download this file on Github: `serialRobotTSD.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/serialRobotTSD.py>`_
+You can view and download this file on Github: `serialRobotTSD.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotTSD.py>`_
 
 .. code-block:: python
    :linenos:

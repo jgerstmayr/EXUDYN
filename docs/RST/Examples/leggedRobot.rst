@@ -5,7 +5,7 @@
 leggedRobot.py
 **************
 
-You can view and download this file on Github: `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/leggedRobot.py>`_
+You can view and download this file on Github: `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/leggedRobot.py>`_
 
 .. code-block:: python
    :linenos:

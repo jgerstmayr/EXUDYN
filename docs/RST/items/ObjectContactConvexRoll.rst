@@ -209,7 +209,7 @@ acts onto the body, resulting from the slip force acting not in the bodies cente
 
 Relevant Examples and TestModels with weblink:
 
-    \ `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py>`_\  (TestModels/)
+    \ `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ConvexContactTest.py>`_\  (TestModels/)
 
 
 

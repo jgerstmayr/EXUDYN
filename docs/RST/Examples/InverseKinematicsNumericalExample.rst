@@ -5,7 +5,7 @@
 InverseKinematicsNumericalExample.py
 ************************************
 
-You can view and download this file on Github: `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_
+You can view and download this file on Github: `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/InverseKinematicsNumericalExample.py>`_
 
 .. code-block:: python
    :linenos:

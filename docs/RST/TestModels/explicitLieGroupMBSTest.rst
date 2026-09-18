@@ -5,7 +5,7 @@
 explicitLieGroupMBSTest.py
 **************************
 
-You can view and download this file on Github: `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_
+You can view and download this file on Github: `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/explicitLieGroupMBSTest.py>`_
 
 .. code-block:: python
    :linenos:

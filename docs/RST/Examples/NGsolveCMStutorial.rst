@@ -5,7 +5,7 @@
 NGsolveCMStutorial.py
 *********************
 
-You can view and download this file on Github: `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_
+You can view and download this file on Github: `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolveCMStutorial.py>`_
 
 .. code-block:: python
    :linenos:

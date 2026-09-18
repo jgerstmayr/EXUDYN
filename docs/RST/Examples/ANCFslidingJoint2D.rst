@@ -5,7 +5,7 @@
 ANCFslidingJoint2D.py
 *********************
 
-You can view and download this file on Github: `ANCFslidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFslidingJoint2D.py>`_
+You can view and download this file on Github: `ANCFslidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFslidingJoint2D.py>`_
 
 .. code-block:: python
    :linenos:

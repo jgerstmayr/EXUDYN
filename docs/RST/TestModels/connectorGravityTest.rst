@@ -5,7 +5,7 @@
 connectorGravityTest.py
 ***********************
 
-You can view and download this file on Github: `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/connectorGravityTest.py>`_
+You can view and download this file on Github: `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/connectorGravityTest.py>`_
 
 .. code-block:: python
    :linenos:

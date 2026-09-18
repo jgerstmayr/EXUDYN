@@ -5,7 +5,7 @@
 rigidBodyTutorial3withMarkers.py
 ********************************
 
-You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py>`_
+You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidBodyTutorial3withMarkers.py>`_
 
 .. code-block:: python
    :linenos:

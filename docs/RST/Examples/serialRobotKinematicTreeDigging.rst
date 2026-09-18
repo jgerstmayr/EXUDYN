@@ -5,7 +5,7 @@
 serialRobotKinematicTreeDigging.py
 **********************************
 
-You can view and download this file on Github: `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_
+You can view and download this file on Github: `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotKinematicTreeDigging.py>`_
 
 .. code-block:: python
    :linenos:

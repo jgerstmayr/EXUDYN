@@ -5,7 +5,7 @@
 addRevoluteJoint.py
 *******************
 
-You can view and download this file on Github: `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/addRevoluteJoint.py>`_
+You can view and download this file on Github: `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/addRevoluteJoint.py>`_
 
 .. code-block:: python
    :linenos:

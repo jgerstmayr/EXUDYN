@@ -5,7 +5,7 @@
 distanceSensor.py
 *****************
 
-You can view and download this file on Github: `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/distanceSensor.py>`_
+You can view and download this file on Github: `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/distanceSensor.py>`_
 
 .. code-block:: python
    :linenos:

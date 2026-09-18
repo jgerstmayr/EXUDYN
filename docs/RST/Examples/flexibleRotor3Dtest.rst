@@ -5,7 +5,7 @@
 flexibleRotor3Dtest.py
 **********************
 
-You can view and download this file on Github: `flexibleRotor3Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/flexibleRotor3Dtest.py>`_
+You can view and download this file on Github: `flexibleRotor3Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/flexibleRotor3Dtest.py>`_
 
 .. code-block:: python
    :linenos:

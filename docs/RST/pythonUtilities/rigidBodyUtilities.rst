@@ -16,7 +16,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 
 Function: ComputeOrthonormalBasisVectors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeOrthonormalBasisVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L51>`__\ (\ ``vector0``\ )
+`ComputeOrthonormalBasisVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L51>`__\ (\ ``vector0``\ )
 
 - | \ *function description*\ :
   | compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
@@ -32,7 +32,7 @@ Function: ComputeOrthonormalBasisVectors
 
 Function: ComputeOrthonormalBasis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeOrthonormalBasis <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L79>`__\ (\ ``vector0``\ )
+`ComputeOrthonormalBasis <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L79>`__\ (\ ``vector0``\ )
 
 - | \ *function description*\ :
   | compute orthogonal basis, in which the normalized vector0 is the first column and the other columns are normals to vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
@@ -48,14 +48,14 @@ Function: ComputeOrthonormalBasis
 
 Function: GramSchmidt
 ^^^^^^^^^^^^^^^^^^^^^
-`GramSchmidt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L89>`__\ (\ ``vector0``\ , \ ``vector1``\ )
+`GramSchmidt <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L89>`__\ (\ ``vector0``\ , \ ``vector1``\ )
 
 - | \ *function description*\ :
   | compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py>`_\  (TM), \ `sliderCrank3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py>`_\  (TM)
+    \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py>`_\  (TM), \ `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py>`_\  (TM), \ `sliderCrank3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dtest.py>`_\  (TM)
 
 
 
@@ -66,14 +66,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Skew
 ^^^^^^^^^^^^^^
-`Skew <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L110>`__\ (\ ``vector``\ )
+`Skew <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L110>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM), \ `explicitLieGroupIntegratorPythonTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py>`_\  (TM), \ `explicitLieGroupIntegratorTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py>`_\  (TM), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `heavyTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py>`_\  (TM)
+    \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py>`_\  (TM), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM), \ `explicitLieGroupIntegratorPythonTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py>`_\  (TM), \ `explicitLieGroupIntegratorTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py>`_\  (TM), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `heavyTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py>`_\  (TM)
 
 
 
@@ -84,14 +84,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Skew2Vec
 ^^^^^^^^^^^^^^^^^^
-`Skew2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L119>`__\ (\ ``skew``\ )
+`Skew2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L119>`__\ (\ ``skew``\ )
 
 - | \ *function description*\ :
   | convert skew symmetric matrix m to vector
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
+    \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
 
 
 
@@ -102,7 +102,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSkewMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSkewMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L140>`__\ (\ ``v``\ )
+`ComputeSkewMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L140>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | compute skew matrix from vector or matrix; used for ObjectFFRF and CMS implementation
@@ -113,7 +113,7 @@ Function: ComputeSkewMatrix
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM)
+    \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py>`_\  (TM)
 
 
 
@@ -124,7 +124,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: EulerParameters2G
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L210>`__\ (\ ``eulerParameters``\ )
+`EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L210>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | convert Euler parameters (ep) to G-matrix (=\ :math:`\partial \tomega  / \partial {\mathbf{p}}_t`\ )
@@ -142,7 +142,7 @@ Function: EulerParameters2G
 
 Function: EulerParameters2GLocal
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`EulerParameters2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L224>`__\ (\ ``eulerParameters``\ )
+`EulerParameters2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L224>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | convert Euler parameters (ep) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega} / \partial {\mathbf{p}}_t`\ )
@@ -153,7 +153,7 @@ Function: EulerParameters2GLocal
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
+    \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py>`_\  (TM), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
 
 
 
@@ -164,7 +164,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: EulerParameters2RotationMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`EulerParameters2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L238>`__\ (\ ``eulerParameters``\ )
+`EulerParameters2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L238>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix from eulerParameters
@@ -175,7 +175,7 @@ Function: EulerParameters2RotationMatrix
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
+    \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
 
 
@@ -186,7 +186,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationMatrix2EulerParameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrix2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L253>`__\ (\ ``rotationMatrix``\ )
+`RotationMatrix2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L253>`__\ (\ ``rotationMatrix``\ )
 
 - | \ *function description*\ :
   | compute Euler parameters from given rotation matrix
@@ -197,7 +197,7 @@ Function: RotationMatrix2EulerParameters
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `rightAngleFrame.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rightAngleFrame.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
+    \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `rightAngleFrame.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
 
 
@@ -208,7 +208,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: AngularVelocity2EulerParameters_t
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AngularVelocity2EulerParameters_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L300>`__\ (\ ``angularVelocity``\ , \ ``eulerParameters``\ )
+`AngularVelocity2EulerParameters_t <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L300>`__\ (\ ``angularVelocity``\ , \ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | compute time derivative of Euler parameters from (global) angular velocity vector
@@ -228,7 +228,7 @@ Function: AngularVelocity2EulerParameters_t
 
 Function: RotationVector2RotationMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationVector2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L319>`__\ (\ ``rotationVector``\ )
+`RotationVector2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L319>`__\ (\ ``rotationVector``\ )
 
 - | \ *function description*\ :
   | rotaton matrix from rotation vector, see appendix B in
@@ -241,7 +241,7 @@ Function: RotationVector2RotationMatrix
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `universalJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/universalJoint.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `jointArgsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/jointArgsTest.py>`_\  (TM), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/raytracerNOGLFWtest.py>`_\  (TM)
+    \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `universalJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/universalJoint.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `jointArgsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/jointArgsTest.py>`_\  (TM), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py>`_\  (TM)
 
 
 
@@ -252,7 +252,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationMatrix2RotationVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrix2RotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L346>`__\ (\ ``rotationMatrix``\ )
+`RotationMatrix2RotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L346>`__\ (\ ``rotationMatrix``\ )
 
 - | \ *function description*\ :
   | compute rotation vector from rotation matrix
@@ -263,7 +263,7 @@ Function: RotationMatrix2RotationVector
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/raytracerNOGLFWtest.py>`_\  (TM)
+    \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py>`_\  (TM)
 
 
 
@@ -274,7 +274,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeRotationAxisFromRotationVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeRotationAxisFromRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L383>`__\ (\ ``rotationVector``\ )
+`ComputeRotationAxisFromRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L383>`__\ (\ ``rotationVector``\ )
 
 - | \ *function description*\ :
   | compute rotation axis from given rotation vector
@@ -285,7 +285,7 @@ Function: ComputeRotationAxisFromRotationVector
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `LieGroupIntegrationUnitTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py>`_\  (TM)
+    \ `LieGroupIntegrationUnitTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py>`_\  (TM)
 
 
 
@@ -296,7 +296,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationVector2G
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L406>`__\ (\ ``rotationVector``\ )
+`RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L406>`__\ (\ ``rotationVector``\ )
 
 - | \ *function description*\ :
   | convert rotation vector (parameters) (v) to G-matrix (=\ :math:`\partial \tomega  / \partial \dot {\mathbf{v}}`\ )
@@ -314,7 +314,7 @@ Function: RotationVector2G
 
 Function: RotationVector2GLocal
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L417>`__\ (\ ``eulerParameters``\ )
+`RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L417>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | convert rotation vector (parameters) (v) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega}   / \partial {\mathbf{v}}_t`\ )
@@ -332,7 +332,7 @@ Function: RotationVector2GLocal
 
 Function: RotXYZ2RotationMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotXYZ2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L435>`__\ (\ ``rot``\ )
+`RotXYZ2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L435>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix from consecutive xyz \ :ref:`Rot <Rot>`\  (Tait-Bryan angles); A=Ax\*Ay\*Az; rot=[rotX, rotY, rotZ]
@@ -343,7 +343,7 @@ Function: RotXYZ2RotationMatrix
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit2.py>`_\  (TM), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py>`_\  (TM), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/raytracerNOGLFWtest.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
+    \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactImplicit2.py>`_\  (TM), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py>`_\  (TM), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
 
 
@@ -354,7 +354,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationMatrix2RotXYZ
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrix2RotXYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L455>`__\ (\ ``rotationMatrix``\ )
+`RotationMatrix2RotXYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L455>`__\ (\ ``rotationMatrix``\ )
 
 - | \ *function description*\ :
   | convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax\*Ay\*Az;
@@ -369,7 +369,7 @@ Function: RotationMatrix2RotXYZ
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex)
+    \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py>`_\  (Ex)
 
 
 
@@ -380,7 +380,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotXYZ2G
 ^^^^^^^^^^^^^^^^^^
-`RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L496>`__\ (\ ``rot``\ )
+`RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L496>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
   | compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
@@ -398,7 +398,7 @@ Function: RotXYZ2G
 
 Function: RotXYZ2G_t
 ^^^^^^^^^^^^^^^^^^^^
-`RotXYZ2G_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L514>`__\ (\ ``rot``\ , \ ``rot_t``\ )
+`RotXYZ2G_t <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L514>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
   | compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
@@ -417,7 +417,7 @@ Function: RotXYZ2G_t
 
 Function: RotXYZ2GLocal
 ^^^^^^^^^^^^^^^^^^^^^^^
-`RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L534>`__\ (\ ``rot``\ )
+`RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L534>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
   | compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
@@ -435,7 +435,7 @@ Function: RotXYZ2GLocal
 
 Function: RotXYZ2GLocal_t
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotXYZ2GLocal_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L552>`__\ (\ ``rot``\ , \ ``rot_t``\ )
+`RotXYZ2GLocal_t <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L552>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
   | compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
@@ -454,7 +454,7 @@ Function: RotXYZ2GLocal_t
 
 Function: AngularVelocity2RotXYZ_t
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AngularVelocity2RotXYZ_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L576>`__\ (\ ``angularVelocity``\ , \ ``rotation``\ )
+`AngularVelocity2RotXYZ_t <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L576>`__\ (\ ``angularVelocity``\ , \ ``rotation``\ )
 
 - | \ *function description*\ :
   | compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
@@ -473,7 +473,7 @@ Function: AngularVelocity2RotXYZ_t
 
 Function: RotXYZ2EulerParameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotXYZ2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L599>`__\ (\ ``alpha``\ )
+`RotXYZ2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L599>`__\ (\ ``alpha``\ )
 
 - | \ *function description*\ :
   | compute four Euler parameters from given RotXYZ angles, see
@@ -492,7 +492,7 @@ Function: RotXYZ2EulerParameters
 
 Function: RotationMatrix2RotZYZ
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrix2RotZYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L633>`__\ (\ ``rotationMatrix``\ , \ ``flip``\ )
+`RotationMatrix2RotZYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L633>`__\ (\ ``rotationMatrix``\ , \ ``flip``\ )
 
 - | \ *function description*\ :
   | convert rotation matrix to zyz Euler angles;  A=Az\*Ay\*Az;
@@ -515,7 +515,7 @@ Function: RotationMatrix2RotZYZ
 
 Function: RotationMatrixX
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrixX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L681>`__\ (\ ``angleRad``\ )
+`RotationMatrixX <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L681>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix w.r.t. X-axis (first axis)
@@ -526,7 +526,7 @@ Function: RotationMatrixX
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTest.py>`_\  (TM), \ `generalContactCylinderTrigsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTrigsTest.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactCylinderTest.py>`_\  (TM), \ `generalContactCylinderTrigsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactCylinderTrigsTest.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py>`_\  (TM)
 
 
 
@@ -537,7 +537,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationMatrixY
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrixY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L694>`__\ (\ ``angleRad``\ )
+`RotationMatrixY <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L694>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix w.r.t. Y-axis (second axis)
@@ -548,7 +548,7 @@ Function: RotationMatrixY
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM)
 
 
 
@@ -559,7 +559,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationMatrixZ
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrixZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L707>`__\ (\ ``angleRad``\ )
+`RotationMatrixZ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L707>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix w.r.t. Z-axis (third axis)
@@ -570,7 +570,7 @@ Function: RotationMatrixZ
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Ex), \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py>`_\  (Ex), \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py>`_\  (TM)
 
 
 
@@ -581,7 +581,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationMatrix2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationMatrix2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L720>`__\ (\ ``angleRad``\ )
+`RotationMatrix2D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L720>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute 2D rotation matrix
@@ -599,14 +599,14 @@ Function: RotationMatrix2D
 
 Function: HomogeneousTransformation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`HomogeneousTransformation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L735>`__\ (\ ``A``\ , \ ``r``\ )
+`HomogeneousTransformation <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L735>`__\ (\ ``A``\ , \ ``r``\ )
 
 - | \ *function description*\ :
   | compute \ :ref:`HT <HT>`\  matrix from rotation matrix A and translation vector r
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py>`_\  (Ex)
 
 
 
@@ -617,14 +617,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HTtranslate
 ^^^^^^^^^^^^^^^^^^^^^
-`HTtranslate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L746>`__\ (\ ``r``\ )
+`HTtranslate <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L746>`__\ (\ ``r``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for translation with vector r
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createKinematicTreeTest.py>`_\  (TM), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py>`_\  (TM), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
 
 
 
@@ -635,14 +635,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HTtranslateX
 ^^^^^^^^^^^^^^^^^^^^^^
-`HTtranslateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L753>`__\ (\ ``x``\ )
+`HTtranslateX <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L753>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for translation along x axis with value x
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
+    \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
 
 
@@ -653,14 +653,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HTtranslateY
 ^^^^^^^^^^^^^^^^^^^^^^
-`HTtranslateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L760>`__\ (\ ``y``\ )
+`HTtranslateY <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L760>`__\ (\ ``y``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for translation along y axis with value y
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
+    \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
 
 
 
@@ -671,7 +671,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HTtranslateZ
 ^^^^^^^^^^^^^^^^^^^^^^
-`HTtranslateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L767>`__\ (\ ``z``\ )
+`HTtranslateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L767>`__\ (\ ``z``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for translation along z axis with value z
@@ -685,14 +685,14 @@ Function: HTtranslateZ
 
 Function: HT0
 ^^^^^^^^^^^^^
-`HT0 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L774>`__\ ()
+`HT0 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L774>`__\ ()
 
 - | \ *function description*\ :
   | identity \ :ref:`HT <HT>`\ :
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
 
 
 
@@ -703,7 +703,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HTrotateX
 ^^^^^^^^^^^^^^^^^^^
-`HTrotateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L779>`__\ (\ ``angle``\ )
+`HTrotateX <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L779>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for rotation around axis X (first axis)
@@ -717,14 +717,14 @@ Function: HTrotateX
 
 Function: HTrotateY
 ^^^^^^^^^^^^^^^^^^^
-`HTrotateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L786>`__\ (\ ``angle``\ )
+`HTrotateY <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L786>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for rotation around axis X (first axis)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
+    \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
 
 
@@ -735,14 +735,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HTrotateZ
 ^^^^^^^^^^^^^^^^^^^
-`HTrotateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L793>`__\ (\ ``angle``\ )
+`HTrotateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L793>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | \ :ref:`HT <HT>`\  for rotation around axis X (first axis)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
+    \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
 
 
@@ -753,14 +753,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HT2translation
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`HT2translation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L800>`__\ (\ ``T``\ )
+`HT2translation <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L800>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | return translation part of \ :ref:`HT <HT>`\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py>`_\  (TM)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py>`_\  (TM)
 
 
 
@@ -771,14 +771,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HT2rotationMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`HT2rotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L805>`__\ (\ ``T``\ )
+`HT2rotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L805>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | return rotation matrix of \ :ref:`HT <HT>`\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
 
 
@@ -789,14 +789,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: InverseHT
 ^^^^^^^^^^^^^^^^^^^
-`InverseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L811>`__\ (\ ``T``\ )
+`InverseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L811>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | return inverse \ :ref:`HT <HT>`\  such that inv(T)\*T = np.eye(4)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex)
+    \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py>`_\  (Ex)
 
 
 
@@ -807,7 +807,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RotationX2T66
 ^^^^^^^^^^^^^^^^^^^^^^^
-`RotationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L833>`__\ (\ ``angle``\ )
+`RotationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L833>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics
@@ -821,7 +821,7 @@ Function: RotationX2T66
 
 Function: RotationY2T66
 ^^^^^^^^^^^^^^^^^^^^^^^
-`RotationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L846>`__\ (\ ``angle``\ )
+`RotationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L846>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation
@@ -835,7 +835,7 @@ Function: RotationY2T66
 
 Function: RotationZ2T66
 ^^^^^^^^^^^^^^^^^^^^^^^
-`RotationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L859>`__\ (\ ``angle``\ )
+`RotationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L859>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation
@@ -849,7 +849,7 @@ Function: RotationZ2T66
 
 Function: Translation2T66
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`Translation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L872>`__\ (\ ``translation3D``\ )
+`Translation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L872>`__\ (\ ``translation3D``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation according to 3D vector translation3D; output: first 3 components for rotation, second 3 components for translation!
@@ -863,7 +863,7 @@ Function: Translation2T66
 
 Function: TranslationX2T66
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`TranslationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L884>`__\ (\ ``translation``\ )
+`TranslationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L884>`__\ (\ ``translation``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation along X axis; output: first 3 components for rotation, second 3 components for translation!
@@ -877,7 +877,7 @@ Function: TranslationX2T66
 
 Function: TranslationY2T66
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`TranslationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L889>`__\ (\ ``translation``\ )
+`TranslationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L889>`__\ (\ ``translation``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation along Y axis; output: first 3 components for rotation, second 3 components for translation!
@@ -891,7 +891,7 @@ Function: TranslationY2T66
 
 Function: TranslationZ2T66
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`TranslationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L894>`__\ (\ ``translation``\ )
+`TranslationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L894>`__\ (\ ``translation``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation along Z axis; output: first 3 components for rotation, second 3 components for translation!
@@ -905,7 +905,7 @@ Function: TranslationZ2T66
 
 Function: T66toRotationTranslation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`T66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L899>`__\ (\ ``T66``\ )
+`T66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L899>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | convert 6x6 coordinate transformation (Plücker transform) into rotation and translation
@@ -916,7 +916,7 @@ Function: T66toRotationTranslation
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
 
@@ -927,7 +927,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: InverseT66toRotationTranslation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InverseT66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L912>`__\ (\ ``T66``\ )
+`InverseT66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L912>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | convert inverse 6x6 coordinate transformation (Plücker transform) into rotation and translation
@@ -945,7 +945,7 @@ Function: InverseT66toRotationTranslation
 
 Function: RotationTranslation2T66
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationTranslation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L925>`__\ (\ ``A``\ , \ ``v``\ )
+`RotationTranslation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L925>`__\ (\ ``A``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | convert rotation and translation into 6x6 coordinate transformation (Plücker transform)
@@ -964,7 +964,7 @@ Function: RotationTranslation2T66
 
 Function: RotationTranslation2T66Inverse
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RotationTranslation2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L939>`__\ (\ ``A``\ , \ ``v``\ )
+`RotationTranslation2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L939>`__\ (\ ``A``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)
@@ -976,7 +976,7 @@ Function: RotationTranslation2T66Inverse
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
 
@@ -987,7 +987,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: T66Inverse
 ^^^^^^^^^^^^^^^^^^^^
-`T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L953>`__\ (\ ``T66``\ )
+`T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L953>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | compute inverse of 6x6 coordinate transformation (Plücker transform)
@@ -1007,7 +1007,7 @@ Function: T66Inverse
 
 Function: T66toHT
 ^^^^^^^^^^^^^^^^^
-`T66toHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L979>`__\ (\ ``T66``\ )
+`T66toHT <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L979>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | convert 6x6 coordinate transformation (Plücker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
@@ -1018,7 +1018,7 @@ Function: T66toHT
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
 
@@ -1029,7 +1029,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: HT2T66Inverse
 ^^^^^^^^^^^^^^^^^^^^^^^
-`HT2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L995>`__\ (\ ``T``\ )
+`HT2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L995>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
@@ -1047,7 +1047,7 @@ Function: HT2T66Inverse
 
 Function: InertiaTensor2Inertia6D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InertiaTensor2Inertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1013>`__\ (\ ``inertiaTensor``\ )
+`InertiaTensor2Inertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1013>`__\ (\ ``inertiaTensor``\ )
 
 - | \ *function description*\ :
   | convert a 3x3 matrix (list or numpy array) into a list with 6 inertia components, sorted as J00, J11, J22, J12, J02, J01
@@ -1061,14 +1061,14 @@ Function: InertiaTensor2Inertia6D
 
 Function: Inertia6D2InertiaTensor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Inertia6D2InertiaTensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1019>`__\ (\ ``inertia6D``\ )
+`Inertia6D2InertiaTensor <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1019>`__\ (\ ``inertia6D``\ )
 
 - | \ *function description*\ :
   | convert a list or numpy array with 6 inertia components (sorted as [J00, J11, J22, J12, J02, J01]) (list or numpy array) into a 3x3 matrix (np.array)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
+    \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
 
 
 
@@ -1079,7 +1079,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: StrNodeType2NodeType
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StrNodeType2NodeType <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1426>`__\ (\ ``sNodeType``\ )
+`StrNodeType2NodeType <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1426>`__\ (\ ``sNodeType``\ )
 
 - | \ *function description*\ :
   | convert string into exudyn.NodeType; call e.g. with 'NodeType.RotationEulerParameters' or 'RotationEulerParameters'
@@ -1095,7 +1095,7 @@ Function: StrNodeType2NodeType
 
 Function: GetRigidBodyNode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetRigidBodyNode <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1444>`__\ (\ ``nodeType``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ )
+`GetRigidBodyNode <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1444>`__\ (\ ``nodeType``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ )
 
 - | \ *function description*\ :
   | get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
@@ -1118,7 +1118,7 @@ Function: GetRigidBodyNode
 
 Function: AddRigidBody
 ^^^^^^^^^^^^^^^^^^^^^^
-`AddRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1537>`__\ (\ ``mainSys``\ , \ ``inertia``\ , \ ``nodeType = exu.NodeType.RotationEulerParameters``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``graphicsDataList = []``\ )
+`AddRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1537>`__\ (\ ``mainSys``\ , \ ``inertia``\ , \ ``nodeType = exu.NodeType.RotationEulerParameters``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``graphicsDataList = []``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
@@ -1146,7 +1146,7 @@ Function: AddRigidBody
 
 Function: AddRevoluteJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AddRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1619>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
+`AddRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1619>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
 
 - | \ *function description*\ :
   | DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -1164,7 +1164,7 @@ Function: AddRevoluteJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex)
+    \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openVRengine.py>`_\  (Ex)
 
 
 
@@ -1175,7 +1175,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: AddPrismaticJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AddPrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1708>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
+`AddPrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1708>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
 
 - | \ *function description*\ :
   | DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -1193,7 +1193,7 @@ Function: AddPrismaticJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex)
+    \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openVRengine.py>`_\  (Ex)
 
 
 .. _sec-module-rigidbodyutilities-class-treelink:
@@ -1221,7 +1221,7 @@ CLASS TreeLink (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1040>`__\ (\ ``self``\ , \ ``linkInertia``\ , \ ``jointType = exu.JointType.RevoluteZ``\ , \ ``jointHT = HT0()``\ , \ ``parent = None``\ , \ ``PDcontrol = None``\ , \ ``graphicsDataList = None``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1040>`__\ (\ ``self``\ , \ ``linkInertia``\ , \ ``jointType = exu.JointType.RevoluteZ``\ , \ ``jointHT = HT0()``\ , \ ``parent = None``\ , \ ``PDcontrol = None``\ , \ ``graphicsDataList = None``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia
@@ -1234,7 +1234,7 @@ Class function: __init__
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createKinematicTreeTest.py>`_\  (TM)
+    \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py>`_\  (TM)
 
 
 .. _sec-module-rigidbodyutilities-class-rigidbodyinertia:
@@ -1263,7 +1263,7 @@ CLASS RigidBodyInertia (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1077>`__\ (\ ``self``\ , \ ``mass = 0``\ , \ ``inertiaTensor = np.zeros([3,3])``\ , \ ``com = np.zeros(3)``\ , \ ``inertiaTensorAtCOM = False``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1077>`__\ (\ ``self``\ , \ ``mass = 0``\ , \ ``inertiaTensor = np.zeros([3,3])``\ , \ ``com = np.zeros(3)``\ , \ ``inertiaTensorAtCOM = False``\ )
 
 - | \ *classFunction*\ :
   | initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
@@ -1279,7 +1279,7 @@ Class function: __init__
 
 Class function: __add__
 ^^^^^^^^^^^^^^^^^^^^^^^
-`__add__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1120>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
+`__add__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1120>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
 
 - | \ *classFunction*\ :
   | add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
@@ -1297,7 +1297,7 @@ Class function: __add__
 
 Class function: __iadd__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__iadd__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1132>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
+`__iadd__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1132>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
 
 - | \ *classFunction*\ :
   | += operator allows adding another inertia information with SAME local coordinate system and reference point!
@@ -1316,7 +1316,7 @@ Class function: __iadd__
 
 Class function: SetWithCOMinertia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SetWithCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1143>`__\ (\ ``self``\ , \ ``mass``\ , \ ``inertiaTensorCOM``\ , \ ``com``\ )
+`SetWithCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1143>`__\ (\ ``self``\ , \ ``mass``\ , \ ``inertiaTensorCOM``\ , \ ``com``\ )
 
 - | \ *classFunction*\ :
   | set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com
@@ -1331,7 +1331,7 @@ Class function: SetWithCOMinertia
 
 Class function: Inertia
 ^^^^^^^^^^^^^^^^^^^^^^^
-`Inertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1160>`__\ (\ ``self``\ )
+`Inertia <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1160>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
@@ -1342,7 +1342,7 @@ Class function: Inertia
 
 Class function: InertiaCOM
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InertiaCOM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1165>`__\ (\ ``self``\ )
+`InertiaCOM <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1165>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns 3x3 inertia tensor with respect to COM
@@ -1353,7 +1353,7 @@ Class function: InertiaCOM
 
 Class function: COM
 ^^^^^^^^^^^^^^^^^^^
-`COM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1170>`__\ (\ ``self``\ )
+`COM <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1170>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns center of mass (COM) w.r.t. chosen reference point
@@ -1364,7 +1364,7 @@ Class function: COM
 
 Class function: Mass
 ^^^^^^^^^^^^^^^^^^^^
-`Mass <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1175>`__\ (\ ``self``\ )
+`Mass <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1175>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns mass
@@ -1375,7 +1375,7 @@ Class function: Mass
 
 Class function: Translated
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Translated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1180>`__\ (\ ``self``\ , \ ``vec``\ )
+`Translated <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1180>`__\ (\ ``self``\ , \ ``vec``\ )
 
 - | \ *classFunction*\ :
   | returns a RigidBodyInertia with center of mass com shifted by vec; \ :math:`\ra`\  transforms the returned inertiaTensor to the new center of rotation
@@ -1386,7 +1386,7 @@ Class function: Translated
 
 Class function: Rotated
 ^^^^^^^^^^^^^^^^^^^^^^^
-`Rotated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1200>`__\ (\ ``self``\ , \ ``rot``\ )
+`Rotated <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1200>`__\ (\ ``self``\ , \ ``rot``\ )
 
 - | \ *classFunction*\ :
   | returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot\*J\*rot.T
@@ -1399,7 +1399,7 @@ Class function: Rotated
 
 Class function: Transformed
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Transformed <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1217>`__\ (\ ``self``\ , \ ``HT``\ )
+`Transformed <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1217>`__\ (\ ``self``\ , \ ``HT``\ )
 
 - | \ *classFunction*\ :
   | return rigid body inertia transformed by homogeneous transformation HT
@@ -1410,7 +1410,7 @@ Class function: Transformed
 
 Class function: GetInertia6D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetInertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1239>`__\ (\ ``self``\ )
+`GetInertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1239>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) w.r.t. to reference point (not necessarily the COM), as needed in ObjectRigidBody
@@ -1421,7 +1421,7 @@ Class function: GetInertia6D
 
 Class function: GetTypeName
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetTypeName <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1246>`__\ (\ ``self``\ )
+`GetTypeName <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1246>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | which returns str of type ('InertiaCylinder', 'InertiaCuboid', ...)
@@ -1432,7 +1432,7 @@ Class function: GetTypeName
 
 Class function: GetSpecialData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetSpecialData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1251>`__\ (\ ``self``\ )
+`GetSpecialData <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1251>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns dictionary with further data of inertia, like cylinder radius, etc.
@@ -1443,14 +1443,14 @@ Class function: GetSpecialData
 
 Class function: GetGraphics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetGraphics <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1257>`__\ (\ ``self``\ , \ ``color``\ , \ ``nTiles = None``\ , \ ``roundness = None``\ )
+`GetGraphics <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1257>`__\ (\ ``self``\ , \ ``color``\ , \ ``nTiles = None``\ , \ ``roundness = None``\ )
 
 - | \ *classFunction*\ :
   | get graphicsData object from inertia; this simplifies the rigid body creation process and allows to check for consistency; currently does not include HT-rotations!
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Ex), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM), \ `rigidBody2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBody2Dtest.py>`_\  (TM), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM)
+    \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py>`_\  (Ex), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM), \ `rigidBody2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBody2Dtest.py>`_\  (TM), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py>`_\  (TM)
 
 
 .. _sec-module-rigidbodyutilities-class-inertiacuboid(rigidbodyinertia):
@@ -1473,14 +1473,14 @@ CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1330>`__\ (\ ``self``\ , \ ``density``\ , \ ``sideLengths``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1330>`__\ (\ ``self``\ , \ ``density``\ , \ ``sideLengths``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py>`_\  (TM)
 
 
 .. _sec-module-rigidbodyutilities-class-inertiarodx(rigidbodyinertia):
@@ -1496,14 +1496,14 @@ CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1345>`__\ (\ ``self``\ , \ ``mass``\ , \ ``length``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1345>`__\ (\ ``self``\ , \ ``mass``\ , \ ``length``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass and length of rod
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `fourBarMechanismIftomm.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismIftomm.py>`_\  (TM)
+    \ `fourBarMechanismIftomm.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/fourBarMechanismIftomm.py>`_\  (TM)
 
 
 .. _sec-module-rigidbodyutilities-class-inertiamasspoint(rigidbodyinertia):
@@ -1519,14 +1519,14 @@ CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1356>`__\ (\ ``self``\ , \ ``mass``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1356>`__\ (\ ``self``\ , \ ``mass``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass of point
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py>`_\  (Ex), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
+    \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py>`_\  (Ex), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
 
 .. _sec-module-rigidbodyutilities-class-inertiasphere(rigidbodyinertia):
@@ -1542,14 +1542,14 @@ CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1367>`__\ (\ ``self``\ , \ ``mass = None``\ , \ ``radius = None``\ , \ ``density = None``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1367>`__\ (\ ``self``\ , \ ``mass = None``\ , \ ``radius = None``\ , \ ``density = None``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass and radius of sphere
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `contactSphereSphereTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTest.py>`_\  (TM), \ `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM)
+    \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py>`_\  (Ex), \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py>`_\  (Ex), \ `contactSphereSphereTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereSphereTest.py>`_\  (TM), \ `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereSphereTestEAPM.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM)
 
 
 .. _sec-module-rigidbodyutilities-class-inertiahollowsphere(rigidbodyinertia):
@@ -1565,7 +1565,7 @@ CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1387>`__\ (\ ``self``\ , \ ``mass``\ , \ ``radius``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1387>`__\ (\ ``self``\ , \ ``mass``\ , \ ``radius``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass and (inner==outer) radius of hollow sphere
@@ -1584,12 +1584,12 @@ CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1399>`__\ (\ ``self``\ , \ ``density``\ , \ ``length``\ , \ ``outerRadius``\ , \ ``axis``\ , \ ``innerRadius = 0``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py\#L1399>`__\ (\ ``self``\ , \ ``density``\ , \ ``length``\ , \ ``outerRadius``\ , \ ``axis``\ , \ ``innerRadius = 0``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with density, length, outer radius, axis (0=x-axis, 1=y-axis, 2=z-axis) and optional inner radius (for hollow cylinder)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Ex), \ `gyroStability.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM)
+    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py>`_\  (Ex), \ `gyroStability.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/gyroStability.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py>`_\  (TM)
 

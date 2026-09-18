@@ -5,7 +5,7 @@
 rotatingTableTest.py
 ********************
 
-You can view and download this file on Github: `rotatingTableTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rotatingTableTest.py>`_
+You can view and download this file on Github: `rotatingTableTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rotatingTableTest.py>`_
 
 .. code-block:: python
    :linenos:

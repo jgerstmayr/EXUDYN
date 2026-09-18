@@ -5,7 +5,7 @@
 rigidBodyCOMtest.py
 *******************
 
-You can view and download this file on Github: `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_
+You can view and download this file on Github: `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rigidBodyCOMtest.py>`_
 
 .. code-block:: python
    :linenos:

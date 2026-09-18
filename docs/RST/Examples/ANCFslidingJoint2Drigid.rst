@@ -5,7 +5,7 @@
 ANCFslidingJoint2Drigid.py
 **************************
 
-You can view and download this file on Github: `ANCFslidingJoint2Drigid.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py>`_
+You can view and download this file on Github: `ANCFslidingJoint2Drigid.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFslidingJoint2Drigid.py>`_
 
 .. code-block:: python
    :linenos:

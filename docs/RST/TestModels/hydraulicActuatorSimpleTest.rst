@@ -5,7 +5,7 @@
 hydraulicActuatorSimpleTest.py
 ******************************
 
-You can view and download this file on Github: `hydraulicActuatorSimpleTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/hydraulicActuatorSimpleTest.py>`_
+You can view and download this file on Github: `hydraulicActuatorSimpleTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/hydraulicActuatorSimpleTest.py>`_
 
 .. code-block:: python
    :linenos:

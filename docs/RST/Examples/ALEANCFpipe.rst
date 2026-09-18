@@ -5,7 +5,7 @@
 ALEANCFpipe.py
 **************
 
-You can view and download this file on Github: `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ALEANCFpipe.py>`_
+You can view and download this file on Github: `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ALEANCFpipe.py>`_
 
 .. code-block:: python
    :linenos:

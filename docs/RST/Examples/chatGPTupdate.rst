@@ -5,7 +5,7 @@
 chatGPTupdate.py
 ****************
 
-You can view and download this file on Github: `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/chatGPTupdate.py>`_
+You can view and download this file on Github: `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/chatGPTupdate.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 particleClusters.py
 *******************
 
-You can view and download this file on Github: `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/particleClusters.py>`_
+You can view and download this file on Github: `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/particleClusters.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 tutorialNeuralNetwork.py
 ************************
 
-You can view and download this file on Github: `tutorialNeuralNetwork.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/tutorialNeuralNetwork.py>`_
+You can view and download this file on Github: `tutorialNeuralNetwork.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/tutorialNeuralNetwork.py>`_
 
 .. code-block:: python
    :linenos:

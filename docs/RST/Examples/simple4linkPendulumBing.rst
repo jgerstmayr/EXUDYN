@@ -5,7 +5,7 @@
 simple4linkPendulumBing.py
 **************************
 
-You can view and download this file on Github: `simple4linkPendulumBing.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/simple4linkPendulumBing.py>`_
+You can view and download this file on Github: `simple4linkPendulumBing.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/simple4linkPendulumBing.py>`_
 
 .. code-block:: python
    :linenos:

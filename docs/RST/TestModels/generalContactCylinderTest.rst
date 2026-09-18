@@ -5,7 +5,7 @@
 generalContactCylinderTest.py
 *****************************
 
-You can view and download this file on Github: `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/generalContactCylinderTest.py>`_
+You can view and download this file on Github: `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/generalContactCylinderTest.py>`_
 
 .. code-block:: python
    :linenos:

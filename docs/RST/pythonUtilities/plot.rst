@@ -15,7 +15,7 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 Function: ParseOutputFileHeader
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ParseOutputFileHeader <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L64>`__\ (\ ``lines``\ )
+`ParseOutputFileHeader <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L64>`__\ (\ ``lines``\ )
 
 - | \ *function description*\ :
   | parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
@@ -31,7 +31,7 @@ Function: ParseOutputFileHeader
 
 Function: PlotSensorDefaults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensorDefaults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L155>`__\ ()
+`PlotSensorDefaults <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L155>`__\ ()
 
 - | \ *function description*\ :
   | returns structure with default values for PlotSensor which can be modified once to be set for all later calls of PlotSensor
@@ -50,7 +50,7 @@ Function: PlotSensorDefaults
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TM)
+    \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py>`_\  (Ex), \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TM)
 
 
 
@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensor
 ^^^^^^^^^^^^^^^^^^^^
-`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L172>`__\ (\ ``mbs``\ , \ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``legendArgs = None``\ , \ ``**kwargs``\ )
+`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L172>`__\ (\ ``mbs``\ , \ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``legendArgs = None``\ , \ ``**kwargs``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.PlotSensor(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-plotsensor`\ 
@@ -72,7 +72,7 @@ Function: PlotSensor
 
 Function: PlotFFT
 ^^^^^^^^^^^^^^^^^
-`PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L703>`__\ (\ ``frequency``\ , \ ``data``\ , \ ``xLabel = 'frequency'``\ , \ ``yLabel = 'magnitude'``\ , \ ``label = ''``\ , \ ``freqStart = 0``\ , \ ``freqEnd = -1``\ , \ ``logScaleX = True``\ , \ ``logScaleY = True``\ , \ ``majorGrid = True``\ , \ ``minorGrid = True``\ )
+`PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L703>`__\ (\ ``frequency``\ , \ ``data``\ , \ ``xLabel = 'frequency'``\ , \ ``yLabel = 'magnitude'``\ , \ ``label = ''``\ , \ ``freqStart = 0``\ , \ ``freqEnd = -1``\ , \ ``logScaleX = True``\ , \ ``logScaleY = True``\ , \ ``majorGrid = True``\ , \ ``minorGrid = True``\ )
 
 - | \ *function description*\ :
   | plot fft spectrum of signal
@@ -93,7 +93,7 @@ Function: PlotFFT
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex)
+    \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex)
 
 
 
@@ -104,7 +104,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FileStripSpaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L764>`__\ (\ ``filename``\ , \ ``outputFilename``\ , \ ``fileCommentChar = ''``\ , \ ``removeDoubleChars = ''``\ )
+`FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L764>`__\ (\ ``filename``\ , \ ``outputFilename``\ , \ ``fileCommentChar = ''``\ , \ ``removeDoubleChars = ''``\ )
 
 - | \ *function description*\ :
   | strip spaces at beginning / end of lines; this may be sometimes necessary when reading solutions from files that are space-separated
@@ -125,7 +125,7 @@ Function: FileStripSpaces
 
 Function: DataArrayFromSensorList
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`DataArrayFromSensorList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L795>`__\ (\ ``mbs``\ , \ ``sensorNumbers``\ , \ ``positionList = []``\ , \ ``time = ''``\ )
+`DataArrayFromSensorList <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L795>`__\ (\ ``mbs``\ , \ ``sensorNumbers``\ , \ ``positionList = []``\ , \ ``time = ''``\ )
 
 - | \ *function description*\ :
   | helper function to create data array from outputs defined by sensorNumbers list [+optional positionList which must have, e.g., local arc-length of beam according to sensor numbers]; if time=='', current sensor values will be used; if time!=[], evaluation will be based on loading values from file or sensor internal data and evaluate at that time
@@ -139,7 +139,7 @@ Function: DataArrayFromSensorList
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex)
+    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py>`_\  (Ex)
 
 
 
@@ -150,7 +150,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadImage
 ^^^^^^^^^^^^^^^^^^^
-`LoadImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L830>`__\ (\ ``fileName``\ , \ ``trianglesAsLines = True``\ , \ ``verbose = False``\ )
+`LoadImage <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L830>`__\ (\ ``fileName``\ , \ ``trianglesAsLines = True``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
   | import image text file as exported from renderer.RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
@@ -161,7 +161,7 @@ Function: LoadImage
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
+    \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py>`_\  (Ex)
 
 
 
@@ -172,7 +172,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotImage
 ^^^^^^^^^^^^^^^^^^^
-`PlotImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L891>`__\ (\ ``imageData``\ , \ ``HT = np.eye(4)``\ , \ ``axesEqual = True``\ , \ ``plot3D = False``\ , \ ``lineWidths = 1``\ , \ ``lineStyles = '-'``\ , \ ``triangleEdgeColors = 'black'``\ , \ ``triangleEdgeWidths = 0.5``\ , \ ``removeAxes = True``\ , \ ``orthogonalProjection = True``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fileName = ''``\ , \ ``fontSize = 16``\ , \ ``closeAll = False``\ , \ ``azim = 0.``\ , \ ``elev = 0.``\ )
+`PlotImage <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L891>`__\ (\ ``imageData``\ , \ ``HT = np.eye(4)``\ , \ ``axesEqual = True``\ , \ ``plot3D = False``\ , \ ``lineWidths = 1``\ , \ ``lineStyles = '-'``\ , \ ``triangleEdgeColors = 'black'``\ , \ ``triangleEdgeWidths = 0.5``\ , \ ``removeAxes = True``\ , \ ``orthogonalProjection = True``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fileName = ''``\ , \ ``fontSize = 16``\ , \ ``closeAll = False``\ , \ ``azim = 0.``\ , \ ``elev = 0.``\ )
 
 - | \ *function description*\ :
   | plot 2D or 3D vector image data as provided by LoadImage(...) using matplotlib
@@ -196,5 +196,5 @@ Function: PlotImage
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
+    \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py>`_\  (Ex)
 

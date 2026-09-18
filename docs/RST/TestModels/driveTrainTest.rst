@@ -5,7 +5,7 @@
 driveTrainTest.py
 *****************
 
-You can view and download this file on Github: `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/driveTrainTest.py>`_
+You can view and download this file on Github: `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/driveTrainTest.py>`_
 
 .. code-block:: python
    :linenos:

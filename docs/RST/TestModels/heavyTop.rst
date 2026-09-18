@@ -5,7 +5,7 @@
 heavyTop.py
 ***********
 
-You can view and download this file on Github: `heavyTop.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/heavyTop.py>`_
+You can view and download this file on Github: `heavyTop.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/heavyTop.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 3SpringsDistance.py
 *******************
 
-You can view and download this file on Github: `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/3SpringsDistance.py>`_
+You can view and download this file on Github: `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/3SpringsDistance.py>`_
 
 .. code-block:: python
    :linenos:

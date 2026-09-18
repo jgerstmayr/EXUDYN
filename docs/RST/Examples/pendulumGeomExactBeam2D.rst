@@ -5,7 +5,7 @@
 pendulumGeomExactBeam2D.py
 **************************
 
-You can view and download this file on Github: `pendulumGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/pendulumGeomExactBeam2D.py>`_
+You can view and download this file on Github: `pendulumGeomExactBeam2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/pendulumGeomExactBeam2D.py>`_
 
 .. code-block:: python
    :linenos:

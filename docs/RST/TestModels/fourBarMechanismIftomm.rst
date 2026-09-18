@@ -5,7 +5,7 @@
 fourBarMechanismIftomm.py
 *************************
 
-You can view and download this file on Github: `fourBarMechanismIftomm.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/fourBarMechanismIftomm.py>`_
+You can view and download this file on Github: `fourBarMechanismIftomm.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/fourBarMechanismIftomm.py>`_
 
 .. code-block:: python
    :linenos:

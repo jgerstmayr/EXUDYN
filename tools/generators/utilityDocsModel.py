@@ -525,7 +525,7 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     if functionDict['lineNumber'] != 0:
         lineNumberStr = '\\#L'+str(functionDict['lineNumber']+1)
     #github link:
-    url = 'https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/'+pythonFileName +lineNumberStr
+    url = paths.githubSourceURL+'exudyn/'+pythonFileName +lineNumberStr
 
 
     functionNameClean = functionName.replace('\\_','_')

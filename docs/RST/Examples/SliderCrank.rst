@@ -5,7 +5,7 @@
 SliderCrank.py
 **************
 
-You can view and download this file on Github: `SliderCrank.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/SliderCrank.py>`_
+You can view and download this file on Github: `SliderCrank.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/SliderCrank.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 cartesianSpringDamperUserFunction.py
 ************************************
 
-You can view and download this file on Github: `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_
+You can view and download this file on Github: `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/cartesianSpringDamperUserFunction.py>`_
 
 .. code-block:: python
    :linenos:

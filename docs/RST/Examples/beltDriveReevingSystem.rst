@@ -5,7 +5,7 @@
 beltDriveReevingSystem.py
 *************************
 
-You can view and download this file on Github: `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_
+You can view and download this file on Github: `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/beltDriveReevingSystem.py>`_
 
 .. code-block:: python
    :linenos:

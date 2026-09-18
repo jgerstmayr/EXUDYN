@@ -5,7 +5,7 @@
 NGsolveCreateFFRFreducedOrder.py
 ********************************
 
-You can view and download this file on Github: `NGsolveCreateFFRFreducedOrder.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/NGsolveCreateFFRFreducedOrder.py>`_
+You can view and download this file on Github: `NGsolveCreateFFRFreducedOrder.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/NGsolveCreateFFRFreducedOrder.py>`_
 
 .. code-block:: python
    :linenos:

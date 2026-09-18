@@ -5,7 +5,7 @@
 performanceMultiThreadingNG.py
 ******************************
 
-You can view and download this file on Github: `performanceMultiThreadingNG.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/performanceMultiThreadingNG.py>`_
+You can view and download this file on Github: `performanceMultiThreadingNG.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/performanceMultiThreadingNG.py>`_
 
 .. code-block:: python
    :linenos:

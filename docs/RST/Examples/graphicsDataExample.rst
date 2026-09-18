@@ -5,7 +5,7 @@
 graphicsDataExample.py
 **********************
 
-You can view and download this file on Github: `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/graphicsDataExample.py>`_
+You can view and download this file on Github: `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/graphicsDataExample.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 coordinateVectorConstraint.py
 *****************************
 
-You can view and download this file on Github: `coordinateVectorConstraint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/coordinateVectorConstraint.py>`_
+You can view and download this file on Github: `coordinateVectorConstraint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/coordinateVectorConstraint.py>`_
 
 .. code-block:: python
    :linenos:

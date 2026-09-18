@@ -5,7 +5,7 @@
 reevingSystemOpen.py
 ********************
 
-You can view and download this file on Github: `reevingSystemOpen.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/reevingSystemOpen.py>`_
+You can view and download this file on Github: `reevingSystemOpen.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/reevingSystemOpen.py>`_
 
 .. code-block:: python
    :linenos:

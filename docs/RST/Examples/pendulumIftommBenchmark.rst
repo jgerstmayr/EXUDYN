@@ -5,7 +5,7 @@
 pendulumIftommBenchmark.py
 **************************
 
-You can view and download this file on Github: `pendulumIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/pendulumIftommBenchmark.py>`_
+You can view and download this file on Github: `pendulumIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/pendulumIftommBenchmark.py>`_
 
 .. code-block:: python
    :linenos:

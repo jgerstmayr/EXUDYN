@@ -5,7 +5,7 @@
 springsDeactivateConnectors.py
 ******************************
 
-You can view and download this file on Github: `springsDeactivateConnectors.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/springsDeactivateConnectors.py>`_
+You can view and download this file on Github: `springsDeactivateConnectors.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/springsDeactivateConnectors.py>`_
 
 .. code-block:: python
    :linenos:

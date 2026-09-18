@@ -216,7 +216,7 @@ Finally, the data coordinate is updated in order to provide the starting value f
 
 Relevant Examples and TestModels with weblink:
 
-    \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TestModels/)
+    \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TestModels/)
 
 
 

@@ -5,7 +5,7 @@
 rigidBodyAsUserFunctionTest.py
 ******************************
 
-You can view and download this file on Github: `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_
+You can view and download this file on Github: `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rigidBodyAsUserFunctionTest.py>`_
 
 .. code-block:: python
    :linenos:

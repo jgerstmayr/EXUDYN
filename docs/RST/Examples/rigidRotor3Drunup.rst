@@ -5,7 +5,7 @@
 rigidRotor3Drunup.py
 ********************
 
-You can view and download this file on Github: `rigidRotor3Drunup.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidRotor3Drunup.py>`_
+You can view and download this file on Github: `rigidRotor3Drunup.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidRotor3Drunup.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 ANCFrotatingCable2D.py
 **********************
 
-You can view and download this file on Github: `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_
+You can view and download this file on Github: `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFrotatingCable2D.py>`_
 
 .. code-block:: python
    :linenos:

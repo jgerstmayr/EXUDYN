@@ -5,7 +5,7 @@
 beltDrivesComparison.py
 ***********************
 
-You can view and download this file on Github: `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/beltDrivesComparison.py>`_
+You can view and download this file on Github: `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/beltDrivesComparison.py>`_
 
 .. code-block:: python
    :linenos:

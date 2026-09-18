@@ -5,7 +5,7 @@
 createSphereTriangleContact.py
 ******************************
 
-You can view and download this file on Github: `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/createSphereTriangleContact.py>`_
+You can view and download this file on Github: `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/createSphereTriangleContact.py>`_
 
 .. code-block:: python
    :linenos:

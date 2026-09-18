@@ -5,7 +5,7 @@
 explicitLieGroupIntegratorPythonTest.py
 ***************************************
 
-You can view and download this file on Github: `explicitLieGroupIntegratorPythonTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py>`_
+You can view and download this file on Github: `explicitLieGroupIntegratorPythonTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py>`_
 
 .. code-block:: python
    :linenos:

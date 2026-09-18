@@ -5,7 +5,7 @@
 testHDF5loadSave.py
 *******************
 
-You can view and download this file on Github: `testHDF5loadSave.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/testHDF5loadSave.py>`_
+You can view and download this file on Github: `testHDF5loadSave.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/testHDF5loadSave.py>`_
 
 .. code-block:: python
    :linenos:

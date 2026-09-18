@@ -5,7 +5,7 @@
 rigidRotor3DbasicBehaviour.py
 *****************************
 
-You can view and download this file on Github: `rigidRotor3DbasicBehaviour.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py>`_
+You can view and download this file on Github: `rigidRotor3DbasicBehaviour.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidRotor3DbasicBehaviour.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 ANCFmovingRigidbody.py
 **********************
 
-You can view and download this file on Github: `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_
+You can view and download this file on Github: `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFmovingRigidbody.py>`_
 
 .. code-block:: python
    :linenos:

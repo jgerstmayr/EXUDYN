@@ -5,7 +5,7 @@
 myFirstExample.py
 *****************
 
-You can view and download this file on Github: `myFirstExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/myFirstExample.py>`_
+You can view and download this file on Github: `myFirstExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/myFirstExample.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 fourBarMechanismTest.py
 ***********************
 
-You can view and download this file on Github: `fourBarMechanismTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/fourBarMechanismTest.py>`_
+You can view and download this file on Github: `fourBarMechanismTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/fourBarMechanismTest.py>`_
 
 .. code-block:: python
    :linenos:

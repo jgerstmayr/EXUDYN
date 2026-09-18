@@ -5,7 +5,7 @@
 parameterConversionTest.py
 **************************
 
-You can view and download this file on Github: `parameterConversionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/parameterConversionTest.py>`_
+You can view and download this file on Github: `parameterConversionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/parameterConversionTest.py>`_
 
 .. code-block:: python
    :linenos:

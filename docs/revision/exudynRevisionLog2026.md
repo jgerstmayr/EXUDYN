@@ -8486,6 +8486,49 @@ geometry comes from GrabCAD, and it reads it from an absolute path on the author
     **`humanRobotInteraction.py`** stays excluded, as the maintainer confirmed: it says in its own
     header where the geometry comes from (GrabCAD) and reads it from an absolute path.
 
+<a id="r7-6"></a>
+### R7.6 — the links that pointed nowhere
+
+**DONE 2026-09-18** (#2525). Noticed when adding the model of R6.3.7: its entry in the
+*"Relevant Examples and TestModels"* list of `NodePoint` was generated as
+`.../blob/master/main/pythonDev/TestModels/exceptionTypesTest.py`. That directory was removed
+by steps R3.1, R3.8 and R3.9 — so **every** such link, on every item page and on every utility
+function, was dead.
+
+Four generators built the URL by hand, each with its own copy of the prefix:
+`autoGenerateHelper.py` (the example lists), `utilityDocsModel.py` (one link per utility
+function) and `doc2rst.py` in two places (the *"view and download on Github"* line of every
+example and test model page, and the folder link of each index). A prefix that lives in four
+files is a prefix that will disagree with itself, so it now lives in `generatorPaths.py` and the
+four read it. **368 generated documentation files** changed.
+
+**The branch is part of the answer, and it is honest to say so.** The new URLs name `master`
+and the new layout, so they are right the moment this work reaches `master`, and wrong until
+then — exactly as the old ones were right until then and wrong after. What the step buys is
+that this is **one string** to change at the release rather than four generators to edit.
+
+#### What it ran into: a generator that writes nothing (#2526)
+
+Five files kept their old links through the regeneration:
+`docs/theDoc/MainSystemExt.tex`, `MainSystemCreateExt.tex`, the two generated RSTs and
+`stubAutoBindingsExt.pyi`. Their generator, `mainSystemExtensionDocsEmitter.py`, **ends in the
+middle of `main()`**: no write call, no `__main__` block. It runs, exits 0, and produces nothing.
+It has been that way since the split of R4.3 part 2e on 2026-09-14, so those five files are
+frozen at the content they had then.
+
+The regeneration gate cannot see it, and that is the more interesting half: **a generator that
+writes nothing always agrees with the commit.** `generate.py` declares what each stage writes,
+so the check exists — it just is not made. Raised as #2526 and planned as R4.3.1; not fixed
+here, because restoring 70 lines of emitter is not a link fix.
+
+Twenty-five files still contain the old path and are meant to: the hand-written `.tex` prose of
+`gettingStarted`, `introduction`, `tutorial` and `theDoc`, the tutorials in `docs/RST`, and the
+revision documents themselves, where `main/pythonDev/` is a historical statement. The prose
+files are part of R7.1, which converts them.
+
+---
+
+
 <a id="r7-1-2"></a>
 ### R7.1.2 - a stale generated page failed the docs job
 

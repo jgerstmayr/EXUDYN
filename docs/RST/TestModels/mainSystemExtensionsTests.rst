@@ -5,7 +5,7 @@
 mainSystemExtensionsTests.py
 ****************************
 
-You can view and download this file on Github: `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_
+You can view and download this file on Github: `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/mainSystemExtensionsTests.py>`_
 
 .. code-block:: python
    :linenos:

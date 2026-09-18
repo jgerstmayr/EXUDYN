@@ -5,7 +5,7 @@
 complexEigenvaluesTest.py
 *************************
 
-You can view and download this file on Github: `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_
+You can view and download this file on Github: `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/complexEigenvaluesTest.py>`_
 
 .. code-block:: python
    :linenos:

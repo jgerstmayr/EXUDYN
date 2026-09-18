@@ -5,7 +5,7 @@
 createKinematicTreeTest.py
 **************************
 
-You can view and download this file on Github: `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/createKinematicTreeTest.py>`_
+You can view and download this file on Github: `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/createKinematicTreeTest.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 createRollingDiscTest.py
 ************************
 
-You can view and download this file on Github: `createRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/createRollingDiscTest.py>`_
+You can view and download this file on Github: `createRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/createRollingDiscTest.py>`_
 
 .. code-block:: python
    :linenos:

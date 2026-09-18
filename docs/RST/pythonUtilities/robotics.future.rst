@@ -14,7 +14,7 @@ and will be moved in other robotics libraries in future
 
 Function: MakeCorkeRobot
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`MakeCorkeRobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L34>`__\ (\ ``robotDic``\ )
+`MakeCorkeRobot <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py\#L34>`__\ (\ ``robotDic``\ )
 
 - | \ *function description*\ :
   | makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
@@ -42,7 +42,7 @@ Function: MakeCorkeRobot
 
 Function: ComputeIK3R
 ^^^^^^^^^^^^^^^^^^^^^
-`ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L87>`__\ (\ ``robotDic``\ , \ ``HT``\ )
+`ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py\#L87>`__\ (\ ``robotDic``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
@@ -68,7 +68,7 @@ Function: ComputeIK3R
 
 Function: ComputeIKPuma560
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L163>`__\ (\ ``robotDic``\ , \ ``HT``\ )
+`ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py\#L163>`__\ (\ ``robotDic``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
@@ -95,7 +95,7 @@ Function: ComputeIKPuma560
 
 Function: ComputeIKUR
 ^^^^^^^^^^^^^^^^^^^^^
-`ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L293>`__\ (\ ``robotDic``\ , \ ``HTdes``\ )
+`ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py\#L293>`__\ (\ ``robotDic``\ , \ ``HTdes``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist

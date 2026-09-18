@@ -405,7 +405,7 @@ MINI EXAMPLE for ObjectKinematicTree
 
 Relevant Examples and TestModels with weblink:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Examples/), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Examples/), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py>`_\  (Examples/), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py>`_\  (TestModels/), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createKinematicTreeTest.py>`_\  (TestModels/)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Examples/), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py>`_\  (Examples/), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py>`_\  (Examples/), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py>`_\  (TestModels/), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py>`_\  (TestModels/)
 
 
 

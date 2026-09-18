@@ -5,7 +5,7 @@
 testGymCartpoleEnv.py
 *********************
 
-You can view and download this file on Github: `testGymCartpoleEnv.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/testGymCartpoleEnv.py>`_
+You can view and download this file on Github: `testGymCartpoleEnv.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/testGymCartpoleEnv.py>`_
 
 .. code-block:: python
    :linenos:

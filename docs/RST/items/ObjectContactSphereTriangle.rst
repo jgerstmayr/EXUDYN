@@ -133,7 +133,7 @@ TBD
 
 Relevant Examples and TestModels with weblink:
 
-    \ `sphereTriangleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphereTriangleTest.py>`_\  (TestModels/), \ `sphereTriangleTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphereTriangleTest2.py>`_\  (TestModels/)
+    \ `sphereTriangleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py>`_\  (TestModels/), \ `sphereTriangleTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py>`_\  (TestModels/)
 
 
 

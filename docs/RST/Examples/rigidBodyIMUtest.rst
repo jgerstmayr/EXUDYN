@@ -5,7 +5,7 @@
 rigidBodyIMUtest.py
 *******************
 
-You can view and download this file on Github: `rigidBodyIMUtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidBodyIMUtest.py>`_
+You can view and download this file on Github: `rigidBodyIMUtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidBodyIMUtest.py>`_
 
 .. code-block:: python
    :linenos:

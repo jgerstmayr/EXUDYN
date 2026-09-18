@@ -5,7 +5,7 @@
 ROSMassPoint.py
 ***************
 
-You can view and download this file on Github: `ROSMassPoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSMassPoint.py>`_
+You can view and download this file on Github: `ROSMassPoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ROSMassPoint.py>`_
 
 .. code-block:: python
    :linenos:

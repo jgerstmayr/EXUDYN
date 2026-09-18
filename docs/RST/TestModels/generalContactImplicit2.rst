@@ -5,7 +5,7 @@
 generalContactImplicit2.py
 **************************
 
-You can view and download this file on Github: `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/generalContactImplicit2.py>`_
+You can view and download this file on Github: `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/generalContactImplicit2.py>`_
 
 .. code-block:: python
    :linenos:

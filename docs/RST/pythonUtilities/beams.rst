@@ -15,7 +15,7 @@ Beam utility functions, e.g. for creation of sequences of straight or curved bea
 
 Function: GenerateStraightLineANCFCable2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateStraightLineANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L30>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
+`GenerateStraightLineANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L30>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: generate 2D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
@@ -43,7 +43,7 @@ Function: GenerateStraightLineANCFCable2D
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM)
+    \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py>`_\  (TM)
 
 
 
@@ -54,7 +54,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateStraightLineANCFCable
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateStraightLineANCFCable <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L65>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0, 0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0, 0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
+`GenerateStraightLineANCFCable <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L65>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0, 0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0, 0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: generate 3D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
@@ -80,7 +80,7 @@ Function: GenerateStraightLineANCFCable
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `ANCFcable2DuserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcable2DuserFunction.py>`_\  (TM)
+    \ `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcableCantilevered.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `ANCFcable2DuserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcable2DuserFunction.py>`_\  (TM)
 
 
 
@@ -91,7 +91,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateBeamElementsAlongLine
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateBeamElementsAlongLine <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L95>`__\ (\ ``mbs``\ , \ ``positionStart``\ , \ ``positionEnd``\ , \ ``numberOfElements``\ , \ ``beamTemplate = None``\ , \ ``gravity = [0,0,0]``\ , \ ``groundConstraintsStart = None``\ , \ ``groundConstraintsEnd = None``\ , \ ``nodeNumberStart = None``\ , \ ``nodeNumberEnd = None``\ , \ ``EI = None``\ , \ ``EA = None``\ , \ ``GA = None``\ )
+`GenerateBeamElementsAlongLine <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L95>`__\ (\ ``mbs``\ , \ ``positionStart``\ , \ ``positionEnd``\ , \ ``numberOfElements``\ , \ ``beamTemplate = None``\ , \ ``gravity = [0,0,0]``\ , \ ``groundConstraintsStart = None``\ , \ ``groundConstraintsEnd = None``\ , \ ``nodeNumberStart = None``\ , \ ``nodeNumberEnd = None``\ , \ ``EI = None``\ , \ ``EA = None``\ , \ ``GA = None``\ )
 
 - | \ *function description*\ :
   | new generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal ground constraints
@@ -118,7 +118,7 @@ Function: GenerateBeamElementsAlongLine
 
 Function: GenerateStraightBeam
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateStraightBeam <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L136>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``beamTemplate``\ , \ ``gravity = [0,0,0]``\ , \ ``fixedConstraintsNode0 = None``\ , \ ``fixedConstraintsNode1 = None``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
+`GenerateStraightBeam <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L136>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``beamTemplate``\ , \ ``gravity = [0,0,0]``\ , \ ``fixedConstraintsNode0 = None``\ , \ ``fixedConstraintsNode1 = None``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
@@ -160,7 +160,7 @@ Function: GenerateStraightBeam
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py>`_\  (Ex), \ `pendulumGeomExactBeam2Dsimple.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2Dsimple.py>`_\  (Ex)
+    \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beamTutorial.py>`_\  (Ex), \ `pendulumGeomExactBeam2Dsimple.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2Dsimple.py>`_\  (Ex)
 
 
 
@@ -171,7 +171,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateCircularArcANCFCable2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateCircularArcANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L319>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``radius``\ , \ ``startAngle``\ , \ ``arcAngle``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ , \ ``setCurvedReferenceConfiguration = True``\ , \ ``verboseMode = False``\ )
+`GenerateCircularArcANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L319>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``radius``\ , \ ``startAngle``\ , \ ``arcAngle``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ , \ ``setCurvedReferenceConfiguration = True``\ , \ ``verboseMode = False``\ )
 
 - | \ *function description*\ :
   | generate cable elements along circular arc with given start point, radius, start angle (measured relative to \ :math:`x`\ -axis, in positive rotation sense) and angle of arc
@@ -195,7 +195,7 @@ Function: GenerateCircularArcANCFCable2D
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM)
+    \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py>`_\  (TM)
 
 
 
@@ -206,7 +206,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateReevingCurve
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateReevingCurve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L466>`__\ (\ ``circleList``\ , \ ``drawingLinesPerCircle = 64``\ , \ ``numberOfANCFnodes = -1``\ , \ ``removeLastLine = False``\ , \ ``removeFirstLine = False``\ , \ ``radialOffset = 0.``\ , \ ``closedCurve = False``\ , \ ``graphicsElementsPerCircle = 64``\ , \ ``graphicsNodeSize = 0``\ , \ ``colorCircles = [0.,0.5,1.,1.]``\ , \ ``colorLines = [1.,0.5,0.,1.]``\ )
+`CreateReevingCurve <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L466>`__\ (\ ``circleList``\ , \ ``drawingLinesPerCircle = 64``\ , \ ``numberOfANCFnodes = -1``\ , \ ``removeLastLine = False``\ , \ ``removeFirstLine = False``\ , \ ``radialOffset = 0.``\ , \ ``closedCurve = False``\ , \ ``graphicsElementsPerCircle = 64``\ , \ ``graphicsNodeSize = 0``\ , \ ``colorCircles = [0.,0.5,1.,1.]``\ , \ ``colorLines = [1.,0.5,0.,1.]``\ )
 
 - | \ *function description*\ :
   | CreateReevingCurve for creating the geometry of a reeving system based on circles with radius and left/right side of passing the circles; left/right is seen in the direction passing from one to the next circle
@@ -243,7 +243,7 @@ Function: CreateReevingCurve
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_\  (Ex)
+    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py>`_\  (Ex), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py>`_\  (Ex)
 
 
 
@@ -254,7 +254,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PointsAndSlopes2ANCFCable2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PointsAndSlopes2ANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L712>`__\ (\ ``mbs``\ , \ ``ancfPointsSlopes``\ , \ ``elementLengths``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``firstNodeIsLastNode = True``\ , \ ``elementCurvatures = []``\ , \ ``graphicsSizeConstraints = -1``\ )
+`PointsAndSlopes2ANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L712>`__\ (\ ``mbs``\ , \ ``ancfPointsSlopes``\ , \ ``elementLengths``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``firstNodeIsLastNode = True``\ , \ ``elementCurvatures = []``\ , \ ``graphicsSizeConstraints = -1``\ )
 
 - | \ *function description*\ :
   | Create nodes and ANCFCable2D elements in MainSystem mbs from a given set of nodes, elements lengths and a template for the cable, based on output of function CreateReevingCurve(...); function works similar to GenerateStraightLineANCFCable2D, but for arbitrary geometry (curved elements); optionally add loads and constraints
@@ -274,7 +274,7 @@ Function: PointsAndSlopes2ANCFCable2D
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `reevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py>`_\  (Ex)
+    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py>`_\  (Ex), \ `reevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reevingSystem.py>`_\  (Ex)
 
 
 
@@ -285,7 +285,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateSlidingJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L811>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``slidingCoordinateStartPosition = 0``\ )
+`GenerateSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L811>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``slidingCoordinateStartPosition = 0``\ )
 
 - | \ *function description*\ :
   | generate a sliding joint from a list of cables, marker to a sliding body, etc.
@@ -294,7 +294,7 @@ Function: GenerateSlidingJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFslidingAndALEjointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py>`_\  (TM)
+    \ `ANCFslidingAndALEjointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py>`_\  (TM)
 
 
 
@@ -305,7 +305,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateAleSlidingJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateAleSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L841>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``AleNode``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``AleSlidingOffset = 0``\ , \ ``activeConnector = True``\ , \ ``penaltyStiffness = 0``\ )
+`GenerateAleSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py\#L841>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``AleNode``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``AleSlidingOffset = 0``\ , \ ``activeConnector = True``\ , \ ``penaltyStiffness = 0``\ )
 
 - | \ *function description*\ :
   | generate an ALE sliding joint from a list of cables, marker to a sliding body, etc.
@@ -314,5 +314,5 @@ Function: GenerateAleSlidingJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFslidingAndALEjointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py>`_\  (TM)
+    \ `ANCFslidingAndALEjointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py>`_\  (TM)
 

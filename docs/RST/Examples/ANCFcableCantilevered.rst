@@ -5,7 +5,7 @@
 ANCFcableCantilevered.py
 ************************
 
-You can view and download this file on Github: `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFcableCantilevered.py>`_
+You can view and download this file on Github: `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFcableCantilevered.py>`_
 
 .. code-block:: python
    :linenos:

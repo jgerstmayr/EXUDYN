@@ -5,7 +5,7 @@
 reinforcementLearningRobot.py
 *****************************
 
-You can view and download this file on Github: `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_
+You can view and download this file on Github: `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/reinforcementLearningRobot.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 mouseInteractionExample.py
 **************************
 
-You can view and download this file on Github: `mouseInteractionExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/mouseInteractionExample.py>`_
+You can view and download this file on Github: `mouseInteractionExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/mouseInteractionExample.py>`_
 
 .. code-block:: python
    :linenos:

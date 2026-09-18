@@ -5,7 +5,7 @@
 sphericalJointTest.py
 *********************
 
-You can view and download this file on Github: `sphericalJointTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/sphericalJointTest.py>`_
+You can view and download this file on Github: `sphericalJointTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/sphericalJointTest.py>`_
 
 .. code-block:: python
    :linenos:

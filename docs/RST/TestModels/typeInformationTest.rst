@@ -5,7 +5,7 @@
 typeInformationTest.py
 **********************
 
-You can view and download this file on Github: `typeInformationTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/typeInformationTest.py>`_
+You can view and download this file on Github: `typeInformationTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/typeInformationTest.py>`_
 
 .. code-block:: python
    :linenos:

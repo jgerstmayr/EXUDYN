@@ -5,7 +5,7 @@
 solverExplicitODE1ODE2test.py
 *****************************
 
-You can view and download this file on Github: `solverExplicitODE1ODE2test.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/solverExplicitODE1ODE2test.py>`_
+You can view and download this file on Github: `solverExplicitODE1ODE2test.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/solverExplicitODE1ODE2test.py>`_
 
 .. code-block:: python
    :linenos:

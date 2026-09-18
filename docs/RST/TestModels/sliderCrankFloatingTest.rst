@@ -5,7 +5,7 @@
 sliderCrankFloatingTest.py
 **************************
 
-You can view and download this file on Github: `sliderCrankFloatingTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py>`_
+You can view and download this file on Github: `sliderCrankFloatingTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/sliderCrankFloatingTest.py>`_
 
 .. code-block:: python
    :linenos:

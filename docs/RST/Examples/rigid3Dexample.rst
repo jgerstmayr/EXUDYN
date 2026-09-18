@@ -5,7 +5,7 @@
 rigid3Dexample.py
 *****************
 
-You can view and download this file on Github: `rigid3Dexample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigid3Dexample.py>`_
+You can view and download this file on Github: `rigid3Dexample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigid3Dexample.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 lavalRotor2Dtest.py
 *******************
 
-You can view and download this file on Github: `lavalRotor2Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/lavalRotor2Dtest.py>`_
+You can view and download this file on Github: `lavalRotor2Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/lavalRotor2Dtest.py>`_
 
 .. code-block:: python
    :linenos:

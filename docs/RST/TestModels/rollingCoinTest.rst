@@ -5,7 +5,7 @@
 rollingCoinTest.py
 ******************
 
-You can view and download this file on Github: `rollingCoinTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/rollingCoinTest.py>`_
+You can view and download this file on Github: `rollingCoinTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/rollingCoinTest.py>`_
 
 .. code-block:: python
    :linenos:

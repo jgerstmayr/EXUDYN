@@ -5,7 +5,7 @@
 serialRobotFlexible.py
 **********************
 
-You can view and download this file on Github: `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/serialRobotFlexible.py>`_
+You can view and download this file on Github: `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotFlexible.py>`_
 
 .. code-block:: python
    :linenos:

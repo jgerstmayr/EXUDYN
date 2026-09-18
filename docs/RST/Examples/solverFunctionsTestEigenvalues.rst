@@ -5,7 +5,7 @@
 solverFunctionsTestEigenvalues.py
 *********************************
 
-You can view and download this file on Github: `solverFunctionsTestEigenvalues.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py>`_
+You can view and download this file on Github: `solverFunctionsTestEigenvalues.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/solverFunctionsTestEigenvalues.py>`_
 
 .. code-block:: python
    :linenos:

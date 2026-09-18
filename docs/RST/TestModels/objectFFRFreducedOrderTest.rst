@@ -5,7 +5,7 @@
 objectFFRFreducedOrderTest.py
 *****************************
 
-You can view and download this file on Github: `objectFFRFreducedOrderTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py>`_
+You can view and download this file on Github: `objectFFRFreducedOrderTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/objectFFRFreducedOrderTest.py>`_
 
 .. code-block:: python
    :linenos:

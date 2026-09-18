@@ -5,7 +5,7 @@
 objectFFRFreducedOrderAccelerations.py
 **************************************
 
-You can view and download this file on Github: `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_
+You can view and download this file on Github: `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/objectFFRFreducedOrderAccelerations.py>`_
 
 .. code-block:: python
    :linenos:

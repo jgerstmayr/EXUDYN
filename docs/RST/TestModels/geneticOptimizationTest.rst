@@ -5,7 +5,7 @@
 geneticOptimizationTest.py
 **************************
 
-You can view and download this file on Github: `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_
+You can view and download this file on Github: `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/geneticOptimizationTest.py>`_
 
 .. code-block:: python
    :linenos:

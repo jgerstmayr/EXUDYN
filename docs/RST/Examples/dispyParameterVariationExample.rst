@@ -5,7 +5,7 @@
 dispyParameterVariationExample.py
 *********************************
 
-You can view and download this file on Github: `dispyParameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/dispyParameterVariationExample.py>`_
+You can view and download this file on Github: `dispyParameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/dispyParameterVariationExample.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 ANCFbeltDrive.py
 ****************
 
-You can view and download this file on Github: `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_
+You can view and download this file on Github: `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/ANCFbeltDrive.py>`_
 
 .. code-block:: python
    :linenos:

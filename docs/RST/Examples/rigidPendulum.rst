@@ -5,7 +5,7 @@
 rigidPendulum.py
 ****************
 
-You can view and download this file on Github: `rigidPendulum.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/rigidPendulum.py>`_
+You can view and download this file on Github: `rigidPendulum.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/rigidPendulum.py>`_
 
 .. code-block:: python
    :linenos:

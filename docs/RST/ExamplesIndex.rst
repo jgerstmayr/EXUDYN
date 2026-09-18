@@ -5,7 +5,7 @@
 Examples
 ========
 
-This section includes all Examples for Exudyn.They can also be found and downloaded at the `Examples folder of Exudyn on Github <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples>`_
+This section includes all Examples for Exudyn.They can also be found and downloaded at the `Examples folder of Exudyn on Github <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples>`_
 
 .. toctree::
    :maxdepth: 2

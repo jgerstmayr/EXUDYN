@@ -5,7 +5,7 @@
 createRollingDiscPenaltyTest.py
 *******************************
 
-You can view and download this file on Github: `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py>`_
+You can view and download this file on Github: `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/createRollingDiscPenaltyTest.py>`_
 
 .. code-block:: python
    :linenos:

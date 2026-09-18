@@ -5,7 +5,7 @@
 openVRengine.py
 ***************
 
-You can view and download this file on Github: `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/openVRengine.py>`_
+You can view and download this file on Github: `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/openVRengine.py>`_
 
 .. code-block:: python
    :linenos:

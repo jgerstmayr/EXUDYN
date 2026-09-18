@@ -5,7 +5,7 @@
 genericJointUserFunctionTest.py
 *******************************
 
-You can view and download this file on Github: `genericJointUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py>`_
+You can view and download this file on Github: `genericJointUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/genericJointUserFunctionTest.py>`_
 
 .. code-block:: python
    :linenos:

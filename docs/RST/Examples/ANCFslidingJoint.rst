@@ -5,7 +5,7 @@
 ANCFslidingJoint.py
 *******************
 
-You can view and download this file on Github: `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_
+You can view and download this file on Github: `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFslidingJoint.py>`_
 
 .. code-block:: python
    :linenos:

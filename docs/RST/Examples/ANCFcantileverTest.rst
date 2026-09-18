@@ -5,7 +5,7 @@
 ANCFcantileverTest.py
 *********************
 
-You can view and download this file on Github: `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_
+You can view and download this file on Github: `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ANCFcantileverTest.py>`_
 
 .. code-block:: python
    :linenos:

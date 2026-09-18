@@ -5,7 +5,7 @@
 contactSphereSphereTestEAPM.py
 ******************************
 
-You can view and download this file on Github: `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py>`_
+You can view and download this file on Github: `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/contactSphereSphereTestEAPM.py>`_
 
 .. code-block:: python
    :linenos:

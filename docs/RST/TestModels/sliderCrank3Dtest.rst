@@ -5,7 +5,7 @@
 sliderCrank3Dtest.py
 ********************
 
-You can view and download this file on Github: `sliderCrank3Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/sliderCrank3Dtest.py>`_
+You can view and download this file on Github: `sliderCrank3Dtest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/sliderCrank3Dtest.py>`_
 
 .. code-block:: python
    :linenos:

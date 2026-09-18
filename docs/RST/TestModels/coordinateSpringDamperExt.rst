@@ -5,7 +5,7 @@
 coordinateSpringDamperExt.py
 ****************************
 
-You can view and download this file on Github: `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py>`_
+You can view and download this file on Github: `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/coordinateSpringDamperExt.py>`_
 
 .. code-block:: python
    :linenos:

@@ -38,7 +38,7 @@ DESCRIPTION of MarkerNodeCoordinates
 
 Relevant Examples and TestModels with weblink:
 
-    \ `coordinateVectorConstraint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraint.py>`_\  (TestModels/), \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TestModels/)
+    \ `coordinateVectorConstraint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py>`_\  (TestModels/), \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TestModels/)
 
 
 

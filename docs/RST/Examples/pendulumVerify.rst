@@ -5,7 +5,7 @@
 pendulumVerify.py
 *****************
 
-You can view and download this file on Github: `pendulumVerify.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/pendulumVerify.py>`_
+You can view and download this file on Github: `pendulumVerify.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/pendulumVerify.py>`_
 
 .. code-block:: python
    :linenos:

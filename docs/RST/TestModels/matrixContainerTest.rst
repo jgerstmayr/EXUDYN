@@ -5,7 +5,7 @@
 matrixContainerTest.py
 **********************
 
-You can view and download this file on Github: `matrixContainerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/matrixContainerTest.py>`_
+You can view and download this file on Github: `matrixContainerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/matrixContainerTest.py>`_
 
 .. code-block:: python
    :linenos:

@@ -5,7 +5,7 @@
 serialRobotURDF.py
 ******************
 
-You can view and download this file on Github: `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/serialRobotURDF.py>`_
+You can view and download this file on Github: `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/serialRobotURDF.py>`_
 
 .. code-block:: python
    :linenos:

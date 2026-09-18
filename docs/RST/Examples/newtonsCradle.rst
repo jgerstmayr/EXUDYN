@@ -5,7 +5,7 @@
 newtonsCradle.py
 ****************
 
-You can view and download this file on Github: `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/newtonsCradle.py>`_
+You can view and download this file on Github: `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/newtonsCradle.py>`_
 
 .. code-block:: python
    :linenos:

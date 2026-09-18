@@ -5,7 +5,7 @@
 TCPIPexudynMatlab.py
 ********************
 
-You can view and download this file on Github: `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_
+You can view and download this file on Github: `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/TCPIPexudynMatlab.py>`_
 
 .. code-block:: python
    :linenos:

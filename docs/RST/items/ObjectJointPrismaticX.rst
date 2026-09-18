@@ -188,7 +188,7 @@ if \ ``activeConnector = False``\ ,
 
 Relevant Examples and TestModels with weblink:
 
-    \ `revoluteJointPrismaticJointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py>`_\  (TestModels/)
+    \ `revoluteJointPrismaticJointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/revoluteJointPrismaticJointTest.py>`_\  (TestModels/)
 
 
 

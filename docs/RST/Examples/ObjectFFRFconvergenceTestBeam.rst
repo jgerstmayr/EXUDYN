@@ -5,7 +5,7 @@
 ObjectFFRFconvergenceTestBeam.py
 ********************************
 
-You can view and download this file on Github: `ObjectFFRFconvergenceTestBeam.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestBeam.py>`_
+You can view and download this file on Github: `ObjectFFRFconvergenceTestBeam.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ObjectFFRFconvergenceTestBeam.py>`_
 
 .. code-block:: python
    :linenos:

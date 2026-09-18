@@ -5,7 +5,7 @@
 ANCFcontactCircleTest.py
 ************************
 
-You can view and download this file on Github: `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_
+You can view and download this file on Github: `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/ANCFcontactCircleTest.py>`_
 
 .. code-block:: python
    :linenos:

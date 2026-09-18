@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.183.dev1, 
+  \item Exudyn version = 1.11.184.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2526, 
-  \item Number of resolved issues = 2256 (183 in current version), 
+  \item Number of issues = 2527, 
+  \item Number of resolved issues = 2257 (184 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.184}:  resolved Issue 2525: {\bf every generated GitHub weblink points at the old pythonDev tree}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1\, R3.8 and R3.9\, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).}
+    \item {\bf notes: the prefix lives in generatorPaths.githubSourceURL and the four generators that built it by hand read it: autoGenerateHelper.py\, utilityDocsModel.py and doc2rst.py twice. 368 generated documentation files repaired. The URLs name master and the new layout\, so they are right once this work reaches master - one string to change at the release instead of four generators. Five files kept the old links because their generator writes nothing at all\, raised as \#2526. revision2026 step R7.6.}
+    \item   date resolved: {\bf 2026-09-18 18:27},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.183}:  resolved Issue 2523: {\bf no model shows what an Exudyn error looks like from Python}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13669,6 +13678,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2526}:  {\bf mainSystemExtensionDocsEmitter writes none of its five outputs}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The file ends in the middle of main() - no write call and no \_\_main\_\_ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing \#2525\, whose new link prefix could not reach those five files.}
+    \item date raised: 2026-09-18 
+  \ei
   \item open {\bf BUG 2517}:  {\bf the gate environment can hold a stale exudyn wheel}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

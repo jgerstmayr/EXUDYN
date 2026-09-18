@@ -54,7 +54,7 @@ DESCRIPTION of ObjectContactCoordinate
 
 Relevant Examples and TestModels with weblink:
 
-    \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py>`_\  (Examples/), \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Examples/), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TestModels/), \ `contactCoordinateTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py>`_\  (TestModels/)
+    \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py>`_\  (Examples/), \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py>`_\  (Examples/), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py>`_\  (TestModels/), \ `contactCoordinateTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCoordinateTest.py>`_\  (TestModels/)
 
 
 

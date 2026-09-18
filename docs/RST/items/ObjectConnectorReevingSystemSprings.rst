@@ -229,7 +229,7 @@ Further details are given in the implementation and examples are provided in the
 
 Relevant Examples and TestModels with weblink:
 
-    \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Examples/), \ `reevingSystemSpringsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/reevingSystemSpringsTest.py>`_\  (TestModels/)
+    \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/craneReevingSystem.py>`_\  (Examples/), \ `reevingSystemSpringsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/reevingSystemSpringsTest.py>`_\  (TestModels/)
 
 
 

@@ -5,7 +5,7 @@
 bricardMechanism.py
 *******************
 
-You can view and download this file on Github: `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/bricardMechanism.py>`_
+You can view and download this file on Github: `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/bricardMechanism.py>`_
 
 .. code-block:: python
    :linenos:

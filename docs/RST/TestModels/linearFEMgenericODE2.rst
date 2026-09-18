@@ -5,7 +5,7 @@
 linearFEMgenericODE2.py
 ***********************
 
-You can view and download this file on Github: `linearFEMgenericODE2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/linearFEMgenericODE2.py>`_
+You can view and download this file on Github: `linearFEMgenericODE2.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/linearFEMgenericODE2.py>`_
 
 .. code-block:: python
    :linenos:

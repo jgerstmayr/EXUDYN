@@ -5,7 +5,7 @@
 solutionViewerTest.py
 *********************
 
-You can view and download this file on Github: `solutionViewerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/solutionViewerTest.py>`_
+You can view and download this file on Github: `solutionViewerTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/solutionViewerTest.py>`_
 
 .. code-block:: python
    :linenos:

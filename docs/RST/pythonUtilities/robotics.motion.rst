@@ -30,7 +30,7 @@ CLASS ProfileConstantAcceleration (in module robotics.motion)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L153>`__\ (\ ``self``\ , \ ``finalCoordinates``\ , \ ``duration``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L153>`__\ (\ ``self``\ , \ ``finalCoordinates``\ , \ ``duration``\ )
 
 - | \ *classFunction*\ :
   | initialize ProfileConstantAcceleration with vector of final coordinates and duration (time span)
@@ -41,14 +41,14 @@ Class function: __init__
 
 Class function: GetBasicProfile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetBasicProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L159>`__\ (\ ``self``\ , \ ``initialTime``\ , \ ``initialCoordinates``\ , \ ``globalMaxVelocities``\ , \ ``globalMaxAccelerations``\ )
+`GetBasicProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L159>`__\ (\ ``self``\ , \ ``initialTime``\ , \ ``initialCoordinates``\ , \ ``globalMaxVelocities``\ , \ ``globalMaxAccelerations``\ )
 
 - | \ *classFunction*\ :
   | return a class representing profile which is used in Trajectory
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py>`_\  (TM)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py>`_\  (TM)
 
 
 .. _sec-module-robotics-motion-class-profilelinearaccelerationslist:
@@ -75,7 +75,7 @@ CLASS ProfileLinearAccelerationsList (in module robotics.motion)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L186>`__\ (\ ``self``\ , \ ``accelerationList``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L186>`__\ (\ ``self``\ , \ ``accelerationList``\ )
 
 - | \ *classFunction*\ :
   | initialize ProfileLinearAccelerationsList with a list of tuples containing time and acceleration vector
@@ -86,7 +86,7 @@ Class function: __init__
 
 Class function: GetBasicProfile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetBasicProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L197>`__\ (\ ``self``\ , \ ``initialTime``\ , \ ``initialCoordinates``\ , \ ``globalMaxVelocities``\ , \ ``globalMaxAccelerations``\ )
+`GetBasicProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L197>`__\ (\ ``self``\ , \ ``initialTime``\ , \ ``initialCoordinates``\ , \ ``globalMaxVelocities``\ , \ ``globalMaxAccelerations``\ )
 
 - | \ *classFunction*\ :
   | return a class representing profile which is used in Trajectory
@@ -112,7 +112,7 @@ CLASS ProfilePTP (in module robotics.motion)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L219>`__\ (\ ``self``\ , \ ``finalCoordinates``\ , \ ``syncAccTimes = True``\ , \ ``maxVelocities = []``\ , \ ``maxAccelerations = []``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L219>`__\ (\ ``self``\ , \ ``finalCoordinates``\ , \ ``syncAccTimes = True``\ , \ ``maxVelocities = []``\ , \ ``maxAccelerations = []``\ )
 
 - | \ *classFunction*\ :
   | initialize ProfilePTP with final coordinates of motion, optionally max. velocities and accelerations just for this profile (overrides global settings)
@@ -123,14 +123,14 @@ Class function: __init__
 
 Class function: GetBasicProfile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetBasicProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L233>`__\ (\ ``self``\ , \ ``initialTime``\ , \ ``initialCoordinates``\ , \ ``globalMaxVelocities``\ , \ ``globalMaxAccelerations``\ )
+`GetBasicProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L233>`__\ (\ ``self``\ , \ ``initialTime``\ , \ ``initialCoordinates``\ , \ ``globalMaxVelocities``\ , \ ``globalMaxAccelerations``\ )
 
 - | \ *classFunction*\ :
   | return a class representing profile which is used in Trajectory
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `serialRobotTSD.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py>`_\  (Ex)
+    \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `serialRobotTSD.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotTSD.py>`_\  (Ex)
 
 
 .. _sec-module-robotics-motion-class-trajectory:
@@ -161,7 +161,7 @@ CLASS Trajectory (in module robotics.motion)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L313>`__\ (\ ``self``\ , \ ``initialCoordinates``\ , \ ``initialTime = 0``\ , \ ``maxVelocities = []``\ , \ ``maxAccelerations = []``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L313>`__\ (\ ``self``\ , \ ``initialCoordinates``\ , \ ``initialTime = 0``\ , \ ``maxVelocities = []``\ , \ ``maxAccelerations = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot link with parameters, being self-explaining
@@ -177,7 +177,7 @@ Class function: __init__
 
 Class function: GetFinalCoordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetFinalCoordinates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L335>`__\ (\ ``self``\ )
+`GetFinalCoordinates <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L335>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns the coordinates at the end of the (currently) Final profile
@@ -188,7 +188,7 @@ Class function: GetFinalCoordinates
 
 Class function: Add
 ^^^^^^^^^^^^^^^^^^^
-`Add <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L344>`__\ (\ ``self``\ , \ ``profile``\ )
+`Add <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L344>`__\ (\ ``self``\ , \ ``profile``\ )
 
 - | \ *classFunction*\ :
   | add successively profiles, using MotionProfile class
@@ -199,7 +199,7 @@ Class function: Add
 
 Class function: GetTimes
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GetTimes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L352>`__\ (\ ``self``\ )
+`GetTimes <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L352>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return vector of times of start/end of profiles
@@ -210,7 +210,7 @@ Class function: GetTimes
 
 Class function: Initialize
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Initialize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L360>`__\ (\ ``self``\ )
+`Initialize <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L360>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | initialize some parameters for faster evaluation
@@ -221,7 +221,7 @@ Class function: Initialize
 
 Class function: Evaluate
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`Evaluate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L366>`__\ (\ ``self``\ , \ ``t``\ )
+`Evaluate <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L366>`__\ (\ ``self``\ , \ ``t``\ )
 
 - | \ *classFunction*\ :
   | return interpolation of trajectory for coordinates, velocities and accelerations at given time
@@ -234,7 +234,7 @@ Class function: Evaluate
 
 Class function: EvaluateCoordinate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`EvaluateCoordinate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L389>`__\ (\ ``self``\ , \ ``t``\ , \ ``coordinate``\ )
+`EvaluateCoordinate <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L389>`__\ (\ ``self``\ , \ ``t``\ , \ ``coordinate``\ )
 
 - | \ *classFunction*\ :
   | return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
@@ -249,7 +249,7 @@ Class function: EvaluateCoordinate
 
 Class function: __iter__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__iter__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L412>`__\ (\ ``self``\ )
+`__iter__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L412>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | iterator allows to use for x in trajectory: ... constructs
@@ -260,7 +260,7 @@ Class function: __iter__
 
 Class function: __getitem__
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`__getitem__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L417>`__\ (\ ``self``\ , \ ``key``\ )
+`__getitem__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L417>`__\ (\ ``self``\ , \ ``key``\ )
 
 - | \ *classFunction*\ :
   | access to profiles via operator [], allowing trajectory[0], etc.
@@ -271,7 +271,7 @@ Class function: __getitem__
 
 Class function: __len__
 ^^^^^^^^^^^^^^^^^^^^^^^
-`__len__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L422>`__\ (\ ``self``\ )
+`__len__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L422>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | allow using len(trajectory)
@@ -282,12 +282,12 @@ Class function: __len__
 
 Class function: __repr__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__repr__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py\#L428>`__\ (\ ``self``\ )
+`__repr__ <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py\#L428>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | representation of Trajectory is given a list of profiles, allowing easy inspection of data
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py>`_\  (TM)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py>`_\  (TM)
 

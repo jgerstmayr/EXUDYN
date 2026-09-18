@@ -5,7 +5,7 @@
 exceptionTypesTest.py
 *********************
 
-You can view and download this file on Github: `exceptionTypesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/exceptionTypesTest.py>`_
+You can view and download this file on Github: `exceptionTypesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/exceptionTypesTest.py>`_
 
 .. code-block:: python
    :linenos:

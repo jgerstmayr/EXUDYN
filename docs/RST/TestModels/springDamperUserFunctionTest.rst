@@ -5,7 +5,7 @@
 springDamperUserFunctionTest.py
 *******************************
 
-You can view and download this file on Github: `springDamperUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py>`_
+You can view and download this file on Github: `springDamperUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/springDamperUserFunctionTest.py>`_
 
 .. code-block:: python
    :linenos:

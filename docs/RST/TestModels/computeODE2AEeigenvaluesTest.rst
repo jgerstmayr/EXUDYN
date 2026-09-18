@@ -5,7 +5,7 @@
 computeODE2AEeigenvaluesTest.py
 *******************************
 
-You can view and download this file on Github: `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py>`_
+You can view and download this file on Github: `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/computeODE2AEeigenvaluesTest.py>`_
 
 .. code-block:: python
    :linenos:

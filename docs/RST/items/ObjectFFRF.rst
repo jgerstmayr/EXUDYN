@@ -462,7 +462,7 @@ A user function, which computes a mass matrix depending on current time and stat
 
 Relevant Examples and TestModels with weblink:
 
-    \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TestModels/), \ `objectFFRFTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py>`_\  (TestModels/)
+    \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py>`_\  (TestModels/), \ `objectFFRFTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py>`_\  (TestModels/)
 
 
 

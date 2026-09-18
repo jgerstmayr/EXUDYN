@@ -5,7 +5,7 @@
 generalContactFrictionTests.py
 ******************************
 
-You can view and download this file on Github: `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_
+You can view and download this file on Github: `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/generalContactFrictionTests.py>`_
 
 .. code-block:: python
    :linenos:

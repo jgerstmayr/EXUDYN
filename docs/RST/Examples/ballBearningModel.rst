@@ -5,7 +5,7 @@
 ballBearningModel.py
 ********************
 
-You can view and download this file on Github: `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ballBearningModel.py>`_
+You can view and download this file on Github: `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/ballBearningModel.py>`_
 
 .. code-block:: python
    :linenos:

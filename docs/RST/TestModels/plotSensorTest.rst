@@ -5,7 +5,7 @@
 plotSensorTest.py
 *****************
 
-You can view and download this file on Github: `plotSensorTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/plotSensorTest.py>`_
+You can view and download this file on Github: `plotSensorTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/plotSensorTest.py>`_
 
 .. code-block:: python
    :linenos:

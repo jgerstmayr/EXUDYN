@@ -5,7 +5,7 @@
 ConvexContactTest.py
 ********************
 
-You can view and download this file on Github: `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/ConvexContactTest.py>`_
+You can view and download this file on Github: `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/ConvexContactTest.py>`_
 
 .. code-block:: python
    :linenos:

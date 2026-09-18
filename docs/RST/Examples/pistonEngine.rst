@@ -5,7 +5,7 @@
 pistonEngine.py
 ***************
 
-You can view and download this file on Github: `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/pistonEngine.py>`_
+You can view and download this file on Github: `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/Examples/pistonEngine.py>`_
 
 .. code-block:: python
    :linenos:

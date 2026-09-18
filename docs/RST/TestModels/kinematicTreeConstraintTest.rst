@@ -5,7 +5,7 @@
 kinematicTreeConstraintTest.py
 ******************************
 
-You can view and download this file on Github: `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_
+You can view and download this file on Github: `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/kinematicTreeConstraintTest.py>`_
 
 .. code-block:: python
    :linenos:
