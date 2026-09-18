@@ -18,6 +18,7 @@ import numpy as np
 from exudyn.lieGroupBasics import CompositionRuleForRotationVectors as ComposeRotationVectors
 from exudyn.rigidBodyUtilities import ComputeRotationAxisFromRotationVector, Skew
 from exudyn.lieGroupBasics import TExpSO3Inv as TSO3Inv          #old name of the same function
+from exudyn.lieGroupBasics import ExpSO3                          #TEST 2 checks the rotation, not its representative
 from exudyn.lieGroupIntegration import ComputeStepWithRK1, ComputeStepWithRK4
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
@@ -71,35 +72,40 @@ def TestComposeRotationVector():
     
     
     #+++++++++++++++++++++++++++++++++ TEST 2 +++++++++++++++++++++++++++++++++
+    #composing pi*n with itself. This used to compare against the Matlab result [0,0,0] and
+    #therefore failed (#2494): the composition rule does NOT map into the principal range, so it
+    #returns a vector of norm 2*pi about the negated axis. That is the SAME rotation - the identity
+    #- and it is a deliberate decision, matching the verified C++ EXUlie::CompositionRotationVector:
+    #the formulas accept and pass on such noise instead of snapping to a boundary, and a caller who
+    #needs the principal range maps it. See CompositionRuleForRotationVectors().
+    #
+    #So the test now checks what is actually being claimed: that the composed vector describes the
+    #IDENTITY rotation, whatever representative it uses. That is the statement with meaning, and it
+    #survives the mapping convention changing later.
     v0    = np.array([1.0, 1.0, 1.0])
     n0    = ComputeRotationAxisFromRotationVector(v0)
     v0    = pi*n0
     Omega = v0
-    
-    # matlab results:
-    vMatlab   = np.array([0.0, 0.0, 0.0])
-    nMAtlab   = np.array([0.0, 0.0, 0.0])
-    phiMatlab = 0.0
     
     # python results
     vPython   = ComposeRotationVectors(v0,Omega) 
     nPython   = ComputeRotationAxisFromRotationVector(vPython)
     phiPython = LA.norm(vPython)
     
-    # compute deviation
-    deviationOfRotatioVectorComponents = vMatlab - vPython
-    deviationOfRotatioAxisComponents   = nMAtlab - nPython
-    deviationOfRotatioAngle            = phiMatlab - phiPython
+    # the composed rotation must be the identity; and the representative must be the 2*pi one
+    deviationFromIdentity = LA.norm(ExpSO3(vPython) - np.eye(3))
+    deviationOfRotatioAngle = phiPython - 2*pi
+    deviationOfRotatioAxis  = LA.norm(np.abs(nPython) - np.abs(n0))
     
     # print deviations
     print(' ')
     print('RESULTS: TEST 2')
-    print('  vMatlab - vPython = ' + str(deviationOfRotatioVectorComponents))
-    print('  nMAtlab - nPython = ' + str(deviationOfRotatioAxisComponents))
-    print('  phiMatlab - phiPython = ' + str(deviationOfRotatioAngle))
+    print('  ExpSO3(vPython) - I   = ' + str(deviationFromIdentity))
+    print('  |n| deviation         = ' + str(deviationOfRotatioAxis))
+    print('  phiPython - 2*pi      = ' + str(deviationOfRotatioAngle))
     
     # check if tests were successfull
-    sumOfDeviations = LA.norm(deviationOfRotatioVectorComponents) + LA.norm(deviationOfRotatioAxisComponents) + LA.norm(deviationOfRotatioAngle)
+    sumOfDeviations = deviationFromIdentity + deviationOfRotatioAxis + abs(deviationOfRotatioAngle)
     if sumOfDeviations < globalErrorBound:
         print('  TEST 2 was SUCCESSFULL')
     else:

@@ -1167,6 +1167,14 @@ namespace EXUlie {
 	}
 
 	//! compute composition operation for rotation vectors v0 and incremental rotation vector Omega, see \cite{Holzinger2021}
+	//! NOT mapped into the principal range: the norm of the result lies in [0, 2*pi] and may exceed
+	//! pi. It always describes the correct rotation - ExpSO3 of it is the intended matrix - but it
+	//! need not be the shortest representative: composing pi*n with itself gives norm 2*pi, not 0,
+	//! and both are the identity. Deliberate (#2494): the formula accepts and passes on such noise
+	//! instead of snapping to a boundary, which keeps every existing result unchanged. A caller
+	//! needing the principal range maps it: for w > pi use (2*pi - w) about the negated axis.
+	//! Accuracy degrades towards w = 2*pi, the singularity of the tangent operator.
+	//! The Python CompositionRuleForRotationVectors() in lieGroupBasics.py behaves identically.
 	template<typename T>
 	inline SlimVectorBase<T,3> CompositionRotationVector(const SlimVectorBase<T,3>& v0, const SlimVectorBase<T,3>& Omega)
 	{

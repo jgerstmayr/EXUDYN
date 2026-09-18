@@ -6065,6 +6065,13 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
 {\bf author}: Stefan Holzinger
 \vspace{12pt}\end{itemize}
 %
+%
+\noindent For examples on ExpSO3 see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py}{\texttt{LieGroupIntegrationUnitTests.py}} (TM)
+\ei
+
+%
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
 \noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L148}{ExpS3}{}}}\label{sec:lieGroupBasics:ExpS3}
@@ -6473,7 +6480,24 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: compute composition operation for rotation vectors v0 and Omega, see \cite{Holzinger2021}
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]compute composition operation for rotation vectors v0 and Omega, see \cite{Holzinger2021}
+\item[]The composed vector is NOT mapped into the principal range: its norm lies in [0, 2*pi] and may
+\item[]therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended
+\item[]rotation matrix - but it need not be the shortest representative of it. Composing pi*n with
+\item[]itself, for example, gives a vector of norm 2*pi rather than 0; both are the identity rotation.
+\item[]This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h),
+\item[]which is the verified one used by the Lie group integrator, and is a deliberate decision
+\item[]{\it (#2494)}: the formulas accept and pass on such noise rather than snapping to a boundary, which
+\item[]keeps every existing result unchanged. A caller who needs the principal range must map it - for
+\item[]a norm w > pi, use (2*pi - w) about the negated axis.
+\item[]Note also that accuracy degrades towards w = 2*pi, which is the singularity of the tangent
+\item[]{\it operator}: TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the
+\item[]axis - composing pi*n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about
+\item[]4e-8 for n = [0,0,1].
+\end{itemize}
 \item[--]
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
@@ -6482,14 +6506,21 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
 \item[]{\it Omega}: 3D (incremental) rotation vector as np.array
 \end{itemize}
 \item[--]
-{\bf output}: 3D vector as np.array containing composed rotation vector v
+{\bf output}: 3D vector as np.array containing composed rotation vector v; norm in [0, 2*pi], see above
 \item[--]
 {\bf author}: Stefan Holzinger
 \vspace{12pt}\end{itemize}
 %
+%
+\noindent For examples on CompositionRuleForRotationVectors see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py}{\texttt{LieGroupIntegrationUnitTests.py}} (TM)
+\ei
+
+%
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L681}{CompositionRuleRotXYZAnglesRotationVector}{}}}\label{sec:lieGroupBasics:CompositionRuleRotXYZAnglesRotationVector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L696}{CompositionRuleRotXYZAnglesRotationVector}{}}}\label{sec:lieGroupBasics:CompositionRuleRotXYZAnglesRotationVector}
 ({\it alpha0}, {\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

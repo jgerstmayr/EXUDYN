@@ -6352,3 +6352,53 @@ produces the same `-6.9e-18`.
 `kinematicTree.py`, `lieGroupIntegration.py` and `rigidBodyUtilities.py`. Nothing measured makes
 them matter, and a public utility would be new API with stubs and documentation to match - so the
 helpers stay private and local, with the reason written where they are.
+
+
+<a id="r5-12-1"></a>
+### R5.12.1 - the composition rule is allowed to be noisy, and now says so
+
+**DONE 2026-09-18** - issue #2494.
+
+Composing π·n with itself gives a rotation vector of norm 2π rather than 0. Both describe the
+identity rotation; 2π is simply not the principal representative, and it sits exactly on the
+singularity of the tangent operator, where `TExpSO3Inv` returns entries of order 1e15.
+
+**The maintainer asked that the C++ be checked, since those implementations are the verified ones
+used in the papers - and that changed the step.** `EXUlie::CompositionRotationVector`
+(`src/Linalg/RigidBodyMath.h:1171`) is the same formula, term for term, and returns 2π as well:
+`w = pi - 2*atan2(x, xTemp)` is `2*acos(x)`, which for `x = cos(w/2) = -1` is 2π. So this was never
+a Python port that had drifted from a verified original; it is a property both share, and any
+principal-range mapping would have had to change the C++ solver path too.
+
+**The decision was to accept it** (maintainer, 2026-09-18): the formulas should take noise and pass
+it on rather than snap to a boundary. That keeps every existing result unchanged - nothing in the
+solver moves - and a caller who needs the principal range can map it: for `w > π`, use `2π - w`
+about the negated axis. What was missing was not a fix but a statement, so the behaviour is now
+written into the Python docstring **and** the C++ comment, each naming the other, so neither can be
+"repaired" later by someone who has only read one of them.
+
+**One real difference was found on the way, and that one was a defect.** The C++ computes
+
+```cpp
+T xTemp = sqrt(fabs(1 - EXUstd::Square(x))); //fabs added, because term may be slightly smaller than zero
+```
+
+and the Python had no such guard. `1 - x²` is analytically non-negative, but near a half angle of
+π/2 rounding makes it slightly negative and `math.sqrt` raises. Measured: composing π·n with itself
+- the very case of #2494 - made the **shipped Python raise `ValueError: math domain error`** where
+the C++ returned 2π·n. The guard is ported, with the C++ named in the comment.
+
+**`LieGroupIntegrationUnitTests.py` now passes 10 of 10.** TEST 2 had compared against the Matlab
+principal-range answer `[0,0,0]` and was the only failing test in the file. It now checks what is
+actually being claimed - that the composed vector describes the **identity rotation**, whatever
+representative it uses - which is the statement with meaning and survives a later change of
+convention. Measured for `n = [1,1,1]/sqrt(3)`: norm 2π to `8.9e-16`, `ExpSO3` the identity to
+`3.7e-16`, comfortably inside the file's `1e-14` bound.
+
+Accuracy at that singularity is **axis-dependent**, which is worth knowing and is in the docstring:
+the same composition is exact to about `1e-15` for `[1,1,1]/sqrt(3)` and to about `4e-8` for
+`[0,0,1]`.
+
+The file stays in `DeliberatelyNotRun()` for the one remaining reason, now the only one in its
+entry: it PRINTS its results instead of setting `testResult`. Give it one and it can be a test
+model.

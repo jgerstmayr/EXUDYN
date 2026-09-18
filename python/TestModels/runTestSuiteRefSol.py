@@ -252,9 +252,12 @@ def DeliberatelyNotRun():
         'ANCFBeamEigTest.py':
             'runs clean in 0.23s but its testError/testResult lines are commented out (line 232)',
         'LieGroupIntegrationUnitTests.py':
-            'runs since the imports were repaired (#2377) and 9 of its 10 tests pass, but TEST 2 '
-            'fails on #2494 - composing pi+pi about one axis gives 2pi instead of 0 - and it '
-            'prints its results rather than setting testResult',
+            'ALL 10 of its tests pass since 2026-09-18 (revision2026 step R5.12.1 settled #2494: '
+            'the composition rule deliberately does not map into the principal range, and TEST 2 '
+            'now checks that the composed vector is the IDENTITY rotation rather than comparing '
+            'against the Matlab principal-range value). What still keeps it out of the suite is '
+            'that it PRINTS its results instead of setting testResult - give it one and it can be '
+            'a test model',
         'createContactSphereSphere.py':
             'calls SolutionViewer although writeSolutionToFile=useGraphics, so it raises when '
             'run headless; the value -0.21704884156413973 is computed before the crash',

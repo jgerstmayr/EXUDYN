@@ -129,6 +129,10 @@ Function: ExpSO3
 - | \ *author*\ :
   | Stefan Holzinger
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `LieGroupIntegrationUnitTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py>`_\  (TM)
+
 
 
 ----
@@ -533,14 +537,31 @@ Function: CompositionRuleForRotationVectors
 `CompositionRuleForRotationVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L649>`__\ (\ ``v0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
-  | compute composition operation for rotation vectors v0 and Omega, see
+  | compute composition operation for rotation vectors v0 and Omega, see 
+  | The composed vector is NOT mapped into the principal range: its norm lies in [0, 2\*pi] and may
+  | therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended
+  | rotation matrix - but it need not be the shortest representative of it. Composing pi\*n with
+  | itself, for example, gives a vector of norm 2\*pi rather than 0; both are the identity rotation.
+  | This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h),
+  | which is the verified one used by the Lie group integrator, and is a deliberate decision
+  | \ ``(#2494)``\ : the formulas accept and pass on such noise rather than snapping to a boundary, which
+  | keeps every existing result unchanged. A caller who needs the principal range must map it - for
+  | a norm w > pi, use (2\*pi - w) about the negated axis.
+  | Note also that accuracy degrades towards w = 2\*pi, which is the singularity of the tangent
+  | \ ``operator``\ : TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the
+  | axis - composing pi\*n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about
+  | 4e-8 for n = [0,0,1].
 - | \ *input*\ :
   | \ ``v0``\ : 3D rotation vector as np.array
   | \ ``Omega``\ : 3D (incremental) rotation vector as np.array
 - | \ *output*\ :
-  | 3D vector as np.array containing composed rotation vector v
+  | 3D vector as np.array containing composed rotation vector v; norm in [0, 2*pi], see above
 - | \ *author*\ :
   | Stefan Holzinger
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `LieGroupIntegrationUnitTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py>`_\  (TM)
 
 
 
@@ -551,7 +572,7 @@ Function: CompositionRuleForRotationVectors
 
 Function: CompositionRuleRotXYZAnglesRotationVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L681>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
+`CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L696>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
   | compute composition operation for RotXYZ angles, see

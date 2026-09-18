@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.165.dev1, 
+  \item Exudyn version = 1.11.166.dev1, 
   \item last change =  2026-09-18, 
   \item Number of issues = 2509, 
-  \item Number of resolved issues = 2238 (165 in current version), 
+  \item Number of resolved issues = 2239 (166 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.166}: {\bf \color{warningRed}  resolved BUG 2494}: {\bf CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Composing the rotation vector pi*n with itself gives a vector of norm 2*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1}
+    \item {\bf notes: Settled in revision2026 step R5.12.1 by the maintainer's decision: the composition rule does NOT map into the principal range; the result may have a norm up to 2*pi; and that is accepted rather than changed. It always describes the correct rotation - ExpSO3 of it is the intended matrix - so the formulas take such noise and pass it on instead of snapping to a boundary; which keeps every existing result unchanged; and a caller needing the principal range maps it (for w > pi use 2*pi - w about the negated axis). The C++ EXUlie::CompositionRotationVector was checked as asked and is the SAME formula returning the same 2*pi; so this was never a port that drifted. Both the Python docstring and the C++ comment now state it and name each other. One real defect was found and fixed on the way: the Python lacked the fabs() guard the C++ has; so it RAISED ValueError: math domain error for exactly this case. LieGroupIntegrationUnitTests.py now passes 10 of 10; TEST 2 checks that the composition is the identity rotation instead of comparing against the Matlab principal-range value.}
+    \item   date resolved: {\bf 2026-09-18 07:54},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.165}:  resolved Issue 2502: {\bf sliderCrank3Dbenchmark result depends on the numpy version}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13595,12 +13603,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2494}:  {\bf CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: Composing the rotation vector pi*n with itself gives a vector of norm 2*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1}
-    \item date raised: 2026-09-17 
-  \ei
   \item open {\bf BUG 2463}:  {\bf the two GitHub workflows pin different action versions}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

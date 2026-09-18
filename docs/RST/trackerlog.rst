@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.165.dev1, 
++  Exudyn version = 1.11.166.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2509, 
-+  Number of resolved issues = 2238 (165 in current version), 
++  Number of resolved issues = 2239 (166 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.166: :textred:`resolved BUG 2494` : CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns 
+    - issue author: Claude-JG
+    - description:  Composing the rotation vector pi\*n with itself gives a vector of norm 2\*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2\*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1
+    - **notes:** Settled in revision2026 step R5.12.1 by the maintainer's decision: the composition rule does NOT map into the principal range; the result may have a norm up to 2\*pi; and that is accepted rather than changed. It always describes the correct rotation - ExpSO3 of it is the intended matrix - so the formulas take such noise and pass it on instead of snapping to a boundary; which keeps every existing result unchanged; and a caller needing the principal range maps it (for w > pi use 2\*pi - w about the negated axis). The C++ EXUlie::CompositionRotationVector was checked as asked and is the SAME formula returning the same 2\*pi; so this was never a port that drifted. Both the Python docstring and the C++ comment now state it and name each other. One real defect was found and fixed on the way: the Python lacked the fabs() guard the C++ has; so it RAISED ValueError: math domain error for exactly this case. LieGroupIntegrationUnitTests.py now passes 10 of 10; TEST 2 checks that the composition is the identity rotation instead of comparing against the Matlab principal-range value.
+    - date resolved: **2026-09-18 07:54**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.165: resolved Issue 2502: sliderCrank3Dbenchmark result depends on the numpy version (testing)
     - issue author: Claude-JG
     - description:  Measured 2026-09-18: with the SAME exudyn binary (exudynCPP.cp313-win_amd64.pyd md5 identical in both environments); the same source; the same machine and the same Python 3.13.15; the model returns 7.256859912845965 under numpy 2.4.6 - exactly the committed reference - and 7.256859914829453 under numpy 2.2.4; relative 2.7e-10. The suite tolerance is 5e-14; so the test FAILS wherever numpy is older; which is what the maintainer sees in venvP313. numpy enters through the model setup only; so a last-bit difference in the input data is amplified by the solver to 2.7e-10. The same model is already listed in UnresolvedOnLinux() with rel. 2.0e-10; which now looks like the same effect rather than a platform difference. Open questions: which numpy operation in the setup differs; whether other entries of UnresolvedOnLinux() are really numpy-version effects; and whether the suite should pin a minimum numpy for reference comparison or mark the model sensitive. revision2026 phase R10.
@@ -8755,11 +8761,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2494:` CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns
-    - issue author: Claude-JG
-    - description:  Composing the rotation vector pi\*n with itself gives a vector of norm 2\*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2\*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1
-    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
     - issue author: Claude-JG

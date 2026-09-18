@@ -881,35 +881,37 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `knownMissingLocalModules`; `RL_Spot` remains and needs a decision.
 
 <a id="r5-12-1"></a>
-**R5.12.1** *(sub-step of R5.12; the C++ comparison DONE 2026-09-18, the principal-range decision
-    open)* **`CompositionRuleForRotationVectors` returns 2π instead of 0** (#2494): composing π·n
-    with itself gives a vector of norm 2π. It describes the identity rotation - `ExpSO3` of it IS
-    the identity - but it lies outside the principal range and exactly on the singularity of the
-    tangent operator: `TExpSO3Inv` there returns entries of order 1e15. Found by TEST 2 of
-    `LieGroupIntegrationUnitTests.py`, which compares against Matlab results that give 0.
+**R5.12.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-12-1) — *(sub-step of
+    R5.12)* **`CompositionRuleForRotationVectors` returns 2π instead of 0** (#2494):
+    composing π·n with itself gives a vector of norm 2π rather than 0. Both describe the identity
+    rotation; the 2π one is simply not the principal representative.
 
-    **The C++ was checked against, as the maintainer asked (2026-09-17), and the answer changes the
-    step.** `EXUlie::CompositionRotationVector` in `src/Linalg/RigidBodyMath.h:1171` is the *same
-    formula*, term for term, and returns 2π as well: `w = pi - 2*atan2(x, xTemp)` is `2*acos(x)`,
-    which for `x = cos(w/2) = -1` is 2π. So this is **not** a Python port that drifted from a
-    verified original - it is a property of the formula both share, and the question "should the
-    result be brought into the principal range" applies to the C++ solver path too. That is why the
-    decision is left open: `CompositionRotationVector` is used by the Lie group integrator whose
-    results are in the papers.
+    **The C++ was checked against, as the maintainer asked.**
+    `EXUlie::CompositionRotationVector` (`src/Linalg/RigidBodyMath.h:1171`) is the *same formula*,
+    term for term, and returns 2π as well: `w = pi - 2*atan2(x, xTemp)` is `2*acos(x)`, which for
+    `x = cos(w/2) = -1` is 2π. So this was never a Python port that drifted - it is a property both
+    share.
 
-    **One real difference was found and fixed**: the C++ computes
-    `xTemp = sqrt(fabs(1 - x*x))` with the comment *"fabs added, because term may be slightly
-    smaller than zero"*; the Python had no such guard. `1 - x²` is analytically non-negative, but
-    near a half angle of π/2 rounding makes it slightly negative, and `math.sqrt` then **raises
-    `ValueError: math domain error`**. Measured 2026-09-18: composing π·n with itself did exactly
-    that - the shipped Python *crashed* where the C++ returned 2π·n. The guard is now ported, with
-    the C++ named in the comment; the Python returns `6.283185265` (2π to 4e-8, the accuracy
-    `atan2` has left at the singularity), which is what the C++ returns.
+    **Decision (maintainer, 2026-09-18): accept it and document it.** The formulas take noise and
+    pass it on rather than snapping to a boundary; that keeps every existing result unchanged, and
+    a caller who needs the principal range maps it himself - for `w > π`, use `2π - w` about the
+    negated axis. Written into the Python docstring and the C++ comment, each naming the other, so
+    neither can be "fixed" later in ignorance of the other.
 
-    **What is still open**: whether composition should map into [0, π] - `w > π` becoming `2π - w`
-    about `-n`, which turns this case into exactly 0 and matches Matlab - and whether that is done
-    in both implementations or neither. It changes solver behaviour at the singularity, so it needs
-    the maintainer.
+    **One real difference was found on the way and fixed**: the C++ computes
+    `sqrt(fabs(1 - x*x))` with the comment *"fabs added, because term may be slightly smaller than
+    zero"*, and the Python had no guard - so the shipped Python **raised
+    `ValueError: math domain error`** for exactly the case of #2494, where the C++ returned 2π·n.
+    Ported, with the C++ named in the comment.
+
+    **`LieGroupIntegrationUnitTests.py` now passes 10 of 10.** TEST 2 compared against the Matlab
+    principal-range answer `[0,0,0]`; it now checks what is actually being claimed - that the
+    composed vector describes the **identity rotation**, whatever representative it uses - which is
+    the statement with meaning and survives a later change of convention. Measured: for
+    `n = [1,1,1]/sqrt(3)` the norm is 2π to `8.9e-16` and `ExpSO3` is the identity to `3.7e-16`.
+    Accuracy at that singularity is axis-dependent (about `4e-8` for `n = [0,0,1]`), which the
+    docstring says. The file stays in `DeliberatelyNotRun()` for the one remaining reason: it
+    PRINTS its results instead of setting `testResult`.
 
 <a id="r5-13"></a>
 **R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
