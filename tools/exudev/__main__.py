@@ -153,7 +153,7 @@ def BuildParsers():
 
     test = subParsers.add_parser('test', parents=[globalParser, versionParser, fastParser],
         help='run the test suite (runTestSuite.py)',
-        description='Run python/TestModels/runTestSuite.py. "--exit-code" is always passed, because '
+        description='Run python/testing/runTestSuite.py. "--exit-code" is always passed, because '
                     'without it the suite returns 0 no matter how many models failed.')
     test.add_argument('--subset', action='store_true',
                       help='the pull-request subset only (the suite calls this option --fast, which '
@@ -161,7 +161,7 @@ def BuildParsers():
     test.add_argument('--parallel', nargs='?', type=int, const=0, metavar='N',
                       help='every model in its own interpreter; N processes, default all cores')
     test.add_argument('--overwrite-log', action='store_true',
-                      help='overwrite an existing log instead of diverting it to python/logsTmp/')
+                      help='overwrite an existing log instead of diverting it to python/logs/tmp/')
     test.add_argument('--local', action='store_true',
                       help='also copy the log next to the runner (the suite\'s -local)')
     test.add_argument('extra', nargs=argparse.REMAINDER,
@@ -170,7 +170,7 @@ def BuildParsers():
 
     examples = subParsers.add_parser('examples', parents=[globalParser, versionParser],
         help='run the Examples set (runTestExamples.py; slow)',
-        description='Run python/TestModels/runTestExamples.py. The default environment is venvP312, '
+        description='Run python/testing/runTestExamples.py. The default environment is venvP312, '
                     'unchanged from the batch script this replaces, so that "a clean examples run" '
                     'keeps meaning what it always meant.')
     examples.add_argument('--serial', action='store_true', help='one interpreter, in process')
@@ -186,7 +186,7 @@ def BuildParsers():
     performance = subParsers.add_parser('perf', parents=[globalParser, versionParser, fastParser],
         help='run the performance tests (runPerformanceTests.py)')
     performance.add_argument('--machine-id', metavar='ID',
-                             help='EXUDYN_MACHINE_ID: the subfolder of python/PerformanceLogs/')
+                             help='EXUDYN_MACHINE_ID: the subfolder of python/logs/performance/')
     performance.add_argument('--overwrite-log', action='store_true', help='overwrite an existing log')
     performance.add_argument('extra', nargs=argparse.REMAINDER,
                              help="after '--': arguments passed to runPerformanceTests.py verbatim")

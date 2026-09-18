@@ -170,13 +170,13 @@ dev = [
     ]
 
 #pytest collector of the test models (revision2026 step R5.1): 'pytest' from the repository root runs
-#python/TestModels/test_testModels.py, which judges every model exactly as runTestSuite.py does.
+#python/testing/test_testModels.py, which judges every model exactly as runTestSuite.py does.
 #pytest and pytest-xdist are DEV tools, not a runtime or test dependency of the package: the suite
 #itself runs without them, which is why they are not in [project.optional-dependencies].
 #NOTE: do not run pytest with python/ as working directory - the untracked scratch file
 #python/pytest.py would shadow the pytest module (revision2026 step R3.1).
 [tool.pytest.ini_options]
-testpaths = ['python/TestModels']
+testpaths = ['python/testing']
 addopts = '-q'
 #markers of revision2026 step R5.2; the data behind them lives in runTestSuiteRefSol.py
 markers = [
@@ -247,16 +247,16 @@ test-requires = ["numpy", "matplotlib", "scipy"]
 
 [tool.cibuildwheel.linux]
 before-all = "dnf install -y epel-release && dnf install -y mesa-libGL-devel mesa-libGLU-devel glfw-devel freeglut-devel libX11-devel"
-test-command = "cd {project}/python/TestModels && python runTestSuite.py -quiet -local"
+test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -local"
 
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
 environment = { MACOSX_DEPLOYMENT_TARGET = "11.0" }
-test-command = "cd {project}/python/TestModels && python runTestSuite.py -quiet -local"
+test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -local"
 
 [tool.cibuildwheel.windows]
 #re-enabled 2026-08-05 after a strange exit code on Windows had disabled it since 2024-10-09
-test-command = "cd /d {project}/python/TestModels && python runTestSuite.py -quiet -local"
+test-command = "cd /d {project}/python/testing && python runTestSuite.py -quiet -local"
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Build switches, read by setup.py. These are the DEFAULTS; they are never rewritten during a

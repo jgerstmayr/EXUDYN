@@ -655,9 +655,9 @@ mechanical values and these models may not be converged in space or time
 
 Finally, note that the \ ``main/pythonDev/TestModels``\  are often only intended to preserve functionality
 in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the 
-implemented methods. The \ ``TestModels``\  are used in the Exudyn \ **TestSuite**\  \ ``TestModels/runTestSuite.py``\ 
+implemented methods. The \ ``TestModels``\  are used in the Exudyn \ **TestSuite**\  \ ``testing/runTestSuite.py``\ 
 which is run after a full build of Python versions. Output for very version is written
-to \ ``main/pythonDev/TestSuiteLogs``\  containing the Exudyn version and Python version. At the end of these
+to \ ``python/logs/testmodels``\  containing the Exudyn version and Python version. At the end of these
 files, a summary is included to show if all models completed successfully (which means that a certain error level is achieved, which is rather small and different for the models).
 There are also performance tests (e.g., if a certain implementation leads to a significant drop of performance).
 However, the output of the performance tests is not stored on github.

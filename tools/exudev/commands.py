@@ -25,7 +25,9 @@ from runner import Step
 
 #%%******************************************************************************************************
 def ModelsDirectory():
-    return os.path.join(runner.RepositoryRoot(), 'python', 'TestModels')
+    """Where the three runners live. Each of them changes into the directory of the models it
+    drives, so this is simply where they are started (revision2026 step R3.9)."""
+    return os.path.join(runner.RepositoryRoot(), 'python', 'testing')
 
 
 #%%******************************************************************************************************
@@ -322,8 +324,8 @@ def Release(options):
 def PrintReleaseChecklist():
     print('')
     print('  after the release build, by hand:')
-    print('    - check every log under python/TestSuiteLogs, python/PerformanceLogs and '
-          'python/TestExamplesLogs')
+    print('    - check every log under python/logs/testmodels, python/logs/performance and '
+          'python/logs/examples')
     print('    - commit, then tag the release')
     print('    - upload the wheels from dist/ and dist/manylinux/')
 
@@ -510,7 +512,7 @@ def LinuxWslConda(options):
             'python3 -m pip uninstall exudyn -y',
             'auditwheel repair ' + wheel + ' -w ./dist',
             'python3 -m pip install --no-index --pre --find-links=dist exudyn',
-            "cd python/TestModels && python3 runTestSuite.py -quiet"]))
+            "cd python/testing && python3 runTestSuite.py -quiet"]))
 
         def MakeResolve(commandScript=script):
             def Resolve():

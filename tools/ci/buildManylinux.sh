@@ -98,7 +98,7 @@ echo "=== repaired wheel: $repairedWheel"
 "$pyBin/pip" install --no-cache-dir numpy matplotlib     "scipy==1.15.2; python_version < '3.14'"     "scipy; python_version >= '3.14'"
 "$pyBin/pip" install --no-cache-dir --force-reinstall --no-deps "$repairedWheel"
 
-cd "$mainDir/python/TestModels"
+cd "$mainDir/python/testing"
 "$pyBin/python" runTestSuite.py -quiet -local --exit-code
 
 echo "=== $pyTag OK"

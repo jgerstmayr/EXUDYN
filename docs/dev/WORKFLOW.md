@@ -315,7 +315,7 @@ and R5.16, not by this split.
 ### pytest
 
 `pytest` (from the repository root, configured in `pyproject.toml`) runs
-`python/TestModels/test_testModels.py`: one test case per test model and per mini example, each in
+`python/testing/test_testModels.py`: one test case per test model and per mini example, each in
 its own interpreter, judged against the same reference values, tolerance factors and
 sensitive/unresolved lists as `runTestSuite.py` - those have one definition in
 `runTestSuiteRefSol.py` and `testRunnerTools.BaseTolerance()`.
@@ -549,14 +549,15 @@ tracked directory, truncating it at startup *before any test runs*. Since 2026-0
 first:
 
 - target does not exist → written normally (the release flow: the version was just bumped)
-- target exists → the log is **diverted to `main/pythonDev/logsTmp/`** (gitignored), the tests run
+- target exists → the log is **diverted to `python/logs/tmp/`** (gitignored), the tests run
   as usual, and a message names the override
 - `--overwrite-log` → the existing log is replaced deliberately
 
 Existence is the test, so this also covers the multi-machine case: the committed log from another
 machine with the same platform and Python is present, and is not clobbered.
 
-`logsTmp/` is one shared directory for all three runners, so clearing it is a single delete.
+`python/logs/tmp/` is one shared directory for all three runners, so clearing it is a single
+delete. The release-named logs go to `python/logs/{testmodels,examples,performance}/`.
 
 ### What is in a log
 

@@ -26,7 +26,6 @@ except:
     class ExudynTestGlobals:
         pass
     exudynTestGlobals = ExudynTestGlobals()
-    exudynTestGlobals.isPerformanceTest = False
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -39,9 +38,10 @@ import numpy as np
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
-inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if useGraphics:
-#    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
+#the rotor mesh is shared with eight test models, so it stays in TestModels/testData/ rather
+#than being copied here (revision2026 step R3.9, #2513). runPerformanceTests.py runs with
+#python/PerformanceModels/ as working directory.
+inputFileName = '../TestModels/testData/rotorDiscTest'
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
 

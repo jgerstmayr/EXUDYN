@@ -41,16 +41,20 @@ if sys.version_info < (3, 11):
 import tomllib
 
 #the three source trees, with the extra that has to cover each.
-#  TestModels -> [tests]: exactly what is needed to run the test suite.
+#  TestModels, PerformanceModels, MiniExamples and testing -> [tests]: exactly what is needed to
+#                         run the test suite (one directory per kind since revision2026 step R3.9).
 #  exudyn/    -> [all]  : the shipped package has optional imports BY DESIGN (CLAUDE.md invariant
 #                         6 - optional dependencies behind a clear failure at the point of use),
 #                         so requiring [tests] to install mpi4py or dispy would be wrong. [all] is
 #                         'everything referred to internally', which is what covers them.
 #  Examples   -> [all].
 scanTargets = [
-    ('python/TestModels', 'tests'),
-    ('python/exudyn',     'all'),
-    ('python/Examples',   'all'),
+    ('python/TestModels',        'tests'),
+    ('python/PerformanceModels', 'tests'),
+    ('python/MiniExamples',      'tests'),
+    ('python/testing',           'tests'),
+    ('python/exudyn',            'all'),
+    ('python/Examples',          'all'),
     ]
 
 #import name -> PyPI distribution name, for the cases where the two differ. Only real mismatches

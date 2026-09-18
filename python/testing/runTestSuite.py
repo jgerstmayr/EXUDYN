@@ -44,6 +44,12 @@ if useFastModule:
 #include right exudyn module now:
 import numpy as np
 import testRunnerTools
+
+#the suite drives python/TestModels/ and runs IN it: every model is written relative to that
+#directory and the log goes to ../logs/ next to it. Where the suite was STARTED from does not
+#matter (revision2026 steps R3.8, R3.9; #2512, #2513)
+testRunnerTools.WorkInModelsDirectory(testRunnerTools.testModelsDir)
+
 import exudyn as exu
 
 if useFastModule: #asking is not getting; stop rather than write a log that claims the wrong module
@@ -68,7 +74,7 @@ outputLocal = False
 quietMode = False
 useExitCode = False     #--exit-code: return non-zero on reproducible failures, for CI
 overwriteLog = False    #--overwrite-log: replace an existing log instead of diverting to tmp
-#copyLog = False         #copy log to final TestSuiteLogs
+#copyLog = False         #copy log to final logs/testmodels
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
 #--fast: the pull-request subset (revision2026 step R5.2) - without the models that take
@@ -185,8 +191,7 @@ if not testRunnerTools.ModuleIsRegular():
     platformString += '_fast'
 localFileName = 'testSuiteLog_V'+exu.config.Version()+'_'+platformString
 
-#logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.config.Version()+'_'+platformString+'.txt'
-logFileName = '../TestSuiteLogs/'+localFileName+'.txt'
+logFileName = '../logs/testmodels/'+localFileName+'.txt'
 #the directory the run STARTED with, usually from EXUDYN_OUTPUTDIRECTORY. The models below
 #overwrite exudyn.config.outputDirectory one by one, and it has to be put BACK to this - not
 #to the empty string - or the summary is written to a different file than the rest of the
@@ -254,9 +259,7 @@ TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
     from runTestSuiteRefSol import (TestExamplesReferenceSolution, TestExamplesToleranceFactors,
-                                    SensitiveTests, UnresolvedOnLinux,
-                                    NotTestModels, DeliberatelyNotRun,
-                                    PerformanceTestsReferenceSolution)
+                                    SensitiveTests, UnresolvedOnLinux, DeliberatelyNotRun)
     TSScope.examplesTestRefSol = TestExamplesReferenceSolution()
     #the values above belong to the BASELINE module; a module with vector extensions gets the
     #second set on top of them, which holds only the models that actually move (#2470)
@@ -281,18 +284,13 @@ if TSScope.runTestExamples:
     #the reference lists ARE the run manifest, so a model missing from them is never executed.
     #Check that against the folder before running anything, and report it in the log where the
     #next reader will see it (revision2026 step R5.9).
+    #since revision2026 step R3.9 this directory holds test models and nothing else, so the
+    #check is simply 'every .py is either referenced or explicitly excluded' (#2513).
+    #raytracerNOGLFWtest.py is added back because TestExamplesReferenceSolution() pops it on
+    #macOS only - the file still exists there.
     TSScope.coverageText, TSScope.coverageFailed = testRunnerTools.CheckTestCoverage(
         modelsDir='.',
-        #MiniExamples are deliberately absent: they live in MiniExamples/, not here, and have
-        #their own generated manifest. raytracerNOGLFWtest.py is added back because
-        #TestExamplesReferenceSolution() pops it on macOS only - the file still exists there.
-        #PerformanceTestsReferenceSolution() also holds values for the SINGLE RUNS of a model that
-        #solves several sizes or thread counts ('...:nt8'); those are not file names (issue #2460)
-        refSolNames=(set(TSScope.examplesTestRefSol.keys())
-                     | set(k for k in PerformanceTestsReferenceSolution().keys()
-                           if k.endswith('.py'))
-                     | set(['raytracerNOGLFWtest.py'])),
-        notTestModels=NotTestModels(),
+        refSolNames=set(TSScope.examplesTestRefSol.keys()) | set(['raytracerNOGLFWtest.py']),
         deliberatelyNotRun=DeliberatelyNotRun())
     exu.Print(TSScope.coverageText)
 
@@ -420,6 +418,8 @@ if TSScope.runTestExamples:
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #test mini examples which are generated with objects
+#python/ is on sys.path since WorkInModelsDirectory(), so the generated list one level up
+#is importable while the working directory stays TestModels/ (#2513)
 from MiniExamples.miniExamplesFileList import miniExamplesFileList
 miniExamplesFailed = []
 if TSScope.runMiniExamples:
@@ -445,7 +445,7 @@ if TSScope.runMiniExamples:
         SC.Reset()
         testError = -1
         exu.config.outputDirectory = TSScope.solutionDirectory + '/MiniExamples/' + file[:-3] #(#2418)
-        fileDir = 'MiniExamples/'+file
+        fileDir = '../MiniExamples/'+file
         miniTimeStart = time.perf_counter()
         try:
             exec(open(fileDir, encoding='utf8').read(), globals())

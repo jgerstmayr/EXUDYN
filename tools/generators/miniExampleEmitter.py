@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Emits python/TestModels/MiniExamples/<Item>.py for every item that defines a
+# Details:  Emits python/MiniExamples/<Item>.py for every item that defines a
 #           miniExample, and miniExamplesFileList.py, from definitions/ (revision2026 step R4.3,
 #           part 2b). Moved out of src/pythonGenerator/pythonAutoGenerateObjects.py; byte-identical.
 #
@@ -44,8 +44,11 @@ def WriteMiniExample(className, miniExample, outputDir):
     s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n'
 
     s+= 'import sys\n'
-    s+= "sys.path.append('../TestModels')\n"
-    s+= "sys.path.append('../../TestModels') #for direct run in directory\n\n"
+    #modelUnitTests lives in python/testing/ since revision2026 step R3.9 (#2513); the first
+    #entry is for the suite (working directory python/TestModels/), the second for a direct
+    #run in python/MiniExamples/
+    s+= "sys.path.append('../testing')\n"
+    s+= "sys.path.append('../../testing') #for direct run in directory\n\n"
     s+= 'import exudyn as exu\n'
 
     s+= 'from exudyn.utilities import *\n'
@@ -81,8 +84,8 @@ def WriteMiniExample(className, miniExample, outputDir):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Emit the item mini examples from definitions/.')
-    parser.add_argument('--output-dir', default=os.path.join(im.repositoryRoot, 'python', 'TestModels', 'MiniExamples'),
-                        help='directory to write into (default: python/TestModels/MiniExamples)')
+    parser.add_argument('--output-dir', default=os.path.join(im.repositoryRoot, 'python', 'MiniExamples'),
+                        help='directory to write into (default: python/MiniExamples)')
     args = parser.parse_args(argv)
     outputDir = args.output_dir.replace(os.sep, '/').rstrip('/') + '/'
 

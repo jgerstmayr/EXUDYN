@@ -29,6 +29,12 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     #include right exudyn module now:
     import numpy as np
     import testRunnerTools
+
+    #the examples reach sideways with '../Examples/testData/...', so the working directory has
+    #to be a SIBLING of Examples/ - python/TestModels/, exactly as before the runners moved out
+    #of it (revision2026 steps R3.8, R3.9; #2512, #2513)
+    testRunnerTools.WorkInModelsDirectory(testRunnerTools.testModelsDir)
+
     import exudyn as exu
     import time
     
@@ -62,7 +68,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     numberOfProcesses = 0   #0: testRunnerTools picks it from the number of cores
     exampleTimeout = 60     #seconds per example; a timeout after the solver was reached is a pass
     solverTimeout = 1       #seconds per solver call inside an example
-    #copyLog = False         #copy log to final TestSuiteLogs
+    #copyLog = False         #copy log to final logs/examples
     # if sys.version_info.major == 3 and sys.version_info.minor == 7:
     #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
     if len(sys.argv) > 1:
@@ -159,8 +165,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersionMain
     localFileName = 'testExamplesLog_V'+exu.config.Version()+'_'+platformString
     
-    #logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.config.Version()+'_'+platformString+'.txt'
-    logFileName = '../TestExamplesLogs/'+localFileName+'.txt'
+    logFileName = '../logs/examples/'+localFileName+'.txt'
     #never truncate an existing (committed) log by accident; see testRunnerTools.ResolveLogFile
     logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
     exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
@@ -234,7 +239,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
         exu.Print('running '+str(len(runList))+' examples in parallel, timeout '
                   +str(exampleTimeout)+' s, solver timeout '+str(solverTimeout)+' s')
         results = testRunnerTools.RunExamplesInParallel(
-            runList, dirPath, '../logsTmp/exampleOutput',
+            runList, dirPath, '../logs/tmp/exampleOutput',
             numberOfProcesses=numberOfProcesses, timeout=exampleTimeout,
             solverTimeout=solverTimeout, quietMode=quietMode)
 

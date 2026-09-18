@@ -25,7 +25,6 @@ except:
     class ExudynTestGlobals:
         pass
     exudynTestGlobals = ExudynTestGlobals()
-    exudynTestGlobals.isPerformanceTest = False
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 useGraphics = False #without test
 

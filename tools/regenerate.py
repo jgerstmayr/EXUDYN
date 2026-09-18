@@ -48,7 +48,7 @@ tier1Paths = [
     'python/exudyn/__init__.pyi',
     'python/exudyn/symbolic.pyi',
     'tools/generators/generated',
-    'python/TestModels/MiniExamples',
+    'python/MiniExamples',
     ]
 
 #Tier 2: documentation. Differences warn but do not fail.

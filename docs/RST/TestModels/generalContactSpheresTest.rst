@@ -39,7 +39,6 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
        class ExudynTestGlobals:
            pass
        exudynTestGlobals = ExudynTestGlobals()
-       exudynTestGlobals.isPerformanceTest = False
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    SC = exu.SystemContainer()
@@ -50,9 +49,7 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    np.random.seed(1) #always get same results
    
    
-   isPerformanceTest = exudynTestGlobals.isPerformanceTest
    # useGraphics = False
-   # isPerformanceTest = True
    
    L = 1
    n = 500
@@ -60,12 +57,6 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    
    a = L
    vInit= -20
-   
-   if isPerformanceTest: 
-       n *= 100
-       a *= 0.5
-       row *= 2
-       vInit *= 10
    
    radius = 0.5*a
    m = 0.05
@@ -170,8 +161,6 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    
        ssx = 20 #search tree size
        ssy = 20
-       if isPerformanceTest: 
-           ssy*=4
        # mbs.Assemble()
        # gContact.FinalizeContact(mbs, searchTreeSize=np.array([ssx,ssy,ssx]), frictionPairingsInit=np.eye(1), 
        #                          searchTreeBoxMin=np.array([-1.2*H,-H,-1.2*H]), searchTreeBoxMax=np.array([1.2*H,14*H,1.2*H]) #80000 particles
@@ -189,14 +178,10 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    exu.Print("finish gContact")
    
    tEnd = 0.1
-   #the performance run solves this three times, with 1, 4 and 8 threads, and the single-threaded
-   #run is the longest one: 100 steps put it at the upper end of the 1.5 - 5 s target (issue #2460)
-   if isPerformanceTest: tEnd *= 0.2
    h= 0.0002
    simulationSettings = exu.SimulationSettings()
    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-   #the performance run must not measure file writing, and it solves the system three times
-   simulationSettings.solutionSettings.writeSolutionToFile = not isPerformanceTest
+   simulationSettings.solutionSettings.writeSolutionToFile = True
    simulationSettings.solutionSettings.solutionWritePeriod = 0.02
    simulationSettings.solutionSettings.sensorsWritePeriod = h*10
    simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
@@ -207,7 +192,6 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    #simulationSettings.displayStatistics = True
    simulationSettings.timeIntegration.verboseMode = 1
    simulationSettings.parallel.numberOfThreads = 1 #use 1 thread to create reproducible results (due to round off errors in sparse vector?)
-   #the performance run varies the thread count below; the test run stays at 1 thread
    
    simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
    simulationSettings.timeIntegration.newton.useModifiedNewton = False
@@ -242,30 +226,16 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
    simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
    
-   #the performance run solves the same system with several thread counts, to show how the contact
-   #computation scales; every run is reported separately (revision2026 step R5.15, issue #2460). The
-   #TEST run is untouched: one run with a single thread, which is what makes it reproducible.
-   threadList = [1, 4, 8] if isPerformanceTest else [1]
-   if isPerformanceTest:
-       import testRunnerTools
+   #one run with a single thread, which is what makes this test reproducible. The scaling over
+   #thread counts is measured by generalContactSpheresPerf.py (revision2026 step R3.9, #2513).
+   mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
    
-   for numberOfThreads in threadList:
-       simulationSettings.parallel.numberOfThreads = numberOfThreads
-       mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+   u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)
+   uSum = u[0] + u[1] + u[2]
+   exu.Print("u =", u)
+   exu.Print('solution of generalContactSpheresTest=',uSum)
    
-       u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)
-       uSum = u[0] + u[1] + u[2]
-       exu.Print("u =", u)
-       exu.Print('solution of generalContactSpheresTest=',uSum)
-   
-       if isPerformanceTest:
-           testRunnerTools.AddTiming(exudynTestGlobals,
-                                     'generalContactSpheresTest:nt'+str(numberOfThreads), mbs, uSum)
-   
-   if isPerformanceTest: 
-       exudynTestGlobals.testError = uSum - (-1.779402864432934) #2026-09-16: shorter performance run (issue #2460)
-   else:
-       exudynTestGlobals.testError = uSum - (-1.0947542400425323) 
+   exudynTestGlobals.testError = uSum - (-1.0947542400425323)
    
    exudynTestGlobals.testResult = uSum
    

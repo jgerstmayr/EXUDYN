@@ -203,24 +203,6 @@ def OptionalPackageTests():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++
-#return the .py files in TestModels/ which are NOT test models: the runners themselves and
-#the shared infrastructure they import. These are excluded from the coverage check
-#(testRunnerTools.CheckTestCoverage) for a structural reason, not a per-test one, which is
-#why they are kept apart from DeliberatelyNotRun().
-def NotTestModels():
-
-    return set([
-        'runTestSuite.py',              #the test suite driver
-        'runTestSuiteRefSol.py',        #this file: the reference values and the run manifest
-        'runTestExamples.py',           #driver for ../Examples/
-        'runPerformanceTests.py',       #driver for the performance tests
-        'runUnitTests.py',              #driver for the C++ unit tests
-        'testRunnerTools.py',           #shared helpers for all of the above
-        'modelUnitTests.py',            #the model unit test library and exudynTestGlobals
-        'test_testModels.py',           #the pytest collector (revision2026 step R5.1)
-        ])
-
-#%%+++++++++++++++++++++++++++++++++++++++
 #return the test models which exist but are deliberately NOT executed by the test suite,
 #name -> reason. A reason is required: a bare exclusion list is how the set rotted in the
 #first place (revision2026 fact 14), and a sentence per entry makes an unjustified
@@ -406,7 +388,9 @@ def PerformanceTestsReferenceSolution():
     refSol = {
         #the file-level value of a model with several runs is the result of its LAST run; the
         #single runs below are what is actually judged (revision2026 step R5.15, issue #2460)
-        'generalContactSpheresTest.py': -1.779402864432933, #2026-09-16: performance run shortened to tEnd*0.2; before: -5.98425321234168
+        #split out of TestModels/generalContactSpheresTest.py at revision2026 step R3.9 (#2513);
+        #the value is unchanged, because the copy keeps the branch the performance run took
+        'generalContactSpheresPerf.py': -1.779402864432933, #2026-09-16: performance run shortened to tEnd*0.2; before: -5.98425321234168
         'perf3DRigidBodies.py':4.541173417942123, #2026-09-16: tEnd 1 -> 0.7; before: 5.307943301446709
         'perfObjectFFRFreducedOrder.py':21.00863102425483, 
         'perfRigidPendulum.py':2.4735499200766586, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 2.4745344452543323,
@@ -418,9 +402,9 @@ def PerformanceTestsReferenceSolution():
         #2026-09-16 on Windows cp313; deterministic (repeated runs bit-identical).
         #The three contact runs solve the SAME system with 1, 4 and 8 threads, so they share one
         #value - a deviation between thread counts is a finding, not a tolerance question.
-        'generalContactSpheresTest:nt1': -1.779402864432934,
-        'generalContactSpheresTest:nt4': -1.779402864432934,
-        'generalContactSpheresTest:nt8': -1.779402864432934,
+        'generalContactSpheresPerf:nt1': -1.779402864432934,
+        'generalContactSpheresPerf:nt4': -1.779402864432934,
+        'generalContactSpheresPerf:nt8': -1.779402864432934,
         'perfLargeMassSpringChain:rigid-n1000-explicit' : 0.00969140311923411,
         'perfLargeMassSpringChain:rigid-n1000-implicit' : 0.02018347680683519,
         'perfLargeMassSpringChain:rigid-n5000-explicit' : 0.03706120534025104,

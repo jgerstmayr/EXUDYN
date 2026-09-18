@@ -62,7 +62,7 @@ The revision has **three documents**:
 | Generators | 6 scripts, ~25k LOC, in `main/src/pythonGenerator/` |
 | Item definitions | `objectDefinition.py` 1.4 MB / 11,300 lines; `systemStructuresDefinition.py` 256 KB |
 | Python package | 27 modules + `robotics/` in `main/pythonDev/exudyn/` |
-| Tests | 137 TestModel files, **106 executed** (list in `runTestSuiteRefSol.py`) + 23 MiniExamples, ~22 s **with scipy pinned to 1.15.2** (fact 19); 177 Examples; driven by `runTestSuite.py` |
+| Tests | 127 TestModel files, **114 executed** (list in `runTestSuiteRefSol.py`) + 24 MiniExamples, ~22 s **with scipy pinned to 1.15.2** (fact 19); 171 Examples; 7 performance models; driven by the runners in `python/testing/` (revision2026 step R3.9) |
 | Build | `main/setup.py`, 956 lines; VS2022 solution; CMake files are dead |
 | Clone | 203 MB working tree, 65 MB `.git`; `--depth 1` shallow clone of GitHub `master` at `e44aca1`. `origin` = internal GitLab (full history), `github` = public. See §2a. |
 | Maintainer tools | `tools/issueTracker/` (998-line tracker; **the version source of truth**) and `tools/buildAndGenerate/` (15 build/test/release batch scripts). Added to the working tree 2026-09; **never published to GitHub**. |
@@ -582,7 +582,7 @@ Moved to [`exudynRevisionPlan2026.md`](exudynRevisionPlan2026.md) on 2026-09-15.
 | D4 | **Stay on setuptools** | Preserves the ~1-minute wheel and the zero-dependency promise. |
 | D5 | **Plugins require same-toolchain builds** | Removes the need for a C-ABI shim. External users have capable machines; students in courses do not build extension modules. |
 | D6 | **GitHub `master` frozen** until v2.0 | No intermediate public state; months of local iteration are fine. Requires step R1.7. |
-| D7 | **Log retention on GitHub is tiered**: drop everything before 1.9; keep Windows-only / single-platform logs for 1.9 and 1.10; keep all platforms for the current version. Full history is conserved in the internal repository. | `TestSuiteLogs/`, `TestExamplesLogs/` and `PerformanceLogs/` carry genuinely useful cross-version, cross-platform comparisons, but hundreds of files inflate every `--depth 1` clone. Applied 2026-09-09. They stay **tracked** — the `.gitignore` deliberately does not cover them. |
+| D7 | **Log retention on GitHub is tiered**: drop everything before 1.9; keep Windows-only / single-platform logs for 1.9 and 1.10; keep all platforms for the current version. Full history is conserved in the internal repository. | The per-release logs carry genuinely useful cross-version, cross-platform comparisons, but hundreds of files inflate every `--depth 1` clone. Applied 2026-09-09. They stay **tracked** — the `.gitignore` deliberately does not cover them. Since revision2026 step R3.8 they are `python/logs/testmodels/`, `python/logs/examples/` and `python/logs/performance/`. |
 
 ### Open
 

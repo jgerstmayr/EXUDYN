@@ -28,10 +28,13 @@ import sys
 import pytest
 
 #models are addressed by their plain file name, as in runTestSuiteRefSol.py, so they must run with
-#the models directory as working directory - whatever directory pytest was started from
-modelsDirectory = os.path.dirname(os.path.abspath(__file__))
-if modelsDirectory not in sys.path:
-    sys.path.insert(0, modelsDirectory)
+#the models directory as working directory - whatever directory pytest was started from. Since
+#revision2026 step R3.9 this collector lives in python/testing/ and the models one directory over
+#in python/TestModels/ (#2513).
+testingDirectory = os.path.dirname(os.path.abspath(__file__))
+if testingDirectory not in sys.path:
+    sys.path.insert(0, testingDirectory)
+modelsDirectory = os.path.join(os.path.dirname(testingDirectory), 'TestModels')
 
 import testRunnerTools                                                          # noqa: E402
 from runTestSuiteRefSol import (TestExamplesReferenceSolution,                  # noqa: E402
@@ -127,7 +130,7 @@ def test_testModel(modelName):
 
 def test_miniExample(miniExampleName):
     """one generated mini example against its reference value"""
-    fileName = 'MiniExamples/' + miniExampleName
+    fileName = '../MiniExamples/' + miniExampleName
     referenceValue = referenceUpdate.get(miniExampleName, MiniExamplesReferenceSolution()[miniExampleName])
     CheckRun(fileName, RunModel(fileName), referenceValue,
              testRunnerTools.BaseTolerance())

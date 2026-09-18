@@ -28,13 +28,12 @@ class TestInterface:
 #this class is for interaction of test suite with examples given as (autonomous) .py file
 class ExudynTestStructure:
     def __init__(self, useGraphics = True, performTests = False, testError = 0, 
-                 testResult = 0, testTolFact = 1, isPerformanceTest = False):
+                 testResult = 0, testTolFact = 1):
         self.useGraphics = useGraphics
         self.testError = testError      #for regular test models (store reference solution inside)
         self.testResult = testResult    #the value a model computes; was a duplicate testError line
         self.testTolFact = testTolFact  #additional factor to raise tolerance
         self.performTests = performTests #this variable is only used for testing if example is calculated outside test mode
-        self.isPerformanceTest = isPerformanceTest #only true for performance tests; allows to use test both for error and performance test
 
         #one dict per simulation run, appended by testRunnerTools.AddTiming (issue #2460):
         #{'name':..., 'time': solver.timer.total, 'result':...}. A performance model may run

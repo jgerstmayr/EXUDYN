@@ -34,7 +34,10 @@ definitions/                              the item, structure and pybind definit
 tools/generators/                         the code generators: driver generate.py, emitters, validator, helpers
 src/pythonGenerator/                      leftovers removed by later steps (doc2rst, latexConverter, exudynVersion)
 python/exudyn/                            the shipped Python package
-python/TestModels/runTestSuite.py         the test suite (~20 s, run it in full)
+python/testing/runTestSuite.py            the test suite (~20 s, run it in full); the runners
+python/TestModels/                        test models only; models for the other suites are in
+                                          python/{PerformanceModels,MiniExamples,Examples}/
+python/logs/                              testmodels/ examples/ performance/ tmp/
 python/pytestTemplate.py                  template for python/pytest.py, the untracked scratch file
 tools/issueTracker/issueTracker.py        issue tracker AND version source of truth
 tools/exudev/                             the dev driver: build / test / docs; "exudev --help"

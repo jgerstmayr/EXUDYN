@@ -17,10 +17,40 @@ import sys
 import platform
 import time
 
+#%%******************************************************************************************************
+#The directories the runners work in. Since revision2026 step R3.9 (#2513) the runners live in
+#python/testing/ and the models they run live in sibling directories next to it. The models
+#themselves are written relative to a working directory of python/TestModels/ - 'testData/...',
+#'solution/...', '../Examples/testData/...' - so every runner CHANGES INTO the directory of the
+#models it drives (WorkInModelsDirectory below) instead of the ~130 models being rewritten.
+#sys.path[0] is python/testing/ for a runner started here, which is what keeps the models'
+#'import testRunnerTools' and 'from modelUnitTests import ...' working unchanged.
+testingDir = os.path.dirname(os.path.abspath(__file__))
+pythonDir = os.path.dirname(testingDir)
+testModelsDir = os.path.join(pythonDir, 'TestModels')
+performanceModelsDir = os.path.join(pythonDir, 'PerformanceModels')
+miniExamplesDir = os.path.join(pythonDir, 'MiniExamples')
+examplesDir = os.path.join(pythonDir, 'Examples')
+
+
+def WorkInModelsDirectory(directory):
+    """
+    Change into the models directory and make python/ importable, so that relative paths inside
+    the models resolve as they always did and 'from MiniExamples.miniExamplesFileList import ...'
+    finds the generated list one level up. Call this once, before anything reads or writes a
+    relative path. Returns the absolute directory (#2513).
+    """
+    if pythonDir not in sys.path:
+        sys.path.append(pythonDir)          #append: must not shadow the runners' own modules
+    if testingDir not in sys.path:
+        sys.path.insert(0, testingDir)      #a runner started from elsewhere still finds them
+    os.chdir(directory)
+    return directory
+
+
 #shared temporary log directory for all runners; a single directory is easy to delete.
-#relative to the runner's working directory, which is the models directory.
-#NOTE: becomes logs/tmp/ when the logs are relocated (revision2026 step R3.8)
-tmpLogDir = '../logsTmp/'
+#relative to the runner's working directory, which is the models directory (revision2026 step R3.8)
+tmpLogDir = '../logs/tmp/'
 
 #packages whose version can change test results; taken from what the TestModels and Examples
 #import, plus the optional extras documented in docs/howTo/condaEnvironments.md
@@ -271,7 +301,7 @@ def AddTiming(testGlobals, name, mbs, result, solverName='dynamicSolver'):
 
 
 #%%******************************************************************************************************
-def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun):
+def CheckTestCoverage(modelsDir, refSolNames, deliberatelyNotRun):
     """
     Verify that the reference lists and the files on disk still describe the same set of tests.
 
@@ -279,6 +309,10 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
     there is no listdir anywhere in the suite. A model which exists but is in no list is
     therefore never executed, and is indistinguishable from a file which does not exist. That
     is how 19 models came to be silently unrun (revision2026 fact 14, revision2026 step R5.9).
+
+    modelsDir holds MODELS ONLY since revision2026 step R3.9 (#2513), so every .py in it is a
+    test. The list of files which are not tests - needed while the runners and the performance
+    models lived in the same directory as the test models - is gone with them.
 
     Four checks, covering every direction in which the two can drift apart:
 
@@ -300,7 +334,7 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
                  if f.endswith('.py') and os.path.isfile(os.path.join(modelsDir, f)))
 
     covered = set(refSolNames)
-    excluded = set(notTestModels) | set(deliberatelyNotRun)
+    excluded = set(deliberatelyNotRun)
 
     uncovered = sorted(onDisk - covered - excluded)
     staleKeys = sorted(covered - onDisk)
@@ -310,10 +344,9 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
     isFailure = (len(uncovered) != 0) or (len(staleKeys) != 0)
 
     s = '\n+++++ TEST COVERAGE +++++\n'
-    s += ('{:d} .py files in {:s}: {:d} referenced, {:d} infrastructure, '
-          '{:d} deliberately not run\n').format(
+    s += ('{:d} .py files in {:s}: {:d} referenced, {:d} deliberately not run\n').format(
           len(onDisk), modelsDir, len(covered & onDisk),
-          len(set(notTestModels) & onDisk), len(set(deliberatelyNotRun) & onDisk))
+          len(set(deliberatelyNotRun) & onDisk))
 
     if len(uncovered) != 0:
         s += '\nUNCOVERED - in no reference list and on no exclusion list:\n'
@@ -680,6 +713,9 @@ exampleSolvingMarker = '#__EXUDYN_EXAMPLE_SOLVING__'
 runExampleBootstrap = """
 import sys, time
 sys.argv = [{exampleFileName!r}]
+#the runners and modelUnitTests live in python/testing/ since revision2026 step R3.9, while the
+#worker runs with the models directory as its working directory (#2513)
+sys.path.insert(0, {testingDirectory!r})
 import matplotlib
 matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
@@ -750,6 +786,7 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
     import subprocess
 
     source = runExampleBootstrap.format(exampleFileName=exampleFileName,
+                                        testingDirectory=testingDir,
                                         examplePath=examplesDirectory + exampleFileName,
                                         outputDirectory=outputDirectory,
                                         solverTimeout=solverTimeout,
@@ -841,6 +878,8 @@ resultMarker = '#__EXUDYN_TEST_RESULT__'
 runModelBootstrap = """
 import sys, time
 sys.argv = [{fileName!r}]
+#see runExampleBootstrap above (#2513)
+sys.path.insert(0, {testingDirectory!r})
 import matplotlib
 matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
@@ -885,8 +924,13 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
     """
     import subprocess
 
+    #a model addressed through a sibling directory ('../MiniExamples/X.py' since revision2026
+    #step R3.9) must not write its output back into that directory (#2513)
+    outputName = fileName[:-3].replace(chr(92), '/').replace('../', '')
+
     source = runModelBootstrap.format(fileName=fileName,
-                                      outputDirectory=solutionDirectory + '/' + fileName[:-3],
+                                      testingDirectory=testingDir,
+                                      outputDirectory=solutionDirectory + '/' + outputName,
                                       invalidResult=invalidResult,
                                       resultMarker=resultMarker)
     start = time.perf_counter()

@@ -26,7 +26,6 @@ except:
     class ExudynTestGlobals:
         pass
     exudynTestGlobals = ExudynTestGlobals()
-    exudynTestGlobals.isPerformanceTest = False
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()

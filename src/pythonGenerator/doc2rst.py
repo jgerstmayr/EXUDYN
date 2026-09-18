@@ -535,7 +535,7 @@ Indices and tables
 #examples and test models
 if True:
     import sys, os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'python/TestModels'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'python/testing'))
     rstDir = destDir+rstFolder
     from runTestSuiteRefSol import TestExamplesReferenceSolution
 

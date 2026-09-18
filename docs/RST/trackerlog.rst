@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.171.dev1, 
++  Exudyn version = 1.11.173.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2512, 
-+  Number of resolved issues = 2244 (171 in current version), 
++  Number of issues = 2514, 
++  Number of resolved issues = 2246 (173 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.173: resolved Issue 2513: TestModels holds models only (change)
+    - issue author: Claude-JG
+    - description:  The runners and helpers move to python/testing/; the performance models to python/PerformanceModels/ and the generated MiniExamples to python/MiniExamples/; so that python/TestModels/ holds test models only. This removes NotTestModels() - the hard-coded list of non-test files the coverage check of revision2026 step R5.9 needed - and gives the performance suite its own coverage check. The dual-use model generalContactSpheresTest.py is split into two copies without isPerformanceTest switching. revision2026 step R3.9.
+    - **notes:** python/TestModels/ now holds 127 test models and testData/ only; the 8 runners are in python/testing/; the 7 performance models in python/PerformanceModels/ and the 24 generated mini examples in python/MiniExamples/. NotTestModels() is deleted and CheckTestCoverage() lost its notTestModels parameter; the performance suite gained the same coverage check over its own directory; folded into its exit code. No model changed for path reasons: each runner changes into the directory of the models it drives (testRunnerTools.WorkInModelsDirectory); the pattern test_testModels.py already used; so relative paths inside the models resolve as before and the caller working directory no longer matters. The two worker bootstraps now put python/testing/ on sys.path and RunModelInProcess strips a leading ../ from the output directory name. generalContactSpheresTest.py was split into a test copy and PerformanceModels/generalContactSpheresPerf.py with isPerformanceTest removed everywhere; no reference value moved; which is the check that the split was correct. perfObjectFFRFreducedOrder.py reads the shared rotor mesh as ../TestModels/testData/rotorDiscTest rather than a copy. Verified: full suite; performance suite 7 files / 13 single runs; 171 examples; pytest 137 passed; all generator and static checks; sphinx under -W.
+    - date resolved: **2026-09-18 11:00**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.172: resolved Issue 2512: logs consolidated into python/logs/ (change)
+    - issue author: Claude-JG
+    - description:  The four log directories python/TestSuiteLogs/; python/TestExamplesLogs/; python/PerformanceLogs/ and python/logsTmp/ are consolidated into python/logs/ with one subdirectory per kind (testmodels; examples; performance) and a shared tmp/. revision2026 step R3.8.
+    - **notes:** The four log directories became python/logs/{testmodels; examples; performance; tmp}. 62 tracked logs moved with git mv so history follows them; decision D7 unchanged - they stay tracked. Four logFileName expressions and testRunnerTools.tmpLogDir updated. The -local CI copy still goes to the working directory python/TestModels/; so both artifact globs stayed correct and no workflow file was touched. Verified: ResolveLogFile found the existing performance log under ../logs/performance/ and diverted to ../logs/tmp/.
+    - date resolved: **2026-09-18 11:00**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.171: resolved Issue 2505: a test model page is in no toctree (documentation)
     - issue author: Claude-JG
     - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.

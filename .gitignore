@@ -1,9 +1,9 @@
 # Exudyn .gitignore
 #
 # Deliberately NOT ignored, because they are versioned on purpose:
-#   python/PerformanceLogs/   per-release performance records
-#   python/TestSuiteLogs/     per-release test suite records (retention policy: plan D7)
-#   python/TestExamplesLogs/  per-release example-run records
+#   python/logs/performance/  per-release performance records
+#   python/logs/testmodels/   per-release test suite records (retention policy: plan D7)
+#   python/logs/examples/     per-release example-run records
 #   msvc/cppsrc.vcxproj           the live VS project and de-facto source list
 # Add new entries with a comment saying what produces the file.
 
@@ -66,6 +66,8 @@ test.txt
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 python/TestModels/solution/
 python/TestModels/coordinatesSolution.txt
+python/PerformanceModels/solution/
+python/PerformanceModels/coordinatesSolution.txt
 python/Examples/solution/
 python/Examples/coordinatesSolution.txt
 
@@ -118,8 +120,8 @@ tools/issueTracker/trackerlog_backup.txt
 
 # diverted test/performance logs: written when the release-named target already exists,
 # so a run never truncates a committed log (see testRunnerTools.ResolveLogFile).
-# One shared directory, so it is trivial to delete. Becomes logs/tmp/ at revision2026 step R3.8.
-python/logsTmp/
+# One shared directory, so it is trivial to delete (revision2026 step R3.8).
+python/logs/tmp/
 
 # build byproducts from setup.py
 # compiler object files
@@ -128,7 +130,7 @@ tmp/
 setuppy.output.txt
 
 # the '-local' copy that runTestSuite.py writes next to the models for CI artifact
-# collection; the release copy in TestSuiteLogs/ is the one that is kept
+# collection; the release copy in python/logs/testmodels/ is the one that is kept
 python/TestModels/testSuiteLog_V*.txt
 python/TestModels/testExamplesLog_V*.txt
 

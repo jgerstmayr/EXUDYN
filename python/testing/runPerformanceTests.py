@@ -24,6 +24,12 @@ isWindows = (sys.platform == 'win32')
 #include right exudyn module now:
 import numpy as np
 import testRunnerTools
+
+#the performance suite drives python/PerformanceModels/ and runs IN it; the log goes to
+#../logs/performance/ next to it. Where it was STARTED from does not matter
+#(revision2026 steps R3.8, R3.9; #2512, #2513)
+testRunnerTools.WorkInModelsDirectory(testRunnerTools.performanceModelsDir)
+
 #--fast-module measures exudynCPPfast; without it, the regular module. Until revision2026 step
 #R5.11 this was decided by the INTERPRETER - the fast module was used if and only if Python was
 #3.10 - which silently coupled "which module" to "which version" and made the two logs of a
@@ -63,7 +69,7 @@ mbs = SC.AddSystem()
 writeToConsole = True  #do not output to console / shell
 overwriteLog = False   #--overwrite-log: replace an existing log instead of diverting to tmp
 useExitCode = False    #--exit-code: exit non-zero when a performance test failed (#2504)
-#copyLog = False         #copy log to final TestSuiteLogs
+#copyLog = False         #copy log to final logs/performance
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
 if len(sys.argv) > 1:
@@ -132,10 +138,10 @@ elif multiprocessing.cpu_count() == 20:
     #lands here, which is why EXUDYN_MACHINE_ID exists. Remove once it is set on all machines.
     subFolder = 'i7-1370P/'
 
-if subFolder != '' and not os.path.exists('../PerformanceLogs/'+subFolder):
-    os.makedirs('../PerformanceLogs/'+subFolder, exist_ok=True)
+if subFolder != '' and not os.path.exists('../logs/performance/'+subFolder):
+    os.makedirs('../logs/performance/'+subFolder, exist_ok=True)
 
-logFileName = '../PerformanceLogs/'+subFolder+'performanceLog_V'+exu.config.Version()+'_'+platformString+'.txt'
+logFileName = '../logs/performance/'+subFolder+'performanceLog_V'+exu.config.Version()+'_'+platformString+'.txt'
 #never truncate an existing (committed) log by accident; see testRunnerTools.ResolveLogFile
 logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
@@ -183,7 +189,7 @@ testGroups = {
                 'perfSpringDamperUserFunction.py',
              ],
     'large': [
-                'generalContactSpheresTest.py',
+                'generalContactSpheresPerf.py',
                 'perf3DRigidBodies.py',
                 'perfObjectFFRFreducedOrder.py',
                 'perfLargeMassSpringChain.py',
@@ -202,7 +208,6 @@ totalTests = len(testFileList)
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 exudynTestGlobals.useGraphics = False
 exudynTestGlobals.performTests = True
-exudynTestGlobals.isPerformanceTest = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -216,6 +221,17 @@ allRuns = []        #every single simulation run of every model (revision2026 st
 
 from runTestSuiteRefSol import PerformanceTestsReferenceSolution
 performanceTestRefSol = PerformanceTestsReferenceSolution()
+
+#the reference list IS the run manifest here too, so check it against the folder before
+#running anything - the same check runTestSuite.py makes over TestModels/, made possible for
+#the performance models by giving them a directory of their own (revision2026 step R3.9).
+#PerformanceTestsReferenceSolution() also holds values for the SINGLE RUNS of a model that
+#solves several sizes or thread counts ('...:nt8'); those are not file names (issue #2460).
+coverageText, coverageFailed = testRunnerTools.CheckTestCoverage(
+    modelsDir='.',
+    refSolNames=set(k for k in performanceTestRefSol.keys() if k.endswith('.py')),
+    deliberatelyNotRun={})
+exu.Print(coverageText)
 
 testExamplesCnt = 0
 for file in testFileList:
@@ -345,6 +361,8 @@ exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop w
 #list here: unlike the examples, every performance test passes today, and one that does not is a
 #result worth going red for.
 if useExitCode:
-    sys.exit(1 if len(testsFailed) != 0 else 0)
+    #a coverage failure is a real failure: a performance model in no reference list is never
+    #measured and nobody would notice (revision2026 step R3.9)
+    sys.exit(1 if (len(testsFailed) != 0 or coverageFailed) else 0)
 
 

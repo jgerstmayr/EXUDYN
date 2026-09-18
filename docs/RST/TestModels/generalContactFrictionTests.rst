@@ -45,11 +45,7 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    
    nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
    
-   #isPerformanceTest = exudynTestGlobals.isPerformanceTest
    #useGraphics = False
-   # isPerformanceTest = True
-   # tEnd = 0.1
-   # if isPerformanceTest: tEnd *= 0.5
    
    #%%+++++++++++++++++++++++++++++++++
    #sphere-sphere with coordinate constraints, prestressed; fixed torque on one side, linear increasing torque on other side

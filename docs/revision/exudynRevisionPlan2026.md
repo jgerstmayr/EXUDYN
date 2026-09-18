@@ -253,24 +253,18 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     `tools/gen_sources.py` supersedes it.
 
 <a id="r3-8"></a>
-**R3.8** *(phase R3, with the flattening)* **Give the logs their own directory.** Today they sit in three
-    sibling directories next to the models — `TestSuiteLogs/`, `TestExamplesLogs/`,
-    `PerformanceLogs/` — plus the `logsTmp/` added by step R5.10. Consolidate into a top-level `logs/`
-    with one subdirectory per kind (`testmodels`, `examples`, `performance`) and a single shared
-    `logs/tmp/`, which is what makes clearing scratch logs one delete. Do it inside the phase R3
-    `git mv` commit so the moves stay tracked, and update the three `logFileName` expressions plus
-    `testRunnerTools.tmpLogDir` in the same commit.
+**R3.8** **DONE 2026-09-18** — the four log directories consolidated into `python/logs/`
+    (`testmodels`, `examples`, `performance`, `tmp`). The step originally said a **top-level**
+    `logs/`; the maintainer chose `python/` instead, so that the repository root stays the code
+    and how to build it, and everything a test run touches is in one subtree (#2512).
+    → [log](exudynRevisionLog2026.md#r3-8)
 
 <a id="r3-9"></a>
-**R3.9** *(phase R3, with the flattening)* **Move runners and helpers out of the model directories.**
-    `TestModels/` currently mixes the models with `runTestSuite.py`, `runTestExamples.py`,
-    `runPerformanceTests.py`, `runUnitTests.py`, `runTestSuiteRefSol.py`, `modelUnitTests.py` and
-    `testRunnerTools.py`, which is why step R5.9's coverage check needs
-    `NotTestModels()` to name seven files that are not tests. Separate them so the model
-    directories contain models only. Performance
-    models get their own directory as well; a model used for both performance and TestModels moves
-    to performance. Sequence with step R5.9 — a completeness check over a directory of models only
-    is far simpler than one that must know which files to ignore.
+**R3.9** **DONE 2026-09-18** — `python/TestModels/` holds 127 test models and nothing else; the
+    runners are in `python/testing/`, the performance models in `python/PerformanceModels/`, the
+    generated mini examples in `python/MiniExamples/`. `NotTestModels()` is gone and the
+    performance suite has a coverage check of its own. The one dual-use model was split into two
+    copies with the switching removed (#2513). → [log](exudynRevisionLog2026.md#r3-9)
 
 <a id="r3-10"></a>
 **R3.10** **DONE 2026-09-10** — `docs/doxygen/` removed. → [log](exudynRevisionLog2026.md#r3-10)

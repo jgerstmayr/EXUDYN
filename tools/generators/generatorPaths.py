@@ -38,6 +38,10 @@ pythonDir = repositoryRoot + 'python/'
 pythonPackageDir = pythonDir + 'exudyn/'
 testModelsDir = pythonDir + 'TestModels/'
 examplesDir = pythonDir + 'Examples/'
+#since revision2026 step R3.9 each of these holds one kind of file (#2513)
+miniExamplesDir = pythonDir + 'MiniExamples/'
+performanceModelsDir = pythonDir + 'PerformanceModels/'
+testingDir = pythonDir + 'testing/'
 toolsGeneratorsDir = repositoryRoot + 'tools/generators/'
 
 for _directory in (toolsGeneratorsDir, pythonGeneratorDir):

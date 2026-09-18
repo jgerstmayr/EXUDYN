@@ -1024,7 +1024,7 @@ Function: FromPyMeshlabFile
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_\  (Ex), \ `testRunnerTools.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/testRunnerTools.py>`_\  (TM)
+    \ `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_\  (Ex)
 
 
 

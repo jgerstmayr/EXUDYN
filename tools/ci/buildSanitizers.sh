@@ -142,7 +142,7 @@ export UBSAN_OPTIONS="print_stacktrace=1:report_error_type=1"
 
 #the suite must not run its models in child processes here: each one would pay the preload cost
 #again and the findings would be spread over processes that the parent never shows
-cd "$repoRoot/python/TestModels"
+cd "$repoRoot/python/testing"
 set +e
 "$venvPython" runTestSuite.py -quiet --exit-code > "$reportFile" 2>&1
 suiteExit=$?

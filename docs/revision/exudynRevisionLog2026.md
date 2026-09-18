@@ -1779,6 +1779,147 @@ and a new **`buildQuirks.md`** holding the specifics salvaged from the deleted f
     could not be rederived in five minutes. Survivors and the new `buildQuirks.md` are listed in
     `docs/dev/README.md`. → [log](exudynRevisionLog2026.md#r3-6)
 
+<a id="r3-8"></a>
+### R3.8 — the logs get their own directory
+
+**DONE 2026-09-18.** The four log directories — `python/TestSuiteLogs/`, `python/TestExamplesLogs/`,
+`python/PerformanceLogs/` and the gitignored `python/logsTmp/` — became one tree:
+
+```
+python/logs/testmodels/   python/logs/examples/   python/logs/performance/   python/logs/tmp/
+```
+
+The step text said a **top-level** `logs/`. The maintainer chose `python/` instead, and the reason
+is worth keeping: the repository root is "the code and how to build it" and is already busy, while
+everything a test run reads or writes now lives in one subtree under `python/`. The step text was
+amended rather than silently reinterpreted.
+
+62 tracked log files moved with `git mv`, so `git log --follow` still finds their history, and the
+16 untracked local runs came along on disk. Decision **D7** is unchanged: the release logs stay
+tracked.
+
+Four expressions changed, one per writer — `runTestSuite.py:194`, `runTestExamples.py:163`,
+`runPerformanceTests.py:135-138` and `testRunnerTools.tmpLogDir`. `.gitignore`'s standing note
+("*Becomes logs/tmp/ at revision2026 step R3.8*") is now true and was removed.
+
+**The `-local` CI copy did not move**, and that is deliberate: `runTestSuite.py --local` writes
+`testSuiteLog_V*.txt` into its *working directory*, which is still `python/TestModels/`. Both
+artifact globs — `.gitlab-ci.yml:50` and `.github/workflows/wheels.yml:64` — are therefore still
+correct and were not touched, which also meant no `.github/workflows/` approval was needed.
+
+Verified by running the performance suite: `ResolveLogFile` found the existing
+`../logs/performance/performanceLog_V1.11.161.dev1_64bitP3.13.txt` and diverted to
+`../logs/tmp/`, printing the override message. That is the relocation and the protection working
+together, from a runner two directories away.
+
+---
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R3.8** *(phase R3, with the flattening)* **Give the logs their own directory.** Today they sit in
+three sibling directories next to the models — `TestSuiteLogs/`, `TestExamplesLogs/`,
+`PerformanceLogs/` — plus the `logsTmp/` added by step R5.10. Consolidate into a top-level `logs/`
+with one subdirectory per kind (`testmodels`, `examples`, `performance`) and a single shared
+`logs/tmp/`, which is what makes clearing scratch logs one delete. Do it inside the phase R3
+`git mv` commit so the moves stay tracked, and update the three `logFileName` expressions plus
+`testRunnerTools.tmpLogDir` in the same commit.
+
+<a id="r3-9"></a>
+### R3.9 — one kind of file per directory
+
+**DONE 2026-09-18.** `python/TestModels/` held 141 `.py` files: 127 test models, 6 performance
+models, 8 runners and helpers, plus a generated `MiniExamples/` subdirectory. It now holds 127 test
+models and `testData/`, and nothing else.
+
+```
+python/TestModels/          127 test models
+python/PerformanceModels/   7 performance models
+python/MiniExamples/        24 generated mini examples
+python/testing/             the 8 runners and helpers
+python/Examples/            unchanged
+```
+
+**What this was for.** Step R5.9 introduced the coverage check that turns the reference lists into a
+run manifest, and had to introduce `NotTestModels()` alongside it — a hard-coded list of seven files
+that are not tests — purely because the directory was mixed. That function is **deleted**, and
+`CheckTestCoverage()` lost its `notTestModels` parameter. What the suite now prints is the whole
+statement:
+
+```
+127 .py files in .: 114 referenced, 13 deliberately not run
+OK: every .py in the folder is either referenced or explicitly excluded
+```
+
+The same check now also runs over `python/PerformanceModels/` against
+`PerformanceTestsReferenceSolution()`, and feeds `runPerformanceTests.py --exit-code`. The
+performance suite had no such check before, because there was no directory to run it over.
+
+**The names stay.** `Examples/` and `TestModels/` are named in 60 and 67 files and in the user
+documentation. R3.9 asks for models-only *contents*, not a rename, and a rename would collide with
+R7's documentation work, which has to touch those references anyway.
+
+**One decision carries the whole migration.** Every model, mini example and example is written
+relative to a working directory of `python/TestModels/` — `testData/...`, `solution/...`,
+`../Examples/testData/gyro.stl`. Rewriting those would have touched ~130 files. Instead **each
+runner changes into the directory of the models it drives**, the pattern `test_testModels.py`
+already used, via a new `testRunnerTools.WorkInModelsDirectory()`. `sys.path[0]` is
+`python/testing/` for a runner started there, so every model's `import testRunnerTools` and
+`from modelUnitTests import ...` keeps working untouched. **No model file changed for path
+reasons.** Where the runner is *started* from no longer matters at all, which is why
+`exudev`, `buildManylinux.sh`, `buildSanitizers.sh` and the three cibuildwheel `test-command` lines
+each needed one word changed and nothing more.
+
+Two consequences had to be handled explicitly:
+
+- the two worker bootstraps in `testRunnerTools.py` run `python -c` in a fresh interpreter, where
+  `sys.path[0]` is the working directory — which no longer contains `modelUnitTests`. Both now
+  insert `python/testing/` first. Without this, every example would silently have taken its
+  `except ImportError` branch.
+- `RunModelInProcess` builds the output directory from the file name, so a mini example addressed
+  as `../MiniExamples/X.py` would have written its output back into the source directory. The
+  leading `../` is stripped, restoring exactly the old `solution/MiniExamples/X` layout.
+
+**The dual-use model.** Exactly one model was in both suites: `generalContactSpheresTest.py`,
+branching on `isPerformanceTest` at ten places — a different `tEnd`, 100 times as many spheres, a
+1/4/8 thread sweep, solution writing on or off. The maintainer's instruction was to make separate
+copies and drop the switching. So `python/PerformanceModels/generalContactSpheresPerf.py` has the
+`True` side baked in and the test model has the `False` side.
+
+The check that the resolution was done right is that **no reference value moved**: the test copy
+still gives `-1.113854772025744` and the performance copy `-1.779402864432933`, with the three
+`:nt1/:nt4/:nt8` runs at `-1.779402864432934`, all unchanged. `isPerformanceTest` no longer exists
+anywhere — the six `perf*.py` fallbacks, the four dead commented lines in
+`generalContactFrictionTests.py` and the `ExudynTestStructure` constructor argument went with it.
+
+`perfObjectFFRFreducedOrder.py` needed one real path change: it reads the rotor mesh from
+`testData/rotorDiscTest`, which eight test models also read. The mesh stays in
+`TestModels/testData/` and the performance model reaches it as `../TestModels/testData/...` —
+copying a shared FEM input would have been the worse answer. A shared `python/testData/` is a
+reasonable follow-up, not part of this step.
+
+**Verification.** Full suite 137 models + 23 mini examples PASSED from the repository root (the
+chdir makes the caller's directory irrelevant); performance suite 7 files / 13 single runs all
+successful against unchanged references; examples 171 run with the same two known failures;
+`pytest -q -n 8` 137 passed; `regenerate.py` clean with the emitter writing to `python/MiniExamples/`;
+`checkAll`, `checkExtras`, `checkPython`, `checkPython --stubs`, `gen_sources` clean; `exudev docs`
+clean under `-W`.
+
+Done as two commits, the shape R3.1 used: one `git mv` of 100 files with byte-for-byte no content
+change, then one repair commit.
+
+---
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R3.9** *(phase R3, with the flattening)* **Move runners and helpers out of the model directories.**
+`TestModels/` currently mixes the models with `runTestSuite.py`, `runTestExamples.py`,
+`runPerformanceTests.py`, `runUnitTests.py`, `runTestSuiteRefSol.py`, `modelUnitTests.py` and
+`testRunnerTools.py`, which is why step R5.9's coverage check needs `NotTestModels()` to name seven
+files that are not tests. Separate them so the model directories contain models only. Performance
+models get their own directory as well; a model used for both performance and TestModels moves to
+performance. Sequence with step R5.9 — a completeness check over a directory of models only is far
+simpler than one that must know which files to ignore.
+
 <a id="r3-10"></a>
 ### R3.10 — remove `docs/doxygen/`
 
