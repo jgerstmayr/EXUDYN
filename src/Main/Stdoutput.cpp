@@ -392,6 +392,30 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	}
 }
 
+//! THE CAUSE OF AN EXUDYN EXCEPTION (#2537, revision2026 step R6.3.8); declared in
+//! ExceptionsTemplates.h next to the handlers that fill it. thread_local because two threads can be
+//! inside Exudyn at once (the renderer calls Python of its own), and a raw PyObject* rather than a
+//! py::object because a thread_local py::object destructor would need the GIL at thread exit.
+static thread_local PyObject* pendingExceptionCause = nullptr;
+
+void SetPendingExceptionCause(PyObject* value)
+{
+	Py_XINCREF(value);
+	Py_XDECREF(pendingExceptionCause);
+	pendingExceptionCause = value;
+}
+
+void ClearPendingExceptionCause()
+{
+	Py_XDECREF(pendingExceptionCause);
+	pendingExceptionCause = nullptr;
+}
+
+PyObject* PendingExceptionCause()
+{
+	return pendingExceptionCause;
+}
+
 //! The renderer reads globalPyRuntimeErrorFlag in five places (GlfwClient.cpp): it stops the render
 //! loop and, more importantly, keeps the render thread from calling into Python while Python is in
 //! an error state. This is the ONE place that knows the rule, so that every site which decides

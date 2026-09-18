@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.195.dev1, 
++  Exudyn version = 1.11.196.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2537, 
-+  Number of resolved issues = 2268 (195 in current version), 
++  Number of issues = 2538, 
++  Number of resolved issues = 2269 (196 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.196: resolved Issue 2537: an Exudyn exception stringifies the error that caused it instead of chaining it (improvement)
+    - issue author: Claude-JG
+    - description:  A user function that raises ZeroDivisionError reaches Python as a ModelError whose MESSAGE contains the words ZeroDivisionError: float division by zero. The original object is gone: e.__cause__ is None and the traceback that pointed into the user function survives only as printed text. py::raise_from (pytypes.h:818) sets __cause__ and __context__ and keeps the traceback - it needs the registered Python class as a PyObject\* and the original exception as an object. Carry the original from the handler that caught it to the pybind boundary and chain it in one exception translator. Split off from step R6.3.5 on 2026-09-18 and confirmed by the maintainer after reading the model in Spyder.
+    - **notes:** The three handlers that catch error_already_set now store the original with SetPendingExceptionCause(ex.value().ptr()) - a thread_local PyObject\* with explicit incref, not a py::object whose destructor would need the GIL at thread exit - and ONE exception translator in PybindModule.cpp, registered after the eight register_exception calls so that it is tried first, restores it as the current error with its traceback and calls py::raise_from. Control flow is unchanged: the same C++ types are thrown as before, which is why this was not done by calling raise_from in the handler - that would throw py::error_already_set and every intermediate catch(EXUexception) would stop matching. A user function that divides by zero now arrives as ModelError with __cause__ = the ZeroDivisionError and its traceback pointing at the users own line; an error with no Python behind it keeps __cause__ is None; parameterConversionTestReference.txt did not move.
+    - date resolved: **2026-09-18 23:13**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.195: :textred:`resolved BUG 2531` : a typed exception from the solver no longer stops the renderer 
     - issue author: Claude-JG
     - description:  globalPyRuntimeErrorFlag is set in exactly two places: PyError and SysError (Stdoutput.cpp). The CHECKandTHROW\* macros never set it. Until #2524 a bare EXUexception escaping a solver step fell into SolverExceptionHandling catch(EXUexception) and became SysError - which set the flag and stopped the renderer. That handler now has catch(const ExudynError&){throw;} in front of it (needed so the type is not flattened) so every site typed by step R6.3.6 passes through and the flag stays false. The renderer then keeps running and keeps calling Python while Python is in an error state (GlfwClient.cpp reads the flag in five places). The behaviour now depends on how far R6.3.6 has got which is an accident. Set the flag where SOLVER errors are caught - not in ThrowPyErrorType which would make every typed exception anywhere shut the renderer down.

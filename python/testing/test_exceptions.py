@@ -128,6 +128,73 @@ def test_anUntypedCheckIsAnInternalError():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the exception that CAUSED an Exudyn exception travels with it (revision2026 step R6.3.8, #2537)
+
+def _SystemWithAFailingUserFunction():
+    """a load whose user function divides by zero; returns (mbs, simulationSettings)"""
+    from exudyn.itemInterface import (NodePoint, ObjectMassPoint, MarkerNodeCoordinate,
+                                      LoadCoordinate)
+
+    systemContainer = exu.SystemContainer()
+    mbs = systemContainer.AddSystem()
+    nodeNumber = mbs.AddNode(NodePoint(referenceCoordinates=[0., 0., 0.]))
+    mbs.AddObject(ObjectMassPoint(physicsMass=1., nodeNumber=nodeNumber))
+    markerNumber = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeNumber, coordinate=0))
+
+    def DivideByZero(mbs2, t, load):
+        return load/0.
+
+    mbs.AddLoad(LoadCoordinate(markerNumber=markerNumber, load=1.,
+                               loadUserFunction=DivideByZero))
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1
+    simulationSettings.timeIntegration.endTime = 0.01
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+
+    return (mbs, simulationSettings)
+
+
+def test_theCauseIsTheOriginalException():
+    """a user function that raises ZeroDivisionError must arrive as an Exudyn exception whose
+    __cause__ IS that ZeroDivisionError - the object, not the words. Until step R6.3.8 the
+    original survived only inside the message string."""
+    (mbs, simulationSettings) = _SystemWithAFailingUserFunction()
+
+    with pytest.raises(exu.ExudynError) as caught:
+        mbs.SolveDynamic(simulationSettings)
+
+    assert isinstance(caught.value, exu.ModelError)   #a user function is part of the model
+    assert type(caught.value.__cause__) is ZeroDivisionError
+
+
+def test_theCauseKeepsTheTracebackIntoTheUserFunction():
+    """the point of chaining rather than printing: an IDE can jump to the line that failed."""
+    import traceback
+
+    (mbs, simulationSettings) = _SystemWithAFailingUserFunction()
+    with pytest.raises(exu.ExudynError) as caught:
+        mbs.SolveDynamic(simulationSettings)
+
+    cause = caught.value.__cause__
+    assert cause.__traceback__ is not None
+    assert "DivideByZero" in [frame.name for frame in traceback.extract_tb(cause.__traceback__)]
+
+
+def test_anErrorWithoutAPythonCauseIsNotChained():
+    """a CHECKandTHROW has no Python exception behind it, so nothing may be invented - and the
+    pending cause of an earlier error must not attach itself to it"""
+    systemContainer = exu.SystemContainer()
+    mbs = systemContainer.AddSystem()
+    mbs.Assemble()
+
+    with pytest.raises(exu.ExudynIndexError) as caught:
+        mbs.GetObject(99)
+    assert caught.value.__cause__ is None
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #deprecations are Python warnings, not printed lines (revision2026 step R6.3.4, #2522)
 
 def test_deprecationIsAWarning():

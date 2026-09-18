@@ -45,6 +45,7 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 #define NOMINMAX //needs to be placed on top (before windows.h)! Otherwise std::min/max will cause error msg!
 #include <cmath>
 
+#include "Utilities/ExceptionsTemplates.h" //for the pending-cause slot of #2537
 #include "System/versionCpp.h"
 #include "Main/MainSystem.h"
 //#include "Pymodules/PybindUtilities.h" //for RenderState conversions
@@ -194,6 +195,70 @@ PYBIND11_MODULE(exudynCPP, m) {
 			py::make_tuple(exudynError, py::handle(PyExc_TypeError)));
 		py::register_exception<ExudynArithmeticError>(m, "ExudynArithmeticError",
 			py::make_tuple(exudynError, py::handle(PyExc_ArithmeticError)));
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//THE CAUSE (#2537, revision2026 step R6.3.8). register_exception<T> above also installed a
+		//translator per class, which does PyErr_SetString and loses any __cause__. Translators are
+		//tried in REVERSE order of registration, so the one below - registered last - is tried
+		//FIRST and is the one that actually runs for every Exudyn class.
+		//
+		//It is deliberately ONE translator and not eight: the mapping from C++ class to Python
+		//class is the only thing that differs, and a table keeps that visible in one place.
+		//Raw PyObject* and not py::object: these live for the life of the module, and a namespace
+		//scope py::object would be destroyed at interpreter shutdown, when the GIL may be gone.
+		static PyObject* exudynClassOf[9] = { nullptr };
+		const char* classNames[9] = { "ExudynError", "ModelError", "SolverError", "InternalError",
+			"NotImplementedFeatureError", "ExudynIndexError", "ExudynValueError", "ExudynTypeError",
+			"ExudynArithmeticError" };
+		for (Index i = 0; i < 9; i++)
+		{
+			exudynClassOf[i] = m.attr(classNames[i]).ptr();
+			Py_INCREF(exudynClassOf[i]);
+		}
+
+		py::register_exception_translator([](std::exception_ptr exceptionPointer)
+		{
+			try
+			{
+				if (exceptionPointer) { std::rethrow_exception(exceptionPointer); }
+			}
+			catch (const ExudynError& exudynException)
+			{
+				//the C++ class decides the Python class; every one of them derives DIRECTLY from
+				//ExudynError, so the order of these tests does not matter except for the fallback
+				PyObject* pythonClass = exudynClassOf[0];
+				if      (dynamic_cast<const ExudynModelError*>(&exudynException))          { pythonClass = exudynClassOf[1]; }
+				else if (dynamic_cast<const ExudynSolverError*>(&exudynException))         { pythonClass = exudynClassOf[2]; }
+				else if (dynamic_cast<const ExudynInternalError*>(&exudynException))       { pythonClass = exudynClassOf[3]; }
+				else if (dynamic_cast<const ExudynNotImplementedError*>(&exudynException)) { pythonClass = exudynClassOf[4]; }
+				else if (dynamic_cast<const ExudynIndexError*>(&exudynException))          { pythonClass = exudynClassOf[5]; }
+				else if (dynamic_cast<const ExudynValueError*>(&exudynException))          { pythonClass = exudynClassOf[6]; }
+				else if (dynamic_cast<const ExudynTypeError*>(&exudynException))           { pythonClass = exudynClassOf[7]; }
+				else if (dynamic_cast<const ExudynArithmeticError*>(&exudynException))     { pythonClass = exudynClassOf[8]; }
+
+				PyObject* cause = PendingExceptionCause();
+				if (cause != nullptr)
+				{
+					//make the original the current error again, WITH its traceback, so that
+					//raise_from can hang it under the Exudyn exception as __cause__
+					PyObject* causeType = (PyObject*)Py_TYPE(cause);
+					PyObject* causeTraceback = PyException_GetTraceback(cause); //new reference or nullptr
+					Py_INCREF(causeType);
+					Py_INCREF(cause);
+					PyErr_Restore(causeType, cause, causeTraceback); //steals all three
+					py::error_already_set original;                  //fetches it back, normalized
+
+					ClearPendingExceptionCause(); //always, so it cannot attach itself to the next one
+					py::raise_from(original, pythonClass, exudynException.what());
+				}
+				else
+				{
+					ClearPendingExceptionCause();
+					PyErr_SetString(pythonClass, exudynException.what());
+				}
+			}
+		});
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	}
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

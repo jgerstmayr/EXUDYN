@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.195.dev1, 
+  \item Exudyn version = 1.11.196.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2537, 
-  \item Number of resolved issues = 2268 (195 in current version), 
+  \item Number of issues = 2538, 
+  \item Number of resolved issues = 2269 (196 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.196}:  resolved Issue 2537: {\bf an Exudyn exception stringifies the error that caused it instead of chaining it}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: A user function that raises ZeroDivisionError reaches Python as a ModelError whose MESSAGE contains the words ZeroDivisionError: float division by zero. The original object is gone: e.\_\_cause\_\_ is None and the traceback that pointed into the user function survives only as printed text. py::raise\_from (pytypes.h:818) sets \_\_cause\_\_ and \_\_context\_\_ and keeps the traceback - it needs the registered Python class as a PyObject* and the original exception as an object. Carry the original from the handler that caught it to the pybind boundary and chain it in one exception translator. Split off from step R6.3.5 on 2026-09-18 and confirmed by the maintainer after reading the model in Spyder.}
+    \item {\bf notes: The three handlers that catch error\_already\_set now store the original with SetPendingExceptionCause(ex.value().ptr()) - a thread\_local PyObject* with explicit incref, not a py::object whose destructor would need the GIL at thread exit - and ONE exception translator in PybindModule.cpp, registered after the eight register\_exception calls so that it is tried first, restores it as the current error with its traceback and calls py::raise\_from. Control flow is unchanged: the same C++ types are thrown as before, which is why this was not done by calling raise\_from in the handler - that would throw py::error\_already\_set and every intermediate catch(EXUexception) would stop matching. A user function that divides by zero now arrives as ModelError with \_\_cause\_\_ = the ZeroDivisionError and its traceback pointing at the users own line; an error with no Python behind it keeps \_\_cause\_\_ is None; parameterConversionTestReference.txt did not move.}
+    \item   date resolved: {\bf 2026-09-18 23:13},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.195}: {\bf \color{warningRed}  resolved BUG 2531}: {\bf a typed exception from the solver no longer stops the renderer}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

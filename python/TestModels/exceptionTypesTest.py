@@ -183,13 +183,18 @@ else:
             silent += 1
         except BaseException as exception:
             message = str(exception).replace('\n', ' | ')
+            #since revision2026 step R6.3.8 (#2537) an Exudyn exception carries the error that
+            #caused it as __cause__ - the object, with its traceback - instead of only its words
+            cause = exception.__cause__
+            if cause is not None:
+                message = '[__cause__ ' + type(cause).__name__ + ': ' + str(cause) + '] ' + message
             results.append((number, name, type(exception).__name__, message))
 
     exu.Print('')
     exu.Print('exceptionTypesTest: what a user gets, ' + str(len(cases)) + ' cases')
     exu.Print('-' * 110)
     for (number, name, className, message) in results:
-        exu.Print('%2d  %-32s %-22s %s' % (number, name, className, message[:48]))
+        exu.Print('%2d  %-32s %-22s %s' % (number, name, className, message[:62]))
     exu.Print('-' * 110)
 
     #the ONLY thing this model asserts: every case must raise something. Which class and which

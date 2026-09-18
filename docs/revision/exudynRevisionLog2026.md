@@ -7146,6 +7146,79 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-3-8"></a>
+### R6.3.8 — the exception carries what caused it
+
+**DONE 2026-09-18** (#2537). Split off from R6.3.5 on the same day, and the last open sub-step
+of R6.3.
+
+A user function that divides by zero used to arrive as a `ModelError` whose **message** said
+*"ZeroDivisionError: float division by zero"*. The object was gone: `e.__cause__` was `None`,
+and the traceback that pointed into the user function survived as printed text only. The
+maintainer confirmed the symptom after reading the model in Spyder — *"pure text as before,
+but still it allows to easily get to the line number"*.
+
+Now:
+
+```python
+except exudyn.ModelError as e:
+    type(e.__cause__)                 # <class 'ZeroDivisionError'>
+    e.__cause__.__traceback__         # names DivideByZero, the user's own function
+```
+
+and an IDE shows the *"During handling of the above exception, another exception occurred"*
+chain, with the user's line as the innermost frame.
+
+#### The design, and the one that was rejected
+
+`py::raise_from` (`pytypes.h:818`) does the chaining. The obvious place to call it is inside
+`UserFunctionExceptionHandling`, where the Python error is caught — and that is exactly what
+must not be done. It would mean throwing `py::error_already_set` instead of an `ExudynError`,
+and every intermediate `catch (const EXUexception&)` on the way out would stop matching and
+fall into `catch (...)`. The blast radius is the whole handler chain, for a feature that adds
+one attribute.
+
+So the control flow is untouched and the cause travels as **data**:
+
+1. `SetPendingExceptionCause(ex.value().ptr())` in the three handlers that catch
+   `error_already_set`, right before the `PyError(...)` they already did. A `thread_local`
+   `PyObject*` with explicit `Py_INCREF`/`Py_XDECREF` — **not** a `thread_local py::object`,
+   whose destructor would need the GIL at thread exit.
+2. **One** exception translator in `PybindModule.cpp`, registered **after** the eight
+   `register_exception` calls. pybind11 tries translators in reverse order of registration, so
+   the last one registered is the first one tried, and it is the one that runs for every Exudyn
+   class. It restores the cause as the current error *with its traceback*
+   (`PyException_GetTraceback` + `PyErr_Restore`), then calls `py::raise_from`.
+3. The slot is cleared by the translator on **both** paths, so a cause can never attach itself
+   to the next exception.
+
+One translator and not eight: only the C++ class → Python class mapping differs, and a table
+keeps that in one readable place.
+
+#### What did not change
+
+`parameterConversionTestReference.txt` did not move by one line: no type changed, only an
+attribute was added. An error with no Python behind it — any `CHECKandTHROW` — keeps
+`__cause__ is None`, which is its own test, because inventing a cause would be worse than
+having none.
+
+#### The known window, stated
+
+The slot is cleared when the translator runs, not when the handler that filled it returns. If
+an `ExudynError` carrying a pending cause is caught somewhere in C++ and never reaches Python,
+the cause waits for the next translated `ExudynError` on that thread. Clearing on handler entry
+instead would put two `thread_local` writes into the user-function path, which runs per time
+step. The window needs a C++ catch that swallows a `ModelError`, and none exists today.
+
+#### R6.3 has no open sub-step left
+
+Thirteen sub-steps, from the classes of R6.3.1 to this one. What a user meets now: an exception
+with a type, a message that says what to change, a location that is their own line, and — when
+something of theirs failed — the original error hanging under it.
+
+---
+
+
 <a id="r6-3-11"></a>
 ### R6.3.11 — the renderer flag, put where solver errors are caught
 

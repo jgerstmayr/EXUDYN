@@ -714,7 +714,9 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 
 <a id="r6-3-8"></a>
-**R6.3.8** *(sub-step of R6.3; split off from R6.3.5 on 2026-09-18)* **Chain the original Python exception** instead of stringifying it. A user function that raises `ZeroDivisionError` should reach the user as an Exudyn exception whose `__cause__` **is** that `ZeroDivisionError`, with its traceback, rather than as a message containing the words. `py::raise_from` does exactly that (`pytypes.h:818`) - the work is not the call but the handler chain: the error passes through `UserFunctionExceptionHandling` and `SolverExceptionHandling`, which each catch `error_already_set`, so the first one to catch it must decide, and the others must let it through. Needs the registered exception classes reachable from C++ outside `PybindModule.cpp`.
+**R6.3.8** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-8) — *(sub-step of R6.3)*
+    **The original Python exception is chained as `__cause__`** (#2537), with its traceback,
+    instead of being stringified into the message.
 
 <a id="r6-3-9"></a>
 **R6.3.9** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-9) — *(sub-step of R6.3; added on the
