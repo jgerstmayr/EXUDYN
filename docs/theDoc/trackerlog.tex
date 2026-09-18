@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.174.dev1, 
+  \item Exudyn version = 1.11.175.dev1, 
   \item last change =  2026-09-18, 
   \item Number of issues = 2515, 
-  \item Number of resolved issues = 2247 (174 in current version), 
+  \item Number of resolved issues = 2248 (175 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.175}:  resolved Issue 2432: {\bf parameter conversion errors raise inconsistent exception types}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Recorded by parameterConversionTest.py: a wrong value for an item or structure parameter raises RuntimeError (PyError after a C++ check or a pybind11 cast\_error) - TypeError (pybind11 signature mismatch) or ValueError (Python checks) depending on the path; 34c4/34c5 moved most paths to RuntimeError. Maintainer decision 2026-09-15: exception types shall be corrected throughout the revision at an appropriate step - e.g. TypeError for a wrong type (str - list - None - item index into a scalar) and ValueError for a range violation or a wrong size - raised from PyConversion.h and PyError variants; reference update of parameterConversionTest.py. revision2026 step R6.7.}
+    \item {\bf notes: A parameter error now raises TypeError when the object cannot be that parameter at all (None; a string for a number; a list for a scalar; an item index of the wrong kind) and ValueError when the kind is right and the value is not (out of range; wrong size; a must-be-given placeholder). Three mechanisms had to change: PyError takes a PyErrorType and throws py::type\_error or py::value\_error (default unchanged; so the other 577 call sites are untouched); all 20 PyError sites in PyConversion.h name their type (12/8); and the casts that see user input go through Conversion::CastOrRaise; which turns a pybind11 cast\_error - the third path this issue names - into a TypeError naming the parameter. Two layers flattened the type back to RuntimeError and had to be found: EXUexception is a define for std::runtime\_error (ReleaseAssert.h:30) and py::builtin\_exception derives from it; so catch(EXUexception) in the five AddX wrappers and in GenericExceptionHandling caught the new types first - a pass-through now comes before it. Two defects surfaced: three messages built their text with py::cast<std::string>(value); which throws for exactly the values that reach that line; and a 0-d numpy array (what an itemInterface class makes of a scalar in a vector parameter) fails the cast as a Python error; not a cast\_error - which is why the class and dict paths disagreed. Recorded in parameterConversionTestReference.txt: of 966 rows every changed outcome is RuntimeError to TypeError (6898) or to ValueError (785); nothing moved the other way and no successful conversion changed. The MESSAGE is deliberately unchanged and belongs to revision2026 step R6.3.}
+    \item   date resolved: {\bf 2026-09-18 12:50},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.174}:  resolved Issue 2514: {\bf checkExtras does not know python/testing}
 (bug)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

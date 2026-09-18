@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.174.dev1, 
++  Exudyn version = 1.11.175.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2515, 
-+  Number of resolved issues = 2247 (174 in current version), 
++  Number of resolved issues = 2248 (175 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.175: resolved Issue 2432: parameter conversion errors raise inconsistent exception types (change)
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py: a wrong value for an item or structure parameter raises RuntimeError (PyError after a C++ check or a pybind11 cast_error) - TypeError (pybind11 signature mismatch) or ValueError (Python checks) depending on the path; 34c4/34c5 moved most paths to RuntimeError. Maintainer decision 2026-09-15: exception types shall be corrected throughout the revision at an appropriate step - e.g. TypeError for a wrong type (str - list - None - item index into a scalar) and ValueError for a range violation or a wrong size - raised from PyConversion.h and PyError variants; reference update of parameterConversionTest.py. revision2026 step R6.7.
+    - **notes:** A parameter error now raises TypeError when the object cannot be that parameter at all (None; a string for a number; a list for a scalar; an item index of the wrong kind) and ValueError when the kind is right and the value is not (out of range; wrong size; a must-be-given placeholder). Three mechanisms had to change: PyError takes a PyErrorType and throws py::type_error or py::value_error (default unchanged; so the other 577 call sites are untouched); all 20 PyError sites in PyConversion.h name their type (12/8); and the casts that see user input go through Conversion::CastOrRaise; which turns a pybind11 cast_error - the third path this issue names - into a TypeError naming the parameter. Two layers flattened the type back to RuntimeError and had to be found: EXUexception is a define for std::runtime_error (ReleaseAssert.h:30) and py::builtin_exception derives from it; so catch(EXUexception) in the five AddX wrappers and in GenericExceptionHandling caught the new types first - a pass-through now comes before it. Two defects surfaced: three messages built their text with py::cast<std::string>(value); which throws for exactly the values that reach that line; and a 0-d numpy array (what an itemInterface class makes of a scalar in a vector parameter) fails the cast as a Python error; not a cast_error - which is why the class and dict paths disagreed. Recorded in parameterConversionTestReference.txt: of 966 rows every changed outcome is RuntimeError to TypeError (6898) or to ValueError (785); nothing moved the other way and no successful conversion changed. The MESSAGE is deliberately unchanged and belongs to revision2026 step R6.3.
+    - date resolved: **2026-09-18 12:50**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.174: resolved Issue 2514: checkExtras does not know python/testing (bug)
     - issue author: Claude-JG
     - description:  After revision2026 step R3.9 the runners live in python/testing/ and are no longer siblings of the models. checkExtras.LocalModuleNames() only knows the shipped packages and the siblings of the scanned directory; so modelUnitTests and testRunnerTools were reported as UNCOVERED IMPORTS needed by [tests] - although they are project files and not packages at all. revision2026 step R3.9.1.
@@ -7775,11 +7781,6 @@ Open issues
     - issue author: Claude-JG
     - description:  found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
     - date raised: 2026-09-16 
-
- * **open issue 2432:** parameter conversion errors raise inconsistent exception types
-    - issue author: Claude-JG
-    - description:  Recorded by parameterConversionTest.py: a wrong value for an item or structure parameter raises RuntimeError (PyError after a C++ check or a pybind11 cast_error) - TypeError (pybind11 signature mismatch) or ValueError (Python checks) depending on the path; 34c4/34c5 moved most paths to RuntimeError. Maintainer decision 2026-09-15: exception types shall be corrected throughout the revision at an appropriate step - e.g. TypeError for a wrong type (str - list - None - item index into a scalar) and ValueError for a range violation or a wrong size - raised from PyConversion.h and PyError variants; reference update of parameterConversionTest.py. revision2026 step R6.7.
-    - date raised: 2026-09-15 
 
  * **open issue 2423:** every C++ user error inspects the Python source for its file and line
     - issue author: Claude-JG

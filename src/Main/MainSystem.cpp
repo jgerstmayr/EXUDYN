@@ -407,6 +407,14 @@ NodeIndex MainSystem::AddMainNodePyClass(const py::object& pyObject)
 		}
 		itemIndex = AddMainNode(dictObject);
 	}
+	//a parameter error that named its Python exception type keeps it; its message was
+	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
+	//otherwise catch it first (ReleaseAssert.h:30)
+	catch (const py::builtin_exception&)
+	{
+		throw;
+	}
 	catch (const EXUexception& ex)
 	{
 		//will fail, if dictObject is invalid: PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
@@ -821,6 +829,14 @@ ObjectIndex MainSystem::AddMainObjectPyClass(const py::object& pyObject)
 		}
 		itemIndex = AddMainObject(dictObject);
 	}
+	//a parameter error that named its Python exception type keeps it; its message was
+	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
+	//otherwise catch it first (ReleaseAssert.h:30)
+	catch (const py::builtin_exception&)
+	{
+		throw;
+	}
 	catch (const EXUexception& ex)
 	{
 		//will fail, if dictObject is invalid: PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
@@ -1206,6 +1222,14 @@ MarkerIndex MainSystem::AddMainMarkerPyClass(const py::object& pyObject)
 		}
 		itemIndex = AddMainMarker(dictObject);
 	}
+	//a parameter error that named its Python exception type keeps it; its message was
+	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
+	//otherwise catch it first (ReleaseAssert.h:30)
+	catch (const py::builtin_exception&)
+	{
+		throw;
+	}
 	catch (const EXUexception& ex)
 	{
 		//will fail, if dictObject is invalid: PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
@@ -1512,6 +1536,14 @@ LoadIndex MainSystem::AddMainLoadPyClass(const py::object& pyObject)
 		}
 		itemIndex = AddMainLoad(dictObject);
 	}
+	//a parameter error that named its Python exception type keeps it; its message was
+	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
+	//otherwise catch it first (ReleaseAssert.h:30)
+	catch (const py::builtin_exception&)
+	{
+		throw;
+	}
 	catch (const EXUexception& ex)
 	{
 		//will fail, if dictObject is invalid: PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
@@ -1770,6 +1802,14 @@ SensorIndex MainSystem::AddMainSensorPyClass(const py::object& pyObject)
 			dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
 		}
 		itemIndex = AddMainSensor(dictObject);
+	}
+	//a parameter error that named its Python exception type keeps it; its message was
+	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
+	//otherwise catch it first (ReleaseAssert.h:30)
+	catch (const py::builtin_exception&)
+	{
+		throw;
 	}
 	catch (const EXUexception& ex)
 	{

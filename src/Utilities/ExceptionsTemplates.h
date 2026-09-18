@@ -110,6 +110,14 @@ void GenericExceptionHandling(Tfunction&& f, const char* placeOfException)
 		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 
+	//a parameter error that named its Python exception type keeps it; its message was
+	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
+	//otherwise catch it first (ReleaseAssert.h:30)
+	catch (const py::builtin_exception&)
+	{
+		throw;
+	}
 	catch (const EXUexception& ex)
 	{
 		PyError("Internal error in '" + STDstring(placeOfException) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");

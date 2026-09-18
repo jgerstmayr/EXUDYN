@@ -8,6 +8,9 @@
 * 				  Real vectors and matrices become numpy arrays
 * 				- item indices carry their kind as template argument (NodeIndex, ObjectIndex, ...),
 * 				  so an ObjectIndex is rejected where a NodeIndex is expected
+* 				- every error here names its Python exception type (revision2026 step R6.7, #2432):
+* 				  TypeError when the object cannot be this parameter at all, ValueError when the
+* 				  kind is right and the value or the size is not
 * 				- revision2026 step R4.4.3: introduced in 34c2 with the behaviour of the helpers in
 * 				  PybindUtilities.h, which forward here; the generated code switches over in 34c4/34c5
 * 				- deliberately independent of PybindUtilities.h, which is rewritten later
@@ -82,6 +85,52 @@ namespace EPyUtils {
 				py::isinstance<MarkerIndex>(value) || py::isinstance<LoadIndex>(value) ||
 				py::isinstance<SensorIndex>(value);
 		}
+
+		//! the word used for a scalar parameter in a message
+		template<class T>
+		inline const char* ScalarName()
+		{
+			return std::is_same<T, bool>::value ? "a bool"
+				: (std::is_floating_point<T>::value ? "a float"
+					: (std::is_integral<T>::value ? "an integer" : "a value of its enum type"));
+		}
+
+		//! the TypeError both failure paths of CastOrRaise raise; never returns
+		inline void RaiseCastError(const py::object& value, const char* expected, const char* context)
+		{
+			STDstring received = STDstring(", but received ") + EXUstd::ToString(value) +
+				" of type " + EXUstd::ToString(value.get_type());
+			if (context != nullptr)
+			{
+				PyError(STDstring("parameter ") + context + " expects " + expected + received,
+					PyErrorType::typeError);
+			}
+			PyError(STDstring("failed to convert to ") + expected + received, PyErrorType::typeError);
+		}
+
+		//! py::cast, but a failure raises a TypeError naming the parameter instead of a pybind11
+		//! cast_error, which reaches Python as a RuntimeError about C++ types the user cannot see
+		//! (revision2026 step R6.7, #2432). context may be nullptr where the caller has no name.
+		template<class T>
+		inline T CastOrRaise(const py::object& value, const char* expected, const char* context)
+		{
+			try
+			{
+				return py::cast<T>(value);
+			}
+			//py::cast_error is the pybind11 failure; error_already_set is a failure raised by
+			//Python itself during the cast, e.g. "iteration over a 0-d array" for np.array(-1),
+			//which is what an itemInterface class makes of a scalar written into a vector
+			catch (const py::error_already_set&)
+			{
+				RaiseCastError(value, expected, context);
+			}
+			catch (const py::cast_error&)
+			{
+				RaiseCastError(value, expected, context);
+			}
+			return T(); //not reached: PyError always throws
+		}
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -97,7 +146,7 @@ namespace EPyUtils {
 	{
 		if (value.is_none())
 		{
-			PyError(STDstring("parameter ") + context + " received None; a value is required");
+			PyError(STDstring("parameter ") + context + " received None; a value is required", PyErrorType::typeError);
 		}
 	}
 
@@ -109,10 +158,10 @@ namespace EPyUtils {
 		RejectNone(value, context);
 		if (!std::is_same<T, Index>::value && Conversion::IsItemIndex(value))
 		{
-			PyError(STDstring("parameter ") + context + " expects a " + (std::is_same<T, bool>::value ? "bool" : (std::is_floating_point<T>::value ? "float" : "value of its enum type")) +
-				", but received the item index " + EXUstd::ToString(value) + " of type " + EXUstd::ToString(value.get_type()));
+			PyError(STDstring("parameter ") + context + " expects " + Conversion::ScalarName<T>() +
+				", but received the item index " + EXUstd::ToString(value) + " of type " + EXUstd::ToString(value.get_type()), PyErrorType::typeError);
 		}
-		destination = py::cast<T>(value);
+		destination = Conversion::CastOrRaise<T>(value, Conversion::ScalarName<T>(), context);
 	}
 
 	//! raises if a must-be-given parameter (CFMustBeGiven in definitions/) still holds its placeholder default,
@@ -123,7 +172,7 @@ namespace EPyUtils {
 		if (Conversion::IsScalar(value) && py::cast<Real>(value) == placeholder && EXUstd::ParameterRangeChecksActive())
 		{
 			PyError(STDstring("parameter ") + context + " must be given; the default " + EXUstd::ToString(placeholder) +
-				" is only a placeholder");
+				" is only a placeholder", PyErrorType::valueError);
 		}
 	}
 
@@ -139,7 +188,7 @@ namespace EPyUtils {
 		{
 			PyError(STDstring("parameter ") + context + (range == RangeCheck::positive ? " must be positive (> 0)" : " may not be negative") +
 				", but received " + EXUstd::ToString(scalar) +
-				" (range checks can be switched off with exudyn.special.exceptions.parameterRangeChecks = False)");
+				" (range checks can be switched off with exudyn.special.exceptions.parameterRangeChecks = False)", PyErrorType::valueError);
 		}
 		destination = scalar;
 	}
@@ -149,7 +198,7 @@ namespace EPyUtils {
 	{
 		if (!py::isinstance<py::str>(value))
 		{
-			PyError(STDstring("failed to convert to string: " + py::cast<std::string>(value)));
+			PyError(STDstring("failed to convert to string: ") + EXUstd::ToString(value), PyErrorType::typeError);
 		}
 		destination = py::cast<std::string>(value);
 	}
@@ -160,12 +209,12 @@ namespace EPyUtils {
 	{
 		if (!Conversion::IsListOrArray(value)) //test first: a string would otherwise cast into a list of characters
 		{
-			PyError(STDstring("failed to convert SlimVector" + EXUstd::ToString(size) + ": " + py::cast<std::string>(value)));
+			PyError(STDstring("failed to convert SlimVector") + EXUstd::ToString(size) + ": " + EXUstd::ToString(value), PyErrorType::typeError);
 		}
-		std::vector<T> stdlist = py::cast<std::vector<T>>(value);
+		std::vector<T> stdlist = Conversion::CastOrRaise<std::vector<T>>(value, "a list of numbers", nullptr);
 		if ((Index)stdlist.size() != size)
 		{
-			PyError("Vector" + EXUstd::ToString(size) + "D size mismatch: expected " + EXUstd::ToString(size) + " items in list!");
+			PyError("Vector" + EXUstd::ToString(size) + "D size mismatch: expected " + EXUstd::ToString(size) + " items in list!", PyErrorType::valueError);
 		}
 		destination = stdlist;
 	}
@@ -180,20 +229,23 @@ namespace EPyUtils {
 		bool isList = py::isinstance<py::list>(value);
 		if (!isList && !py::isinstance<py::array>(value))
 		{
-			PyError(STDstring("failed to convert to Matrix: " + py::cast<std::string>(value)));
+			PyError(STDstring("failed to convert to Matrix: ") + EXUstd::ToString(value), PyErrorType::typeError);
 		}
-		std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value);
+		std::vector<py::object> stdlist = Conversion::CastOrRaise<std::vector<py::object>>(value, "a list of rows", nullptr);
 		if ((Index)stdlist.size() != rows)
 		{
-			PyError("Matrix size mismatch: expected " + EXUstd::ToString(rows) + " rows!");
+			PyError("Matrix size mismatch: expected " + EXUstd::ToString(rows) + " rows!", PyErrorType::valueError);
 		}
 		for (Index i = 0; i < rows; i++)
 		{
 			if (isList && !py::isinstance<py::list>(stdlist[i]))
 			{
-				PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+				//the row is not a list: a type problem, not a size one - the message said "size mismatch"
+				//until revision2026 step R6.7, where the distinction started to matter (#2432)
+				PyError("Matrix row " + EXUstd::ToString(i) + " is not a list; expected " + EXUstd::ToString(columns) + " columns",
+					PyErrorType::typeError);
 			}
-			std::vector<T> rowVector = py::cast<std::vector<T>>(stdlist[i]);
+			std::vector<T> rowVector = Conversion::CastOrRaise<std::vector<T>>(stdlist[i], "a row of numbers", nullptr);
 			if ((Index)rowVector.size() == columns)
 			{
 				for (Index j = 0; j < columns; j++)
@@ -203,7 +255,7 @@ namespace EPyUtils {
 			}
 			else if (!isList) //a list row of wrong length is left unchanged, as before 34c2
 			{
-				PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+				PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!', PyErrorType::valueError);
 			}
 		}
 	}
@@ -292,9 +344,9 @@ namespace EPyUtils {
 		if (!Conversion::IsItemIndexOfKind<TItemIndex>(value))
 		{
 			PyError(STDstring("Expected ") + Conversion::ItemIndexName<TItemIndex>() + ", but received '" + EXUstd::ToString(value) +
-				"', type=" + EXUstd::ToString(value.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!");
+				"', type=" + EXUstd::ToString(value.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!", PyErrorType::typeError);
 		}
-		destination = py::cast<Index>(value);
+		destination = Conversion::CastOrRaise<Index>(value, Conversion::ItemIndexName<TItemIndex>(), nullptr);
 	}
 
 	//! one index as return value, e.g. Index nodeNumber = ItemIndexFromPython<NodeIndex>(value)
@@ -314,7 +366,7 @@ namespace EPyUtils {
 		if (!Conversion::IsListOrArray(value))
 		{
 			PyError(STDstring("Expected list of ") + Conversion::ItemIndexName<TItemIndex>() + ", but received '" + EXUstd::ToString(value) +
-				"'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...) or inconsistent arrays for nodeNumbers, markerNumbers, ...!");
+				"'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...) or inconsistent arrays for nodeNumbers, markerNumbers, ...!", PyErrorType::typeError);
 		}
 		py::list pylist = py::cast<py::list>(value); //also works for numpy arrays
 		for (auto item : pylist)
@@ -334,7 +386,7 @@ namespace EPyUtils {
 		if (arrayIndex.NumberOfItems() != size)
 		{
 			PyError(STDstring("Expected list of ") + EXUstd::ToString(size) + " " + Conversion::ItemIndexName<TItemIndex>() + ", but received " +
-				EXUstd::ToString(arrayIndex.NumberOfItems()) + " items in list");
+				EXUstd::ToString(arrayIndex.NumberOfItems()) + " items in list", PyErrorType::valueError);
 		}
 		destination = SlimArray<Index, size>(arrayIndex, 0);
 	}
@@ -349,7 +401,7 @@ namespace EPyUtils {
 	{
 		if (!py::isinstance<py::str>(value))
 		{
-			PyError(STDstring("parameter ") + context + " expects a string, but received " + EXUstd::ToString(value));
+			PyError(STDstring("parameter ") + context + " expects a string, but received " + EXUstd::ToString(value), PyErrorType::typeError);
 		}
 		destination = py::cast<std::string>(value);
 	}
@@ -360,12 +412,12 @@ namespace EPyUtils {
 	{
 		if (!Conversion::IsSequence(value))
 		{
-			PyError(STDstring("parameter ") + context + " expects a list or array of " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString(value));
+			PyError(STDstring("parameter ") + context + " expects a list or array of " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString(value), PyErrorType::typeError);
 		}
-		std::vector<T> stdlist = py::cast<std::vector<T>>(value);
+		std::vector<T> stdlist = Conversion::CastOrRaise<std::vector<T>>(value, "a list of numbers", context);
 		if ((Index)stdlist.size() != size)
 		{
-			PyError(STDstring("parameter ") + context + " expects " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString((Index)stdlist.size()));
+			PyError(STDstring("parameter ") + context + " expects " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString((Index)stdlist.size()), PyErrorType::valueError);
 		}
 		destination = stdlist;
 	}
@@ -375,9 +427,9 @@ namespace EPyUtils {
 	{
 		if (!Conversion::IsSequence(value))
 		{
-			PyError(STDstring("parameter ") + context + " expects a list of integers, but received " + EXUstd::ToString(value));
+			PyError(STDstring("parameter ") + context + " expects a list of integers, but received " + EXUstd::ToString(value), PyErrorType::typeError);
 		}
-		destination = ArrayIndex(py::cast<std::vector<Index>>(value));
+		destination = ArrayIndex(Conversion::CastOrRaise<std::vector<Index>>(value, "a list of integers", context));
 	}
 
 	//! a list, tuple or 1D numpy array of any length (Vector)
@@ -386,9 +438,9 @@ namespace EPyUtils {
 	{
 		if (!Conversion::IsSequence(value))
 		{
-			PyError(STDstring("parameter ") + context + " expects a list or array, but received " + EXUstd::ToString(value));
+			PyError(STDstring("parameter ") + context + " expects a list or array, but received " + EXUstd::ToString(value), PyErrorType::typeError);
 		}
-		std::vector<T> stdlist = py::cast<std::vector<T>>(value);
+		std::vector<T> stdlist = Conversion::CastOrRaise<std::vector<T>>(value, "a list of numbers", context);
 		destination = stdlist;
 	}
 
@@ -400,7 +452,7 @@ namespace EPyUtils {
 		FromPython(value, arrayIndex, context);
 		if (arrayIndex.NumberOfItems() != size)
 		{
-			PyError(STDstring("parameter ") + context + " expects " + EXUstd::ToString(size) + " integers, but received " + EXUstd::ToString(arrayIndex.NumberOfItems()));
+			PyError(STDstring("parameter ") + context + " expects " + EXUstd::ToString(size) + " integers, but received " + EXUstd::ToString(arrayIndex.NumberOfItems()), PyErrorType::valueError);
 		}
 		destination = SlimArray<Index, size>(arrayIndex, 0);
 	}

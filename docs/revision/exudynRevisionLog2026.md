@@ -6045,6 +6045,84 @@ debugging a single example.
     switch has to exist from the same commit. One flag covers items and structures.
 
 
+<a id="r6-7"></a>
+### R6.7 — one exception type per kind of parameter error
+
+**DONE 2026-09-18.** A wrong parameter value raised one of three types depending on which path it
+took, and the path was not something a user could see. Now it raises one of two, by what is wrong:
+
+- **`TypeError`** — the object cannot be this parameter at all: `None`, a string where a number
+  belongs, a list for a scalar, a scalar for a vector, an item index of the wrong kind.
+- **`ValueError`** — the kind is right and the value is not: out of range, wrong size, a
+  must-be-given placeholder left in place.
+
+**Three mechanisms had to change, not one.** The first was expected; the other two were what made
+the first invisible.
+
+1. `PyError` always threw `std::runtime_error` (`Stdoutput.cpp:333`). It now takes a
+   `PyErrorType` (`Stdoutput.h`) defaulting to `runtimeError`, so the other 577 call sites are
+   untouched, and throws `py::type_error` or `py::value_error` when asked. All **20** `PyError`
+   sites in `PyConversion.h` name their type: 12 `TypeError`, 8 `ValueError`.
+
+2. **`EXUexception` is a `#define` for `std::runtime_error`** (`ReleaseAssert.h:30`), and
+   pybind11's `builtin_exception` derives from it. So `catch (const EXUexception&)` in the five
+   `AddNode/AddObject/AddMarker/AddLoad/AddSensor` wrappers and in `GenericExceptionHandling`
+   caught the new types first and flattened them back to `RuntimeError`. Each now has a
+   `catch (const py::builtin_exception&) { throw; }` **before** that clause, with a note saying
+   why the order matters. The detail was already printed where the error was raised, so
+   re-throwing loses no message.
+
+3. The third path #2432 names is a pybind11 **`cast_error`**, which arrives in Python as a
+   `RuntimeError` whose message is about C++ types the user cannot see
+   (*"Unable to cast Python instance of type <class 'str'> to C++ type '?'"*). The casts that see
+   user input go through `Conversion::CastOrRaise`, which turns a failure into a `TypeError`
+   naming the parameter.
+
+**Two defects surfaced on the way, both of which had been hiding behind the flat type.**
+
+- Three messages built their text with `py::cast<std::string>(value)` — which throws its own
+  `cast_error` for exactly the values that reach that line. The message was never printed and the
+  wrong exception escaped. They use `EXUstd::ToString` now, as the rest of the file does.
+- A cast can also fail as a **Python** error rather than a pybind11 one: `np.array(-1)` is a 0-d
+  array, and iterating it raises *"iteration over a 0-d array"* inside the cast. This is exactly
+  what an `itemInterface` class makes of a scalar written into a vector parameter
+  (`self.localPosition = np.array(localPosition)`), which is why the **class path and the dict
+  path disagreed** while everything was `RuntimeError` and nobody could tell. `CastOrRaise`
+  catches `py::error_already_set` as well, and the three paths agree again.
+
+**What the record says.** `parameterConversionTest.py` writes every probe outcome to
+`parameterConversionTestReference.txt`, so this step is auditable rather than plausible. Across
+966 recorded rows, **every single changed outcome is `RuntimeError` → `TypeError` (6898) or
+`RuntimeError` → `ValueError` (785)**. No successful conversion changed, and nothing moved in the
+other direction. Totals over the file: 418/27/3 RuntimeError/TypeError/ValueError before,
+232/285/71 after. The rows that regrouped did so because three access paths that used to differ now
+agree.
+
+What is left as `RuntimeError` is what this step did not claim: the graphics-data converters and
+everything raised through `CHECKandTHROW`, which is step R6.3.
+
+**Deliberately not changed: the message.** `PyError` prints the detail and then throws a fixed
+string, so `str(exception)` still says only *"Exudyn: parsing of Python file terminated due to
+Python (user) error"*. Changing the type and the message in one step would have made the reference
+diff unreadable. It is written into R6.3.
+
+Verified: full suite 137 models + 23 mini examples PASSED; 171 examples with the same two known
+failures; `pytest -q -n 8` 137 passed; regeneration, `checkAll`, `checkExtras`, `checkPython`,
+`checkPython --stubs`, `gen_sources` clean.
+
+---
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R6.7** *(after R4.4.3.6, before the error-message work of phase R6)* **One exception type per kind
+of parameter error** (#2432). Today a wrong parameter value raises one of three types, depending on
+the path: `RuntimeError` from `PyError` or a pybind11 `cast_error`; `TypeError` from a pybind11
+signature mismatch; `ValueError` from the former Python checks. R4.4.3.4/34c5 moved most paths to
+`RuntimeError`. **Decision (2026-09-15):** correct this throughout the revision at one step. For
+example, `TypeError` for a wrong type (string, list, `None`, an item index into a scalar) and
+`ValueError` for a range violation or a wrong size, raised from `PyConversion.h`. Applied as its own
+reference update of `parameterConversionTest.py`.
+
 <a id="r8-3-2"></a>
 ### R8.3.2 - the old backlog, checked against what the revision did
 

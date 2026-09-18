@@ -1255,20 +1255,19 @@ unrelated items. Each step below fixes exactly one of them:
 
 | property | what it means | steps |
 |---|---|---|
-| **which exception type** reaches Python | `RuntimeError` / `TypeError` / `ValueError` / `ImportError` | **R6.7** parameter errors · **R6.3** everything else · **R6.2** the import itself |
+| **which exception type** reaches Python | `RuntimeError` / `TypeError` / `ValueError` / `ImportError` | **R6.7** **DONE** parameter errors · **R6.3** everything else · **R6.2** the import itself |
 | **what the message says** | the text, and where the traceback points | **R6.4** the taxonomy R6.3 and R6.7 write against |
 | **what it costs to raise** | errors in a loop are a normal pattern, not an exceptional one | **R6.6** |
 | **whether the check runs at all** | opting out for a production run | **R6.5** **DONE** |
 | how the **Python side** handles errors | `python/exudyn/` catching its own | **R6.1** |
 
-**Recommended order:** **R6.7** (the smallest fully measured surface — one header, one test that
-records the answer) → **R6.3** (the same treatment for everything else) → **R6.4** (write down what
-R6.3 and R6.7 established) → **R6.1**. **R6.2** and **R6.6** touch none of the above and can be
+**Recommended order:** **R6.7** **DONE** → **R6.3** (the same treatment for everything else, and the
+message that R6.7 deliberately left alone) → **R6.4** (write down what R6.3 and R6.7 established)
+→ **R6.1**. **R6.2** and **R6.6** touch none of the above and can be
 done at any time; **R6.2 is a hard prerequisite for phase R9**.
 
-Measured 2026-09-18: `PyError` always throws `std::runtime_error` (`Stdoutput.cpp:333`), so every
-C++ user error arrives in Python as `RuntimeError` whatever went wrong — **597** call sites, 21 of
-them in `PyConversion.h`. `CHECKandTHROW` appears **1204** times. `python/exudyn/` has **46** bare
+Measured 2026-09-18: `PyError` threw `std::runtime_error` for every user error (`Stdoutput.cpp:333`)
+until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`. `CHECKandTHROW` appears **1204** times. `python/exudyn/` has **46** bare
 `except:` clauses, the largest groups in `processing.py`, `interactive.py`, `solver.py` and
 `__init__.py` (7/7/6/6). The behaviour is recorded probe by probe in
 `parameterConversionTest.py`, so a change of exception type shows up as a reviewable diff of
@@ -1316,17 +1315,10 @@ them in `PyConversion.h`. `CHECKandTHROW` appears **1204** times. `python/exudyn
     The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
 
 <a id="r6-7"></a>
-**R6.7** *(after R4.4.3.6, before the error-message work of phase R6)* **One exception type per kind of
-    parameter error** (#2432). Today a wrong parameter value raises one of three types, depending on
-    the path:
-    - `RuntimeError` from `PyError` or a pybind11 `cast_error`;
-    - `TypeError` from a pybind11 signature mismatch;
-    - `ValueError` from the former Python checks.
-
-    R4.4.3.4/34c5 moved most paths to `RuntimeError`. **Decision (2026-09-15):** correct this throughout
-    the revision at one step. For example, `TypeError` for a wrong type (string, list, `None`, an item
-    index into a scalar) and `ValueError` for a range violation or a wrong size, raised from
-    `PyConversion.h`. Applied as its own reference update of `parameterConversionTest.py`.
+**R6.7** **DONE 2026-09-18** — a wrong parameter raises `TypeError` when the object cannot be that
+    parameter at all and `ValueError` when the kind is right and the value is not; `PyError` chooses
+    the Python exception, and the three layers that used to flatten it back to `RuntimeError` were
+    found and fixed (#2432). → [log](exudynRevisionLog2026.md#r6-7)
 
 ## R7 — Documentation (~3 weeks)  <!-- old Phase 6 -->
 

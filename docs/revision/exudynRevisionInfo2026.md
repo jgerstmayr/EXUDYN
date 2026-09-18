@@ -443,6 +443,26 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
     order-deterministic. `exudev env` prints the numpy version of every environment for exactly this
     reason.
 
+29. **`EXUexception` is a `#define` for `std::runtime_error`** (`ReleaseAssert.h:30`), and every
+    pybind11 `builtin_exception` - `py::type_error`, `py::value_error`, `py::cast_error` - derives
+    from `std::runtime_error` too. So a `catch (const EXUexception&)` catches all of them, and an
+    exception that chose a specific Python type is silently turned back into a `RuntimeError` one
+    frame later. Measured 2026-09-18 (step R6.7): the five `AddNode/AddObject/AddMarker/AddLoad/
+    AddSensor` wrappers in `MainSystem.cpp` and `GenericExceptionHandling` all did this, which is
+    why the first attempt at R6.7 changed nothing visible on the dict path while working on the
+    `SetObjectParameter` path.
+
+    **The rule this leaves behind:** a `catch (const py::builtin_exception&) { throw; }` must come
+    BEFORE any `catch (const EXUexception&)` in the same try block, and a new catch-all added
+    anywhere in the C++/Python boundary has to be checked against it.
+
+    Related, and the reason the class and the dict paths disagreed for years without anyone being
+    able to see it: a cast can fail as a **Python** error rather than a pybind11 one.
+    `np.array(-1)` is a 0-d array and iterating it raises *"iteration over a 0-d array"*; that is
+    exactly what an `itemInterface` class makes of a scalar written into a vector parameter
+    (`self.localPosition = np.array(localPosition)`), while the dict path passes the raw `-1`.
+    Both were `RuntimeError`, so the difference was invisible.
+
 ## 4. The frozen generated set (phase R0)
 
 The committed generated files at `e44aca1` are the reference snapshot, after a rebuild

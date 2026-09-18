@@ -78,15 +78,24 @@ public:
 	virtual void SetSuspendWriting(bool flag) { suspendWriting = flag; }
 };
 
+//! which Python exception a user error becomes. Everything was a RuntimeError until
+//! revision2026 step R6.7; a wrong TYPE and a wrong VALUE are told apart since (#2432)
+enum class PyErrorType
+{
+	runtimeError,   //!< the default, and what every call site outside PyConversion.h still uses
+	typeError,      //!< the object cannot be this parameter at all: None, a string for a number, an index of the wrong kind
+	valueError      //!< the kind is right, the value is not: out of range, wrong size, a placeholder left in place
+};
+
 void SysError(std::string error_msg); //!< prints a formated system (inernal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar
 
-void PyError(std::string error_msg); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
+void PyError(std::string error_msg, PyErrorType errorType = PyErrorType::runtimeError); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; errorType selects the Python exception (#2432)
 
 void PyWarning(std::string warning_msg); //!< prints a formated python warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
 
 void SysError(std::string error_msg, std::ofstream& file); //!< prints a formated system (inernal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; additionally writes to file if file.is_open()=true
 
-void PyError(std::string error_msg, std::ofstream& file); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; additionally writes to file if file.is_open()=true
+void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType = PyErrorType::runtimeError); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; additionally writes to file if file.is_open()=true
 
 void PyWarning(std::string warning_msg, std::ofstream& file); //!< prints a formated python warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar; additionally writes to file if file.is_open()=true
 

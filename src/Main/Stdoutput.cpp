@@ -302,15 +302,15 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
-void PyError(std::string error_msg)
+void PyError(std::string error_msg, PyErrorType errorType)
 {
 	std::ofstream dummy; //ofstream which is not active
-	PyError(error_msg, dummy);
+	PyError(error_msg, dummy, errorType);
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
 //! additional output to file
-void PyError(std::string error_msg, std::ofstream& file) 
+void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType) 
 {
 	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; } //stop graphics, etc.
 	STDstring fileName;
@@ -330,7 +330,17 @@ void PyError(std::string error_msg, std::ofstream& file)
 		file << "********************************************************************\n\n";
 	}
 	//PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
-	throw std::runtime_error("Exudyn: parsing of Python file terminated due to Python (user) error");
+	//the DETAIL is in error_msg above; what is thrown carries only the fixed text, which is what the
+	//message work of revision2026 step R6.3 changes. R6.7 decides the TYPE only (#2432):
+	//py::type_error and py::value_error are pybind11 builtin exceptions and become TypeError and
+	//ValueError when they leave a bound function
+	const char* terminated = "Exudyn: parsing of Python file terminated due to Python (user) error";
+	switch (errorType)
+	{
+	case PyErrorType::typeError: throw py::type_error(terminated);
+	case PyErrorType::valueError: throw py::value_error(terminated);
+	default: throw std::runtime_error(terminated);
+	}
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
