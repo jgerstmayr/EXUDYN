@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.173.dev1, 
++  Exudyn version = 1.11.174.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2514, 
-+  Number of resolved issues = 2246 (173 in current version), 
++  Number of issues = 2515, 
++  Number of resolved issues = 2247 (174 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.174: resolved Issue 2514: checkExtras does not know python/testing (bug)
+    - issue author: Claude-JG
+    - description:  After revision2026 step R3.9 the runners live in python/testing/ and are no longer siblings of the models. checkExtras.LocalModuleNames() only knows the shipped packages and the siblings of the scanned directory; so modelUnitTests and testRunnerTools were reported as UNCOVERED IMPORTS needed by [tests] - although they are project files and not packages at all. revision2026 step R3.9.1.
+    - **notes:** LocalModuleNames() also counts the tracked .py of python/testing/ as local names for every scanned directory; because every runner puts that directory on sys.path before it executes a model (testRunnerTools.WorkInModelsDirectory). Verified: checkExtras --check green again; the four UNCOVERED IMPORTS were modelUnitTests and testRunnerTools; imported by name from TestModels/; PerformanceModels/ and MiniExamples/.
+    - date resolved: **2026-09-18 12:47**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.173: resolved Issue 2513: TestModels holds models only (change)
     - issue author: Claude-JG
     - description:  The runners and helpers move to python/testing/; the performance models to python/PerformanceModels/ and the generated MiniExamples to python/MiniExamples/; so that python/TestModels/ holds test models only. This removes NotTestModels() - the hard-coded list of non-test files the coverage check of revision2026 step R5.9 needed - and gives the performance suite its own coverage check. The dual-use model generalContactSpheresTest.py is split into two copies without isPerformanceTest switching. revision2026 step R3.9.

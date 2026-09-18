@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.173.dev1, 
+  \item Exudyn version = 1.11.174.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2514, 
-  \item Number of resolved issues = 2246 (173 in current version), 
+  \item Number of issues = 2515, 
+  \item Number of resolved issues = 2247 (174 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.174}:  resolved Issue 2514: {\bf checkExtras does not know python/testing}
+(bug)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: After revision2026 step R3.9 the runners live in python/testing/ and are no longer siblings of the models. checkExtras.LocalModuleNames() only knows the shipped packages and the siblings of the scanned directory; so modelUnitTests and testRunnerTools were reported as UNCOVERED IMPORTS needed by [tests] - although they are project files and not packages at all. revision2026 step R3.9.1.}
+    \item {\bf notes: LocalModuleNames() also counts the tracked .py of python/testing/ as local names for every scanned directory; because every runner puts that directory on sys.path before it executes a model (testRunnerTools.WorkInModelsDirectory). Verified: checkExtras --check green again; the four UNCOVERED IMPORTS were modelUnitTests and testRunnerTools; imported by name from TestModels/; PerformanceModels/ and MiniExamples/.}
+    \item   date resolved: {\bf 2026-09-18 12:47},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.173}:  resolved Issue 2513: {\bf TestModels holds models only}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

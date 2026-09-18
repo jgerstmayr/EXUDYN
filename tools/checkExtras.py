@@ -198,8 +198,10 @@ def TrackedFiles(repositoryRoot):
 def LocalModuleNames(repositoryRoot, scanDirectory):
     """
     Top-level names that resolve inside the project rather than to a third-party package: the
-    shipped packages under python/, and the sibling modules of the scanned directory
-    (TestModels and Examples import their own helpers by bare name).
+    shipped packages under python/, the sibling modules of the scanned directory
+    (TestModels and Examples import their own helpers by bare name), and the runners in
+    python/testing/, which every runner puts on sys.path before it executes a model
+    (testRunnerTools.WorkInModelsDirectory, revision2026 step R3.9).
 
     Only TRACKED files count - see TrackedFiles().
     """
@@ -214,6 +216,12 @@ def LocalModuleNames(repositoryRoot, scanDirectory):
             localNames.add(parts[1][:-3])       #a module directly in python/
         elif len(parts) > 2:
             localNames.add(parts[1])            #a package directory in python/
+
+    #the runners and their helpers are importable from every models directory, because the
+    #runner puts python/testing/ on sys.path before it executes anything (revision2026 step R3.9)
+    for path in tracked:
+        if path.startswith('python/testing/') and path.endswith('.py'):
+            localNames.add(path.split('/')[-1][:-3])
 
     #recursive: a helper next to an example is imported by bare name, whatever depth it sits at
     scanRelative = os.path.relpath(scanDirectory, repositoryRoot).replace(os.sep, '/') + '/'

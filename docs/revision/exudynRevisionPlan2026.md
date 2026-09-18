@@ -266,6 +266,14 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     performance suite has a coverage check of its own. The one dual-use model was split into two
     copies with the switching removed (#2513). → [log](exudynRevisionLog2026.md#r3-9)
 
+<a id="r3-9-1"></a>
+**R3.9.1** **DONE 2026-09-18** — *(sub-step of R3.9, found by the gates of the next step)*
+    **`checkExtras.py` did not know `python/testing/`** (#2514). With the runners no longer siblings of
+    the models, `modelUnitTests` and `testRunnerTools` were reported as uncovered imports "needed by
+    [tests]" — although they are project files, not packages. `LocalModuleNames()` now also counts
+    the tracked modules of `python/testing/`, which every runner puts on `sys.path` before it executes
+    a model.
+
 <a id="r3-10"></a>
 **R3.10** **DONE 2026-09-10** — `docs/doxygen/` removed. → [log](exudynRevisionLog2026.md#r3-10)
 
@@ -1242,8 +1250,36 @@ here, because they describe the developer workflow rather than the user document
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
+An error has four separable properties, and mixing them is what made this phase read as a list of
+unrelated items. Each step below fixes exactly one of them:
+
+| property | what it means | steps |
+|---|---|---|
+| **which exception type** reaches Python | `RuntimeError` / `TypeError` / `ValueError` / `ImportError` | **R6.7** parameter errors · **R6.3** everything else · **R6.2** the import itself |
+| **what the message says** | the text, and where the traceback points | **R6.4** the taxonomy R6.3 and R6.7 write against |
+| **what it costs to raise** | errors in a loop are a normal pattern, not an exceptional one | **R6.6** |
+| **whether the check runs at all** | opting out for a production run | **R6.5** **DONE** |
+| how the **Python side** handles errors | `python/exudyn/` catching its own | **R6.1** |
+
+**Recommended order:** **R6.7** (the smallest fully measured surface — one header, one test that
+records the answer) → **R6.3** (the same treatment for everything else) → **R6.4** (write down what
+R6.3 and R6.7 established) → **R6.1**. **R6.2** and **R6.6** touch none of the above and can be
+done at any time; **R6.2 is a hard prerequisite for phase R9**.
+
+Measured 2026-09-18: `PyError` always throws `std::runtime_error` (`Stdoutput.cpp:333`), so every
+C++ user error arrives in Python as `RuntimeError` whatever went wrong — **597** call sites, 21 of
+them in `PyConversion.h`. `CHECKandTHROW` appears **1204** times. `python/exudyn/` has **46** bare
+`except:` clauses, the largest groups in `processing.py`, `interactive.py`, `solver.py` and
+`__init__.py` (7/7/6/6). The behaviour is recorded probe by probe in
+`parameterConversionTest.py`, so a change of exception type shows up as a reviewable diff of
+`parameterConversionTestReference.txt` rather than as a surprise.
+
+
 <a id="r6-1"></a>
-**R6.1** Audit every bare `except:`; replace with specific exceptions and actionable messages.
+**R6.1** *(phase R6, after R6.4)* **Audit every bare `except:`** in `python/exudyn/` (46 as of 2026-09-18);
+    replace each with the specific exception it is there for, and an actionable message. A bare
+    `except:` also swallows `KeyboardInterrupt` and `SystemExit`, which is why several of them
+    make a run impossible to stop. Do it after R6.4, so that what is caught can be named.
 
 <a id="r6-2"></a>
 **R6.2** Rewrite binary selection in `__init__.py` as one testable function that logs its decision
@@ -1252,12 +1288,21 @@ here, because they describe the developer workflow rather than the user document
     **Hard prerequisite for phase R9.**
 
 <a id="r6-3"></a>
-**R6.3** Map `CHECKandTHROW` paths to specific Python exception types; chain `py::error_already_set`
-    so user-function tracebacks survive instead of being stringified
-    (`ExceptionsTemplates.h:50`).
+**R6.3** *(phase R6, after R6.7)* **The same treatment for everything that is not a parameter.**
+    Map the `CHECKandTHROW` paths (1204 sites) to specific Python exception types, the way R6.7
+    did for the 21 conversion sites, and chain `py::error_already_set` so that user-function
+    tracebacks survive instead of being stringified (`ExceptionsTemplates.h:50`).
+
+    **Also the message.** `PyError` prints the detail to `pout` and then throws a fixed string,
+    `"Exudyn: parsing of Python file terminated due to Python (user) error"` (`Stdoutput.cpp:333`),
+    so `str(exception)` never carries what actually went wrong. R6.7 deliberately left that
+    alone to keep one change in one step; it belongs here.
 
 <a id="r6-4"></a>
-**R6.4** Document the error taxonomy.
+**R6.4** *(phase R6, after R6.3)* **Document the error taxonomy**: for each exception type, what
+    it means in Exudyn, what a user should do about it, and which layer raises it. It is the
+    written form of what R6.7 and R6.3 decide, and what R6.1 catches against — so it is written
+    after them, not before, and it goes into the user documentation, not only into a dev note.
 
 <a id="r6-5"></a>
 **R6.5** **DONE 2026-09-15** — A user switch for parameter range checks. → [log](exudynRevisionLog2026.md#r6-5)
