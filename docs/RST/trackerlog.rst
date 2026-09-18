@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.186.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2528, 
++  Number of issues = 2529, 
 +  Number of resolved issues = 2259 (186 in current version), 
 
 ************
@@ -7769,6 +7769,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textred:`open issue 2528:` map the user-facing error sites onto the exception classes
+    - issue author: Claude-JG
+    - description:  The classes exist (#2516)\, the helpers can carry them (#2521) and the triage says which site is for whom (#2520) - but 1082 user-facing call sites still raise whatever they always raised. Map them area by area\, starting with src/Pymodules\, the layer closest to the user. revision2026 step R6.3.6.
+    - date raised: 2026-09-18 
 
  * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG

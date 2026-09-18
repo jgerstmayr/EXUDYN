@@ -355,8 +355,13 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 {
 	switch (errorType)
 	{
-	case PyErrorType::typeError:           throw py::type_error(message);
-	case PyErrorType::valueError:          throw py::value_error(message);
+	//These were py::type_error and py::value_error - pybind11 builtins, which become the PLAIN
+	//Python TypeError and ValueError - from step R6.7 until step R6.3.6 (#2528). They now throw the
+	//Exudyn classes, which derive from those built-ins AND from exudyn.ExudynError: an existing
+	//"except TypeError" keeps working and "except exudyn.ExudynError" starts working. That is the
+	//maintainer's decision of 2026-09-18, "wrap everything as ExudynError".
+	case PyErrorType::typeError:           throw ExudynTypeError(message);
+	case PyErrorType::valueError:          throw ExudynValueError(message);
 	case PyErrorType::modelError:          throw ExudynModelError(message);
 	case PyErrorType::solverError:         throw ExudynSolverError(message);
 	case PyErrorType::internalError:       throw ExudynInternalError(message);

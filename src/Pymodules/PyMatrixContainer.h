@@ -123,7 +123,7 @@ namespace EPyUtils {
 			destination  = PyMatrixContainer(other);
 			return true;
 		}
-		PyError(STDstring("ERROR: failed to convert '") + itemName + "' into MatrixContainer; dictionary:\n" + EXUstd::ToString(d));
+		PyError(STDstring("ERROR: failed to convert '") + itemName + "' into MatrixContainer; dictionary:\n" + EXUstd::ToString(d), PyErrorType::typeError);
 		return false;
 	}
 	inline bool SetPyMatrixContainerSafely(const py::object& value, PyMatrixContainer& destination)

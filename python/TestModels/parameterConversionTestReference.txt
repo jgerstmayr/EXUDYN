@@ -1,79 +1,6 @@
 #probes: neg zero int2 real str bool list2 list3 list4 numpy3 matrix2 nodeIndex objectIndex markerList none
 
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
-  ObjectANCFBeam: sectionData(class,dict,set)
-  ObjectBeamGeometricallyExact: sectionData(class,dict,set)
-  ObjectKinematicTree: jointTypes(class,dict,set)
-  VisualizationSettings.openGL.advanced: initialModelRotation(dict)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !TypeError
-  ObjectANCFBeam: VsectionGeometry(class,dict,set)
-  ObjectBeamGeometricallyExact: VsectionGeometry(class,dict,set)
-  ObjectFFRFreducedOrder: outputVariableTypeModeBasis(set)
-  SensorBody: outputVariableType(set)
-  SensorKinematicTree: outputVariableType(set)
-  SensorMarker: outputVariableType(set)
-  SensorNode: outputVariableType(set)
-  SensorObject: outputVariableType(set)
-  SensorSuperElement: outputVariableType(set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError Matrix3DList
-  ObjectANCFThinPlate: physicsCurvatureCoefficients(class,dict,set) physicsStrainCoefficients(class,dict,set)
-  ObjectKinematicTree: jointTransformations(class,dict,set) linkInertiasCOM(class,dict,set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError MatrixContainer !RuntimeError !RuntimeError !RuntimeError MatrixContainer
-  ObjectContactCurveCircles: polynomialData(class,dict,set) segmentsData(class,dict,set)
-  ObjectFFRF: dampingMatrixFF(class,dict,set) massMatrixFF(class,dict,set) stiffnessMatrixFF(class,dict,set)
-  ObjectFFRFreducedOrder: dampingMatrixReduced(class,dict,set) massMatrixReduced(class,dict,set) stiffnessMatrixReduced(class,dict,set)
-  ObjectGenericODE2: dampingMatrix(class,dict,set) massMatrix(class,dict,set) stiffnessMatrix(class,dict,set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list0=[] !RuntimeError !RuntimeError !RuntimeError !RuntimeError
-  ObjectKinematicTree: VgraphicsDataList(class,dict,set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError Vector3DList !RuntimeError !RuntimeError !RuntimeError !RuntimeError Vector3DList
-  ObjectConnectorReevingSystemSprings: sheavesAxes(class,dict,set)
-  ObjectContactSphereTriangle: trianglePoints(class,dict,set)
-  ObjectKinematicTree: jointOffsets(class,dict,set) linkCOMs(class,dict,set) linkForces(class,dict,set) linkTorques(class,dict,set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list0=[] list0=[] list0=[] list0=[] list0=[] !RuntimeError !RuntimeError list0=[] !RuntimeError
-  ObjectGround: VgraphicsData(class,dict,set)
-  ObjectMass1D: VgraphicsData(class,dict,set)
-  ObjectMassPoint: VgraphicsData(class,dict,set)
-  ObjectMassPoint2D: VgraphicsData(class,dict,set)
-  ObjectRigidBody: VgraphicsData(class,dict,set)
-  ObjectRigidBody2D: VgraphicsData(class,dict,set)
-  ObjectRotationalMass1D: VgraphicsData(class,dict,set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list2=[1.0,2.0] list3=[1.0,2.0,3.0] list4=[1.0,2.0,3.0,4.0] list3=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError list2=[0.0,1.0] !RuntimeError
-  VisualizationSettings.sensors.traces: traceColors(dict)
-
-outcome: !RuntimeError int=0.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
-  LoadCoordinate: loadUserFunction(class,dict,set)
-  LoadForceVector: loadVectorUserFunction(class,dict,set)
-  LoadMassProportional: loadVectorUserFunction(class,dict,set)
-  LoadTorqueVector: loadVectorUserFunction(class,dict,set)
-  ObjectANCFCable2D: axialForceUserFunction(class,dict,set) bendingMomentUserFunction(class,dict,set)
-  ObjectConnectorCartesianSpringDamper: springForceUserFunction(class,dict,set)
-  ObjectConnectorCoordinate: offsetUserFunction(class,dict,set) offsetUserFunction_t(class,dict,set)
-  ObjectConnectorCoordinateSpringDamper: springForceUserFunction(class,dict,set)
-  ObjectConnectorCoordinateSpringDamperExt: springForceUserFunction(class,dict,set)
-  ObjectConnectorCoordinateVector: constraintUserFunction(class,dict,set) jacobianUserFunction(class,dict,set)
-  ObjectConnectorLinearSpringDamper: springForceUserFunction(class,dict,set)
-  ObjectConnectorRigidBodySpringDamper: postNewtonStepUserFunction(class,dict,set) springForceTorqueUserFunction(class,dict,set)
-  ObjectConnectorSpringDamper: springForceUserFunction(class,dict,set)
-  ObjectConnectorTorsionalSpringDamper: springTorqueUserFunction(class,dict,set)
-  ObjectFFRF: forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
-  ObjectFFRFreducedOrder: forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
-  ObjectGenericODE1: rhsUserFunction(class,dict,set)
-  ObjectGenericODE2: VgraphicsDataUserFunction(class,dict,set) forceUserFunction(class,dict,set) jacobianUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
-  ObjectGround: VgraphicsDataUserFunction(class,dict,set)
-  ObjectJointGeneric: offsetUserFunction(class,dict,set) offsetUserFunction_t(class,dict,set)
-  ObjectKinematicTree: forceUserFunction(class,dict,set)
-  ObjectRigidBody: VgraphicsDataUserFunction(class,dict,set)
-  ObjectRigidBody2D: VgraphicsDataUserFunction(class,dict,set)
-  SensorUserFunction: sensorUserFunction(class,dict,set)
-
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   MarkerBodiesRelativeRotationCoordinate: bodyNumbers(class,dict,set)
   MarkerBodiesRelativeTranslationCoordinate: bodyNumbers(class,dict,set)
   ObjectALEANCFCable2D: nodeNumbers(class,dict,set)
@@ -94,9 +21,8 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Type
   SimulationSettings.timeIntegration.explicitIntegration: dynamicSolverType(attribute,dict)
   VisualizationSettings.contour: outputVariable(attribute,dict)
   VisualizationSettings.interactive: highlightItemType(attribute,dict)
-  VisualizationSettings.openGL.advanced: initialModelRotation(attribute)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError list2:MarkerIndex !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list2:MarkerIndex !ExudynTypeError
   ObjectConnectorCartesianSpringDamper: markerNumbers(class,dict,set)
   ObjectConnectorCoordinate: markerNumbers(class,dict,set)
   ObjectConnectorCoordinateSpringDamper: markerNumbers(class,dict,set)
@@ -130,7 +56,7 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Type
   ObjectJointSliding2D: markerNumbers(class,dict,set) slidingMarkerNumbers(class,dict,set)
   ObjectJointSpherical: markerNumbers(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError list2=[0.0,1.0] !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list2=[0.0,1.0] !ExudynTypeError
   MarkerSuperElementPosition: meshNodeNumbers(class,dict,set)
   MarkerSuperElementRigid: meshNodeNumbers(class,dict,set)
   ObjectJointGeneric: constrainedAxes(class,dict,set)
@@ -144,7 +70,22 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Type
   VisualizationSettings.view2.window: renderWindowSize(attribute,dict)
   VisualizationSettings.view3.window: renderWindowSize(attribute,dict)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError !TypeError !ValueError !TypeError !ValueError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !RuntimeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Matrix3DList
+  ObjectANCFThinPlate: physicsCurvatureCoefficients(class,dict,set) physicsStrainCoefficients(class,dict,set)
+  ObjectKinematicTree: jointTransformations(class,dict,set) linkInertiasCOM(class,dict,set)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !RuntimeError MatrixContainer !ExudynTypeError !ExudynTypeError !ExudynTypeError MatrixContainer
+  ObjectContactCurveCircles: polynomialData(class,dict,set) segmentsData(class,dict,set)
+  ObjectFFRF: dampingMatrixFF(class,dict,set) massMatrixFF(class,dict,set) stiffnessMatrixFF(class,dict,set)
+  ObjectFFRFreducedOrder: dampingMatrixReduced(class,dict,set) massMatrixReduced(class,dict,set) stiffnessMatrixReduced(class,dict,set)
+  ObjectGenericODE2: dampingMatrix(class,dict,set) massMatrix(class,dict,set) stiffnessMatrix(class,dict,set)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Vector3DList !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Vector3DList
+  ObjectConnectorReevingSystemSprings: sheavesAxes(class,dict,set)
+  ObjectContactSphereTriangle: trianglePoints(class,dict,set)
+  ObjectKinematicTree: jointOffsets(class,dict,set) linkCOMs(class,dict,set) linkForces(class,dict,set) linkTorques(class,dict,set)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   ObjectConnectorRigidBodySpringDamper: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectConnectorTorsionalSpringDamper: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectContactCurveCircles: rotationMarker0(class,dict,set)
@@ -156,7 +97,7 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Valu
   ObjectMass1D: referenceRotation(class,dict,set)
   ObjectRotationalMass1D: referenceRotation(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError !ValueError !ValueError !ValueError !TypeError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   NodePointSlope1: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   NodePointSlope12: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   NodePointSlope23: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
@@ -167,10 +108,10 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Valu
   ObjectJointGeneric: offsetUserFunctionParameters(class,dict,set)
   ObjectRigidBody: physicsInertia(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError !ValueError !ValueError !ValueError !ValueError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   ObjectConnectorRigidBodySpringDamper: damping(class,dict,set) stiffness(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError !ValueError list4=[1.0,2.0,3.0,4.0] !ValueError !TypeError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynValueError list4=[1.0,2.0,3.0,4.0] !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   NodePoint: Vcolor(class,dict,set)
   NodePoint2D: Vcolor(class,dict,set)
   NodePoint2DSlope1: Vcolor(class,dict,set)
@@ -245,11 +186,11 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Valu
   VisualizationSettings.raytracer.advanced: backgroundColorReflections(attribute,dict)
   VisualizationSettings.sensors: defaultColor(attribute,dict)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError !ValueError numpy4f=[1.0,2.0,3.0,4.0] !ValueError !TypeError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynValueError numpy4f=[1.0,2.0,3.0,4.0] !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   NodePoint2DSlope1: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   ObjectANCFThinPlate: slopesScalingX(class,dict,set) slopesScalingY(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError list3=[1.0,2.0,3.0] !ValueError list3=[1.0,2.0,3.0] !TypeError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError list3=[1.0,2.0,3.0] !ExudynValueError list3=[1.0,2.0,3.0] !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   VisualizationSettings.bodies: defaultSize(attribute,dict)
   VisualizationSettings.interactive: autoRotationVelocity(attribute,dict)
   VisualizationSettings.openGL.advanced: initialCenterPoint(attribute,dict)
@@ -268,7 +209,7 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Valu
   VisualizationSettings.view2.camera: cameraPosition(attribute,dict) clippingPlaneNormal(attribute,dict) nearFarPlaneOffset(attribute,dict) trackMarkerOrientation(attribute,dict) trackMarkerPosition(attribute,dict)
   VisualizationSettings.view3.camera: cameraPosition(attribute,dict) clippingPlaneNormal(attribute,dict) nearFarPlaneOffset(attribute,dict) trackMarkerOrientation(attribute,dict) trackMarkerPosition(attribute,dict)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError numpy3f=[1.0,2.0,3.0] !ValueError numpy3f=[1.0,2.0,3.0] !TypeError !TypeError !TypeError !ValueError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError numpy3f=[1.0,2.0,3.0] !ExudynValueError numpy3f=[1.0,2.0,3.0] !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   LoadForceVector: loadVector(class,dict,set)
   LoadMassProportional: loadVector(class,dict,set)
   LoadTorqueVector: loadVector(class,dict,set)
@@ -297,17 +238,14 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !Valu
   SensorBody: localPosition(class,dict,set)
   SensorKinematicTree: localPosition(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError list2=[1.0,2.0] list3=[1.0,2.0,3.0] list4=[1.0,2.0,3.0,4.0] list3=[1.0,2.0,3.0] !TypeError !TypeError !TypeError list2=[0.0,1.0] !TypeError
-  VisualizationSettings.sensors.traces: traceColors(attribute)
-
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError numpy2f=[1.0,2.0] !ValueError !ValueError !ValueError !TypeError !TypeError !TypeError numpy2f=[0.0,1.0] !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy2f=[1.0,2.0] !ExudynValueError !ExudynValueError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy2f=[0.0,1.0] !ExudynTypeError
   NodePoint2D: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   ObjectConnectorReevingSystemSprings: coordinateFactors(class,dict,set)
   ObjectConnectorRollingDiscPenalty: dryFriction(class,dict,set) viscousFriction(class,dict,set)
   ObjectContactSphereSphere: spheresRadii(class,dict,set)
   ObjectRigidBody2D: physicsCenterOfMass(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !TypeError !TypeError !TypeError numpy2f=[0.0,1.0] !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy2f=[0.0,1.0] !ExudynTypeError
   MarkerSuperElementPosition: weightingFactors(class,dict,set)
   MarkerSuperElementRigid: weightingFactors(class,dict,set)
   Node1D: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
@@ -322,7 +260,7 @@ outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError numpy
   ObjectKinematicTree: jointDControlVector(class,dict,set) jointForceVector(class,dict,set) jointPControlVector(class,dict,set) jointPositionOffsetVector(class,dict,set) jointVelocityOffsetVector(class,dict,set) linkMasses(class,dict,set)
   SensorUserFunction: factors(class,dict,set)
 
-outcome: !TypeError !TypeError !TypeError !TypeError str=x !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError str=x !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   SensorBody: fileName(class,dict,set)
   SensorKinematicTree: fileName(class,dict,set)
   SensorLoad: fileName(class,dict,set)
@@ -346,7 +284,7 @@ outcome: !TypeError !TypeError !TypeError !TypeError str=x !TypeError !TypeError
   VisualizationSettings.raytracer.material8: name(attribute,dict)
   VisualizationSettings.raytracer.material9: name(attribute,dict)
 
-outcome: !ValueError
+outcome: !ExudynValueError
   MarkerKinematicTreeRigid: linkNumber(omit)
   MarkerNodeCoordinate: coordinate(omit)
   MarkerNodeODE1Coordinate: coordinate(omit)
@@ -365,7 +303,7 @@ outcome: !ValueError
   SensorKinematicTree: linkNumber(omit)
   SensorSuperElement: meshNodeNumber(omit)
 
-outcome: !ValueError !ValueError
+outcome: !ExudynValueError !ExudynValueError
   MarkerKinematicTreeRigid: (defaults)
   MarkerNodeCoordinate: (defaults)
   MarkerNodeODE1Coordinate: (defaults)
@@ -384,7 +322,7 @@ outcome: !ValueError !ValueError
   SensorKinematicTree: (defaults)
   SensorSuperElement: (defaults)
 
-outcome: !ValueError !ValueError float=2.0 float=2.5 !TypeError float=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: !ExudynValueError !ExudynValueError float=2.0 float=2.5 !ExudynTypeError float=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   ObjectANCFBeam: physicsLength(class,dict,set)
   ObjectBeamGeometricallyExact: physicsLength(class,dict,set)
   ObjectConnectorCoordinateSpringDamperExt: exponentialDecayStatic(class,dict,set)
@@ -413,7 +351,7 @@ outcome: !ValueError !ValueError float=2.0 float=2.5 !TypeError float=1.0 !TypeE
   VisualizationSettings.view3.scene: worldBasisSize(attribute,dict)
   VisualizationSettings.view3.window: globalFontSize(attribute,dict)
 
-outcome: !ValueError !ValueError int=2.0 !TypeError !TypeError int=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError !ValueError !ValueError !TypeError !TypeError
+outcome: !ExudynValueError !ExudynValueError int=2.0 !ExudynTypeError !ExudynTypeError int=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynValueError !ExudynTypeError !ExudynTypeError
   MarkerBodyCable2DShape: numberOfSegments(class,dict,set)
   NodeGenericAE: numberOfAECoordinates(class,dict,set)
   NodeGenericODE1: numberOfODE1Coordinates(class,dict,set)
@@ -435,7 +373,7 @@ outcome: !ValueError !ValueError int=2.0 !TypeError !TypeError int=1.0 !TypeErro
   VisualizationSettings.raytracer.advanced: searchTreeFactor(attribute,dict) tilesPerThread(attribute,dict)
   VisualizationSettings.sensors.traces: positionsShowEvery(attribute,dict) triadsShowEvery(attribute,dict) vectorsShowEvery(attribute,dict)
 
-outcome: !ValueError float=0.0 float=2.0 float=2.5 !TypeError float=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: !ExudynValueError float=0.0 float=2.0 float=2.5 !ExudynTypeError float=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   ObjectALEANCFCable2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set) physicsMovingMassFactor(class,dict,set)
   ObjectANCFCable: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set)
   ObjectANCFCable2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set)
@@ -499,7 +437,7 @@ outcome: !ValueError float=0.0 float=2.0 float=2.5 !TypeError float=1.0 !TypeErr
   VisualizationSettings.view2.camera: perspective(attribute,dict)
   VisualizationSettings.view3.camera: perspective(attribute,dict)
 
-outcome: !ValueError int=0.0 int=2.0 !TypeError !TypeError int=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError int=0.0 int=0.0 !TypeError !TypeError
+outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError int=0.0 int=0.0 !ExudynTypeError !ExudynTypeError
   MarkerKinematicTreeRigid: linkNumber(class,dict,set)
   MarkerNodeCoordinate: coordinate(class,dict,set)
   MarkerNodeODE1Coordinate: coordinate(class,dict,set)
@@ -529,13 +467,77 @@ outcome: !ValueError int=0.0 int=2.0 !TypeError !TypeError int=1.0 !TypeError !T
   VisualizationSettings.view2.scene: drawCoordinateSystem(attribute,dict)
   VisualizationSettings.view3.scene: drawCoordinateSystem(attribute,dict)
 
+outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+  ObjectANCFBeam: sectionData(class,dict,set)
+  ObjectBeamGeometricallyExact: sectionData(class,dict,set)
+  ObjectKinematicTree: jointTypes(class,dict,set)
+  VisualizationSettings.openGL.advanced: initialModelRotation(dict)
+
+outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !TypeError
+  ObjectANCFBeam: VsectionGeometry(class,dict,set)
+  ObjectBeamGeometricallyExact: VsectionGeometry(class,dict,set)
+  ObjectFFRFreducedOrder: outputVariableTypeModeBasis(set)
+  SensorBody: outputVariableType(set)
+  SensorKinematicTree: outputVariableType(set)
+  SensorMarker: outputVariableType(set)
+  SensorNode: outputVariableType(set)
+  SensorObject: outputVariableType(set)
+  SensorSuperElement: outputVariableType(set)
+
+outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list0=[] !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+  ObjectKinematicTree: VgraphicsDataList(class,dict,set)
+
+outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list0=[] list0=[] list0=[] list0=[] list0=[] !RuntimeError !RuntimeError list0=[] !RuntimeError
+  ObjectGround: VgraphicsData(class,dict,set)
+  ObjectMass1D: VgraphicsData(class,dict,set)
+  ObjectMassPoint: VgraphicsData(class,dict,set)
+  ObjectMassPoint2D: VgraphicsData(class,dict,set)
+  ObjectRigidBody: VgraphicsData(class,dict,set)
+  ObjectRigidBody2D: VgraphicsData(class,dict,set)
+  ObjectRotationalMass1D: VgraphicsData(class,dict,set)
+
+outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list2=[1.0,2.0] list3=[1.0,2.0,3.0] list4=[1.0,2.0,3.0,4.0] list3=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError list2=[0.0,1.0] !RuntimeError
+  VisualizationSettings.sensors.traces: traceColors(dict)
+
+outcome: !RuntimeError int=0.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+  LoadCoordinate: loadUserFunction(class,dict,set)
+  LoadForceVector: loadVectorUserFunction(class,dict,set)
+  LoadMassProportional: loadVectorUserFunction(class,dict,set)
+  LoadTorqueVector: loadVectorUserFunction(class,dict,set)
+  ObjectANCFCable2D: axialForceUserFunction(class,dict,set) bendingMomentUserFunction(class,dict,set)
+  ObjectConnectorCartesianSpringDamper: springForceUserFunction(class,dict,set)
+  ObjectConnectorCoordinate: offsetUserFunction(class,dict,set) offsetUserFunction_t(class,dict,set)
+  ObjectConnectorCoordinateSpringDamper: springForceUserFunction(class,dict,set)
+  ObjectConnectorCoordinateSpringDamperExt: springForceUserFunction(class,dict,set)
+  ObjectConnectorCoordinateVector: constraintUserFunction(class,dict,set) jacobianUserFunction(class,dict,set)
+  ObjectConnectorLinearSpringDamper: springForceUserFunction(class,dict,set)
+  ObjectConnectorRigidBodySpringDamper: postNewtonStepUserFunction(class,dict,set) springForceTorqueUserFunction(class,dict,set)
+  ObjectConnectorSpringDamper: springForceUserFunction(class,dict,set)
+  ObjectConnectorTorsionalSpringDamper: springTorqueUserFunction(class,dict,set)
+  ObjectFFRF: forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
+  ObjectFFRFreducedOrder: forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
+  ObjectGenericODE1: rhsUserFunction(class,dict,set)
+  ObjectGenericODE2: VgraphicsDataUserFunction(class,dict,set) forceUserFunction(class,dict,set) jacobianUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set)
+  ObjectGround: VgraphicsDataUserFunction(class,dict,set)
+  ObjectJointGeneric: offsetUserFunction(class,dict,set) offsetUserFunction_t(class,dict,set)
+  ObjectKinematicTree: forceUserFunction(class,dict,set)
+  ObjectRigidBody: VgraphicsDataUserFunction(class,dict,set)
+  ObjectRigidBody2D: VgraphicsDataUserFunction(class,dict,set)
+  SensorUserFunction: sensorUserFunction(class,dict,set)
+
+outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+  VisualizationSettings.openGL.advanced: initialModelRotation(attribute)
+
+outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError list2=[1.0,2.0] list3=[1.0,2.0,3.0] list4=[1.0,2.0,3.0,4.0] list3=[1.0,2.0,3.0] !TypeError !TypeError !TypeError list2=[0.0,1.0] !TypeError
+  VisualizationSettings.sensors.traces: traceColors(attribute)
+
 outcome: LoadIndex LoadIndex
   LoadCoordinate: (defaults)
   LoadForceVector: (defaults)
   LoadMassProportional: (defaults)
   LoadTorqueVector: (defaults)
 
-outcome: LoadIndex LoadIndex LoadIndex !TypeError !TypeError LoadIndex !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: LoadIndex LoadIndex LoadIndex !ExudynTypeError !ExudynTypeError LoadIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   SensorLoad: loadNumber(class,dict,set)
 
 outcome: MarkerIndex MarkerIndex
@@ -554,7 +556,7 @@ outcome: MarkerIndex MarkerIndex
   MarkerSuperElementPosition: (defaults)
   MarkerSuperElementRigid: (defaults)
 
-outcome: MarkerIndex MarkerIndex MarkerIndex !TypeError !TypeError MarkerIndex !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: MarkerIndex MarkerIndex MarkerIndex !ExudynTypeError !ExudynTypeError MarkerIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   LoadCoordinate: markerNumber(class,dict,set)
   LoadForceVector: markerNumber(class,dict,set)
   LoadMassProportional: markerNumber(class,dict,set)
@@ -576,7 +578,7 @@ outcome: NodeIndex NodeIndex
   NodeRigidBodyRotVecLG: (defaults)
   NodeRigidBodyRxyz: (defaults)
 
-outcome: NodeIndex NodeIndex NodeIndex !TypeError !TypeError NodeIndex !TypeError !TypeError !TypeError !TypeError !TypeError NodeIndex !TypeError !TypeError !TypeError
+outcome: NodeIndex NodeIndex NodeIndex !ExudynTypeError !ExudynTypeError NodeIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError NodeIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError
   MarkerBodiesRelativeRotationCoordinate: nodeNumber(class,dict,set)
   MarkerNodeCoordinate: nodeNumber(class,dict,set)
   MarkerNodeCoordinates: nodeNumber(class,dict,set)
@@ -652,7 +654,7 @@ outcome: ObjectIndex ObjectIndex
   ObjectRigidBody2D: (defaults)
   ObjectRotationalMass1D: (defaults)
 
-outcome: ObjectIndex ObjectIndex ObjectIndex !TypeError !TypeError ObjectIndex !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError ObjectIndex !TypeError !TypeError
+outcome: ObjectIndex ObjectIndex ObjectIndex !ExudynTypeError !ExudynTypeError ObjectIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError ObjectIndex !ExudynTypeError !ExudynTypeError
   MarkerBodyBeamShape: bodyNumber(class,dict,set)
   MarkerBodyCable2DCoordinates: bodyNumber(class,dict,set)
   MarkerBodyCable2DShape: bodyNumber(class,dict,set)
@@ -685,11 +687,11 @@ outcome: SensorIndex SensorIndex
   SensorObject: (defaults)
   SensorUserFunction: (defaults)
 
-outcome: bool=0.0 bool=0.0 bool=0.0 bool=0.0 !TypeError bool=0.0 !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: bool=0.0 bool=0.0 bool=0.0 bool=0.0 !ExudynTypeError bool=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   ObjectFFRF: objectIsInitialized(class,dict,set)
   ObjectFFRFreducedOrder: objectIsInitialized(class,dict,set)
 
-outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !TypeError bool=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   LoadCoordinate: Vshow(class,dict,set)
   LoadForceVector: Vshow(class,dict,set) bodyFixed(class,dict,set)
   LoadMassProportional: Vshow(class,dict,set)
@@ -841,7 +843,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !TypeError bool=1.0 !TypeError !Typ
   VisualizationSettings.view3.scene: drawWorldBasis(attribute,dict) facesTransparent(attribute,dict) showFaceEdges(attribute,dict) showFaces(attribute,dict) showLines(attribute,dict) showMeshEdges(attribute,dict) showMeshFaces(attribute,dict)
   VisualizationSettings.view3.window: alwaysOnTop(attribute,dict) lockModelView(attribute,dict) maximize(attribute,dict) showComputationInfo(attribute,dict) showMouseCoordinates(attribute,dict) showRenderStateInfo(attribute,dict) showWindow(attribute,dict)
 
-outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !TypeError float=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
+outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !ExudynTypeError float=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   LoadCoordinate: load(class,dict,set)
   MarkerBodiesRelativeRotationCoordinate: offset(class,dict,set)
   MarkerBodiesRelativeTranslationCoordinate: offset(class,dict,set)
@@ -915,7 +917,7 @@ outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !TypeError float=1.0 !TypeErro
   VisualizationSettings.view2.camera: clippingPlaneDistance(attribute,dict)
   VisualizationSettings.view3.camera: clippingPlaneDistance(attribute,dict)
 
-outcome: int=-1.0 int=0.0 int=2.0 !TypeError !TypeError int=1.0 !TypeError !TypeError !TypeError !TypeError !TypeError int=0.0 int=0.0 !TypeError !TypeError
+outcome: int=-1.0 int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int=1.0 !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError int=0.0 int=0.0 !ExudynTypeError !ExudynTypeError
   MarkerSuperElementRigid: rotationsExponentialMap(class,dict,set)
   ObjectALEANCFCable2D: useReducedOrderIntegration(class,dict,set)
   ObjectANCFCable: useReducedOrderIntegration(class,dict,set)

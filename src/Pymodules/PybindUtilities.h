@@ -111,7 +111,7 @@ namespace EPyUtils {
 			Index num = py::cast<py::int_>(function);
 			if (num != 0)
 			{
-				CHECKandTHROWstring( (STDstring(info)+": parameter must be either a Python function or 0 but received: "+EXUstd::ToString(function)).c_str() );
+				CHECKandTHROWstring( (STDstring(info)+": parameter must be either a Python function or 0 but received: "+EXUstd::ToString(function)).c_str() , ExudynTypeError);
 			}
 			else
 			{
@@ -125,7 +125,7 @@ namespace EPyUtils {
 		}
 		else
 		{
-			CHECKandTHROWstring((STDstring(info) + ": parameter must be either a Python function or 0 but received '" + EXUstd::ToString(function)+"'").c_str());
+			CHECKandTHROWstring((STDstring(info) + ": parameter must be either a Python function or 0 but received '" + EXUstd::ToString(function)+"'").c_str(), ExudynTypeError);
 		}
 	}
 
@@ -160,12 +160,12 @@ namespace EPyUtils {
 					}
 					else
 					{
-						PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+						PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!', PyErrorType::valueError);
 					}
 				}
 				else
 				{
-					PyError("Matrix in illegal format!");
+					PyError("Matrix in illegal format!", PyErrorType::typeError);
 				}
 			}
 			return true;
@@ -192,12 +192,12 @@ namespace EPyUtils {
 				}
 				else
 				{
-					PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+					PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!', PyErrorType::valueError);
 				}
 			}
 			return true;
 		}
-		PyError(STDstring("failed to convert to Matrix: " + py::cast<std::string>(value)));
+		PyError(STDstring("failed to convert to Matrix: " + py::cast<std::string>(value)), PyErrorType::typeError);
 		return false;
 	}
 
@@ -228,12 +228,12 @@ namespace EPyUtils {
 					}
 					else
 					{
-						PyError("List of arrays size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+						PyError("List of arrays size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!', PyErrorType::valueError);
 					}
 				}
 				else
 				{
-					PyError("List of arrays with illegal format!");
+					PyError("List of arrays with illegal format!", PyErrorType::typeError);
 				}
 			}
 			return true;
@@ -255,12 +255,12 @@ namespace EPyUtils {
 				}
 				else
 				{
-					PyError("List of arrays size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+					PyError("List of arrays size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!', PyErrorType::valueError);
 				}
 			}
 			return true;
 		}
-		PyError(STDstring("Failed to convert to list of arrays: " + py::cast<std::string>(pyObject)));
+		PyError(STDstring("Failed to convert to list of arrays: " + py::cast<std::string>(pyObject)), PyErrorType::typeError);
 		return false;
 	}
 
@@ -282,10 +282,10 @@ namespace EPyUtils {
 			}
 			else
 			{
-				PyError("SlimArray" + EXUstd::ToString(size) + " size mismatch: expected " + EXUstd::ToString(size) + " items in list or numpy array!");
+				PyError("SlimArray" + EXUstd::ToString(size) + " size mismatch: expected " + EXUstd::ToString(size) + " items in list or numpy array!", PyErrorType::valueError);
 			}
 		}
-		PyError(STDstring("failed to convert to SlimArray" + EXUstd::ToString(size) + ": " + py::cast<std::string>(value)));
+		PyError(STDstring("failed to convert to SlimArray" + EXUstd::ToString(size) + ": " + py::cast<std::string>(value)), PyErrorType::typeError);
 		return false;
 	}
 

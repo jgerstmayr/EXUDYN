@@ -65,7 +65,7 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 				Index iCol = 0;
 				if (!py::isinstance<py::list>(item)) //process list, which is default in python constructor
 				{
-					CHECKandTHROWstring("MatrixContainer: list must be either empty or list of lists");
+					CHECKandTHROWstring("MatrixContainer: list must be either empty or list of lists", ExudynTypeError);
 				}
 				py::list pylist2 = py::cast<py::list>(item);
 
@@ -77,7 +77,7 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 				}
 				else if (nCols != (Index)pylist2.size())
 				{
-					CHECKandTHROWstring("MatrixContainer: list of lists: number of floats must be same in all sub-lists");
+					CHECKandTHROWstring("MatrixContainer: list of lists: number of floats must be same in all sub-lists", ExudynValueError);
 				}
 
 				for (auto value : pylist2)
@@ -108,7 +108,7 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 	}
 	else
 	{
-		CHECKandTHROWstring("MatrixContainer: can only initialize with None, empty list [], list of lists, 2D numpy array, or scipy csr_matrix");
+		CHECKandTHROWstring("MatrixContainer: can only initialize with None, empty list [], list of lists, 2D numpy array, or scipy csr_matrix", ExudynTypeError);
 	}
 	//pout << "PyMatrixContainer::PyMatrixContainer:READY\n";
 
@@ -149,7 +149,7 @@ void PyMatrixContainer::SetWithDenseMatrix(const py::array_t<Real>& pyArray, boo
 				}
 			}
 		}
-		else { CHECKandTHROWstring("MatrixContainer::SetWithDenseMatrix: illegal array format!"); }
+		else { CHECKandTHROWstring("MatrixContainer::SetWithDenseMatrix: illegal array format!", ExudynTypeError); }
 	}
 }
 
@@ -166,7 +166,7 @@ void PyMatrixContainer::SetWithSparseMatrixCSR(Index numberOfRowsInit, Index num
 		}
 		else
 		{
-			CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrixCSR: reading sparse matrix failed: invalid format");
+			CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrixCSR: reading sparse matrix failed: invalid format", ExudynTypeError);
 		}
 	}, "MatrixContainer::SetWithSparseMatrixCSR failed: it is very likely that pyArray does not have appropriate sparse triplet format");
 }
@@ -180,7 +180,7 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 			if (IsScipySparseMatrix(sparseMatrix))
 			{
 				if (!py::hasattr(sparseMatrix, "shape")) {
-					CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: reading scipy sparse matrix failed: did not detect shape");
+					CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: reading scipy sparse matrix failed: did not detect shape", ExudynTypeError);
 				}
 				py::tuple shape = sparseMatrix.attr("shape").cast<py::tuple>();
 				Index numColumns = shape[1].cast<Index>();
@@ -217,7 +217,7 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 			{
 				SetOrAddSparseMatrixCSRBase(numberOfRowsInit, numberOfColumnsInit, py::cast<py::array>(sparseMatrix), useDenseMatrixInit, false, factor);
 			}
-			else { CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: invalid matrix format!"); }
+			else { CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: invalid matrix format!", ExudynTypeError); }
 
 		}, "MatrixContainer::SetWithSparseMatrix failed: it is very likely that sparseMatrix is not a scipy csr_matrix or sparse triplet format");
 }
@@ -238,7 +238,7 @@ void PyMatrixContainer::SetOrAddSparseMatrixCSRBase(Index numberOfRowsInit, Inde
 
 			if (ncols != 3)
 			{
-				CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: in case of triplets, array must have 3 columns: row, column and value!");
+				CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: in case of triplets, array must have 3 columns: row, column and value!", ExudynValueError);
 			}
 
 			if (useDenseMatrix)
@@ -286,7 +286,7 @@ void PyMatrixContainer::SetOrAddSparseMatrixCSRBase(Index numberOfRowsInit, Inde
 				}
 				else
 				{
-					CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: when useDenseMatrix=true, array can only be empty if number of columns=rows=0!");
+					CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: when useDenseMatrix=true, array can only be empty if number of columns=rows=0!", ExudynValueError);
 				}
 			}
 			else
@@ -302,7 +302,7 @@ void PyMatrixContainer::SetOrAddSparseMatrixCSRBase(Index numberOfRowsInit, Inde
 //! add (ONLY) scipy sparse matrix multiplied with given factor; matrix must already be initialized
 void PyMatrixContainer::AddSparseMatrixBase(const py::object& sparseMatrix, Real factor)
 {
-	CHECKandTHROW(IsScipySparseMatrix(sparseMatrix), "MatrixContainer::SetWithSparseMatrix or AddSparseMatrix: reading scipy sparse matrix failed, possibly due to wrong format");
+	CHECKandTHROW(IsScipySparseMatrix(sparseMatrix), "MatrixContainer::SetWithSparseMatrix or AddSparseMatrix: reading scipy sparse matrix failed, possibly due to wrong format", ExudynTypeError);
 
 	// Get the 'indptr', 'indices', and 'data' attributes
 	py::array_t<Index> indptr = sparseMatrix.attr("indptr").cast<py::array_t<Index>>();
@@ -358,7 +358,7 @@ void PyMatrixContainer::AddSparseMatrix(const py::object& sparseMatrix, Real fac
 			//to same as SetWithSparseMatrixCSR but without initialization (add new superfunction, which can do both set+add!
 			SetOrAddSparseMatrixCSRBase(0, 0, py::cast<py::array>(sparseMatrix), false, true, factor); //check if this also works for lists of lists ...
 		}
-		else { CHECKandTHROWstring("MatrixContainer::AddSparseMatrix did not detect a valid sparse matrix format"); }
+		else { CHECKandTHROWstring("MatrixContainer::AddSparseMatrix did not detect a valid sparse matrix format", ExudynTypeError); }
 	}, "MatrixContainer::AddSparseMatrix failed: it is very likely that sparseMatrix is not a scipy csr matrix and has an inappropriate format");
 
 }

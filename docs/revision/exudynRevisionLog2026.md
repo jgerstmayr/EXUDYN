@@ -6981,6 +6981,59 @@ so cases 5 and 6 legitimately raise nothing there.
 ---
 
 
+<a id="r6-3-6"></a>
+### R6.3.6 — the mapping, area by area: `src/Pymodules`
+
+**IN PROGRESS** (#2528). First area done 2026-09-18.
+
+`src/Pymodules` is the layer closest to the user: 93 sites, 91 of them user-facing by the triage
+of R6.3.2. **54 got an explicit type**, read one at a time, on three rules:
+
+| rule | becomes | examples |
+|---|---|---|
+| the object cannot be that at all | `ExudynTypeError` | a list where a list of lists is wanted; something that is not a sparse matrix; a parameter that must be a Python function |
+| the kind is right and the value is not | `ExudynValueError` | sub-lists of different length; triplets without three columns; a friction matrix that is not square |
+| an index outside its range | `ExudynIndexError` | `Vector3DList[7]` on a list of three |
+| an illegal way to use the model | `ExudynModelError` | `GeneralContact()` constructed directly; a radius only some contact types can have |
+
+The other 39 are right as they are: 5 `PyWarning` (not errors), 3 `SysError` that really are
+internal (the renderer failing to stop, an invalid enum in a string converter), and the 24 sites
+of `PyConversion.h` that R6.7 typed already.
+
+#### "Wrap everything" is now true
+
+`PyErrorType::typeError` and `valueError` threw `py::type_error` and `py::value_error` — pybind11
+builtins, which become the **plain** Python `TypeError` and `ValueError`. They now throw
+`ExudynTypeError` and `ExudynValueError`, which derive from those built-ins **and** from
+`exudyn.ExudynError`. An existing `except TypeError` keeps working and
+`except exudyn.ExudynError` starts working — the maintainer's decision of 2026-09-18.
+
+This is visible, and it is recorded: `parameterConversionTestReference.txt` reports **3520**
+changed outcomes, every one of them `TypeError` → `ExudynTypeError` or `ValueError` →
+`ExudynValueError`. Nothing else moved, and nothing that converted successfully changed. The
+reference was regenerated deliberately: that file records behaviour, and this is the behaviour.
+
+#### The six SysError sites answer their own comment
+
+R6.3.3 made six `SysError` calls in `PyMatrixVector.h` opt out of the new internal default,
+because their message ends in *"check your Python code!"*. They are now `PyError`, so the
+printed block says **User ERROR** instead of **SYSTEM ERROR**. Their Python type is deliberately
+unchanged: the honest type is the exception that was caught there, and passing it on is R6.3.8.
+
+#### What one area of eight looks like
+
+The model of R6.3.7 shows the progress without being edited for it: cases 3, 4 and 5 now read
+`ExudynTypeError` / `ExudynValueError` / `ExudynTypeError`, and cases 1, 2, 6, 7 and 8 still read
+`RuntimeError`, because `src/Main` is the next area. That is the point of the model.
+
+One test had to change with the area, and the reason is worth recording: the case that checks
+*"an untyped check still produces a plain RuntimeError"* used `MatrixContainer.SetWithDenseMatrix`,
+which this area typed. It now uses `mbs.systemData.SetODE2Coordinates`, in `src/Main`, and will
+have to move again when that area is mapped — the test follows the frontier on purpose.
+
+---
+
+
 <a id="r6-3-5"></a>
 ### R6.3.5 — what the exception says, and where it says it happened
 

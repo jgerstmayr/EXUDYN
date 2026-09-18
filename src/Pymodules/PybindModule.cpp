@@ -288,7 +288,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 				return py::make_tuple(self.GetIndex());
 			},
 			[](const py::tuple& t) {
-				CHECKandTHROW(t.size() == 1, "NodeIndex: loading data with pickle received invalid data structure!");
+				CHECKandTHROW(t.size() == 1, "NodeIndex: loading data with pickle received invalid data structure!", ExudynValueError);
 				NodeIndex self(py::cast<Index>(t[0]));
 				return self;
 			}))
@@ -329,7 +329,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 				return py::make_tuple(self.GetIndex());
 			},
 			[](const py::tuple& t) {
-				CHECKandTHROW(t.size() == 1, "ObjectIndex: loading data with pickle received invalid data structure!");
+				CHECKandTHROW(t.size() == 1, "ObjectIndex: loading data with pickle received invalid data structure!", ExudynValueError);
 				ObjectIndex self(py::cast<Index>(t[0]));
 				return self;
 			}))
@@ -370,7 +370,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 				return py::make_tuple(self.GetIndex());
 			},
 			[](const py::tuple& t) {
-				CHECKandTHROW(t.size() == 1, "MarkerIndex: loading data with pickle received invalid data structure!");
+				CHECKandTHROW(t.size() == 1, "MarkerIndex: loading data with pickle received invalid data structure!", ExudynValueError);
 				MarkerIndex self(py::cast<Index>(t[0]));
 				return self;
 			}))
@@ -411,7 +411,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 				return py::make_tuple(self.GetIndex());
 			},
 			[](const py::tuple& t) {
-				CHECKandTHROW(t.size() == 1, "LoadIndex: loading data with pickle received invalid data structure!");
+				CHECKandTHROW(t.size() == 1, "LoadIndex: loading data with pickle received invalid data structure!", ExudynValueError);
 				LoadIndex self(py::cast<Index>(t[0]));
 				return self;
 			}))
@@ -452,7 +452,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 				return py::make_tuple(self.GetIndex());
 			},
 			[](const py::tuple& t) {
-				CHECKandTHROW(t.size() == 1, "SensorIndex: loading data with pickle received invalid data structure!");
+				CHECKandTHROW(t.size() == 1, "SensorIndex: loading data with pickle received invalid data structure!", ExudynValueError);
 				SensorIndex self(py::cast<Index>(t[0]));
 				return self;
 			}))
@@ -533,7 +533,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 				return py::make_tuple(self.GetDictionary());
 			},
 			[](const py::tuple& t) {
-				CHECKandTHROW(t.size() == 1, "MainSystem: loading data with pickle received invalid data structure!");
+				CHECKandTHROW(t.size() == 1, "MainSystem: loading data with pickle received invalid data structure!", ExudynValueError);
 				MainSystemContainer* self = new MainSystemContainer();
 				self->SetDictionary(py::cast<py::dict>(t[0]));
 				return self;

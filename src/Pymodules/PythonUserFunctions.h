@@ -86,13 +86,13 @@ public:
 	//! comparison operator, just for comparison with 0
 	bool operator==(Index value) const
 	{
-		CHECKandTHROW(value == 0, "PythonUserFunctionBase::operator==(): only allowed for comparison with 0");
+		CHECKandTHROW(value == 0, "PythonUserFunctionBase::operator==(): only allowed for comparison with 0", ExudynValueError);
 		return !IsValid();
 	}
 	//! comparison operator, just for comparison with 0
 	bool operator!=(Index value) const
 	{
-		CHECKandTHROW(value == 0, "PythonUserFunctionBase::operator!=(): only allowed for comparison with 0");
+		CHECKandTHROW(value == 0, "PythonUserFunctionBase::operator!=(): only allowed for comparison with 0", ExudynValueError);
 		return IsValid();
 	}
 
@@ -107,7 +107,7 @@ public:
 	//! assignment operator, just for assign to 0, indicating reset of user function
 	PythonUserFunctionBase<UFT>& operator= (Index value)
 	{
-		CHECKandTHROW(value == 0, "PythonUserFunctionBase::operator=(): only allowed for assignment to 0");
+		CHECKandTHROW(value == 0, "PythonUserFunctionBase::operator=(): only allowed for assignment to 0", ExudynValueError);
 		Reset();
 
 		return *this;

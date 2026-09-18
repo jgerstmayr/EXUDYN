@@ -39,7 +39,7 @@ public:
     //! forbid calls of GeneralContact constructor, as this would lead to an unusable system
     static PyGeneralContact* ForbidConstructor()
     {
-        CHECKandTHROWstring("GeneralContact() may not be called. Use AddGeneralContact() of MainSystem() to create a GeneralContact inside MainSystem.");
+        CHECKandTHROWstring("GeneralContact() may not be called. Use AddGeneralContact() of MainSystem() to create a GeneralContact inside MainSystem.", ExudynModelError);
         return new PyGeneralContact(); //this is never called
     }
 
@@ -109,7 +109,7 @@ public:
 		EPyUtils::SetMatrixSafely(frictionPairingsInit, frictionPairingsC);
 		if (frictionPairingsC.NumberOfRows() != frictionPairingsC.NumberOfColumns())
 		{
-			PyError("SetFrictionPairings: frictionPairings Matrix must be square (equal number of rows and columns)!");
+			PyError("SetFrictionPairings: frictionPairings Matrix must be square (equal number of rows and columns)!", PyErrorType::valueError);
 		}
 		if (!(frictionPairingsC.GetTransposed() == frictionPairingsC))
 		{
@@ -196,7 +196,7 @@ public:
 	{
 		if (localIndex >= spheresMarkerBased.NumberOfItems())
 		{
-			PyError("GeneralContact::GetMarkerBasedSphere: localIndex out of range");
+			PyError("GeneralContact::GetMarkerBasedSphere: localIndex out of range", PyErrorType::indexError);
 		}
 		const ContactSpheresMarkerBased& data = spheresMarkerBased[localIndex];
 		auto d = py::dict();
@@ -221,7 +221,7 @@ public:
 	{
 		if (localIndex >= spheresMarkerBased.NumberOfItems())
 		{
-			PyError("GeneralContact::SetMarkerBasedSphere: localIndex out of range");
+			PyError("GeneralContact::SetMarkerBasedSphere: localIndex out of range", PyErrorType::indexError);
 		}
 		ContactSpheresMarkerBased& data = spheresMarkerBased[localIndex];
 		
@@ -230,7 +230,7 @@ public:
 		if (radius >= 0) { data.radius = radius; }
 		if (frictionMaterialIndex >= 0) 
 		{
-			CHECKandTHROW(frictionMaterialIndex < settings.frictionPairings.NumberOfRows(), "SetSphereMarkerBased: frictionMaterialIndex out of valid range");
+			CHECKandTHROW(frictionMaterialIndex < settings.frictionPairings.NumberOfRows(), "SetSphereMarkerBased: frictionMaterialIndex out of valid range", ExudynIndexError);
 			data.frictionMaterialIndex = frictionMaterialIndex;
 		}
 		
@@ -241,7 +241,7 @@ public:
 	{
 		if (localIndex >= trigsRigidBodyBased.NumberOfItems())
 		{
-			PyError("GeneralContact::GetTriangleRigidBodyBased: localIndex out of range");
+			PyError("GeneralContact::GetTriangleRigidBodyBased: localIndex out of range", PyErrorType::indexError);
 		}
 		const ContactTriangleRigidBodyBased& data = trigsRigidBodyBased[localIndex];
 		auto d = py::dict();
@@ -262,13 +262,13 @@ public:
 	{
 		if (localIndex >= trigsRigidBodyBased.NumberOfItems())
 		{
-			PyError("GeneralContact::SetTriangleRigidBodyBased: localIndex out of range");
+			PyError("GeneralContact::SetTriangleRigidBodyBased: localIndex out of range", PyErrorType::indexError);
 		}
 		ContactTriangleRigidBodyBased& data = trigsRigidBodyBased[localIndex];
 
 		if (contactRigidBodyIndex >= 0) 
 		{ 
-			CHECKandTHROW(contactRigidBodyIndex < rigidBodyMarkerBased.NumberOfItems(), "SetTriangleRigidBodyBased: contactRigidBodyIndex out of valid range");
+			CHECKandTHROW(contactRigidBodyIndex < rigidBodyMarkerBased.NumberOfItems(), "SetTriangleRigidBodyBased: contactRigidBodyIndex out of valid range", ExudynIndexError);
 			data.contactRigidBodyIndex = contactRigidBodyIndex;
 		}
 
@@ -284,7 +284,7 @@ public:
 	py::object PyShortestDistanceAlongLine(const py::object& pStart, const py::object& direction, Real minDistance, Real maxDistance, bool asDictionary=false,
 		Real cylinderRadius = 0, Contact::TypeIndex selectedTypeIndex = Contact::IndexEndOfEnumList)
 	{
-		CHECKandTHROW((cylinderRadius == 0.) || (selectedTypeIndex == Contact::IndexSpheresMarkerBased), "ShortestDistanceAlongLine:: cylinderRadius may only be non-zero in case of SpheresMarkerBased");
+		CHECKandTHROW((cylinderRadius == 0.) || (selectedTypeIndex == Contact::IndexSpheresMarkerBased), "ShortestDistanceAlongLine:: cylinderRadius may only be non-zero in case of SpheresMarkerBased", ExudynModelError);
 
 		Vector3D pStartC;
 		Vector3D directionC;

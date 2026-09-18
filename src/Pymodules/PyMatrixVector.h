@@ -53,7 +53,7 @@ public:
 		else
 		{
 			PyError(STDstring("Vector" + EXUstd::ToString(dataSize) + "DList: Expected empty list, None, or list of " + EXUstd::ToString(dataSize) + "D numpy arrays, but received '" +
-				EXUstd::ToString(listOfArrays) + "'"));
+				EXUstd::ToString(listOfArrays) + "'"), PyErrorType::typeError);
 		}
 	}
 
@@ -67,7 +67,7 @@ public:
 		if (index < 0 || index >= this->NumberOfItems())
 		{
 			PyError("Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]: trying to access list with size "+EXUstd::ToString(this->NumberOfItems()) +
-				" with index "+ EXUstd::ToString(index));
+				" with index "+ EXUstd::ToString(index), PyErrorType::indexError);
 		}
 		else
 		{
@@ -94,38 +94,38 @@ public:
 					else
 					{
 						PyError(STDstring("Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]: Expected list of list of " + EXUstd::ToString(dataSize) + " floats, but item " + EXUstd::ToString(this->NumberOfItems()) +
-							" is invalid: '" + EXUstd::ToString(pyArray) + "'"));
+							" is invalid: '" + EXUstd::ToString(pyArray) + "'"), PyErrorType::typeError);
 					}
 
 				}
 				else
 				{
 					PyError(STDstring("Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]: Expected list of " + EXUstd::ToString(dataSize) + "D numpy arrays, but item " + EXUstd::ToString(this->NumberOfItems()) +
-						" is invalid: '" + EXUstd::ToString(pyArray) + "'"));
+						" is invalid: '" + EXUstd::ToString(pyArray) + "'"), PyErrorType::typeError);
 				}
 			}
 			//mostly catches python errors:
 			catch (const pybind11::error_already_set& ex)
 			{
-				//NOT an internal error, whatever the helper is called: the message ends in "check your
-				//Python code" and the value came from the user. So this site opts out of the new
-				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
-				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
+				//a user's array, reported to the user: PyError, not SysError, so the printed block says
+				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
+				//is the exception that was caught here, and passing it on is step R6.3.8
+				PyError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 
 			catch (const EXUexception& ex)
 			{
-				//NOT an internal error, whatever the helper is called: the message ends in "check your
-				//Python code" and the value came from the user. So this site opts out of the new
-				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
-				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
+				//a user's array, reported to the user: PyError, not SysError, so the printed block says
+				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
+				//is the exception that was caught here, and passing it on is step R6.3.8
+				PyError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 			catch (...) //any other exception
 			{
-				//NOT an internal error, whatever the helper is called: the message ends in "check your
-				//Python code" and the value came from the user. So this site opts out of the new
-				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
-				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
+				//a user's array, reported to the user: PyError, not SysError, so the printed block says
+				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
+				//is the exception that was caught here, and passing it on is step R6.3.8
+				PyError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
 			}
 
 		}
@@ -203,7 +203,7 @@ public:
 		else
 		{
 			PyError(STDstring("Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList: Expected empty list, None, or list of " + EXUstd::ToString(numberOfRowsColumns) + "D numpy matrices, but received '" +
-				EXUstd::ToString(listOfArrays) + "'"));
+				EXUstd::ToString(listOfArrays) + "'"), PyErrorType::typeError);
 		}
 	}
 
@@ -212,7 +212,7 @@ public:
 		if (index < 0 || index >= this->NumberOfItems())
 		{
 			PyError("Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::GetItem operator[]: trying to access list with size " +
-				EXUstd::ToString(this->NumberOfItems()) + " with index " + EXUstd::ToString(index));
+				EXUstd::ToString(this->NumberOfItems()) + " with index " + EXUstd::ToString(index), PyErrorType::indexError);
 			return py::cast<int>(0);
 		}
 		else
@@ -227,7 +227,7 @@ public:
 		if (index < 0 || index >= this->NumberOfItems())
 		{
 			PyError("Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem  operator[]: trying to access list with size " + 
-				EXUstd::ToString(this->NumberOfItems()) + " with index " + EXUstd::ToString(index));
+				EXUstd::ToString(this->NumberOfItems()) + " with index " + EXUstd::ToString(index), PyErrorType::indexError);
 		}
 		else
 		{
@@ -238,25 +238,25 @@ public:
 			//mostly catches python errors:
 			catch (const pybind11::error_already_set& ex)
 			{
-				//NOT an internal error, whatever the helper is called: the message ends in "check your
-				//Python code" and the value came from the user. So this site opts out of the new
-				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
-				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
+				//a user's array, reported to the user: PyError, not SysError, so the printed block says
+				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
+				//is the exception that was caught here, and passing it on is step R6.3.8
+				PyError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 
 			catch (const EXUexception& ex)
 			{
-				//NOT an internal error, whatever the helper is called: the message ends in "check your
-				//Python code" and the value came from the user. So this site opts out of the new
-				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
-				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
+				//a user's array, reported to the user: PyError, not SysError, so the printed block says
+				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
+				//is the exception that was caught here, and passing it on is step R6.3.8
+				PyError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 			catch (...) //any other exception
 			{
-				//NOT an internal error, whatever the helper is called: the message ends in "check your
-				//Python code" and the value came from the user. So this site opts out of the new
-				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
-				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
+				//a user's array, reported to the user: PyError, not SysError, so the printed block says
+				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
+				//is the exception that was caught here, and passing it on is step R6.3.8
+				PyError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
 			}
 
 		}
@@ -318,7 +318,7 @@ namespace EPyUtils
 				{
 					rv = false;
 					PyError(STDstring("Set " + listType + ": Either empty list [], None, or " + listType + " allowed, but received: ") +
-						STDstring(py::str(value))); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
+						STDstring(py::str(value)), PyErrorType::typeError); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
 				}
 				rv = true;
 			}
@@ -345,14 +345,14 @@ namespace EPyUtils
 			{
 				rv = false;
 				PyError(STDstring("Set " + listType + ": Either empty list [], None, or " + listType + " allowed, but received: ") +
-					STDstring(py::str(value))); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
+					STDstring(py::str(value)), PyErrorType::typeError); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
 			}
 		}, "Set [Vector/Matrix][3/6]DList");
 		if (rv) { return true; }
 		else
 		{
 			PyError(STDstring("Set " + listType + " failed when received: ") +
-				STDstring(py::str(value))); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
+				STDstring(py::str(value)), PyErrorType::typeError); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
 			return false;
 		}
 	}
@@ -371,7 +371,7 @@ namespace EPyUtils
 			py::object other = d[item]; //this is necessary to make isinstance work
 			return SetVector3DListSafely(other, destination);
 		}
-		PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector3DList; dictionary:\n" + EXUstd::ToString(d));
+		PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector3DList; dictionary:\n" + EXUstd::ToString(d), PyErrorType::typeError);
 		return false;
 	}
 
@@ -382,7 +382,7 @@ namespace EPyUtils
 			py::object other = d[item]; //this is necessary to make isinstance work
 			return SetMatrix3DListSafely(other, destination);
 		}
-		PyError(STDstring("ERROR: failed to convert '") + item + "' into Matrix3DList; dictionary:\n" + EXUstd::ToString(d));
+		PyError(STDstring("ERROR: failed to convert '") + item + "' into Matrix3DList; dictionary:\n" + EXUstd::ToString(d), PyErrorType::typeError);
 		return false;
 	}
 

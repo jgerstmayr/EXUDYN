@@ -95,10 +95,13 @@ def test_typedCheckMacros():
 def test_untypedCheckStillWorks():
     """a CHECKandTHROWstring WITHOUT a class must behave exactly as before - a plain RuntimeError
     and not an ExudynError. The optional argument is optional, and 1194 macro sites depend on it"""
-    import numpy as np
+    systemContainer = exu.SystemContainer()
+    mbs = systemContainer.AddSystem()
+    mbs.Assemble()
 
+    #src/Main is not mapped yet (step R6.3.6 works area by area), so this one is still untyped
     with pytest.raises(RuntimeError) as caught:
-        exu.MatrixContainer().SetWithDenseMatrix(np.array([1., 2., 3.]))   #1-D, not a matrix
+        mbs.systemData.SetODE2Coordinates([1., 2., 3.])
     assert not isinstance(caught.value, exu.ExudynError)
 
 
