@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.182.dev1, 
++  Exudyn version = 1.11.183.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2523, 
-+  Number of resolved issues = 2255 (182 in current version), 
++  Number of issues = 2526, 
++  Number of resolved issues = 2256 (183 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.183: resolved Issue 2523: no model shows what an Exudyn error looks like from Python (testing)
+    - issue author: Claude-JG
+    - description:  Nothing in the test suite provokes the errors a user actually meets, so there is no record of which exception class and which message reach Python\, and no way to look at an Exudyn error the way Spyder or VS Code shows it. Maintainer request 2026-09-18. revision2026 step R6.3.7.
+    - **notes:** python/TestModels/exceptionTypesTest.py provokes ten user errors - bad item number, wrong parameter type and value, wrong size, a feature an item does not have, a missing marker, a system the static solver cannot solve, and a division by zero inside a load user function - catches each and reports the class and the message. Six of ten carry the same sentence about parsing terminated\, which is the evidence for step R6.3.5. catchErrors=False with singleCase=N lets one case fly so an IDE shows it. Classes and messages are printed and never asserted\, so later steps need not edit the model, testResult is the number of cases that raised nothing. revision2026 step R6.3.7.
+    - date resolved: **2026-09-18 18:13**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.182: resolved Issue 2522: deprecation notices are printed lines and not Python warnings (change)
     - issue author: Claude-JG
     - description:  The 199 deprecation notices go through PyWarning; which prints to the console. A user cannot filter them; cannot promote them to errors; and sees the same line on every single call - a deprecated setting read in a loop prints thousands of times. Python has a mechanism for exactly this: DeprecationWarning through PyErr_WarnEx; which is filterable; promotable with -W error::DeprecationWarning and reported once per source location. revision2026 step R6.3.4.
@@ -7745,6 +7751,16 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textorange:`open issue 2525:` every generated GitHub weblink points at the old pythonDev tree
+    - issue author: Claude-JG
+    - description:  The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1\, R3.8 and R3.9\, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).
+    - date raised: 2026-09-18 
+
+ * :textred:`open issue 2524:` a user function error is reported as a SYSTEM ERROR
+    - issue author: Claude-JG
+    - description:  An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug\, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file\, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.
+    - date raised: 2026-09-18 
 
  * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG

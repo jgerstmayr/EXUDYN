@@ -677,8 +677,33 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `py::error_already_set` as well, so a user-function traceback survives instead of being
     stringified (`ExceptionsTemplates.h:50`).
 
+    **What the model of R6.3.7 measured** (2026-09-18): of ten provoked user errors, **six** arrive
+    carrying only *"Exudyn: parsing of Python file terminated due to Python (user) error"* - the
+    same sentence for a bad item number, a string written into a number, and a marker that does not
+    exist. The explanation exists; it was printed to the console and thrown away.
+
+    Two more findings from the same run, both in this step (**#2524**):
+
+    - An error inside a **user function** is reported twice: once correctly as a *User ERROR* with
+      the user's own file and line in its `At:` block, and then again by `SolverExceptionHandling`
+      as **`SYSTEM ERROR: EXUDYN raised internal error in 'CSolverBase::SolveSteps'`**. The user's
+      mistake is labelled an Exudyn bug, and since R6.3.3 its C++ class is `ExudynInternalError`,
+      whose whole meaning is *please report this*.
+    - The `[file ..., line N]` header of both blocks names **`exudyn/solver.py`**, not the user's
+      file, because `PyGetCurrentFileInformation` returns the innermost Python frame and during a
+      solver call that frame is the solver wrapper. The `At:` block three lines below it has the
+      right answer. Whatever R6.6 does with that function, the header and the traceback must stop
+      disagreeing.
+
 <a id="r6-3-6"></a>
 **R6.3.6** *(sub-step of R6.3)* **The mapping itself**, area by area, on the triage of R6.3.2.
+
+<a id="r6-3-7"></a>
+**R6.3.7** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-7) — *(sub-step of R6.3;
+    maintainer request 2026-09-18)* **A model that shows what an Exudyn error looks like**
+    (#2523): ten provoked user errors including one inside a Python user function, each caught and
+    reported with its class and message - and a switch that lets one of them fly, to see it the way
+    Spyder or VS Code shows it. It found #2524 on the first run.
 
 
 <a id="r6-4"></a>

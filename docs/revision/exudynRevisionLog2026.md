@@ -6913,6 +6913,74 @@ serial runner did, and tightening it is a separate question from this step.
 so the runner and the worker apply the same rules; `--serial` keeps the old in-process run for
 debugging a single example.
 
+<a id="r6-3-7"></a>
+### R6.3.7 — ten errors, as a user meets them
+
+**DONE 2026-09-18** (#2523). Maintainer request: a model that provokes the errors a user
+actually gets, catches each one, and reports what arrived — so that the taxonomy work can be
+*seen* rather than argued about, and so that an Exudyn error can be looked at the way Spyder or
+VS Code shows it.
+
+`python/TestModels/exceptionTypesTest.py`, ten cases, the last two through the solver:
+
+| # | the user | class today | `str(exception)` today |
+|---|---|---|---|
+| 1 | asks for object 999 | `RuntimeError` | *parsing of Python file terminated...* |
+| 2 | asks the output of a node that does not exist | `RuntimeError` | *...terminated...* |
+| 3 | writes `'heavy'` into a mass | `TypeError` | *...terminated...* |
+| 4 | gives a 3D position two components | `ValueError` | *...terminated...* |
+| 5 | hands a list to a sparse matrix | `ExudynTypeError` | `MatrixContainer::SetWithSparseMatrix: illegal array format!` |
+| 6 | writes five coordinates into three | `RuntimeError` | `SystemData::SetODE2Coords: incompatible size of vectors` |
+| 7 | asks a mass point for a strain | `RuntimeError` | *...terminated...* |
+| 8 | loads marker 999 and assembles | `RuntimeError` | *...terminated...* |
+| 9 | solves a body that is not held | `ValueError` | `SolveStatic terminated due to errors` |
+| 10 | divides by zero in a load user function | `ValueError` | `SolveDynamic terminated` |
+
+**Six of ten carry the same sentence** — *"Exudyn: parsing of Python file terminated due to
+Python (user) error"* — for a bad item number, a string in a number field and a missing marker
+alike. The real explanation was printed to the console and dropped. That is R6.3.5 in one
+table, and the reason this model is a **record** and not an assertion: the classes and messages
+are printed, never compared, so R6.3.5 and R6.3.6 do not have to edit this file to make it pass.
+The only thing it asserts is that every case raises **something** (`testResult` = the number
+that raised nothing, 0), which stays true through the whole of R6.3.
+
+**The switch the maintainer asked for.** `catchErrors = False` plus `singleCase = N` runs one
+case with no `try/except` anywhere on the path, so the exception reaches the IDE. Better than
+commenting blocks out, and it cannot be left half-done.
+
+#### What the first run found (#2524)
+
+Running case 10 uncaught prints, in this order:
+
+```
+User ERROR [file '...\exudyn\solver.py', line 283]:
+Error in Python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
+ZeroDivisionError: float division by zero
+At:
+  ...\exceptionTypesTest.py(150): LoadUserFunction        <- the user's own line, correct
+SYSTEM ERROR [file '...\exudyn\solver.py', line 283]:
+EXUDYN raised internal error in 'CSolverBase::SolveSteps'
+ValueError: SolveDynamic terminated                        <- what str(exception) says
+```
+
+- The `At:` block is **right**, and it is the mechanism the maintainer asked to keep: nothing
+  else on the C++ side knows which line of a user function was executing.
+- The `[file ..., line 283]` header is **wrong**: it names `solver.py`, because
+  `PyGetCurrentFileInformation` returns the innermost Python frame and during a solver call
+  that is the solver wrapper. The correct answer is three lines below it, in the block the same
+  message printed.
+- The user's `ZeroDivisionError` is then reported a second time as **SYSTEM ERROR — EXUDYN
+  raised internal error**. A user's mistake labelled an Exudyn bug; and since R6.3.3 its C++
+  class is `ExudynInternalError`, whose entire meaning is *please report this*. Raised as
+  **#2524** and folded into R6.3.5 rather than fixed here, because it is a message decision and
+  this step is a measurement.
+
+The model is excluded from `exudynCPPfast` judging: that module compiles the range checks away,
+so cases 5 and 6 legitimately raise nothing there.
+
+---
+
+
 <a id="r6-3-4"></a>
 ### R6.3.4 — a deprecation is a statement about the user's code
 

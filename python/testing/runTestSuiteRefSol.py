@@ -105,6 +105,7 @@ def TestExamplesReferenceSolution():
         'pendulumFriction.py':0.39999998776982154,
         'parameterConversionTest.py':0.0,                             #new 2026-09-14: number of differences to parameterConversionTestReference.txt (revision2026 step R4.4.3.1)
         'typeInformationTest.py':0.0,                                 #new 2026-09-15: number of disagreements of exudyn.types with the C++ module (revision2026 step R4.10.4)
+        'exceptionTypesTest.py':0.0,                                  #new 2026-09-18: number of provoked errors that raised NOTHING (revision2026 step R6.3.7)
         'pickleCopyMbs.py':0.2583013564103506,                      #new 2025-05-10
         'plotSensorTest.py':1.0,
         'postNewtonStepContactTest.py':0.057286638346409235,
@@ -497,6 +498,10 @@ def NotJudgedOutsideRegularModule():
             'its result is the number of parameter outcomes differing from the recorded behaviour, '
             'and a module without range checks legitimately reports different outcomes for invalid '
             'input - 89 of them; it records behaviour, so only the regular module can judge it',
+        'exceptionTypesTest.py':
+            'it counts errors that were NOT raised, and exudynCPPfast compiles the range checks '
+            'away - two of its ten cases legitimately raise nothing there; the point of the model '
+            'is what a user gets from the regular module (revision2026 step R6.3.7)',
         'NGsolveCMStest.py':
             'it loads FEM data from the tracked testData/netgenTestMesh.pkl, which carries exudyn '
             'C++ types; under a second module the load raises \'type "Real" is already registered\', '

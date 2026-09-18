@@ -92,6 +92,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/pendulumFriction
    TestModels/parameterConversionTest
    TestModels/typeInformationTest
+   TestModels/exceptionTypesTest
    TestModels/pickleCopyMbs
    TestModels/plotSensorTest
    TestModels/postNewtonStepContactTest
