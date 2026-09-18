@@ -551,7 +551,7 @@ Function: CompositionRuleForRotationVectors
 
 Function: CompositionRuleRotXYZAnglesRotationVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L676>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
+`CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L681>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
   | compute composition operation for RotXYZ angles, see

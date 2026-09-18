@@ -664,7 +664,12 @@ def CompositionRuleForRotationVectors(v0, Omega):
     s1 = Sinc(w2Half)
     x = c0*c1 - 0.25*s0*s1*np.dot(v0,Omega)
     xPower = x**2
-    xTemp = sqrt(1 - xPower)
+    #abs() as in the C++ implementation EXUlie::CompositionRotationVector (RigidBodyMath.h), which
+    #is the verified one: x is the cosine of the half composed angle, so 1-x*x is analytically >= 0,
+    #but rounding makes it slightly negative near a half angle of pi/2 - and math.sqrt then raises
+    #"math domain error" instead of returning the answer. Composing pi*n with itself did exactly
+    #that (#2494); the C++ returned 2*pi*n there and the Python crashed
+    xTemp = sqrt(abs(1 - xPower))
     w = np.pi - 2*atan2(x,xTemp)        
     rho = s0*c1*v0 + c0*s1*Omega + 0.5*s0*s1*np.cross(v0, Omega)
     n = ComputeRotationAxisFromRotationVector(rho)

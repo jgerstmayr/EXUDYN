@@ -898,14 +898,35 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `knownMissingLocalModules`; `RL_Spot` remains and needs a decision.
 
 <a id="r5-12-1"></a>
-**R5.12.1** *(sub-step of R5.12; found 2026-09-17)* **`CompositionRuleForRotationVectors` returns
-    2π instead of 0** (#2494): composing π·n with itself gives a vector of norm 2π. It describes
-    the identity rotation - `ExpSO3` of it IS the identity - but it lies outside the principal
-    range and exactly on the singularity of the tangent operator: `TExpSO3Inv` there returns
-    entries of order 1e15. Found by TEST 2 of `LieGroupIntegrationUnitTests.py`, which compares
-    against Matlab results that give 0. Regarding the implementation of the Lie group methods,
-    also check the C++ versions which should be the correct implementations, as they have been 
-    used in the papers and they were verified several times.
+**R5.12.1** *(sub-step of R5.12; the C++ comparison DONE 2026-09-18, the principal-range decision
+    open)* **`CompositionRuleForRotationVectors` returns 2π instead of 0** (#2494): composing π·n
+    with itself gives a vector of norm 2π. It describes the identity rotation - `ExpSO3` of it IS
+    the identity - but it lies outside the principal range and exactly on the singularity of the
+    tangent operator: `TExpSO3Inv` there returns entries of order 1e15. Found by TEST 2 of
+    `LieGroupIntegrationUnitTests.py`, which compares against Matlab results that give 0.
+
+    **The C++ was checked against, as the maintainer asked (2026-09-17), and the answer changes the
+    step.** `EXUlie::CompositionRotationVector` in `src/Linalg/RigidBodyMath.h:1171` is the *same
+    formula*, term for term, and returns 2π as well: `w = pi - 2*atan2(x, xTemp)` is `2*acos(x)`,
+    which for `x = cos(w/2) = -1` is 2π. So this is **not** a Python port that drifted from a
+    verified original - it is a property of the formula both share, and the question "should the
+    result be brought into the principal range" applies to the C++ solver path too. That is why the
+    decision is left open: `CompositionRotationVector` is used by the Lie group integrator whose
+    results are in the papers.
+
+    **One real difference was found and fixed**: the C++ computes
+    `xTemp = sqrt(fabs(1 - x*x))` with the comment *"fabs added, because term may be slightly
+    smaller than zero"*; the Python had no such guard. `1 - x²` is analytically non-negative, but
+    near a half angle of π/2 rounding makes it slightly negative, and `math.sqrt` then **raises
+    `ValueError: math domain error`**. Measured 2026-09-18: composing π·n with itself did exactly
+    that - the shipped Python *crashed* where the C++ returned 2π·n. The guard is now ported, with
+    the C++ named in the comment; the Python returns `6.283185265` (2π to 4e-8, the accuracy
+    `atan2` has left at the singularity), which is what the C++ returns.
+
+    **What is still open**: whether composition should map into [0, π] - `w > π` becoming `2π - w`
+    about `-n`, which turns this case into exactly 0 and matches Matlab - and whether that is done
+    in both implementations or neither. It changes solver behaviour at the singularity, so it needs
+    the maintainer.
 
 <a id="r5-13"></a>
 **R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
