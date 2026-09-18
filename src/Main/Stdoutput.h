@@ -111,6 +111,8 @@ void PyError(std::string error_msg, PyErrorType errorType = PyErrorType::runtime
 
 void PyWarning(std::string warning_msg); //!< prints a formated python warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
 
+void StopRendererOnError(); //!< raise globalPyRuntimeErrorFlag, which shuts the renderer down, unless the renderer itself asked for errors to be survivable (#2531)
+
 void PyDeprecated(std::string message); //!< raises a Python DeprecationWarning: filterable, promotable with -W error::DeprecationWarning, and reported once per source location instead of on every call (#2522)
 
 void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType = PyErrorType::internalError); //!< prints a formated system (internal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; additionally writes to file if file.is_open()=true

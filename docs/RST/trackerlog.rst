@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.194.dev1, 
++  Exudyn version = 1.11.195.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2537, 
-+  Number of resolved issues = 2267 (194 in current version), 
++  Number of resolved issues = 2268 (195 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.195: :textred:`resolved BUG 2531` : a typed exception from the solver no longer stops the renderer 
+    - issue author: Claude-JG
+    - description:  globalPyRuntimeErrorFlag is set in exactly two places: PyError and SysError (Stdoutput.cpp). The CHECKandTHROW\* macros never set it. Until #2524 a bare EXUexception escaping a solver step fell into SolverExceptionHandling catch(EXUexception) and became SysError - which set the flag and stopped the renderer. That handler now has catch(const ExudynError&){throw;} in front of it (needed so the type is not flattened) so every site typed by step R6.3.6 passes through and the flag stays false. The renderer then keeps running and keeps calling Python while Python is in an error state (GlfwClient.cpp reads the flag in five places). The behaviour now depends on how far R6.3.6 has got which is an accident. Set the flag where SOLVER errors are caught - not in ThrowPyErrorType which would make every typed exception anywhere shut the renderer down.
+    - **notes:** The flag is raised at the solver boundary, in the two pass-through catches of SolverExceptionHandling before the throw - where the maintainer placed it, because the renderer stalls anyway once an exception reaches the solver. Not in ThrowPyErrorType, which would stop the renderer for an error raised while a model is being built and for each of the ~38000 probe errors of parameterConversionTest. The rule itself (honour deactivateGlobalPyRuntimeErrorFlag) now lives once, in StopRendererOnError(), called from PyError, SysError and the solver boundary. No automated test is possible: the flag is not exposed to Python and rule 11 forbids opening a renderer here - the suites only show that raising it does not poison a later run.
+    - date resolved: **2026-09-18 23:02**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.194: resolved Issue 2536: the explicit dynamic solver returns False instead of raising (change)
     - issue author: Claude-JG
     - description:  In SolveDynamic the implicit branch prints SolverErrorMessage and raises when the solver fails; the explicit branch (ExplicitEuler, RK44, DOPRI5, VelocityVerlet, ...) has no try and no check at all and simply returns False. The same call therefore aborts loudly or continues silently depending on solverType, and a user who does not test the return value keeps computing with the state of a failed run - exactly the case the maintainer named for parameter variations. Make the explicit branch behave like the implicit one.
@@ -8866,11 +8872,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2531:` a typed exception from the solver no longer stops the renderer
-    - issue author: Claude-JG
-    - description:  globalPyRuntimeErrorFlag is set in exactly two places: PyError and SysError (Stdoutput.cpp). The CHECKandTHROW\* macros never set it. Until #2524 a bare EXUexception escaping a solver step fell into SolverExceptionHandling catch(EXUexception) and became SysError - which set the flag and stopped the renderer. That handler now has catch(const ExudynError&){throw;} in front of it (needed so the type is not flattened) so every site typed by step R6.3.6 passes through and the flag stays false. The renderer then keeps running and keeps calling Python while Python is in an error state (GlfwClient.cpp reads the flag in five places). The behaviour now depends on how far R6.3.6 has got which is an accident. Set the flag where SOLVER errors are caught - not in ThrowPyErrorType which would make every typed exception anywhere shut the renderer down.
-    - date raised: 2026-09-18 
 
  * :textred:`open BUG 2526:` mainSystemExtensionDocsEmitter writes none of its five outputs
     - issue author: Claude-JG

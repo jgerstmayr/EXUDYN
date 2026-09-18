@@ -392,6 +392,17 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	}
 }
 
+//! The renderer reads globalPyRuntimeErrorFlag in five places (GlfwClient.cpp): it stops the render
+//! loop and, more importantly, keeps the render thread from calling into Python while Python is in
+//! an error state. This is the ONE place that knows the rule, so that every site which decides
+//! "this error ends the run" says so the same way (#2531, revision2026 step R6.3.11).
+//! deactivateGlobalPyRuntimeErrorFlag is set by rendererPythonInterface.cpp around calls the
+//! renderer itself makes into Python, where an error may not take the window down.
+void StopRendererOnError()
+{
+	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; }
+}
+
 //! the message an exception carries: what went wrong, and where the user's Python was (#2527)
 std::string ErrorMessageWithLocation(const std::string& message, const std::string& fileName, Index lineNumber)
 {
@@ -425,7 +436,7 @@ void PyError(std::string error_msg, PyErrorType errorType)
 //! additional output to file
 void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType) 
 {
-	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; } //stop graphics, etc.
+	StopRendererOnError(); //stop graphics, etc.
 	STDstring fileName;
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
@@ -462,8 +473,7 @@ void SysError(std::string error_msg, PyErrorType errorType)
 //! additional output to file
 void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 {
-	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; }//stop graphics, etc.
-	//globalPyRuntimeErrorFlag = true; //stop graphics, etc.
+	StopRendererOnError(); //stop graphics, etc.
 
 	STDstring fileName;
 	Index lineNumber;

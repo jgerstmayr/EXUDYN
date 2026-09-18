@@ -732,38 +732,10 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     flood the terminal. Both file channels now write the identical text.
 
 <a id="r6-3-11"></a>
-**R6.3.11** *(sub-step of R6.3; raised 2026-09-18)* **A typed exception from the solver no
-    longer stops the renderer** (#2531). `globalPyRuntimeErrorFlag` is set in exactly two places,
-    `PyError` and `SysError`; the `CHECKandTHROW*` macros never set it. Until #2524 a bare
-    `EXUexception` escaping a solver step fell into `SolverExceptionHandling`'s
-    `catch (const EXUexception&)` and became a `SysError`, which set the flag. That handler now
-    has `catch (const ExudynError&) { throw; }` in front of it — needed, or the type is
-    flattened (info fact 29) — so **every site typed by R6.3.6 passes through and the flag
-    stays false**. `GlfwClient.cpp` reads it in five places, one of which keeps the render thread
-    from calling into Python while Python is in an error state. So the behaviour now depends on
-    how far R6.3.6 has got, which is an accident and not a decision.
-
-    **The approach** (maintainer, 2026-09-18): *the renderer stalls anyway once an exception
-    reaches the solver*, so the flag belongs **where solver errors are caught**, not where
-    exceptions are thrown.
-
-    - Set it in `SolverExceptionHandling` (`ExceptionsTemplates.h`), in the two pass-through
-      catches **before** the `throw;`, and leave the `SysError` branch as it is — one function,
-      every solver error, whatever its type.
-    - Honour `deactivateGlobalPyRuntimeErrorFlag` exactly as `PyError` and `SysError` do, so the
-      documented case *"functions called e.g. from command windows, which allow errors without
-      shutting down the renderer"* keeps working unchanged.
-    - **Not** in `ThrowPyErrorType`, although it is the single throw site and therefore tempting.
-      It would shut the renderer down for every typed exception anywhere: `mbs.GetObject(99)` at
-      model-build time, a caught error in a parameter variation, each of the ~38000 probe errors
-      of `parameterConversionTest.py`. That is the same mistake R6.3.10 just corrected for the
-      console — reporting an error that somebody already handled.
-    - Check `CSolverBase`'s own outer catch as well, so a failure that never passes through the
-      template is covered too.
-
-    Expectable cases this should make smooth: a `SolveDynamic` that aborts with the renderer
-    open stops the renderer, as before R6.3.6; a caught error during model setup leaves it
-    running; a parameter variation that handles its own errors is unaffected.
+**R6.3.11** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-11) — *(sub-step of R6.3)*
+    **A typed exception from the solver stops the renderer again** (#2531): the flag is raised
+    at the solver boundary, where the maintainer placed it, and `StopRendererOnError()` is now
+    the one place that knows the rule.
 
 <a id="r6-3-12"></a>
 **R6.3.12** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-12) — *(sub-step of R6.3)*

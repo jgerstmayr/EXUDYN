@@ -7146,6 +7146,63 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-3-11"></a>
+### R6.3.11 — the renderer flag, put where solver errors are caught
+
+**DONE 2026-09-18** (#2531). A regression that the typing of R6.3.6 introduced, found by the
+maintainer asking a one-line question: *is `globalPyRuntimeErrorFlag` set on `CHECKandTHROW`?*
+
+It is not, and it never was: the flag is written in exactly two places, `PyError` and
+`SysError`. It used to be set **indirectly** — a bare `EXUexception` escaping a solver step
+fell into `SolverExceptionHandling`'s `catch (const EXUexception&)` and became a `SysError`.
+Step R6.3.5 put `catch (const ExudynError&) { throw; }` in front of that handler, which is
+required or the type is flattened (info fact 29) — and from then on **every site typed by
+R6.3.6 passed through and left the flag false**. The renderer kept running, and kept calling
+into Python while Python was in an error state (`GlfwClient.cpp` reads the flag in five places,
+one of them exactly that guard).
+
+What made it worth fixing rather than accepting: the behaviour had come to depend on **how far
+the typing had got**. Two errors of the same kind behaved differently because one area had been
+mapped and another had not.
+
+#### Where it belongs
+
+The maintainer decided the placement: *the renderer stalls anyway once an exception reaches the
+solver*, so the flag goes **where solver errors are caught** — the two pass-through catches
+of `SolverExceptionHandling`, before the `throw;`.
+
+Not in `ThrowPyErrorType`, although that is the single throw site and therefore the tempting
+one. It would shut the renderer down for `mbs.GetObject(99)` while a model is being built, for
+a caught error in a parameter variation, and for each of the ~38000 probe errors of
+`parameterConversionTest.py` — the same mistake R6.3.10 had just corrected for the console.
+
+`CSolverBase::SolveSystem` wraps `InitializeSolver`, `SolveSteps` and `FinalizeSolver` in that
+template, so the template **is** the solver boundary and nothing else needed touching.
+
+#### One place that knows the rule
+
+`PyError` and `SysError` each carried their own copy of
+`if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; }`. That is now
+`StopRendererOnError()` in `Stdoutput.cpp`, called from three places. The `deactivate` flag —
+set by `rendererPythonInterface.cpp` around the twelve calls the renderer itself makes into
+Python, where an error may not take the window down — is honoured by construction.
+
+#### Two things stated rather than discovered
+
+**There is no automated test.** The flag is not exposed to Python, and rule 11 forbids opening
+a renderer window here, so nothing in the suites can observe it. What the suites do show is
+that raising the flag does not poison a later run: `exceptionTypesTest.py` fails two solves and
+the cases after them still pass. The real check is one manual run by the maintainer with a
+renderer open — a failed `SolveDynamic` must close it.
+
+**With the renderer open, a parameter variation that catches solver errors will again lose the
+renderer on the first failure.** C++ cannot know whether an exception will be caught further
+up. This is the behaviour from before #2524 being restored, not something new, but it is the
+kind of thing that is better written down than rediscovered.
+
+---
+
+
 <a id="r6-3-13"></a>
 ### R6.3.13 — the solver raises what actually failed
 

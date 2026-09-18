@@ -88,12 +88,21 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 	//parameter error, a solver failure. Reporting it again as "EXUDYN raised internal error" labels
 	//a user's mistake an Exudyn bug - which is exactly what happened to every user function error
 	//until #2524. These must come before catch(EXUexception): both derive from it (info fact 29)
+	//
+	//StopRendererOnError() is what the SysError below used to do on the way past (#2531,
+	//revision2026 step R6.3.11). Passing the exception through skipped it, so every site typed by
+	//step R6.3.6 silently stopped shutting the renderer down - the behaviour came to depend on how
+	//far the typing had got. The flag belongs HERE, at the solver boundary: the renderer stalls
+	//anyway once an exception reaches the solver, while an error raised while a model is being
+	//built must not take the window down.
 	catch (const py::builtin_exception&)
 	{
+		StopRendererOnError();
 		throw;
 	}
 	catch (const ExudynError&)
 	{
+		StopRendererOnError();
 		throw;
 	}
 	catch (const EXUexception& ex)
