@@ -411,6 +411,32 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
     orders of magnitude between any two runs and carry no information here (fact 24).
 
 
+28. **numpy's rounding of small matrix products is not stable across releases**, and it reaches
+    Exudyn through model setup. Measured 2026-09-18 with a **byte-identical** `exudynCPP.pyd` (md5
+    equal in both environments), the same source and the same Python 3.13.15 - confirmed by putting
+    the other numpy on `PYTHONPATH` for that one interpreter, which flips the result:
+
+    | | `A.T @ v`, 3x3 by 3, third component analytically 0 |
+    |---|---|
+    | numpy 2.2.4 | `0.0` - equal to an explicit `sum(A[k][i]*v[k])` |
+    | numpy 2.4.6 | `-2.930234083156181e-19` |
+
+    A general 3x3 by 3x3 product differs too (`0.5633333333333334` vs `...32`). This is not a numpy
+    bug but the freedom an implementation has in summation order; the newer release happens to be
+    the one that deviates from exact arithmetic here.
+
+    Every `Create*Joint` in `mainSystemExtensions.py` converts a joint position and orientation into
+    body coordinates with `A0.T @ (pJoint - p0)` and `A0.T @ AJ` - about twenty call sites - so
+    those last bits are solver INPUT, and a sensitive model amplifies them:
+    `sliderCrank3Dbenchmark.py` moves by a relative `2.7e-10` against a tolerance of `5e-14` (#2502,
+    step R5.9.2). One model in the suite is affected at the current tolerance; the rest of the
+    assembled system is bit-identical.
+
+    The consequence when reading a failed comparison: **a committed reference value is only
+    reproducible for the numpy version it was produced with**, unless the setup arithmetic is made
+    order-deterministic. `exudev env` prints the numpy version of every environment for exactly this
+    reason.
+
 ## 4. The frozen generated set (phase R0)
 
 The committed generated files at `e44aca1` are the reference snapshot, after a rebuild
