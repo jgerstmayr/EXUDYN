@@ -10,12 +10,24 @@
 #           then run the simulation:
 #               python 3 ROSMobileManipulator.py
 #           You can use the prepared ROS node, ROSControlMobileManipulator to control the simulation
-#           use a bash terminal to start the recommended file  (see folder Examples/supplementary):
+#           use a bash terminal to start the recommended file
+#           (it is in python/Examples/testData/ROS/):
 #               python3 ROSControlMobileManipulator.py
 #           For even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
-#           copy files ROSMobileManipulator.py, ROSbodykairos.stl and ROSControlMobileManipulator.py in corresponding folders within the package
+#           copy files ROSMobileManipulator.py, ROSbodykairos.stl and ROSControlMobileManipulator.py
+#           (the latter two are in python/Examples/testData/ROS/) into the corresponding folders of the package
 #           For more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py from the EXUDYN examples folder
 # 
+#
+# STATUS (2026-09-18): this example was written and TESTED IN 2023 against ROS1 noetic and has
+#           not been run since - the maintainer has no ROS installation to test it with, and it
+#           is excluded from the automated example run for that reason. Take it as a WORKING
+#           ILLUSTRATION of how the exudyn/ROS coupling is put together, not as something that
+#           runs unchanged: topic names, message types and the node layout have to be adapted
+#           to your own installation and ROS version. Re-checking it against a current ROS is
+#           issue #2511.
+#           The supplementary files - the ROS nodes, the launch file and the STL geometry -
+#           are in python/Examples/testData/ROS/.
 # Author:   Martin Sereinig, Peter Manzl 
 # Date:     2023-05-31 (created)
 # last Update: 2023-09-11

@@ -1,0 +1,30 @@
+<!-- 
+# This is an launch file example to use the ROS turtlesim package together with the exudyn ROSexampleTurtle simulation
+# Details: After creating a catkin workspace and a ROS package (myExudynInterface) this can be used to start
+#          two ROS nodes, turtesim_node and ROSTurtle.py both turtles will be move in circles whereby the 
+#          exudyn turtle commands the ROS turtle
+#          roslaunch myExudynInterfae ROSBringupTurtle.launch 
+#          for more functionality see also: ROSMassPoint.py, ROSBringup.launch, ROSControlTurtleVelocity.py
+# Author:   Martin Sereinig, Peter Manzl 
+# Date:     2023-05-31 (created)
+# Copyright:This file is part of Exudyn. Exudyn is free software. 
+# You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt'
+-->
+
+<launch>
+        <arg name="oneParameter" default="parameterName" />
+        <arg name="stlFilePath" default="mypath" />
+        <!-- start turtlesim node-->
+        <node pkg="turtlesim" type = "turtlesim_node" name="turtlesim_node">
+        </node>
+        
+        <!-- start exudyn node-->
+        <node pkg="myExudynInterface" type="ROSTurtle.py" name="ROSTurtle" output="screen" args="False">
+        
+        <!-- put stlFilePath on parameter server for exudyn to find stl-->
+        <param name="stlFilePath" value="$(find myExudynInterface)/scripts/exudynros/"/>
+        
+        <!-- remap ros topic name, for turtlesim to be controled by exudyn-->
+        <remap from="exudyn/Twist" to="turtle1/cmd_vel"/>
+        </node>
+</launch>

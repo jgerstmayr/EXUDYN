@@ -6497,3 +6497,53 @@ exudyn **1.11.0** - months stale - which was rebuilt.
 it), although four test models read the IFTOMM slider-crank and heavy-top comparison solutions from
 it; those reads sit inside `if useGraphics` blocks, so the suite passes and only the comparison
 plots are lost, which is why nobody noticed. `python/TestModels/testData/gyro.stl` is missing too.
+
+
+<a id="r5-18-4"></a>
+### R5.18.4 - the missing data files, restored and pruned
+
+**DONE 2026-09-18** - issues #2510 (resolved) and #2511 (raised).
+
+#2510 was an inventory: which data files do the examples and test models reference that the
+repository does not contain. The maintainer copied the old folders back the same day, and this step
+decided what to keep.
+
+**`docs/verification/`** - 19 files arrived; **8 are referenced** and are now tracked:
+
+| kept | read by |
+|---|---|
+| `Slidercrank3DiftommBenchmark/` - Masarati, Masoudi, Chaojie, Gonzalez, KarthikBushan, PingZhou | `sliderCrank3Dbenchmark.py`, `sliderCrank3Dtest.py` |
+| `HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt` | `heavyTop.py` |
+| `HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt` | `explicitLieGroupIntegratorPythonTest.py`, `explicitLieGroupMBSTest.py` |
+
+The other 11 went to **`tmp/verification/`** - gitignored, so out of the repository but still on
+disk - rather than being deleted: the `Pendulum/` folder and the paper PDF are unused, but
+`GeneralizedAlpha.m` and `HeavyTopWithEulerParameter.m` are *how the kept reference solutions were
+produced*. That is provenance, not junk, and whether provenance belongs in the repository is the
+maintainer's call rather than a cleanup decision.
+
+Verified by running `sliderCrank3Dbenchmark.py` and `heavyTop.py` with `useGraphics` **on** (windows
+suppressed): both read their comparison data and finish. Those reads sit inside `if useGraphics`
+blocks, which is why the suite never noticed the files were gone.
+
+**`gyro.stl`** was placed in `python/Examples/testData/`, but `netgenSTLtest.py` asked for
+`testData/gyro.stl` - and the example runner's working directory is `python/TestModels`, so that
+resolved to the wrong place. Changed to `../Examples/testData/gyro.stl`, which resolves **from both
+directories**, which is exactly why the other examples are written that way. Verified by loading it
+with netgen from the runner's directory.
+
+**The ROS examples** - all five supplementary files in `python/Examples/testData/ROS/` are
+referenced and all five are kept. The headers pointed at an `Examples/supplementary` folder that no
+longer exists; they now name the real one. More usefully, each of the three examples gained a
+**STATUS note** saying what nobody could have known from reading them: written and tested in **2023**
+against ROS1 noetic, not run since, and skipped by the example runner because `rospy` is absent - so
+they are a working illustration of how the coupling is assembled, not something that runs unchanged
+against a current installation. ROS1 noetic reached end of life in May 2025; whether these are
+ported to ROS2 or marked historical is **#2511**, which needs somebody with a ROS installation.
+
+The STL files are ASCII, so `.gitattributes`' deliberate `text=auto` for `*.stl` - it is documented
+there that both ASCII and binary variants exist and NUL detection sorts them out - stores them
+correctly; checked with `git diff --numstat`, which shows line counts rather than "binary".
+
+**`humanRobotInteraction.py`** stays excluded, as the maintainer confirmed: its own header says the
+geometry comes from GrabCAD, and it reads it from an absolute path on the author machine.

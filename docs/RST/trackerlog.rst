@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.169.dev1, 
++  Exudyn version = 1.11.170.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2511, 
-+  Number of resolved issues = 2242 (169 in current version), 
++  Number of issues = 2512, 
++  Number of resolved issues = 2243 (170 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.170: resolved Issue 2510: data files referenced by examples and test models are not in the repository (testing)
+    - issue author: Claude-JG
+    - description:  Inventory taken 2026-09-18 (revision2026 step R5.18.2). (1) docs/verification/ does not exist and was NEVER committed - git log shows no commit touching it - although four test models read from it: sliderCrank3Dtest.py and sliderCrank3Dbenchmark.py want Slidercrank3DiftommBenchmark/ (the Masarati; Masoudi; Chaojie; KarthikBushan; PingZhou and Gonzalez comparison solutions) and heavyTop.py and explicitLieGroupIntegratorPythonTest.py want HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt and HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt. Those reads sit inside "if useGraphics" blocks; so the suite passes without them and only the comparison plots are lost - which is why nobody noticed. (2) python/Examples/testData/objImportTest.obj is missing; it is the only thing stopping pymeshlabFileImport.py. (3) python/TestModels/testData/gyro.stl is missing; needed by netgenSTLtest.py. NOT missing and NOT to be restored: humanRobotInteraction.py and the ROS and URDF examples read files the repository never contained by design (GrabCAD download; a ROS installation). The maintainer has the files in the old repository.
+    - **notes:** Resolved in revision2026 step R5.18.4: the maintainer copied the old folders back and this step kept what is referenced. docs/verification: 8 of 19 files are referenced and are now tracked (the six IFTOMM slider-crank comparison solutions and the two heavy-top RK4 solutions); the other 11 went to the gitignored tmp/verification/ rather than being deleted; because two of them are the Matlab generators of the kept reference solutions and that is provenance. gyro.stl is tracked and netgenSTLtest.py now asks for ../Examples/testData/gyro.stl; which resolves from the example directory AND from the runner working directory. The five ROS supplementary files are tracked in python/Examples/testData/ROS/ and the example headers point there instead of at the vanished Examples/supplementary. Verified by running sliderCrank3Dbenchmark.py and heavyTop.py with useGraphics on: both read their comparison data and finish. Successor for the ROS state: #2511.
+    - date resolved: **2026-09-18 08:33**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.169: resolved Issue 2509: symbolicModuleTest compares scalars with exact equality (testing)
     - issue author: Claude-JG
     - description:  Successor of #2501; which fixed the VECTOR/matrix comparison. The SCALAR loop a few hundred lines above still used "if res[0] != res[1]" - exact equality between two independent implementations of a transcendental function; the symbolic module's and Python's. That holds only by luck; and the luck ran out with numpy 2.5.3: acosh(2) comes out 1 ulp apart (1.3169578969248166 against ...68); counted twice; so the model returned 2.948 against a reference of 0.948 and the suite failed with error 2.0 - exactly the symptom of #2501 in a different branch of the same file. Found 2026-09-18 by a Linux run in WSL under numpy 2.5.3; which is also what the GitLab manylinux job uses. Fixed in revision2026 step R5.9.3 with the same relative tolerance.
@@ -7721,9 +7727,9 @@ Version 0.1
 Open issues
 ***********
 
- * :textorange:`open issue 2510:` data files referenced by examples and test models are not in the repository
+ * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG
-    - description:  Inventory taken 2026-09-18 (revision2026 step R5.18.2). (1) docs/verification/ does not exist and was NEVER committed - git log shows no commit touching it - although four test models read from it: sliderCrank3Dtest.py and sliderCrank3Dbenchmark.py want Slidercrank3DiftommBenchmark/ (the Masarati; Masoudi; Chaojie; KarthikBushan; PingZhou and Gonzalez comparison solutions) and heavyTop.py and explicitLieGroupIntegratorPythonTest.py want HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt and HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt. Those reads sit inside "if useGraphics" blocks; so the suite passes without them and only the comparison plots are lost - which is why nobody noticed. (2) python/Examples/testData/objImportTest.obj is missing; it is the only thing stopping pymeshlabFileImport.py. (3) python/TestModels/testData/gyro.stl is missing; needed by netgenSTLtest.py. NOT missing and NOT to be restored: humanRobotInteraction.py and the ROS and URDF examples read files the repository never contained by design (GrabCAD download; a ROS installation). The maintainer has the files in the old repository.
+    - description:  ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
     - date raised: 2026-09-18 
 
  * :textred:`open issue 2508:` checkExtras passed locally and failed in CI because of an untracked file

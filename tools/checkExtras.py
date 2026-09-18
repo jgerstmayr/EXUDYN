@@ -77,6 +77,9 @@ exemptImports = {
     'rospy':         'ROS is not distributed on PyPI; installed with the ROS distribution',
     'geometry_msgs': 'ROS message package, not on PyPI',
     'std_msgs':      'ROS message package, not on PyPI',
+    'std_srvs':      'ROS service package, not on PyPI; imported by the ROS node '
+                     'python/Examples/testData/ROS/ROSControlMobileManipulator.py, which came into '
+                     'the repository with the supplementary files of revision2026 step R5.18.4',
     'exudynCPP':     'the compiled extension itself, built by setup.py',
     'pyansys':       'imported inside GenerateStressModesFromPyAnsys() only, behind a flag that '
                      'is False; the distribution was renamed to ansys-mapdl-reader and pulling '

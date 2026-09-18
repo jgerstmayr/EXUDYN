@@ -1189,6 +1189,39 @@ here, because they describe the developer workflow rather than the user document
 
     Successor: **#2510**, the inventory of data files the repository never contained.
 
+<a id="r5-18-4"></a>
+**R5.18.4** **DONE 2026-09-18** — *(sub-step of R5.18; maintainer supplied the files)*
+    **The missing data files, restored and pruned** (#2510, #2511). The inventory of #2510 was
+    answered: the maintainer copied the old folders back, and this step kept what is referenced and
+    moved the rest out.
+
+    **`docs/verification/`** - 19 files arrived, **8 are referenced** and are now tracked: the six
+    IFTOMM slider-crank comparison solutions (Masarati, Masoudi, Chaojie, Gonzalez, KarthikBushan,
+    PingZhou) and the two heavy-top RK4 solutions. The other 11 - the `Pendulum/` folder, the
+    `GeneralizedAlpha` variants of the heavy top, the two Matlab generators and a paper PDF - are
+    referenced by nothing and went to `tmp/verification/`, which is gitignored, rather than being
+    deleted: the two `.m` files are how the reference solutions were produced, so they are
+    provenance rather than junk, and the maintainer should decide whether provenance belongs in the
+    repository.
+
+    **`gyro.stl`** was placed in `python/Examples/testData/`, but `netgenSTLtest.py` asked for
+    `testData/gyro.stl`, which the example runner resolves against `python/TestModels`. Changed to
+    `../Examples/testData/gyro.stl`, which resolves **from both directories** - that is why the
+    other examples are written that way - and verified by loading it with netgen from the runner's
+    working directory.
+
+    **The ROS examples** (#2511). Their supplementary files - two ROS nodes, a launch file and two
+    STL geometries - are in `python/Examples/testData/ROS/`; all five are referenced and all five
+    are kept. The headers still pointed at an `Examples/supplementary` folder that no longer
+    exists; they now name the real one. Each of the three examples gained a **STATUS note**: written
+    and tested in 2023 against ROS1 noetic, not run since, excluded from the automated run because
+    `rospy` is absent - a working illustration of how the coupling is put together, not something
+    that runs unchanged. ROS1 noetic reached end of life in May 2025, so whether these move to ROS2
+    or become historical is the open question of #2511, and needs somebody with an installation.
+
+    **`humanRobotInteraction.py`** stays excluded, as the maintainer confirmed: it says in its own
+    header where the geometry comes from (GrabCAD) and reads it from an absolute path.
+
 <a id="r5-18-3"></a>
 **R5.18.3** **DONE 2026-09-18** — *(sub-step of R5.18; found by the first GitLab run after the
     driver landed)* **A gate that was green locally and red in CI** (#2508).

@@ -27,8 +27,19 @@ You can view and download this file on Github: `ROSTurtle.py <https://github.com
    #           Start example with argument -noTrack, to not track the turtle:
    #               python3 ROSTurtle.py -noTrack
    #           For even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
-   #           copy files  ROSTurtle.py, Turtle.stl and ROSBringupTurtle.launch file  (see folder Examples/supplementary) in corresponding folders within the package
+   #           copy files  ROSTurtle.py, ROSTurtle.stl and ROSBringupTurtle.launch file
+   #           (they are in python/Examples/testData/ROS/) into the corresponding folders of the package
    #           For more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py
+   #
+   # STATUS (2026-09-18): this example was written and TESTED IN 2023 against ROS1 noetic and has
+   #           not been run since - the maintainer has no ROS installation to test it with, and it
+   #           is excluded from the automated example run for that reason. Take it as a WORKING
+   #           ILLUSTRATION of how the exudyn/ROS coupling is put together, not as something that
+   #           runs unchanged: topic names, message types and the node layout have to be adapted
+   #           to your own installation and ROS version. Re-checking it against a current ROS is
+   #           issue #2511.
+   #           The supplementary files - the ROS nodes, the launch file and the STL geometry -
+   #           are in python/Examples/testData/ROS/.
    # Author:   Martin Sereinig, Peter Manzl 
    # Date:     2023-05-31 (created)
    #

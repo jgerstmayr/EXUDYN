@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.169.dev1, 
+  \item Exudyn version = 1.11.170.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2511, 
-  \item Number of resolved issues = 2242 (169 in current version), 
+  \item Number of issues = 2512, 
+  \item Number of resolved issues = 2243 (170 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.170}:  resolved Issue 2510: {\bf data files referenced by examples and test models are not in the repository}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Inventory taken 2026-09-18 (revision2026 step R5.18.2). (1) docs/verification/ does not exist and was NEVER committed - git log shows no commit touching it - although four test models read from it: sliderCrank3Dtest.py and sliderCrank3Dbenchmark.py want Slidercrank3DiftommBenchmark/ (the Masarati; Masoudi; Chaojie; KarthikBushan; PingZhou and Gonzalez comparison solutions) and heavyTop.py and explicitLieGroupIntegratorPythonTest.py want HeavyTopSolution/HeavyTop\_TimeEulerParameter\_RK4.txt and HeavyTopSolution/HeavyTop\_TimeBodyAngularVelocity\_RK4.txt. Those reads sit inside "if useGraphics" blocks; so the suite passes without them and only the comparison plots are lost - which is why nobody noticed. (2) python/Examples/testData/objImportTest.obj is missing; it is the only thing stopping pymeshlabFileImport.py. (3) python/TestModels/testData/gyro.stl is missing; needed by netgenSTLtest.py. NOT missing and NOT to be restored: humanRobotInteraction.py and the ROS and URDF examples read files the repository never contained by design (GrabCAD download; a ROS installation). The maintainer has the files in the old repository.}
+    \item {\bf notes: Resolved in revision2026 step R5.18.4: the maintainer copied the old folders back and this step kept what is referenced. docs/verification: 8 of 19 files are referenced and are now tracked (the six IFTOMM slider-crank comparison solutions and the two heavy-top RK4 solutions); the other 11 went to the gitignored tmp/verification/ rather than being deleted; because two of them are the Matlab generators of the kept reference solutions and that is provenance. gyro.stl is tracked and netgenSTLtest.py now asks for ../Examples/testData/gyro.stl; which resolves from the example directory AND from the runner working directory. The five ROS supplementary files are tracked in python/Examples/testData/ROS/ and the example headers point there instead of at the vanished Examples/supplementary. Verified by running sliderCrank3Dbenchmark.py and heavyTop.py with useGraphics on: both read their comparison data and finish. Successor for the ROS state: \#2511.}
+    \item   date resolved: {\bf 2026-09-18 08:33},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.169}:  resolved Issue 2509: {\bf symbolicModuleTest compares scalars with exact equality}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
