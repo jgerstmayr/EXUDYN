@@ -20,14 +20,26 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+# ACTION VERSIONS (revision2026 step R5.14.1, #2463). Every action is pinned to a MAJOR version,
+# and both workflows in this directory use the SAME major - they had drifted apart to checkout@v3
+# and setup-python@v4 here against @v6 in wheels.yml, which means two sets of behaviour to reason
+# about and the older one silently rotting. Why pin at all: an unpinned action follows its default
+# branch, so a third party can change what runs here between two identical commits. Why the major
+# only: GitHub deprecates whole majors (the Node runtime they ship on), so a major that falls
+# behind eventually stops running at all - that is the failure mode to avoid, not a patch
+# difference. Raise both files together.
+#
+# runs-on stays 'ubuntu-latest' here while wheels.yml pins its images: the wheel matrix must be
+# reproducible across the four platforms it builds for, whereas this job only renders the
+# documentation and benefits from following the newest image.
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6          # CHANGED 2026-09-18: v3 -> v6, same as wheels.yml
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6      # CHANGED 2026-09-18: v4 -> v6, same as wheels.yml
       with:
         python-version: '3.x'
         cache: 'pip'
@@ -39,6 +51,8 @@ jobs:
       run: |
         sphinx-build . docs/_build
     - name: Deploy to Github pages
+      # third party, not an actions/* one: v4 IS its current major, so it is up to date
+      # and is not part of the "same major" rule above, which is about the actions/* set
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: "docs/_build"

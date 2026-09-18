@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.166.dev1, 
++  Exudyn version = 1.11.167.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2509, 
-+  Number of resolved issues = 2239 (166 in current version), 
++  Number of resolved issues = 2240 (167 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.167: :textred:`resolved BUG 2463` : the two GitHub workflows pin different action versions 
+    - issue author: Claude-JG
+    - description:  .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.
+    - **notes:** Fixed in revision2026 step R5.14.1; approved by the maintainer 2026-09-18: documentation.yaml now uses actions/checkout@v6 and actions/setup-python@v6; the same majors as wheels.yml; and the file states why the actions are pinned at all (an unpinned action follows its default branch) and why the MAJOR is what matters (GitHub deprecates whole majors with their Node runtime; so one that falls behind stops running altogether). JamesIves/github-pages-deploy-action@v4 is left as is - third-party and already its current major - and runs-on stays ubuntu-latest here while wheels.yml pins its images; both with the reason written in the file. Not verifiable during the freeze: GitHub Actions only fire on pushes to master and on pull requests; both files were checked to parse and the first real run comes when GitHub is live again.
+    - date resolved: **2026-09-18 07:58**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.166: :textred:`resolved BUG 2494` : CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns 
     - issue author: Claude-JG
     - description:  Composing the rotation vector pi\*n with itself gives a vector of norm 2\*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2\*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1
@@ -8761,11 +8767,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
-    - issue author: Claude-JG
-    - description:  .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.
-    - date raised: 2026-09-16 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG

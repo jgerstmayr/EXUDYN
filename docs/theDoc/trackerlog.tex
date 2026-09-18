@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.166.dev1, 
+  \item Exudyn version = 1.11.167.dev1, 
   \item last change =  2026-09-18, 
   \item Number of issues = 2509, 
-  \item Number of resolved issues = 2239 (166 in current version), 
+  \item Number of resolved issues = 2240 (167 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.167}: {\bf \color{warningRed}  resolved BUG 2463}: {\bf the two GitHub workflows pin different action versions}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.}
+    \item {\bf notes: Fixed in revision2026 step R5.14.1; approved by the maintainer 2026-09-18: documentation.yaml now uses actions/checkout@v6 and actions/setup-python@v6; the same majors as wheels.yml; and the file states why the actions are pinned at all (an unpinned action follows its default branch) and why the MAJOR is what matters (GitHub deprecates whole majors with their Node runtime; so one that falls behind stops running altogether). JamesIves/github-pages-deploy-action@v4 is left as is - third-party and already its current major - and runs-on stays ubuntu-latest here while wheels.yml pins its images; both with the reason written in the file. Not verifiable during the freeze: GitHub Actions only fire on pushes to master and on pull requests; both files were checked to parse and the first real run comes when GitHub is live again.}
+    \item   date resolved: {\bf 2026-09-18 07:58},
+date raised: 2026-09-16 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.166}: {\bf \color{warningRed}  resolved BUG 2494}: {\bf CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13603,12 +13611,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2463}:  {\bf the two GitHub workflows pin different action versions}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.}
-    \item date raised: 2026-09-16 
-  \ei
   \item open {\bf BUG 2398}:  {\bf explicit integration costs O(N^2) per step with the default dense linear solver}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

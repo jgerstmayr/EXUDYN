@@ -6402,3 +6402,33 @@ the same composition is exact to about `1e-15` for `[1,1,1]/sqrt(3)` and to abou
 The file stays in `DeliberatelyNotRun()` for the one remaining reason, now the only one in its
 entry: it PRINTS its results instead of setting `testResult`. Give it one and it can be a test
 model.
+
+
+<a id="r5-14-1"></a>
+### R5.14.1 - the two workflows use one set of action versions
+
+**DONE 2026-09-18** - issue #2463; approved by the maintainer, who also asked that the versions be
+raised rather than merely aligned.
+
+`.github/workflows/wheels.yml` had been modernised (`actions/checkout@v6`, `setup-python@v6`,
+`upload-artifact@v7`, `download-artifact@v6`) while `documentation.yaml` sat on `checkout@v3` and
+`setup-python@v4`. Two sets of behaviour to reason about, and the older one quietly rotting.
+
+Both `actions/*` entries in `documentation.yaml` are now at the same majors as `wheels.yml`, and the
+file carries the reasoning that was missing:
+
+- **why pin at all** - an unpinned action follows its default branch, so a third party can change
+  what runs between two identical commits of this repository;
+- **why the major and not the patch** - GitHub deprecates whole majors, because of the Node runtime
+  the action ships on. A major that falls behind eventually stops running altogether, which is the
+  failure mode worth avoiding; a patch difference is not.
+
+Two things deliberately left as they were, each with the reason in the file so the next reader does
+not "fix" them: `JamesIves/github-pages-deploy-action@v4` is third-party and v4 is its current
+major, so it is up to date and outside the rule; and `runs-on: ubuntu-latest` stays here while
+`wheels.yml` pins its images, because the wheel matrix must be reproducible across four platforms
+whereas this job only renders documentation and benefits from the newest image.
+
+**What could not be verified**, and the maintainer accepted this when approving: GitHub Actions fire
+only on pushes to master and on pull requests, so nothing in this directory runs during the freeze
+(step R1.7). Both files were checked to parse; the first real run comes when GitHub is live again.

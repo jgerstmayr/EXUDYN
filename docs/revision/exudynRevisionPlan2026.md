@@ -961,10 +961,24 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `build-system.requires` and to the cibuildwheel version CI pins.
 
 <a id="r5-14-1"></a>
-**R5.14.1** *(sub-step of R5.14; NEEDS APPROVAL - touches `.github/workflows/`)* **One set of action
-    versions.** `wheels.yml` uses `actions/setup-python@v6`, `documentation.yaml` still
-    `actions/checkout@v3` and `actions/setup-python@v4` (#2463). Raise both to the same version and
-    note in the file why they are pinned at all.
+**R5.14.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-14-1) — *(sub-step of
+    R5.14; approved by the maintainer 2026-09-18)* **One set of action versions** (#2463).
+    `wheels.yml` used `actions/checkout@v6` and `actions/setup-python@v6`; `documentation.yaml` was
+    still on `@v3` and `@v4`. Both now use the same majors, and the file says why they are pinned at
+    all: an unpinned action follows its default branch, so a third party can change what runs
+    between two identical commits - and the major matters because GitHub deprecates whole majors
+    (the Node runtime they ship on), so one that falls behind eventually stops running at all. That
+    is the failure mode to avoid, not a patch difference.
+
+    `JamesIves/github-pages-deploy-action@v4` is left alone and the comment says why: v4 IS its
+    current major, and it is third-party rather than part of the `actions/*` set the rule is about.
+    `runs-on: ubuntu-latest` also stays, against the pinned images of `wheels.yml`: the wheel matrix
+    has to be reproducible across four platforms, while this job only renders documentation and
+    benefits from the newest image.
+
+    **Not verifiable here**: GitHub Actions fire only on pushes to master and on pull requests, so
+    nothing runs during the freeze (step R1.7). Both files were checked to parse; the real test is
+    the first run once GitHub is live again, which the maintainer accepted when approving.
 
 <a id="r5-15"></a>
 **R5.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-15) — **Performance suite reports
