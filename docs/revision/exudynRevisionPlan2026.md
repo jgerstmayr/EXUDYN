@@ -784,17 +784,25 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `wheels_linux`' job; memory safety is this one's.
 
 <a id="r5-6-1"></a>
-**R5.6.1** *(sub-step of R5.6; first CI run seen 2026-09-18)* **Let the sanitizer job go red.**
-    It is `allow_failure: true` for now. The **first GitLab run failed for a packaging reason, not
-    a sanitizer one**: the job installed `setuptools` and `wheel` but not `pybind11`, and
-    `buildSanitizers.sh` builds with `--no-build-isolation`, so pip does not fetch
-    `[build-system] requires` itself. Everything up to that point worked - `apt-get` brought in
-    gcc 14.2 and the matching libasan, and the script found both. Fixed by installing
-    `pybind11<3.0` in the job and by checking the three build modules up front, so the next such
-    failure is one line instead of line 443 of a pip traceback.
+**R5.6.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6-1) — *(sub-step of R5.6)*
+    **The sanitizer job is a gate.** It was introduced with `allow_failure: true`, because a
+    first sanitizer pass over 107k lines of C++ usually finds things and a job that stays red trains
+    people to ignore it.
 
-    Still open: after a run that actually reaches the suite, either flip `allow_failure` to `false`
-    or baseline what is found. A job that may be red forever teaches people to ignore it.
+    Two runs decided it. The **first failed for a packaging reason, not a sanitizer one**: the job
+    installed `setuptools` and `wheel` but not `pybind11`, and `buildSanitizers.sh` builds with
+    `--no-build-isolation`, so pip does not fetch `[build-system] requires` itself. Everything up to
+    that point had worked - `apt-get` brought in gcc 14.2 and the matching libasan, and the script
+    found both. Fixed by installing `pybind11<3.0` in the job and by checking the three build
+    modules up front, so such a failure is one line instead of line 443 of a pip traceback.
+
+    The **second run was clean**: zero AddressSanitizer errors and zero UndefinedBehaviorSanitizer
+    reports over the whole suite, on Debian gcc 14.2 - matching the gcc 13 result measured in WSL.
+    The script exits non-zero on any finding, so a green job *is* the measurement.
+
+    There is therefore nothing to baseline, and `allow_failure` is **removed**: a finding from now
+    on is new, and is worth stopping the pipeline for. No job in `.gitlab-ci.yml` may fail silently
+    any more.
 
 <a id="r5-7"></a>
 **R5.7** **DONE** — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`). → [log](exudynRevisionLog2026.md#r5-7)

@@ -154,13 +154,16 @@ check_sources:
 # runs on the same weekly schedule as everything else, not per push - which is already this
 # repository's cadence.
 #
-# allow_failure IS DELIBERATE, and temporary: the first runs of a sanitizer over a 107k-line C++
-# code base find things, and a job that is red for weeks trains people to ignore it. The findings
-# are triaged in revision2026 step R5.6.1; this flips to false when the list is empty or baselined.
+# This job IS A GATE: it may go red and stop the pipeline. It was introduced with
+# allow_failure: true, because a first sanitizer pass over 107k lines of C++ usually finds things
+# and a job that stays red trains people to ignore it - but the first run that reached the suite
+# was CLEAN, on Debian gcc 14.2 here and on gcc 13 in WSL: zero AddressSanitizer errors and zero
+# UndefinedBehaviorSanitizer reports over 114 test models. There is nothing to baseline, so the
+# allowance was removed (revision2026 step R5.6.1, 2026-09-18). A finding from now on is new, and
+# is worth stopping for.
 sanitizers_linux:
   stage: build
   image: python:3.13
-  allow_failure: true
   variables:
     GIT_DEPTH: "1"
   before_script:

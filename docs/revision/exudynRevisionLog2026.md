@@ -6577,3 +6577,37 @@ pages that the generator intends. `sphinx-build -b html . _build -E -W --keep-go
 **`exudev docs` is now strict by default** - `-W --keep-going`, with `--no-strict` to opt out. The
 local build has to apply the gate CI applies; a warning that passes locally and fails in CI is
 exactly #2508 in a second tool, and that one cost a whole pipeline to find.
+
+
+<a id="r5-6-1"></a>
+### R5.6.1 - the sanitizer job becomes a gate
+
+**DONE 2026-09-18.**
+
+R5.6 introduced `sanitizers_linux` with `allow_failure: true`, deliberately and temporarily: a first
+AddressSanitizer/UndefinedBehaviorSanitizer pass over 107k lines of C++ usually finds something, and
+a job that stays red for weeks teaches people to ignore it. The step was to decide, after a run that
+actually reached the suite, whether to flip it or to baseline what it found.
+
+**The first run never reached the suite.** It failed for a packaging reason: the job installed
+`setuptools` and `wheel` but not `pybind11`, and `buildSanitizers.sh` builds with
+`--no-build-isolation`, so pip does not fetch `[build-system] requires` itself. Everything before
+that had worked - `apt-get` brought in gcc 14.2 and its matching libasan, and the script found both,
+which is the part that could have gone wrong and did not. Fixed by installing `pybind11<3.0` in the
+job, and by checking the three build modules up front so the next such failure is one line rather
+than line 443 of a pip traceback.
+
+**The second run was clean.** Zero AddressSanitizer errors and zero UndefinedBehaviorSanitizer
+reports over the whole test suite, on Debian gcc 14.2 - independently matching the gcc 13 result
+measured locally in WSL. The script exits non-zero on any finding, so a green job *is* the
+measurement, not an absence of one.
+
+So there is nothing to baseline, and `allow_failure` is **removed**. A sanitizer finding from now on
+is new, and is worth stopping the pipeline for. With this, **no job in `.gitlab-ci.yml` may fail
+silently** - which was the point of R2.7 and of the note in `wheels_linux` about the GitHub
+workflow's `continue-on-error`, and is now true of every job.
+
+Worth recording plainly, because it is the result the step existed to obtain: **the Exudyn test
+suite runs clean under AddressSanitizer and UndefinedBehaviorSanitizer** - 114 test models and 23
+mini examples, two compilers, two distributions. The one defect the work found (#2506) was found by
+`-O1` before a sanitizer check ever ran.
