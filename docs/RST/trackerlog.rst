@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.197.dev1, 
++  Exudyn version = 1.11.198.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2539, 
-+  Number of resolved issues = 2270 (197 in current version), 
++  Number of issues = 2540, 
++  Number of resolved issues = 2271 (198 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.198: resolved Issue 2539: a bare except in the shipped package swallows Ctrl-C (fix)
+    - issue author: Claude-JG
+    - description:  52 bare except: remain in python/exudyn/ across 16 files. A bare except catches KeyboardInterrupt and SystemExit as well - so Ctrl-C is swallowed wherever one wraps something long: the inverse-kinematics SolveSystem in robotics/roboticsCore.py, the ffmpeg run in interactive.py, the multiprocessing pool in FEM.py. The larger group - 23 of them - guards an optional import and therefore reports a broken installation of scipy or roboticstoolbox as "the package is missing". Name what is caught: ImportError for a dependency probe, the specific error for a feature probe, and except Exception for something that must survive an external tool or a users own code - which still lets KeyboardInterrupt through. The 16 E722 entries of tools/ci/ruffBaseline.txt are the inventory and must disappear with the step.
+    - **notes:** All 52 named, plus one inside a docstring example. Four rules did it: 23 ImportError for a dependency probe, 16 specific errors for a feature probe (AttributeError, IndexError, KeyError, tk.TclError, np.linalg.LinAlgError, exudyn.ExudynError), 13 except Exception where catching everything is genuinely meant - which still lets KeyboardInterrupt through. The ruff baseline lost its 16 E722 entries and went from 205 tolerated findings to 151, so a new bare except in the package now fails the gate; no pytest was added, because that gate already is the regression test. Correction to the issue as first written: the seven handlers in processing.py are not around the parameter-variation loop - parameterFunction(...) is not wrapped at all and a user model that raises has always propagated.
+    - date resolved: **2026-09-18 23:51**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.197: resolved Issue 2538: an error raised by a macro never reaches the solver file (fix)
     - issue author: Claude-JG
     - description:  PyError, SysError and PyWarning take an std::ofstream and write the message to it; CHECKandTHROW and CHECKandTHROWstring write nothing - and after step R6.3.6 those are more than 1100 call sites carrying a real type. So the message that ends a solver run can be missing from exactly the file someone opens afterwards to find out why it ended. Catch it where the file is known: CSolverBase::SolveSystem is the only place that holds file.solverFile and it wraps all three solver phases. Write the same block there that the pout log file gets and re-raise. With that in place the twelve PyError/SysError calls that pass file.solverFile would write twice - so the two ofstream overloads go and the argument is dropped at those sites: one writer, one rule. PyWarning keeps its ofstream overload because a warning throws nothing and the outer catch can never see it.

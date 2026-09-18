@@ -136,7 +136,7 @@ def StiffnessManipulability(robot, JointStiffness, HT, mode,singularWeight=1000)
     try:
         CartesianStiffness = np.linalg.inv(J@np.linalg.inv(JointStiffness)@J.T)
         
-    except: 
+    except np.linalg.LinAlgError: 
         HelpMatrix = np.ones(CartesianStiffness.shape)
         CartesianStiffness = HelpMatrix*singularWeight
     

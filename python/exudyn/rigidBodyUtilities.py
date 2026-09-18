@@ -1184,7 +1184,7 @@ class RigidBodyInertia:
         inertiaCOM = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
         try:
             newCOM = self.com + vec
-        except:
+        except (ValueError, TypeError):
             raise ValueError("ERROR in RigidBodyInertia.Translated(vec): vec must be a vector with 3 components")
         inertiaCOM += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
         rbi = RigidBodyInertia(mass=self.mass, 
@@ -1208,7 +1208,7 @@ class RigidBodyInertia:
             return 0
         try:
             inertia = np.dot(np.array(rot),np.dot(self.inertiaTensor,rot.transpose()))
-        except:
+        except (ValueError, TypeError, AttributeError):
             raise ValueError("ERROR in RigidBodyInertia.Rotated(rot): rot must be a 3x3 rotation matrix")
         return RigidBodyInertia(mass=self.mass, 
                                 inertiaTensor=inertia,

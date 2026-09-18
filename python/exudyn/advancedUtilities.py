@@ -174,7 +174,7 @@ def RaiseTypeError(where='', argumentName='', received = None, expectedType = No
     receivedStr = ', <argument can not be converted to string>'
     try:
         receivedStr  = ', but received "' + str(received) + '", type=' + str(type(received))
-    except:
+    except Exception:
         pass
     errStr += receivedStr
 
@@ -509,7 +509,7 @@ def ConvertScipySparseToDict(sparseMatrix):
     if not isinstance(sparseMatrix, csr_matrix):
         try:
             sparseMatrix = sparseMatrix.tocsr()
-        except:
+        except AttributeError:
             raise ValueError(f"ConvertScipySparseToDict: Unsupported sparse matrix type: {type(sparseMatrix)}")
         
     return {'data': sparseMatrix.data,
@@ -650,7 +650,7 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
     try:
         import h5py
         #from scipy.sparse import csr_matrix
-    except:
+    except ImportError:
         raise ImportError('LoadDictFromHDF5 only works if scipy and h5py are installed')        
 
     NoneCast = lambda x: None #returns none
@@ -793,7 +793,7 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         #regular item
         try:
             typeString = itemIndex.GetTypeString()
-        except:
+        except AttributeError:
             raise ValueError('ConvertFunctionToSymbolic: itemIndex must be a valid exudyn ItemIndex or itemTypeName has to be provided instead')
         
         itemTypeNameCopy = None

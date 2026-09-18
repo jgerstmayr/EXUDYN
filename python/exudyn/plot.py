@@ -259,7 +259,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         import matplotlib
         import matplotlib.pyplot as plt
         import matplotlib.ticker as ticker
-    except:
+    except ImportError:
         raise ValueError('ERROR: PlotSensor: matplotlib is not installed; PlotSensor is therefore not available')
 
     

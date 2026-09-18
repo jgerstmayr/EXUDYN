@@ -34,7 +34,7 @@ __all__ = [
 useOldGym = False
 try:
     useOldGym = tuple(map(int, stable_baselines3.__version__.split('.')))[:3] <= tuple(map(int, '1.8.0'.split('.')))
-except:
+except (AttributeError, ValueError):
     pass #if it fails, useOldGym = False
 
 if useOldGym:

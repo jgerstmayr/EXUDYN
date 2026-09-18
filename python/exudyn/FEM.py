@@ -53,7 +53,7 @@ scipyInstalled = False
 try:
     import scipy # noqa # pylint: disable=unused-import
     scipyInstalled = True
-except:
+except ImportError:
     pass
 
 def WarnNumpy2():
@@ -4272,7 +4272,7 @@ class FEMinterface:
                 if numberOfThreads == -1:
                     numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
                 useSingleThreading = False
-            except:
+            except (ImportError, NotImplementedError):
                 pass
             if not useSingleThreading:
                 vectorInput = np.array(vectorInput)
@@ -4283,11 +4283,11 @@ class FEMinterface:
                         import tqdm #progress bar
                         try: #_instances only available after first run!
                             tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
-                        except:
+                        except AttributeError:
                             pass
                         useTQDM = True
                         exu.Print("useTQDM")
-                    except:
+                    except ImportError:
                         pass
                 
                 if useTQDM:

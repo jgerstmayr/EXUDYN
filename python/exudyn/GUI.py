@@ -56,7 +56,7 @@ def GetRendererSystemContainer():
             guiSC = exudyn.sys['currentRendererSystemContainer']
             if guiSC != 0 and type(guiSC) == exudyn.SystemContainer:
                 return guiSC
-    except: 
+    except (KeyError, AttributeError): 
         pass
     return None
 
@@ -122,7 +122,7 @@ def GetExudynDisplayScaling():
         
         return 1
 
-    except: 
+    except (KeyError, AttributeError, tk.TclError): 
         #print('except!')
         return 1
 
@@ -138,7 +138,7 @@ def GetGUIContentScaling(root):
             return s
         else:
             return root.tk.call('tk', 'scaling') #obtains current scaling?
-    except:
+    except tk.TclError:
         return 1
     
 #create dictionaries for lists in combo box: bool, OutputVariableType, ...
@@ -296,7 +296,7 @@ def CheckType(valueStr, vType, vSize):
         exec(s,globals(),mylocals)
         x=mylocals['locx']
         #print('mylocals=',mylocals)
-    except:
+    except Exception:
         #print("entered text does not comply with the value's type")
         return [False, 'invalid array or matrix: check brackets and types']
 
@@ -668,7 +668,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
             #print('screen height=', screen_height)
             if screen_height > 1.2*treeEditDefaultHeight:
                 windowHeight = int(min(treeEditMaxInitialHeight, 0.85*screen_height))
-        except:
+        except tk.TclError:
             print('WARNING: EditDictionaryWithTypeInfo could not determine screen size; please report error, Python version and platform as github issue')
 
     tkWindow.geometry(str(treeEditDefaultWidth)+'x'+str(windowHeight))

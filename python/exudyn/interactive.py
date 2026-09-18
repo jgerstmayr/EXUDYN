@@ -123,7 +123,7 @@ class InteractiveDialog:
             import tkinter
             import tkinter.font as tkFont
             from exudyn.GUI import GetTkRootAndNewWindow
-        except:
+        except ImportError:
             raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
 
         
@@ -164,7 +164,7 @@ class InteractiveDialog:
         self.tkWindow.title(title)
         try:
             systemScaling = self.tkWindow.call('tk', 'scaling') #obtains current scaling?
-        except:
+        except Exception:
             pass
         systemScaling = 1
 
@@ -871,7 +871,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     def UFmakeMP4():
         try:
             import ffmpeg # noqa # pylint: disable=unused-import
-        except:
+        except ImportError:
             messagebox.showinfo('Warning', 'FFMPEG is not installed, therefore mp4 files cannot be generated.\nUse: "pip install ffmpeg-python"')
             return
         
@@ -1004,7 +1004,7 @@ def ConvertImages2Video(workingDir='images',
     import os
     try:
         import ffmpeg
-    except:
+    except ImportError:
         raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
     
     kwargs = {}
@@ -1026,7 +1026,7 @@ def ConvertImages2Video(workingDir='images',
                     **kwargs)
             .run(overwrite_output=True)
         )
-    except:
+    except Exception:
         exudyn.Print('ERROR in ConvertImages2Video:')
         exudyn.Print('It seems that ffmpeg is not correctly installed; make sure that ffmpeg can be executed from the currently used console by executing "ffmpeg"\n')
 
@@ -1041,7 +1041,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
         from tkinter import filedialog
         from tkinter import messagebox
         #from exudyn.GUI import GetTkRootAndNewWindow
-    except:
+    except ImportError:
         raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
 
     # from tkinter import ttk
@@ -1049,7 +1049,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     
     try:
         import ffmpeg # noqa # pylint: disable=unused-import
-    except:
+    except ImportError:
         raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
 
     

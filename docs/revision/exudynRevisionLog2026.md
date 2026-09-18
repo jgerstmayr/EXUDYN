@@ -7146,6 +7146,79 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-1"></a>
+### R6.1 — every bare `except:` in the package names what it catches
+
+**DONE 2026-09-18** (#2539). The plan wrote this step as *"after R6.4"*, because what is caught
+has to be nameable first. **R6.3 is what made it nameable**; R6.4 documents the taxonomy for
+users rather than defining it, so the dependency was satisfied.
+
+52 sites in 16 files, plus one inside a docstring example. The kind of guard decided the fix, so
+this is four rules rather than 52 judgements:
+
+| kind | becomes | sites |
+|---|---|---:|
+| an optional dependency probed at import | `except ImportError:` | 23 |
+| a feature or attribute probe | the specific error: `AttributeError`, `IndexError`, `KeyError`, `tk.TclError`, `np.linalg.LinAlgError`, `exudyn.ExudynError` | 16 |
+| something that must survive an external tool or a user's own code | `except Exception:` | 13 |
+
+`except Exception:` is not the bare form with extra words: it does **not** catch
+`KeyboardInterrupt`, `SystemExit` or `GeneratorExit`, which is the whole point of the step. The
+sites that keep it are the ones where catching everything is genuinely meant — `exec()` of
+text a user typed into the GUI, running `ffmpeg`, the URDF-reading hack in
+`robotics/utilities.py`, the inverse-kinematics solve that reports failure rather than raising.
+
+#### Where the bare form actually hurt
+
+Two kinds of damage, and they are different:
+
+- **Ctrl-C was swallowed** wherever a bare `except:` wrapped something long: the
+  inverse-kinematics `SolveSystem` in `robotics/roboticsCore.py`, the `ffmpeg` run in
+  `interactive.py`, the multiprocessing pool in `FEM.py`. Interrupting those left the loop
+  running and reported a failure instead.
+- **A real error inside an optional import was reported as "the package is missing".** 23 sites
+  said *"install with pip install X"* for any failure whatsoever — including a broken
+  installation of X, a version conflict inside it, or an `AttributeError` in its own import
+  code. Those now surface as themselves.
+
+**A claim I had to correct.** The issue as first written said `processing.py` holds seven bare
+handlers *"inside ParameterVariation and GeneticOptimization, which run user models in a loop"*.
+Reading them says otherwise: the seven are two info strings, three optional imports, a tqdm
+probe and an `IndexError` on the last element of a list — and the call to
+`parameterFunction(...)` at line 232 is **not** wrapped at all, so a user model that raises has
+always propagated. The issue text was corrected rather than left standing.
+
+#### The gate is the regression test
+
+No new pytest. `E722` is part of ruff's `E7` group, which `checkPython.py` already runs, and the
+16 baseline entries for it are now deleted — so a new bare `except:` in the package is a NEW
+finding and fails `exudev generate --all-checks`. That is stronger than a test, and it exists
+already; writing a pytest that re-runs ruff would be a second mechanism for the same rule.
+
+The baseline went from 205 tolerated findings to **151**: 52 for this step, plus the two stale
+`solver.py` counts that step R6.3.13 had already removed without regenerating the file.
+
+#### Out of scope, deliberately
+
+131 bare handlers in `python/TestModels/`, 14 in `python/Examples/`, 7 in
+`python/PerformanceModels/`, 5 in `python/testing/`. R6.1 names the **shipped package**; the
+models are a separate decision and a much larger diff, and `checkPython.py` only scans
+`python/exudyn/` anyway.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R6.1** *(phase R6, after R6.4)* **Audit every bare `except:`** in `python/exudyn/` (46 as of 2026-09-18);
+    replace each with the specific exception it is there for, and an actionable message. A bare
+    `except:` also swallows `KeyboardInterrupt` and `SystemExit`, which is why several of them
+    make a run impossible to stop. Do it after R6.4, so that what is caught can be named.
+
+---
+
+
 <a id="r6-8"></a>
 ### R6.8 — the error is in the log file, whichever helper raised it
 

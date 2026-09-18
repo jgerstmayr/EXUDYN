@@ -363,7 +363,7 @@ def SolverSuccess(solverStructure):
         #assume MainSystem mbs, exu library and simulationSettings:
         try:
             mbs.SolveDynamic(simulationSettings)
-        except:
+        except exu.ExudynError:
             [success, msg] = exu.SolverSuccess(mbs.sys['dynamicSolver'])
             exu.Print('success=',success)
             exu.Print('error message=',msg)
@@ -495,7 +495,7 @@ def ComputeLinearizedSystem(mbs,
     if nAE != 0 and (projectIntoConstraintNullspace or returnConstraintJacobian or returnConstraintNullspace):
         try:
             from scipy.linalg import svd
-        except:
+        except ImportError:
             raise ValueError('ComputeLinearizedSystem: missing scipy package; install with: pip install scipy')
         #use SVD to project equations into nullspace
         #constraint jacobian:
@@ -598,7 +598,7 @@ def ComputeODE2Eigenvalues(mbs,
         from scipy.linalg import eigh, eig, svd  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
         from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
         from scipy.sparse import csr_matrix
-    except:
+    except ImportError:
         raise ValueError('ComputeODE2Eigenvalues: missing scipy package; install with: pip install scipy')
 
     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
@@ -859,7 +859,7 @@ def ComputeSystemDegreeOfFreedom(mbs,
     if useSVD:
         try:
             from scipy.linalg import svdvals#, svd
-        except:
+        except ImportError:
             raise ValueError('ComputeSystemDegreeOfFreedom: missing scipy package; install with: pip install scipy')
 
     

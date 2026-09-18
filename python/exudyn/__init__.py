@@ -100,38 +100,38 @@ try:
             try:
                 from .exudynCPPfast import *
                 print('Imported exudyn fast version without range checks')
-            except:
+            except ImportError:
                 __useExudynFast = False
                 print('Import of exudyn fast version failed; falling back to regular version')
 
     if not __useExudynFast:
         from .exudynCPP import *
 
-except:
+except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
     try:
         from exudynCPP import *
-    except:
+    except ImportError:
         raise ImportError('Import of exudyn C++ module failed; check 32/64 bits versions, restart your iPython console or try to uninstall and install exudyn')
 
 #import very useful solver functionality into exudyn module (==> available as exu.SolveStatic, etc.)
 try:
     from .solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues
-except:
+except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues #noqa: F401 - re-export, available as exu.SolveDynamic etc.
 
 #use exudyn.demos.Demo1() from 1.9.137 onwards!
 try:
     from . import demos #noqa: F401 - re-export, available as exudyn.demos
-except:
+except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     pass
     #import exudyn.demos as demos
 
 try:
     from .mainSystemExtensions import JointPreCheckCalcBodyMarkers #import just some function, will assign MainSystem patches
-except:
+except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from mainSystemExtensions import JointPreCheckCalcBodyMarkers #noqa: F401 - importing the module assigns the MainSystem patches
 

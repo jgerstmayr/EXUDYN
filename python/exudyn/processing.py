@@ -44,7 +44,7 @@ def GetVersionPlatformString():
     try:
         sReturn += 'Exudyn version = '
         sReturn += exudyn.config.Version(True)
-    except:
+    except Exception:
         import sys
         #the micro version may be different!
         sReturn += '(no exudyn) Python'+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro)
@@ -55,7 +55,7 @@ def GetVersionPlatformString():
         if platform.uname().version != '':
             sReturn += ' V' + platform.uname().version
         sReturn += '; ' + platform.uname().machine + '; ' + platform.uname().processor
-    except:
+    except Exception:
         pass
 
     return sReturn
@@ -197,7 +197,7 @@ def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, c
     if useCluster:
         try:
             import dispy
-        except:
+        except ImportError:
             exudyn.Print('WARNING: ProcessParameterList: dispy is not installed (try: pip install dispy); switching to multiprocessing mode instead')
             useCluster = False
 
@@ -207,7 +207,7 @@ def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, c
         if useMPI:
             try:
                 from mpi4py.futures import MPIPoolExecutor
-            except:
+            except ImportError:
                 exudyn.Print('WARNING: ProcessParameterList: mpi4py is not installed or mpi4py.futures not available (try: conda install mpi4py); switching to multiprocessing mode instead')
                 useMPI = False
 
@@ -217,10 +217,10 @@ def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, c
             import tqdm #progress bar
             try: #_instances only available after first run!
                 tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
-            except:
+            except AttributeError:
                 pass
             useTQDM = True
-        except:
+        except ImportError:
             pass
 
     resultsFileCnt = 0 #counter for results file; used in several if branches
@@ -1230,7 +1230,7 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
             valuesSorted[iKey] = np.array(values[iBackward-nVar[i]+1:iForward+nVar[i]])
             try: 
                 iForward += nVar[i] + nVar[i+1]
-            except: 
+            except IndexError: 
                 continue
             iBackward = iForward -1
     valRef = values[0]

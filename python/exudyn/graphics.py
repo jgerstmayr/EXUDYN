@@ -2701,7 +2701,7 @@ def FromPyMeshlabFile(fileName, defaultColor=color.defaultBody,
     """
     try:
         import pymeshlab #pip install pymeshlab
-    except:
+    except ImportError:
         raise ImportError('graphics.FromPyMeshlabFile: requires pymeshlab to be installed (not found): pip install pymeshlab')
 
     ms = pymeshlab.MeshSet()
@@ -2779,7 +2779,7 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
     """
     try:
         from stl import mesh
-    except:
+    except ImportError:
         raise ValueError('FromSTLfile requires installation of numpy-stl; try "pip install numpy-stl"')
     
     data=mesh.Mesh.from_file(fileName)

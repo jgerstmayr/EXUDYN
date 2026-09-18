@@ -546,10 +546,11 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 
 <a id="r6-1"></a>
-**R6.1** *(phase R6, after R6.4)* **Audit every bare `except:`** in `python/exudyn/` (46 as of 2026-09-18);
-    replace each with the specific exception it is there for, and an actionable message. A bare
-    `except:` also swallows `KeyboardInterrupt` and `SystemExit`, which is why several of them
-    make a run impossible to stop. Do it after R6.4, so that what is caught can be named.
+**R6.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-1) — *(phase R6)*
+    **Every bare `except:` in `python/exudyn/` names what it catches** (#2539): 52 of them in 16
+    files, plus a docstring example. The 16 `E722` entries of the ruff baseline are gone, and the
+    gate is the regression test.
+
 
 <a id="r6-2"></a>
 **R6.2** Rewrite binary selection in `__init__.py` as one testable function that logs its decision

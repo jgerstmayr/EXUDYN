@@ -106,13 +106,13 @@ def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
         import roboticstoolbox as rtb
         from roboticstoolbox.tools.data import rtb_path_to_datafile
         from roboticstoolbox.tools import xacro
-    except:
+    except ImportError:
         raise ImportError('GetRoboticsToolboxInternalModel: import of roboticstoolbox failed. You have to do "pip install roboticstoolbox-python" in order to use this function!')
     
     try:
         robotFunc = getattr(rtb.models.URDF, modelName)
         robot = robotFunc() #this reads out the main robot structure
-    except:
+    except Exception:
         raise ValueError('GetRoboticsToolboxInternalModel: could not retrieve robot model "'+modelName+'"')
         
     urdf = None
@@ -151,7 +151,7 @@ def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
         urdf = rtb.tools.urdf.urdf.URDF.loadstr(urdfString,  
                                                 Path(urdfBasePath) / urdfFilePath,
                                                 urdfBasePath)
-    except: #except Exception as e:
+    except Exception: #except Exception as e:
         if int(ignoreURDFerrors) <= 1:  #if somebody gets annoyed of warning!
             exudyn.Print('WARNING: GetRoboticsToolboxInternalModel could not retreive urdf file!')
         if not ignoreURDFerrors:
@@ -181,7 +181,7 @@ def LoadURDFrobot(urdfFilePath, urdfBasePath,
     from pathlib import Path
     try:
         import roboticstoolbox as rtb
-    except:
+    except ImportError:
         raise ImportError('LoadURDFrobot: import of roboticstoolbox failed. You have to do "pip install roboticstoolbox-python" in order to use this function!')
     
     # urdfFilePath = 'ur_description/urdf/ur5_joint_limited_robot.urdf.xacro'
@@ -237,7 +237,7 @@ def GetURDFrobotData(robot,
     try:
         import pymeshlab #pip install pymeshlab
         hasPymeshlab = True
-    except:
+    except ImportError:
         if verbose > 0: 
             exudyn.Print('WARNING: GetURDFrobotData: import of pymeshlab failed. You have to do "pip install pymeshlab" in order to enable visualization!')
     

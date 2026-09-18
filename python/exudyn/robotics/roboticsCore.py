@@ -1398,7 +1398,7 @@ class InverseKinematicsNumerical():
             q = projectAngleToPMPi(q) # solution of the inverse kinematics problem projected into -pi/pi range
             self.mbsIK.systemData.SetODE2Coordinates(coordinates=q, configuration=exudyn.ConfigurationType.Initial)
             
-        except:
+        except Exception:
             if self.flagDebug: 
                 exudyn.Print('WARNING: InverseKinematics: Solve: static solver failed')
             [q, success] = None, False

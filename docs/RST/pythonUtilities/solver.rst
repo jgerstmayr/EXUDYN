@@ -67,7 +67,7 @@ Function: SolverSuccess
   #assume MainSystem mbs, exu library and simulationSettings:
   try:
       mbs.SolveDynamic(simulationSettings)
-  except:
+  except exu.ExudynError:
       [success, msg] = exu.SolverSuccess(mbs.sys['dynamicSolver'])
       exu.Print('success=',success)
       exu.Print('error message=',msg)

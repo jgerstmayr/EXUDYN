@@ -3322,7 +3322,7 @@ def CreateDistanceSensor(mbs, generalContactIndex,
                                          variableType=exudyn.OutputVariableType.Position, 
                                          configuration=exudyn.ConfigurationType.Reference)
             p0list = list(p0list)
-        except:
+        except exudyn.ExudynError:
             p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
     else:
         raise ValueError('CreateDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')

@@ -143,7 +143,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         try:
             stlGrafics = graphics.FromSTLfileASCII(mobileRobot['platformStlFile'],color=[1,1,1,1])
             graphicsPlatformList += [stlGrafics]
-        except:
+        except Exception:
             exu.Print('stl not found, maybe wrong directory, use box instead')
             graphicsPlatformList += [graphics.Brick(centerPoint=[0,0,2.0],size=[lCar, wCar-1.1*wWheel, hCar], color=graphics.color.steelblue[0:3]+[0.2])]
 
@@ -434,7 +434,7 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
     try: # add one additional index at start and end of the Roll if it exists. 
         iRoll[np.where(iRoll)[0][[0,-1]] + [-1,1]] = True 
         iRollTest[np.where(iRollTest)[0][[0,-1]] + [-1,1]] = True 
-    except: 
+    except IndexError: 
         pass
     x = x[iRoll]
     y = y[iRoll]
