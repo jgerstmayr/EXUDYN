@@ -5524,6 +5524,63 @@ visible. A filter that hides more than it says is worse than no filter.
     (curated noise, generated backlog of 271), and the PEP 561 marker is shipped - **after** R5.5.2
     closed the gaps that would have turned correct user code into reported errors.
 
+<a id="r5-5-7"></a>
+### R5.5.7 — the stub gate and the two compiled modules
+
+**DONE 2026-09-18** (#2515).
+
+The curated noise file names both compiled modules, `exudyn.exudynCPP` and
+`exudyn.exudynCPPfast`, because neither has a stub of its own. A wheel built without the fast
+module — the default of `exudev build`, step R5.18 — has nothing for the second entry to match,
+and `stubtest` treats an allowlist entry that never matches as an **error**. So the gate failed
+with *"unused allowlist entry"* on a perfectly good wheel, and passed only because a fast wheel
+happened to be installed. A gate whose result depends on a build option that the thing it checks
+does not depend on is not checking what it claims to.
+
+`--ignore-unused-allowlist` fixes it in one word, but that word applies to **both** allowlists,
+and for the generated backlog the unused entry is exactly the signal worth keeping: it means a
+gap was closed and the file can shrink. The two were therefore separated. stubtest no longer
+judges unused entries at all; instead the check runs `--generate-allowlist` once and compares
+that list against the backlog itself:
+
+| | |
+|---|---|
+in the generated list, not in the backlog | a NEW disagreement — fails the gate |
+in the backlog, not in the generated list | a stale entry — reported, does not fail |
+
+The backlog is generated, so its entries are plain error names and compare literally. The
+detailed stubtest message is not lost: on a new finding the check runs once more **with** the
+backlog, so the output is the explanation, not just a name. In the green case this is one
+stubtest run, as before (12 s → 8 s, since generating is cheaper than reporting).
+
+Verified by mutation, all three paths: a noise entry that matches nothing no longer fails
+(the `exudynCPPfast` case); a backlog entry that matches nothing is reported and exits 0; a
+finding removed from the backlog is reported with stubtest's own diff and exits 1.
+
+---
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R5.5.7** *(sub-step of R5.5; found while running the gates for R6.7 on 2026-09-18)* **The stub
+    gate must pass whether or not the fast module was built.** `tools/ci/stubtestNoise.txt` lists
+    `exudyn\.exudynCPPfast`, and `stubtest` reports an allowlist entry that never matches as an
+    error. A wheel built without the fast module — which is what `exudev build` produces by
+    default (step R5.18) — therefore fails `checkPython.py --stubs --check` with
+    *"unused allowlist entry"*, although nothing is wrong with the stubs.
+
+    **Scope: this affects only the stub gate.** The test suite, the examples and `pytest` all pass
+    against a module without `exudynCPPfast` — measured on 2026-09-18, when venvP313 ran the
+    whole of R6.7 on a non-fast wheel. The maintainer's rule stands: the release wheels of
+    GitLab/GitHub carry both modules, but a local build of the regular module alone must be fully
+    testable.
+
+    `stubtest --ignore-unused-allowlist` fixes it in one word but throws away a signal worth
+    keeping: an unused entry in the *generated backlog* `stubtestBaseline.txt` means a gap was
+    closed and the file can shrink, which is the point of that file. So separate the two: ignore
+    unused entries, and add an explicit check of the backlog against a `--generate-allowlist` run,
+    which reports the entries that are no longer needed. Then the gate is green on both wheels and
+    the backlog still shrinks visibly.
+
 <a id="r5-5-6"></a>
 ### R5.5.6 - future.py, and the same pattern one function further
 

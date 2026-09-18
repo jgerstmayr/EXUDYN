@@ -391,25 +391,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     returning an undefined name - the same pattern as R5.5.5, one function further.
 
 <a id="r5-5-7"></a>
-**R5.5.7** *(sub-step of R5.5; found while running the gates for R6.7 on 2026-09-18)* **The stub
-    gate must pass whether or not the fast module was built.** `tools/ci/stubtestNoise.txt` lists
-    `exudyn\.exudynCPPfast`, and `stubtest` reports an allowlist entry that never matches as an
-    error. A wheel built without the fast module — which is what `exudev build` produces by
-    default (step R5.18) — therefore fails `checkPython.py --stubs --check` with
-    *"unused allowlist entry"*, although nothing is wrong with the stubs.
-
-    **Scope: this affects only the stub gate.** The test suite, the examples and `pytest` all pass
-    against a module without `exudynCPPfast` — measured on 2026-09-18, when venvP313 ran the
-    whole of R6.7 on a non-fast wheel. The maintainer's rule stands: the release wheels of
-    GitLab/GitHub carry both modules, but a local build of the regular module alone must be fully
-    testable.
-
-    `stubtest --ignore-unused-allowlist` fixes it in one word but throws away a signal worth
-    keeping: an unused entry in the *generated backlog* `stubtestBaseline.txt` means a gap was
-    closed and the file can shrink, which is the point of that file. So separate the two: ignore
-    unused entries, and add an explicit check of the backlog against a `--generate-allowlist` run,
-    which reports the entries that are no longer needed. Then the gate is green on both wheels and
-    the backlog still shrinks visibly.
+**R5.5.7** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-5-7) — *(sub-step of R5.5)* **The stub gate must pass whether or not the fast module was built** (#2515).
 
 <a id="r5-6"></a>
 **R5.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6) — *(phase R5)* **An ASan/UBSan Linux job.** For a C++ library invoking arbitrary user callbacks this catches the class of bug users report as "it crashed with no message".

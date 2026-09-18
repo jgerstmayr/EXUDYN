@@ -23,6 +23,9 @@
 #           actually imported, with mypy's stubtest (revision2026 step R5.5.4). Two allowlists:
 #           tools/ci/stubtestNoise.txt is curated (pybind dunders, stub-only typing helpers) and
 #           tools/ci/stubtestBaseline.txt is the generated backlog, which is meant to shrink.
+#           Which allowlist entries are USED depends on the wheel - a build without the fast module
+#           has no exudynCPPfast to disagree about - so unused entries are not an error; the
+#           backlog is compared against the current findings here instead (step R5.5.7, #2515).
 #           NOTE this checks the INSTALLED package, not python/exudyn/ - install before believing it.
 #
 # Usage:    python tools/checkPython.py             report
@@ -133,6 +136,7 @@ mypyConfigFile = os.path.join(repositoryRoot, 'tools', 'ci', 'mypyStubtest.ini')
 def RunStubtest(generate=False):
     command = [sys.executable, '-m', 'mypy.stubtest', 'exudyn',
                '--ignore-positional-only',                  #pybind reports every argument as positional
+               '--ignore-unused-allowlist',                 #which entries are used depends on the wheel, #2515
                '--mypy-config-file', mypyConfigFile,
                '--allowlist', stubtestNoiseFile]
     if generate:
@@ -151,11 +155,25 @@ def RunStubtest(generate=False):
     return process
 
 
+def BacklogEntries():
+    """the entries of the generated backlog, in file order"""
+    if not os.path.exists(stubtestBaselineFile):
+        return []
+    with open(stubtestBaselineFile, 'r', encoding='utf8') as file:
+        return [line.strip() for line in file
+                if line.strip() != '' and not line.startswith('#')]
+
+
+def GeneratedEntries(process):
+    """the error names a --generate-allowlist run reports: everything the curated noise file does
+    not already cover"""
+    return [line.strip() for line in process.stdout.split('\n')
+            if line.strip() != '' and not line.startswith('note:')]
+
+
 def CheckStubs(args):
     if args.write:
-        process = RunStubtest(generate=True)
-        entries = [line for line in process.stdout.split('\n')
-                   if line.strip() != '' and not line.startswith('note:')]
+        entries = GeneratedEntries(RunStubtest(generate=True))
         header = ['#Backlog of tools/checkPython.py --stubs (revision2026 step R5.5.4): the stub-vs-module',
                   '#disagreements that existed when the check was introduced. GENERATED - regenerate with',
                   "#'python tools/checkPython.py --stubs --write'. A disagreement that is NOT in here fails the",
@@ -168,15 +186,37 @@ def CheckStubs(args):
         print('stubtest backlog written: ' + str(len(entries)) + ' entries.')
         return 0
 
-    process = RunStubtest()
-    output = process.stdout.strip()
-    if 'Success: no issues found' in output:
+    #One --generate-allowlist run answers both questions at once: which disagreements exist now,
+    #and which backlog entries no longer occur. The backlog is generated, so its entries are plain
+    #error names and compare literally. Unused entries cannot be left to stubtest (#2515): the
+    #curated noise file names BOTH compiled modules, and a wheel built without the fast module has
+    #only one of them - which used to fail this gate with "unused allowlist entry" although nothing
+    #was wrong with the stubs. The backlog is checked for stale entries here instead, which is the
+    #half of that signal worth keeping.
+    current = GeneratedEntries(RunStubtest(generate=True))
+    backlog = BacklogEntries()
+    newFindings = [entry for entry in current if entry not in set(backlog)]
+    staleEntries = [entry for entry in backlog if entry not in set(current)]
+
+    if staleEntries:
+        print(str(len(staleEntries)) + (' entry of ' if len(staleEntries) == 1 else ' entries of ')
+              + os.path.relpath(stubtestBaselineFile, repositoryRoot)
+              + (' no longer occurs:' if len(staleEntries) == 1 else ' no longer occur:'))
+        for entry in staleEntries[:20]:
+            print('    ' + entry)
+        if len(staleEntries) > 20:
+            print('    ... and ' + str(len(staleEntries) - 20) + ' more')
+        print('The backlog is meant to SHRINK. Regenerate it so that they cannot come back unnoticed:')
+        print('    python tools/checkPython.py --stubs --write')
+        print('')
+
+    if not newFindings:
         print('OK: the stubs and the imported module agree, apart from the curated noise and the')
-        print('    ' + str(sum(1 for line in open(stubtestBaselineFile, encoding='utf8')
-                               if line.strip() and not line.startswith('#'))) + ' entries of the backlog.')
+        print('    ' + str(len(backlog)) + ' entries of the backlog.')
         return 0
 
-    print(output)
+    #a real disagreement: run once more with the backlog, for stubtest's own explanation of it
+    print(RunStubtest().stdout.strip())
     print('')
     print('A name the stub and the module disagree about is either a stub that went stale or a')
     print('binding that is not described. Note that stubtest checks the INSTALLED package: if you')

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.175.dev1, 
++  Exudyn version = 1.11.176.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2515, 
-+  Number of resolved issues = 2248 (175 in current version), 
++  Number of issues = 2516, 
++  Number of resolved issues = 2249 (176 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.176: resolved Issue 2515: stub gate fails on a wheel without the fast module (bug)
+    - issue author: Claude-JG
+    - description:  checkPython.py --stubs --check reports 'unused allowlist entry exudyn.exudynCPPfast' as an error when the installed wheel was built without the fast module (the default of exudev build; revision2026 step R5.18). Nothing is wrong with the stubs. revision2026 step R5.5.7.
+    - **notes:** stubtest no longer judges unused allowlist entries; the generated backlog is compared against a --generate-allowlist run instead - a new entry fails the gate, a stale one is reported. revision2026 step R5.5.7.
+    - date resolved: **2026-09-18 14:49**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.175: resolved Issue 2432: parameter conversion errors raise inconsistent exception types (change)
     - issue author: Claude-JG
     - description:  Recorded by parameterConversionTest.py: a wrong value for an item or structure parameter raises RuntimeError (PyError after a C++ check or a pybind11 cast_error) - TypeError (pybind11 signature mismatch) or ValueError (Python checks) depending on the path; 34c4/34c5 moved most paths to RuntimeError. Maintainer decision 2026-09-15: exception types shall be corrected throughout the revision at an appropriate step - e.g. TypeError for a wrong type (str - list - None - item index into a scalar) and ValueError for a range violation or a wrong size - raised from PyConversion.h and PyError variants; reference update of parameterConversionTest.py. revision2026 step R6.7.
