@@ -73,15 +73,15 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list0=[] !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   ObjectKinematicTree: VgraphicsDataList(class,dict,set)
 
-outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !RuntimeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Matrix3DList
-  ObjectANCFThinPlate: physicsCurvatureCoefficients(class,dict,set) physicsStrainCoefficients(class,dict,set)
-  ObjectKinematicTree: jointTransformations(class,dict,set) linkInertiasCOM(class,dict,set)
-
-outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !RuntimeError MatrixContainer !ExudynTypeError !ExudynTypeError !ExudynTypeError MatrixContainer
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !InternalError MatrixContainer !ExudynTypeError !ExudynTypeError !ExudynTypeError MatrixContainer
   ObjectContactCurveCircles: polynomialData(class,dict,set) segmentsData(class,dict,set)
   ObjectFFRF: dampingMatrixFF(class,dict,set) massMatrixFF(class,dict,set) stiffnessMatrixFF(class,dict,set)
   ObjectFFRFreducedOrder: dampingMatrixReduced(class,dict,set) massMatrixReduced(class,dict,set) stiffnessMatrixReduced(class,dict,set)
   ObjectGenericODE2: dampingMatrix(class,dict,set) massMatrix(class,dict,set) stiffnessMatrix(class,dict,set)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !RuntimeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Matrix3DList
+  ObjectANCFThinPlate: physicsCurvatureCoefficients(class,dict,set) physicsStrainCoefficients(class,dict,set)
+  ObjectKinematicTree: jointTransformations(class,dict,set) linkInertiasCOM(class,dict,set)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Vector3DList !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError Vector3DList
   ObjectConnectorReevingSystemSprings: sheavesAxes(class,dict,set)
@@ -933,7 +933,7 @@ outcome: int=-1.0 int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int=1.0 !Exu
   VisualizationSettings.view2.camera: trackMarker(attribute,dict) trackMarkerMbsNumber(attribute,dict)
   VisualizationSettings.view3.camera: trackMarker(attribute,dict) trackMarkerMbsNumber(attribute,dict)
 
-outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError numpy2f=[0.0,1.0] !RuntimeError
+outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] !InternalError
   ObjectANCFThinPlate: physicsThickness(class,dict)
   ObjectConnectorCoordinateVector: offset(class,dict)
   ObjectContactConvexRoll: coefficientsHull(class,dict)
@@ -943,7 +943,7 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError 
   ObjectGenericODE1: rhsVector(class,dict)
   ObjectGenericODE2: forceVector(class,dict)
 
-outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError numpy2f=[0.0,1.0] !RuntimeError
+outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] !InternalError
   ObjectANCFThinPlate: physicsThickness(set)
   ObjectConnectorCoordinateVector: offset(set)
   ObjectContactConvexRoll: coefficientsHull(set)
@@ -953,22 +953,22 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError nu
   ObjectGenericODE1: rhsVector(set)
   ObjectGenericODE2: forceVector(set)
 
-outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !RuntimeError numpy1x1f=[1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError numpy2x2f=[1.0,0.0,0.0,1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !RuntimeError numpy1x1f=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2f=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !InternalError
   ObjectConnectorCoordinateVector: quadraticTermMarker0(class,dict) quadraticTermMarker1(class,dict) scalingMarker0(class,dict) scalingMarker1(class,dict)
   ObjectFFRFreducedOrder: mPhitTPsi(class,dict) mPhitTPsiTilde(class,dict) mPsiTildePsi(class,dict) mPsiTildePsiTilde(class,dict) mXRefTildePsi(class,dict) mXRefTildePsiTilde(class,dict) modeBasis(class,dict) outputVariableModeBasis(class,dict)
   ObjectGenericODE1: systemMatrix(class,dict)
 
-outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !ValueError numpy1x1f=[1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError numpy2x2f=[1.0,0.0,0.0,1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+outcome: numpy1x1f=[-1.0] numpy1x1f=[0.0] numpy1x1f=[2.0] numpy1x1f=[2.5] !ValueError numpy1x1f=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2f=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !InternalError
   ObjectConnectorCoordinateVector: quadraticTermMarker0(set) quadraticTermMarker1(set) scalingMarker0(set) scalingMarker1(set)
   ObjectFFRFreducedOrder: mPhitTPsi(set) mPhitTPsiTilde(set) mPsiTildePsi(set) mPsiTildePsiTilde(set) mXRefTildePsi(set) mXRefTildePsiTilde(set) modeBasis(set) outputVariableModeBasis(set)
   ObjectGenericODE1: systemMatrix(set)
 
-outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !RuntimeError numpy1x1i=[1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError numpy2x2i=[1.0,0.0,0.0,1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !RuntimeError numpy1x1i=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !RuntimeError
   ObjectFFRF: VtriangleMesh(class,dict)
   ObjectFFRFreducedOrder: VtriangleMesh(class,dict)
   ObjectGenericODE2: VtriangleMesh(class,dict)
 
-outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !ValueError numpy1x1i=[1.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError numpy2x2i=[1.0,0.0,0.0,1.0] !RuntimeError !RuntimeError !RuntimeError !TypeError
+outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !ValueError numpy1x1i=[1.0] !InternalError !InternalError !InternalError !InternalError numpy2x2i=[1.0,0.0,0.0,1.0] !InternalError !InternalError !InternalError !TypeError
   ObjectFFRF: VtriangleMesh(set)
   ObjectFFRFreducedOrder: VtriangleMesh(set)
   ObjectGenericODE2: VtriangleMesh(set)

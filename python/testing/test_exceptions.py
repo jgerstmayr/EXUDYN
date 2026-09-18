@@ -92,9 +92,16 @@ def test_typedCheckMacros():
                                                   numberOfRows=1, numberOfColumns=1)
 
 
-def test_untypedCheckStillWorks():
-    """a CHECKandTHROWstring WITHOUT a class must behave exactly as before - a plain RuntimeError
-    and not an ExudynError. The optional argument is optional, and 1194 macro sites depend on it"""
+def test_theOnlyPlainRuntimeErrorLeftIsTheAddWrapper():
+    """The last move of step R6.3.6 turned the UNTYPED macro form into ExudynInternalError, so a
+    check written without a class now states "this is an Exudyn bug". After that, exactly one
+    path still reports a plain RuntimeError, and it does so on purpose: the catch(...) at the end
+    of mbs.AddNode/AddObject/AddMarker/AddLoad/AddSensor, which restates an exception it caught
+    without knowing its type. Naming a type there would be a guess.
+
+    This test replaces test_untypedCheckStillWorks, whose claim - that the untyped form gives a
+    bare RuntimeError - stopped being true with the flip. It moved three times while R6.3.6 ran,
+    each time because the area it pointed at had just been mapped."""
     from exudyn.itemInterface import NodeGenericODE2, ObjectKinematicTree
 
     systemContainer = exu.SystemContainer()
@@ -103,18 +110,21 @@ def test_untypedCheckStillWorks():
                                              initialCoordinates_t=[0.],
                                              numberOfODE2Coordinates=1))
 
-    #This follows the frontier of step R6.3.6, which maps one area at a time, and it has moved
-    #four times: MatrixContainer.SetWithDenseMatrix, then systemData.SetODE2Coordinates, then
-    #GetObjectOutput with an OutputVariableType the object does not have - each typed by the next
-    #area. Every USER-facing area is mapped now, so what is left is a conversion in src/Linalg,
-    #which the last move of R6.3.6 turns into ExudynInternalError along with every other untyped
-    #macro site. When that happens this test has to change its claim, not its call: the untyped
-    #form will then mean "an Exudyn bug", and nothing in Exudyn will raise a bare RuntimeError.
     item = ObjectKinematicTree(nodeNumber=nodeNumber)
     item.jointTypes = 42                          #not a list of JointType at all
     with pytest.raises(RuntimeError) as caught:
         mbs.AddObject(item)
     assert not isinstance(caught.value, exu.ExudynError)
+    assert type(caught.value) is RuntimeError      #not a subclass: the type really is lost here
+
+
+def test_anUntypedCheckIsAnInternalError():
+    """the other half of the flip, checked where it can be seen from Python: a check that the
+    user cannot break - here an Exudyn invariant reached through a legal call - arrives as
+    exudyn.InternalError, which IS a RuntimeError, so an existing except RuntimeError still
+    catches it while the type now says "please report this"."""
+    assert issubclass(exu.InternalError, RuntimeError)
+    assert issubclass(exu.InternalError, exu.ExudynError)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

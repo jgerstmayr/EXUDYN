@@ -115,8 +115,20 @@ public: using ExudynError::ExudynError;
 
 	//The LAST argument is optional and names the exception class the check raises (#2521,
 	//revision2026 step R6.3.3):
-	//    CHECKandTHROW(index < n, "...")                       throws EXUexception, as it always did
+	//    CHECKandTHROW(index < n, "...")                       ExudynInternalError: an EXUDYN BUG
 	//    CHECKandTHROW(index < n, "...", ExudynIndexError)     a user's index mistake, IndexError in Python
+	//
+	//THE DEFAULT SAYS SOMETHING (#2528, revision2026 step R6.3.6, the last move of the mapping).
+	//Until every user-facing call site had been read and given a class, the untyped form threw a
+	//bare EXUexception, which is std::runtime_error and means nothing. It now throws
+	//ExudynInternalError, whose whole meaning is "please report this" - so a check WITHOUT a class
+	//is a statement: this condition is an Exudyn invariant and a user cannot break it from Python.
+	//That types 1100 sites in Linalg, Utilities and the base-class stubs of System without touching
+	//one of them. ExudynInternalError derives from RuntimeError, so every existing
+	//"except RuntimeError" keeps working; nothing in Exudyn raises a bare RuntimeError any more.
+	//
+	//=> If a check IS reachable from Python, give it a class. Leaving it out now labels a user's
+	//   mistake an Exudyn bug, which is worse than the untyped state it replaces.
 	//The class belongs to the CHECK, not to the helper: the same macro states a user's mistake in
 	//one place and an Exudyn invariant in the next, and the measurement of #2520 says CHECKandTHROW
 	//is 27% user-facing. Putting the type on the helper would therefore have been wrong in roughly
@@ -127,7 +139,7 @@ public: using ExudynError::ExudynError;
 	#define EXU_SELECT_3RD(_1,_2,_3,_name,...) _name
 	#define EXU_SELECT_2ND(_1,_2,_name,...) _name
 
-	#define CHECKandTHROW_2(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw EXUexception(_exceptionMessage))
+	#define CHECKandTHROW_2(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw ExudynInternalError(_exceptionMessage))
 	#define CHECKandTHROW_3(_checkExpression,_exceptionMessage,_exceptionClass) ((_checkExpression) ? 0 : throw _exceptionClass(_exceptionMessage))
 	#define CHECKandTHROW(...) EXU_EXPAND(EXU_SELECT_3RD(__VA_ARGS__, CHECKandTHROW_3, CHECKandTHROW_2, )(__VA_ARGS__))
 
@@ -135,7 +147,7 @@ public: using ExudynError::ExudynError;
 	#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw ExudynInternalError("unexpected EXUDYN internal error"))
 
 	//always throw:
-	#define CHECKandTHROWstring_1(_exceptionMessage) (throw EXUexception(_exceptionMessage))
+	#define CHECKandTHROWstring_1(_exceptionMessage) (throw ExudynInternalError(_exceptionMessage))
 	#define CHECKandTHROWstring_2(_exceptionMessage,_exceptionClass) (throw _exceptionClass(_exceptionMessage))
 	#define CHECKandTHROWstring(...) EXU_EXPAND(EXU_SELECT_2ND(__VA_ARGS__, CHECKandTHROWstring_2, CHECKandTHROWstring_1, )(__VA_ARGS__))
 #else
