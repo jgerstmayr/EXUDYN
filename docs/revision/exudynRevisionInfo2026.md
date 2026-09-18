@@ -473,7 +473,10 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
     Both were `RuntimeError`, so the difference was invisible.
 
 30. **Where Exudyn reports something, and what it reports** — measured 2026-09-18 over all
-    `.h`/`.cpp` in `src/`, excluding the four files that define the helpers. **2249 call sites**:
+    `.h`/`.cpp` in `src/`, excluding the four files that define the helpers. **2249 call sites**
+    — **corrected 2026-09-18 in step R6.3.2: 188 of those are in commented-out lines, so there
+    are 2064 live calls.** `tools/errorTriage.py` is the measurement now; the per-helper numbers
+    below are the raw ones and are larger by the same cause:
 
     | helper | sites | what it does today |
     |---|---|---|

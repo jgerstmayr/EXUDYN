@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.179.dev1, 
++  Exudyn version = 1.11.180.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2520, 
-+  Number of resolved issues = 2252 (179 in current version), 
++  Number of issues = 2521, 
++  Number of resolved issues = 2253 (180 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.180: resolved Issue 2520: no way to tell a user error from an Exudyn bug in the C++ sources (improvement)
+    - issue author: Claude-JG
+    - description:  The five error helpers all end in RuntimeError and the helper a check is written with says nothing about what the check means - the same macro states a user index mistake in one place and an Exudyn invariant in the next. Before any type can be assigned the 2064 call sites have to be sorted by WHO the message is for. revision2026 step R6.3.2.
+    - **notes:** tools/errorTriage.py sorts the 2064 live call sites by audience (1082 user, 793 internal, 189 to be read) and by kind. Three findings: the inventory of fact 30 counted 188 commented-out lines, not implemented is 94 sites and earns its own class, and src/Objects is 43 percent user-facing\, which the step had assumed internal. No helper is one thing - CHECKandTHROW is 27 percent user-facing and SysError has 10 user sites - so the type belongs at the call site\, not on the helper. revision2026 step R6.3.2.
+    - date resolved: **2026-09-18 15:47**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.179: resolved Issue 2519: issue types and statuses are three lists that disagree (improvement)
     - issue author: Claude-JG
     - description:  trackerlog.txt and issueTracker.py each carry a comment listing the issue types and statuses, neither matches the other and neither matches what is in the file: 39 distinct type spellings in 2519 issues\, 20 of them typos or singletons\, NEW FEATURE and EXTENSION for the same thing\, NEW TEST written as TESTING. The statuses WORK and TESTING were never used once, ABANDONED is missing. Nothing validates the value on RaiseIssue. revision2026 step R8.7.
