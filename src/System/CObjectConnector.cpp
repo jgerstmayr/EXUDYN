@@ -36,7 +36,7 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 	Index n0 = jac0.NumberOfColumns();
 	Index n1 = jac1.NumberOfColumns();
 
-	CHECKandTHROW(hasRotationJacobian == false, "CObjectConnector::ComputeJacobianODE2_ODE2generic: not implemented for rotationJacobian");
+	CHECKandTHROW(hasRotationJacobian == false, "CObjectConnector::ComputeJacobianODE2_ODE2generic: not implemented for rotationJacobian", ExudynNotImplementedError);
 
 	jacobianODE2.SetUseDenseMatrix();
 	jacobianODE2.GetInternalDenseMatrix().SetNumberOfRowsAndColumns(n0 + n1, n0 + n1);

@@ -382,7 +382,7 @@ Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Rea
 	if (staticTriangles && trigsRigidBodyBasedDynamicStartIndex != startIndex)
 	{
 		//pout << "trigsRigidBodyBasedDynamicStartIndex=" << trigsRigidBodyBasedDynamicStartIndex << ", startIndex=" << startIndex << "\n";
-		PyError("GeneralConact: AddTrianglesRigidBodyBased(...): static triangles may only be added at the beginning; add dynamic triangles after ALL static triangles");
+		PyError("GeneralConact: AddTrianglesRigidBodyBased(...): static triangles may only be added at the beginning; add dynamic triangles after ALL static triangles", PyErrorType::modelError);
 	}
 
 
@@ -397,7 +397,7 @@ Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Rea
 	if (contactStiffness <= 0)
 	{
 		PyError("GeneralConact: AddTrianglesRigidBodyBased(...): contactStiffness should be non-zero and positive (rigidBodyMarkerIndex=" +
-			EXUstd::ToString(rigidBodyMarkerIndex) + ")");
+			EXUstd::ToString(rigidBodyMarkerIndex) + ")", PyErrorType::valueError);
 	}
 
 	//now add triangles as single items
@@ -410,7 +410,7 @@ Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Rea
 		{
 			if (!pointList.IsValidIndex(trig[i])) { 
 				PyError("GeneralConact: AddTrianglesRigidBodyBased(...): triangle " + EXUstd::ToString(cnt) + 
-					" has invalid point index " + EXUstd::ToString(trig[i])); }
+					" has invalid point index " + EXUstd::ToString(trig[i]), PyErrorType::valueError); }
 			itemTrig.points[i] = pointList[trig[i]];
 		}
 
@@ -445,7 +445,7 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 	if (maxFrictionMaterialIndex >= settings.frictionPairings.NumberOfRows())
 	{
 		//pout << "maxFric=" << maxFrictionMaterialIndex << "\n";
-		PyError("Assemble() / GeneralContact::FinalizeContact(...): frictionMaterialIndex is larger than size of frictionPairings matrix; you need to initialize frictionPairings!");
+		PyError("Assemble() / GeneralContact::FinalizeContact(...): frictionMaterialIndex is larger than size of frictionPairings matrix; you need to initialize frictionPairings!", PyErrorType::modelError);
 	}
 	if (settings.ancfCableNumberOfContactSegments > DANCFselectedSegmentsLength)
 	{
@@ -518,11 +518,11 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 			Index markerNumber = spheresMarkerBased[i].markerIndex;
 			if (markerNumber >= cSystem.GetSystemData().GetCMarkers().NumberOfItems())
 			{
-				PyError("Assemble() / FinalizeContact: illegal marker Number of sphereMarkerBased / circle " + EXUstd::ToString(i));
+				PyError("Assemble() / FinalizeContact: illegal marker Number of sphereMarkerBased / circle " + EXUstd::ToString(i), PyErrorType::modelError);
 			}
 			else if (!EXUstd::IsOfType(cSystem.GetSystemData().GetCMarkers()[markerNumber]->GetType(), Marker::Position))
 			{
-				PyError("Assemble() / FinalizeContact: sphereMarkerBased / circle " + EXUstd::ToString(i) + " has invalid marker: must be of Position or Position+Orientation");
+				PyError("Assemble() / FinalizeContact: sphereMarkerBased / circle " + EXUstd::ToString(i) + " has invalid marker: must be of Position or Position+Orientation", PyErrorType::modelError);
 			}
 
 			if (!EXUstd::IsOfType(cSystem.GetSystemData().GetCMarkers()[markerNumber]->GetType(), Marker::Orientation)) { hasPositionMarker = true; }
@@ -542,11 +542,11 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 			Index objectIndex = item.objectIndex;
 			if (objectIndex < 0 || objectIndex >= cSystem.GetSystemData().GetCObjects().NumberOfItems())
 			{
-				PyError("Assemble() / FinalizeContact: ancfCable " + EXUstd::ToString(i) + " has illegal object index " + EXUstd::ToString(objectIndex));
+				PyError("Assemble() / FinalizeContact: ancfCable " + EXUstd::ToString(i) + " has illegal object index " + EXUstd::ToString(objectIndex), PyErrorType::valueError);
 			}
 			if (typeid(*cSystem.GetSystemData().GetCObjects()[objectIndex]) != typeid(CObjectANCFCable2D))
 			{
-				PyError("Assemble() / FinalizeContact: ancfCable " + EXUstd::ToString(i) + " is not a valid ANCFCable2D");
+				PyError("Assemble() / FinalizeContact: ancfCable " + EXUstd::ToString(i) + " is not a valid ANCFCable2D", PyErrorType::modelError);
 			}
 			else
 			{
@@ -568,11 +568,11 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 			Index markerNumber = rigidBodyMarkerBased[i].markerIndex;
 			if (markerNumber >= cSystem.GetSystemData().GetCMarkers().NumberOfItems())
 			{
-				PyError("Assemble() / FinalizeContact: illegal marker Number of rigidBodyMarkerBased " + EXUstd::ToString(i));
+				PyError("Assemble() / FinalizeContact: illegal marker Number of rigidBodyMarkerBased " + EXUstd::ToString(i), PyErrorType::modelError);
 			}
 			else if (!EXUstd::IsOfType((Index)cSystem.GetSystemData().GetCMarkers()[markerNumber]->GetType(), (Index)Marker::Position+(Index)Marker::Orientation))
 			{
-				PyError("Assemble() / FinalizeContact: rigidBodyMarkerBased " + EXUstd::ToString(i) + " has invalid marker: must be of Position+Orientation");
+				PyError("Assemble() / FinalizeContact: rigidBodyMarkerBased " + EXUstd::ToString(i) + " has invalid marker: must be of Position+Orientation", PyErrorType::modelError);
 			}
 
 			cSystem.GetSystemData().ComputeMarkerODE2LTGarray(markerNumber, *(allLTGs[gi]), true); //true=reset list before appending
@@ -580,7 +580,7 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 		}
 		else
 		{
-			CHECKandTHROWstring("FinalizeContact: case not implemented!");
+			CHECKandTHROWstring("FinalizeContact: case not implemented!", ExudynNotImplementedError);
 			//Index i = gi - globalJacobianIndexOffsets[spheresMarkerBasedIndex];
 			//allPositionJacobians[gi] = nullptr;
 			//allRotationJacobians[gi] = nullptr;
@@ -1061,7 +1061,7 @@ void GeneralContact::ComputeDataAndBBancfCable2D(const CSystemData& systemData, 
 
 		item.L = ancf.GetLength();
 		item.isALE = false;
-		CHECKandTHROW(ancf.GetODE2Size() == 8, "GeneralContact::ComputeDataAndBBancfCable2D: ALEANCF not implemented!");
+		CHECKandTHROW(ancf.GetODE2Size() == 8, "GeneralContact::ComputeDataAndBBancfCable2D: ALEANCF not implemented!", ExudynNotImplementedError);
 
 		if (updateBoundingBoxes)
 		{
@@ -2768,11 +2768,11 @@ Index GeneralContact::GetItemsInBox(const Box3D& box,
 bool GeneralContact::ShortestDistanceAlongLine(const Vector3D& pStart, const Vector3D& direction, Real minDistance, Real maxDistance,
 	Index& foundLocalIndex, Contact::TypeIndex& foundTypeIndex, Real& foundDistance, Real& foundVelocityAlongLine, Real cylinderRadius, Contact::TypeIndex selectedTypeIndex)
 {
-	if (maxDistance <= minDistance) { PyError("GeneralContact::ShortestDistanceAlongLine: minDistance must be smaller than maxDistance"); }
+	if (maxDistance <= minDistance) { PyError("GeneralContact::ShortestDistanceAlongLine: minDistance must be smaller than maxDistance", PyErrorType::valueError); }
 
 	//decide along which axis to search:
 	Real dirLen = direction.GetL2Norm();
-	if (dirLen == 0.) { PyError("GeneralContact::ShortestDistanceAlongLine: direction vector may not be [0,0,0]"); }
+	if (dirLen == 0.) { PyError("GeneralContact::ShortestDistanceAlongLine: direction vector may not be [0,0,0]", PyErrorType::valueError); }
 
 	Vector3D dir0 = direction * (1. / dirLen);
 	

@@ -150,7 +150,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 		if (!file.solutionFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
 			output.writeToSolutionFile = false;
-			SysError(STDstring("failed to open solution file '") + solutionFileName + "'", file.solverFile);
+			SysError(STDstring("failed to open solution file '") + solutionFileName + "'", file.solverFile, PyErrorType::valueError);
 		}
 		else
 		{
@@ -172,7 +172,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 		
 		if (!file.solverFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
-			SysError(STDstring("failed to open solution file '") + solverFileName + "'", file.solverFile);
+			SysError(STDstring("failed to open solution file '") + solverFileName + "'", file.solverFile, PyErrorType::valueError);
 		}
 		else
 		{
@@ -204,7 +204,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
                 if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
                 {
-                    SysError(STDstring("failed to open sensor file '") + sensorFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
+                    SysError(STDstring("failed to open sensor file '") + sensorFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile, PyErrorType::valueError);
                     file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
                 }
                 else
@@ -268,7 +268,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	computationalSystem.GetPostProcessData()->SetSolutionMessage(simulationSettings.solutionSettings.solutionInformation);
 
 	//some pre-checks for solver
-	if (!computationalSystem.IsSystemConsistent()) { PyError("Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)", file.solverFile); return false; }
+	if (!computationalSystem.IsSystemConsistent()) { PyError("Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)", file.solverFile, PyErrorType::modelError); return false; }
 
 	computationalSystem.GetSystemData().GetNumberOfComputationCoordinates(data.nODE2, data.nODE1, data.nAE, data.nData);
 	data.nSys = data.nODE2 + data.nODE1 + data.nAE;
@@ -283,7 +283,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 
 	if (data.nSys == 0)
 	{
-		PyError("Solver: cannot solve for system size = 0", file.solverFile);
+		PyError("Solver: cannot solve for system size = 0", file.solverFile, PyErrorType::modelError);
 		return false;
 	}
 
@@ -302,7 +302,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	}
 	else
 	{
-		PyError("Solver:InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile);
+		PyError("Solver:InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile, PyErrorType::valueError);
 		data.SetLinearSolverType(LinearSolverType::_None);
 		return false;
 	}
@@ -340,7 +340,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	//}
 	else
 	{
-		PyError("Solver:InitializeSolverData: Unsupported solver type in simulationSettings.linearSolverType", file.solverFile);
+		PyError("Solver:InitializeSolverData: Unsupported solver type in simulationSettings.linearSolverType", file.solverFile, PyErrorType::valueError);
 	}
 
 	//++++++++++++++++++++++++++++++
@@ -395,7 +395,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 
 	if (newton.newtonResidualMode != 0 && newton.newtonResidualMode != 1) //check residual mode: 0/1, otherwise not implemented by solvers!
 	{ 
-		PyError("Solver:InitializeSolverData: NewtonSettings.newtonResidualMode: unsupported mode"); 
+		PyError("Solver:InitializeSolverData: NewtonSettings.newtonResidualMode: unsupported mode", PyErrorType::valueError); 
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -464,7 +464,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	{
 		if (fabs(timeint.numberOfSteps - std::round(timeint.numberOfSteps)) > EXUstd::EPSILONREAL*100.*timeint.numberOfSteps) //max relative deviation: 100*eps => this helps if number of steps is computed from complex formula
 		{
-			PyError("InitializeSolver: timeIntegration.numberOfSteps must be integer (or very close to it), but received " + EXUstd::ToString(timeint.numberOfSteps));
+			PyError("InitializeSolver: timeIntegration.numberOfSteps must be integer (or very close to it), but received " + EXUstd::ToString(timeint.numberOfSteps), PyErrorType::valueError);
 		}
 		it.numberOfSteps = (Index)std::round(timeint.numberOfSteps);
 		if (it.numberOfSteps == 0)
@@ -1371,7 +1371,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				}
 				conv.linearSolverFailed = true;
 				conv.linearSolverCausingRow = factorizeOutput;
-				SysError(s); //this error might not be recoverable
+				SysError(s, PyErrorType::solverError); //this error might not be recoverable
 				conv.stopNewton = true;
 			}
 			//STOPGLOBALTIMER(TSfactorize);
@@ -2039,7 +2039,7 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 					{
 						STDstring msg = "CSolverBase::WriteSensorsToFile: storeInternal == True : seems that number of output values of sensor (sensor number ";
 						msg += EXUstd::ToString(cnt) + ") changed; consider storeInternal == False for this sensor and write to file";
-						PyError(msg, file.solverFile);
+						PyError(msg, file.solverFile, PyErrorType::modelError);
 					}
 				}
 				item->GetInternalStorage().AppendRow(output.sensorValuesTemp2);

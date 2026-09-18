@@ -55,12 +55,12 @@ public:
 
 	const GLFWwindow* GetWindow(bool raiseError = true) const
 	{
-		if (raiseError && window == nullptr) { CHECKandTHROWstring("RenderView::GetWindow const: not yet set; initialize renderer first (renderer.Start())"); }
+		if (raiseError && window == nullptr) { CHECKandTHROWstring("RenderView::GetWindow const: not yet set; initialize renderer first (renderer.Start())", ExudynModelError); }
 		return window;
 	}
 	GLFWwindow* GetWindow(bool raiseError = true)
 	{
-		if (raiseError && window == nullptr) { CHECKandTHROWstring("RenderView::GetWindow: not yet set; initialize renderer first (renderer.Start())"); }
+		if (raiseError && window == nullptr) { CHECKandTHROWstring("RenderView::GetWindow: not yet set; initialize renderer first (renderer.Start())", ExudynModelError); }
 		return window;
 	}
 	void SetWindow(GLFWwindow* windowInit)
@@ -70,12 +70,12 @@ public:
 
 	const RenderState* GetRenderState(bool raiseError = true) const
 	{
-		if (raiseError && renderState == nullptr) { CHECKandTHROWstring("RenderView::RenderState const: not yet set; initialize renderer first (renderer.Start())"); }
+		if (raiseError && renderState == nullptr) { CHECKandTHROWstring("RenderView::RenderState const: not yet set; initialize renderer first (renderer.Start())", ExudynModelError); }
 		return renderState;
 	}
 	RenderState* GetRenderState(bool raiseError = true)
 	{
-		if (raiseError && renderState == nullptr) { CHECKandTHROWstring("RenderView::RenderState: not yet set; initialize renderer first (renderer.Start())"); }
+		if (raiseError && renderState == nullptr) { CHECKandTHROWstring("RenderView::RenderState: not yet set; initialize renderer first (renderer.Start())", ExudynModelError); }
 		return renderState;
 	}
 	void SetRenderState(RenderState* renderStateInit)
@@ -141,13 +141,13 @@ public:
 	{ 
 		bool flag = renderViewArray[viewID].GetWindowShouldBeCreated();
 		CHECKandTHROW(!(flag && IsWindowOpen(viewID)), "RenderViewList::GetWindowShouldBeCreated: inconsistent flags");
-		CHECKandTHROW(viewID != 0, "RenderViewList::GetWindowShouldBeCreated: not possible for main view 0");
+		CHECKandTHROW(viewID != 0, "RenderViewList::GetWindowShouldBeCreated: not possible for main view 0", ExudynValueError);
 		return flag;
 	}
 
 	void SetWindowShouldBeCreated(Index viewID, bool flag) 
 	{ 
-		CHECKandTHROW(viewID != 0, "RenderViewList::SetWindowShouldBeCreated: not possible for main view 0");
+		CHECKandTHROW(viewID != 0, "RenderViewList::SetWindowShouldBeCreated: not possible for main view 0", ExudynValueError);
 		renderViewArray[viewID].SetWindowShouldBeCreated(flag);
 	}
 

@@ -285,7 +285,7 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 	if (simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints &&
 		!simulationSettings.timeIntegration.generalizedAlpha.useNewmark)
 	{
-		PyError("SolveDynamic:GeneralizedAlpha: useIndex2Constraints=True may only be used if useNewmark=True");
+		PyError("SolveDynamic:GeneralizedAlpha: useIndex2Constraints=True may only be used if useNewmark=True", PyErrorType::valueError);
 	}
 
 	hasConstantMassMatrix = false;
@@ -398,7 +398,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator
 				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations)
 			{
-				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile);
+				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile, PyErrorType::valueError);
 			}
 
 			//initialize for Jacobian computation
@@ -969,7 +969,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 			{
 				jacAdd = computationalSystem.GetPythonUserFunctions().systemJacobianFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
 				it.currentTime, -scalODE2, -gammaPrime * scalODE2, -scalODE2);
-				if (jacAdd.UseDenseMatrix()) { SysError("MainSystem::SystemJacobianUserFunction: must use sparse matrix mode; dense mode not implemented"); }
+				if (jacAdd.UseDenseMatrix()) { SysError("MainSystem::SystemJacobianUserFunction: must use sparse matrix mode; dense mode not implemented", PyErrorType::notImplementedError); }
 
 				//add sparse triplets to jacobian:
 				data.systemJacobian->AddSparseTriplets(jacAdd.GetInternalSparseTripletMatrix().GetTriplets());

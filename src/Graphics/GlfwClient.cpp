@@ -1647,7 +1647,7 @@ bool GlfwRenderer::StartRenderer(Index verbose)
 	}
 	else
 	{
-		PyError("No SystemContainer has been attached to renderer (or it has been detached). Renderer cannot be started without SystemContainer.");
+		PyError("No SystemContainer has been attached to renderer (or it has been detached). Renderer cannot be started without SystemContainer.", PyErrorType::modelError);
 		return false;
 	}
 	return false; //not needed, but to suppress warnings
@@ -2752,7 +2752,7 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 
 		if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
-			CHECKandTHROWstring((STDstring("failed to open image file '") + filename + "'; check path and file name").c_str());
+			CHECKandTHROWstring((STDstring("failed to open image file '") + filename + "'; check path and file name").c_str(), ExudynValueError);
 		}
 		imageFile.precision(8); //more accuracy is not available from float values!
 		imageFile << "#Exudyn text image export file\n";

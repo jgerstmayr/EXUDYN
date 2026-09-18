@@ -294,7 +294,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 			{
 				jacAdd = computationalSystem.GetPythonUserFunctions().systemJacobianFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
 				it.currentTime, 1., 0., 1.);
-				if (jacAdd.UseDenseMatrix()) { SysError("MainSystem::SystemJacobianUserFunction: must use sparse matrix mode; dense mode not implemented"); }
+				if (jacAdd.UseDenseMatrix()) { SysError("MainSystem::SystemJacobianUserFunction: must use sparse matrix mode; dense mode not implemented", PyErrorType::notImplementedError); }
 
 				//add sparse triplets to jacobian:
 				data.systemJacobian->AddSparseTriplets(jacAdd.GetInternalSparseTripletMatrix().GetTriplets());

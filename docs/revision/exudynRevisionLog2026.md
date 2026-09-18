@@ -7146,6 +7146,84 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-3-6-rest"></a>
+### R6.3.6 — the mapping: `src/Solver`, `src/Graphics`, `src/System`
+
+**IN PROGRESS** (#2528). Areas four to six done 2026-09-18, in one commit: together they are
+smaller than `src/Objects` and they share one finding.
+
+374 sites considered, **107 typed**. The proportion is the point: `src/System` is almost
+entirely internal — 106 `CHECKandTHROWstring` and 56 `SysError` calls that are base-class
+stubs (*"Invalid call to CMarker::GetPosition"*, *"CNode::GetCoordinateVector: call illegal"*)
+saying a derived class did not override something. Those are Exudyn bugs by construction and
+the default flip will type all of them in one move.
+
+| area | sites | typed | what the typed ones are |
+|---|---:|---:|---|
+| `src/Graphics` | 92 | 53 | almost all of it is the `GraphicsData` dictionary |
+| `src/Solver` | 59 | 30 | solver settings and the model, checked before the run |
+| `src/System` | 243 | 24 | `GeneralContact`, set up from Python and checked at `Assemble()` |
+
+#### `SolverError` is not where the plan said it was
+
+The plan carried `src/Solver` with the note *"its own type, `SolverError`"*. Reading the area
+says otherwise: **the 29 sites the triage found are settings and model validation**, not solver
+failures — an unsupported `linearSolverType`, a `numberOfSteps` that is not an integer, an
+explicit integrator meeting a constraint it cannot handle. They became `ExudynValueError` and
+`ExudynModelError`.
+
+`ExudynSolverError` belongs to **three** sites, and the pattern method could not see them,
+because they read `SysError(s)` with the message built in a variable above the call:
+
+```cpp
+std::string s = "CSolverExplicit: System mass matrix seems to be singular / not invertible!\n";
+...
+SysError(s); //this error is not recoverable
+```
+
+A singular system matrix is exactly what `ExudynSolverError` is for. They are now typed by hand
+— with `CSolverBase.cpp:1374`, the factorization failure of the implicit solver.
+
+**The blind spot is worth naming, because it is a property of the method and not of this area.**
+A rule over the message text cannot classify a call whose message is not in the call. Eighteen
+such sites exist in these three areas; they were listed by hand with a reason each, and the
+three most interesting sites in the whole area were among them.
+
+#### The other place the user actually meets a solver failure is Python
+
+`python/exudyn/solver.py` raises `ValueError("SolveStatic terminated due to errors")` and
+`ValueError("SolveDynamic terminated")`. That is where a user's `except` around a solve lands,
+and it is a plain `ValueError` today. **Not changed here, and it needs a decision:**
+`exudyn.SolverError` derives from `ExudynError` and `RuntimeError`, **not** from `ValueError`, so
+moving those two raises would break an existing `except ValueError` around `SolveDynamic`. Left
+as it is, raised as a question rather than guessed.
+
+#### `GraphicsData`: identical messages get identical types
+
+49 of the 53 typed sites in `src/Graphics` validate one dictionary. Several of its checks are
+pairs that print the **same sentence** from two different branches — one for the wrong size,
+one for the wrong kind:
+
+```cpp
+if (stdColorList.size() == 4) { ... }
+else { PyError("GraphicsData Line: color must be a float list or numpy array with 4 components"); }
+} else { PyError("GraphicsData Line: color must be a float list or numpy array with 4 components"); }
+```
+
+They are both `ExudynValueError`, deliberately. A user tells errors apart by what they **read**,
+and these two are the same sentence; giving them different Python types would mean the same
+message is sometimes a `TypeError` and sometimes a `ValueError`, which is worse than one honest
+answer. `ExudynTypeError` is used where the message itself says *"must be of type"*.
+
+#### The reference file, again six paths
+
+`parameterConversionTestReference.txt` moved on 8 parameters — every `VgraphicsData` and
+`VgraphicsDataList`, `RuntimeError` → `ExudynTypeError`. That is the same dictionary, reached
+through an item parameter instead of through `SC.renderer`.
+
+---
+
+
 <a id="r6-3-6-objects"></a>
 ### R6.3.6 — the mapping, area by area: `src/Objects`
 

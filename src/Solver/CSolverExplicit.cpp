@@ -120,7 +120,7 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 				conv.linearSolverFailed = true;
 				conv.massMatrixNotInvertible = true;
 				conv.linearSolverCausingRow = factorizeOutput;
-				SysError(s); //this error is not recoverable
+				SysError(s, PyErrorType::solverError); //this error is not recoverable
 			}
 			STOPTIMER(timer.factorization);
 		}
@@ -453,9 +453,9 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		//store error in second approximation:
 		Real atol = simulationSettings.timeIntegration.absoluteTolerance;
 		Real rtol = simulationSettings.timeIntegration.relativeTolerance;
-		CHECKandTHROW(atol > 0, "SolverExplicit: absolute tolerance must be > 0");
+		CHECKandTHROW(atol > 0, "SolverExplicit: absolute tolerance must be > 0", ExudynValueError);
 		
-		CHECKandTHROW(data.nODE1 + data.nODE2 > 0, "SolverExplicit: total number of ODE1 and ODE2 coordinates must not be zero");
+		CHECKandTHROW(data.nODE1 + data.nODE2 > 0, "SolverExplicit: total number of ODE1 and ODE2 coordinates must not be zero", ExudynModelError);
 
 		Real scODE1, scODE2;
 		Real err = 0;
@@ -665,7 +665,7 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 			{
 				s += "The solver returned the causing system equation number (coordinate number) = " + EXUstd::ToString(factorizeOutput) + "\n";
 			}
-			SysError(s); //this error is not recoverable
+			SysError(s, PyErrorType::solverError); //this error is not recoverable
 		}
 		STOPTIMER(timer.factorization);
 	}
@@ -824,7 +824,7 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 		}
 		default:
 		{
-			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType (method misses implementation)!", file.solverFile);
+			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType (method misses implementation)!", file.solverFile, PyErrorType::valueError);
 			return 0;
 		}
 	}
@@ -850,7 +850,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 		{
 			if (node->GetNumberOfAECoordinates() != 0)
 			{
-				PyError(STDstring("SolverExplicit: explicit integrator detected node ") + EXUstd::ToString(cnt) + " which contains algebraic variables; aborting solver", file.solverFile);
+				PyError(STDstring("SolverExplicit: explicit integrator detected node ") + EXUstd::ToString(cnt) + " which contains algebraic variables; aborting solver", file.solverFile, PyErrorType::modelError);
 			}
 			cnt++;
 		}
@@ -860,7 +860,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 		{
 			if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint) && !EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
 			{
-				PyError("SolverExplicit: mode eliminateConstraints==True detected incompatible object " + EXUstd::ToString(cnt));
+				PyError("SolverExplicit: mode eliminateConstraints==True detected incompatible object " + EXUstd::ToString(cnt), PyErrorType::modelError);
 			}
 			// constraint is also connector now ...
 			if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint)) //has algebraic equations; only CObjectConnectorCoordinate allowed; 
@@ -890,7 +890,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 							else if (!EXUstd::IsOfType(node.GetNodeGroup(), CNodeGroup::ODE2variables))
 							{
 								PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-									EXUstd::ToString(cnt) + " which contains marker to node other than ODE2; aborting solver", file.solverFile);
+									EXUstd::ToString(cnt) + " which contains marker to node other than ODE2; aborting solver", file.solverFile, PyErrorType::modelError);
 							}
 							else //this must give the coordinate that should be constrained
 							{
@@ -902,18 +902,18 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 						else
 						{
 							PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-								EXUstd::ToString(cnt) + " which contains marker to node other than NodeCoordinate; aborting solver", file.solverFile);
+								EXUstd::ToString(cnt) + " which contains marker to node other than NodeCoordinate; aborting solver", file.solverFile, PyErrorType::modelError);
 						}
 					}
 					if (markerGroundNode != 1)
 					{
 						PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-							EXUstd::ToString(cnt) + "  that does not have one ground node; aborting solver", file.solverFile);
+							EXUstd::ToString(cnt) + "  that does not have one ground node; aborting solver", file.solverFile, PyErrorType::modelError);
 					}
 					else if (markerNodeCoordinate != 2)
 					{
 						PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-							EXUstd::ToString(cnt) + " which contains markers other than MarkerNodeCoordinate; aborting solver", file.solverFile);
+							EXUstd::ToString(cnt) + " which contains markers other than MarkerNodeCoordinate; aborting solver", file.solverFile, PyErrorType::modelError);
 					}
 
 				}
@@ -921,7 +921,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 				if (failed)
 				{
 					PyError(STDstring("SolverExplicit: explicit integrator detected object ") + 
-						EXUstd::ToString(cnt) + " which contains constraints that cannot be solved; aborting solver", file.solverFile);
+						EXUstd::ToString(cnt) + " which contains constraints that cannot be solved; aborting solver", file.solverFile, PyErrorType::modelError);
 				}
 			}
 			cnt++;
@@ -1184,7 +1184,7 @@ void CSolverExplicitTimeInt::LieGroupODE2StepEvaluation(CSystem& computationalSy
 		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
 		Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
 		Index off = node.GetGlobalODE2CoordinateIndex();
-		CHECKandTHROW(nRot == 3, "CSolverExplicitTimeInt::LieGroupODE2StepEvaluation: only implemented for 3 rotation coordinates");
+		CHECKandTHROW(nRot == 3, "CSolverExplicitTimeInt::LieGroupODE2StepEvaluation: only implemented for 3 rotation coordinates", ExudynNotImplementedError);
 
 		Vector3D Omega(0.);
 		LinkedDataVector vecRef(refODE2, off + nPos, nRot);

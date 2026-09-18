@@ -55,7 +55,7 @@ bool MainSolverBase::CheckInitialized(const MainSystem& mainSystem) const
 {
 	if (!mainSystem.cSystem.IsSystemConsistent())
 	{
-		SysError("MainSystem (mbs) is not correctly initialized; call MainSystem.Assemble() first");
+		SysError("MainSystem (mbs) is not correctly initialized; call MainSystem.Assemble() first", PyErrorType::modelError);
 		return false;
 	}
 
@@ -65,7 +65,7 @@ bool MainSolverBase::CheckInitialized(const MainSystem& mainSystem) const
 		GetCSolver().data.nAE == initializedSystemSizes[2] &&
 		GetCSolver().data.nData == initializedSystemSizes[3]))
 	{
-		SysError("MainSolverBase is not correctly initialized; call InitializeSolver() first");
+		SysError("MainSolverBase is not correctly initialized; call InitializeSolver() first", PyErrorType::modelError);
 		return false;
 	}
 
@@ -74,7 +74,7 @@ bool MainSolverBase::CheckInitialized(const MainSystem& mainSystem) const
 		GetCSolver().data.nAE ==   mainSystem.cSystem.GetSystemData().GetNumberOfCoordinatesAE() &&
 		GetCSolver().data.nData == mainSystem.cSystem.GetSystemData().GetNumberOfCoordinatesData()))
 	{
-		SysError("Systen sizes do not match; either MainSolverBase is not correctly initialized or MainSystem (mbs) has changed; call Assemble() and InitializeSolver() first");
+		SysError("Systen sizes do not match; either MainSolverBase is not correctly initialized or MainSystem (mbs) has changed; call Assemble() and InitializeSolver() first", PyErrorType::modelError);
 		return false;
 	}
 
@@ -93,7 +93,7 @@ bool CheckInitializedData(const MainSolverBase& s)
 	}
 	else
 	{
-		SysError("MainSolverBase is not correctly initialized; call InitializeSolver() first");
+		SysError("MainSolverBase is not correctly initialized; call InitializeSolver() first", PyErrorType::modelError);
 		return false;
 	}
 }
@@ -160,7 +160,7 @@ void MainSolverBase::SetSystemJacobian(const py::array_t<Real>& systemJacobian)
 
 	CheckInitializedData(*this);
 	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in CSolver
-	if (m.NumberOfColumns() != nSys || m.NumberOfRows() != nSys) { SysError("MainSolverBase::SetSystemJacobian(...): matrix has wrong size or MainSolverBase is not correctly initialized; call InitializeSolver() first"); }
+	if (m.NumberOfColumns() != nSys || m.NumberOfRows() != nSys) { SysError("MainSolverBase::SetSystemJacobian(...): matrix has wrong size or MainSolverBase is not correctly initialized; call InitializeSolver() first", PyErrorType::valueError); }
 	
 	GetCSolver().data.systemJacobian->SetMatrix(m);
 }
@@ -173,7 +173,7 @@ void MainSolverBase::SetSystemMassMatrix(const py::array_t<Real>& systemMassMatr
 
 	CheckInitializedData(*this);
 	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in CSolver
-	if (m.NumberOfColumns() != nSys || m.NumberOfRows() != nSys) { SysError("MainSolverBase::SetSystemMassMatrix(...): matrix has wrong size or MainSolverBase is not correctly initialized; call InitializeSolver() first"); }
+	if (m.NumberOfColumns() != nSys || m.NumberOfRows() != nSys) { SysError("MainSolverBase::SetSystemMassMatrix(...): matrix has wrong size or MainSolverBase is not correctly initialized; call InitializeSolver() first", PyErrorType::valueError); }
 
 	GetCSolver().data.systemMassMatrix->SetMatrix(m);
 }
@@ -183,7 +183,7 @@ void MainSolverBase::SetSystemResidual(const Vector& systemResidual)
 {
 	CheckInitializedData(*this);
 	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in CSolver
-	if (systemResidual.NumberOfItems() != nSys) { SysError("MainSolverBase::SetSystemResidual(...): vector has wrong size or MainSolverBase is not correctly initialized; call InitializeSolver() first"); }
+	if (systemResidual.NumberOfItems() != nSys) { SysError("MainSolverBase::SetSystemResidual(...): vector has wrong size or MainSolverBase is not correctly initialized; call InitializeSolver() first", PyErrorType::valueError); }
 
 	GetCSolver().data.systemResidual.CopyFrom(systemResidual);
 }
