@@ -847,6 +847,23 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `kinematicTree.py` and elsewhere. Nothing measured makes them matter, and a public utility would
     be new API - so the helpers stay private and local, with the reason written where they are.
 
+<a id="r5-9-3"></a>
+**R5.9.3** **DONE 2026-09-18** — *(sub-step of R5.9; the other half of R5.9.1)*
+    **`symbolicModuleTest` compares scalars with exact equality** (#2509). R5.9.1 gave the
+    vector/matrix comparison a relative tolerance; the **scalar** loop a few hundred lines above
+    still used `if res[0] != res[1]` - exact equality between two independent implementations of a
+    transcendental function, the symbolic module's and Python's. That holds only by luck, and the
+    luck ran out with **numpy 2.5.3**, where `acosh(2)` comes out 1 ulp apart
+    (`1.3169578969248166` against `...68`), counted twice - so the model returned `2.948` against a
+    reference of `0.948` and the suite failed with error 2.0, the exact symptom of #2501 in another
+    branch of the same file.
+
+    Found by running the suite on **Linux in WSL** before telling the maintainer to restart the
+    GitLab pipeline: numpy 2.5.3 is what the manylinux job uses, so CI would have failed again on a
+    model that looked fixed. Same relative tolerance as R5.9.1; verified under numpy 2.2.4, 2.4.6
+    **and** 2.5.3, all returning the committed reference exactly, and a mutation of `1e-12` relative
+    still flags 498 of the ~796 comparisons.
+
 <a id="r5-10"></a>
 **R5.10** **DONE 2026-09-10** — `testRunnerTools.ResolveLogFile()` decides the log target before the first write. → [log](exudynRevisionLog2026.md#r5-10)
 
@@ -1137,16 +1154,40 @@ here, because they describe the developer workflow rather than the user document
     let every step of the driver be judged by its return code.
 
 <a id="r5-18-2"></a>
-**R5.18.2** *(sub-step of R5.18; found while giving the examples an exit code)* **Three examples
-    fail for a missing optional package instead of being skipped** (#2507).
-    `testRunnerTools.ExampleSkipReason()` already skips what cannot run - stable-baselines3, rospy,
-    a MATLAB peer - but does not cover `numpy-stl` (`humanRobotInteraction.py`,
-    `stlFileImport.py`) or `pymeshlab` (`pymeshlabFileImport.py`), so those three are counted as
-    failures. They are three of the five entries in `KnownExampleFailures()` today. The decision
-    this needs is why it is a step and not three lines: a machine that HAS the package *should* run
-    them, so the fix is probably to **try the import** rather than to list file names - and then
-    `numpy-stl` and `pymeshlab` belong in the `[all]` extra of `pyproject.toml`, so that a
-    developer environment has them.
+**R5.18.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-2) — *(sub-step of
+    R5.18)* **The examples decide by what the environment HAS** (#2507). Three examples were
+    counted as failures because an optional package was missing, although
+    `ExampleSkipReason()` already had a skip mechanism that simply did not cover them.
+
+    Implemented as the maintainer asked (2026-09-18): `testRunnerTools` probes the optional packages
+    **once** with `importlib.util.find_spec` - which does not execute them - into
+    `AvailablePackages()`, reads each example's imports from its **syntax tree**
+    (`ImportedTopLevelNames`), and skips it naming the distribution when one is absent. So the same
+    example is skipped where the package is missing and **runs where it is installed**, instead of
+    being decided by a list of file names.
+
+    **That immediately corrected the diagnoses**, which is the point of deciding by availability:
+
+    - `pymeshlabFileImport.py` had **two** problems stacked on top of each other. Running it instead
+      of skipping it showed the second: `File does not exists: ../Examples/testData/objImportTest.obj`
+      - a data file the repository did not contain. The maintainer supplied it the same day, and the
+      example now **runs and passes** where pymeshlab is installed and is skipped where it is not.
+      That needs one extra rule: exudyn imports pymeshlab *lazily* inside
+      `graphics.FromPyMeshlabFile()`, so the example's syntax tree shows nothing - such indirect
+      needs are listed in `indirectPackageNeeds`, and are still decided by availability.
+    - `humanRobotInteraction.py` reads the articulated-dummy STL files from an **absolute path on
+      the author machine**, and says in its own comment that they are not included and come from
+      GrabCAD. Never a package question at all.
+
+    `stlFileImport.py` joins them: it reads `solution/stlImport.stl`, which it only *writes* when
+    its `if False` branch is switched on by hand. `KnownExampleFailures()` is down from five entries
+    to **two**, both with causes of their own (`NGsolveGeometry.py`, `rendererNOGLFWexample.py`).
+
+    Measured with a current `venvP312`: 171 examples, **27 skipped, 2 failures, both known** -
+    `PASSED: no unexpected example failed`, and the runner returns 0. The stale exudyn **1.11.0**
+    that environment still carried was found by the same run and rebuilt.
+
+    Successor: **#2510**, the inventory of data files the repository never contained.
 
 <a id="r5-18-3"></a>
 **R5.18.3** **DONE 2026-09-18** — *(sub-step of R5.18; found by the first GitLab run after the

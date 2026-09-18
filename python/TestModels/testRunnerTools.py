@@ -400,6 +400,129 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
 #or a package that is not part of the test environment, or are incompatible with being exec'd.
 #Moved here from runTestExamples.py in revision2026 step R5.16, so that the runner and the worker
 #process apply exactly the same rules.
+#the optional packages an Example may import, as import name -> distribution name. The examples run
+#in whatever environment the maintainer has, and that environment legitimately differs from the next
+#one: venvP312 has numpy-stl and pymeshlab, venvExuP313 has neither. An example that needs one of
+#them must therefore be SKIPPED where it is absent and RUN where it is present - deciding by file
+#name instead would either hide a real failure or invent one (#2507).
+#
+#Only OPTIONAL packages belong here. numpy is mandatory, and a missing scipy or matplotlib is a
+#broken environment rather than a skip reason - those are in the [tests] extra of pyproject.toml.
+optionalPackageDistributions = {
+    'stl':               'numpy-stl',
+    'pymeshlab':         'pymeshlab',
+    'ngsolve':           'ngsolve',
+    'netgen':            'ngsolve',
+    'roboticstoolbox':   'roboticstoolbox-python',
+    'spatialmath':       'spatialmath-python',
+    'numba':             'numba',
+    'dispy':             'dispy',
+    'mpi4py':            'mpi4py',
+    'tqdm':              'tqdm',
+    'ffmpeg':            'ffmpeg-python',
+    'networkx':          'networkx',
+    'open3d':            'open3d',
+    'pyansys':           'ansys-mapdl-reader',
+    'torch':             'torch',
+    'gymnasium':         'gymnasium',
+    'gym':               'gym',
+    'tensorboard':       'tensorboard',
+    }
+
+availablePackages = None            #filled once by AvailablePackages()
+
+
+#%%******************************************************************************************************
+def AvailablePackages():
+    """
+    Which of the optional packages this environment has, as {import name: True/False}.
+
+    Probed ONCE with importlib.util.find_spec, which does not execute the package: importing torch
+    or ngsolve to find out whether they exist would cost seconds and could have side effects.
+
+    Returns:
+        dict: import name -> availability
+    """
+    global availablePackages
+    if availablePackages is not None:
+        return availablePackages
+
+    import importlib.util
+    availablePackages = {}
+    for importName in optionalPackageDistributions:
+        try:
+            availablePackages[importName] = (importlib.util.find_spec(importName) is not None)
+        except Exception:
+            #a broken installation can make find_spec itself raise; that is "not available" from
+            #the point of view of an example that wants to import it
+            availablePackages[importName] = False
+
+    return availablePackages
+
+
+#%%******************************************************************************************************
+def ImportedTopLevelNames(fileString):
+    """
+    The top-level module names a source imports, from its syntax tree: 'import a.b' and
+    'from a import c' both give 'a'; relative imports are skipped.
+
+    Args:
+        fileString (str): the source
+
+    Returns:
+        set: the top-level names
+    """
+    import ast
+    names = set()
+    try:
+        tree = ast.parse(fileString)
+    except SyntaxError:
+        return names
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                names.add(alias.name.split('.')[0])
+        elif isinstance(node, ast.ImportFrom):
+            if node.level == 0 and node.module:
+                names.add(node.module.split('.')[0])
+
+    return names
+
+
+#%%******************************************************************************************************
+def MissingPackagesOfSource(fileString):
+    """
+    The optional packages a source imports and this environment does not have.
+
+    Args:
+        fileString (str): the source of the example
+
+    Returns:
+        list: distribution names, sorted
+    """
+    available = AvailablePackages()
+    missing = set()
+    for importName in ImportedTopLevelNames(fileString):
+        if importName in optionalPackageDistributions and not available[importName]:
+            missing.add(optionalPackageDistributions[importName])
+
+    return sorted(missing)
+
+
+#an example can need a package WITHOUT importing it: exudyn imports it lazily inside the function
+#the example calls, so the syntax tree of the example shows nothing. graphics.FromPyMeshlabFile()
+#does 'import pymeshlab' at graphics.py:2703, which is why pymeshlabFileImport.py never names the
+#package outside a comment. Such a need cannot be inferred and is listed here - but it is still
+#decided by AVAILABILITY, so the example runs where the package is installed (#2507).
+#Measured 2026-09-18: it runs and passes in venvP312, which has pymeshlab, and raises ImportError
+#in venvExuP313, which does not.
+indirectPackageNeeds = {
+    'pymeshlabFileImport': 'pymeshlab',     #graphics.FromPyMeshlabFile()
+    }
+
+
+#%%******************************************************************************************************
 def ExampleSkipReason(exampleFileName, fileString):
     """
     Decide whether an example can be run at all.
@@ -424,11 +547,20 @@ def ExampleSkipReason(exampleFileName, fileString):
         #directory from an earlier run (found by revision2026 step R5.16)
         'minimizeExample': 'needs the output of parameterVariationExample.py',
         'dispyParameterVariationExample': 'needs the output of parameterVariationExample.py',
+        #the same class - a file that is not in the repository and that no run produces
+        #(maintainer, 2026-09-18; #2507)
+        'humanRobotInteraction': 'needs the articulated-dummy STL files; which the example itself '
+                                 'says are not included and are downloaded from GrabCAD - it reads '
+                                 'them from an absolute path on the author machine (line 79)',
+        'stlFileImport': 'reads solution/stlImport.stl, which it only WRITES when its '
+                         'if-False branch is switched on by hand',
         }
     for key, reason in byName.items():
         if key in exampleFileName:
             return reason
 
+    #NOT availability questions, so these stay unconditional: the first would start a training run
+    #even where stable-baselines3 is installed, and the other two need something no package provides
     byContent = {
         'stable_baselines3': 'needs stable-baselines3 and a training run',
         'rospy': 'needs a ROS installation',
@@ -437,6 +569,18 @@ def ExampleSkipReason(exampleFileName, fileString):
     for key, reason in byContent.items():
         if key in fileString:
             return reason
+
+    #everything else is decided by what this environment HAS rather than by a list of file names:
+    #the same example is skipped where the package is missing and runs where it is installed (#2507)
+    available = AvailablePackages()
+    for key, importName in indirectPackageNeeds.items():
+        if key in exampleFileName and not available.get(importName, False):
+            return ('needs ' + optionalPackageDistributions.get(importName, importName)
+                    + ', not installed here (used indirectly, through exudyn)')
+
+    missing = MissingPackagesOfSource(fileString)
+    if missing:
+        return 'needs ' + ', '.join(missing) + ', not installed here'
 
     return ''
 
@@ -456,14 +600,11 @@ def KnownExampleFailures():
         dict: file name -> the measured reason
     """
     return {
-        #three of these are missing OPTIONAL PACKAGES, which ought to be a SKIP rather than a
-        #failure - ExampleSkipReason() already has that mechanism and does not cover them. Whether
-        #a machine that HAS the package should run them is a decision, not an oversight, so it is
-        #issue #2507 rather than three lines added here
-        'humanRobotInteraction.py': "ModuleNotFoundError: No module named 'stl' (numpy-stl)",
-        'pymeshlabFileImport.py':   "ModuleNotFoundError: No module named 'pymeshlab'",
-        'stlFileImport.py':         "FileNotFoundError: solution/stlImport.stl - the file another "
-                                    "example writes with numpy-stl",
+        #the three package/file cases that used to sit here are gone: ExampleSkipReason() now
+        #decides them by what the environment HAS (#2507, step R5.18.2), so pymeshlabFileImport.py
+        #is skipped where pymeshlab is missing and RUNS where it is installed, and the two that
+        #need files nothing produces are permanent skips by name.
+        #What is left are two real failures with causes of their own:
         'NGsolveGeometry.py':       'fails inside the NGsolve geometry construction under exec(...)',
         'rendererNOGLFWexample.py': 'expects the renderer to be absent; the runner suppresses it '
                                     'differently',

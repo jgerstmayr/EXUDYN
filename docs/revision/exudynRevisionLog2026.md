@@ -6432,3 +6432,68 @@ whereas this job only renders documentation and benefits from the newest image.
 **What could not be verified**, and the maintainer accepted this when approving: GitHub Actions fire
 only on pushes to master and on pull requests, so nothing in this directory runs during the freeze
 (step R1.7). Both files were checked to parse; the first real run comes when GitHub is live again.
+
+
+<a id="r5-9-3"></a>
+### R5.9.3 - the other half of the symbolic tolerance
+
+**DONE 2026-09-18** - issue #2509, successor of #2501.
+
+R5.9.1 gave the vector/matrix comparison of `symbolicModuleTest.py` a relative tolerance. The
+**scalar** loop a few hundred lines above still used `if res[0] != res[1]` - exact equality between
+two independent implementations of a transcendental function, the symbolic module's and Python's.
+That holds only by luck, and the luck ran out with **numpy 2.5.3**: `acosh(2)` comes out one ulp
+apart (`1.3169578969248166` against `...68`), counted twice, so the model returned `2.948` against
+a reference of `0.948` and the suite failed with error 2.0 - the exact symptom of #2501, in another
+branch of the same file.
+
+**How it was found matters more than the fix.** Before telling the maintainer to restart the GitLab
+pipeline, the suite was built and run on **Linux in WSL**. numpy 2.5.3 is what the manylinux job
+uses, so without that run CI would have failed a second time on a model that looked fixed.
+
+The same relative tolerance as R5.9.1. Verified under numpy **2.2.4, 2.4.6 and 2.5.3** - all three
+return the committed reference `0.9484129575069745` exactly - and a mutation of `1e-12` relative
+still flags 498 of the ~796 comparisons, so nothing was weakened.
+
+
+<a id="r5-18-2"></a>
+### R5.18.2 - the examples decide by what the environment has
+
+**DONE 2026-09-18** - issue #2507, successor #2510.
+
+Three examples were counted as failures because an optional package was missing, although
+`ExampleSkipReason()` already had a skip mechanism - it simply did not cover them. Deciding that by
+file name is wrong in both directions: on a machine that HAS the package the example should run, and
+on one that does not it is not a failure.
+
+Implemented as the maintainer asked: `testRunnerTools` probes the optional packages **once** with
+`importlib.util.find_spec` - which does not execute them, so no seconds are lost importing torch or
+ngsolve - and reads each example's imports from its **syntax tree** rather than by string matching.
+An example that imports a package this environment lacks is skipped, naming the distribution.
+
+**Deciding by availability immediately corrected the diagnoses**, which is the whole point:
+
+- `pymeshlabFileImport.py` had two problems stacked. Running it instead of skipping it exposed the
+  second: `File does not exists: ../Examples/testData/objImportTest.obj`. The maintainer supplied
+  the file the same day, and the example now runs and passes where pymeshlab is installed. It needs
+  one extra rule, because exudyn imports pymeshlab *lazily* inside `graphics.FromPyMeshlabFile()`
+  and the example therefore never names it: such indirect needs are listed in
+  `indirectPackageNeeds` - still decided by availability, not by file name.
+- `humanRobotInteraction.py` was never a package question either: it reads the articulated-dummy
+  STL files from an absolute path on the author machine and says in its own comment that they are
+  not included and come from GrabCAD.
+- `stlFileImport.py` reads `solution/stlImport.stl`, which it only *writes* when its `if False`
+  branch is switched on by hand.
+
+`KnownExampleFailures()` is down from five entries to **two**, both with causes of their own
+(`NGsolveGeometry.py`, `rendererNOGLFWexample.py`).
+
+**Measured with a current `venvP312`**: 171 examples, 27 skipped, 2 failures, both known,
+`PASSED: no unexpected example failed`. That run also found that the environment still carried
+exudyn **1.11.0** - months stale - which was rebuilt.
+
+**Successor #2510**: an inventory of data files the repository never contained.
+`docs/verification/` does not exist and **was never committed** (no commit in git history touches
+it), although four test models read the IFTOMM slider-crank and heavy-top comparison solutions from
+it; those reads sit inside `if useGraphics` blocks, so the suite passes and only the comparison
+plots are lost, which is why nobody noticed. `python/TestModels/testData/gyro.stl` is missing too.

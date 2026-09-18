@@ -9,15 +9,33 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.167.dev1, 
+  \item Exudyn version = 1.11.169.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2509, 
-  \item Number of resolved issues = 2240 (167 in current version), 
+  \item Number of issues = 2511, 
+  \item Number of resolved issues = 2242 (169 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.169}:  resolved Issue 2509: {\bf symbolicModuleTest compares scalars with exact equality}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Successor of \#2501; which fixed the VECTOR/matrix comparison. The SCALAR loop a few hundred lines above still used "if res[0] != res[1]" - exact equality between two independent implementations of a transcendental function; the symbolic module's and Python's. That holds only by luck; and the luck ran out with numpy 2.5.3: acosh(2) comes out 1 ulp apart (1.3169578969248166 against ...68); counted twice; so the model returned 2.948 against a reference of 0.948 and the suite failed with error 2.0 - exactly the symptom of \#2501 in a different branch of the same file. Found 2026-09-18 by a Linux run in WSL under numpy 2.5.3; which is also what the GitLab manylinux job uses. Fixed in revision2026 step R5.9.3 with the same relative tolerance.}
+    \item {\bf notes: Fixed in revision2026 step R5.9.3: the SCALAR comparison of symbolicModuleTest.py now uses the same relative tolerance as the vector one; instead of exact equality between two independent implementations of a transcendental function. Found by running the suite on Linux in WSL before restarting the GitLab pipeline - numpy 2.5.3 is what the manylinux job uses; and acosh(2) differs by one ulp there. Verified under numpy 2.2.4; 2.4.6 and 2.5.3: all three return the committed reference 0.9484129575069745 exactly; and a mutation of 1e-12 relative still flags 498 of the about 796 comparisons.}
+    \item   date resolved: {\bf 2026-09-18 08:15},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.168}:  resolved Issue 2507: {\bf three examples FAIL for a missing optional package instead of being skipped}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: ExampleSkipReason() in testRunnerTools.py skips an example that cannot run - it already does so for stable-baselines3; rospy and a MATLAB TCPIP peer. Three examples are not covered and are reported as FAILURES instead: humanRobotInteraction.py and stlFileImport.py need numpy-stl ("No module named ,stl,") and pymeshlabFileImport.py needs pymeshlab. Measured 2026-09-18; they are 3 of the 5 entries now in KnownExampleFailures() (revision2026 step R5.18.1). The decision this needs is not obvious and is why it is an issue rather than three lines: a machine that HAS the package should run them - so the right fix is probably to TRY the import rather than to list file names; and then numpy-stl and pymeshlab belong in the [all] extra of pyproject.toml so that a developer environment has them. The other two entries of the list are unrelated: NGsolveGeometry.py fails inside the geometry construction under exec(...) and rendererNOGLFWexample.py expects the renderer to be absent in a way the runner does not produce.}
+    \item {\bf notes: Fixed in revision2026 step R5.18.2 as the maintainer asked: testRunnerTools probes the optional packages once with importlib.util.find\_spec - which does not execute them - and reads each example's imports from its SYNTAX TREE; so an example is skipped where a package it needs is missing and RUNS where it is installed; instead of being decided by a list of file names. Deciding by availability corrected the diagnoses: pymeshlabFileImport.py was not a pymeshlab failure but a missing data file (objImportTest.obj; supplied by the maintainer the same day); it now runs and passes where pymeshlab exists - through indirectPackageNeeds; because exudyn imports pymeshlab lazily inside graphics.FromPyMeshlabFile() and the example never names it. humanRobotInteraction.py reads STL files from an absolute path on the author machine and says itself they come from GrabCAD; stlFileImport.py reads a file it only writes when its if-False branch is switched on. KnownExampleFailures() is down from five entries to two. Measured with a current venvP312: 171 examples; 27 skipped; 2 known failures; exit code 0.}
+    \item   date resolved: {\bf 2026-09-18 08:15},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.167}: {\bf \color{warningRed}  resolved BUG 2463}: {\bf the two GitHub workflows pin different action versions}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

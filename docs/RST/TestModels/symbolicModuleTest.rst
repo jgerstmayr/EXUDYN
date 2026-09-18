@@ -226,7 +226,14 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
                for res in result:
                    s = 'correct'
                    sumResults += res[0]
-                   if res[0] != res[1]: 
+                   #a RELATIVE tolerance, for the same reason as in the vector section below (#2509,
+                   #the successor of #2501): this compares two independent implementations of a
+                   #transcendental function - the symbolic module's and Python's - and exact equality
+                   #between them holds only by luck. It held until numpy 2.5.3, where acosh(2) comes
+                   #out 1 ulp apart (1.3169578969248166 against ...68) and the model reported two
+                   #wrong results. What this test is about is that the symbolic module computes the
+                   #right function, not that two libraries round identically.
+                   if abs(res[0] - res[1]) > 1e-14*max(abs(res[0]), abs(res[1]), 1.):
                        s = 'WRONG:'
                        s += str(res[0]-res[1])
                        cntWrong+=1

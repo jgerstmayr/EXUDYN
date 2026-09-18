@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.167.dev1, 
++  Exudyn version = 1.11.169.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2509, 
-+  Number of resolved issues = 2240 (167 in current version), 
++  Number of issues = 2511, 
++  Number of resolved issues = 2242 (169 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.169: resolved Issue 2509: symbolicModuleTest compares scalars with exact equality (testing)
+    - issue author: Claude-JG
+    - description:  Successor of #2501; which fixed the VECTOR/matrix comparison. The SCALAR loop a few hundred lines above still used "if res[0] != res[1]" - exact equality between two independent implementations of a transcendental function; the symbolic module's and Python's. That holds only by luck; and the luck ran out with numpy 2.5.3: acosh(2) comes out 1 ulp apart (1.3169578969248166 against ...68); counted twice; so the model returned 2.948 against a reference of 0.948 and the suite failed with error 2.0 - exactly the symptom of #2501 in a different branch of the same file. Found 2026-09-18 by a Linux run in WSL under numpy 2.5.3; which is also what the GitLab manylinux job uses. Fixed in revision2026 step R5.9.3 with the same relative tolerance.
+    - **notes:** Fixed in revision2026 step R5.9.3: the SCALAR comparison of symbolicModuleTest.py now uses the same relative tolerance as the vector one; instead of exact equality between two independent implementations of a transcendental function. Found by running the suite on Linux in WSL before restarting the GitLab pipeline - numpy 2.5.3 is what the manylinux job uses; and acosh(2) differs by one ulp there. Verified under numpy 2.2.4; 2.4.6 and 2.5.3: all three return the committed reference 0.9484129575069745 exactly; and a mutation of 1e-12 relative still flags 498 of the about 796 comparisons.
+    - date resolved: **2026-09-18 08:15**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.168: resolved Issue 2507: three examples FAIL for a missing optional package instead of being skipped (testing)
+    - issue author: Claude-JG
+    - description:  ExampleSkipReason() in testRunnerTools.py skips an example that cannot run - it already does so for stable-baselines3; rospy and a MATLAB TCPIP peer. Three examples are not covered and are reported as FAILURES instead: humanRobotInteraction.py and stlFileImport.py need numpy-stl ("No module named ,stl,") and pymeshlabFileImport.py needs pymeshlab. Measured 2026-09-18; they are 3 of the 5 entries now in KnownExampleFailures() (revision2026 step R5.18.1). The decision this needs is not obvious and is why it is an issue rather than three lines: a machine that HAS the package should run them - so the right fix is probably to TRY the import rather than to list file names; and then numpy-stl and pymeshlab belong in the [all] extra of pyproject.toml so that a developer environment has them. The other two entries of the list are unrelated: NGsolveGeometry.py fails inside the geometry construction under exec(...) and rendererNOGLFWexample.py expects the renderer to be absent in a way the runner does not produce.
+    - **notes:** Fixed in revision2026 step R5.18.2 as the maintainer asked: testRunnerTools probes the optional packages once with importlib.util.find_spec - which does not execute them - and reads each example's imports from its SYNTAX TREE; so an example is skipped where a package it needs is missing and RUNS where it is installed; instead of being decided by a list of file names. Deciding by availability corrected the diagnoses: pymeshlabFileImport.py was not a pymeshlab failure but a missing data file (objImportTest.obj; supplied by the maintainer the same day); it now runs and passes where pymeshlab exists - through indirectPackageNeeds; because exudyn imports pymeshlab lazily inside graphics.FromPyMeshlabFile() and the example never names it. humanRobotInteraction.py reads STL files from an absolute path on the author machine and says itself they come from GrabCAD; stlFileImport.py reads a file it only writes when its if-False branch is switched on. KnownExampleFailures() is down from five entries to two. Measured with a current venvP312: 171 examples; 27 skipped; 2 known failures; exit code 0.
+    - date resolved: **2026-09-18 08:15**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.167: :textred:`resolved BUG 2463` : the two GitHub workflows pin different action versions 
     - issue author: Claude-JG
     - description:  .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.
@@ -7709,14 +7721,14 @@ Version 0.1
 Open issues
 ***********
 
+ * :textorange:`open issue 2510:` data files referenced by examples and test models are not in the repository
+    - issue author: Claude-JG
+    - description:  Inventory taken 2026-09-18 (revision2026 step R5.18.2). (1) docs/verification/ does not exist and was NEVER committed - git log shows no commit touching it - although four test models read from it: sliderCrank3Dtest.py and sliderCrank3Dbenchmark.py want Slidercrank3DiftommBenchmark/ (the Masarati; Masoudi; Chaojie; KarthikBushan; PingZhou and Gonzalez comparison solutions) and heavyTop.py and explicitLieGroupIntegratorPythonTest.py want HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt and HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt. Those reads sit inside "if useGraphics" blocks; so the suite passes without them and only the comparison plots are lost - which is why nobody noticed. (2) python/Examples/testData/objImportTest.obj is missing; it is the only thing stopping pymeshlabFileImport.py. (3) python/TestModels/testData/gyro.stl is missing; needed by netgenSTLtest.py. NOT missing and NOT to be restored: humanRobotInteraction.py and the ROS and URDF examples read files the repository never contained by design (GrabCAD download; a ROS installation). The maintainer has the files in the old repository.
+    - date raised: 2026-09-18 
+
  * :textred:`open issue 2508:` checkExtras passed locally and failed in CI because of an untracked file
     - issue author: Claude-JG
     - description:  tools/checkExtras.py built its set of "local module names" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: "import pytest" in test_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported "UNCOVERED IMPORTS: pytest ... needed by [tests]" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in [dependency-groups]; not in any extra.
-    - date raised: 2026-09-18 
-
- * :textorange:`open issue 2507:` three examples FAIL for a missing optional package instead of being skipped
-    - issue author: Claude-JG
-    - description:  ExampleSkipReason() in testRunnerTools.py skips an example that cannot run - it already does so for stable-baselines3; rospy and a MATLAB TCPIP peer. Three examples are not covered and are reported as FAILURES instead: humanRobotInteraction.py and stlFileImport.py need numpy-stl ("No module named ,stl,") and pymeshlabFileImport.py needs pymeshlab. Measured 2026-09-18; they are 3 of the 5 entries now in KnownExampleFailures() (revision2026 step R5.18.1). The decision this needs is not obvious and is why it is an issue rather than three lines: a machine that HAS the package should run them - so the right fix is probably to TRY the import rather than to list file names; and then numpy-stl and pymeshlab belong in the [all] extra of pyproject.toml so that a developer environment has them. The other two entries of the list are unrelated: NGsolveGeometry.py fails inside the geometry construction under exec(...) and rendererNOGLFWexample.py expects the renderer to be absent in a way the runner does not produce.
     - date raised: 2026-09-18 
 
  * :textblue:`open issue 2505:` a test model page is in no toctree
