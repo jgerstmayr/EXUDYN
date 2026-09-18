@@ -202,7 +202,11 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 				}
 				else
 				{ 
-					CHECKandTHROW(numberOfRowsInit >= numRows && numberOfColumnsInit >= numColumns, "SetWithSparseMatrix: numberOfRows and numberOfColumns must be either default values (invalid index), or >= the dimensions of sparseMatrix");
+					//the kind of value is right and the value is not: the third argument is what the
+					//typed form of the macro adds (#2521, revision2026 step R6.3.3)
+					CHECKandTHROW(numberOfRowsInit >= numRows && numberOfColumnsInit >= numColumns,
+						"SetWithSparseMatrix: numberOfRows and numberOfColumns must be either default values (invalid index), or >= the dimensions of sparseMatrix",
+						ExudynValueError);
 				}
 
 				Initialize(numberOfRowsInit, numberOfColumnsInit, useDenseMatrixInit);
@@ -265,7 +269,10 @@ void PyMatrixContainer::SetOrAddSparseMatrixCSRBase(Index numberOfRowsInit, Inde
 				}
 			}
 		}
-		else { CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: illegal array format!"); }
+		//what was handed over is not a sparse matrix in any accepted form: the OBJECT is wrong
+		//and not its value - the second argument is what the typed form of the macro adds
+		//(#2521, revision2026 step R6.3.3)
+		else { CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: illegal array format!", ExudynTypeError); }
 	}
 	else 
 	{ 

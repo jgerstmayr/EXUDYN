@@ -78,22 +78,33 @@ public:
 	virtual void SetSuspendWriting(bool flag) { suspendWriting = flag; }
 };
 
-//! which Python exception a user error becomes. Everything was a RuntimeError until
-//! revision2026 step R6.7; a wrong TYPE and a wrong VALUE are told apart since (#2432)
+//! which Python exception an error becomes. Everything was a RuntimeError until revision2026 step
+//! R6.7; a wrong TYPE and a wrong VALUE are told apart since (#2432), and the Exudyn exception
+//! classes of #2516 are named here as well (#2521, step R6.3.3). The classes themselves are in
+//! ReleaseAssert.h; this enum exists because PyError and SysError are compiled functions and
+//! cannot be templated on the class the way the CHECKandTHROW macros are.
 enum class PyErrorType
 {
-	runtimeError,   //!< the default, and what every call site outside PyConversion.h still uses
-	typeError,      //!< the object cannot be this parameter at all: None, a string for a number, an index of the wrong kind
-	valueError      //!< the kind is right, the value is not: out of range, wrong size, a placeholder left in place
+	runtimeError,       //!< the default, and what every call site outside PyConversion.h still uses
+	typeError,          //!< the object cannot be this parameter at all: None, a string for a number, an index of the wrong kind
+	valueError,         //!< the kind is right, the value is not: out of range, wrong size, a placeholder left in place
+	modelError,         //!< the model is illegal: a combination that cannot work, a setting that contradicts another
+	solverError,        //!< the solver cannot continue: singular matrix, no convergence, divergence
+	internalError,      //!< an Exudyn invariant broke; the message is for a developer reading a user's log
+	notImplementedError,//!< the feature or the combination does not exist; neither a mistake nor a bug
+	indexError,         //!< an index outside its range
+	arithmeticError     //!< division by zero, sqrt of a negative number
 };
 
-void SysError(std::string error_msg); //!< prints a formated system (inernal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar
+[[noreturn]] void ThrowPyErrorType(PyErrorType errorType, const char* message); //!< the one place that turns a PyErrorType into a throw (#2521); the classes are in ReleaseAssert.h
+
+void SysError(std::string error_msg, PyErrorType errorType = PyErrorType::internalError); //!< prints a formated system (internal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; errorType selects the Python exception and defaults to what SysError means (#2521)
 
 void PyError(std::string error_msg, PyErrorType errorType = PyErrorType::runtimeError); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; errorType selects the Python exception (#2432)
 
 void PyWarning(std::string warning_msg); //!< prints a formated python warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
 
-void SysError(std::string error_msg, std::ofstream& file); //!< prints a formated system (inernal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; additionally writes to file if file.is_open()=true
+void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType = PyErrorType::internalError); //!< prints a formated system (internal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; additionally writes to file if file.is_open()=true
 
 void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType = PyErrorType::runtimeError); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; additionally writes to file if file.is_open()=true
 

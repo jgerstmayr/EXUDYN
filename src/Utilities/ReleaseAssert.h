@@ -106,15 +106,36 @@ public: using ExudynError::ExudynError;
 	//!linalg matrix/vector access functions, memory allocation, array classes and solvers will throw exceptions if the errors are not recoverable
 	//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, no checks are performed
 
-	#define CHECKandTHROW(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw EXUexception(_exceptionMessage))
-	#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw EXUexception("unexpected EXUDYN internal error"))
+	//The LAST argument is optional and names the exception class the check raises (#2521,
+	//revision2026 step R6.3.3):
+	//    CHECKandTHROW(index < n, "...")                       throws EXUexception, as it always did
+	//    CHECKandTHROW(index < n, "...", ExudynIndexError)     a user's index mistake, IndexError in Python
+	//The class belongs to the CHECK, not to the helper: the same macro states a user's mistake in
+	//one place and an Exudyn invariant in the next, and the measurement of #2520 says CHECKandTHROW
+	//is 27% user-facing. Putting the type on the helper would therefore have been wrong in roughly
+	//240 places; putting it here costs one token per site.
+	//EXU_EXPAND is needed because MSVC's traditional preprocessor passes __VA_ARGS__ as ONE token
+	//to the selector macro unless the result is expanded again.
+	#define EXU_EXPAND(_x) _x
+	#define EXU_SELECT_3RD(_1,_2,_3,_name,...) _name
+	#define EXU_SELECT_2ND(_1,_2,_name,...) _name
+
+	#define CHECKandTHROW_2(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw EXUexception(_exceptionMessage))
+	#define CHECKandTHROW_3(_checkExpression,_exceptionMessage,_exceptionClass) ((_checkExpression) ? 0 : throw _exceptionClass(_exceptionMessage))
+	#define CHECKandTHROW(...) EXU_EXPAND(EXU_SELECT_3RD(__VA_ARGS__, CHECKandTHROW_3, CHECKandTHROW_2, )(__VA_ARGS__))
+
+	//no message at all, so nothing but an internal error can be meant by it
+	#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw ExudynInternalError("unexpected EXUDYN internal error"))
+
 	//always throw:
-	#define CHECKandTHROWstring(_exceptionMessage) (throw EXUexception(_exceptionMessage))
+	#define CHECKandTHROWstring_1(_exceptionMessage) (throw EXUexception(_exceptionMessage))
+	#define CHECKandTHROWstring_2(_exceptionMessage,_exceptionClass) (throw _exceptionClass(_exceptionMessage))
+	#define CHECKandTHROWstring(...) EXU_EXPAND(EXU_SELECT_2ND(__VA_ARGS__, CHECKandTHROWstring_2, CHECKandTHROWstring_1, )(__VA_ARGS__))
 #else
 	//no checks in __FAST_EXUDYN_LINALG mode
-	#define CHECKandTHROW(_checkExpression,_exceptionMessage)
+	#define CHECKandTHROW(...)
 	#define CHECKandTHROWcond(_checkExpression)
-	#define CHECKandTHROWstring(_exceptionMessage)
+	#define CHECKandTHROWstring(...)
 #endif
 
 //add some macro to define unused variable, not trowing compiler warning, especially in case of __FAST_EXUDYN_LINALG where some variables will not be used any more

@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.180.dev1, 
+  \item Exudyn version = 1.11.181.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2521, 
-  \item Number of resolved issues = 2253 (180 in current version), 
+  \item Number of issues = 2522, 
+  \item Number of resolved issues = 2254 (181 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.181}:  resolved Issue 2521: {\bf the error helpers cannot name an exception class}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: CHECKandTHROW\, CHECKandTHROWstring and SysError can only throw EXUexception\, so a check cannot say what kind of error it states - and the measurement of \#2520 shows no helper is one kind (CHECKandTHROW is 27 percent user-facing\, SysError has 10 user sites). The type has to be choosable at the CALL SITE. revision2026 step R6.3.3.}
+    \item {\bf notes: CHECKandTHROW and CHECKandTHROWstring take an optional last argument naming the exception class, PyErrorType carries nine kinds and ThrowPyErrorType is the one place that turns one into a throw, SysError defaults to internalError. The MSVC traditional preprocessor needs the selection AND the call expanded together. Six SysError sites in PyMatrixVector.h whose message says check your Python code opt out - they were six of the ten user-facing SysError sites the triage of \#2520 had named. revision2026 step R6.3.3.}
+    \item   date resolved: {\bf 2026-09-18 17:33},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.180}:  resolved Issue 2520: {\bf no way to tell a user error from an Exudyn bug in the C++ sources}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

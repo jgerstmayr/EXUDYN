@@ -70,3 +70,29 @@ def test_aCppThrowKeepsItsType():
     assert 'exu.InvalidIndex()' in str(caught.value)
     assert isinstance(caught.value, ValueError)
     assert isinstance(caught.value, exu.ExudynError)
+
+
+def test_typedCheckMacros():
+    """the two typed forms of the macros (revision2026 step R6.3.3, #2521). Both go through
+    GenericExceptionHandling on the way out, which is where the type used to be lost"""
+    scipySparse = pytest.importorskip('scipy.sparse')
+    import numpy as np
+
+    #CHECKandTHROWstring with a class: what was handed over is not a sparse matrix in any form
+    with pytest.raises(exu.ExudynTypeError):
+        exu.MatrixContainer().SetWithSparseMatrix([1, 2, 3])
+
+    #CHECKandTHROW with a third argument: the kind of value is right and the value is not
+    with pytest.raises(exu.ExudynValueError):
+        exu.MatrixContainer().SetWithSparseMatrix(scipySparse.csr_matrix(np.eye(3)),
+                                                  numberOfRows=1, numberOfColumns=1)
+
+
+def test_untypedCheckStillWorks():
+    """a CHECKandTHROWstring WITHOUT a class must behave exactly as before - a plain RuntimeError
+    and not an ExudynError. The optional argument is optional, and 1194 macro sites depend on it"""
+    import numpy as np
+
+    with pytest.raises(RuntimeError) as caught:
+        exu.MatrixContainer().SetWithDenseMatrix(np.array([1., 2., 3.]))   #1-D, not a matrix
+    assert not isinstance(caught.value, exu.ExudynError)

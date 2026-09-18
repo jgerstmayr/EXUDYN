@@ -6913,6 +6913,68 @@ serial runner did, and tightening it is a separate question from this step.
 so the runner and the worker apply the same rules; `--serial` keeps the old in-process run for
 debugging a single example.
 
+<a id="r6-3-3"></a>
+### R6.3.3 — an optional argument, and what it caught on the first run
+
+**DONE 2026-09-18** (#2521).
+
+The type belongs to the **check**, not to the helper — R6.3.2 measured why: `CHECKandTHROW` is
+27% user-facing and `SysError` has ten sites that speak to the user, so typing the helpers
+would have been wrong in roughly 240 places. So each helper learns to *carry* a class and the
+call site names it:
+
+```
+CHECKandTHROW(index < n, "...")                     throws EXUexception, exactly as before
+CHECKandTHROW(index < n, "...", ExudynIndexError)   an IndexError in Python
+CHECKandTHROWstring("...", ExudynTypeError)         the same, for the always-throwing form
+PyError(msg, PyErrorType::modelError)               nine kinds now, three before
+SysError(msg)                                       an InternalError by default
+```
+
+The macro takes the class **by name** rather than through an enum, so it costs one token per
+site and no lookup table. `PyError` and `SysError` are compiled functions and cannot be
+templated that way, so they take a `PyErrorType`, and `ThrowPyErrorType` in `Stdoutput.cpp` is
+the single place that turns one into a throw.
+
+#### Two things about the macro
+
+An optional macro argument means counting `__VA_ARGS__`, and **MSVC's traditional preprocessor
+passes them to the selector as one token**. The first build produced 40 warnings *"not enough
+arguments for CHECKandTHROW_2"* and an error in every file that uses linear algebra. The fix is
+to expand the selection **and the call together** — `EXU_EXPAND(SELECT(...)(__VA_ARGS__))`, not
+`EXU_EXPAND(SELECT(...))(__VA_ARGS__)`. Worth knowing before the next variadic macro.
+
+`CHECKandTHROWcond` now throws `ExudynInternalError` outright. It has no message — its text is
+the fixed *"unexpected EXUDYN internal error"* — so nothing else can be meant by it.
+
+#### What the SysError default caught
+
+`SysError` means "an Exudyn invariant broke", so its default became `internalError`. That is
+safe by construction — `exudyn.InternalError` **is** a `RuntimeError`, so every existing
+`except RuntimeError` keeps catching it — and the test suite still found something:
+**`parameterConversionTest.py` failed with 12 differences**, all of them `Matrix3DList` and
+`Vector3DList` parameters turning from `RuntimeError` into `InternalError`.
+
+The cause is six `SysError` calls in `PyMatrixVector.h` whose own message ends in **"check your
+Python code!"**. They report a *user's* bad array as a system error, and had done so silently
+for years because both ended as `RuntimeError`. Telling a user to report their own typo as an
+Exudyn bug is worse than saying nothing, so those six sites opt out of the new default and keep
+`PyErrorType::runtimeError` until R6.3.6 decides what they really are.
+
+**The triage had already named exactly those six.** They are six of the ten `SysError` sites
+R6.3.2 marked user-facing — found by a text rule, confirmed a day later by a test failure.
+The other four (`GetOutputVariableTypeString: invalid variable type` and its kin) are, on
+reading, **internal**, so the triage is wrong on those: they sit in `src/Main` and
+`src/Pymodules`, and the rule trusts the area before the helper. That is the known cost of the
+area rule and the reason `--sites` prints the list.
+
+`python/testing/test_exceptions.py` grows two cases: both typed forms arrive with their class,
+and an **untyped** `CHECKandTHROWstring` still produces a plain `RuntimeError` that is *not* an
+`ExudynError` — the property 1194 unconverted sites depend on.
+
+---
+
+
 <a id="r6-3-2"></a>
 ### R6.3.2 — who is each message for?
 

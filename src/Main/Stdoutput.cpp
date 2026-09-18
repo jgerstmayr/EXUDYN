@@ -301,6 +301,26 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	}
 }
 
+//! the ONE place that turns a PyErrorType into a throw (#2521, revision2026 step R6.3.3). The
+//! Exudyn classes are in ReleaseAssert.h and reach Python as the classes registered in
+//! PybindModule.cpp; py::type_error and py::value_error are pybind11 builtins and become the plain
+//! Python TypeError/ValueError. [[noreturn]] so that every caller of it ends the same way.
+[[noreturn]] void ThrowPyErrorType(PyErrorType errorType, const char* message)
+{
+	switch (errorType)
+	{
+	case PyErrorType::typeError:           throw py::type_error(message);
+	case PyErrorType::valueError:          throw py::value_error(message);
+	case PyErrorType::modelError:          throw ExudynModelError(message);
+	case PyErrorType::solverError:         throw ExudynSolverError(message);
+	case PyErrorType::internalError:       throw ExudynInternalError(message);
+	case PyErrorType::notImplementedError: throw ExudynNotImplementedError(message);
+	case PyErrorType::indexError:          throw ExudynIndexError(message);
+	case PyErrorType::arithmeticError:     throw ExudynArithmeticError(message);
+	default:                               throw std::runtime_error(message);
+	}
+}
+
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
 void PyError(std::string error_msg, PyErrorType errorType)
 {
@@ -334,25 +354,19 @@ void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 	//message work of revision2026 step R6.3 changes. R6.7 decides the TYPE only (#2432):
 	//py::type_error and py::value_error are pybind11 builtin exceptions and become TypeError and
 	//ValueError when they leave a bound function
-	const char* terminated = "Exudyn: parsing of Python file terminated due to Python (user) error";
-	switch (errorType)
-	{
-	case PyErrorType::typeError: throw py::type_error(terminated);
-	case PyErrorType::valueError: throw py::value_error(terminated);
-	default: throw std::runtime_error(terminated);
-	}
+	ThrowPyErrorType(errorType, "Exudyn: parsing of Python file terminated due to Python (user) error");
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
-void SysError(std::string error_msg)
+void SysError(std::string error_msg, PyErrorType errorType)
 {
 	std::ofstream dummy; //ofstream which is not active
-	SysError(error_msg, dummy);
+	SysError(error_msg, dummy, errorType);
 }
 
 //! prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
 //! additional output to file
-void SysError(std::string error_msg, std::ofstream& file) 
+void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 {
 	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; }//stop graphics, etc.
 	//globalPyRuntimeErrorFlag = true; //stop graphics, etc.
@@ -373,8 +387,9 @@ void SysError(std::string error_msg, std::ofstream& file)
 		file << "Exudyn: parsing of python file terminated due to system error\n\n";
 		file << "********************************************************************\n\n";
 	}
-	throw std::runtime_error("Exudyn: parsing of Python file terminated due to system error");
-	//PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to system error");
+	//an Exudyn invariant broke: exudyn.InternalError, which IS a RuntimeError, so an existing
+	//"except RuntimeError" keeps catching it while the type now says "please report this" (#2521)
+	ThrowPyErrorType(errorType, "Exudyn: parsing of Python file terminated due to system error");
 }
 
 //!< prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar

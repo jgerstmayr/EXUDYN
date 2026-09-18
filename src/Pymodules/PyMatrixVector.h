@@ -107,16 +107,25 @@ public:
 			//mostly catches python errors:
 			catch (const pybind11::error_already_set& ex)
 			{
-				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!");
+				//NOT an internal error, whatever the helper is called: the message ends in "check your
+				//Python code" and the value came from the user. So this site opts out of the new
+				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
+				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 
 			catch (const EXUexception& ex)
 			{
-				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!");
+				//NOT an internal error, whatever the helper is called: the message ends in "check your
+				//Python code" and the value came from the user. So this site opts out of the new
+				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
+				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 			catch (...) //any other exception
 			{
-				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]; check your Python code!");
+				//NOT an internal error, whatever the helper is called: the message ends in "check your
+				//Python code" and the value came from the user. So this site opts out of the new
+				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
+				SysError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
 			}
 
 		}
@@ -229,16 +238,25 @@ public:
 			//mostly catches python errors:
 			catch (const pybind11::error_already_set& ex)
 			{
-				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!");
+				//NOT an internal error, whatever the helper is called: the message ends in "check your
+				//Python code" and the value came from the user. So this site opts out of the new
+				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
+				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 
 			catch (const EXUexception& ex)
 			{
-				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!");
+				//NOT an internal error, whatever the helper is called: the message ends in "check your
+				//Python code" and the value came from the user. So this site opts out of the new
+				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
+				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 			catch (...) //any other exception
 			{
-				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]; check your Python code!");
+				//NOT an internal error, whatever the helper is called: the message ends in "check your
+				//Python code" and the value came from the user. So this site opts out of the new
+				//SysError default; which type it should really carry is decided in step R6.3.6 (#2521)
+				SysError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
 			}
 
 		}

@@ -659,10 +659,10 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     from was wrong.
 
 <a id="r6-3-3"></a>
-**R6.3.3** *(sub-step of R6.3)* **The helpers learn to carry a type.** `CHECKandTHROW`,
-    `CHECKandTHROWstring` and `SysError` gain an optional type, defaulting to the kind their
-    location says they are - so the 1194 macro sites stay one-liners, and a site that is something
-    else says so. `PyError` already has it (R6.7).
+**R6.3.3** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-3) — *(sub-step of R6.3)*
+    **The helpers learn to carry a type** (#2521). An optional last argument on `CHECKandTHROW` and
+    `CHECKandTHROWstring`, nine kinds on `PyErrorType`, and one `SysError` default change that
+    the triage of R6.3.2 had already predicted would hit six sites.
 
 <a id="r6-3-4"></a>
 **R6.3.4** *(sub-step of R6.3)* **Deprecations leave the error path.** One C++ function raising a

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.180.dev1, 
++  Exudyn version = 1.11.181.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2521, 
-+  Number of resolved issues = 2253 (180 in current version), 
++  Number of issues = 2522, 
++  Number of resolved issues = 2254 (181 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.181: resolved Issue 2521: the error helpers cannot name an exception class (extension)
+    - issue author: Claude-JG
+    - description:  CHECKandTHROW\, CHECKandTHROWstring and SysError can only throw EXUexception\, so a check cannot say what kind of error it states - and the measurement of #2520 shows no helper is one kind (CHECKandTHROW is 27 percent user-facing\, SysError has 10 user sites). The type has to be choosable at the CALL SITE. revision2026 step R6.3.3.
+    - **notes:** CHECKandTHROW and CHECKandTHROWstring take an optional last argument naming the exception class, PyErrorType carries nine kinds and ThrowPyErrorType is the one place that turns one into a throw, SysError defaults to internalError. The MSVC traditional preprocessor needs the selection AND the call expanded together. Six SysError sites in PyMatrixVector.h whose message says check your Python code opt out - they were six of the ten user-facing SysError sites the triage of #2520 had named. revision2026 step R6.3.3.
+    - date resolved: **2026-09-18 17:33**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.180: resolved Issue 2520: no way to tell a user error from an Exudyn bug in the C++ sources (improvement)
     - issue author: Claude-JG
     - description:  The five error helpers all end in RuntimeError and the helper a check is written with says nothing about what the check means - the same macro states a user index mistake in one place and an Exudyn invariant in the next. Before any type can be assigned the 2064 call sites have to be sorted by WHO the message is for. revision2026 step R6.3.2.
