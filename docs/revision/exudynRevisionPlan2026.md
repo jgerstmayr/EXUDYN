@@ -759,6 +759,27 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     **`robotics/future.py` imports `graphics`** (#2489), and its `MakeCorkeRobot` raises instead of
     returning an undefined name - the same pattern as R5.5.5, one function further.
 
+<a id="r5-5-7"></a>
+**R5.5.7** *(sub-step of R5.5; found while running the gates for R6.7 on 2026-09-18)* **The stub
+    gate must pass whether or not the fast module was built.** `tools/ci/stubtestNoise.txt` lists
+    `exudyn\.exudynCPPfast`, and `stubtest` reports an allowlist entry that never matches as an
+    error. A wheel built without the fast module — which is what `exudev build` produces by
+    default (step R5.18) — therefore fails `checkPython.py --stubs --check` with
+    *"unused allowlist entry"*, although nothing is wrong with the stubs.
+
+    **Scope: this affects only the stub gate.** The test suite, the examples and `pytest` all pass
+    against a module without `exudynCPPfast` — measured on 2026-09-18, when venvP313 ran the
+    whole of R6.7 on a non-fast wheel. The maintainer's rule stands: the release wheels of
+    GitLab/GitHub carry both modules, but a local build of the regular module alone must be fully
+    testable.
+
+    `stubtest --ignore-unused-allowlist` fixes it in one word but throws away a signal worth
+    keeping: an unused entry in the *generated backlog* `stubtestBaseline.txt` means a gap was
+    closed and the file can shrink, which is the point of that file. So separate the two: ignore
+    unused entries, and add an explicit check of the backlog against a `--generate-allowlist` run,
+    which reports the entries that are no longer needed. Then the gate is green on both wheels and
+    the backlog still shrinks visibly.
+
 <a id="r5-6"></a>
 **R5.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-6) — *(phase R5)* **An ASan/UBSan
     Linux job.** For a C++ library invoking arbitrary user callbacks this catches the class of bug
@@ -1255,7 +1276,7 @@ unrelated items. Each step below fixes exactly one of them:
 
 | property | what it means | steps |
 |---|---|---|
-| **which exception type** reaches Python | `RuntimeError` / `TypeError` / `ValueError` / `ImportError` | **R6.7** **DONE** parameter errors · **R6.3** everything else · **R6.2** the import itself |
+| **which exception type** reaches Python | after R6.7: `TypeError` and `ValueError` for parameters, `RuntimeError` for everything else. R6.3 adds the kinds the checks actually test — index, size, arithmetic, illegal operation, solver failure — so this list is expected to grow | **R6.7** **DONE** parameter errors · **R6.3** everything else · **R6.2** the import itself |
 | **what the message says** | the text, and where the traceback points | **R6.4** the taxonomy R6.3 and R6.7 write against |
 | **what it costs to raise** | errors in a loop are a normal pattern, not an exceptional one | **R6.6** |
 | **whether the check runs at all** | opting out for a production run | **R6.5** **DONE** |
@@ -1267,8 +1288,8 @@ message that R6.7 deliberately left alone) → **R6.4** (write down what R6.3 an
 done at any time; **R6.2 is a hard prerequisite for phase R9**.
 
 Measured 2026-09-18: `PyError` threw `std::runtime_error` for every user error (`Stdoutput.cpp:333`)
-until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`. `CHECKandTHROW` appears **1204** times. `python/exudyn/` has **46** bare
-`except:` clauses, the largest groups in `processing.py`, `interactive.py`, `solver.py` and
+until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`.
+`CHECKandTHROW` has **818** call sites, and `python/exudyn/` has **46** bare `except:` clauses, the largest groups in `processing.py`, `interactive.py`, `solver.py` and
 `__init__.py` (7/7/6/6). The behaviour is recorded probe by probe in
 `parameterConversionTest.py`, so a change of exception type shows up as a reviewable diff of
 `parameterConversionTestReference.txt` rather than as a surprise.
@@ -1288,8 +1309,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 <a id="r6-3"></a>
 **R6.3** *(phase R6, after R6.7)* **The same treatment for everything that is not a parameter.**
-    Map the `CHECKandTHROW` paths (1204 sites) to specific Python exception types, the way R6.7
-    did for the 21 conversion sites, and chain `py::error_already_set` so that user-function
+    Map the `CHECKandTHROW` paths (818 call sites) to specific Python exception types, the way R6.7
+    did for the 20 conversion sites, and chain `py::error_already_set` so that user-function
     tracebacks survive instead of being stringified (`ExceptionsTemplates.h:50`).
 
     **Also the message.** `PyError` prints the detail to `pout` and then throws a fixed string,
@@ -1297,11 +1318,45 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     so `str(exception)` never carries what actually went wrong. R6.7 deliberately left that
     alone to keep one change in one step; it belongs here.
 
+    **The kinds to map** (maintainer, 2026-09-18 — the names are historical and say nothing
+    about the kind, because exception types were not a concern when the checks were written):
+
+    | kind | what it is | candidate |
+    |---|---|---|
+    | **index** | most of `CHECKandTHROW`: an index outside its range | `IndexError` |
+    | **size / shape** | vectors and matrices that do not fit each other | `ValueError` |
+    | **arithmetic** | division by zero, `sqrt` of a negative, a singular 3x3 inverse | `ArithmeticError` and its subclasses |
+    | **illegal operation** | today's `PyError`: a combination of settings that cannot work | a user error, see R6.4 |
+    | **solver failure** | singular Jacobian, no convergence, divergence | its own type; see below |
+
+    Measured 2026-09-18 over the **818** `CHECKandTHROW` call sites, classified by their message
+    text: 328 size/shape, 227 index/range, 61 arithmetic, 51 illegal/unsupported, 151 other. This
+    confirms the maintainer's reading — two thirds are index or size — but it also shows the
+    distinction that decides the step: the largest groups sit in `Linalg/Matrix.h`,
+    `ConstSizeMatrix.h` and `ConstSizeVector.h` (77/77/36), where a firing check means an **Exudyn
+    bug, not a user mistake**. Those must stay a plain internal error; mapping them to a friendly
+    Python type would dress up a defect as a usage question. Triage user-facing from internal
+    first, then map only the user-facing ones.
+
+    **Solver failures are the case with a real user need** (maintainer): a singular matrix or a
+    diverged integration raises on purpose, so that nobody keeps working with a simulation that
+    already failed. 35 `PyError`/`SysError` calls in `src/Solver/` do this, all arriving as
+    `RuntimeError`. A user who wants to catch exactly this — to retry with a smaller step, or to
+    score a failed parameter variation — cannot, without matching on message text.
+
 <a id="r6-4"></a>
 **R6.4** *(phase R6, after R6.3)* **Document the error taxonomy**: for each exception type, what
     it means in Exudyn, what a user should do about it, and which layer raises it. It is the
     written form of what R6.7 and R6.3 decide, and what R6.1 catches against — so it is written
     after them, not before, and it goes into the user documentation, not only into a dev note.
+
+    **The decision this step has to take, and it is not a documentation decision:** whether
+    Exudyn defines its own exception classes. Built-in types alone cannot express "the solver
+    diverged" or "this combination of settings is illegal", and users end up matching on
+    message text. `py::register_exception` lets a class derive from a built-in, so
+    `exudyn.SolverError(RuntimeError)` would let a user write `except exudyn.SolverError` while
+    every existing `except RuntimeError` keeps working — no break, one new capability.
+    Decide it here, once, for all of phase R6.
 
 <a id="r6-5"></a>
 **R6.5** **DONE 2026-09-15** — A user switch for parameter range checks. → [log](exudynRevisionLog2026.md#r6-5)
