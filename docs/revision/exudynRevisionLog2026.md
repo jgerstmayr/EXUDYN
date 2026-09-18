@@ -7979,6 +7979,29 @@ plots are lost, which is why nobody noticed. `python/TestModels/testData/gyro.st
 
     Successor: **#2510**, the inventory of data files the repository never contained.
 
+<a id="r5-18-6"></a>
+### R5.18.6 — `exudev build --env NAME`
+
+**DONE 2026-09-18** (#2518). `--env` worked for `test`, `examples`, `perf` and `env`, and `build`
+refused it with an error: the wheel to install is selected by its `cp3xx` tag, and an environment
+name does not say which Python it has. True of the name — and irrelevant, because the
+**environment** says. `runner.PythonTagOfEnvironment` asks the interpreter
+(`sys.version_info`), caches the answer per run, and the build proceeds.
+
+The name is deliberately not parsed. `venvExuP313` is called that by convention, and a convention
+is not evidence; asking costs 1.8 s once and cannot be wrong.
+
+Under `--dry-run` nothing runs, not even that question, so the tag stays unknown and the install
+step prints `cp3xx (whichever venvExuP313 has)` in its note. The real work happens in the step's
+`resolve`, which is the mechanism already there for commands that can only be built once
+something has run.
+
+This also removes the split that made #2517 possible: the generator environment can now be built
+into directly, with `exudev build --env venvExuP313`.
+
+---
+
+
 <a id="r5-18-3"></a>
 ### R5.18.3 — a gate that was green locally and red in CI
 

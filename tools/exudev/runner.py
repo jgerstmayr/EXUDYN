@@ -191,6 +191,44 @@ def KnownEnvironments():
 
 
 #%%******************************************************************************************************
+environmentPythonTags = {}               #environment name -> 'P313', filled by the probe below
+
+
+def PythonTagOfEnvironment(environment, options):
+    """Which Python an environment has, as the version tag the rest of the driver uses:
+    'venvExuP313' -> 'P313'. The NAME is not the answer - an environment may be called anything,
+    and 'venvExuP313' is only called that by convention - so the interpreter itself is asked, once
+    per environment and per run (#2518)."""
+    if environment in environmentPythonTags:
+        return environmentPythonTags[environment]
+
+    argv = InEnvironment(environment,
+                         ['python', '-c', 'import sys;print("P%d%d" % sys.version_info[:2])'],
+                         options)
+    try:
+        completed = subprocess.run(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   universal_newlines=True)
+    except OSError as error:
+        raise SystemExit('exudev: could not ask ' + environment + ' for its Python version: '
+                         + str(error))
+
+    tag = None
+    for line in completed.stdout.split('\n'):      #conda run may add lines of its own
+        line = line.strip()
+        if len(line) == 4 and line[0] == 'P' and line[1:].isdigit():
+            tag = line
+
+    if tag is None:
+        raise SystemExit('exudev: ' + environment + ' did not answer which Python it has '
+                         '(exit code ' + str(completed.returncode) + '). Its output was:\n'
+                         + (completed.stdout + completed.stderr).strip())
+
+    environmentPythonTags[environment] = tag
+
+    return tag
+
+
+#%%******************************************************************************************************
 def InEnvironment(environment, argv, options):
     """Wrap a command so that it runs in the conda environment. With --no-conda the command is run
     as it is, with 'python' replaced by the interpreter running the driver."""

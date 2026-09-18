@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.177.dev1, 
++  Exudyn version = 1.11.178.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2518, 
-+  Number of resolved issues = 2250 (177 in current version), 
++  Number of issues = 2519, 
++  Number of resolved issues = 2251 (178 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.178: resolved Issue 2518: exudev build refuses --env (extension)
+    - issue author: Claude-JG
+    - description:  exudev build --env NAME exits with an error because the wheel to install is selected by its cp3xx tag and the environment NAME does not say which Python it has. The environment itself does say: ask its interpreter. Maintainer request 2026-09-18: venvExuP313 should be usable for building. revision2026 step R5.18.6.
+    - **notes:** runner.PythonTagOfEnvironment asks the environment interpreter for sys.version_info and caches it, build accepts --env. Under --dry-run the question is not asked either\, so the tag is resolved at run time. revision2026 step R5.18.6.
+    - date resolved: **2026-09-18 15:27**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.177: resolved Issue 2516: add Exudyn exception classes to the Python module (change)
     - issue author: Claude-JG
     - description:  Exudyn raises RuntimeError for everything from C++, a user cannot tell a solver divergence from an illegal setting from an Exudyn bug without matching on message text. Add ExudynError and its subclasses, each derives additionally from the built-in that fits. revision2026 step R6.3.1.

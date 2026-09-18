@@ -487,6 +487,9 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 <a id="r5-18-4"></a>
 **R5.18.4** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-4) — *(sub-step of R5.18; maintainer supplied the files)* **The missing data files, restored and pruned** (#2510, #2511).
 
+<a id="r5-18-6"></a>
+**R5.18.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-6) — *(sub-step of R5.18; maintainer request 2026-09-18)* **`exudev build --env NAME`** (#2518): the environment is asked which Python it has, instead of the driver refusing to guess from its name.
+
 <a id="r5-18-5"></a>
 **R5.18.5** *(sub-step of R5.18; found while building for step R6.3.1)* **The gate environment can hold a stale wheel** (#2517). The gates run in `venvExuP313`; `exudev build` installs into `venvP313`. So a C++ change can be built and every gate can still run against a wheel from an earlier version - a green result that means nothing. Seen for real: `venvExuP313` held `1.11.173.dev1` while the sources were at `1.11.176.dev1`, and the stub gate happily described a module that did not contain the nine new classes. Either `exudev build` installs into the generator environment as well, or the checks refuse to run when the installed version differs from `version.txt`. The second is the stronger rule and costs one comparison.
 

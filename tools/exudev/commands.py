@@ -176,18 +176,20 @@ def Build(options):
         return Complete(options)
 
     root = runner.RepositoryRoot()
-    versions = SelectedVersions(options, 'P313')
 
-    #a build needs the version TAG as well as the environment: the wheel it installs is selected by
-    #its cp3xx tag, and an arbitrary --env name does not say which one that is
+    #A build needs the version TAG as well as the environment, because the wheel it installs is
+    #selected by its cp3xx tag - which is why '--env' used to be refused here. The environment
+    #knows: its interpreter is asked (#2518). Under --dry-run nothing may run, not even that
+    #question, so the tag stays unknown there and the install step says 'cp3xx' in its note.
     if getattr(options, 'env', None):
-        raise SystemExit('exudev: "build --env ' + options.env + '" cannot work out which wheel '
-                         'belongs to that environment. Name the version as well, for instance '
-                         '"exudev build --py P313", or use --env only for test, examples, perf '
-                         'and env.')
+        tag = None if options.dryRun else runner.PythonTagOfEnvironment(options.env, options)
+        targets = [(tag, options.env)]
+    else:
+        targets = [(tag, runner.EnvironmentName(tag))
+                   for tag in SelectedVersions(options, 'P313')]
 
     if options.fast:
-        WarnAboutFastModule(versions)
+        WarnAboutFastModule([tag for (tag, _) in targets if tag is not None])
 
     steps = []
     if options.clean:
@@ -195,9 +197,7 @@ def Build(options):
 
     buildEnvironment = BuildEnvironment(options)
 
-    for pythonTag in versions:
-        environment = runner.EnvironmentName(pythonTag)
-
+    for (pythonTag, environment) in targets:
         wheelArgv = ['python', '-m', 'pip', 'wheel', '.', '-w', 'dist', '--no-deps']
         if options.verbose:
             wheelArgv += ['-v']
@@ -212,7 +212,9 @@ def Build(options):
             #older one. This removes the whole "I tested yesterday's binary" class of failure.
             def MakeInstall(tag=pythonTag, environmentName=environment):
                 def Resolve():
-                    wheel = WheelForVersion(tag)
+                    #with '--env' and no '--py' the tag is only known once something may run
+                    wheel = WheelForVersion(tag or runner.PythonTagOfEnvironment(environmentName,
+                                                                                options))
                     if wheel is None:
                         print('exudev: no wheel for ' + tag + ' found in dist/')
                         return None
@@ -223,9 +225,11 @@ def Build(options):
 
             steps += [Step('install the wheel into ' + environment,
                            resolve=MakeInstall(), cwd=root,
-                           note=('install the newest dist/exudyn-*-cp' + pythonTag[1:] + '-*.whl '
-                                 'into ' + environment + ' with '
-                                 '"python -m pip install --force-reinstall --no-deps <that wheel>"'))]
+                           note=('install the newest dist/exudyn-*-cp'
+                                 + (pythonTag[1:] if pythonTag else '3xx (whichever '
+                                    + environment + ' has)') + '-*.whl into ' + environment
+                                 + ' with "python -m pip install --force-reinstall --no-deps '
+                                 '<that wheel>"'))]
 
             steps += [VersionCheckStep(environment, options)]
 

@@ -34,6 +34,7 @@ import runner                            #noqa: E402
 
 epilogText = """examples:
   exudev build                      build and install for Python 3.13 (no docs, no tests)
+  exudev build --env venvExuP313    ... into a named environment, whatever Python it has
   exudev build --fast               ... including the fast module exudynCPPfast
   exudev build --complete           clean, regenerate, docs, all versions, all tests
   exudev test --py all              the test suite in every environment
@@ -69,7 +70,8 @@ def VersionParser():
                         help='Python version(s): 313, P313, 3.13, "all", or a list like 310,313')
     parser.add_argument('--env', metavar='NAME',
                         help='conda environment to use (default: ' + runner.generatorEnvironment
-                             + ' for generation and documentation, venvP3xx for the version matrix)')
+                             + ' for generation and documentation, venvP3xx for the version matrix);'
+                             ' for "build" the environment is asked which Python it has')
 
     return parser
 

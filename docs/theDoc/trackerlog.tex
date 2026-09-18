@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.177.dev1, 
+  \item Exudyn version = 1.11.178.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2518, 
-  \item Number of resolved issues = 2250 (177 in current version), 
+  \item Number of issues = 2519, 
+  \item Number of resolved issues = 2251 (178 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.178}:  resolved Issue 2518: {\bf exudev build refuses --env}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: exudev build --env NAME exits with an error because the wheel to install is selected by its cp3xx tag and the environment NAME does not say which Python it has. The environment itself does say: ask its interpreter. Maintainer request 2026-09-18: venvExuP313 should be usable for building. revision2026 step R5.18.6.}
+    \item {\bf notes: runner.PythonTagOfEnvironment asks the environment interpreter for sys.version\_info and caches it, build accepts --env. Under --dry-run the question is not asked either\, so the tag is resolved at run time. revision2026 step R5.18.6.}
+    \item   date resolved: {\bf 2026-09-18 15:27},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.177}:  resolved Issue 2516: {\bf add Exudyn exception classes to the Python module}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
