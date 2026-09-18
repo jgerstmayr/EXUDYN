@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.188.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2531, 
++  Number of issues = 2532, 
 +  Number of resolved issues = 2261 (188 in current version), 
 
 ************
@@ -8835,6 +8835,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2531:` a typed exception from the solver no longer stops the renderer
+    - issue author: Claude-JG
+    - description:  globalPyRuntimeErrorFlag is set in exactly two places: PyError and SysError (Stdoutput.cpp). The CHECKandTHROW\* macros never set it. Until #2524 a bare EXUexception escaping a solver step fell into SolverExceptionHandling catch(EXUexception) and became SysError - which set the flag and stopped the renderer. That handler now has catch(const ExudynError&){throw;} in front of it (needed so the type is not flattened) so every site typed by step R6.3.6 passes through and the flag stays false. The renderer then keeps running and keeps calling Python while Python is in an error state (GlfwClient.cpp reads the flag in five places). The behaviour now depends on how far R6.3.6 has got which is an accident. Set the flag where SOLVER errors are caught - not in ThrowPyErrorType which would make every typed exception anywhere shut the renderer down.
+    - date raised: 2026-09-18 
 
  * :textred:`open BUG 2526:` mainSystemExtensionDocsEmitter writes none of its five outputs
     - issue author: Claude-JG

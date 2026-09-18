@@ -32,7 +32,7 @@ void CNodeGenericData::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeGenericData::GetOutputVariable: invalid configuration");
+			PyError("CNodeGenericData::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

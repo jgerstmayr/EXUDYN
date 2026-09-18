@@ -89,7 +89,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -101,7 +101,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -113,7 +113,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -125,7 +125,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

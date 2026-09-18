@@ -191,7 +191,7 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 
 			if (parameters.offsetUserFunction_t) //from here on it becomes much slower ... (python)
 			{
-				PyError("ObjectJointGeneric: offsetUserFunction_t not implemented for velocity level constraints!");
+				PyError("ObjectJointGeneric: offsetUserFunction_t not implemented for velocity level constraints!", PyErrorType::notImplementedError);
 			}
 			
 			Vector3D vVel;

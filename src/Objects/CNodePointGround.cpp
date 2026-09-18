@@ -39,7 +39,7 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointGround::GetOutputVariable: invalid configuration");
+			PyError("CNodePointGround::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -51,7 +51,7 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointGround::GetOutputVariable: invalid configuration");
+			PyError("CNodePointGround::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -63,7 +63,7 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointGround::GetOutputVariable: invalid configuration");
+			PyError("CNodePointGround::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

@@ -92,7 +92,7 @@ void CObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian(EXUmath::Mat
 		PyMatrixContainer PMC(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel));
 
-		CHECKandTHROW(PMC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian: jacobian currently only accepts dense matrices");
+		CHECKandTHROW(PMC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian: jacobian currently only accepts dense matrices", ExudynValueError);
 		jacobian.SetUseDenseMatrix();
 		jacobian.GetInternalDenseMatrix() = PMC.GetInternalDenseMatrix(); 
 

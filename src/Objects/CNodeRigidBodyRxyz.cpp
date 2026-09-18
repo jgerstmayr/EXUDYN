@@ -328,7 +328,7 @@ void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, Conf
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -340,7 +340,7 @@ void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, Conf
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -352,7 +352,7 @@ void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, Conf
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -364,7 +364,7 @@ void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, Conf
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

@@ -59,7 +59,7 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 		}
 		else
 		{
-			PyError("CNode1D::GetOutputVariable: invalid configuration");
+			PyError("CNode1D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -71,7 +71,7 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 		}
 		else
 		{
-			PyError("CNode1D::GetOutputVariable: invalid configuration");
+			PyError("CNode1D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -83,7 +83,7 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 		}
 		else
 		{
-			PyError("CNode1D::GetOutputVariable: invalid configuration");
+			PyError("CNode1D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -95,7 +95,7 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 		}
 		else
 		{
-			PyError("CNode1D::GetOutputVariable: invalid configuration");
+			PyError("CNode1D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

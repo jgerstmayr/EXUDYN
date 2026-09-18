@@ -27,7 +27,7 @@ void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, con
 	}
 	else
 	{
-		CHECKandTHROW(parameters.physicsMass != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
+		CHECKandTHROW(parameters.physicsMass != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
 		massMatrix.SetScalarMatrix(1, 1./parameters.physicsMass);
 	}
 }

@@ -24,7 +24,7 @@ void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 	Real m = parameters.physicsMass;
 	if (computeInverse)
 	{
-		CHECKandTHROW(m != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
+		CHECKandTHROW(m != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
 		m = 1. / m;
 	}
 	if (m != 0.)

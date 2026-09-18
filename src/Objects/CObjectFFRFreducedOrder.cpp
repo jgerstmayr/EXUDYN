@@ -71,10 +71,10 @@ void CObjectFFRFreducedOrder::InitializeObject()
 //! Computational function: compute mass matrix
 void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectFFRFreducedOrder::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+	CHECKandTHROW(!computeInverse, "CObjectFFRFreducedOrder::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False", ExudynNotImplementedError);
 
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	if (!objectIsInitialized) { PyError("CObjectFFRFreducedOrder::ComputeMassMatrix: objectIsInitialized = false: run Assemble() before computation."); }
+	if (!objectIsInitialized) { PyError("CObjectFFRFreducedOrder::ComputeMassMatrix: objectIsInitialized = false: run Assemble() before computation.", PyErrorType::modelError); }
 
 	Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
 	Index nODE2FF = GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates();
@@ -751,7 +751,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 		const Matrix& modeBasis = parameters.modeBasis;
 		Index nModes = modeBasis.NumberOfColumns();
 
-		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: weightingMatrix must have one column only");
+		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: weightingMatrix must have one column only", ExudynValueError);
 
 		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
 		value.SetAll(0.);
@@ -809,7 +809,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 	//global angular velocity at mesh position derivative w.r.t. all q_t: with reference frame: 
 	//[0, A * Glocal, A*(0,...,0, w0*pRefTilde0*nodeJac0, 0,..., 0, w1*pRefTilde1*nodeJac1, ...)]
 	{
-		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, weightingMatrix must have 1 row!");
+		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, weightingMatrix must have 1 row!", ExudynValueError);
 
 		const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
 		Index nODE2rigid = cNode->GetNumberOfODE2Coordinates();
@@ -909,7 +909,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 //! get extended output variable types for multi-nodal objects with mesh nodes
 OutputVariableType CObjectFFRFreducedOrder::GetOutputVariableTypesSuperElement(Index meshNodeNumber) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetOutputVariableSuperElement: meshNodeNumber out of range ");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetOutputVariableSuperElement: meshNodeNumber out of range ", ExudynIndexError);
 	//independent of meshNodeNumber!!!
 	OutputVariableType ovt = (OutputVariableType)(
 		(Index64)OutputVariableType::Position +
@@ -991,7 +991,7 @@ void CObjectFFRFreducedOrder::GetOutputVariableSuperElement(OutputVariableType v
 //! return the mesh node pointer; for consistency checks
 CNodeODE2* CObjectFFRFreducedOrder::GetMeshNode(Index meshNodeNumber) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNode: meshNodeNumber out of range");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNode: meshNodeNumber out of range", ExudynIndexError);
 
 	return nullptr; //there is no meshnode, its only virtual ...
 }
@@ -999,7 +999,7 @@ CNodeODE2* CObjectFFRFreducedOrder::GetMeshNode(Index meshNodeNumber) const
 //! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalPosition: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalPosition: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)", ExudynIndexError);
 
 	if (configuration == ConfigurationType::Reference) {
 		return Vector3D({ parameters.referencePositions[meshNodeNumber * 3],
@@ -1019,7 +1019,7 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalPosition(Index meshNodeNumber,
 //! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalVelocity: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalVelocity: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)", ExudynIndexError);
 
 	return GetMeshNodeCoordinates(meshNodeNumber, ((CNodeODE2*)GetCNode(genericNodeNumber))->GetCoordinateVector_t(configuration));
 }
@@ -1027,7 +1027,7 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalVelocity(Index meshNodeNumber,
 //! return the (local) acceleration of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalAcceleration(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalAcceleration: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalAcceleration: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)", ExudynIndexError);
 
 	return GetMeshNodeCoordinates(meshNodeNumber, ((CNodeODE2*)GetCNode(genericNodeNumber))->GetCoordinateVector_tt(configuration));
 }
@@ -1035,7 +1035,7 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalAcceleration(Index meshNodeNum
 //! return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodePosition(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodePosition: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodePosition: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)", ExudynIndexError);
 
 	Matrix3D refRot = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration);
 	Vector3D refPos = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetPosition(configuration);
@@ -1046,7 +1046,7 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodePosition(Index meshNodeNumber, Conf
 //! return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodeVelocity(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeVelocity: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeVelocity: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)", ExudynIndexError);
 
 	// \dot R + A * \localOmega x \localPosition
 	return ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetVelocity(configuration) +
@@ -1058,7 +1058,7 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeVelocity(Index meshNodeNumber, Conf
 //! return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodeAcceleration(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeAcceleration: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRF)");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeAcceleration: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRF)", ExudynIndexError);
 
 	Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration);
 	Vector3D xloc = GetMeshNodeLocalPosition(meshNodeNumber, configuration);

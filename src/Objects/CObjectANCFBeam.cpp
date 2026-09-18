@@ -67,20 +67,20 @@ void MainObjectANCFBeam::SetInternalBeamSection(const py::object& pyObject)
 		    bsCheck = GetInternalBeamSection();
 		    if (!(bs.stiffnessMatrix == bsCheck.stiffnessMatrix))
 		    {
-			    PyError("ObjectANCFBeam: BeamSection stiffnessMatrix contains off-diagonal values which can not be used");
+			    PyError("ObjectANCFBeam: BeamSection stiffnessMatrix contains off-diagonal values which can not be used", PyErrorType::valueError);
 		    }
 			if (!(bs.dampingMatrix == bsCheck.dampingMatrix))
 			{
-				PyError("ObjectANCFBeam: BeamSection dampingMatrix contains off-diagonal values which can not be used");
+				PyError("ObjectANCFBeam: BeamSection dampingMatrix contains off-diagonal values which can not be used", PyErrorType::valueError);
 			}
 			if (!(bs.inertia == bsCheck.inertia))
 		    {
-			    PyError("ObjectANCFBeam: BeamSection inertia contains off-diagonal values which can not be used");
+			    PyError("ObjectANCFBeam: BeamSection inertia contains off-diagonal values which can not be used", PyErrorType::valueError);
 		    }
 	    }
 	    else
 	    {
-		    PyError("ObjectANCFBeam: expected BeamSection, but received: " + STDstring(py::str(pyObject)));
+		    PyError("ObjectANCFBeam: expected BeamSection, but received: " + STDstring(py::str(pyObject)), PyErrorType::typeError);
 	    }
     }, "ObjectANCFBeam::SetInternalBeamSection");
 }
@@ -664,7 +664,7 @@ void CObjectANCFBeam::GetDeltaCrossSectionDeformation(Real x, ConstSizeMatrix<EX
 //! Computational function: compute mass matrix
 void CObjectANCFBeam::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectANCFBeam::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+	CHECKandTHROW(!computeInverse, "CObjectANCFBeam::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 	
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
@@ -877,7 +877,7 @@ void CObjectANCFBeam::GetAccessFunctionBody(AccessFunctionType accessType, const
 	}
 	case AccessFunctionType::AngularVelocity_qt:
 	{
-		CHECKandTHROWstring("CObjectANCFBeam::GetAccessFunctionBody(AngularVelocity_qt): not implemented!");
+		CHECKandTHROWstring("CObjectANCFBeam::GetAccessFunctionBody(AngularVelocity_qt): not implemented!", ExudynNotImplementedError);
 
 		break;
 	}
@@ -1132,7 +1132,7 @@ HomogeneousTransformation CObjectANCFBeam::GetLocalPositionFrame(const Vector3D&
 //! return configuration dependent angular velocity of node; returns always a 3D Vector
 Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("ObjectANCFBeamBase::GetAngularVelocity: not implemented!");
+	CHECKandTHROWstring("ObjectANCFBeamBase::GetAngularVelocity: not implemented!", ExudynNotImplementedError);
 	return Vector3D();
 
 	////for details see GetAngularVelocity in PointSlope23

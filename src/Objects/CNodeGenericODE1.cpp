@@ -37,7 +37,7 @@ void CNodeGenericODE1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration");
+			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -49,7 +49,7 @@ void CNodeGenericODE1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration");
+			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -61,7 +61,7 @@ void CNodeGenericODE1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration");
+			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

@@ -19,7 +19,7 @@
 //! Computational function: compute mass matrix
 void CObjectRotationalMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectRotationalMass1D::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+	CHECKandTHROW(!computeInverse, "CObjectRotationalMass1D::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False", ExudynNotImplementedError);
 
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	if (!computeInverse)
@@ -28,7 +28,7 @@ void CObjectRotationalMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 	}
 	else
 	{
-		CHECKandTHROW(parameters.physicsInertia != 0., "CObjectRotationalMass1D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True");
+		CHECKandTHROW(parameters.physicsInertia != 0., "CObjectRotationalMass1D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
 		massMatrix.SetScalarMatrix(1, 1./parameters.physicsInertia);
 	}
 }
@@ -48,7 +48,7 @@ void CObjectRotationalMass1D::GetAccessFunctionBody(AccessFunctionType accessTyp
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
-		CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetAccessFunctionBody: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D");
+		CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetAccessFunctionBody: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D", ExudynModelError);
 		//would require to compute action on axis: similar to ObjectRigidBody2D, then depends on coordinates (sin/cos)?
 		//v = GetRotationMatrix(...) * (Vector3D({ 0.,0.,omegaLocal }) x localPosition)
 		//dv/dq_t = ...
@@ -64,7 +64,7 @@ void CObjectRotationalMass1D::GetAccessFunctionBody(AccessFunctionType accessTyp
 	}
 	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation; HACK: Matrix value(0,0:6) contains 3D force + 3D torque
 	{
-		CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetAccessFunctionBody [JacobianTtimesVector_q]: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D");
+		CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetAccessFunctionBody [JacobianTtimesVector_q]: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D", ExudynModelError);
 		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
 		break;
 	}

@@ -28,8 +28,8 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 
 		if (computeInverse)
 		{
-			CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
-			CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True");
+			CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
+			CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
 			m = 1. / m;
 			J = 1. / J;
 		}
@@ -66,7 +66,7 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 			Index rv = massMatrix.InvertWithMaxSize<3>();
 			if (rv != -1)
 			{
-				CHECKandTHROWstring("CObjectRigidBody2D::ComputeMassMatrix: inverse failed; check if node type fits, if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+				CHECKandTHROWstring("CObjectRigidBody2D::ComputeMassMatrix: inverse failed; check if node type fits, if mass parameters are non-zero or set computeMassMatrixInversePerBody=False", ExudynValueError);
 			}
 		}
 	}

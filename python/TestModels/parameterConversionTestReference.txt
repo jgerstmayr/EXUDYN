@@ -4,11 +4,11 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   MarkerBodiesRelativeRotationCoordinate: bodyNumbers(class,dict,set)
   MarkerBodiesRelativeTranslationCoordinate: bodyNumbers(class,dict,set)
   ObjectALEANCFCable2D: nodeNumbers(class,dict,set)
-  ObjectANCFBeam: nodeNumbers(class,dict,set)
+  ObjectANCFBeam: nodeNumbers(class,dict,set) sectionData(class,dict,set)
   ObjectANCFCable: nodeNumbers(class,dict,set)
   ObjectANCFCable2D: nodeNumbers(class,dict,set)
   ObjectANCFThinPlate: nodeNumbers(class,dict,set)
-  ObjectBeamGeometricallyExact: nodeNumbers(class,dict,set)
+  ObjectBeamGeometricallyExact: nodeNumbers(class,dict,set) sectionData(class,dict,set)
   ObjectBeamGeometricallyExact2D: nodeNumbers(class,dict,set)
   ObjectConnectorHydraulicActuatorSimple: nodeNumbers(class,dict,set)
   ObjectFFRF: nodeNumbers(class,dict,set)
@@ -468,8 +468,6 @@ outcome: !ExudynValueError int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int
   VisualizationSettings.view3.scene: drawCoordinateSystem(attribute,dict)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
-  ObjectANCFBeam: sectionData(class,dict,set)
-  ObjectBeamGeometricallyExact: sectionData(class,dict,set)
   ObjectKinematicTree: jointTypes(class,dict,set)
   VisualizationSettings.openGL.advanced: initialModelRotation(dict)
 

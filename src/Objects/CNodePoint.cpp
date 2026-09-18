@@ -61,7 +61,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 			GetODE2CoordinateVectorWithReference(value, configuration);
 		} else
 		{ 
-			PyError("CNodePoint::GetOutputVariable: invalid configuration"); 
+			PyError("CNodePoint::GetOutputVariable: invalid configuration", PyErrorType::valueError); 
 		}
 		break;
 	}
@@ -73,7 +73,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 		}
 		else
 		{
-			PyError("CNodePoint::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -85,7 +85,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 		}
 		else
 		{
-			PyError("CNodePoint::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 
@@ -98,7 +98,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 		}
 		else
 		{
-			PyError("CNodePoint::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

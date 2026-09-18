@@ -340,7 +340,7 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -352,7 +352,7 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -364,7 +364,7 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -376,7 +376,7 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

@@ -81,7 +81,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 			}
 			else
 			{
-				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not possible for classicalFormulation");
+				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not possible for classicalFormulation", ExudynNotImplementedError);
 
 			}
 		}

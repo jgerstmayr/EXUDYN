@@ -305,7 +305,7 @@ void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, 
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRotVecLG::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRotVecLG::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -317,7 +317,7 @@ void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, 
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRotVecLG::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRotVecLG::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -329,7 +329,7 @@ void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, 
 		}
 		else
 		{
-			PyError("CNodeRigidBodyRotVecLG::GetOutputVariable: invalid configuration");
+			PyError("CNodeRigidBodyRotVecLG::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

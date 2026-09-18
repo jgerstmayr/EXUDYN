@@ -158,7 +158,7 @@ void CNodePointSlope1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -170,7 +170,7 @@ void CNodePointSlope1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -182,7 +182,7 @@ void CNodePointSlope1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -194,7 +194,7 @@ void CNodePointSlope1::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else
 		{
-			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope1::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

@@ -1288,7 +1288,7 @@ bool MainObjectContactSphereSphere::CheckPreAssembleConsistency(const MainSystem
 	if (cObject->GetParameters().dynamicFriction != 0.) { requestedMarkerType += (Index)Marker::Orientation; }
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactSphereSphere: number of markers must be 2");
+	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactSphereSphere: number of markers must be 2", ExudynModelError);
 
 	if (!EXUstd::IsOfTypeAndNotNone((Index)mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), requestedMarkerType))
 	{
@@ -1356,7 +1356,7 @@ bool MainObjectContactSphereTorus::CheckPreAssembleConsistency(const MainSystem&
 	if (cObject->GetParameters().dynamicFriction != 0.) { requestedMarkerType += (Index)Marker::Orientation; }
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactSphereTorus: number of markers must be 2");
+	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactSphereTorus: number of markers must be 2", ExudynModelError);
 
 	if (!EXUstd::IsOfTypeAndNotNone((Index)mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), requestedMarkerType))
 	{
@@ -1430,7 +1430,7 @@ bool MainObjectContactSphereTriangle::CheckPreAssembleConsistency(const MainSyst
 	if (cObject->GetParameters().dynamicFriction != 0.) { requestedMarkerType += (Index)Marker::Orientation; }
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactSphereTriangle: number of markers must be 2");
+	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactSphereTriangle: number of markers must be 2", ExudynModelError);
 
 	if (!EXUstd::IsOfTypeAndNotNone((Index)mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), requestedMarkerType))
 	{
@@ -1489,7 +1489,7 @@ bool MainObjectContactCurveCircles::CheckPreAssembleConsistency(const MainSystem
 
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactCurveCircles: number of markers must be at least 2");
+	CHECKandTHROW(nMarkers.NumberOfItems() >= 2, "CObjectContactCurveCircles: number of markers must be at least 2", ExudynModelError);
 	if (!EXUstd::IsOfTypeAndNotNone((Index)mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), Marker::Position + Marker::Orientation))
 	{
 		errorString = STDstring("CObjectContactCurveCircles: Marker 0 must generally be of type = 'Rigid' (Position + Orientation)");

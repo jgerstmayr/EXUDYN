@@ -744,7 +744,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
     }
     else
     {
-        CHECKandTHROWstring("CObjectANCFThinPlate::ComputeODE2LHStemplate: useReducedOrderIntegration must be 0 or 1");
+        CHECKandTHROWstring("CObjectANCFThinPlate::ComputeODE2LHStemplate: useReducedOrderIntegration must be 0 or 1", ExudynValueError);
     }
     
     // Loop over Gauss points and compute forces directly
@@ -948,7 +948,7 @@ void CObjectANCFThinPlate::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
                                              Index objectNumber, 
                                              bool computeInverse) const
 {
-    CHECKandTHROW(!computeInverse, "CObjectANCFThinPlate::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+    CHECKandTHROW(!computeInverse, "CObjectANCFThinPlate::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
     
     PreComputeMassTerms();
     // Copy the precomputed mass matrix to the container's dense matrix
@@ -967,7 +967,7 @@ Real CObjectANCFThinPlate::ComputeThicknessAtPoint(Real xi, Real eta) const
     if (parameters.physicsThickness.NumberOfItems() == 1) { return parameters.physicsThickness[0]; }
     else
     {
-        CHECKandTHROW(parameters.physicsThickness.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeThicknessAtPoint: physicsThickness must have length 1 or 4");
+        CHECKandTHROW(parameters.physicsThickness.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeThicknessAtPoint: physicsThickness must have length 1 or 4", ExudynValueError);
         const Vector& coeffs = parameters.physicsThickness;
         // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
@@ -983,7 +983,7 @@ Matrix3D CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint(Real xi, Real et
     if (parameters.physicsStrainCoefficients.NumberOfItems() == 1) { return parameters.physicsStrainCoefficients[0]; }
     else
     {
-        CHECKandTHROW(parameters.physicsStrainCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint: physicsStrainCoefficients must have length 1 or 4");
+        CHECKandTHROW(parameters.physicsStrainCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint: physicsStrainCoefficients must have length 1 or 4", ExudynValueError);
         const Matrix3DList& coeffs = parameters.physicsStrainCoefficients;
         // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
@@ -999,7 +999,7 @@ Matrix3D CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint(Real xi, Real
     if (parameters.physicsCurvatureCoefficients.NumberOfItems() == 1) { return parameters.physicsCurvatureCoefficients[0]; }
     else
     {
-        CHECKandTHROW(parameters.physicsCurvatureCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint: physicsCurvatureCoefficients must have length 1 or 4");
+        CHECKandTHROW(parameters.physicsCurvatureCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint: physicsCurvatureCoefficients must have length 1 or 4", ExudynValueError);
         const Matrix3DList& coeffs = parameters.physicsCurvatureCoefficients;
         // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
@@ -1107,7 +1107,7 @@ void CObjectANCFThinPlate::GetAccessFunctionBody(AccessFunctionType accessType,
         value.SetNumberOfRowsAndColumns(dim, dim * ns); 
 
         CHECKandTHROW(localPosition[2] == 0,
-            "CObjectANCFThinPlate: markers, forces and constraints can only act at the plate midsurface at Z=0; check your code");
+            "CObjectANCFThinPlate: markers, forces and constraints can only act at the plate midsurface at Z=0; check your code", ExudynModelError);
 
         value.SetAll(0.);
 
@@ -1243,7 +1243,7 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa,   M);
 
         Real h = ComputeThicknessAtPoint(xi, eta);
-        CHECKandTHROW(h > 0., "CObjectANCFThinPlate::GetOutputVariableBody: thickness h must be > 0 for StressLocal");
+        CHECKandTHROW(h > 0., "CObjectANCFThinPlate::GetOutputVariableBody: thickness h must be > 0 for StressLocal", ExudynValueError);
         Real zeta = localPosition[2];  // in [-1,1]: -1 = bottom, +1 = top surface
         Real s11 = N[0]/h + zeta*(6.*M[0]/(h*h));
         Real s22 = N[1]/h + zeta*(6.*M[1]/(h*h));
@@ -1499,7 +1499,7 @@ Vector3D CObjectANCFThinPlate::GetAcceleration(const Vector3D& localPosition,
 Vector3D CObjectANCFThinPlate::GetAngularVelocity(const Vector3D& localPosition, 
                                                    ConfigurationType configuration) const
 {
-    CHECKandTHROWstring("CObjectANCFThinPlate::GetAngularVelocity: NOT implemented");
+    CHECKandTHROWstring("CObjectANCFThinPlate::GetAngularVelocity: NOT implemented", ExudynNotImplementedError);
     return Vector3D({0., 0., 0.});
 }
 

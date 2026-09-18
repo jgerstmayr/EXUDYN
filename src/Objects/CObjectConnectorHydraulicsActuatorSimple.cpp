@@ -156,7 +156,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, co
         }
     }
 
-	CHECKandTHROW(V0act != 0 && V1act != 0, "CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS: chamber volume vanished; further computation not possible!");
+	CHECKandTHROW(V0act != 0 && V1act != 0, "CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS: chamber volume vanished; further computation not possible!", ExudynValueError);
 
 	LinkedDataVector p = GetCNode(0)->GetCurrentCoordinateVector(); //reference values are zero!
 	//pout << "ComputeODE1RHS: p=" << p << "\n";

@@ -184,7 +184,7 @@ inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const 
             {
                 if (parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0)
                 {
-                    CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt: needs valid data node for frictionProportionalZone != 0");
+                    CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt: needs valid data node for frictionProportionalZone != 0", ExudynModelError);
                     Real& currentStateFriction = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0];
                     Real& currentStateLastStick = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[1];
 
@@ -200,7 +200,7 @@ inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const 
             //limit stops:
             if (parameters.useLimitStops)
             {
-                CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt: needs valid data node for useLimitStops=True");
+                CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt: needs valid data node for useLimitStops=True", ExudynModelError);
                 Real newContactState = 0; //unused
                 Real discontinuousError = 0; //unused
                 Real currentStateLS = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[2];

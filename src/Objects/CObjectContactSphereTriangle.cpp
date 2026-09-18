@@ -59,7 +59,7 @@ TReal CObjectContactSphereTriangle::ComputeContactForces(TReal gap, const SlimVe
 					lambda *= (ee * ee - 1.) / ee;
 				}
 				else {
-					CHECKandTHROWstring("CObjectContactSphereTriangle: coefficient of restitution must be > 0");
+					CHECKandTHROWstring("CObjectContactSphereTriangle: coefficient of restitution must be > 0", ExudynValueError);
 				}
 			}
 			contactForce += lambda * deltaExp * deltaVnormal;

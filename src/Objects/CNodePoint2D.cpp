@@ -64,7 +64,7 @@ void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, Configurat
 		}
 		else
 		{
-			PyError("CNodePoint2D::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -76,7 +76,7 @@ void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, Configurat
 		}
 		else
 		{
-			PyError("CNodePoint2D::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -88,7 +88,7 @@ void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, Configurat
 		}
 		else
 		{
-			PyError("CNodePoint2D::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -100,7 +100,7 @@ void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, Configurat
 		}
 		else
 		{
-			PyError("CNodePoint2D::GetOutputVariable: invalid configuration");
+			PyError("CNodePoint2D::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

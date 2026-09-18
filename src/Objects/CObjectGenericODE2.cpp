@@ -76,7 +76,7 @@ void CObjectGenericODE2::ComputeObjectCoordinates_tt(Vector& coordinates_tt, Con
 //! Computational function: compute mass matrix
 void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectGenericODE2::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+	CHECKandTHROW(!computeInverse, "CObjectGenericODE2::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False", ExudynNotImplementedError);
 
 	if (parameters.massMatrixUserFunction)
 	{
@@ -154,7 +154,7 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 		Vector userForce;
 
 		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
-		CHECKandTHROW(userForce.NumberOfItems() == nODE2, "CObjectGenericODE2: forceUserFunction return a vector with different size from ObjectGenericODE2 system size");
+		CHECKandTHROW(userForce.NumberOfItems() == nODE2, "CObjectGenericODE2: forceUserFunction return a vector with different size from ObjectGenericODE2 system size", ExudynValueError);
 		ode2Lhs -= userForce;
 	}
 
@@ -193,7 +193,7 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 		//(in sparse mode the jacobianODE2 is a link to the sparseTriplets of the system matrix and has size 0):
 		if (jacobianODE2.UseDenseMatrix() && (jacobianODE2.NumberOfRows() != nODE2 || jacobianODE2.NumberOfColumns() != nODE2))
 		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return square matrix with size according to ObjectGenericODE2 coordinates!");
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return square matrix with size according to ObjectGenericODE2 coordinates!", ExudynValueError);
 		}
 	}
 	else
@@ -217,7 +217,7 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 	{
 		if (!parameters.stiffnessMatrix.UseDenseMatrix() && parameters.stiffnessMatrix.NumberOfRows() != 0)
 		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!");
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!", ExudynValueError);
 		}
 		if (rowsStiff && addStiffnessMatrix) 
 		{ 
@@ -236,7 +236,7 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 	{
 		if (parameters.stiffnessMatrix.UseDenseMatrix() && parameters.stiffnessMatrix.NumberOfRows() != 0)
 		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!");
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!", ExudynValueError);
 		}
 		if (rowsStiff && addStiffnessMatrix)
 		{
@@ -278,7 +278,7 @@ JacobianType::Type CObjectGenericODE2::GetAvailableJacobians() const
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE2::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
-	SysError("CObjectGenericODE2:GetAccessFunctionBody not available");
+	SysError("CObjectGenericODE2:GetAccessFunctionBody not available", PyErrorType::notImplementedError);
 }
 
 //! provide according output variable in "value"
@@ -330,7 +330,7 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectGenericODE2::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CObjectGenericODE2::GetPosition: function not available");
+	CHECKandTHROWstring("CObjectGenericODE2::GetPosition: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
 	//return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) + localPosition;
 
@@ -339,7 +339,7 @@ Vector3D CObjectGenericODE2::GetPosition(const Vector3D& localPosition, Configur
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectGenericODE2::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CObjectGenericODE2::GetVelocity: function not available");
+	CHECKandTHROWstring("CObjectGenericODE2::GetVelocity: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
 	//return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration);
 }
@@ -347,7 +347,7 @@ Vector3D CObjectGenericODE2::GetVelocity(const Vector3D& localPosition, Configur
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectGenericODE2::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CObjectGenericODE2::GetDisplacement: function not available");
+	CHECKandTHROWstring("CObjectGenericODE2::GetDisplacement: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
 	//return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
@@ -377,7 +377,7 @@ void CObjectGenericODE2::InitializeCoordinateIndices()
 		parameters.coordinateIndexPerNode[i] = s;
 		if (!EXUstd::IndexIsInRange(parameters.nodeNumbers[i], 0, cSystemData->GetCNodes().NumberOfItems()))
 		{
-			PyError("ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist");
+			PyError("ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist", PyErrorType::modelError);
 		}
 		else
 		{
@@ -402,7 +402,7 @@ void CObjectGenericODE2::GetAccessFunctionSuperElement(AccessFunctionType access
 //! get extended output variable types for multi-nodal objects with mesh nodes
 OutputVariableType CObjectGenericODE2::GetOutputVariableTypesSuperElement(Index meshNodeNumber) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableTypesSuperElement: meshNodeNumber out of range ");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableTypesSuperElement: meshNodeNumber out of range ", ExudynIndexError);
 
 	return GetCNode(meshNodeNumber)->GetOutputVariableTypes();
 }
@@ -410,14 +410,14 @@ OutputVariableType CObjectGenericODE2::GetOutputVariableTypesSuperElement(Index 
 //! get extended output variables for multi-nodal objects with mesh nodes
 void CObjectGenericODE2::GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableSuperElement: meshNodeNumber out of range ");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableSuperElement: meshNodeNumber out of range ", ExudynIndexError);
 	return GetCNode(meshNodeNumber)->GetOutputVariable(variableType, configuration, value);
 }
 
 //! return the mesh node pointer; for consistency checks
 CNodeODE2* CObjectGenericODE2::GetMeshNode(Index meshNodeNumber) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNode: meshNodeNumber out of range");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNode: meshNodeNumber out of range", ExudynIndexError);
 
 	return (CNodeODE2*)(GetCNode(meshNodeNumber));
 }
@@ -425,7 +425,7 @@ CNodeODE2* CObjectGenericODE2::GetMeshNode(Index meshNodeNumber) const
 //! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectGenericODE2::GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalPosition: meshNodeNumber out of range");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalPosition: meshNodeNumber out of range", ExudynIndexError);
 	
 	return ((CNodeODE2*)(GetCNode(meshNodeNumber)))->GetPosition(configuration);
 }
@@ -433,7 +433,7 @@ Vector3D CObjectGenericODE2::GetMeshNodeLocalPosition(Index meshNodeNumber, Conf
 //! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectGenericODE2::GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalVelocity: meshNodeNumber out of range ");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalVelocity: meshNodeNumber out of range ", ExudynIndexError);
 
 	return ((CNodeODE2*)(GetCNode(meshNodeNumber)))->GetVelocity(configuration);
 }
@@ -441,14 +441,14 @@ Vector3D CObjectGenericODE2::GetMeshNodeLocalVelocity(Index meshNodeNumber, Conf
 //! return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectGenericODE2::GetMeshNodePosition(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodePosition: meshNodeNumber out of range");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodePosition: meshNodeNumber out of range", ExudynIndexError);
 	return GetMeshNodeLocalPosition(meshNodeNumber, configuration);
 }
 
 //! return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectGenericODE2::GetMeshNodeVelocity(Index meshNodeNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeVelocity: meshNodeNumber out of range");
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeVelocity: meshNodeNumber out of range", ExudynIndexError);
 
 	return GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
 }

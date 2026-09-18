@@ -57,7 +57,7 @@ TReal CObjectContactSphereTorus::ComputeContactForces(TReal gap, const SlimVecto
 				{
 					lambda *= (ee * ee - 1.) / ee;
 				} else {
-					CHECKandTHROWstring("CObjectContactSphereTorus: coefficient of restitution must be > 0");
+					CHECKandTHROWstring("CObjectContactSphereTorus: coefficient of restitution must be > 0", ExudynValueError);
 				}
 			}
 			contactForce += lambda * deltaExp * deltaVnormal;
@@ -116,7 +116,7 @@ void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStruc
 
 	Vector3D rPC = (pp0 - p1);
 	Real lenR = rPC.GetL2Norm();
-	CHECKandTHROW(lenR > 0, "CObjectContactSphereTorus::ComputeConnectorProperties: sphere is exactly at axis of torus and therefore contact computations failed!");
+	CHECKandTHROW(lenR > 0, "CObjectContactSphereTorus::ComputeConnectorProperties: sphere is exactly at axis of torus and therefore contact computations failed!", ExudynModelError);
 	
 	rPC *= parameters.torusMajorRadius / lenR; //now rPC points from p0 to center of circle at torus
 	pCircle1 = p1 + rPC; //center of circle on torus, representing marker 1 as hollow sphere (or cylinder)

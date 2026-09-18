@@ -47,7 +47,7 @@ void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 	if (computeInverse)
 	{
 		Index rv = massMatrixC.GetInternalDenseMatrix().InvertSpecial(tempMatrix, tempArrayIndex, false);
-		CHECKandTHROW(rv == -1, "CObjectKinematicTree::ComputeMassMatrix: inverse failed; check if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+		CHECKandTHROW(rv == -1, "CObjectKinematicTree::ComputeMassMatrix: inverse failed; check if mass parameters are non-zero or set computeMassMatrixInversePerBody=False", ExudynValueError);
         __UNUSED(rv); //avoid unused variable warnings
 	}
 }
@@ -85,7 +85,7 @@ void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType
 	}
 	case OutputVariableType::Force:
 	{
-		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectKinematicTree::GetOutputVariable: OutputVariableType::Force can only be computed for Current configuration");
+		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectKinematicTree::GetOutputVariable: OutputVariableType::Force can only be computed for Current configuration", ExudynValueError);
 		ComputeODE2LHS(value, objectNumber);	break;
 	}
 	default:
@@ -107,7 +107,7 @@ Vector3D CObjectKinematicTree::GetPosition(const Vector3D& localPosition, Config
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectKinematicTree::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CObjectKinematicTree::GetVelocity: function not available");
+	CHECKandTHROWstring("CObjectKinematicTree::GetVelocity: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
 	//return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration);
 }
@@ -115,7 +115,7 @@ Vector3D CObjectKinematicTree::GetVelocity(const Vector3D& localPosition, Config
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectKinematicTree::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CObjectKinematicTree::GetDisplacement: function not available");
+	CHECKandTHROWstring("CObjectKinematicTree::GetDisplacement: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
 	//return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
@@ -123,7 +123,7 @@ Vector3D CObjectKinematicTree::GetDisplacement(const Vector3D& localPosition, Co
 //! return the local position of the center of mass, used for massProportionalLoad, which may NOT be appropriate for GenericODE2
 Vector3D CObjectKinematicTree::GetLocalCenterOfMass() const 
 {
-	CHECKandTHROWstring("CObjectKinematicTree::GetLocalCenterOfMass: function not available");
+	CHECKandTHROWstring("CObjectKinematicTree::GetLocalCenterOfMass: function not available", ExudynNotImplementedError);
 	return Vector3D(0.);
 }
 
@@ -394,7 +394,7 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 			Vector userForce;
 
 			EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempVector, tempVector2);
-			CHECKandTHROW(userForce.NumberOfItems() == n, "CObjectKinematicTree: forceUserFunction return a vector with different size from ObjectKinematicTree system size");
+			CHECKandTHROW(userForce.NumberOfItems() == n, "CObjectKinematicTree: forceUserFunction return a vector with different size from ObjectKinematicTree system size", ExudynValueError);
 			f -= userForce;
 		}
 
@@ -500,7 +500,7 @@ void CObjectKinematicTree::AddExternalForces6D(const Transformation66List& Xup, 
 //! return the (global) position of 'localPosition' of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetPositionKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetPositionKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetPositionKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -518,7 +518,7 @@ Vector3D CObjectKinematicTree::GetPositionKinematicTree(const Vector3D& localPos
 //! return the rotation matrix of of linkNumber according to configuration type
 Matrix3D CObjectKinematicTree::GetRotationMatrixKinematicTree(Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetRotationMatrixKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetRotationMatrixKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -536,7 +536,7 @@ Matrix3D CObjectKinematicTree::GetRotationMatrixKinematicTree(Index linkNumber, 
 //! return the (global) velocity of 'localPosition' and linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetVelocityKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetVelocityKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetVelocityKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -557,7 +557,7 @@ Vector3D CObjectKinematicTree::GetVelocityKinematicTree(const Vector3D& localPos
 //! return the (global) angular velocity of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAngularVelocityKinematicTree(Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularVelocityKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularVelocityKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -578,7 +578,7 @@ Vector3D CObjectKinematicTree::GetAngularVelocityKinematicTree(Index linkNumber,
 //! return the (local) angular velocity of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAngularVelocityLocalKinematicTree(Index linkNumber, ConfigurationType configuration ) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularVelocityLocalKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularVelocityLocalKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -595,7 +595,7 @@ Vector3D CObjectKinematicTree::GetAngularVelocityLocalKinematicTree(Index linkNu
 //! return the (global) acceleration of 'localPosition' and linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAccelerationKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAccelerationKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAccelerationKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -626,7 +626,7 @@ Vector3D CObjectKinematicTree::GetAccelerationKinematicTree(const Vector3D& loca
 //! return the (global) angular acceleration of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAngularAccelerationKinematicTree(Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularAccelerationKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularAccelerationKinematicTree: invalid linkNumber", ExudynIndexError);
 
 	Transformation66List& jointTransformations = (configuration != ConfigurationType::Visualization) ? jointTransformationsTemp : jointTransformationsTempVis;
 	Vector6DList& jointVelocities = (configuration != ConfigurationType::Visualization) ? jointVelocitiesTemp : jointVelocitiesTempVis;
@@ -709,7 +709,7 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 //! just make sure that this overwritten function is not called!
 void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
-	SysError("CObjectKinematicTree:GetAccessFunctionBody not available");
+	SysError("CObjectKinematicTree:GetAccessFunctionBody not available", PyErrorType::notImplementedError);
 }
 
 

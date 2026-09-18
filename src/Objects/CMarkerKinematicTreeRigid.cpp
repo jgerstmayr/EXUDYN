@@ -76,11 +76,11 @@ void CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative(const CSyste
 	//markerData.jacobianDerivative.SetAll(0.);
 	//return;
 
-	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: this function is needed by some connector, but is not implemented yet!");
+	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: this function is needed by some connector, but is not implemented yet!", ExudynNotImplementedError);
 
 	if (!EXUstd::IsOfType(cSystemData.GetCObjects()[parameters.objectNumber]->GetAccessFunctionTypes(), AccessFunctionType::JacobianTtimesVector_q))
 	{
-		CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: object " + EXUstd::ToString(parameters.objectNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact");
+		CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: object " + EXUstd::ToString(parameters.objectNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact", ExudynNotImplementedError);
 	}
 
 	//**********************************************************

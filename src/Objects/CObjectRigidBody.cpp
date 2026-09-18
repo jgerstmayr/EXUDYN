@@ -112,7 +112,7 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 		Index rv = massMatrix.InvertWithMaxSize<CNodeRigidBody::maxRotationCoordinates + nDisplacementCoordinates>();
 		if (rv != -1)
 		{
-			CHECKandTHROWstring("CObjectRigidBody::ComputeMassMatrix: inverse failed; check if node type fits, if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+			CHECKandTHROWstring("CObjectRigidBody::ComputeMassMatrix: inverse failed; check if node type fits, if mass parameters are non-zero or set computeMassMatrixInversePerBody=False", ExudynValueError);
 		}
 	}
 

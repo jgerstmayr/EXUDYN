@@ -115,7 +115,7 @@ void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerData(const CSystemDat
 void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {
 	//should not be called, because flags not set
-	CHECKandTHROWstring("CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivative NOT implemented");
+	CHECKandTHROWstring("CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivative NOT implemented", ExudynNotImplementedError);
 
 	//if (!EXUstd::IsOfType(cSystemData.GetCObjects()[parameters.bodyNumbers[0]]->GetAccessFunctionTypes(), AccessFunctionType::JacobianTtimesVector_q))
 	//{

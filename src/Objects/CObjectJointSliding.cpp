@@ -66,7 +66,7 @@ void CObjectJointSliding::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 
 		if (velocityLevel)
 		{
-			CHECKandTHROWstring("CObjectJointSliding::ComputeAlgebraicEquations: velocityLevel not possible now!");
+			CHECKandTHROWstring("CObjectJointSliding::ComputeAlgebraicEquations: velocityLevel not possible now!", ExudynNotImplementedError);
 		}
 
 		if (true) //(parameters.classicalFormulation)
@@ -92,10 +92,10 @@ void CObjectJointSliding::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 		//{
 		//	//check SlidingJoint2D
 		//}
-		CHECKandTHROW(!HasRotationConstraints(), "CObjectJointSliding::ComputeAlgebraicEquations: constrainRotations must be all zero for now!");
+		CHECKandTHROW(!HasRotationConstraints(), "CObjectJointSliding::ComputeAlgebraicEquations: constrainRotations must be all zero for now!", ExudynNotImplementedError);
 		if (HasRotationConstraints())
 		{
-			CHECKandTHROW(beamHasTorsion || !parameters.constrainRotations[0], "CObjectJointSliding::ComputeAlgebraicEquations: for torsion-free beam elements, constrainRotations[0] must be zero!");
+			CHECKandTHROW(beamHasTorsion || !parameters.constrainRotations[0], "CObjectJointSliding::ComputeAlgebraicEquations: for torsion-free beam elements, constrainRotations[0] must be zero!", ExudynModelError);
 
 			algebraicEquations[torquesStartIndex + 0] = GetCurrentAEcoordinate(torquesStartIndex);
 			if (parameters.constrainRotations[1]) //rotation around y-axis
@@ -185,7 +185,7 @@ void CObjectJointSliding::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resi
 
 		if (HasRotationConstraints())
 		{
-			CHECKandTHROWstring("CObjectJointSliding::ComputeJacobianAE: case with constrainRotations[i]!=0 not implemented!");
+			CHECKandTHROWstring("CObjectJointSliding::ComputeJacobianAE: case with constrainRotations[i]!=0 not implemented!", ExudynNotImplementedError);
 			//const ResizableMatrix& rotJac0 = markerData.GetMarkerData(0).rotationJacobian;
 			//Matrix3D A0 = markerData.GetMarkerData(0).orientation;
 

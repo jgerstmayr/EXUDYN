@@ -86,7 +86,7 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 		Vector userForce;
 
 		EvaluateUserFunctionRHS(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates);
-		CHECKandTHROW(userForce.NumberOfItems() == nODE1, "CObjectGenericODE1: forceUserFunction return a vector with different size from ObjectGenericODE1 system size");
+		CHECKandTHROW(userForce.NumberOfItems() == nODE1, "CObjectGenericODE1: forceUserFunction return a vector with different size from ObjectGenericODE1 system size", ExudynValueError);
 
 		ODE1Rhs += userForce;
 	}
@@ -97,7 +97,7 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE1::GetAccessFunction(AccessFunctionType accessType, Matrix& value) const
 {
-	SysError("CObjectGenericODE1:GetAccessFunction not available");
+	SysError("CObjectGenericODE1:GetAccessFunction not available", PyErrorType::notImplementedError);
 }
 
 //! provide according output variable in "value"
@@ -150,7 +150,7 @@ void CObjectGenericODE1::InitializeCoordinateIndices()
 		parameters.coordinateIndexPerNode[i] = s;
 		if (!EXUstd::IndexIsInRange(parameters.nodeNumbers[i], 0, cSystemData->GetCNodes().NumberOfItems()))
 		{
-			PyError("ObjectGenericODE1: invalid node number detected; all nodes used in ObjectGenericODE1 must already exist");
+			PyError("ObjectGenericODE1: invalid node number detected; all nodes used in ObjectGenericODE1 must already exist", PyErrorType::modelError);
 		}
 		else
 		{

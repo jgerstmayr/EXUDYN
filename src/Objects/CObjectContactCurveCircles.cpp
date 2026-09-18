@@ -71,7 +71,7 @@ void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStru
 	Vector2D v02D({ v0Local[0], v0Local[1] });
 	Real omegaZ = omega0local[2];
 
-	CHECKandTHROW(parameters.segmentsData.UseDenseMatrix(), "CObjectContactCurveCircles::ComputeConnectorProperties: segmentsData must be in dense matrix mode!");
+	CHECKandTHROW(parameters.segmentsData.UseDenseMatrix(), "CObjectContactCurveCircles::ComputeConnectorProperties: segmentsData must be in dense matrix mode!", ExudynValueError);
 
 	const ResizableMatrix& segData = parameters.segmentsData.GetInternalDenseMatrix();
 	//const ResizableMatrix& polyData = parameters.polynomialData.GetInternalDenseMatrix();

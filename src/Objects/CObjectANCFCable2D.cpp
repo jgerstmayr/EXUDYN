@@ -178,7 +178,7 @@ void CObjectANCFCable2DBase::PreComputeMassTerms() const
 //! Computational function: compute mass matrix
 void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectANCFCable2DBase::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+	CHECKandTHROW(!computeInverse, "CObjectANCFCable2DBase::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
@@ -269,7 +269,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
 		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
 	}
-	else { CHECKandTHROWstring("ObjectANCFCable2DBase::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
+	else { CHECKandTHROWstring("ObjectANCFCable2DBase::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
 
 	//axial strain:
 	cnt = 0;
@@ -342,7 +342,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		else
 		{
 			//NOT differentiated!
-			CHECKandTHROW(!isALE || physicsMovingMassFactor != 1., "CObjectANCFCable2DBase: ALE not compatible with user function");
+			CHECKandTHROW(!isALE || physicsMovingMassFactor != 1., "CObjectANCFCable2DBase: ALE not compatible with user function", ExudynModelError);
 
 			Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
 			SlimVectorBase<TReal, dim> rxx = MapCoordinates<TReal>(SVxx, qANCF);
@@ -401,7 +401,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	//	integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder5Points);  
 	//	integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder5Weights);
 	//}
-	else { CHECKandTHROWstring("ObjectANCFCable2DBase::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
+	else { CHECKandTHROWstring("ObjectANCFCable2DBase::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
 
 	cnt = 0;
 	for (auto item : integrationPoints)
@@ -513,7 +513,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		else
 		{
 			//NOT differentiated!
-			CHECKandTHROW(!isALE || physicsMovingMassFactor != 1., "CObjectANCFCable2DBase: ALE not compatible with user function");
+			CHECKandTHROW(!isALE || physicsMovingMassFactor != 1., "CObjectANCFCable2DBase: ALE not compatible with user function", ExudynModelError);
 
 			Real rxNorm = sqrt((Real)rxNorm2);
 			Real axialStrain = rxNorm - 1.; // axial strain

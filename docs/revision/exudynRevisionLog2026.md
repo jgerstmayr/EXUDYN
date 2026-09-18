@@ -7078,6 +7078,84 @@ for a LaTeX original that never existed.
 ---
 
 
+<a id="r6-3-6-objects"></a>
+### R6.3.6 — the mapping, area by area: `src/Objects`
+
+**IN PROGRESS** (#2528). Third area done 2026-09-18.
+
+365 sites, the largest area so far and the first where reading one site at a time would have
+produced a table nobody could review. **190 got an explicit type**, 162 deliberately did not.
+
+#### The method had to change, and that is the point of this entry
+
+The first two areas were mapped from a hand-written table of file and line number. At 365 sites
+that table would be three pages of numbers whose correctness cannot be checked by reading it.
+So this area was mapped by **patterns over the message**, each pattern carrying the reason for
+its type, and every site matched against them — with the unmatched ones printed. A pattern
+is reviewable in a way a line number is not: `meshNodeNumber` → `ExudynIndexError` can be
+judged as a rule, and it covers 31 sites in three files.
+
+The reason it works here and not earlier: `src/Objects` is 130 files written to the same shape,
+so its error messages repeat. `GetOutputVariable: invalid configuration` occurs **55 times**,
+once per node class.
+
+| pattern | type | sites |
+|---|---|---:|
+| `GetOutputVariable: invalid configuration` | `valueError` | 55 |
+| `meshNodeNumber` / `linkNumber < NumberOfLinks` | `ExudynIndexError` | 31 |
+| *not implemented*, *not available*, *not possible now*, `computeInverse` | `ExudynNotImplementedError` | 42 |
+| a parameter value that cannot be used | `ExudynValueError` | ~40 |
+| what a user's own user function returned | `ExudynValueError` | 5 |
+| the model put together in a way that cannot work | `ExudynModelError` | 18 |
+| `expected BeamSection` | `ExudynTypeError` | 2 |
+
+#### The 55 that were worth the whole exercise
+
+Every node class ends its `GetOutputVariable` with a branch like
+
+```cpp
+if (IsValidConfigurationButNotReference(configuration)) { value = GetCoordinateVector_t(...); }
+else { PyError("CNodePoint::GetOutputVariable: invalid configuration"); }
+```
+
+That is a user asking for a velocity in the **Reference** configuration, where there is none.
+It is the single most ordinary mistake in this area and it raised a bare `RuntimeError` in all
+55 places. It is now `ExudynValueError`, which is also a `ValueError`.
+
+#### 162 sites keep no type, in three groups
+
+| group | sites | why |
+|---|---:|---|
+| `SysError` | 87 | its default already **is** `internalError`; most say *"error should not occur"* in their own comment |
+| the `velocityAvailable` family | 29 | *"marker do not provide velocityLevel information"* — the **solver** failed to provide it, not the user; the user-reachable path is guarded upstream in `src/Main` by the typed `GetObjectOutput: may only be called for connectors with Current configuration` |
+| other macro sites | 46 | degenerate elements, zero-length slope vectors, *"illegal case"*, *"inverse failed"*, `ltg` size mismatches — Exudyn invariants, which the default flip will type in one move |
+
+The `velocityAvailable` group is the one worth arguing about, so the argument is recorded: the
+triage called all 29 USER because the message mentions a marker, and reading them says otherwise.
+They fire when a connector is asked for velocity-level data during a computation that has none,
+which the solver decides.
+
+#### What moved in the reference file
+
+`parameterConversionTestReference.txt` changed by **six lines**: `ObjectANCFBeam.sectionData` and
+`ObjectBeamGeometricallyExact.sectionData` joined the `ExudynTypeError` group, where every other
+item-typed parameter already sat. Handing a dict where a `BeamSection` is wanted now says
+`TypeError` like every comparable parameter. Nothing else in 4637 parameter paths moved.
+
+#### Two things noticed and not fixed (rule 9)
+
+- Eight `SysError` calls say *"GetOutputVariableConnector not implemented"* and are reachable
+  from `mbs.GetObjectOutput(contactObject, ...)`. They got
+  `PyErrorType::notImplementedError`, which is the honest **type**, but the helper still prints a
+  *SYSTEM ERROR* heading where *User ERROR* belongs. Since R6.3.10 that heading only reaches the
+  log file, so it is cosmetic — but it is wrong, and changing a helper is not typing a site.
+- Four files under `src/Objects` are **cp1252**, not UTF-8 (a German umlaut in a comment). The
+  mapping tool now reads and writes each file in its own encoding; a tool that assumed UTF-8
+  would have rewritten those files wholesale.
+
+---
+
+
 <a id="r6-3-6-main"></a>
 ### R6.3.6 — the mapping, area by area: `src/Main`
 

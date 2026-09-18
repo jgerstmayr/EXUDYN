@@ -191,7 +191,7 @@ void CObjectANCFCable::PreComputeMassTerms() const
 //! Computational function: compute mass matrix
 void CObjectANCFCable::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectANCFCable::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+	CHECKandTHROW(!computeInverse, "CObjectANCFCable::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
@@ -273,7 +273,7 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
 		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
 	}
-	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
+	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
 
 	//axial strain:
 	cnt = 0;
@@ -337,7 +337,7 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points); 
 		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
 	}
-	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
+	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
 
 	cnt = 0;
 	for (auto item : integrationPoints)
@@ -493,7 +493,7 @@ void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, cons
 		//pout << "inside ..." << localPosition << "\n";
 
 		CHECKandTHROW(localPosition[1] == 0 && localPosition[2] == 0,
-			"CObjectANCFCable: markers, forces and constraints can only act at the beam centerline at Y=Z=0; check your code");
+			"CObjectANCFCable: markers, forces and constraints can only act at the beam centerline at Y=Z=0; check your code", ExudynModelError);
 
 		value.SetAll(0.);
 		value(0, 0) = SV[0];
@@ -743,7 +743,7 @@ Vector3D CObjectANCFCable::GetDisplacement(const Vector3D& localPosition, Config
 //! return configuration dependent angular velocity of node; returns always a 3D Vector
 Vector3D CObjectANCFCable::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CObjectANCFCable::GetAngularVelocity: not implemented!!!");
+	CHECKandTHROWstring("CObjectANCFCable::GetAngularVelocity: not implemented!!!", ExudynNotImplementedError);
 	//for details see GetAngularVelocity in Point2DSlope1
 
 	Real xLoc = localPosition[0]; //only x-coordinate

@@ -44,7 +44,7 @@ void CMarkerBodyPosition::ComputeMarkerDataJacobianDerivative(const CSystemData&
 {
 	if (!EXUstd::IsOfType(cSystemData.GetCObjects()[parameters.bodyNumber]->GetAccessFunctionTypes(), AccessFunctionType::JacobianTtimesVector_q))
 	{
-		CHECKandTHROWstring("MarkerBodyPosition::ComputeMarkerDataJacobianDerivative: body " + EXUstd::ToString(parameters.bodyNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact");
+		CHECKandTHROWstring("MarkerBodyPosition::ComputeMarkerDataJacobianDerivative: body " + EXUstd::ToString(parameters.bodyNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact", ExudynNotImplementedError);
 	}
 
 	//v has size 6, must be copied to markerData.jacobianDerivative

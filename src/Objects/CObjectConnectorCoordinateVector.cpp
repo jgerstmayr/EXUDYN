@@ -207,15 +207,15 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 				markerData.GetMarkerData(0).vectorValue, markerData.GetMarkerData(1).vectorValue,
 				markerData.GetMarkerData(0).vectorValue_t, markerData.GetMarkerData(1).vectorValue_t, parameters.velocityLevel);
 
-			CHECKandTHROW(MC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::ComputeJacobianAE: jacobian currently only accepts dense matrices");
+			CHECKandTHROW(MC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::ComputeJacobianAE: jacobian currently only accepts dense matrices", ExudynValueError);
 			usedJac->CopyFrom(MC.GetInternalDenseMatrix());
 
 			CHECKandTHROW(usedJac->NumberOfRows() == nAE, 
 				"CObjectConnectorCoordinateVector::ComputeJacobianAE with jacobianUserFunction: number of rows returned=" + 
-				EXUstd::ToString(usedJac->NumberOfRows()) + " but expected nAE=" + EXUstd::ToString(nAE));
+				EXUstd::ToString(usedJac->NumberOfRows()) + " but expected nAE=" + EXUstd::ToString(nAE), ExudynValueError);
 			CHECKandTHROW(usedJac->NumberOfColumns() == sizeOfCoordinates, 
 				"CObjectConnectorCoordinateVector::ComputeJacobianAE with jacobianUserFunction: number of columns returned=" + 
-				EXUstd::ToString(usedJac->NumberOfColumns()) + " but expected nAE=" + EXUstd::ToString(sizeOfCoordinates));
+				EXUstd::ToString(usedJac->NumberOfColumns()) + " but expected nAE=" + EXUstd::ToString(sizeOfCoordinates), ExudynValueError);
 		}
 
 	}

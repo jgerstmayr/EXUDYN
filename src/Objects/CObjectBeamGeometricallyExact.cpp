@@ -42,16 +42,16 @@ void MainObjectBeamGeometricallyExact::SetInternalBeamSection(const py::object& 
 		bsCheck = GetInternalBeamSection();
 		if (!(bs.stiffnessMatrix == bsCheck.stiffnessMatrix))
 		{
-			PyError("ObjectBeamGeometricallyExact: BeamSection stiffnessMatrix contains values which can not be used");
+			PyError("ObjectBeamGeometricallyExact: BeamSection stiffnessMatrix contains values which can not be used", PyErrorType::valueError);
 		}
 		if (!(bs.inertia == bsCheck.inertia))
 		{
-			PyError("ObjectBeamGeometricallyExact: BeamSection inertia contains values which can not be used");
+			PyError("ObjectBeamGeometricallyExact: BeamSection inertia contains values which can not be used", PyErrorType::valueError);
 		}
 	}
 	else
 	{
-		PyError("ObjectBeamGeometricallyExact: expected BeamSection, but received: " + STDstring(py::str(pyObject)));
+		PyError("ObjectBeamGeometricallyExact: expected BeamSection, but received: " + STDstring(py::str(pyObject)), PyErrorType::typeError);
 	}
 }
 
@@ -119,7 +119,7 @@ Vector3D CObjectBeamGeometricallyExact::MapVectors(const Vector2D& SV, const Vec
 //! Computational function: compute mass matrix
 void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+	CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	massMatrix.SetScalarMatrix(GetODE2Size(), 0.); //set 6x6 matrix
@@ -416,7 +416,7 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 void CObjectBeamGeometricallyExact::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
 	//Real L = parameters.physicsLength;
-	CHECKandTHROWstring("CObjectBeamGeometricallyExact::GetAccessFunctionBody (for MarkerBody): NOT implemented yet; Markers can be only attached to nodes!");
+	CHECKandTHROWstring("CObjectBeamGeometricallyExact::GetAccessFunctionBody (for MarkerBody): NOT implemented yet; Markers can be only attached to nodes!", ExudynNotImplementedError);
 
 	switch (accessType)
 	{

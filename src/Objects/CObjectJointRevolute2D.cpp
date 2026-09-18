@@ -96,7 +96,7 @@ OutputVariableType CObjectJointRevolute2D::GetOutputVariableTypes() const
 //! provide according output variable in "value"
 void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	SysError("CObjectJointRevolute2D::GetOutputVariableConnector not implemented");
+	SysError("CObjectJointRevolute2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
 }
 
 

@@ -206,7 +206,7 @@ void CNodePointSlope12::GetRotationJacobian(Matrix& value) const
 //! 4x4 matrix for all nodal coordinates
 void CNodePointSlope12::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const 
 { 
-	CHECKandTHROWstring("CNodePointSlope12::GetRotationJacobianTTimesVector_q: not implemented!");
+	CHECKandTHROWstring("CNodePointSlope12::GetRotationJacobianTTimesVector_q: not implemented!", ExudynNotImplementedError);
 
 	////only in current configuration!
 	//LinkedDataVector ref = GetCoordinateVector(ConfigurationType::Reference);
@@ -280,7 +280,7 @@ void CNodePointSlope12::GetOutputVariable(OutputVariableType variableType, Confi
 		}
 		else
 		{
-			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -292,7 +292,7 @@ void CNodePointSlope12::GetOutputVariable(OutputVariableType variableType, Confi
 		}
 		else
 		{
-			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -304,7 +304,7 @@ void CNodePointSlope12::GetOutputVariable(OutputVariableType variableType, Confi
 		}
 		else
 		{
-			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}
@@ -316,7 +316,7 @@ void CNodePointSlope12::GetOutputVariable(OutputVariableType variableType, Confi
 		}
 		else
 		{
-			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration");
+			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration", PyErrorType::valueError);
 		}
 		break;
 	}

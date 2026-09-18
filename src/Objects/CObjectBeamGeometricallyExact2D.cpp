@@ -111,7 +111,7 @@ Matrix2D CObjectBeamGeometricallyExact2D::GetRotationMatrix2D(Real theta) const
 // Compute mass matrix for ns-node element (each node: 3 DOFs)
 void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-    CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact2D::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+    CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact2D::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
     Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
     if (massMatrixComputed)

@@ -113,7 +113,7 @@ Vector3D CObjectContactConvexRoll::FindContactPoint(const Matrix3D& Rotm, const 
 void CObjectContactConvexRoll::InitializeObject(const CObjectContactConvexRollParameters& parameters) 
 {
 	if (parameters.coefficientsHull.NumberOfItems() > CObjectContactConvexRollMaxPolynomialCoefficients) {
-		PyError("The maximum number of " + EXUstd::ToString(CObjectContactConvexRollMaxPolynomialCoefficients) + " coefficients for the polynomial of the ContactConvexRoll was exceeded. Please reduce the number of coefficients. ");
+		PyError("The maximum number of " + EXUstd::ToString(CObjectContactConvexRollMaxPolynomialCoefficients) + " coefficients for the polynomial of the ContactConvexRoll was exceeded. Please reduce the number of coefficients. ", PyErrorType::valueError);
 	}
 	Vector dpoly; //just called once, new is no problem!
 	Vector ddpoly; 
