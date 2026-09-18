@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.184.dev1, 
++  Exudyn version = 1.11.186.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2527, 
-+  Number of resolved issues = 2257 (184 in current version), 
++  Number of issues = 2528, 
++  Number of resolved issues = 2259 (186 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.186: resolved Issue 2527: str(exception) carries no information (change)
+    - issue author: Claude-JG
+    - description:  PyError prints the explanation and then throws the fixed sentence Exudyn: parsing of Python file terminated due to Python (user) error - identical for a bad item number\, a string written into a number and a missing marker. The model of revision2026 step R6.3.7 shows six of ten user errors arriving that way. An except block that logs the message logs nothing\, and the detail is gone. SysError does the same. revision2026 step R6.3.5.
+    - **notes:** PyError and SysError throw the actual message plus the Python location instead of a fixed sentence, six of the ten cases of the model of #2523 now say what went wrong. PyGetCurrentFileInformation walks out of the exudyn package\, so the location is the users own frame and not exudyn/solver.py. revision2026 step R6.3.5.
+    - date resolved: **2026-09-18 18:39**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.185: resolved Issue 2524: a user function error is reported as a SYSTEM ERROR (fix)
+    - issue author: Claude-JG
+    - description:  An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug\, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file\, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.
+    - **notes:** the user function handler raises PyErrorType::modelError - a user function is part of the model - and SolverExceptionHandling passes an already-typed exception through instead of re-reporting it as EXUDYN raised internal error. A bare EXUexception still becomes a SysError. The header of the printed block now names the users own file and line. revision2026 step R6.3.5.
+    - date resolved: **2026-09-18 18:39**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.184: resolved Issue 2525: every generated GitHub weblink points at the old pythonDev tree (fix)
     - issue author: Claude-JG
     - description:  The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1\, R3.8 and R3.9\, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).
@@ -7757,11 +7769,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * :textred:`open issue 2524:` a user function error is reported as a SYSTEM ERROR
-    - issue author: Claude-JG
-    - description:  An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug\, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file\, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.
-    - date raised: 2026-09-18 
 
  * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG

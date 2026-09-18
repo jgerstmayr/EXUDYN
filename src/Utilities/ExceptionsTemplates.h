@@ -47,8 +47,11 @@ void UserFunctionExceptionHandling(Tfunction&& f, const char* functionName)
 	//mostly catches python errors:
 	catch (const pybind11::error_already_set& ex)
 	{
-		PyError("Error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
-		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//the user's own Python failed inside their own function. That is a MODEL error - a user
+		//function is part of the model - and naming it as one is what keeps the solver from
+		//reporting it a second time as an internal Exudyn error (#2524)
+		PyError("Error in Python USER FUNCTION '" + STDstring(functionName) + "':\n" + STDstring(ex.what()) + "; check your Python code!",
+			PyErrorType::modelError);
 	}
 
 	catch (const EXUexception& ex)
@@ -78,13 +81,24 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 	//mostly catches python errors:
 	catch (const pybind11::error_already_set& ex)
 	{
-		PyError("Error in solver function '" + STDstring(functionName) + "' originating from Python code (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
-		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		PyError("Error in solver function '" + STDstring(functionName) + "' originating from Python code:\n" + STDstring(ex.what()) + "; check your Python code!",
+			PyErrorType::modelError);
+	}
+	//ALREADY REPORTED, and with a type that says what it is: a user function that raised, a
+	//parameter error, a solver failure. Reporting it again as "EXUDYN raised internal error" labels
+	//a user's mistake an Exudyn bug - which is exactly what happened to every user function error
+	//until #2524. These must come before catch(EXUexception): both derive from it (info fact 29)
+	catch (const py::builtin_exception&)
+	{
+		throw;
+	}
+	catch (const ExudynError&)
+	{
+		throw;
 	}
 	catch (const EXUexception& ex)
 	{
 		SysError("EXUDYN raised internal error in '" + STDstring(functionName) + "':\n" + STDstring(ex.what()));
-		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{

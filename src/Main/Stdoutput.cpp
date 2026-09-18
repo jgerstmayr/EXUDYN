@@ -280,19 +280,65 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 }
 
 
+//! the directory of the shipped exudyn package, asked once; used to decide which Python frame is
+//! the USER's (#2524, revision2026 step R6.3.5)
+const std::string& ExudynPackageDirectory()
+{
+	static std::string directory = []() -> std::string
+	{
+		try
+		{
+			std::string file = py::cast<std::string>(py::module::import("exudyn").attr("__file__"));
+			for (char& character : file) { if (character == '\\') { character = '/'; } }
+			for (char& character : file) { character = (char)tolower((unsigned char)character); }
+			size_t position = file.find_last_of('/');
+			return position == std::string::npos ? std::string() : file.substr(0, position + 1);
+		}
+		catch (...) { return std::string(); }
+	}();
+
+	return directory;
+}
+
 void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< retrieve current parsed file information from python (for error/warning messages...)
 {
 	try
 	{
 		py::module inspect = py::module::import("inspect");
-		py::object currentFrame = inspect.attr("currentframe")();
-		lineNumber = int(py::int_(currentFrame.attr("f_lineno")));
+		py::object frame = inspect.attr("currentframe")();
 
-		//python usage: fn = inspect.getframeinfo(inspect.currentframe()).filename
-		py::object frameInfo = inspect.attr("getframeinfo")(currentFrame);
-		fileName = std::string(py::str(frameInfo.attr("filename")));
+		//WHY currentframe() AND NOT THE C++ STACK: this is the only way to learn which line of
+		//PYTHON is executing, and inside a user function - springForceUserFunction and its kin -
+		//that is the only line worth naming. Nothing on the C++ side knows it.
+		//WHY THE WALK: the innermost frame is not always the user's. During mbs.SolveDynamic() it is
+		//exudyn/solver.py, so every error raised from a solver run used to name the solver wrapper
+		//and a line the user has never seen (#2524). So walk outwards to the first frame that is not
+		//inside the shipped package - and if every frame is inside it, keep the innermost one, which
+		//is the best answer available.
+		//getframeinfo() is deliberately NOT used: it scans sys.modules and READS THE SOURCE FILE,
+		//which cost 9 s in a model that provokes 38000 errors (#2423), and f_code.co_filename says
+		//the same thing.
+		const std::string& packageDirectory = ExudynPackageDirectory();
+		py::object chosen = frame;
+		py::object current = frame;
 
-		//py::print(std::string("info has been called from: ") + fileName + std::string(" at line ") + EXUstd::ToString(line));
+		while (!current.is_none())
+		{
+			std::string name = py::cast<std::string>(current.attr("f_code").attr("co_filename"));
+			std::string normalized = name;
+			for (char& character : normalized) { if (character == '\\') { character = '/'; } }
+			for (char& character : normalized) { character = (char)tolower((unsigned char)character); }
+
+			if (packageDirectory.empty() || normalized.compare(0, packageDirectory.size(), packageDirectory) != 0)
+			{
+				chosen = current;
+				break;
+			}
+			current = current.attr("f_back");
+		}
+
+		fileName = py::cast<std::string>(chosen.attr("f_code").attr("co_filename"));
+		lineNumber = int(py::int_(chosen.attr("f_lineno")));
 	}
 	catch (...) //any other exception
 	{
@@ -319,6 +365,14 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	case PyErrorType::arithmeticError:     throw ExudynArithmeticError(message);
 	default:                               throw std::runtime_error(message);
 	}
+}
+
+//! the message an exception carries: what went wrong, and where the user's Python was (#2527)
+std::string ErrorMessageWithLocation(const std::string& message, const std::string& fileName, Index lineNumber)
+{
+	if (fileName == "unknown file" || fileName.empty()) { return message; }
+
+	return message + " [Python file '" + fileName + "', line " + EXUstd::ToString(lineNumber) + "]";
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
@@ -349,12 +403,13 @@ void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 		file << "Exudyn: parsing of Python file terminated due to python (user) error\n\n";
 		file << "********************************************************************\n\n";
 	}
-	//PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
-	//the DETAIL is in error_msg above; what is thrown carries only the fixed text, which is what the
-	//message work of revision2026 step R6.3 changes. R6.7 decides the TYPE only (#2432):
-	//py::type_error and py::value_error are pybind11 builtin exceptions and become TypeError and
-	//ValueError when they leave a bound function
-	ThrowPyErrorType(errorType, "Exudyn: parsing of Python file terminated due to Python (user) error");
+	//WHAT IS THROWN CARRIES THE DETAIL (#2527, revision2026 step R6.3.5). Until now it was the fixed
+	//sentence "Exudyn: parsing of Python file terminated due to Python (user) error", identical for
+	//a bad item number, a string written into a number and a missing marker; the explanation was
+	//printed above and then dropped, so str(exception) told a user nothing and an except block that
+	//logs the message logged nothing. The location goes with it, because a caught exception is often
+	//all that survives of a run.
+	ThrowPyErrorType(errorType, ErrorMessageWithLocation(error_msg, fileName, lineNumber).c_str());
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
@@ -388,8 +443,10 @@ void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 		file << "********************************************************************\n\n";
 	}
 	//an Exudyn invariant broke: exudyn.InternalError, which IS a RuntimeError, so an existing
-	//"except RuntimeError" keeps catching it while the type now says "please report this" (#2521)
-	ThrowPyErrorType(errorType, "Exudyn: parsing of Python file terminated due to system error");
+	//"except RuntimeError" keeps catching it while the type now says "please report this" (#2521).
+	//The message goes with it: an internal error that reaches a developer as a fixed sentence is a
+	//bug report with the evidence removed (#2527)
+	ThrowPyErrorType(errorType, ErrorMessageWithLocation(error_msg, fileName, lineNumber).c_str());
 }
 
 //!< prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar

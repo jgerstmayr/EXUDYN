@@ -98,6 +98,8 @@ enum class PyErrorType
 
 [[noreturn]] void ThrowPyErrorType(PyErrorType errorType, const char* message); //!< the one place that turns a PyErrorType into a throw (#2521); the classes are in ReleaseAssert.h
 
+std::string ErrorMessageWithLocation(const std::string& message, const std::string& fileName, Index lineNumber); //!< what an exception carries: the detail and the user's Python location (#2527)
+
 void SysError(std::string error_msg, PyErrorType errorType = PyErrorType::internalError); //!< prints a formated system (internal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; errorType selects the Python exception and defaults to what SysError means (#2521)
 
 void PyError(std::string error_msg, PyErrorType errorType = PyErrorType::runtimeError); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; errorType selects the Python exception (#2432)

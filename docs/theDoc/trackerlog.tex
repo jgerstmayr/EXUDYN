@@ -9,15 +9,33 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.184.dev1, 
+  \item Exudyn version = 1.11.186.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2527, 
-  \item Number of resolved issues = 2257 (184 in current version), 
+  \item Number of issues = 2528, 
+  \item Number of resolved issues = 2259 (186 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.186}:  resolved Issue 2527: {\bf str(exception) carries no information}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: PyError prints the explanation and then throws the fixed sentence Exudyn: parsing of Python file terminated due to Python (user) error - identical for a bad item number\, a string written into a number and a missing marker. The model of revision2026 step R6.3.7 shows six of ten user errors arriving that way. An except block that logs the message logs nothing\, and the detail is gone. SysError does the same. revision2026 step R6.3.5.}
+    \item {\bf notes: PyError and SysError throw the actual message plus the Python location instead of a fixed sentence, six of the ten cases of the model of \#2523 now say what went wrong. PyGetCurrentFileInformation walks out of the exudyn package\, so the location is the users own frame and not exudyn/solver.py. revision2026 step R6.3.5.}
+    \item   date resolved: {\bf 2026-09-18 18:39},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.185}:  resolved Issue 2524: {\bf a user function error is reported as a SYSTEM ERROR}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug\, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file\, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.}
+    \item {\bf notes: the user function handler raises PyErrorType::modelError - a user function is part of the model - and SolverExceptionHandling passes an already-typed exception through instead of re-reporting it as EXUDYN raised internal error. A bare EXUexception still becomes a SysError. The header of the printed block now names the users own file and line. revision2026 step R6.3.5.}
+    \item   date resolved: {\bf 2026-09-18 18:39},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.184}:  resolved Issue 2525: {\bf every generated GitHub weblink points at the old pythonDev tree}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

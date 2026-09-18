@@ -6981,6 +6981,107 @@ so cases 5 and 6 legitimately raise nothing there.
 ---
 
 
+<a id="r6-3-5"></a>
+### R6.3.5 — what the exception says, and where it says it happened
+
+**DONE 2026-09-18** (#2527, #2524).
+
+Three changes, all in what a user reads.
+
+#### 1. The exception carries the detail
+
+`PyError` printed the explanation and threw the fixed sentence *"Exudyn: parsing of Python file
+terminated due to Python (user) error"*; `SysError` did the same with its own sentence. So
+`str(exception)` said nothing, and an `except` block that logs the message logged nothing. The
+model of R6.3.7 measured it: **six of ten** user errors arrived that way. The same table now:
+
+| # | before | after |
+|---|---|---|
+| 1 | *parsing of Python file terminated...* | `MainSystem::GetObject: access to invalid object number` |
+| 2 | *...terminated...* | `MainSystem::GetNodeOutputVariable: access to invalid node number` |
+| 3 | *...terminated...* | `parameter ObjectMassPoint.physicsMass expects a number` |
+| 4 | *...terminated...* | `Vector3D size mismatch: expected 3 items in list` |
+| 7 | *...terminated...* | `Invalid OutputVariableType in MainObject::GetOutputVariable` |
+| 8 | *...terminated...* | `Load 0, name = 'load0', type=Coordinate, contains invalid marker number` |
+
+The location goes with it, as `[Python file '...', line N]`, because a caught exception is
+often all that survives of a long run.
+
+#### 2. The location is the user's own frame
+
+`PyGetCurrentFileInformation` took the innermost Python frame. That is right for
+`mbs.AddObject(...)`, where the innermost frame **is** the user's line — and wrong for
+anything raised during `mbs.SolveDynamic()`, where it is `exudyn/solver.py` and the user's line
+is further out. Every solver-time error named a file the user had never opened (#2524).
+
+It now walks outwards to the first frame that is not inside the shipped `exudyn` package, and
+keeps the innermost frame if every frame is inside it. The package directory is asked once from
+`exudyn.__file__`. `inspect.getframeinfo` is gone with it: `f_code.co_filename` and `f_lineno`
+say the same thing without reading the source file.
+
+**And that did not make anything faster, which is worth writing down** because step R6.6 exists
+on the premise that it would. `parameterConversionTest.py` — ~38000 probe errors — takes
+**5.89 s** inside `runTestSuite.py` with the scan removed, against **5.73-5.88 s** in the three
+preceding committed logs with it in place, and 6.04 s against 6.12 s standalone on the same
+wheel pair. The 9 s of #2423 did not reproduce. R6.6 has been annotated accordingly: the
+mechanism may still be worth simplifying, but not on those grounds until they are re-measured.
+
+#### 3. A user function error is reported once, as a user error
+
+An exception inside a Python user function was reported twice: correctly as a *User ERROR*, and
+then again by `SolverExceptionHandling` as **`SYSTEM ERROR: EXUDYN raised internal error in
+'CSolverBase::SolveSteps'`**. A user's `ZeroDivisionError` labelled an Exudyn bug — and since
+R6.3.3 with the C++ class `ExudynInternalError`, whose whole meaning is *please report this*.
+
+Two changes together: the user-function handler raises `PyErrorType::modelError`, because a user
+function is **part of the model**; and `SolverExceptionHandling` passes an already-typed
+exception (`ExudynError`, `py::builtin_exception`) straight through instead of re-reporting it.
+A bare `EXUexception` — a raw `CHECKandTHROW` inside the solver, which nobody has reported yet
+— still becomes a `SysError`, which is what that path is for. The pass-throughs come **before**
+`catch (const EXUexception&)`, for the third time in this phase (info fact 29).
+
+Case 10 of the model, run uncaught, now prints one block, headed with the user's own file and
+line, and the `At:` traceback below it still names the line inside the user function.
+
+**Not done here, and named rather than left implicit**: the original Python exception is still
+stringified into the message instead of being chained as `__cause__`. `py::raise_from` can do
+it, but the user-function error passes through two nested handlers that each catch
+`error_already_set`, so chaining means redesigning the handler chain, not editing one catch
+block. It is R6.3.8.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R6.3.5** *(sub-step of R6.3)* **The message survives.** `PyError` throws a fixed string
+    (`Stdoutput.cpp:333`), so `str(exception)` never carries what went wrong; the detail goes into
+    the exception, including the Python file and line, in one common format. Chain
+    `py::error_already_set` as well, so a user-function traceback survives instead of being
+    stringified (`ExceptionsTemplates.h:50`).
+
+    **What the model of R6.3.7 measured** (2026-09-18): of ten provoked user errors, **six** arrive
+    carrying only *"Exudyn: parsing of Python file terminated due to Python (user) error"* - the
+    same sentence for a bad item number, a string written into a number, and a marker that does not
+    exist. The explanation exists; it was printed to the console and thrown away.
+
+    Two more findings from the same run, both in this step (**#2524**):
+
+    - An error inside a **user function** is reported twice: once correctly as a *User ERROR* with
+      the user's own file and line in its `At:` block, and then again by `SolverExceptionHandling`
+      as **`SYSTEM ERROR: EXUDYN raised internal error in 'CSolverBase::SolveSteps'`**. The user's
+      mistake is labelled an Exudyn bug, and since R6.3.3 its C++ class is `ExudynInternalError`,
+      whose whole meaning is *please report this*.
+    - The `[file ..., line N]` header of both blocks names **`exudyn/solver.py`**, not the user's
+      file, because `PyGetCurrentFileInformation` returns the innermost Python frame and during a
+      solver call that frame is the solver wrapper. The `At:` block three lines below it has the
+      right answer. Whatever R6.6 does with that function, the header and the traceback must stop
+      disagreeing.
+
+---
+
+
 <a id="r6-3-4"></a>
 ### R6.3.4 — a deprecation is a statement about the user's code
 

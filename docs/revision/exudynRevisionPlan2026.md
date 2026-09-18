@@ -686,32 +686,16 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     and reports the user's own file and line.
 
 <a id="r6-3-5"></a>
-**R6.3.5** *(sub-step of R6.3)* **The message survives.** `PyError` throws a fixed string
-    (`Stdoutput.cpp:333`), so `str(exception)` never carries what went wrong; the detail goes into
-    the exception, including the Python file and line, in one common format. Chain
-    `py::error_already_set` as well, so a user-function traceback survives instead of being
-    stringified (`ExceptionsTemplates.h:50`).
-
-    **What the model of R6.3.7 measured** (2026-09-18): of ten provoked user errors, **six** arrive
-    carrying only *"Exudyn: parsing of Python file terminated due to Python (user) error"* - the
-    same sentence for a bad item number, a string written into a number, and a marker that does not
-    exist. The explanation exists; it was printed to the console and thrown away.
-
-    Two more findings from the same run, both in this step (**#2524**):
-
-    - An error inside a **user function** is reported twice: once correctly as a *User ERROR* with
-      the user's own file and line in its `At:` block, and then again by `SolverExceptionHandling`
-      as **`SYSTEM ERROR: EXUDYN raised internal error in 'CSolverBase::SolveSteps'`**. The user's
-      mistake is labelled an Exudyn bug, and since R6.3.3 its C++ class is `ExudynInternalError`,
-      whose whole meaning is *please report this*.
-    - The `[file ..., line N]` header of both blocks names **`exudyn/solver.py`**, not the user's
-      file, because `PyGetCurrentFileInformation` returns the innermost Python frame and during a
-      solver call that frame is the solver wrapper. The `At:` block three lines below it has the
-      right answer. Whatever R6.6 does with that function, the header and the traceback must stop
-      disagreeing.
+**R6.3.5** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-5) — *(sub-step of R6.3)*
+    **The message survives** (#2527), the location names the **user's** Python frame and not
+    `solver.py`, and a user-function error is no longer reported a second time as an internal
+    Exudyn error (#2524).
 
 <a id="r6-3-6"></a>
 **R6.3.6** *(sub-step of R6.3)* **The mapping itself**, area by area, on the triage of R6.3.2.
+
+<a id="r6-3-8"></a>
+**R6.3.8** *(sub-step of R6.3; split off from R6.3.5 on 2026-09-18)* **Chain the original Python exception** instead of stringifying it. A user function that raises `ZeroDivisionError` should reach the user as an Exudyn exception whose `__cause__` **is** that `ZeroDivisionError`, with its traceback, rather than as a message containing the words. `py::raise_from` does exactly that (`pytypes.h:818`) - the work is not the call but the handler chain: the error passes through `UserFunctionExceptionHandling` and `SolverExceptionHandling`, which each catch `error_already_set`, so the first one to catch it must decide, and the others must let it through. Needs the registered exception classes reachable from C++ outside `PybindModule.cpp`.
 
 <a id="r6-3-7"></a>
 **R6.3.7** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-7) — *(sub-step of R6.3;
@@ -742,6 +726,15 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
     after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
     The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
+
+    **Measured again 2026-09-18 (step R6.3.5), and the cost did not reproduce.** That step replaced
+    `inspect.getframeinfo` with `f_code.co_filename` / `f_lineno` for a different reason - the
+    location was wrong, not slow - and the timing did not move: `parameterConversionTest.py`, the
+    model with ~38000 probe errors, takes **5.89 s** inside `runTestSuite.py` with the scan removed
+    against **5.73-5.88 s** in the three preceding committed logs with it in place. So the expensive
+    part of this step is **already gone and it bought nothing measurable**; whatever is left of
+    R6.6, it should not be justified by the 9 s number until that is re-measured on a case that
+    still shows it.
 
     **What must not be lost** (maintainer, 2026-09-18): this mechanism is the reason an error inside
     a *user function* - `springForceUserFunction` and its kin - reports the line inside that
