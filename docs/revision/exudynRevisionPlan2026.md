@@ -713,6 +713,70 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     Spyder or VS Code shows it. It found #2524 on the first run.
 
 
+<a id="r6-3-8"></a>
+**R6.3.8** *(sub-step of R6.3; split off from R6.3.5 on 2026-09-18)* **Chain the original Python exception** instead of stringifying it. A user function that raises `ZeroDivisionError` should reach the user as an Exudyn exception whose `__cause__` **is** that `ZeroDivisionError`, with its traceback, rather than as a message containing the words. `py::raise_from` does exactly that (`pytypes.h:818`) - the work is not the call but the handler chain: the error passes through `UserFunctionExceptionHandling` and `SolverExceptionHandling`, which each catch `error_already_set`, so the first one to catch it must decide, and the others must let it through. Needs the registered exception classes reachable from C++ outside `PybindModule.cpp`.
+
+<a id="r6-3-9"></a>
+**R6.3.9** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-9) — *(sub-step of R6.3; added on the
+    maintainer's request, 2026-09-18)*
+    **The rules get a home** (#2529). The nine classes, the seven helpers and the rules for
+    choosing between them existed only in code comments and in the revision log — a record,
+    not a reference. They are now `docs/dev/CODING_STYLE.md` §10, with `CONTRIBUTING.md`,
+    `docs/dev/README.md` and `CLAUDE.md` pointing at that one place.
+
+<a id="r6-3-10"></a>
+**R6.3.10** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-10) — *(sub-step of R6.3; added on the
+    maintainer's decision, 2026-09-18)*
+    **The error block goes to the log file and never to the console** (#2530). The exception
+    already carries the same message and the same location, and a *caught* exception must not
+    flood the terminal. Both file channels now write the identical text.
+
+<a id="r6-3-11"></a>
+**R6.3.11** *(sub-step of R6.3; raised 2026-09-18)* **A typed exception from the solver no
+    longer stops the renderer** (#2531). `globalPyRuntimeErrorFlag` is set in exactly two places,
+    `PyError` and `SysError`; the `CHECKandTHROW*` macros never set it. Until #2524 a bare
+    `EXUexception` escaping a solver step fell into `SolverExceptionHandling`'s
+    `catch (const EXUexception&)` and became a `SysError`, which set the flag. That handler now
+    has `catch (const ExudynError&) { throw; }` in front of it — needed, or the type is
+    flattened (info fact 29) — so **every site typed by R6.3.6 passes through and the flag
+    stays false**. `GlfwClient.cpp` reads it in five places, one of which keeps the render thread
+    from calling into Python while Python is in an error state. So the behaviour now depends on
+    how far R6.3.6 has got, which is an accident and not a decision.
+
+    **The approach** (maintainer, 2026-09-18): *the renderer stalls anyway once an exception
+    reaches the solver*, so the flag belongs **where solver errors are caught**, not where
+    exceptions are thrown.
+
+    - Set it in `SolverExceptionHandling` (`ExceptionsTemplates.h`), in the two pass-through
+      catches **before** the `throw;`, and leave the `SysError` branch as it is — one function,
+      every solver error, whatever its type.
+    - Honour `deactivateGlobalPyRuntimeErrorFlag` exactly as `PyError` and `SysError` do, so the
+      documented case *"functions called e.g. from command windows, which allow errors without
+      shutting down the renderer"* keeps working unchanged.
+    - **Not** in `ThrowPyErrorType`, although it is the single throw site and therefore tempting.
+      It would shut the renderer down for every typed exception anywhere: `mbs.GetObject(99)` at
+      model-build time, a caught error in a parameter variation, each of the ~38000 probe errors
+      of `parameterConversionTest.py`. That is the same mistake R6.3.10 just corrected for the
+      console — reporting an error that somebody already handled.
+    - Check `CSolverBase`'s own outer catch as well, so a failure that never passes through the
+      template is covered too.
+
+    Expectable cases this should make smooth: a `SolveDynamic` that aborts with the renderer
+    open stops the renderer, as before R6.3.6; a caught error during model setup leaves it
+    running; a parameter variation that handles its own errors is unaffected.
+
+<a id="r6-3-12"></a>
+**R6.3.12** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-12) — *(sub-step of R6.3)*
+    **Eight user-facing "not implemented" sites stop calling themselves SYSTEM ERROR** (#2532):
+    `SysError` → `PyError`, keeping the type R6.3.6 gave them.
+
+<a id="r6-3-13"></a>
+**R6.3.13** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-13) — *(sub-step of R6.3; maintainer
+    decision 2026-09-18)*
+    **`SolveStatic` and `SolveDynamic` raise what actually failed** (#2534), the overridden
+    `simulationSettings` are restored even when a solve fails (#2535), and the explicit dynamic
+    solver stops failing silently (#2536).
+
 <a id="r6-4"></a>
 **R6.4** *(phase R6, after R6.3)* **Document the error taxonomy**: for each exception type, what
     it means in Exudyn, what a user should do about it, and which layer raises it. It is the

@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.191.dev1, 
++  Exudyn version = 1.11.194.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2534, 
-+  Number of resolved issues = 2264 (191 in current version), 
++  Number of issues = 2537, 
++  Number of resolved issues = 2267 (194 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.194: resolved Issue 2536: the explicit dynamic solver returns False instead of raising (change)
+    - issue author: Claude-JG
+    - description:  In SolveDynamic the implicit branch prints SolverErrorMessage and raises when the solver fails; the explicit branch (ExplicitEuler, RK44, DOPRI5, VelocityVerlet, ...) has no try and no check at all and simply returns False. The same call therefore aborts loudly or continues silently depending on solverType, and a user who does not test the return value keeps computing with the state of a failed run - exactly the case the maintainer named for parameter variations. Make the explicit branch behave like the implicit one.
+    - **notes:** The explicit branch of SolveDynamic now prints SolverErrorMessage and raises like the implicit one, instead of returning False in silence. Also raise ValueError(solver type not implemented) became exudyn.NotImplementedFeatureError.
+    - date resolved: **2026-09-18 22:32**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.193: :textred:`resolved BUG 2535` : a failed SolveDynamic leaves simulationSettings overridden 
+    - issue author: Claude-JG
+    - description:  SolveDynamic with DynamicSolverType.TrapezoidalIndex2 overrides timeIntegration.generalizedAlpha.useNewmark and useIndex2Constraints and restores them at the end of the finally block. The "raise ValueError(SolveDynamic terminated)" sits in the same finally block ABOVE those lines, so on failure the restore never runs: the user simulationSettings keep useNewmark=True and useIndex2Constraints=True and the NEXT solve in the same script silently uses a different integrator. Wrong results without any message. Found while reading the raise sites for the exception work.
+    - **notes:** The restore of useNewmark and useIndex2Constraints moved into its own finally block, which runs on every path. It used to sit below the raise in the same finally block, so a failed TrapezoidalIndex2 solve left the users simulationSettings overridden and the next solve in the same script silently used a different integrator.
+    - date resolved: **2026-09-18 22:32**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.192: resolved Issue 2534: SolveStatic and SolveDynamic throw the real exception away (fix)
+    - issue author: Claude-JG
+    - description:  solver.py has "try: success = solver.SolveSystem(...) / except: pass / finally: if not success: ... raise ValueError(...)". The except swallows the exception that actually explains the failure - since step R6.3.6 that is an ExudynModelError, an ExudynSolverError for a singular matrix, or the user own ZeroDivisionError from a user function - and replaces it with a fixed sentence and a lost traceback. Re-raise it instead. Only the other failure mode needs a manufactured exception: SolveSystem returning False without throwing (no Newton convergence, step size below minimum), and there exudyn.SolverError is the honest answer. NOTE the raise must move out of the finally block at the same time: a raise in finally REPLACES an exception that is still propagating, so removing the except alone would lose the original error by a different route.
+    - **notes:** except: pass is gone from SolveStatic and SolveDynamic (both branches). A solve that threw now re-raises the original exception with its traceback after printing SolverErrorMessage; a solve that returned False without throwing raises exudyn.SolverError. Model exceptionTypesTest.py case 9 now reads SolverError: CSolverBase::Newton: System Jacobian seems to be singular instead of ValueError: SolveStatic terminated due to errors; case 10 reads ModelError with the user function that divided by zero. except ValueError around a solve still catches the common case because ModelError and ExudynValueError derive from ValueError.
+    - date resolved: **2026-09-18 22:32**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.191: resolved Issue 2528: map the user-facing error sites onto the exception classes (change)
     - issue author: Claude-JG
     - description:  The classes exist (#2516)\, the helpers can carry them (#2521) and the triage says which site is for whom (#2520) - but 1082 user-facing call sites still raise whatever they always raised. Map them area by area\, starting with src/Pymodules\, the layer closest to the user. revision2026 step R6.3.6.

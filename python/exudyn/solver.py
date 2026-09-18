@@ -189,15 +189,23 @@ def SolveStatic(mbs, simulationSettings = None,
     success = False
     try:
         success = staticSolver.SolveSystem(mbs, simulationSettings)
-    except:
-        pass
-    finally:
+    except BaseException:
+        #the exception that reaches here EXPLAINS the failure: an ExudynModelError, an
+        #ExudynSolverError for a singular matrix, or the user's own error from a user function.
+        #It used to be swallowed by 'except: pass' and replaced by a fixed ValueError, which threw
+        #away both the type and the traceback (#2534, revision2026 step R6.3.13)
+        exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems,
+                                 showCausingNodes=showCausingItems, showHints=showHints))
+        raise
+    else:
         if not success:
-            exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+            #the solver stopped without an exception: no Newton convergence, step size below the
+            #minimum. Nothing was raised, so this is the one place that has to name a type
+            exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems,
                                      showCausingNodes=showCausingItems, showHints=showHints))
-            raise ValueError("SolveStatic terminated due to errors")
+            raise exudyn.SolverError("SolveStatic terminated due to errors")
 
-        elif updateInitialValues:
+        if updateInitialValues:
             currentState = mbs.systemData.GetSystemState() #get current values
             mbs.systemData.SetSystemState(systemStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
 
@@ -281,17 +289,22 @@ def SolveDynamic(mbs,
         success = False
         try:
             success = dynamicSolver.SolveSystem(mbs, simulationSettings)
-        except:
-            pass
-        finally:
+        except BaseException:
+            exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems,
+                                     showCausingNodes=showCausingItems, showHints=showHints))
+            raise                       #what actually failed, with its traceback (#2534)
+        else:
             if not success:
-                exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
+                exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems,
                                          showCausingNodes=showCausingItems, showHints=showHints))
-                raise ValueError("SolveDynamic terminated")
-                
+                raise exudyn.SolverError("SolveDynamic terminated")
+
             CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.newtonStepsCount) #now check if these statistics are ok
-    
-            #restore old settings:
+        finally:
+            #THE RESTORE BELONGS HERE (#2535). TrapezoidalIndex2 overrides these two settings above,
+            #and the raise used to sit in the same block ABOVE the restore - so a failed solve left
+            #the user's simulationSettings with useNewmark=True and the NEXT solve in the same
+            #script silently used a different integrator
             simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
             simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
     elif (solverType == exudyn.DynamicSolverType.ExplicitEuler or 
@@ -310,10 +323,23 @@ def SolveDynamic(mbs,
             mbs.sys['simulationSettings'] = simulationSettings #link to last simulation settings
 
         stat = exudyn.special.InfoStat(False)
-        success = dynamicSolver.SolveSystem(mbs, simulationSettings)
+        try:
+            success = dynamicSolver.SolveSystem(mbs, simulationSettings)
+        except BaseException:
+            exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems,
+                                     showCausingNodes=showCausingItems, showHints=showHints))
+            raise
+        #this branch used to return False in silence while the implicit branch raised, so the same
+        #call aborted or continued depending on solverType (#2536)
+        if not success:
+            exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems,
+                                     showCausingNodes=showCausingItems, showHints=showHints))
+            raise exudyn.SolverError("SolveDynamic terminated")
+
         CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.currentStepIndex*dynamicSolver.GetNumberOfStages()) #now check if these statistics are ok
     else:
-        raise ValueError("SolveDynamic: solver type not implemented: ", solverType)
+        raise exudyn.NotImplementedFeatureError("SolveDynamic: solver type not implemented: "
+                                                + str(solverType))
     
     if updateInitialValues:
         currentState = mbs.systemData.GetSystemState() #get current values

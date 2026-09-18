@@ -9,15 +9,41 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.191.dev1, 
+  \item Exudyn version = 1.11.194.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2534, 
-  \item Number of resolved issues = 2264 (191 in current version), 
+  \item Number of issues = 2537, 
+  \item Number of resolved issues = 2267 (194 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.194}:  resolved Issue 2536: {\bf the explicit dynamic solver returns False instead of raising}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: In SolveDynamic the implicit branch prints SolverErrorMessage and raises when the solver fails; the explicit branch (ExplicitEuler, RK44, DOPRI5, VelocityVerlet, ...) has no try and no check at all and simply returns False. The same call therefore aborts loudly or continues silently depending on solverType, and a user who does not test the return value keeps computing with the state of a failed run - exactly the case the maintainer named for parameter variations. Make the explicit branch behave like the implicit one.}
+    \item {\bf notes: The explicit branch of SolveDynamic now prints SolverErrorMessage and raises like the implicit one, instead of returning False in silence. Also raise ValueError(solver type not implemented) became exudyn.NotImplementedFeatureError.}
+    \item   date resolved: {\bf 2026-09-18 22:32},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.193}: {\bf \color{warningRed}  resolved BUG 2535}: {\bf a failed SolveDynamic leaves simulationSettings overridden}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: SolveDynamic with DynamicSolverType.TrapezoidalIndex2 overrides timeIntegration.generalizedAlpha.useNewmark and useIndex2Constraints and restores them at the end of the finally block. The "raise ValueError(SolveDynamic terminated)" sits in the same finally block ABOVE those lines, so on failure the restore never runs: the user simulationSettings keep useNewmark=True and useIndex2Constraints=True and the NEXT solve in the same script silently uses a different integrator. Wrong results without any message. Found while reading the raise sites for the exception work.}
+    \item {\bf notes: The restore of useNewmark and useIndex2Constraints moved into its own finally block, which runs on every path. It used to sit below the raise in the same finally block, so a failed TrapezoidalIndex2 solve left the users simulationSettings overridden and the next solve in the same script silently used a different integrator.}
+    \item   date resolved: {\bf 2026-09-18 22:32},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.192}:  resolved Issue 2534: {\bf SolveStatic and SolveDynamic throw the real exception away}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: solver.py has "try: success = solver.SolveSystem(...) / except: pass / finally: if not success: ... raise ValueError(...)". The except swallows the exception that actually explains the failure - since step R6.3.6 that is an ExudynModelError, an ExudynSolverError for a singular matrix, or the user own ZeroDivisionError from a user function - and replaces it with a fixed sentence and a lost traceback. Re-raise it instead. Only the other failure mode needs a manufactured exception: SolveSystem returning False without throwing (no Newton convergence, step size below minimum), and there exudyn.SolverError is the honest answer. NOTE the raise must move out of the finally block at the same time: a raise in finally REPLACES an exception that is still propagating, so removing the except alone would lose the original error by a different route.}
+    \item {\bf notes: except: pass is gone from SolveStatic and SolveDynamic (both branches). A solve that threw now re-raises the original exception with its traceback after printing SolverErrorMessage; a solve that returned False without throwing raises exudyn.SolverError. Model exceptionTypesTest.py case 9 now reads SolverError: CSolverBase::Newton: System Jacobian seems to be singular instead of ValueError: SolveStatic terminated due to errors; case 10 reads ModelError with the user function that divided by zero. except ValueError around a solve still catches the common case because ModelError and ExudynValueError derive from ValueError.}
+    \item   date resolved: {\bf 2026-09-18 22:32},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.191}:  resolved Issue 2528: {\bf map the user-facing error sites onto the exception classes}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

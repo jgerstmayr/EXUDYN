@@ -7146,6 +7146,77 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-3-13"></a>
+### R6.3.13 — the solver raises what actually failed
+
+**DONE 2026-09-18** (#2534, #2535, #2536). The last open point of R6.3: `solver.py` raised a
+plain `ValueError("SolveDynamic terminated")`, and the question was which type it should carry.
+
+Reading it answered a different question. The type did not have to be **chosen** — the right
+exception already existed and was being thrown away:
+
+```python
+success = False
+try:
+    success = staticSolver.SolveSystem(mbs, simulationSettings)
+except:
+    pass                          #the real error dies here, type and traceback
+finally:
+    if not success:
+        exudyn.Print(SolverErrorMessage(...))
+        raise ValueError("SolveStatic terminated due to errors")
+```
+
+Since R6.3.6 that discarded exception **says something**: an `ExudynModelError`, an
+`ExudynSolverError` for a singular matrix, or the user's own `ZeroDivisionError` from a user
+function. It is now re-raised with a bare `raise`, after the diagnostic is printed.
+
+**Two failure modes, and only one needs a type.**
+
+| mode | what happens now |
+|---|---|
+| `SolveSystem` threw | `raise` — the original exception, with its traceback |
+| `SolveSystem` returned `False` without throwing (no Newton convergence, step size below the minimum) | `exudyn.SolverError`, the one place that has to name a type |
+
+The model of R6.3.7 measures the difference without being edited:
+
+| case | before | after |
+|---|---|---|
+| 9, a system the solver cannot solve | `ValueError: SolveStatic terminated due to errors` | `SolverError: CSolverBase::Newton: System Jacobian seems to be singular` |
+| 10, a user function that divides by zero | `ValueError: SolveDynamic terminated` | `ModelError: Error in Python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction'` |
+
+**On compatibility**, since this was the reason the question was left open: for the re-raise
+path the break is smaller than it looks. `ExudynModelError` and `ExudynValueError` both derive
+from `ValueError`, so `except ValueError` around a solve still catches the common *"your model
+is wrong"* case — case 10 above is caught by it. It stops catching a singular matrix and a
+user-function error, which is the point of the change. Only the manufactured
+`SolverError` is a clean break, and it is the rarer path.
+
+#### Two things found while reading those twelve lines
+
+**#2535, a bug with wrong results and no message.** `SolveDynamic` with
+`DynamicSolverType.TrapezoidalIndex2` overrides `useNewmark` and `useIndex2Constraints` and
+restores them at the end of the `finally` block — *below* the `raise`. So a **failed** solve
+never restored them, and the next `SolveDynamic` in the same script silently used a different
+integrator. The restore now has its own `finally`, which runs on every path.
+
+That is also why the raise had to leave the `finally` block at the same time: a `raise` inside
+`finally` **replaces** an exception that is still propagating, so deleting `except: pass` alone
+would have lost the original error by a different route.
+
+**#2536, the same call behaving two ways.** The implicit branch printed the diagnostic and
+raised; the explicit branch (`ExplicitEuler`, `RK44`, `DOPRI5`, `VelocityVerlet`, ...) had no
+`try` and no check at all and simply **returned `False`**. A user who does not test the return
+value kept computing with the state of a failed run — the case the maintainer named when
+deciding R6.3 (*"otherwise the user may report some 0 or None values and does not see where it
+happens"*). The explicit branch now behaves like the implicit one.
+
+And `raise ValueError("SolveDynamic: solver type not implemented")` became
+`exudyn.NotImplementedFeatureError`, which is what it says.
+
+---
+
+
 <a id="r6-3-6-done"></a>
 ### R6.3.6 — the mapping, closed: the default says something
 
@@ -7256,62 +7327,11 @@ remaining bare `RuntimeError` outcomes are the **55** that pass through the `Add
     it"* without touching any of them - and it is only safe once no user-facing site still relies on
     the default.
 
-<a id="r6-3-12"></a>
-**R6.3.12** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-12) — *(sub-step of R6.3)*
-    **Eight user-facing "not implemented" sites stop calling themselves SYSTEM ERROR** (#2532):
-    `SysError` → `PyError`, keeping the type R6.3.6 gave them.
-
-<a id="r6-3-11"></a>
-**R6.3.11** *(sub-step of R6.3; raised 2026-09-18)* **A typed exception from the solver no
-    longer stops the renderer** (#2531). `globalPyRuntimeErrorFlag` is set in exactly two places,
-    `PyError` and `SysError`; the `CHECKandTHROW*` macros never set it. Until #2524 a bare
-    `EXUexception` escaping a solver step fell into `SolverExceptionHandling`'s
-    `catch (const EXUexception&)` and became a `SysError`, which set the flag. That handler now
-    has `catch (const ExudynError&) { throw; }` in front of it — needed, or the type is
-    flattened (info fact 29) — so **every site typed by R6.3.6 passes through and the flag
-    stays false**. `GlfwClient.cpp` reads it in five places, one of which keeps the render thread
-    from calling into Python while Python is in an error state. So the behaviour now depends on
-    how far R6.3.6 has got, which is an accident and not a decision.
-
-    **The approach** (maintainer, 2026-09-18): *the renderer stalls anyway once an exception
-    reaches the solver*, so the flag belongs **where solver errors are caught**, not where
-    exceptions are thrown.
-
-    - Set it in `SolverExceptionHandling` (`ExceptionsTemplates.h`), in the two pass-through
-      catches **before** the `throw;`, and leave the `SysError` branch as it is — one function,
-      every solver error, whatever its type.
-    - Honour `deactivateGlobalPyRuntimeErrorFlag` exactly as `PyError` and `SysError` do, so the
-      documented case *"functions called e.g. from command windows, which allow errors without
-      shutting down the renderer"* keeps working unchanged.
-    - **Not** in `ThrowPyErrorType`, although it is the single throw site and therefore tempting.
-      It would shut the renderer down for every typed exception anywhere: `mbs.GetObject(99)` at
-      model-build time, a caught error in a parameter variation, each of the ~38000 probe errors
-      of `parameterConversionTest.py`. That is the same mistake R6.3.10 just corrected for the
-      console — reporting an error that somebody already handled.
-    - Check `CSolverBase`'s own outer catch as well, so a failure that never passes through the
-      template is covered too.
-
-    Expectable cases this should make smooth: a `SolveDynamic` that aborts with the renderer
-    open stops the renderer, as before R6.3.6; a caught error during model setup leaves it
-    running; a parameter variation that handles its own errors is unaffected.
-
-<a id="r6-3-10"></a>
-**R6.3.10** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-10) — *(sub-step of R6.3; added on the
-    maintainer's decision, 2026-09-18)*
-    **The error block goes to the log file and never to the console** (#2530). The exception
-    already carries the same message and the same location, and a *caught* exception must not
-    flood the terminal. Both file channels now write the identical text.
-
-<a id="r6-3-9"></a>
-**R6.3.9** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-9) — *(sub-step of R6.3; added on the
-    maintainer's request, 2026-09-18)*
-    **The rules get a home** (#2529). The nine classes, the seven helpers and the rules for
-    choosing between them existed only in code comments and in the revision log — a record,
-    not a reference. They are now `docs/dev/CODING_STYLE.md` §10, with `CONTRIBUTING.md`,
-    `docs/dev/README.md` and `CLAUDE.md` pointing at that one place.
-
-<a id="r6-3-8"></a>
-**R6.3.8** *(sub-step of R6.3; split off from R6.3.5 on 2026-09-18)* **Chain the original Python exception** instead of stringifying it. A user function that raises `ZeroDivisionError` should reach the user as an Exudyn exception whose `__cause__` **is** that `ZeroDivisionError`, with its traceback, rather than as a message containing the words. `py::raise_from` does exactly that (`pytypes.h:818`) - the work is not the call but the handler chain: the error passes through `UserFunctionExceptionHandling` and `SolverExceptionHandling`, which each catch `error_already_set`, so the first one to catch it must decide, and the others must let it through. Needs the registered exception classes reachable from C++ outside `PybindModule.cpp`.
+*(The archive stops here. The plan block between the `r6-3-6` and `r6-3-7` anchors also held
+R6.3.8 to R6.3.12, because each new sub-step had been inserted before the previous anchor and
+they had piled up there. Closing R6.3.6 cut from anchor to anchor and removed all five from the
+plan; they were recovered from `b480cef^` and put back after R6.3.7 in ascending order. Lesson
+for the next closing: cut to the **next numbered step**, not to the next anchor in the file.)*
 
 ---
 
