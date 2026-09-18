@@ -6913,6 +6913,62 @@ serial runner did, and tightening it is a separate question from this step.
 so the runner and the worker apply the same rules; `--serial` keeps the old in-process run for
 debugging a single example.
 
+<a id="r6-3-4"></a>
+### R6.3.4 — a deprecation is a statement about the user's code
+
+**DONE 2026-09-18** (#2522).
+
+199 deprecation notices went through `PyWarning`, which prints a line. A printed line is the
+one form of this message a user can do nothing with: it cannot be filtered, cannot be turned
+into an error, and arrives again on **every** call — a deprecated setting read inside a
+time-step loop printed thousands of identical lines.
+
+`PyDeprecated` (`Stdoutput.cpp`) raises a real `DeprecationWarning` through `PyErr_WarnEx`.
+Measured on the finished build:
+
+| | before | after |
+|---|---|---|
+| 500 reads of a deprecated setting | 500 printed lines | **1** warning |
+| `-W error::DeprecationWarning` | no effect | the call **raises** |
+| `warnings.filterwarnings()` on one of them | no effect | silences that one only |
+| where it points | *"referred line number my be wrong!"* | the user's own file and line |
+
+That last row is not a side effect worth glossing over: `PyErr_WarnEx` derives the location
+from the Python frame itself, so `PyDeprecated` does **not** call `PyGetCurrentFileInformation`
+(the `inspect.getframeinfo` scan of #2423, step R6.6) — 199 sites both report better and stop
+paying for it.
+
+**184 of the 199 are generated**, so they were changed in the emitter
+(`structureHeaderEmitter.py`) and regenerated; the remaining 15 are hand-written, and the
+triage tool of R6.3.2 produced the list of exactly where they are. `exudyn.config.suppressWarnings`
+is still honoured: an explicit request for silence outranks the warning machinery.
+
+**What changes for a user, stated plainly.** Python's default filters show a
+`DeprecationWarning` raised from `__main__` and hide one raised from an imported module. A
+script that sets a deprecated visualization setting therefore still sees it, once per line;
+a *library* built on Exudyn no longer prints it to its users by default, which is the intended
+trade and the reason `DeprecationWarning` exists. `-W error::DeprecationWarning` is how anyone
+finds all of them before a release removes the old names.
+
+Three test cases hold the three properties: the warning is raised and is a `DeprecationWarning`,
+it can be promoted to an error, and 500 calls from one line produce one warning.
+
+#### Also, from the maintainer, 2026-09-18
+
+The class list in `ReleaseAssert.h` now says outright that a class added there must be added to
+the registration block of `PybindModule.cpp`. Only that direction needs saying — a class
+registered without being declared does not compile, while a class **declared and not
+registered** compiles perfectly and reaches Python as a plain `RuntimeError`, because
+pybind11 translates it with its built-in `std::runtime_error` rule and nothing reports that the
+new class exists only in C++.
+
+A test makes the comment enforceable: it reads the `class Exudyn*Error` declarations out of
+`ReleaseAssert.h` and the `register_exception<...>` calls out of `PybindModule.cpp` and requires
+the two sets to be equal (9 and 9 today). It skips when not run from a source tree.
+
+---
+
+
 <a id="r6-3-3"></a>
 ### R6.3.3 — an optional argument, and what it caught on the first run
 

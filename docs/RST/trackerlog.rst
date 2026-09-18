@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.181.dev1, 
++  Exudyn version = 1.11.182.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2522, 
-+  Number of resolved issues = 2254 (181 in current version), 
++  Number of issues = 2523, 
++  Number of resolved issues = 2255 (182 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.182: resolved Issue 2522: deprecation notices are printed lines and not Python warnings (change)
+    - issue author: Claude-JG
+    - description:  The 199 deprecation notices go through PyWarning; which prints to the console. A user cannot filter them; cannot promote them to errors; and sees the same line on every single call - a deprecated setting read in a loop prints thousands of times. Python has a mechanism for exactly this: DeprecationWarning through PyErr_WarnEx; which is filterable; promotable with -W error::DeprecationWarning and reported once per source location. revision2026 step R6.3.4.
+    - **notes:** PyDeprecated raises a real DeprecationWarning through PyErr_WarnEx: filterable, promotable with -W error::DeprecationWarning, reported once per source location and pointing at the users own file and line. 184 generated sites changed in structureHeaderEmitter.py and 15 hand-written ones converted. It does not call PyGetCurrentFileInformation at all\, so 199 sites also stop paying for the inspect.getframeinfo scan of #2423. exudyn.config.suppressWarnings is still honoured. revision2026 step R6.3.4.
+    - date resolved: **2026-09-18 18:05**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.181: resolved Issue 2521: the error helpers cannot name an exception class (extension)
     - issue author: Claude-JG
     - description:  CHECKandTHROW\, CHECKandTHROWstring and SysError can only throw EXUexception\, so a check cannot say what kind of error it states - and the measurement of #2520 shows no helper is one kind (CHECKandTHROW is 27 percent user-facing\, SysError has 10 user sites). The type has to be choosable at the CALL SITE. revision2026 step R6.3.3.

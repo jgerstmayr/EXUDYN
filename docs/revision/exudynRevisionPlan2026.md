@@ -665,10 +665,10 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     the triage of R6.3.2 had already predicted would hit six sites.
 
 <a id="r6-3-4"></a>
-**R6.3.4** *(sub-step of R6.3)* **Deprecations leave the error path.** One C++ function raising a
-    real `DeprecationWarning` through `PyErr_WarnEx`, the 184 generated
-    `VisualizationSettings` sites emitted to call it, and the 15 hand-written ones converted. A user
-    can then filter them, promote them with `-W error::DeprecationWarning`, or see each once.
+**R6.3.4** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-4) — *(sub-step of R6.3)*
+    **Deprecations leave the error path** (#2522). `PyDeprecated` raises a real
+    `DeprecationWarning`; 199 sites converted; a deprecated setting read 500 times reports once,
+    and reports the user's own file and line.
 
 <a id="r6-3-5"></a>
 **R6.3.5** *(sub-step of R6.3)* **The message survives.** `PyError` throws a fixed string

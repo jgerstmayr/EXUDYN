@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.181.dev1, 
+  \item Exudyn version = 1.11.182.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2522, 
-  \item Number of resolved issues = 2254 (181 in current version), 
+  \item Number of issues = 2523, 
+  \item Number of resolved issues = 2255 (182 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.182}:  resolved Issue 2522: {\bf deprecation notices are printed lines and not Python warnings}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The 199 deprecation notices go through PyWarning; which prints to the console. A user cannot filter them; cannot promote them to errors; and sees the same line on every single call - a deprecated setting read in a loop prints thousands of times. Python has a mechanism for exactly this: DeprecationWarning through PyErr\_WarnEx; which is filterable; promotable with -W error::DeprecationWarning and reported once per source location. revision2026 step R6.3.4.}
+    \item {\bf notes: PyDeprecated raises a real DeprecationWarning through PyErr\_WarnEx: filterable, promotable with -W error::DeprecationWarning, reported once per source location and pointing at the users own file and line. 184 generated sites changed in structureHeaderEmitter.py and 15 hand-written ones converted. It does not call PyGetCurrentFileInformation at all\, so 199 sites also stop paying for the inspect.getframeinfo scan of \#2423. exudyn.config.suppressWarnings is still honoured. revision2026 step R6.3.4.}
+    \item   date resolved: {\bf 2026-09-18 18:05},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.181}:  resolved Issue 2521: {\bf the error helpers cannot name an exception class}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

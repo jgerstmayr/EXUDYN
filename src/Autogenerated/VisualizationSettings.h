@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -190,7 +190,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -270,7 +270,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -365,7 +365,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -442,7 +442,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -522,7 +522,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -578,7 +578,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -640,7 +640,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -714,7 +714,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -794,7 +794,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -859,7 +859,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -936,7 +936,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1045,7 +1045,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1113,7 +1113,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1214,7 +1214,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1297,7 +1297,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1374,7 +1374,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1451,7 +1451,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1510,7 +1510,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1613,7 +1613,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1678,7 +1678,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1752,7 +1752,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1823,7 +1823,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1991,7 +1991,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2097,7 +2097,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2177,7 +2177,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2493,7 +2493,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2576,7 +2576,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2638,7 +2638,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2730,7 +2730,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2912,7 +2912,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -3012,830 +3012,830 @@ public: // AUTO:
 //! implementation:
 
 inline void VSettingsGeneral::PySetDrawCoordinateSystem(const Index& drawCoordinateSystemInit) { 
-    PyWarning("VisualizationSettings parameter general.drawCoordinateSystem is deprecated! use view0.scene.drawCoordinateSystem instead!");
+    PyDeprecated("VisualizationSettings parameter general.drawCoordinateSystem is deprecated! use view0.scene.drawCoordinateSystem instead!");
     backlink->view0.scene.drawCoordinateSystem= (const Index&)drawCoordinateSystemInit; 
     }
 inline Index VSettingsGeneral::PyGetDrawCoordinateSystem() const { 
-    PyWarning("VisualizationSettings parameter general.drawCoordinateSystem is deprecated! use view0.scene.drawCoordinateSystem instead!");
+    PyDeprecated("VisualizationSettings parameter general.drawCoordinateSystem is deprecated! use view0.scene.drawCoordinateSystem instead!");
     return Index(backlink->view0.scene.drawCoordinateSystem); 
     }
 
 inline void VSettingsGeneral::PySetDrawWorldBasis(const bool& drawWorldBasisInit) { 
-    PyWarning("VisualizationSettings parameter general.drawWorldBasis is deprecated! use view0.scene.drawWorldBasis instead!");
+    PyDeprecated("VisualizationSettings parameter general.drawWorldBasis is deprecated! use view0.scene.drawWorldBasis instead!");
     backlink->view0.scene.drawWorldBasis= (const bool&)drawWorldBasisInit; 
     }
 inline bool VSettingsGeneral::PyGetDrawWorldBasis() const { 
-    PyWarning("VisualizationSettings parameter general.drawWorldBasis is deprecated! use view0.scene.drawWorldBasis instead!");
+    PyDeprecated("VisualizationSettings parameter general.drawWorldBasis is deprecated! use view0.scene.drawWorldBasis instead!");
     return bool(backlink->view0.scene.drawWorldBasis); 
     }
 
 inline void VSettingsGeneral::PySetShowComputationInfo(const bool& showComputationInfoInit) { 
-    PyWarning("VisualizationSettings parameter general.showComputationInfo is deprecated! use view0.window.showComputationInfo instead!");
+    PyDeprecated("VisualizationSettings parameter general.showComputationInfo is deprecated! use view0.window.showComputationInfo instead!");
     backlink->view0.window.showComputationInfo= (const bool&)showComputationInfoInit; 
     }
 inline bool VSettingsGeneral::PyGetShowComputationInfo() const { 
-    PyWarning("VisualizationSettings parameter general.showComputationInfo is deprecated! use view0.window.showComputationInfo instead!");
+    PyDeprecated("VisualizationSettings parameter general.showComputationInfo is deprecated! use view0.window.showComputationInfo instead!");
     return bool(backlink->view0.window.showComputationInfo); 
     }
 
 inline void VSettingsGeneral::PySetTextSize(const float& globalFontSizeInit) { 
-    PyWarning("VisualizationSettings parameter general.textSize is deprecated! use view0.window.globalFontSize instead!");
+    PyDeprecated("VisualizationSettings parameter general.textSize is deprecated! use view0.window.globalFontSize instead!");
     backlink->view0.window.globalFontSize= (const float&)globalFontSizeInit; 
     }
 inline float VSettingsGeneral::PyGetTextSize() const { 
-    PyWarning("VisualizationSettings parameter general.textSize is deprecated! use view0.window.globalFontSize instead!");
+    PyDeprecated("VisualizationSettings parameter general.textSize is deprecated! use view0.window.globalFontSize instead!");
     return float(backlink->view0.window.globalFontSize); 
     }
 
 inline void VSettingsGeneral::PySetWorldBasisSize(const float& worldBasisSizeInit) { 
-    PyWarning("VisualizationSettings parameter general.worldBasisSize is deprecated! use view0.scene.worldBasisSize instead!");
+    PyDeprecated("VisualizationSettings parameter general.worldBasisSize is deprecated! use view0.scene.worldBasisSize instead!");
     backlink->view0.scene.worldBasisSize= (const float&)worldBasisSizeInit; 
     }
 inline float VSettingsGeneral::PyGetWorldBasisSize() const { 
-    PyWarning("VisualizationSettings parameter general.worldBasisSize is deprecated! use view0.scene.worldBasisSize instead!");
+    PyDeprecated("VisualizationSettings parameter general.worldBasisSize is deprecated! use view0.scene.worldBasisSize instead!");
     return float(backlink->view0.scene.worldBasisSize); 
     }
 
 inline void VSettingsContour::PySetColorBarPrecision(const Index& colorBarPrecisionInit) { 
-    PyWarning("VisualizationSettings parameter contour.colorBarPrecision is deprecated! use contour.advanced.colorBarPrecision instead!");
+    PyDeprecated("VisualizationSettings parameter contour.colorBarPrecision is deprecated! use contour.advanced.colorBarPrecision instead!");
     backlink->contour.advanced.colorBarPrecision= (const Index&)colorBarPrecisionInit; 
     }
 inline Index VSettingsContour::PyGetColorBarPrecision() const { 
-    PyWarning("VisualizationSettings parameter contour.colorBarPrecision is deprecated! use contour.advanced.colorBarPrecision instead!");
+    PyDeprecated("VisualizationSettings parameter contour.colorBarPrecision is deprecated! use contour.advanced.colorBarPrecision instead!");
     return Index(backlink->contour.advanced.colorBarPrecision); 
     }
 
 inline void VSettingsContour::PySetColorBarTiling(const Index& colorBarTilingInit) { 
-    PyWarning("VisualizationSettings parameter contour.colorBarTiling is deprecated! use contour.advanced.colorBarTiling instead!");
+    PyDeprecated("VisualizationSettings parameter contour.colorBarTiling is deprecated! use contour.advanced.colorBarTiling instead!");
     backlink->contour.advanced.colorBarTiling= (const Index&)colorBarTilingInit; 
     }
 inline Index VSettingsContour::PyGetColorBarTiling() const { 
-    PyWarning("VisualizationSettings parameter contour.colorBarTiling is deprecated! use contour.advanced.colorBarTiling instead!");
+    PyDeprecated("VisualizationSettings parameter contour.colorBarTiling is deprecated! use contour.advanced.colorBarTiling instead!");
     return Index(backlink->contour.advanced.colorBarTiling); 
     }
 
 inline void VSettingsContour::PySetShowColorBar(const bool& showColorBarInit) { 
-    PyWarning("VisualizationSettings parameter contour.showColorBar is deprecated! use contour.advanced.showColorBar instead!");
+    PyDeprecated("VisualizationSettings parameter contour.showColorBar is deprecated! use contour.advanced.showColorBar instead!");
     backlink->contour.advanced.showColorBar= (const bool&)showColorBarInit; 
     }
 inline bool VSettingsContour::PyGetShowColorBar() const { 
-    PyWarning("VisualizationSettings parameter contour.showColorBar is deprecated! use contour.advanced.showColorBar instead!");
+    PyDeprecated("VisualizationSettings parameter contour.showColorBar is deprecated! use contour.advanced.showColorBar instead!");
     return bool(backlink->contour.advanced.showColorBar); 
     }
 
 inline void VSettingsWindowDeprecated::PySetAlwaysOnTop(const bool& alwaysOnTopInit) { 
-    PyWarning("VisualizationSettings parameter window.alwaysOnTop is deprecated! use view0.window.alwaysOnTop instead!");
+    PyDeprecated("VisualizationSettings parameter window.alwaysOnTop is deprecated! use view0.window.alwaysOnTop instead!");
     backlink->view0.window.alwaysOnTop= (const bool&)alwaysOnTopInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetAlwaysOnTop() const { 
-    PyWarning("VisualizationSettings parameter window.alwaysOnTop is deprecated! use view0.window.alwaysOnTop instead!");
+    PyDeprecated("VisualizationSettings parameter window.alwaysOnTop is deprecated! use view0.window.alwaysOnTop instead!");
     return bool(backlink->view0.window.alwaysOnTop); 
     }
 
 inline void VSettingsWindowDeprecated::PySetIgnoreKeys(const bool& ignoreKeysInit) { 
-    PyWarning("VisualizationSettings parameter window.ignoreKeys is deprecated! use interactive.ignoreKeys instead!");
+    PyDeprecated("VisualizationSettings parameter window.ignoreKeys is deprecated! use interactive.ignoreKeys instead!");
     backlink->interactive.ignoreKeys= (const bool&)ignoreKeysInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetIgnoreKeys() const { 
-    PyWarning("VisualizationSettings parameter window.ignoreKeys is deprecated! use interactive.ignoreKeys instead!");
+    PyDeprecated("VisualizationSettings parameter window.ignoreKeys is deprecated! use interactive.ignoreKeys instead!");
     return bool(backlink->interactive.ignoreKeys); 
     }
 
 inline void VSettingsWindowDeprecated::PySetKeyPressUserFunction(const std::function<bool(int, int, int)>& keyPressUserFunctionInit) { 
-    PyWarning("VisualizationSettings parameter window.keyPressUserFunction is deprecated! use interactive.keyPressUserFunction instead!");
+    PyDeprecated("VisualizationSettings parameter window.keyPressUserFunction is deprecated! use interactive.keyPressUserFunction instead!");
     backlink->interactive.keyPressUserFunction= (const std::function<bool(int, int, int)>&)keyPressUserFunctionInit; 
     }
 inline std::function<bool(int, int, int)> VSettingsWindowDeprecated::PyGetKeyPressUserFunction() const { 
-    PyWarning("VisualizationSettings parameter window.keyPressUserFunction is deprecated! use interactive.keyPressUserFunction instead!");
+    PyDeprecated("VisualizationSettings parameter window.keyPressUserFunction is deprecated! use interactive.keyPressUserFunction instead!");
     return std::function<bool(int, int, int)>(backlink->interactive.keyPressUserFunction); 
     }
 
 inline void VSettingsWindowDeprecated::PySetLimitWindowToScreenSize(const bool& limitWindowToScreenSizeInit) { 
-    PyWarning("VisualizationSettings parameter window.limitWindowToScreenSize is deprecated! use general.limitWindowToScreenSize instead!");
+    PyDeprecated("VisualizationSettings parameter window.limitWindowToScreenSize is deprecated! use general.limitWindowToScreenSize instead!");
     backlink->general.limitWindowToScreenSize= (const bool&)limitWindowToScreenSizeInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetLimitWindowToScreenSize() const { 
-    PyWarning("VisualizationSettings parameter window.limitWindowToScreenSize is deprecated! use general.limitWindowToScreenSize instead!");
+    PyDeprecated("VisualizationSettings parameter window.limitWindowToScreenSize is deprecated! use general.limitWindowToScreenSize instead!");
     return bool(backlink->general.limitWindowToScreenSize); 
     }
 
 inline void VSettingsWindowDeprecated::PySetMaximize(const bool& maximizeInit) { 
-    PyWarning("VisualizationSettings parameter window.maximize is deprecated! use view0.window.maximize instead!");
+    PyDeprecated("VisualizationSettings parameter window.maximize is deprecated! use view0.window.maximize instead!");
     backlink->view0.window.maximize= (const bool&)maximizeInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetMaximize() const { 
-    PyWarning("VisualizationSettings parameter window.maximize is deprecated! use view0.window.maximize instead!");
+    PyDeprecated("VisualizationSettings parameter window.maximize is deprecated! use view0.window.maximize instead!");
     return bool(backlink->view0.window.maximize); 
     }
 
 inline void VSettingsWindowDeprecated::PySetReallyQuitTimeLimit(const Real& reallyQuitTimeLimitInit) { 
-    PyWarning("VisualizationSettings parameter window.reallyQuitTimeLimit is deprecated! use general.reallyQuitTimeLimit instead!");
+    PyDeprecated("VisualizationSettings parameter window.reallyQuitTimeLimit is deprecated! use general.reallyQuitTimeLimit instead!");
     backlink->general.reallyQuitTimeLimit= (const Real&)reallyQuitTimeLimitInit; 
     }
 inline Real VSettingsWindowDeprecated::PyGetReallyQuitTimeLimit() const { 
-    PyWarning("VisualizationSettings parameter window.reallyQuitTimeLimit is deprecated! use general.reallyQuitTimeLimit instead!");
+    PyDeprecated("VisualizationSettings parameter window.reallyQuitTimeLimit is deprecated! use general.reallyQuitTimeLimit instead!");
     return Real(backlink->general.reallyQuitTimeLimit); 
     }
 
 inline void VSettingsWindowDeprecated::PySetRenderWindowSize(const std::array<Index,2>& renderWindowSizeInit) { 
-    PyWarning("VisualizationSettings parameter window.renderWindowSize is deprecated! use view0.window.renderWindowSize instead!");
+    PyDeprecated("VisualizationSettings parameter window.renderWindowSize is deprecated! use view0.window.renderWindowSize instead!");
     backlink->view0.window.renderWindowSize= (const Index2&)renderWindowSizeInit; 
     }
 inline std::array<Index,2> VSettingsWindowDeprecated::PyGetRenderWindowSize() const { 
-    PyWarning("VisualizationSettings parameter window.renderWindowSize is deprecated! use view0.window.renderWindowSize instead!");
+    PyDeprecated("VisualizationSettings parameter window.renderWindowSize is deprecated! use view0.window.renderWindowSize instead!");
     return std::array<Index,2>(backlink->view0.window.renderWindowSize); 
     }
 
 inline void VSettingsWindowDeprecated::PySetShowMouseCoordinates(const bool& showMouseCoordinatesInit) { 
-    PyWarning("VisualizationSettings parameter window.showMouseCoordinates is deprecated! use view0.window.showMouseCoordinates instead!");
+    PyDeprecated("VisualizationSettings parameter window.showMouseCoordinates is deprecated! use view0.window.showMouseCoordinates instead!");
     backlink->view0.window.showMouseCoordinates= (const bool&)showMouseCoordinatesInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetShowMouseCoordinates() const { 
-    PyWarning("VisualizationSettings parameter window.showMouseCoordinates is deprecated! use view0.window.showMouseCoordinates instead!");
+    PyDeprecated("VisualizationSettings parameter window.showMouseCoordinates is deprecated! use view0.window.showMouseCoordinates instead!");
     return bool(backlink->view0.window.showMouseCoordinates); 
     }
 
 inline void VSettingsWindowDeprecated::PySetShowRenderStateInfo(const bool& showRenderStateInfoInit) { 
-    PyWarning("VisualizationSettings parameter window.showRenderStateInfo is deprecated! use view0.window.showRenderStateInfo instead!");
+    PyDeprecated("VisualizationSettings parameter window.showRenderStateInfo is deprecated! use view0.window.showRenderStateInfo instead!");
     backlink->view0.window.showRenderStateInfo= (const bool&)showRenderStateInfoInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetShowRenderStateInfo() const { 
-    PyWarning("VisualizationSettings parameter window.showRenderStateInfo is deprecated! use view0.window.showRenderStateInfo instead!");
+    PyDeprecated("VisualizationSettings parameter window.showRenderStateInfo is deprecated! use view0.window.showRenderStateInfo instead!");
     return bool(backlink->view0.window.showRenderStateInfo); 
     }
 
 inline void VSettingsWindowDeprecated::PySetShowWindow(const bool& showWindowInit) { 
-    PyWarning("VisualizationSettings parameter window.showWindow is deprecated! use view0.window.showWindow instead!");
+    PyDeprecated("VisualizationSettings parameter window.showWindow is deprecated! use view0.window.showWindow instead!");
     backlink->view0.window.showWindow= (const bool&)showWindowInit; 
     }
 inline bool VSettingsWindowDeprecated::PyGetShowWindow() const { 
-    PyWarning("VisualizationSettings parameter window.showWindow is deprecated! use view0.window.showWindow instead!");
+    PyDeprecated("VisualizationSettings parameter window.showWindow is deprecated! use view0.window.showWindow instead!");
     return bool(backlink->view0.window.showWindow); 
     }
 
 inline void VSettingsWindowDeprecated::PySetStartupTimeout(const Index& rendererStartupTimeoutInit) { 
-    PyWarning("VisualizationSettings parameter window.startupTimeout is deprecated! use general.rendererStartupTimeout instead!");
+    PyDeprecated("VisualizationSettings parameter window.startupTimeout is deprecated! use general.rendererStartupTimeout instead!");
     backlink->general.rendererStartupTimeout= (const Index&)rendererStartupTimeoutInit; 
     }
 inline Index VSettingsWindowDeprecated::PyGetStartupTimeout() const { 
-    PyWarning("VisualizationSettings parameter window.startupTimeout is deprecated! use general.rendererStartupTimeout instead!");
+    PyDeprecated("VisualizationSettings parameter window.startupTimeout is deprecated! use general.rendererStartupTimeout instead!");
     return Index(backlink->general.rendererStartupTimeout); 
     }
 
 inline void VSettingsRaytracer::PySetAmbientLightColor(const std::array<float,4>& lightModelAmbientInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.ambientLightColor is deprecated! use openGL.lightModelAmbient instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.ambientLightColor is deprecated! use openGL.lightModelAmbient instead!");
     backlink->openGL.lightModelAmbient= (const Float4&)lightModelAmbientInit; 
     }
 inline std::array<float,4> VSettingsRaytracer::PyGetAmbientLightColor() const { 
-    PyWarning("VisualizationSettings parameter raytracer.ambientLightColor is deprecated! use openGL.lightModelAmbient instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.ambientLightColor is deprecated! use openGL.lightModelAmbient instead!");
     return std::array<float,4>(backlink->openGL.lightModelAmbient); 
     }
 
 inline void VSettingsRaytracer::PySetBackgroundColorReflections(const std::array<float,4>& backgroundColorReflectionsInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.backgroundColorReflections is deprecated! use raytracer.advanced.backgroundColorReflections instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.backgroundColorReflections is deprecated! use raytracer.advanced.backgroundColorReflections instead!");
     backlink->raytracer.advanced.backgroundColorReflections= (const Float4&)backgroundColorReflectionsInit; 
     }
 inline std::array<float,4> VSettingsRaytracer::PyGetBackgroundColorReflections() const { 
-    PyWarning("VisualizationSettings parameter raytracer.backgroundColorReflections is deprecated! use raytracer.advanced.backgroundColorReflections instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.backgroundColorReflections is deprecated! use raytracer.advanced.backgroundColorReflections instead!");
     return std::array<float,4>(backlink->raytracer.advanced.backgroundColorReflections); 
     }
 
 inline void VSettingsRaytracer::PySetEnable(const bool& useRaytracerInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.enable is deprecated! use view0.camera.useRaytracer instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.enable is deprecated! use view0.camera.useRaytracer instead!");
     backlink->view0.camera.useRaytracer= (const bool&)useRaytracerInit; 
     }
 inline bool VSettingsRaytracer::PyGetEnable() const { 
-    PyWarning("VisualizationSettings parameter raytracer.enable is deprecated! use view0.camera.useRaytracer instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.enable is deprecated! use view0.camera.useRaytracer instead!");
     return bool(backlink->view0.camera.useRaytracer); 
     }
 
 inline void VSettingsRaytracer::PySetLightRadius(const float& lightRadiusInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.lightRadius is deprecated! use openGL.light0.lightRadius instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.lightRadius is deprecated! use openGL.light0.lightRadius instead!");
     backlink->openGL.light0.lightRadius= (const float&)lightRadiusInit; 
     }
 inline float VSettingsRaytracer::PyGetLightRadius() const { 
-    PyWarning("VisualizationSettings parameter raytracer.lightRadius is deprecated! use openGL.light0.lightRadius instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.lightRadius is deprecated! use openGL.light0.lightRadius instead!");
     return float(backlink->openGL.light0.lightRadius); 
     }
 
 inline void VSettingsRaytracer::PySetSearchTreeFactor(const Index& searchTreeFactorInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.searchTreeFactor is deprecated! use raytracer.advanced.searchTreeFactor instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.searchTreeFactor is deprecated! use raytracer.advanced.searchTreeFactor instead!");
     backlink->raytracer.advanced.searchTreeFactor= (const Index&)searchTreeFactorInit; 
     }
 inline Index VSettingsRaytracer::PyGetSearchTreeFactor() const { 
-    PyWarning("VisualizationSettings parameter raytracer.searchTreeFactor is deprecated! use raytracer.advanced.searchTreeFactor instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.searchTreeFactor is deprecated! use raytracer.advanced.searchTreeFactor instead!");
     return Index(backlink->raytracer.advanced.searchTreeFactor); 
     }
 
 inline void VSettingsRaytracer::PySetShadowScalingFactor(const Index& shadowScalingFactorInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.shadowScalingFactor is deprecated! use raytracer.advanced.shadowScalingFactor instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.shadowScalingFactor is deprecated! use raytracer.advanced.shadowScalingFactor instead!");
     backlink->raytracer.advanced.shadowScalingFactor= (const Index&)shadowScalingFactorInit; 
     }
 inline Index VSettingsRaytracer::PyGetShadowScalingFactor() const { 
-    PyWarning("VisualizationSettings parameter raytracer.shadowScalingFactor is deprecated! use raytracer.advanced.shadowScalingFactor instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.shadowScalingFactor is deprecated! use raytracer.advanced.shadowScalingFactor instead!");
     return Index(backlink->raytracer.advanced.shadowScalingFactor); 
     }
 
 inline void VSettingsRaytracer::PySetShadowSmoothingSteps(const Index& shadowSmoothingStepsInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.shadowSmoothingSteps is deprecated! use raytracer.advanced.shadowSmoothingSteps instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.shadowSmoothingSteps is deprecated! use raytracer.advanced.shadowSmoothingSteps instead!");
     backlink->raytracer.advanced.shadowSmoothingSteps= (const Index&)shadowSmoothingStepsInit; 
     }
 inline Index VSettingsRaytracer::PyGetShadowSmoothingSteps() const { 
-    PyWarning("VisualizationSettings parameter raytracer.shadowSmoothingSteps is deprecated! use raytracer.advanced.shadowSmoothingSteps instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.shadowSmoothingSteps is deprecated! use raytracer.advanced.shadowSmoothingSteps instead!");
     return Index(backlink->raytracer.advanced.shadowSmoothingSteps); 
     }
 
 inline void VSettingsRaytracer::PySetShowText(const bool& showTextInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.showText is deprecated! use raytracer.advanced.showText instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.showText is deprecated! use raytracer.advanced.showText instead!");
     backlink->raytracer.advanced.showText= (const bool&)showTextInit; 
     }
 inline bool VSettingsRaytracer::PyGetShowText() const { 
-    PyWarning("VisualizationSettings parameter raytracer.showText is deprecated! use raytracer.advanced.showText instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.showText is deprecated! use raytracer.advanced.showText instead!");
     return bool(backlink->raytracer.advanced.showText); 
     }
 
 inline void VSettingsRaytracer::PySetTilesPerThread(const Index& tilesPerThreadInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.tilesPerThread is deprecated! use raytracer.advanced.tilesPerThread instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.tilesPerThread is deprecated! use raytracer.advanced.tilesPerThread instead!");
     backlink->raytracer.advanced.tilesPerThread= (const Index&)tilesPerThreadInit; 
     }
 inline Index VSettingsRaytracer::PyGetTilesPerThread() const { 
-    PyWarning("VisualizationSettings parameter raytracer.tilesPerThread is deprecated! use raytracer.advanced.tilesPerThread instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.tilesPerThread is deprecated! use raytracer.advanced.tilesPerThread instead!");
     return Index(backlink->raytracer.advanced.tilesPerThread); 
     }
 
 inline void VSettingsRaytracer::PySetZBiasLines(const float& zBiasLinesInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.zBiasLines is deprecated! use raytracer.advanced.zBiasLines instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.zBiasLines is deprecated! use raytracer.advanced.zBiasLines instead!");
     backlink->raytracer.advanced.zBiasLines= (const float&)zBiasLinesInit; 
     }
 inline float VSettingsRaytracer::PyGetZBiasLines() const { 
-    PyWarning("VisualizationSettings parameter raytracer.zBiasLines is deprecated! use raytracer.advanced.zBiasLines instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.zBiasLines is deprecated! use raytracer.advanced.zBiasLines instead!");
     return float(backlink->raytracer.advanced.zBiasLines); 
     }
 
 inline void VSettingsRaytracer::PySetZOffsetCamera(const float& dummyInit) { 
-    PyWarning("VisualizationSettings parameter raytracer.zOffsetCamera is deprecated! use openGL.dummy instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.zOffsetCamera is deprecated! use openGL.dummy instead!");
     backlink->openGL.dummy= (const float&)dummyInit; 
     }
 inline float VSettingsRaytracer::PyGetZOffsetCamera() const { 
-    PyWarning("VisualizationSettings parameter raytracer.zOffsetCamera is deprecated! use openGL.dummy instead!");
+    PyDeprecated("VisualizationSettings parameter raytracer.zOffsetCamera is deprecated! use openGL.dummy instead!");
     return float(backlink->openGL.dummy); 
     }
 
 inline void VSettingsOpenGL::PySetClippingPlaneColor(const std::array<float,4>& clippingPlaneColorInit) { 
-    PyWarning("VisualizationSettings parameter openGL.clippingPlaneColor is deprecated! use openGL.advanced.clippingPlaneColor instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.clippingPlaneColor is deprecated! use openGL.advanced.clippingPlaneColor instead!");
     backlink->openGL.advanced.clippingPlaneColor= (const Float4&)clippingPlaneColorInit; 
     }
 inline std::array<float,4> VSettingsOpenGL::PyGetClippingPlaneColor() const { 
-    PyWarning("VisualizationSettings parameter openGL.clippingPlaneColor is deprecated! use openGL.advanced.clippingPlaneColor instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.clippingPlaneColor is deprecated! use openGL.advanced.clippingPlaneColor instead!");
     return std::array<float,4>(backlink->openGL.advanced.clippingPlaneColor); 
     }
 
 inline void VSettingsOpenGL::PySetClippingPlaneDistance(const float& clippingPlaneDistanceInit) { 
-    PyWarning("VisualizationSettings parameter openGL.clippingPlaneDistance is deprecated! use view0.camera.clippingPlaneDistance instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.clippingPlaneDistance is deprecated! use view0.camera.clippingPlaneDistance instead!");
     backlink->view0.camera.clippingPlaneDistance= (const float&)clippingPlaneDistanceInit; 
     }
 inline float VSettingsOpenGL::PyGetClippingPlaneDistance() const { 
-    PyWarning("VisualizationSettings parameter openGL.clippingPlaneDistance is deprecated! use view0.camera.clippingPlaneDistance instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.clippingPlaneDistance is deprecated! use view0.camera.clippingPlaneDistance instead!");
     return float(backlink->view0.camera.clippingPlaneDistance); 
     }
 
 inline void VSettingsOpenGL::PySetClippingPlaneNormal(const std::array<float,3>& clippingPlaneNormalInit) { 
-    PyWarning("VisualizationSettings parameter openGL.clippingPlaneNormal is deprecated! use view0.camera.clippingPlaneNormal instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.clippingPlaneNormal is deprecated! use view0.camera.clippingPlaneNormal instead!");
     backlink->view0.camera.clippingPlaneNormal= (const Float3&)clippingPlaneNormalInit; 
     }
 inline std::array<float,3> VSettingsOpenGL::PyGetClippingPlaneNormal() const { 
-    PyWarning("VisualizationSettings parameter openGL.clippingPlaneNormal is deprecated! use view0.camera.clippingPlaneNormal instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.clippingPlaneNormal is deprecated! use view0.camera.clippingPlaneNormal instead!");
     return std::array<float,3>(backlink->view0.camera.clippingPlaneNormal); 
     }
 
 inline void VSettingsOpenGL::PySetDepthSorting(const bool& depthSortingInit) { 
-    PyWarning("VisualizationSettings parameter openGL.depthSorting is deprecated! use openGL.advanced.depthSorting instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.depthSorting is deprecated! use openGL.advanced.depthSorting instead!");
     backlink->openGL.advanced.depthSorting= (const bool&)depthSortingInit; 
     }
 inline bool VSettingsOpenGL::PyGetDepthSorting() const { 
-    PyWarning("VisualizationSettings parameter openGL.depthSorting is deprecated! use openGL.advanced.depthSorting instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.depthSorting is deprecated! use openGL.advanced.depthSorting instead!");
     return bool(backlink->openGL.advanced.depthSorting); 
     }
 
 inline void VSettingsOpenGL::PySetEnableLight0(const bool& enableInit) { 
-    PyWarning("VisualizationSettings parameter openGL.enableLight0 is deprecated! use openGL.light0.enable instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.enableLight0 is deprecated! use openGL.light0.enable instead!");
     backlink->openGL.light0.enable= (const bool&)enableInit; 
     }
 inline bool VSettingsOpenGL::PyGetEnableLight0() const { 
-    PyWarning("VisualizationSettings parameter openGL.enableLight0 is deprecated! use openGL.light0.enable instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.enableLight0 is deprecated! use openGL.light0.enable instead!");
     return bool(backlink->openGL.light0.enable); 
     }
 
 inline void VSettingsOpenGL::PySetEnableLight1(const bool& enableInit) { 
-    PyWarning("VisualizationSettings parameter openGL.enableLight1 is deprecated! use openGL.light1.enable instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.enableLight1 is deprecated! use openGL.light1.enable instead!");
     backlink->openGL.light1.enable= (const bool&)enableInit; 
     }
 inline bool VSettingsOpenGL::PyGetEnableLight1() const { 
-    PyWarning("VisualizationSettings parameter openGL.enableLight1 is deprecated! use openGL.light1.enable instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.enableLight1 is deprecated! use openGL.light1.enable instead!");
     return bool(backlink->openGL.light1.enable); 
     }
 
 inline void VSettingsOpenGL::PySetEnableLighting(const bool& enableLightingInit) { 
-    PyWarning("VisualizationSettings parameter openGL.enableLighting is deprecated! use openGL.advanced.enableLighting instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.enableLighting is deprecated! use openGL.advanced.enableLighting instead!");
     backlink->openGL.advanced.enableLighting= (const bool&)enableLightingInit; 
     }
 inline bool VSettingsOpenGL::PyGetEnableLighting() const { 
-    PyWarning("VisualizationSettings parameter openGL.enableLighting is deprecated! use openGL.advanced.enableLighting instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.enableLighting is deprecated! use openGL.advanced.enableLighting instead!");
     return bool(backlink->openGL.advanced.enableLighting); 
     }
 
 inline void VSettingsOpenGL::PySetFacesTransparent(const bool& facesTransparentInit) { 
-    PyWarning("VisualizationSettings parameter openGL.facesTransparent is deprecated! use view0.scene.facesTransparent instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.facesTransparent is deprecated! use view0.scene.facesTransparent instead!");
     backlink->view0.scene.facesTransparent= (const bool&)facesTransparentInit; 
     }
 inline bool VSettingsOpenGL::PyGetFacesTransparent() const { 
-    PyWarning("VisualizationSettings parameter openGL.facesTransparent is deprecated! use view0.scene.facesTransparent instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.facesTransparent is deprecated! use view0.scene.facesTransparent instead!");
     return bool(backlink->view0.scene.facesTransparent); 
     }
 
 inline void VSettingsOpenGL::PySetInitialCenterPoint(const std::array<float,3>& initialCenterPointInit) { 
-    PyWarning("VisualizationSettings parameter openGL.initialCenterPoint is deprecated! use openGL.advanced.initialCenterPoint instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialCenterPoint is deprecated! use openGL.advanced.initialCenterPoint instead!");
     backlink->openGL.advanced.initialCenterPoint= (const Float3&)initialCenterPointInit; 
     }
 inline std::array<float,3> VSettingsOpenGL::PyGetInitialCenterPoint() const { 
-    PyWarning("VisualizationSettings parameter openGL.initialCenterPoint is deprecated! use openGL.advanced.initialCenterPoint instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialCenterPoint is deprecated! use openGL.advanced.initialCenterPoint instead!");
     return std::array<float,3>(backlink->openGL.advanced.initialCenterPoint); 
     }
 
 inline void VSettingsOpenGL::PySetInitialMaxSceneSize(const float& initialMaxSceneSizeInit) { 
-    PyWarning("VisualizationSettings parameter openGL.initialMaxSceneSize is deprecated! use openGL.advanced.initialMaxSceneSize instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialMaxSceneSize is deprecated! use openGL.advanced.initialMaxSceneSize instead!");
     backlink->openGL.advanced.initialMaxSceneSize= (const float&)initialMaxSceneSizeInit; 
     }
 inline float VSettingsOpenGL::PyGetInitialMaxSceneSize() const { 
-    PyWarning("VisualizationSettings parameter openGL.initialMaxSceneSize is deprecated! use openGL.advanced.initialMaxSceneSize instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialMaxSceneSize is deprecated! use openGL.advanced.initialMaxSceneSize instead!");
     return float(backlink->openGL.advanced.initialMaxSceneSize); 
     }
 
 inline void VSettingsOpenGL::PySetInitialModelRotation(const StdArray33F& initialModelRotationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.initialModelRotation is deprecated! use openGL.advanced.initialModelRotation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialModelRotation is deprecated! use openGL.advanced.initialModelRotation instead!");
     backlink->openGL.advanced.initialModelRotation= (const StdArray33F&)initialModelRotationInit; 
     }
 inline StdArray33F VSettingsOpenGL::PyGetInitialModelRotation() const { 
-    PyWarning("VisualizationSettings parameter openGL.initialModelRotation is deprecated! use openGL.advanced.initialModelRotation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialModelRotation is deprecated! use openGL.advanced.initialModelRotation instead!");
     return StdArray33F(backlink->openGL.advanced.initialModelRotation); 
     }
 
 inline void VSettingsOpenGL::PySetInitialZoom(const float& initialZoomInit) { 
-    PyWarning("VisualizationSettings parameter openGL.initialZoom is deprecated! use openGL.advanced.initialZoom instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialZoom is deprecated! use openGL.advanced.initialZoom instead!");
     backlink->openGL.advanced.initialZoom= (const float&)initialZoomInit; 
     }
 inline float VSettingsOpenGL::PyGetInitialZoom() const { 
-    PyWarning("VisualizationSettings parameter openGL.initialZoom is deprecated! use openGL.advanced.initialZoom instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.initialZoom is deprecated! use openGL.advanced.initialZoom instead!");
     return float(backlink->openGL.advanced.initialZoom); 
     }
 
 inline void VSettingsOpenGL::PySetLight0ambient(const float& dummyInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0ambient is deprecated! use openGL.dummy instead!");
     backlink->openGL.dummy= (const float&)dummyInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0ambient() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0ambient is deprecated! use openGL.dummy instead!");
     return float(backlink->openGL.dummy); 
     }
 
 inline void VSettingsOpenGL::PySetLight0constantAttenuation(const float& constantAttenuationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0constantAttenuation is deprecated! use openGL.light0.constantAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0constantAttenuation is deprecated! use openGL.light0.constantAttenuation instead!");
     backlink->openGL.light0.constantAttenuation= (const float&)constantAttenuationInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0constantAttenuation() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0constantAttenuation is deprecated! use openGL.light0.constantAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0constantAttenuation is deprecated! use openGL.light0.constantAttenuation instead!");
     return float(backlink->openGL.light0.constantAttenuation); 
     }
 
 inline void VSettingsOpenGL::PySetLight0diffuse(const float& diffuseInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0diffuse is deprecated! use openGL.light0.diffuse instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0diffuse is deprecated! use openGL.light0.diffuse instead!");
     backlink->openGL.light0.diffuse= (const float&)diffuseInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0diffuse() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0diffuse is deprecated! use openGL.light0.diffuse instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0diffuse is deprecated! use openGL.light0.diffuse instead!");
     return float(backlink->openGL.light0.diffuse); 
     }
 
 inline void VSettingsOpenGL::PySetLight0linearAttenuation(const float& linearAttenuationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0linearAttenuation is deprecated! use openGL.light0.linearAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0linearAttenuation is deprecated! use openGL.light0.linearAttenuation instead!");
     backlink->openGL.light0.linearAttenuation= (const float&)linearAttenuationInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0linearAttenuation() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0linearAttenuation is deprecated! use openGL.light0.linearAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0linearAttenuation is deprecated! use openGL.light0.linearAttenuation instead!");
     return float(backlink->openGL.light0.linearAttenuation); 
     }
 
 inline void VSettingsOpenGL::PySetLight0position(const std::array<float,4>& positionInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0position is deprecated! use openGL.light0.position instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0position is deprecated! use openGL.light0.position instead!");
     backlink->openGL.light0.position= (const Float4&)positionInit; 
     }
 inline std::array<float,4> VSettingsOpenGL::PyGetLight0position() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0position is deprecated! use openGL.light0.position instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0position is deprecated! use openGL.light0.position instead!");
     return std::array<float,4>(backlink->openGL.light0.position); 
     }
 
 inline void VSettingsOpenGL::PySetLight0quadraticAttenuation(const float& quadraticAttenuationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0quadraticAttenuation is deprecated! use openGL.light0.quadraticAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0quadraticAttenuation is deprecated! use openGL.light0.quadraticAttenuation instead!");
     backlink->openGL.light0.quadraticAttenuation= (const float&)quadraticAttenuationInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0quadraticAttenuation() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0quadraticAttenuation is deprecated! use openGL.light0.quadraticAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0quadraticAttenuation is deprecated! use openGL.light0.quadraticAttenuation instead!");
     return float(backlink->openGL.light0.quadraticAttenuation); 
     }
 
 inline void VSettingsOpenGL::PySetLight0specular(const float& specularInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light0specular is deprecated! use openGL.light0.specular instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0specular is deprecated! use openGL.light0.specular instead!");
     backlink->openGL.light0.specular= (const float&)specularInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0specular() const { 
-    PyWarning("VisualizationSettings parameter openGL.light0specular is deprecated! use openGL.light0.specular instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light0specular is deprecated! use openGL.light0.specular instead!");
     return float(backlink->openGL.light0.specular); 
     }
 
 inline void VSettingsOpenGL::PySetLight1ambient(const float& dummyInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1ambient is deprecated! use openGL.dummy instead!");
     backlink->openGL.dummy= (const float&)dummyInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1ambient() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1ambient is deprecated! use openGL.dummy instead!");
     return float(backlink->openGL.dummy); 
     }
 
 inline void VSettingsOpenGL::PySetLight1constantAttenuation(const float& constantAttenuationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1constantAttenuation is deprecated! use openGL.light1.constantAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1constantAttenuation is deprecated! use openGL.light1.constantAttenuation instead!");
     backlink->openGL.light1.constantAttenuation= (const float&)constantAttenuationInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1constantAttenuation() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1constantAttenuation is deprecated! use openGL.light1.constantAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1constantAttenuation is deprecated! use openGL.light1.constantAttenuation instead!");
     return float(backlink->openGL.light1.constantAttenuation); 
     }
 
 inline void VSettingsOpenGL::PySetLight1diffuse(const float& diffuseInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1diffuse is deprecated! use openGL.light1.diffuse instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1diffuse is deprecated! use openGL.light1.diffuse instead!");
     backlink->openGL.light1.diffuse= (const float&)diffuseInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1diffuse() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1diffuse is deprecated! use openGL.light1.diffuse instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1diffuse is deprecated! use openGL.light1.diffuse instead!");
     return float(backlink->openGL.light1.diffuse); 
     }
 
 inline void VSettingsOpenGL::PySetLight1linearAttenuation(const float& linearAttenuationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1linearAttenuation is deprecated! use openGL.light1.linearAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1linearAttenuation is deprecated! use openGL.light1.linearAttenuation instead!");
     backlink->openGL.light1.linearAttenuation= (const float&)linearAttenuationInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1linearAttenuation() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1linearAttenuation is deprecated! use openGL.light1.linearAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1linearAttenuation is deprecated! use openGL.light1.linearAttenuation instead!");
     return float(backlink->openGL.light1.linearAttenuation); 
     }
 
 inline void VSettingsOpenGL::PySetLight1position(const std::array<float,4>& positionInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1position is deprecated! use openGL.light1.position instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1position is deprecated! use openGL.light1.position instead!");
     backlink->openGL.light1.position= (const Float4&)positionInit; 
     }
 inline std::array<float,4> VSettingsOpenGL::PyGetLight1position() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1position is deprecated! use openGL.light1.position instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1position is deprecated! use openGL.light1.position instead!");
     return std::array<float,4>(backlink->openGL.light1.position); 
     }
 
 inline void VSettingsOpenGL::PySetLight1quadraticAttenuation(const float& quadraticAttenuationInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1quadraticAttenuation is deprecated! use openGL.light1.quadraticAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1quadraticAttenuation is deprecated! use openGL.light1.quadraticAttenuation instead!");
     backlink->openGL.light1.quadraticAttenuation= (const float&)quadraticAttenuationInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1quadraticAttenuation() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1quadraticAttenuation is deprecated! use openGL.light1.quadraticAttenuation instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1quadraticAttenuation is deprecated! use openGL.light1.quadraticAttenuation instead!");
     return float(backlink->openGL.light1.quadraticAttenuation); 
     }
 
 inline void VSettingsOpenGL::PySetLight1specular(const float& specularInit) { 
-    PyWarning("VisualizationSettings parameter openGL.light1specular is deprecated! use openGL.light1.specular instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1specular is deprecated! use openGL.light1.specular instead!");
     backlink->openGL.light1.specular= (const float&)specularInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1specular() const { 
-    PyWarning("VisualizationSettings parameter openGL.light1specular is deprecated! use openGL.light1.specular instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.light1specular is deprecated! use openGL.light1.specular instead!");
     return float(backlink->openGL.light1.specular); 
     }
 
 inline void VSettingsOpenGL::PySetLightModelLocalViewer(const bool& lightModelLocalViewerInit) { 
-    PyWarning("VisualizationSettings parameter openGL.lightModelLocalViewer is deprecated! use openGL.advanced.lightModelLocalViewer instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lightModelLocalViewer is deprecated! use openGL.advanced.lightModelLocalViewer instead!");
     backlink->openGL.advanced.lightModelLocalViewer= (const bool&)lightModelLocalViewerInit; 
     }
 inline bool VSettingsOpenGL::PyGetLightModelLocalViewer() const { 
-    PyWarning("VisualizationSettings parameter openGL.lightModelLocalViewer is deprecated! use openGL.advanced.lightModelLocalViewer instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lightModelLocalViewer is deprecated! use openGL.advanced.lightModelLocalViewer instead!");
     return bool(backlink->openGL.advanced.lightModelLocalViewer); 
     }
 
 inline void VSettingsOpenGL::PySetLightModelTwoSide(const bool& lightModelTwoSideInit) { 
-    PyWarning("VisualizationSettings parameter openGL.lightModelTwoSide is deprecated! use openGL.advanced.lightModelTwoSide instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lightModelTwoSide is deprecated! use openGL.advanced.lightModelTwoSide instead!");
     backlink->openGL.advanced.lightModelTwoSide= (const bool&)lightModelTwoSideInit; 
     }
 inline bool VSettingsOpenGL::PyGetLightModelTwoSide() const { 
-    PyWarning("VisualizationSettings parameter openGL.lightModelTwoSide is deprecated! use openGL.advanced.lightModelTwoSide instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lightModelTwoSide is deprecated! use openGL.advanced.lightModelTwoSide instead!");
     return bool(backlink->openGL.advanced.lightModelTwoSide); 
     }
 
 inline void VSettingsOpenGL::PySetLightPositionsInCameraFrame(const bool& useCameraFrameInit) { 
-    PyWarning("VisualizationSettings parameter openGL.lightPositionsInCameraFrame is deprecated! use openGL.light0.useCameraFrame instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lightPositionsInCameraFrame is deprecated! use openGL.light0.useCameraFrame instead!");
     backlink->openGL.light0.useCameraFrame= (const bool&)useCameraFrameInit; 
     }
 inline bool VSettingsOpenGL::PyGetLightPositionsInCameraFrame() const { 
-    PyWarning("VisualizationSettings parameter openGL.lightPositionsInCameraFrame is deprecated! use openGL.light0.useCameraFrame instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lightPositionsInCameraFrame is deprecated! use openGL.light0.useCameraFrame instead!");
     return bool(backlink->openGL.light0.useCameraFrame); 
     }
 
 inline void VSettingsOpenGL::PySetLineSmooth(const bool& lineSmoothInit) { 
-    PyWarning("VisualizationSettings parameter openGL.lineSmooth is deprecated! use openGL.advanced.lineSmooth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lineSmooth is deprecated! use openGL.advanced.lineSmooth instead!");
     backlink->openGL.advanced.lineSmooth= (const bool&)lineSmoothInit; 
     }
 inline bool VSettingsOpenGL::PyGetLineSmooth() const { 
-    PyWarning("VisualizationSettings parameter openGL.lineSmooth is deprecated! use openGL.advanced.lineSmooth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.lineSmooth is deprecated! use openGL.advanced.lineSmooth instead!");
     return bool(backlink->openGL.advanced.lineSmooth); 
     }
 
 inline void VSettingsOpenGL::PySetMaterialAmbientAndDiffuse(const std::array<float,4>& materialSpecularInit) { 
-    PyWarning("VisualizationSettings parameter openGL.materialAmbientAndDiffuse is deprecated! use openGL.materialSpecular instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.materialAmbientAndDiffuse is deprecated! use openGL.materialSpecular instead!");
     backlink->openGL.materialSpecular= (const Float4&)materialSpecularInit; 
     }
 inline std::array<float,4> VSettingsOpenGL::PyGetMaterialAmbientAndDiffuse() const { 
-    PyWarning("VisualizationSettings parameter openGL.materialAmbientAndDiffuse is deprecated! use openGL.materialSpecular instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.materialAmbientAndDiffuse is deprecated! use openGL.materialSpecular instead!");
     return std::array<float,4>(backlink->openGL.materialSpecular); 
     }
 
 inline void VSettingsOpenGL::PySetPerspective(const float& perspectiveInit) { 
-    PyWarning("VisualizationSettings parameter openGL.perspective is deprecated! use view0.camera.perspective instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.perspective is deprecated! use view0.camera.perspective instead!");
     backlink->view0.camera.perspective= (const float&)perspectiveInit; 
     }
 inline float VSettingsOpenGL::PyGetPerspective() const { 
-    PyWarning("VisualizationSettings parameter openGL.perspective is deprecated! use view0.camera.perspective instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.perspective is deprecated! use view0.camera.perspective instead!");
     return float(backlink->view0.camera.perspective); 
     }
 
 inline void VSettingsOpenGL::PySetPolygonOffset(const float& polygonOffsetInit) { 
-    PyWarning("VisualizationSettings parameter openGL.polygonOffset is deprecated! use openGL.advanced.polygonOffset instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.polygonOffset is deprecated! use openGL.advanced.polygonOffset instead!");
     backlink->openGL.advanced.polygonOffset= (const float&)polygonOffsetInit; 
     }
 inline float VSettingsOpenGL::PyGetPolygonOffset() const { 
-    PyWarning("VisualizationSettings parameter openGL.polygonOffset is deprecated! use openGL.advanced.polygonOffset instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.polygonOffset is deprecated! use openGL.advanced.polygonOffset instead!");
     return float(backlink->openGL.advanced.polygonOffset); 
     }
 
 inline void VSettingsOpenGL::PySetShadeModelSmooth(const bool& shadeModelSmoothInit) { 
-    PyWarning("VisualizationSettings parameter openGL.shadeModelSmooth is deprecated! use openGL.advanced.shadeModelSmooth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.shadeModelSmooth is deprecated! use openGL.advanced.shadeModelSmooth instead!");
     backlink->openGL.advanced.shadeModelSmooth= (const bool&)shadeModelSmoothInit; 
     }
 inline bool VSettingsOpenGL::PyGetShadeModelSmooth() const { 
-    PyWarning("VisualizationSettings parameter openGL.shadeModelSmooth is deprecated! use openGL.advanced.shadeModelSmooth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.shadeModelSmooth is deprecated! use openGL.advanced.shadeModelSmooth instead!");
     return bool(backlink->openGL.advanced.shadeModelSmooth); 
     }
 
 inline void VSettingsOpenGL::PySetShadow(const float& shadowInit) { 
-    PyWarning("VisualizationSettings parameter openGL.shadow is deprecated! use openGL.light0.shadow instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.shadow is deprecated! use openGL.light0.shadow instead!");
     backlink->openGL.light0.shadow= (const float&)shadowInit; 
     }
 inline float VSettingsOpenGL::PyGetShadow() const { 
-    PyWarning("VisualizationSettings parameter openGL.shadow is deprecated! use openGL.light0.shadow instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.shadow is deprecated! use openGL.light0.shadow instead!");
     return float(backlink->openGL.light0.shadow); 
     }
 
 inline void VSettingsOpenGL::PySetShadowPolygonOffset(const float& shadowPolygonOffsetInit) { 
-    PyWarning("VisualizationSettings parameter openGL.shadowPolygonOffset is deprecated! use openGL.advanced.shadowPolygonOffset instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.shadowPolygonOffset is deprecated! use openGL.advanced.shadowPolygonOffset instead!");
     backlink->openGL.advanced.shadowPolygonOffset= (const float&)shadowPolygonOffsetInit; 
     }
 inline float VSettingsOpenGL::PyGetShadowPolygonOffset() const { 
-    PyWarning("VisualizationSettings parameter openGL.shadowPolygonOffset is deprecated! use openGL.advanced.shadowPolygonOffset instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.shadowPolygonOffset is deprecated! use openGL.advanced.shadowPolygonOffset instead!");
     return float(backlink->openGL.advanced.shadowPolygonOffset); 
     }
 
 inline void VSettingsOpenGL::PySetShowFaceEdges(const bool& showFaceEdgesInit) { 
-    PyWarning("VisualizationSettings parameter openGL.showFaceEdges is deprecated! use view0.scene.showFaceEdges instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showFaceEdges is deprecated! use view0.scene.showFaceEdges instead!");
     backlink->view0.scene.showFaceEdges= (const bool&)showFaceEdgesInit; 
     }
 inline bool VSettingsOpenGL::PyGetShowFaceEdges() const { 
-    PyWarning("VisualizationSettings parameter openGL.showFaceEdges is deprecated! use view0.scene.showFaceEdges instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showFaceEdges is deprecated! use view0.scene.showFaceEdges instead!");
     return bool(backlink->view0.scene.showFaceEdges); 
     }
 
 inline void VSettingsOpenGL::PySetShowFaces(const bool& showFacesInit) { 
-    PyWarning("VisualizationSettings parameter openGL.showFaces is deprecated! use view0.scene.showFaces instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showFaces is deprecated! use view0.scene.showFaces instead!");
     backlink->view0.scene.showFaces= (const bool&)showFacesInit; 
     }
 inline bool VSettingsOpenGL::PyGetShowFaces() const { 
-    PyWarning("VisualizationSettings parameter openGL.showFaces is deprecated! use view0.scene.showFaces instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showFaces is deprecated! use view0.scene.showFaces instead!");
     return bool(backlink->view0.scene.showFaces); 
     }
 
 inline void VSettingsOpenGL::PySetShowLines(const bool& showLinesInit) { 
-    PyWarning("VisualizationSettings parameter openGL.showLines is deprecated! use view0.scene.showLines instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showLines is deprecated! use view0.scene.showLines instead!");
     backlink->view0.scene.showLines= (const bool&)showLinesInit; 
     }
 inline bool VSettingsOpenGL::PyGetShowLines() const { 
-    PyWarning("VisualizationSettings parameter openGL.showLines is deprecated! use view0.scene.showLines instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showLines is deprecated! use view0.scene.showLines instead!");
     return bool(backlink->view0.scene.showLines); 
     }
 
 inline void VSettingsOpenGL::PySetShowMeshEdges(const bool& showMeshEdgesInit) { 
-    PyWarning("VisualizationSettings parameter openGL.showMeshEdges is deprecated! use view0.scene.showMeshEdges instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showMeshEdges is deprecated! use view0.scene.showMeshEdges instead!");
     backlink->view0.scene.showMeshEdges= (const bool&)showMeshEdgesInit; 
     }
 inline bool VSettingsOpenGL::PyGetShowMeshEdges() const { 
-    PyWarning("VisualizationSettings parameter openGL.showMeshEdges is deprecated! use view0.scene.showMeshEdges instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showMeshEdges is deprecated! use view0.scene.showMeshEdges instead!");
     return bool(backlink->view0.scene.showMeshEdges); 
     }
 
 inline void VSettingsOpenGL::PySetShowMeshFaces(const bool& showMeshFacesInit) { 
-    PyWarning("VisualizationSettings parameter openGL.showMeshFaces is deprecated! use view0.scene.showMeshFaces instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showMeshFaces is deprecated! use view0.scene.showMeshFaces instead!");
     backlink->view0.scene.showMeshFaces= (const bool&)showMeshFacesInit; 
     }
 inline bool VSettingsOpenGL::PyGetShowMeshFaces() const { 
-    PyWarning("VisualizationSettings parameter openGL.showMeshFaces is deprecated! use view0.scene.showMeshFaces instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.showMeshFaces is deprecated! use view0.scene.showMeshFaces instead!");
     return bool(backlink->view0.scene.showMeshFaces); 
     }
 
 inline void VSettingsOpenGL::PySetTextLineSmooth(const bool& textLineSmoothInit) { 
-    PyWarning("VisualizationSettings parameter openGL.textLineSmooth is deprecated! use openGL.advanced.textLineSmooth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.textLineSmooth is deprecated! use openGL.advanced.textLineSmooth instead!");
     backlink->openGL.advanced.textLineSmooth= (const bool&)textLineSmoothInit; 
     }
 inline bool VSettingsOpenGL::PyGetTextLineSmooth() const { 
-    PyWarning("VisualizationSettings parameter openGL.textLineSmooth is deprecated! use openGL.advanced.textLineSmooth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.textLineSmooth is deprecated! use openGL.advanced.textLineSmooth instead!");
     return bool(backlink->openGL.advanced.textLineSmooth); 
     }
 
 inline void VSettingsOpenGL::PySetTextLineWidth(const float& textLineWidthInit) { 
-    PyWarning("VisualizationSettings parameter openGL.textLineWidth is deprecated! use openGL.advanced.textLineWidth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.textLineWidth is deprecated! use openGL.advanced.textLineWidth instead!");
     backlink->openGL.advanced.textLineWidth= (const float&)textLineWidthInit; 
     }
 inline float VSettingsOpenGL::PyGetTextLineWidth() const { 
-    PyWarning("VisualizationSettings parameter openGL.textLineWidth is deprecated! use openGL.advanced.textLineWidth instead!");
+    PyDeprecated("VisualizationSettings parameter openGL.textLineWidth is deprecated! use openGL.advanced.textLineWidth instead!");
     return float(backlink->openGL.advanced.textLineWidth); 
     }
 
 inline void VSettingsInteractive::PySetHighlightColor(const std::array<float,4>& highlightColorInit) { 
-    PyWarning("VisualizationSettings parameter interactive.highlightColor is deprecated! use interactive.advanced.highlightColor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.highlightColor is deprecated! use interactive.advanced.highlightColor instead!");
     backlink->interactive.advanced.highlightColor= (const Float4&)highlightColorInit; 
     }
 inline std::array<float,4> VSettingsInteractive::PyGetHighlightColor() const { 
-    PyWarning("VisualizationSettings parameter interactive.highlightColor is deprecated! use interactive.advanced.highlightColor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.highlightColor is deprecated! use interactive.advanced.highlightColor instead!");
     return std::array<float,4>(backlink->interactive.advanced.highlightColor); 
     }
 
 inline void VSettingsInteractive::PySetHighlightOtherColor(const std::array<float,4>& highlightOtherColorInit) { 
-    PyWarning("VisualizationSettings parameter interactive.highlightOtherColor is deprecated! use interactive.advanced.highlightOtherColor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.highlightOtherColor is deprecated! use interactive.advanced.highlightOtherColor instead!");
     backlink->interactive.advanced.highlightOtherColor= (const Float4&)highlightOtherColorInit; 
     }
 inline std::array<float,4> VSettingsInteractive::PyGetHighlightOtherColor() const { 
-    PyWarning("VisualizationSettings parameter interactive.highlightOtherColor is deprecated! use interactive.advanced.highlightOtherColor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.highlightOtherColor is deprecated! use interactive.advanced.highlightOtherColor instead!");
     return std::array<float,4>(backlink->interactive.advanced.highlightOtherColor); 
     }
 
 inline void VSettingsInteractive::PySetJoystickScaleRotation(const float& joystickScaleRotationInit) { 
-    PyWarning("VisualizationSettings parameter interactive.joystickScaleRotation is deprecated! use interactive.advanced.joystickScaleRotation instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.joystickScaleRotation is deprecated! use interactive.advanced.joystickScaleRotation instead!");
     backlink->interactive.advanced.joystickScaleRotation= (const float&)joystickScaleRotationInit; 
     }
 inline float VSettingsInteractive::PyGetJoystickScaleRotation() const { 
-    PyWarning("VisualizationSettings parameter interactive.joystickScaleRotation is deprecated! use interactive.advanced.joystickScaleRotation instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.joystickScaleRotation is deprecated! use interactive.advanced.joystickScaleRotation instead!");
     return float(backlink->interactive.advanced.joystickScaleRotation); 
     }
 
 inline void VSettingsInteractive::PySetJoystickScaleTranslation(const float& joystickScaleTranslationInit) { 
-    PyWarning("VisualizationSettings parameter interactive.joystickScaleTranslation is deprecated! use interactive.advanced.joystickScaleTranslation instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.joystickScaleTranslation is deprecated! use interactive.advanced.joystickScaleTranslation instead!");
     backlink->interactive.advanced.joystickScaleTranslation= (const float&)joystickScaleTranslationInit; 
     }
 inline float VSettingsInteractive::PyGetJoystickScaleTranslation() const { 
-    PyWarning("VisualizationSettings parameter interactive.joystickScaleTranslation is deprecated! use interactive.advanced.joystickScaleTranslation instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.joystickScaleTranslation is deprecated! use interactive.advanced.joystickScaleTranslation instead!");
     return float(backlink->interactive.advanced.joystickScaleTranslation); 
     }
 
 inline void VSettingsInteractive::PySetKeypressRotationStep(const float& keypressRotationStepInit) { 
-    PyWarning("VisualizationSettings parameter interactive.keypressRotationStep is deprecated! use interactive.advanced.keypressRotationStep instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.keypressRotationStep is deprecated! use interactive.advanced.keypressRotationStep instead!");
     backlink->interactive.advanced.keypressRotationStep= (const float&)keypressRotationStepInit; 
     }
 inline float VSettingsInteractive::PyGetKeypressRotationStep() const { 
-    PyWarning("VisualizationSettings parameter interactive.keypressRotationStep is deprecated! use interactive.advanced.keypressRotationStep instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.keypressRotationStep is deprecated! use interactive.advanced.keypressRotationStep instead!");
     return float(backlink->interactive.advanced.keypressRotationStep); 
     }
 
 inline void VSettingsInteractive::PySetKeypressTranslationStep(const float& keypressTranslationStepInit) { 
-    PyWarning("VisualizationSettings parameter interactive.keypressTranslationStep is deprecated! use interactive.advanced.keypressTranslationStep instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.keypressTranslationStep is deprecated! use interactive.advanced.keypressTranslationStep instead!");
     backlink->interactive.advanced.keypressTranslationStep= (const float&)keypressTranslationStepInit; 
     }
 inline float VSettingsInteractive::PyGetKeypressTranslationStep() const { 
-    PyWarning("VisualizationSettings parameter interactive.keypressTranslationStep is deprecated! use interactive.advanced.keypressTranslationStep instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.keypressTranslationStep is deprecated! use interactive.advanced.keypressTranslationStep instead!");
     return float(backlink->interactive.advanced.keypressTranslationStep); 
     }
 
 inline void VSettingsInteractive::PySetLockModelView(const bool& lockModelViewInit) { 
-    PyWarning("VisualizationSettings parameter interactive.lockModelView is deprecated! use view0.window.lockModelView instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.lockModelView is deprecated! use view0.window.lockModelView instead!");
     backlink->view0.window.lockModelView= (const bool&)lockModelViewInit; 
     }
 inline bool VSettingsInteractive::PyGetLockModelView() const { 
-    PyWarning("VisualizationSettings parameter interactive.lockModelView is deprecated! use view0.window.lockModelView instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.lockModelView is deprecated! use view0.window.lockModelView instead!");
     return bool(backlink->view0.window.lockModelView); 
     }
 
 inline void VSettingsInteractive::PySetMouseMoveRotationFactor(const float& mouseMoveRotationFactorInit) { 
-    PyWarning("VisualizationSettings parameter interactive.mouseMoveRotationFactor is deprecated! use interactive.advanced.mouseMoveRotationFactor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.mouseMoveRotationFactor is deprecated! use interactive.advanced.mouseMoveRotationFactor instead!");
     backlink->interactive.advanced.mouseMoveRotationFactor= (const float&)mouseMoveRotationFactorInit; 
     }
 inline float VSettingsInteractive::PyGetMouseMoveRotationFactor() const { 
-    PyWarning("VisualizationSettings parameter interactive.mouseMoveRotationFactor is deprecated! use interactive.advanced.mouseMoveRotationFactor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.mouseMoveRotationFactor is deprecated! use interactive.advanced.mouseMoveRotationFactor instead!");
     return float(backlink->interactive.advanced.mouseMoveRotationFactor); 
     }
 
 inline void VSettingsInteractive::PySetPauseWithSpacebar(const bool& pauseWithSpacebarInit) { 
-    PyWarning("VisualizationSettings parameter interactive.pauseWithSpacebar is deprecated! use interactive.advanced.pauseWithSpacebar instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.pauseWithSpacebar is deprecated! use interactive.advanced.pauseWithSpacebar instead!");
     backlink->interactive.advanced.pauseWithSpacebar= (const bool&)pauseWithSpacebarInit; 
     }
 inline bool VSettingsInteractive::PyGetPauseWithSpacebar() const { 
-    PyWarning("VisualizationSettings parameter interactive.pauseWithSpacebar is deprecated! use interactive.advanced.pauseWithSpacebar instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.pauseWithSpacebar is deprecated! use interactive.advanced.pauseWithSpacebar instead!");
     return bool(backlink->interactive.advanced.pauseWithSpacebar); 
     }
 
 inline void VSettingsInteractive::PySetSelectionHighlights(const bool& selectionHighlightsInit) { 
-    PyWarning("VisualizationSettings parameter interactive.selectionHighlights is deprecated! use interactive.advanced.selectionHighlights instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionHighlights is deprecated! use interactive.advanced.selectionHighlights instead!");
     backlink->interactive.advanced.selectionHighlights= (const bool&)selectionHighlightsInit; 
     }
 inline bool VSettingsInteractive::PyGetSelectionHighlights() const { 
-    PyWarning("VisualizationSettings parameter interactive.selectionHighlights is deprecated! use interactive.advanced.selectionHighlights instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionHighlights is deprecated! use interactive.advanced.selectionHighlights instead!");
     return bool(backlink->interactive.advanced.selectionHighlights); 
     }
 
 inline void VSettingsInteractive::PySetSelectionLeftMouse(const bool& selectionLeftMouseInit) { 
-    PyWarning("VisualizationSettings parameter interactive.selectionLeftMouse is deprecated! use interactive.advanced.selectionLeftMouse instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionLeftMouse is deprecated! use interactive.advanced.selectionLeftMouse instead!");
     backlink->interactive.advanced.selectionLeftMouse= (const bool&)selectionLeftMouseInit; 
     }
 inline bool VSettingsInteractive::PyGetSelectionLeftMouse() const { 
-    PyWarning("VisualizationSettings parameter interactive.selectionLeftMouse is deprecated! use interactive.advanced.selectionLeftMouse instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionLeftMouse is deprecated! use interactive.advanced.selectionLeftMouse instead!");
     return bool(backlink->interactive.advanced.selectionLeftMouse); 
     }
 
 inline void VSettingsInteractive::PySetSelectionLeftMouseItemTypes(const Index& selectionLeftMouseItemTypesInit) { 
-    PyWarning("VisualizationSettings parameter interactive.selectionLeftMouseItemTypes is deprecated! use interactive.advanced.selectionLeftMouseItemTypes instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionLeftMouseItemTypes is deprecated! use interactive.advanced.selectionLeftMouseItemTypes instead!");
     backlink->interactive.advanced.selectionLeftMouseItemTypes= (const Index&)selectionLeftMouseItemTypesInit; 
     }
 inline Index VSettingsInteractive::PyGetSelectionLeftMouseItemTypes() const { 
-    PyWarning("VisualizationSettings parameter interactive.selectionLeftMouseItemTypes is deprecated! use interactive.advanced.selectionLeftMouseItemTypes instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionLeftMouseItemTypes is deprecated! use interactive.advanced.selectionLeftMouseItemTypes instead!");
     return Index(backlink->interactive.advanced.selectionLeftMouseItemTypes); 
     }
 
 inline void VSettingsInteractive::PySetSelectionRightMouse(const bool& selectionRightMouseInit) { 
-    PyWarning("VisualizationSettings parameter interactive.selectionRightMouse is deprecated! use interactive.advanced.selectionRightMouse instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionRightMouse is deprecated! use interactive.advanced.selectionRightMouse instead!");
     backlink->interactive.advanced.selectionRightMouse= (const bool&)selectionRightMouseInit; 
     }
 inline bool VSettingsInteractive::PyGetSelectionRightMouse() const { 
-    PyWarning("VisualizationSettings parameter interactive.selectionRightMouse is deprecated! use interactive.advanced.selectionRightMouse instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionRightMouse is deprecated! use interactive.advanced.selectionRightMouse instead!");
     return bool(backlink->interactive.advanced.selectionRightMouse); 
     }
 
 inline void VSettingsInteractive::PySetSelectionRightMouseGraphicsData(const bool& selectionRightMouseGraphicsDataInit) { 
-    PyWarning("VisualizationSettings parameter interactive.selectionRightMouseGraphicsData is deprecated! use interactive.advanced.selectionRightMouseGraphicsData instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionRightMouseGraphicsData is deprecated! use interactive.advanced.selectionRightMouseGraphicsData instead!");
     backlink->interactive.advanced.selectionRightMouseGraphicsData= (const bool&)selectionRightMouseGraphicsDataInit; 
     }
 inline bool VSettingsInteractive::PyGetSelectionRightMouseGraphicsData() const { 
-    PyWarning("VisualizationSettings parameter interactive.selectionRightMouseGraphicsData is deprecated! use interactive.advanced.selectionRightMouseGraphicsData instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.selectionRightMouseGraphicsData is deprecated! use interactive.advanced.selectionRightMouseGraphicsData instead!");
     return bool(backlink->interactive.advanced.selectionRightMouseGraphicsData); 
     }
 
 inline void VSettingsInteractive::PySetTrackMarker(const Index& trackMarkerInit) { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarker is deprecated! use view0.camera.trackMarker instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarker is deprecated! use view0.camera.trackMarker instead!");
     backlink->view0.camera.trackMarker= (const Index&)trackMarkerInit; 
     }
 inline Index VSettingsInteractive::PyGetTrackMarker() const { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarker is deprecated! use view0.camera.trackMarker instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarker is deprecated! use view0.camera.trackMarker instead!");
     return Index(backlink->view0.camera.trackMarker); 
     }
 
 inline void VSettingsInteractive::PySetTrackMarkerMbsNumber(const Index& trackMarkerMbsNumberInit) { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarkerMbsNumber is deprecated! use view0.camera.trackMarkerMbsNumber instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarkerMbsNumber is deprecated! use view0.camera.trackMarkerMbsNumber instead!");
     backlink->view0.camera.trackMarkerMbsNumber= (const Index&)trackMarkerMbsNumberInit; 
     }
 inline Index VSettingsInteractive::PyGetTrackMarkerMbsNumber() const { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarkerMbsNumber is deprecated! use view0.camera.trackMarkerMbsNumber instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarkerMbsNumber is deprecated! use view0.camera.trackMarkerMbsNumber instead!");
     return Index(backlink->view0.camera.trackMarkerMbsNumber); 
     }
 
 inline void VSettingsInteractive::PySetTrackMarkerOrientation(const std::array<float,3>& trackMarkerOrientationInit) { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarkerOrientation is deprecated! use view0.camera.trackMarkerOrientation instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarkerOrientation is deprecated! use view0.camera.trackMarkerOrientation instead!");
     backlink->view0.camera.trackMarkerOrientation= (const Float3&)trackMarkerOrientationInit; 
     }
 inline std::array<float,3> VSettingsInteractive::PyGetTrackMarkerOrientation() const { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarkerOrientation is deprecated! use view0.camera.trackMarkerOrientation instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarkerOrientation is deprecated! use view0.camera.trackMarkerOrientation instead!");
     return std::array<float,3>(backlink->view0.camera.trackMarkerOrientation); 
     }
 
 inline void VSettingsInteractive::PySetTrackMarkerPosition(const std::array<float,3>& trackMarkerPositionInit) { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarkerPosition is deprecated! use view0.camera.trackMarkerPosition instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarkerPosition is deprecated! use view0.camera.trackMarkerPosition instead!");
     backlink->view0.camera.trackMarkerPosition= (const Float3&)trackMarkerPositionInit; 
     }
 inline std::array<float,3> VSettingsInteractive::PyGetTrackMarkerPosition() const { 
-    PyWarning("VisualizationSettings parameter interactive.trackMarkerPosition is deprecated! use view0.camera.trackMarkerPosition instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.trackMarkerPosition is deprecated! use view0.camera.trackMarkerPosition instead!");
     return std::array<float,3>(backlink->view0.camera.trackMarkerPosition); 
     }
 
 inline void VSettingsInteractive::PySetZoomStepFactor(const float& zoomStepFactorInit) { 
-    PyWarning("VisualizationSettings parameter interactive.zoomStepFactor is deprecated! use interactive.advanced.zoomStepFactor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.zoomStepFactor is deprecated! use interactive.advanced.zoomStepFactor instead!");
     backlink->interactive.advanced.zoomStepFactor= (const float&)zoomStepFactorInit; 
     }
 inline float VSettingsInteractive::PyGetZoomStepFactor() const { 
-    PyWarning("VisualizationSettings parameter interactive.zoomStepFactor is deprecated! use interactive.advanced.zoomStepFactor instead!");
+    PyDeprecated("VisualizationSettings parameter interactive.zoomStepFactor is deprecated! use interactive.advanced.zoomStepFactor instead!");
     return float(backlink->interactive.advanced.zoomStepFactor); 
     }
 

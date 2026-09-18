@@ -255,7 +255,10 @@ def StructureCppHeader(parseInfo):
             deprecationWarning = ''
             if IDPNS:
                 lineBreakIDP = '\n    '
-                deprecationWarning = 'PyWarning("VisualizationSettings parameter '
+                #a real Python DeprecationWarning, not a printed line (#2522, revision2026 step
+                #R6.3.4): the user can filter it, promote it with -W error::DeprecationWarning, and
+                #sees it once per source location instead of on every read of the setting
+                deprecationWarning = 'PyDeprecated("VisualizationSettings parameter '
                 deprecationWarning += ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
                 deprecationWarning += ' is deprecated! use '+Description(parameter)+' instead!");'+lineBreakIDP
                 (version, expDate) = DParameter2VersionExpiration(parameter)

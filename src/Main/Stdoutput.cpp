@@ -393,10 +393,34 @@ void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 }
 
 //!< prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
-void PyWarning(std::string warning_msg) 
+void PyWarning(std::string warning_msg)
 {
 	std::ofstream dummy; //ofstream which is not active
 	PyWarning(warning_msg, dummy);
+}
+
+//! a deprecation is neither an error nor a line of output: it is a statement about the user's code
+//! that the user must be able to act on (#2522, revision2026 step R6.3.4). Python has the machinery
+//! for it, and a printed line has none of it:
+//!   - "-W error::DeprecationWarning" turns every one of them into an exception, which is how a
+//!     user finds them all before an Exudyn release removes the old name;
+//!   - warnings.filterwarnings() silences one of them without silencing the others;
+//!   - the same site reports ONCE instead of on every call - a deprecated setting read inside a
+//!     time-step loop used to print thousands of identical lines.
+//! PyErr_WarnEx does the per-location bookkeeping itself, from the Python frame, so unlike
+//! PyWarning this does not call PyGetCurrentFileInformation (#2423) and costs nothing per call.
+//! The GIL is held: every call site is a pybind-bound getter, setter or function.
+extern bool suppressWarnings;   //defined below, next to PyWarning, which is its other reader
+
+void PyDeprecated(std::string message)
+{
+	if (suppressWarnings) { return; } //an explicit request for silence is honoured here as well
+
+	if (PyErr_WarnEx(PyExc_DeprecationWarning, message.c_str(), 1) != 0)
+	{
+		//the user turned this warning into an error; the Python exception is already set
+		throw py::error_already_set();
+	}
 }
 
 bool suppressWarnings = false; //!< global flag to suppress warnings

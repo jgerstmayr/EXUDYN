@@ -365,7 +365,7 @@ bool MainSystem::UnlinkVisualizationSystem()
 //! interrupt further computation until user input --> 'pause' function
 void MainSystem::WaitForUserToContinue(bool printMessage, bool deprecationWarning)
 { 
-	if (deprecationWarning) { PyWarning("MainSystem.WaitForUserToContinue(): function is deprecated; for SystemContainer SC use set SC.renderer.DoIdleTasks() instead"); }
+	if (deprecationWarning) { PyDeprecated("MainSystem.WaitForUserToContinue(): function is deprecated; for SystemContainer SC use set SC.renderer.DoIdleTasks() instead"); }
 
 	GetCSystem().GetPostProcessData()->WaitForUserToContinue(printMessage);
 }

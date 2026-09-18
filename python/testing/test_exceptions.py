@@ -20,6 +20,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import builtins
+import io
+import os
+import re
+import warnings
 
 import pytest
 
@@ -96,3 +100,65 @@ def test_untypedCheckStillWorks():
     with pytest.raises(RuntimeError) as caught:
         exu.MatrixContainer().SetWithDenseMatrix(np.array([1., 2., 3.]))   #1-D, not a matrix
     assert not isinstance(caught.value, exu.ExudynError)
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#deprecations are Python warnings, not printed lines (revision2026 step R6.3.4, #2522)
+
+def test_deprecationIsAWarning():
+    """a deprecated setting and a deprecated function both raise a real DeprecationWarning"""
+    systemContainer = exu.SystemContainer()
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter('always')
+        exu.GetVersionString()                                       #a deprecated function
+        systemContainer.visualizationSettings.general.drawWorldBasis = True   #a deprecated setting
+
+    assert len(caught) == 2
+    for record in caught:
+        assert issubclass(record.category, DeprecationWarning)
+        assert 'deprecated' in str(record.message).lower()
+
+
+def test_deprecationCanBePromotedToAnError():
+    """-W error::DeprecationWarning must find them; that is how a user prepares for a release that
+    removes the old name"""
+    with warnings.catch_warnings():
+        warnings.simplefilter('error', DeprecationWarning)
+        with pytest.raises(DeprecationWarning):
+            exu.GetVersionString()
+
+
+def test_deprecationIsReportedOncePerLocation():
+    """the point of the change: a deprecated setting read in a time-step loop used to print one line
+    per call"""
+    systemContainer = exu.SystemContainer()
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter('default')
+        for _ in range(500):
+            systemContainer.visualizationSettings.general.drawWorldBasis = True
+
+    assert len(caught) == 1
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the two lists of classes must agree, and only one direction of that fails to compile
+
+def test_everyCppClassIsRegistered():
+    """A class added to ReleaseAssert.h and NOT registered in PybindModule.cpp compiles perfectly
+    and arrives in Python as a plain RuntimeError, because pybind11 translates it with its built-in
+    std::runtime_error rule. Nothing reports that, so this does."""
+    repositoryRoot = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    header = os.path.join(repositoryRoot, 'src', 'Utilities', 'ReleaseAssert.h')
+    module = os.path.join(repositoryRoot, 'src', 'Pymodules', 'PybindModule.cpp')
+    if not os.path.isfile(header) or not os.path.isfile(module):
+        pytest.skip('not run from a source tree')
+
+    declared = set(re.findall(r'^class (Exudyn\w*Error)\s*:', io.open(header, encoding='utf8').read(),
+                              re.M))
+    registered = set(re.findall(r'register_exception<(Exudyn\w*Error)>',
+                                io.open(module, encoding='utf8').read()))
+
+    assert declared, 'no exception classes found in ReleaseAssert.h - did the file move?'
+    assert declared == registered, ('declared but not registered: ' + str(sorted(declared - registered))
+                                    + '; registered but not declared: '
+                                    + str(sorted(registered - declared)))

@@ -48,6 +48,13 @@
 //
 //Which class a check raises is a property of the CHECK, not of the helper it is written with: the
 //same macro states a user's index mistake in one place and an Exudyn invariant in the next.
+//
+//=> A CLASS ADDED, REMOVED OR RENAMED HERE MUST BE ADDED, REMOVED OR RENAMED IN THE
+//   REGISTRATION BLOCK OF src/Pymodules/PybindModule.cpp AS WELL. Only that direction needs
+//   saying: a class registered there without one here does not compile, while a class added
+//   here and NOT registered there compiles perfectly and arrives in Python as a plain
+//   RuntimeError - pybind11 translates it with its built-in std::runtime_error rule, and
+//   nothing reports that the new class exists only in C++.
 class ExudynError : public EXUexception            //!< the root; never raised directly
 {
 public:

@@ -113,7 +113,7 @@ Index GetInvalidIndex() { return EXUstd::InvalidIndex; }
 //! set flag to write (true) or not write to console; default = true
 void PySetWriteToConsole(bool flag) 
 { 
-	PyWarning("exudyn.SetWriteToConsole(): function is deprecated; use set exudyn.config.printToConsole instead");
+	PyDeprecated("exudyn.SetWriteToConsole(): function is deprecated; use set exudyn.config.printToConsole instead");
 	outputBuffer.SetWriteToConsole(flag);
 }
 
@@ -161,7 +161,7 @@ void PyPrint(py::args args, py::kwargs kwargs) {
 //! retrieve current version as m.attr is not passed trough package
 py::str PyGetVersionString(bool addDetails = false)
 {
-	PyWarning("exudyn.GetVersionString(): function is deprecated; use set exudyn.config.Version() instead");
+	PyDeprecated("exudyn.GetVersionString(): function is deprecated; use set exudyn.config.Version() instead");
 	return GetExudynBuildVersionString(addDetails);
 }
 
@@ -169,7 +169,7 @@ extern bool suppressWarnings; //!< global flag to suppress warnings
 //! set flag to suppress (=true) or enable (=false) warnings
 void PySuppressWarningsOld(bool flag)
 {
-	PyWarning("exudyn.SuppressWarnings(): function is deprecated; use set exudyn.config.suppressWarnings instead");
+	PyDeprecated("exudyn.SuppressWarnings(): function is deprecated; use set exudyn.config.suppressWarnings instead");
 	suppressWarnings = flag;
 }
 
@@ -177,7 +177,7 @@ void PySuppressWarningsOld(bool flag)
 //! add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0
 void PySetPrintDelayMilliSeconds(Index delayMilliSeconds)
 {
-	PyWarning("SetPrintDelayMilliSeconds(): function is deprecated; use set exudyn.config.printDelayMilliSeconds instead");
+	PyDeprecated("SetPrintDelayMilliSeconds(): function is deprecated; use set exudyn.config.printDelayMilliSeconds instead");
 	outputBuffer.SetDelayMilliSeconds(delayMilliSeconds);
 }
 
@@ -190,7 +190,7 @@ void PySetOutputPrecision(Index precision)
 
 void PySetOutputPrecisionOld(Index precision)
 {
-	PyWarning("SetOutputPrecision(): function is deprecated; use set exudyn.config.precision instead");
+	PyDeprecated("SetOutputPrecision(): function is deprecated; use set exudyn.config.precision instead");
 	PySetOutputPrecision(precision);
 }
 
@@ -205,7 +205,7 @@ extern bool linalgPrintUsePythonFormat; //!< true: use python format for output 
 //! true: use python format for output of vectors and matrices; false: use matlab format
 void PySetLinalgOutputFormatPython(bool flagPythonFormat)
 {
-	PyWarning("SetLinalgOutputFormatPython(): function is deprecated; use set exudyn.config.linalgOutputFormatPython instead");
+	PyDeprecated("SetLinalgOutputFormatPython(): function is deprecated; use set exudyn.config.linalgOutputFormatPython instead");
 	linalgPrintUsePythonFormat = flagPythonFormat;
 }
 
@@ -265,7 +265,7 @@ py::list PythonInfoStat(bool writeOutput = true)
 
 py::list PythonInfoStatOld(bool writeOutput = true)
 {
-	PyWarning("exudyn.InfoStat(): function is deprecated; use set exudyn.special.InfoStat() instead");
+	PyDeprecated("exudyn.InfoStat(): function is deprecated; use set exudyn.special.InfoStat() instead");
 	return PythonInfoStat(writeOutput);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -274,7 +274,7 @@ py::list PythonInfoStatOld(bool writeOutput = true)
 //! start glfw renderer; return true if successful
 bool PyStartOpenGLRenderer(Index verbose = true, bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyWarning("exudyn.StartRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Start() instead"); }
+	if (deprecationWarning) { PyDeprecated("exudyn.StartRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Start() instead"); }
 #ifdef USE_GLFW_GRAPHICS
 #if defined(__EXUDYN__APPLE__)
 	//on APPLE, tkinter must be imported before start of OpenGL - workaround for BUG, #1339
@@ -300,7 +300,7 @@ bool PyStartOpenGLRenderer(Index verbose = true, bool deprecationWarning = false
 //! stop glfw renderer; return true if successful
 void PyStopOpenGLRenderer(bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyWarning("exudyn.StopRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Stop() instead"); }
+	if (deprecationWarning) { PyDeprecated("exudyn.StopRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Stop() instead"); }
 
 #ifdef USE_GLFW_GRAPHICS
 	try
@@ -351,7 +351,7 @@ void PyCloseViewWindow(Index viewID)
 //! start glfw renderer; return true if successful
 bool PyIsRendererActive(bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyWarning("exudyn.IsRendererActive(): function is deprecated; for SystemContainer SC use set SC.renderer.IsActive() instead"); }
+	if (deprecationWarning) { PyDeprecated("exudyn.IsRendererActive(): function is deprecated; for SystemContainer SC use set SC.renderer.IsActive() instead"); }
 #ifdef USE_GLFW_GRAPHICS
 	return glfwRenderer.IsGlfwInitAndRendererActive();
 #else
@@ -374,7 +374,7 @@ Index PyGetRendererUpdateCount()
 //! run renderer idle for certain amount of time; use this for single-threaded, interactive animations
 void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyWarning("exudyn.DoRendererIdleTasks(): function is deprecated; for SystemContainer SC use set SC.renderer.DoIdleTasks() instead"); }
+	if (deprecationWarning) { PyDeprecated("exudyn.DoRendererIdleTasks(): function is deprecated; for SystemContainer SC use set SC.renderer.DoIdleTasks() instead"); }
 #ifdef USE_GLFW_GRAPHICS
 	glfwRenderer.DoRendererIdleTasks(waitSeconds);
 #else

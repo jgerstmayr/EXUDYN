@@ -109,7 +109,7 @@ public:
 		if (warnRendererCount < 3)
 		{
 			warnRendererCount++;
-			PyWarning("The call to SystemContainer function " + oldFunctionName + 
+			PyDeprecated("The call to SystemContainer function " + oldFunctionName + 
 				" is deprecated. For SystemContainer SC use SC.renderer." + newFunctionName + " instead!\n");
 		}
 	}
