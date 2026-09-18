@@ -114,7 +114,7 @@ py::dict MainSystem::GetDictionary() const
 		{
 			if (pySpecial.exceptions.dictionaryNonCopyable)
 			{
-				PyError(STDstring("GetDictionary (pickle/copy): MainSystem object '") + item->GetName() + "' has a user function which cannot be copied!");
+				PyError(STDstring("GetDictionary (pickle/copy): MainSystem object '") + item->GetName() + "' has a user function which cannot be copied!", PyErrorType::modelError);
 			}
 		}
 		itemList.append(item->GetDictionary(true));
@@ -155,7 +155,7 @@ void MainSystem::SetDictionary(const py::dict& d)
 	if (EXUstd::exudynVersion != py::cast<STDstring>(d["__version__"]) && pySpecial.exceptions.dictionaryVersionMismatch)
 	{
 		PyError(STDstring("SetDictionary: Exudyn version is ") + EXUstd::exudynVersion +
-			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"])+"; you can disable this exception in exudyn.special.exceptions");
+			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"])+"; you can disable this exception in exudyn.special.exceptions", PyErrorType::valueError);
 	}
 
 	//const MainSystemData& msd = GetMainSystemData();
@@ -308,7 +308,7 @@ PyGeneralContact& MainSystem::GetGeneralContact(Index generalContactNumber)
 	}
 	else
 	{
-		PyError("MainSystem::GeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber));
+		PyError("MainSystem::GeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber), PyErrorType::indexError);
 		return (PyGeneralContact&)*cSystem.GetGeneralContacts().Last(); //code not reached ...
 	}
 }
@@ -323,7 +323,7 @@ void MainSystem::DeleteGeneralContact(Index generalContactNumber)
 	}
 	else
 	{
-		PyError("MainSystem::DeleteGeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber));
+		PyError("MainSystem::DeleteGeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber), PyErrorType::indexError);
 	}
 
 }
@@ -560,7 +560,7 @@ void MainSystem::DeleteNode(Index deleteItemNumber, bool suppressWarnings)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::DeleteNode: access to invalid node number ") + EXUstd::ToString(deleteItemNumber));
+		PyError(STDstring("MainSystem::DeleteNode: access to invalid node number ") + EXUstd::ToString(deleteItemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -590,7 +590,7 @@ py::dict MainSystem::PyGetNode(const py::object& itemIndex)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNode: access to invalid node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::GetNode: access to invalid node number ") + EXUstd::ToString(nodeNumber), PyErrorType::indexError);
 		py::dict d;
 		return d;
 	}
@@ -620,7 +620,7 @@ void MainSystem::PyModifyNode(const py::object& itemIndex, py::dict nodeDict)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifyNode: access to invalid node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::ModifyNode: access to invalid node number ") + EXUstd::ToString(nodeNumber), PyErrorType::indexError);
 	}
 }
 
@@ -644,7 +644,7 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		PyError(STDstring("MainSystem::GetNodeDefaults: typeName needed'"));
+		PyError(STDstring("MainSystem::GetNodeDefaults: typeName needed'"), PyErrorType::valueError);
 		return d;
 	}
 	
@@ -658,7 +658,7 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNodeDefaults: unknown node type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetNodeDefaults: unknown node type '") + typeName + "'", PyErrorType::valueError);
 	}
 	return d;
 }
@@ -676,7 +676,7 @@ py::object MainSystem::PyGetNodeOutputVariable(const py::object& itemIndex, Outp
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNodeOutputVariable: access to invalid node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::GetNodeOutputVariable: access to invalid node number ") + EXUstd::ToString(nodeNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -694,13 +694,13 @@ Index MainSystem::PyGetNodeODE2Index(const py::object& itemIndex) const
 		}
 		else
 		{
-			PyError(STDstring("MainSystem::GetNodeODE2Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE2 node");
+			PyError(STDstring("MainSystem::GetNodeODE2Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE2 node", PyErrorType::indexError);
 			return EXUstd::InvalidIndex;
 		}
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNodeODE2Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
+		PyError(STDstring("MainSystem::GetNodeODE2Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)", PyErrorType::indexError);
 		return EXUstd::InvalidIndex;
 	}
 }
@@ -717,13 +717,13 @@ Index MainSystem::PyGetNodeODE1Index(const py::object& itemIndex) const
 		}
 		else
 		{
-			PyError(STDstring("MainSystem::GetNodeODE1Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE1 node");
+			PyError(STDstring("MainSystem::GetNodeODE1Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE1 node", PyErrorType::indexError);
 			return EXUstd::InvalidIndex;
 		}
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNodeODE1Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
+		PyError(STDstring("MainSystem::GetNodeODE1Index: access to invalid node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)", PyErrorType::indexError);
 		return EXUstd::InvalidIndex;
 	}
 }
@@ -740,13 +740,13 @@ Index MainSystem::PyGetNodeAEIndex(const py::object& itemIndex) const
 		}
 		else
 		{
-			PyError(STDstring("MainSystem::GetNodeAEIndex: access to invalid node number ") + EXUstd::ToString(nodeNumber) + ": not an AE node");
+			PyError(STDstring("MainSystem::GetNodeAEIndex: access to invalid node number ") + EXUstd::ToString(nodeNumber) + ": not an AE node", PyErrorType::indexError);
 			return EXUstd::InvalidIndex;
 		}
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNodeAEIndex: access to invalid node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
+		PyError(STDstring("MainSystem::GetNodeAEIndex: access to invalid node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)", PyErrorType::indexError);
 		return EXUstd::InvalidIndex;
 	}
 }
@@ -780,7 +780,7 @@ py::object MainSystem::PyGetNodeParameter(const py::object& itemIndex, const STD
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetNodeParameter: access to invalid node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::GetNodeParameter: access to invalid node number ") + EXUstd::ToString(nodeNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -796,7 +796,7 @@ void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetNodeParameter: access to invalid node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::SetNodeParameter: access to invalid node number ") + EXUstd::ToString(nodeNumber), PyErrorType::indexError);
 	}
 }
 
@@ -981,7 +981,7 @@ void MainSystem::PyDeleteObject(const py::object& objectNumber, bool deleteDepen
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::DeleteObject: access to invalid object number ") + EXUstd::ToString(deleteItemNumber));
+		PyError(STDstring("MainSystem::DeleteObject: access to invalid object number ") + EXUstd::ToString(deleteItemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1010,7 +1010,7 @@ py::dict MainSystem::PyGetObject(const py::object& itemIndex, bool addGraphicsDa
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetObject: access to invalid object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetObject: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		py::dict d;
 		return d;
 	}
@@ -1040,7 +1040,7 @@ void MainSystem::PyModifyObject(const py::object& itemIndex, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifyObject: access to invalid object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifyObject: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1050,7 +1050,7 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		PyError(STDstring("MainSystem::GetObjectDefaults: typeName needed'"));
+		PyError(STDstring("MainSystem::GetObjectDefaults: typeName needed'"), PyErrorType::valueError);
 		return d;
 	}
 
@@ -1064,7 +1064,7 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetObjectDefaults: unknown object type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetObjectDefaults: unknown object type '") + typeName + "'", PyErrorType::valueError);
 	}
 	return d;
 }
@@ -1095,7 +1095,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 
 		if ((Index)mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
-			CHECKandTHROW(configuration == ConfigurationType::Current, "GetObjectOutput: may only be called for connectors with Current configuration");
+			CHECKandTHROW(configuration == ConfigurationType::Current, "GetObjectOutput: may only be called for connectors with Current configuration", ExudynValueError);
 			MarkerDataStructure markerDataStructure;
 			const bool computeJacobian = false; //not needed for OutputVariables
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
@@ -1110,7 +1110,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetObjectOutputVariable: access to invalid object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetObjectOutputVariable: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -1138,14 +1138,14 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 			else
 			{
 				PyError(STDstring("MainSystem::GetOutputVariableBody: invalid localPosition: expected vector with 3 real values; object number ") +
-					EXUstd::ToString(itemNumber));
+					EXUstd::ToString(itemNumber), PyErrorType::valueError);
 				return py::int_(EXUstd::InvalidIndex);
 				//return py::object();
 			}
 		}
 		else
 		{
-			PyError(STDstring("MainSystem::GetObjectOutputVariableBody: access to invalid object number ") + EXUstd::ToString(itemNumber));
+			PyError(STDstring("MainSystem::GetObjectOutputVariableBody: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::typeError);
 			return py::int_(EXUstd::InvalidIndex);
 			//return py::object();
 		}
@@ -1164,7 +1164,7 @@ py::object MainSystem::PyGetObjectOutputVariableSuperElement(const py::object& i
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetObjectOutputVariableSuperElement: access to invalid object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::PyGetObjectOutputVariableSuperElement: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }
@@ -1179,7 +1179,7 @@ py::object MainSystem::PyGetObjectParameter(const py::object& itemIndex, const S
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetObjectParameter: access to invalid object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetObjectParameter: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -1195,7 +1195,7 @@ void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstri
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetObjectParameter: access to invalid object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetObjectParameter: access to invalid object number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1381,7 +1381,7 @@ void MainSystem::DeleteMarker(Index deleteItemNumber, bool suppressWarnings)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::DeleteMarker: access to invalid marker number ") + EXUstd::ToString(deleteItemNumber));
+		PyError(STDstring("MainSystem::DeleteMarker: access to invalid marker number ") + EXUstd::ToString(deleteItemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1410,7 +1410,7 @@ py::dict MainSystem::PyGetMarker(const py::object& itemIndex)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetMarker: access to invalid marker number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetMarker: access to invalid marker number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		py::dict d;
 		return d;
 	}
@@ -1440,7 +1440,7 @@ void MainSystem::PyModifyMarker(const py::object& itemIndex, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifyMarker: access to invalid marker number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifyMarker: access to invalid marker number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1450,7 +1450,7 @@ py::dict MainSystem::PyGetMarkerDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		PyError(STDstring("MainSystem::GetMarkerDefaults: typeName needed'"));
+		PyError(STDstring("MainSystem::GetMarkerDefaults: typeName needed'"), PyErrorType::valueError);
 		return d;
 	}
 
@@ -1464,7 +1464,7 @@ py::dict MainSystem::PyGetMarkerDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetMarkerDefaults: unknown object type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetMarkerDefaults: unknown object type '") + typeName + "'", PyErrorType::valueError);
 	}
 	return d;
 }
@@ -1479,7 +1479,7 @@ py::object MainSystem::PyGetMarkerParameter(const py::object& itemIndex, const S
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetMarkerParameter: access to invalid marker number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetMarkerParameter: access to invalid marker number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -1495,7 +1495,7 @@ void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstri
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetMarkerParameter: access to invalid marker number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetMarkerParameter: access to invalid marker number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1513,7 +1513,7 @@ py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, Ou
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetMarkerOutput: access to invalid marker number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetMarkerOutput: access to invalid marker number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }
@@ -1651,7 +1651,7 @@ void MainSystem::DeleteLoad(Index deleteItemNumber, bool deleteDependentMarkers,
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::DeleteLoad: access to invalid load number ") + EXUstd::ToString(deleteItemNumber));
+		PyError(STDstring("MainSystem::DeleteLoad: access to invalid load number ") + EXUstd::ToString(deleteItemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1683,7 +1683,7 @@ py::dict MainSystem::PyGetLoad(const py::object& itemIndex)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoad: access to invalid load number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetLoad: access to invalid load number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		py::dict d;
 		return d;
 	}
@@ -1713,7 +1713,7 @@ void MainSystem::PyModifyLoad(const py::object& itemIndex, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifyLoad: access to invalid load number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifyLoad: access to invalid load number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1723,7 +1723,7 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		PyError(STDstring("MainSystem::GetLoadDefaults: typeName needed'"));
+		PyError(STDstring("MainSystem::GetLoadDefaults: typeName needed'"), PyErrorType::valueError);
 		return d;
 	}
 
@@ -1737,7 +1737,7 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoadDefaults: unknown load type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetLoadDefaults: unknown load type '") + typeName + "'", PyErrorType::valueError);
 	}
 	return d;
 }
@@ -1755,7 +1755,7 @@ py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoadValues: access to invalid load number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetLoadValues: access to invalid load number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }
@@ -1770,7 +1770,7 @@ py::object MainSystem::PyGetLoadParameter(const py::object& itemIndex, const STD
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoadParameter: access to invalid load number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetLoadParameter: access to invalid load number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -1786,7 +1786,7 @@ void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetLoadParameter: access to invalid load number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetLoadParameter: access to invalid load number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1918,7 +1918,7 @@ void MainSystem::DeleteSensor(Index deleteItemNumber, bool suppressWarnings)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::DeleteSensor: access to invalid sensor number ") + EXUstd::ToString(deleteItemNumber));
+		PyError(STDstring("MainSystem::DeleteSensor: access to invalid sensor number ") + EXUstd::ToString(deleteItemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1949,7 +1949,7 @@ py::dict MainSystem::PyGetSensor(const py::object& itemIndex)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensor: access to invalid sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensor: access to invalid sensor number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		py::dict d;
 		return d;
 	}
@@ -1979,7 +1979,7 @@ void MainSystem::PyModifySensor(const py::object& itemIndex, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifySensor: access to invalid sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifySensor: access to invalid sensor number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -1989,7 +1989,7 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		PyError(STDstring("MainSystem::GetSensorDefaults: typeName needed'"));
+		PyError(STDstring("MainSystem::GetSensorDefaults: typeName needed'"), PyErrorType::valueError);
 		return d;
 	}
 
@@ -2003,7 +2003,7 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensorDefaults: unknown sensor type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetSensorDefaults: unknown sensor type '") + typeName + "'", PyErrorType::valueError);
 	}
 	return d;
 }
@@ -2020,7 +2020,7 @@ py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, Configurat
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensorValues: access to invalid sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensorValues: access to invalid sensor number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }
@@ -2034,14 +2034,14 @@ py::array_t<Real> MainSystem::PyGetSensorStoredData(const py::object& itemIndex)
 	{
 		if (!mainSystemData.GetMainSensors().GetItem(itemNumber)->GetCSensor()->GetStoreInternalFlag())
 		{
-			PyError(STDstring("MainSystem::GetSensorStoredData: sensor number ") + EXUstd::ToString(itemNumber)+" has no internal data as storeInternal==False");
+			PyError(STDstring("MainSystem::GetSensorStoredData: sensor number ") + EXUstd::ToString(itemNumber)+" has no internal data as storeInternal==False", PyErrorType::modelError);
 			return py::int_(EXUstd::InvalidIndex);
 		}
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetInternalStorage();
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensorStoredData: access to invalid sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensorStoredData: access to invalid sensor number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }
@@ -2058,7 +2058,7 @@ py::object MainSystem::PyGetSensorParameter(const py::object& itemIndex, const S
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensorParameter: access to invalid sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensorParameter: access to invalid sensor number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -2074,7 +2074,7 @@ void MainSystem::PySetSensorParameter(const py::object& itemIndex, const STDstri
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetSensorParameter: access to invalid sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetSensorParameter: access to invalid sensor number ") + EXUstd::ToString(itemNumber), PyErrorType::indexError);
 	}
 }
 
@@ -2088,14 +2088,14 @@ void MainSystemData::RaiseIfConfigurationIllegal(const char* functionName, Confi
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with illegal configuration ConfigurationType._None";
-		CHECKandTHROWstring(s);
+		CHECKandTHROWstring(s, ExudynValueError);
 	}
 	else if ((Index)configuration >= (Index)ConfigurationType::EndOfEnumList)
 	{
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with illegal configuration ConfigurationType.???";
-		CHECKandTHROWstring(s);
+		CHECKandTHROWstring(s, ExudynValueError);
 	}
 	//else if (configuration == ConfigurationType::StartOfStep) //StartOfStep currently also initialized in CSystem
 	//{
@@ -2112,7 +2112,7 @@ void MainSystemData::RaiseIfNotConsistentNorReference(const char* functionName, 
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with illegal configuration for inconsistent system; it may be either called for consistent system (needs mbs.Assemble() prior to this call and not change in mbs any more) or use configuration = ConfigurationType.Reference";
-		CHECKandTHROWstring(s);
+		CHECKandTHROWstring(s, ExudynModelError);
 	}
 }
 
@@ -2123,7 +2123,7 @@ void MainSystemData::RaiseIfNotConsistent(const char* functionName, Index itemIn
 		STDstring s = STDstring("MainSystem::") + functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called for inconsistent system; a call to mbs.Assemble() is necessary prior to this function call (such that mbs.systemIsConsistent returns True)";
-		CHECKandTHROWstring(s);
+		CHECKandTHROWstring(s, ExudynModelError);
 	}
 }
 
@@ -2142,7 +2142,7 @@ void MainSystemData::RaiseIfNotOutputVariableTypeForReferenceConfiguration(const
 		STDstring s = functionName;
 		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
 		s += ": called with ConfigurationType.Reference is only possible with an OutputVariableType suitable for reference configuration, being Position, Displacement, Distance, Rotation or Coordinate-like, but not Velocity, Acceleration, Force, Stress, etc.";
-		CHECKandTHROWstring(s);
+		CHECKandTHROWstring(s, ExudynValueError);
 	}
 }
 

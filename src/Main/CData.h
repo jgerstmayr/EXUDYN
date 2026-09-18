@@ -50,7 +50,7 @@ public: //
 		else if (configurationType == ConfigurationType::StartOfStep) { return startOfStepState; }
 		else if (configurationType == ConfigurationType::Visualization) { return visualizationState; }
 
-		CHECKandTHROWstring("ERROR: CData:Get(...) no valid configurationType");
+		CHECKandTHROWstring("ERROR: CData:Get(...) no valid configurationType", ExudynValueError);
 		return currentState;
 	}
 

@@ -86,7 +86,7 @@ void MainSystemContainer::SetDictionary(const py::dict& d)
 	if (EXUstd::exudynVersion != py::cast<STDstring>(d["__version__"]) && pySpecial.exceptions.dictionaryVersionMismatch)
 	{
 		PyError(STDstring("SetDictionary: Exudyn version is ") + EXUstd::exudynVersion +
-			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"]) + "; you can disable this exception in exudyn.special.exceptions");
+			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"]) + "; you can disable this exception in exudyn.special.exceptions", PyErrorType::valueError);
 	}
 
 	py::list systemList = py::cast<py::list>(d["systems"]);
@@ -332,7 +332,7 @@ MainSystem& MainSystemContainer::GetMainSystem(Index systemNumber)
 	else
 	{
 		PyError(STDstring("GetMainSystem: Cannot access system ") + EXUstd::ToString(systemNumber) +
-			" (number of systems = " + EXUstd::ToString(mainSystems.NumberOfItems()) + "); added and returned a new system");
+			" (number of systems = " + EXUstd::ToString(mainSystems.NumberOfItems()) + "); added and returned a new system", PyErrorType::indexError);
 		return AddMainSystem();
 	}
 }
@@ -422,7 +422,7 @@ void MainRenderer::ResetState()
 	}
 	else
 	{
-		PyError("renderer.ResetState() cannot be called while the OpenGL renderer is active: call renderer.Stop() first!");
+		PyError("renderer.ResetState() cannot be called while the OpenGL renderer is active: call renderer.Stop() first!", PyErrorType::modelError);
 	}
 }
 //! redraw current view and save image
@@ -481,7 +481,7 @@ void MainRenderer::EnableView(Index viewID, bool createWindow)
 {
 	if (!EXUstd::IndexIsInRange(viewID, 1, MAX_VIEWS_GLFW))
 	{
-		PyError(STDstring("renderer.EnableView: viewID must lie in range 1..") + EXUstd::ToString(MAX_VIEWS_GLFW - 1)+"; main view 0 can only be enabled with renderer.Start()");
+		PyError(STDstring("renderer.EnableView: viewID must lie in range 1..") + EXUstd::ToString(MAX_VIEWS_GLFW - 1)+"; main view 0 can only be enabled with renderer.Start()", PyErrorType::valueError);
 	}
 
 	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
@@ -493,7 +493,7 @@ void MainRenderer::EnableView(Index viewID, bool createWindow)
 	{
 		if (!IsActive())
 		{
-			PyError("renderer.EnableView: renderer is not yet active; in case of createWindow=True, main view 0 has to be started first with renderer.Start()!");
+			PyError("renderer.EnableView: renderer is not yet active; in case of createWindow=True, main view 0 has to be started first with renderer.Start()!", PyErrorType::modelError);
 		}
 
 		PyOpenViewWindow(viewID); //sets flag for GLFWClient thread to create window; further states only set when window is created!
@@ -566,8 +566,8 @@ void MainRenderer::SetModelView(float zoom, const std::vector<Real>& rotationVec
 
 	RVD.renderState.zoom = zoom;
 
-	CHECKandTHROW(centerPoint.size() == 3, "renderer.SetModelView: centerPoint must be a list of numpy array with 3 floats");
-	CHECKandTHROW(rotationVector.size() == 3, "renderer.SetModelView: rotationVector must be a list of numpy array with 3 floats");
+	CHECKandTHROW(centerPoint.size() == 3, "renderer.SetModelView: centerPoint must be a list of numpy array with 3 floats", ExudynValueError);
+	CHECKandTHROW(rotationVector.size() == 3, "renderer.SetModelView: rotationVector must be a list of numpy array with 3 floats", ExudynValueError);
 
 	RVD.renderState.centerPoint[0] = (float)centerPoint[0];
 	RVD.renderState.centerPoint[1] = (float)centerPoint[1];
@@ -779,11 +779,11 @@ Index MainGraphicsMaterialList::IndexOrName2Index(py::object indexOrName) const
 				break;
 			}
 		}
-		CHECKandTHROW(i != -1, "GraphicsMaterialList: indexOrName: name not found");
+		CHECKandTHROW(i != -1, "GraphicsMaterialList: indexOrName: name not found", ExudynValueError);
 	}
 	else
 	{
-		CHECKandTHROWstring("GraphicsMaterialList: indexOrName: indexOrName must be either of string or of int type");
+		CHECKandTHROWstring("GraphicsMaterialList: indexOrName: indexOrName must be either of string or of int type", ExudynTypeError);
 	}
 	return i;
 
@@ -801,7 +801,7 @@ void MainGraphicsMaterialList::SetMaterial(Index i, const VSettingsMaterial& mat
 void MainGraphicsMaterialList::PySetMaterial(py::object indexOrName, py::object material)
 {
 	Index i = IndexOrName2Index(indexOrName);
-	CHECKandTHROW(i >= 0, "GraphicsMaterialList.SetMaterial: index out of range");
+	CHECKandTHROW(i >= 0, "GraphicsMaterialList.SetMaterial: index out of range", ExudynIndexError);
 	std::vector<VSettingsMaterial>& data = mainSystemContainer->GetVisualizationSystemContainer().materials;
 
 	if (i > (Index)data.size() - 1) { data.resize(i + 1); }
@@ -825,7 +825,7 @@ void MainGraphicsMaterialList::PySetMaterial(py::object indexOrName, py::object 
 	}
 	else
 	{
-		PyError("GraphicsMaterialList.SetMaterial: expected VSettingsMaterial or dict with material data, but received" + EXUstd::ToString(material));
+		PyError("GraphicsMaterialList.SetMaterial: expected VSettingsMaterial or dict with material data, but received" + EXUstd::ToString(material), PyErrorType::typeError);
 	}
 	if (i < minNumberOfMaterials) { CopyToVisSettings(); }
 }
@@ -834,7 +834,7 @@ const VSettingsMaterial& MainGraphicsMaterialList::GetMaterial(py::object indexO
 {
 	const std::vector<VSettingsMaterial>& data = mainSystemContainer->GetVisualizationSystemContainer().materials;
 	Index i = IndexOrName2Index(indexOrName);
-	CHECKandTHROW(EXUstd::IndexIsInRange(i, 0, NumberOfItems()), "GraphicsMaterialList.GetMaterial: index out of range");
+	CHECKandTHROW(EXUstd::IndexIsInRange(i, 0, NumberOfItems()), "GraphicsMaterialList.GetMaterial: index out of range", ExudynIndexError);
 	return data[i];
 }
 

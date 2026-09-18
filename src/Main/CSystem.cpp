@@ -46,7 +46,7 @@
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
 void CSystem::Assemble(const MainSystem& mainSystem)
 {
-	if (!mainSystem.HasMainSystemContainer()) { PyError("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you need to do first:\n SC=exudyn.SystemContainer()\nSC.Append(mbs)\n"); }
+	if (!mainSystem.HasMainSystemContainer()) { PyError("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you need to do first:\n SC=exudyn.SystemContainer()\nSC.Append(mbs)\n", PyErrorType::modelError); }
 
 	globalTimers.Reset(); //timers already used by finalize contact ...
 	for (CObject* object : cSystemData.GetCObjects())
@@ -108,13 +108,13 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial displacement coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")", PyErrorType::modelError);
 					systemIsInteger = false;
 				}
 
 				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector_t().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial velocity coordinate vector (" +
-						EXUstd::ToString(mainNode->GetInitialCoordinateVector_t().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector_t().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")", PyErrorType::modelError);
 					systemIsInteger = false;
 				}
 			}
@@ -126,7 +126,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal ODE1 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal ODE1 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")", PyErrorType::modelError);
 					systemIsInteger = false;
 				}
 			}
@@ -138,7 +138,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal Data coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal Data coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")", PyErrorType::modelError);
 					systemIsInteger = false;
 				}
 			}
@@ -174,7 +174,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			if (!EXUstd::IndexIsInRange(nodeItemIndex, 0, numberOfNodes))
 			{
 				PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
-					EXUstd::ToString(i) + " contains invalid (global) node number " + EXUstd::ToString(nodeItemIndex));
+					EXUstd::ToString(i) + " contains invalid (global) node number " + EXUstd::ToString(nodeItemIndex), PyErrorType::modelError);
 				systemIsInteger = false;
 			}
 			else //check if right nodeTypes are used
@@ -186,7 +186,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
 						EXUstd::ToString(i) + " (global index = " + EXUstd::ToString(nodeItemIndex) + ")" +
 						" contains invalid node type " + Node::GetTypeString(cNode->GetType()) +
-						" while the requested node type was '" + Node::GetTypeString(item->GetRequestedNodeType()) + "'");
+						" while the requested node type was '" + Node::GetTypeString(item->GetRequestedNodeType()) + "'", PyErrorType::modelError);
 					systemIsInteger = false;
 				}
 			}
@@ -198,7 +198,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			if (connector->RequestedNumberOfMarkers() != 0 && connector->GetMarkerNumbers().NumberOfItems() != connector->RequestedNumberOfMarkers())
 			{
 				PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-					" must have " + EXUstd::ToString(connector->RequestedNumberOfMarkers()) + " markers, but got " + EXUstd::ToString(connector->GetMarkerNumbers().NumberOfItems()) + " markers");
+					" must have " + EXUstd::ToString(connector->RequestedNumberOfMarkers()) + " markers, but got " + EXUstd::ToString(connector->GetMarkerNumbers().NumberOfItems()) + " markers", PyErrorType::modelError);
 				systemIsInteger = false;
 			}
 			else
@@ -216,7 +216,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					if (!EXUstd::IndexIsInRange(markerItemIndex, 0, numberOfMarkers))
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
-							EXUstd::ToString(i) + " contains invalid (global) marker number " + EXUstd::ToString(markerItemIndex));
+							EXUstd::ToString(i) + " contains invalid (global) marker number " + EXUstd::ToString(markerItemIndex), PyErrorType::modelError);
 						systemIsInteger = false;
 					}
 					else
@@ -227,7 +227,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 						{
 							PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
 								EXUstd::ToString(i) + " contains marker with invalid type '" + Marker::GetTypeString(marker->GetType()) +
-								"', but expected marker type '" + Marker::GetTypeString(connector->GetRequestedMarkerType()) + "'");
+								"', but expected marker type '" + Marker::GetTypeString(connector->GetRequestedMarkerType()) + "'", PyErrorType::modelError);
 							systemIsInteger = false;
 						}
 					}
@@ -237,25 +237,25 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE2) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_function) != 0))
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							": Internal error: connector JacobianType::AE_ODE2 must be consistent with JacobianType::AE_ODE2_function");
+							": Internal error: connector JacobianType::AE_ODE2 must be consistent with JacobianType::AE_ODE2_function", PyErrorType::internalError);
 						systemIsInteger = false;
 					}
 					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_t) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_t_function) != 0))
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							": Internal error: connector JacobianType::AE_ODE2_t must be consistent with JacobianType::AE_ODE2_t_function");
+							": Internal error: connector JacobianType::AE_ODE2_t must be consistent with JacobianType::AE_ODE2_t_function", PyErrorType::internalError);
 						systemIsInteger = false;
 					}
 					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE1) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE1_function) != 0))
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							": Internal error: connector JacobianType::AE_ODE1 must be consistent with JacobianType::AE_ODE1_function");
+							": Internal error: connector JacobianType::AE_ODE1 must be consistent with JacobianType::AE_ODE1_function", PyErrorType::internalError);
 						systemIsInteger = false;
 					}
 					if (((connector->GetAvailableJacobians() & JacobianType::AE_AE) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_AE_function) != 0))
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							": Internal error: connector JacobianType::AE_AE must be consistent with JacobianType::AE_AE_function");
+							": Internal error: connector JacobianType::AE_AE must be consistent with JacobianType::AE_AE_function", PyErrorType::internalError);
 						systemIsInteger = false;
 					}
 				}
@@ -284,7 +284,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			if (!EXUstd::IndexIsInRange(nodeIndex, 0, numberOfNodes) && !(acceptInvalidNodeNumber && nodeIndex == EXUstd::InvalidIndex) )
 			{
 				PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-					", contains invalid (global) node number " + EXUstd::ToString(nodeIndex));
+					", contains invalid (global) node number " + EXUstd::ToString(nodeIndex), PyErrorType::modelError);
 				systemIsInteger = false;
 			}
 			if (systemIsInteger && !(acceptInvalidNodeNumber && nodeIndex == EXUstd::InvalidIndex))
@@ -296,7 +296,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					if (!EXUstd::IsOfType(nodeType, Node::Position) && !EXUstd::IsOfType(nodeType, Node::Position2D))
 					{
 						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							" requires a node with type Position or Position2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this");
+							" requires a node with type Position or Position2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this", PyErrorType::modelError);
 						systemIsInteger = false;
 					}
 				}
@@ -305,7 +305,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					if (!EXUstd::IsOfType(nodeType, Node::Orientation) && !EXUstd::IsOfType(nodeType, Node::Orientation2D))
 					{
 						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							" requires a node with type Orientation or Orientation2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this");
+							" requires a node with type Orientation or Orientation2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this", PyErrorType::modelError);
 						systemIsInteger = false;
 					}
 				}
@@ -320,7 +320,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				if (!EXUstd::IndexIsInRange(objectIndex, 0, numberOfObjects))
 				{
 					PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-						", contains invalid (global) object number " + EXUstd::ToString(objectIndex));
+						", contains invalid (global) object number " + EXUstd::ToString(objectIndex), PyErrorType::modelError);
 					systemIsInteger = false;
 				}
 				if (systemIsInteger)
@@ -328,7 +328,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[objectIndex]->GetCObject()->GetType(), CObjectType::Body))
 					{
 						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							": expected ObjectType::Body, but received object (object number=" + EXUstd::ToString(objectIndex) + ")");
+							": expected ObjectType::Body, but received object (object number=" + EXUstd::ToString(objectIndex) + ")", PyErrorType::modelError);
 						systemIsInteger = false;
 					}
 				}
@@ -342,7 +342,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 						if (!EXUstd::IsOfType(afType, AccessFunctionType::TranslationalVelocity_qt))
 						{
 							PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-								" requires an object with position information, but object number " + EXUstd::ToString(objectIndex) + " does not provide this");
+								" requires an object with position information, but object number " + EXUstd::ToString(objectIndex) + " does not provide this", PyErrorType::modelError);
 							systemIsInteger = false;
 						}
 					}
@@ -351,7 +351,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 						if (!EXUstd::IsOfType(afType, AccessFunctionType::AngularVelocity_qt))
 						{
 							PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-								" requires an object with orienation (rotation) information, but object number " + EXUstd::ToString(itemIndex) + " does not provide this");
+								" requires an object with orienation (rotation) information, but object number " + EXUstd::ToString(itemIndex) + " does not provide this", PyErrorType::modelError);
 							systemIsInteger = false;
 						}
 					}
@@ -374,7 +374,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		if (!EXUstd::IndexIsInRange(markerIndex, 0, numberOfMarkers))
 		{
 			PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-				", contains invalid marker number " + EXUstd::ToString(markerIndex));
+				", contains invalid marker number " + EXUstd::ToString(markerIndex), PyErrorType::modelError);
 			systemIsInteger = false;
 		}
 		
@@ -386,7 +386,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
 					", contains marker with invalid type '" + Marker::GetTypeString(markerType) +
-					"', but expected marker type '" + Marker::GetTypeString(requestedType) + "'");
+					"', but expected marker type '" + Marker::GetTypeString(requestedType) + "'", PyErrorType::modelError);
 				systemIsInteger = false;
 			}
 		}
@@ -398,7 +398,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
 					": marker (marker number = " + EXUstd::ToString(cLoad->GetMarkerNumber()) + 
-					") must provide orientation (e.g. RigidBody marker) in case that bodyFixed == True");
+					") must provide orientation (e.g. RigidBody marker) in case that bodyFixed == True", PyErrorType::modelError);
 				systemIsInteger = false;
 			}
 		}
@@ -419,7 +419,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index n = item->GetCSensor()->GetNodeNumber();
 			if (!EXUstd::IndexIsInRange(n, 0, numberOfNodes))
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n));
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n), PyErrorType::modelError);
 			}
 		}
 		else if (item->GetCSensor()->HasObjectNumber()) //type=object, body, super element, ...
@@ -429,7 +429,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				if (!EXUstd::IndexIsInRange(n, 0, numberOfObjects))
 				{
 					PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-						"', type = SensorType::" + GetSensorTypeString(item->GetCSensor()->GetType()) + ", contains invalid object number " + EXUstd::ToString(n));
+						"', type = SensorType::" + GetSensorTypeString(item->GetCSensor()->GetType()) + ", contains invalid object number " + EXUstd::ToString(n), PyErrorType::modelError);
 				}
 			}
 		}
@@ -438,7 +438,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index n = item->GetCSensor()->GetMarkerNumber();
 			if (!EXUstd::IndexIsInRange(n, 0, numberOfMarkers))
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Marker, contains invalid marker number " + EXUstd::ToString(n));
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Marker, contains invalid marker number " + EXUstd::ToString(n), PyErrorType::modelError);
 			}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Load)
@@ -446,7 +446,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index n = item->GetCSensor()->GetLoadNumber();
 			if (!EXUstd::IndexIsInRange(n, 0, numberOfLoads))
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Load, contains invalid load number " + EXUstd::ToString(n));
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Load, contains invalid load number " + EXUstd::ToString(n), PyErrorType::modelError);
 			}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::UserFunction)
@@ -454,14 +454,14 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			const CSensorUserFunction& sensorUserFunction = (const CSensorUserFunction&)(*item->GetCSensor());
 			if (sensorUserFunction.GetParameters().sensorUserFunction == 0)
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::UserFunction, contains empty user function");
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::UserFunction, contains empty user function", PyErrorType::modelError);
 			}
 			for (Index m : sensorUserFunction.GetParameters().sensorNumbers)
 			{
 				if (!EXUstd::IndexIsInRange(m, 0, numberOfSensors))
 				{
 					PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-						"', type = SensorType::UserFunction: local sensor number " + EXUstd::ToString(m) + " is invalid");
+						"', type = SensorType::UserFunction: local sensor number " + EXUstd::ToString(m) + " is invalid", PyErrorType::modelError);
 				}
 			}
 		}
@@ -483,7 +483,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	{
 		if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
 		{
-			PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+			PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString, PyErrorType::modelError);
 			systemIsInteger = false;
 		}
 		itemIndex++;
@@ -494,7 +494,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	{
 		if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
 		{
-			PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+			PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString, PyErrorType::modelError);
 			systemIsInteger = false;
 		}
 		itemIndex++;
@@ -505,7 +505,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	{
 		if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
 		{
-			PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+			PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString, PyErrorType::modelError);
 			systemIsInteger = false;
 		}
 		itemIndex++;
@@ -516,7 +516,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
     {
         if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
         {
-            PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+            PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString, PyErrorType::modelError);
             systemIsInteger = false;
         }
         itemIndex++;
@@ -527,7 +527,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
     {
         if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
         {
-            PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+            PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString, PyErrorType::modelError);
             systemIsInteger = false;
         }
         itemIndex++;
@@ -860,7 +860,7 @@ void CSystem::PreComputeItemLists()
 			}
 			else 
 			{ 
-				SysError("CSystem::PreComputeItemLists(...): object "+EXUstd::ToString(i) + ": ODE2 type not implemented"); 
+				SysError("CSystem::PreComputeItemLists(...): object "+EXUstd::ToString(i) + ": ODE2 type not implemented", PyErrorType::notImplementedError); 
 			}
 		}
 
@@ -909,11 +909,11 @@ void CSystem::PreComputeItemLists()
 			//NOT AVAILABLE NOW: connectors or pure objects
 			else if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
 			{
-				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for Connectors with AE");
+				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for Connectors with AE", ExudynNotImplementedError);
 			}
 			else
 			{
-				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for pure objects with AE");
+				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for pure objects with AE", ExudynNotImplementedError);
 			}
 
 			//add projected equations only if algebraic equation is available (i.e., do not add for rigid bodies, because this term is handled by nodes)
@@ -1058,7 +1058,7 @@ void CSystem::ComputeLieGroupNodeCompositionEps(Vector& currentODE2,
     nodeODE2coordsLink.LinkDataTo(currentODE2, nodeGlobalCoordinate, nPos + nRot);
     
     //as incrementatlMotion is limited to 6, we need to limit this here!
-    CHECKandTHROW(nPos + nRot <= 6, "CSystem::ComputeLieGroupNodeCompositionEps: only possible for node size <= 6");
+    CHECKandTHROW(nPos + nRot <= 6, "CSystem::ComputeLieGroupNodeCompositionEps: only possible for node size <= 6", ExudynNotImplementedError);
 
     storedNodeODE2.CopyFrom(nodeODE2coordsLink);
 	//LinkedDataVector currentPosition(storedNodeODE2, off, nPos); //wrong, no offset off needed here!
@@ -1769,11 +1769,11 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
                 }
                 else
                 {
-                    CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, marker type not implemented!");
+                    CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, marker type not implemented!", ExudynNotImplementedError);
                 }
             }
         }
-        else { CHECKandTHROWstring("CSystem::ComputeODE2SingleLoad: marker must be Body or Node type\n"); }
+        else { CHECKandTHROWstring("CSystem::ComputeODE2SingleLoad: marker must be Body or Node type\n", ExudynModelError); }
     }
     else 
     { 
@@ -1803,7 +1803,7 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 		if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
 		{
 			const bool computeJacobian = true;
-			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)");
+			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)", ExudynValueError);
 			//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
 			marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 			//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
@@ -1816,7 +1816,7 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 		else if (loadType == LoadType::Torque)
 		{
 			const bool computeJacobian = true;
-			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D torque)");
+			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D torque)", ExudynValueError);
 			//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
 			marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 			//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
@@ -1828,7 +1828,7 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 		else if (loadType == LoadType::Coordinate)
 		{
 			const bool computeJacobian = true;
-			CHECKandTHROW(loadVector1Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 1D load)");
+			CHECKandTHROW(loadVector1Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 1D load)", ExudynValueError);
 			//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
 			marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 			//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
@@ -1837,7 +1837,7 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 			//pout << "generalizedLoad=" << temp.generalizedLoad << "\n";
 			//pout << "loadVector1D=" << loadVector1D << "\n";
 		}
-		else { CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, LoadType not implemented!"); }
+		else { CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, LoadType not implemented!", ExudynNotImplementedError); }
 
 		//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
 		//pout << "genLoad=" << temp.generalizedLoad << "\n";
@@ -1942,7 +1942,7 @@ void CSystem::ComputeODE2SingleLoadLTG(Index loadIndex, ArrayIndex& ltgODE2equat
             }
             else
             {
-                CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoadLTG, marker type not implemented!");
+                CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoadLTG, marker type not implemented!", ExudynNotImplementedError);
             }
         }
     }
@@ -2053,7 +2053,7 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
         }
         if (ltgODE1coords.NumberOfItems() != 0)
         {
-            CHECKandTHROWstring("JacobianODE2Loads: dependency on ODE1 coordinates not implemented; set computeLoadsJacobian=False in solver settings");
+            CHECKandTHROWstring("JacobianODE2Loads: dependency on ODE1 coordinates not implemented; set computeLoadsJacobian=False in solver settings", ExudynNotImplementedError);
         }
 
 
@@ -2102,7 +2102,7 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 			{
 				//loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
 				//loadVector3Ddefined = true;
-				CHECKandTHROW(true, "ComputeODE1Loads(...): illegal 3D force vector ");
+				CHECKandTHROW(true, "ComputeODE1Loads(...): illegal 3D force vector ", ExudynValueError);
 			}
 			else
 			{
@@ -2124,11 +2124,11 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 			if (loadType == LoadType::Coordinate)
 			{
 				const bool computeJacobian = true;
-				CHECKandTHROW(loadVector1Ddefined, "ComputeODE1Loads(...): illegal force vector format (expected 1D load)");
+				CHECKandTHROW(loadVector1Ddefined, "ComputeODE1Loads(...): illegal force vector format (expected 1D load)", ExudynValueError);
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
 			}
-			else { CHECKandTHROWstring("ERROR: CSystem::ComputeSystemODE1RHS, LoadType not implemented!"); }
+			else { CHECKandTHROWstring("ERROR: CSystem::ComputeSystemODE1RHS, LoadType not implemented!", ExudynNotImplementedError); }
 
 			//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
 			//pout << "genLoad=" << temp.generalizedLoad << "\n";
@@ -2899,7 +2899,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute total jacobian ==> very time consuming ==> change this to local jacobian (use flag in numDiffParameters?)
 
-	if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianGM.GetSystemMatrixType())) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: only works for LinearSolverType.EXUdense; illegal LinearSolverType!"); }
+	if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianGM.GetSystemMatrixType())) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: only works for LinearSolverType.EXUdense; illegal LinearSolverType!", ExudynValueError); }
 	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianGM).GetMatrixEXUdense();
 
 	f0.SetNumberOfItems(nAE);
@@ -3088,7 +3088,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	}
 	else
 	{
-		CHECKandTHROWstring("CSystem::ComputeObjectJacobianAE(...): object type not implemented");
+		CHECKandTHROWstring("CSystem::ComputeObjectJacobianAE(...): object type not implemented", ExudynNotImplementedError);
 	}
 }
 
@@ -3113,7 +3113,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 	}
 	else
 	{
-		if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented"); }
+		if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented", ExudynNotImplementedError); }
 		//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 		Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 		Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
@@ -3133,7 +3133,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 
 			bool objectUsesVelocityLevel;// = false;
 
-			CHECKandTHROW(ltgODE1.NumberOfItems() == 0, "CSystem::JacobianAE: not implemented for constraints/joints with ODE1 coordinates");
+			CHECKandTHROW(ltgODE1.NumberOfItems() == 0, "CSystem::JacobianAE: not implemented for constraints/joints with ODE1 coordinates", ExudynNotImplementedError);
 
 			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, filledJacobians/*, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled*/);
 
@@ -3189,7 +3189,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 				//remaining part could be integrated according to code above: for (Index j: cSystemData.objectsWithAlgebraicEquations) {...}
 				//CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
 				CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE2_t + JacobianType::AE_ODE1 + JacobianType::AE_AE)),
-					"CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
+					"CSystem: JacobianAE(...): mode not implemented for node algebraic equations", ExudynNotImplementedError);
 			}
 		}//for cSystemData.nodesODE2WithAE
 	}//if(newton.useNumericalDifferentiationAE)
@@ -3274,7 +3274,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 				}
 				else if (filledJacobians & JacobianType::AE_ODE1)//(flagAE_ODE1filled)
 				{
-					CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations");
+					CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations", ExudynNotImplementedError);
 				}
 			}
 			else //NODES WITH AE
@@ -3363,7 +3363,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 			}
 			else if (filledJacobians & JacobianType::AE_ODE1)//(flagAE_ODE1filled)
 			{
-				CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations");
+				CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations", ExudynNotImplementedError);
 
 				//use following code, but add ode1ReactionForces first to function interface ...
 				//const ResizableMatrix& jac = temp.localJacobianAE_ODE1;
@@ -3584,7 +3584,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 			}
 			//CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
 			CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE2_t + JacobianType::AE_ODE1 + JacobianType::AE_AE)),
-				"CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
+				"CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations", ExudynNotImplementedError);
 		}
 	}
 
@@ -3616,7 +3616,7 @@ void CSystem::NumericalConstraintJacobianDerivative(TemporaryComputationData& te
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 
     if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianCqV.GetSystemMatrixType()))
-    { CHECKandTHROWstring("CSystem::NumericalConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!"); }
+    { CHECKandTHROWstring("CSystem::NumericalConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!", ExudynValueError); }
 	
     ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianCqV).GetMatrixEXUdense();
 	
@@ -3731,7 +3731,7 @@ void CSystem::NumericalConstraintJacobianTimesVector(TemporaryComputationData& t
 			//remaining part could be integrated according to code above: for (Index j: cSystemData.objectsWithAlgebraicEquations) {...}
 			//CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
 			CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE2_t + JacobianType::AE_ODE1 + JacobianType::AE_AE)),
-				"CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
+				"CSystem: NumericalConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations", ExudynNotImplementedError);
 		}
 	}
 

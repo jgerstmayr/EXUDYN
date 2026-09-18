@@ -30,7 +30,7 @@ private:
 public:
 	static MainGraphicsMaterialList* ForbidConstructor()
 	{
-		CHECKandTHROWstring("constructor GraphicsMaterialList() may not be called. It is automatically created inside Renderer and other usage of this class is not possible.");
+		CHECKandTHROWstring("constructor GraphicsMaterialList() may not be called. It is automatically created inside Renderer and other usage of this class is not possible.", ExudynModelError);
 		return new MainGraphicsMaterialList(); //this is never called
 	}
 	void Initialize(MainSystemContainer* backlink) 
@@ -93,7 +93,7 @@ public:
 
 	static MainRenderer* ForbidConstructor()
 	{
-		CHECKandTHROWstring("constructor Renderer() may not be called. It is automatically created inside SystemContainer and other usage of this class is not possible.");
+		CHECKandTHROWstring("constructor Renderer() may not be called. It is automatically created inside SystemContainer and other usage of this class is not possible.", ExudynModelError);
 		return new MainRenderer(); //this is never called
 	}
 
@@ -181,7 +181,7 @@ public:
 	{
 		if (!IsActive())
 		{
-			PyError(STDstring("Renderer function '") + functionName + "' has been called, but renderer was not active (call renderer.Start() first!)");
+			PyError(STDstring("Renderer function '") + functionName + "' has been called, but renderer was not active (call renderer.Start() first!)", PyErrorType::modelError);
 		}
 	}
 
@@ -299,7 +299,7 @@ inline void MainRenderer::ViewDisabledError(Index viewID, const char* functionNa
 	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
 	if (!VSC.GetRenderViewData(viewID).renderState.viewEnabled)
 	{
-		PyError(STDstring("Renderer function '") + functionName + "' has been called for view " + EXUstd::ToString(viewID) + ", view is not enabled (call renderer.EnableView(...) first)");
+		PyError(STDstring("Renderer function '") + functionName + "' has been called for view " + EXUstd::ToString(viewID) + ", view is not enabled (call renderer.EnableView(...) first)", PyErrorType::modelError);
 	}
 }
 

@@ -47,7 +47,7 @@ public: //
     //! forbid calls of MainSystemData constructor, as this would lead to an unusable system
     static MainSystemData* ForbidConstructor()
     {
-        CHECKandTHROWstring("SystemData() may not be called. It is automatically created inside MainSystem and other usage of this class is not possible.");
+        CHECKandTHROWstring("SystemData() may not be called. It is automatically created inside MainSystem and other usage of this class is not possible.", ExudynModelError);
         return new MainSystemData(); //this is never called
     }
 
@@ -138,7 +138,7 @@ public: //
 		else if (configurationType == ConfigurationType::StartOfStep) { return &(cSystemData->GetCData().GetStartOfStep()); }
 		else if (configurationType == ConfigurationType::Visualization) { return &(cSystemData->GetCData().GetVisualization()); }
 
-		CHECKandTHROWstring("ERROR: no valid configurationType in MainSystemData::GetCSystemState (const)");
+		CHECKandTHROWstring("ERROR: no valid configurationType in MainSystemData::GetCSystemState (const)", ExudynValueError);
 		return &(cSystemData->GetCData().GetInitial());
 	}
 
@@ -150,7 +150,7 @@ public: //
 		else if (configurationType == ConfigurationType::StartOfStep) { return &(cSystemData->GetCData().GetStartOfStep()); }
 		else if (configurationType == ConfigurationType::Visualization) { return &(cSystemData->GetCData().GetVisualization()); }
 
-		CHECKandTHROWstring("ERROR: no valid configurationType in MainSystemData::GetCSystemState");
+		CHECKandTHROWstring("ERROR: no valid configurationType in MainSystemData::GetCSystemState", ExudynValueError);
 		return &(cSystemData->GetCData().GetInitial());
 	}
 
@@ -297,7 +297,7 @@ public: //
 	//! pybind write access to ODE2 coords
 	void SetODE2Coords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords().NumberOfItems(),"SystemData::SetODE2Coords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords().NumberOfItems(),"SystemData::SetODE2Coords: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetODE2Coords(v);
 	}
 
@@ -313,7 +313,7 @@ public: //
 	//! pybind write access to ODE2_t coords
 	void SetODE2Coords_t(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords_t().NumberOfItems(), "SystemData::SetODE2Coords_t: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords_t().NumberOfItems(), "SystemData::SetODE2Coords_t: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetODE2Coords_t(v);
 	}
 
@@ -329,7 +329,7 @@ public: //
 	//! pybind write access to ODE2_t coords
 	void SetODE2Coords_tt(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords_tt().NumberOfItems(), "SystemData::SetODE2Coords_tt: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords_tt().NumberOfItems(), "SystemData::SetODE2Coords_tt: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetODE2Coords_tt(v);
 	}
 
@@ -345,7 +345,7 @@ public: //
 	//! pybind write access to ODE1 coords
 	void SetODE1Coords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetODE1Coords(v);
 	}
 
@@ -361,7 +361,7 @@ public: //
 	//! pybind write access to ODE1_t coords
 	void SetODE1Coords_t(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords_t: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords_t: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetODE1Coords_t(v);
 	}
 
@@ -377,7 +377,7 @@ public: //
 	//! pybind write access to AE coords
 	void SetAECoords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetAECoords().NumberOfItems(), "SystemData::SetAECoords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetAECoords().NumberOfItems(), "SystemData::SetAECoords: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetAECoords(v);
 	}
 	//+++++++++++++++++++++++++++++++++++
@@ -392,7 +392,7 @@ public: //
 	//! pybind write access to AE coords
 	void SetDataCoords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetDataCoords().NumberOfItems(), "SystemData::SetDataCoords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetDataCoords().NumberOfItems(), "SystemData::SetDataCoords: incompatible size of vectors", ExudynValueError);
 		GetCSystemState(configurationType)->SetDataCoords(v);
 	}
 
@@ -403,7 +403,7 @@ public: //
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalODE2().NumberOfItems())
 		{
-			PyError("GetObjectLTGODE2: illegal index");
+			PyError("GetObjectLTGODE2: illegal index", PyErrorType::indexError);
 			return std::vector<Index>();
 		}
 		return cSystemData->GetLocalToGlobalODE2()[objectNumber];
@@ -413,7 +413,7 @@ public: //
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalODE1().NumberOfItems())
 		{
-			PyError("GetObjectLTGODE1: illegal index");
+			PyError("GetObjectLTGODE1: illegal index", PyErrorType::indexError);
 			return std::vector<Index>();
 		}
 		return cSystemData->GetLocalToGlobalODE1()[objectNumber];
@@ -423,7 +423,7 @@ public: //
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalAE().NumberOfItems())
 		{
-			PyError("GetObjectLTGAE: illegal index");
+			PyError("GetObjectLTGAE: illegal index", PyErrorType::indexError);
 			return std::vector<Index>();
 		}
 		return cSystemData->GetLocalToGlobalAE()[objectNumber];
@@ -433,7 +433,7 @@ public: //
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalData().NumberOfItems())
 		{
-			PyError("GetObjectLTGData: illegal index");
+			PyError("GetObjectLTGData: illegal index", PyErrorType::indexError);
 			return std::vector<Index>();
 		}
 		return cSystemData->GetLocalToGlobalData()[objectNumber];
@@ -445,7 +445,7 @@ public: //
     {
         if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
         {
-            PyError("GetNodeLocalToGlobalODE2: illegal index");
+            PyError("GetNodeLocalToGlobalODE2: illegal index", PyErrorType::indexError);
             return std::vector<Index>();
         }
         std::vector<Index> indexList;
@@ -468,7 +468,7 @@ public: //
     {
         if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
         {
-            PyError("GetNodeLocalToGlobalODE1: illegal index");
+            PyError("GetNodeLocalToGlobalODE1: illegal index", PyErrorType::indexError);
             return std::vector<Index>();
         }
         std::vector<Index> indexList;
@@ -491,7 +491,7 @@ public: //
     {
         if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
         {
-            PyError("GetNodeLocalToGlobalAE: illegal index");
+            PyError("GetNodeLocalToGlobalAE: illegal index", PyErrorType::indexError);
             return std::vector<Index>();
         }
         std::vector<Index> indexList;
@@ -514,7 +514,7 @@ public: //
     {
         if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
         {
-            PyError("GetNodeLocalToGlobalData: illegal index");
+            PyError("GetNodeLocalToGlobalData: illegal index", PyErrorType::indexError);
             return std::vector<Index>();
         }
         std::vector<Index> indexList;
@@ -542,7 +542,7 @@ public: //
         Index nLoads = cSystemData->GetCLoads().NumberOfItems();
         if (loadNumber >= nLoads)
         {
-            PyError("AddODE2LoadDependencies: invalid load number");
+            PyError("AddODE2LoadDependencies: invalid load number", PyErrorType::indexError);
         }
 
         //check if load dependencies are initialized:
@@ -556,7 +556,7 @@ public: //
         }
         else if (cSystemData->GetLoadsODE2dependencies().NumberOfItems() != nLoads)
         {
-            PyError("AddODE2LoadDependencies: inconsistent size of systemData.loadsODE2dependencies; call Assemble() first");
+            PyError("AddODE2LoadDependencies: inconsistent size of systemData.loadsODE2dependencies; call Assemble() first", PyErrorType::modelError);
         }
         Index nODE2 = cSystemData->GetNumberOfCoordinatesODE2();
         for (Index k = 0; k < (Index)globalODE2coordinates.size(); k++)
@@ -564,7 +564,7 @@ public: //
             Index c = globalODE2coordinates[k];
             if (!EXUstd::IndexIsInRange(c, 0, nODE2))
             {
-                PyError(STDstring("AddODE2LoadDependencies: coordinate index ")+EXUstd::ToString(k)+" is "+ EXUstd::ToString(c)+" which is not in valid range [0,"+ EXUstd::ToString(nODE2)+"]");
+                PyError(STDstring("AddODE2LoadDependencies: coordinate index ")+EXUstd::ToString(k)+" is "+ EXUstd::ToString(c)+" which is not in valid range [0,"+ EXUstd::ToString(nODE2)+"]", PyErrorType::indexError);
             }
             cSystemData->GetLoadsODE2dependencies()[loadNumber].Append(c);
         }

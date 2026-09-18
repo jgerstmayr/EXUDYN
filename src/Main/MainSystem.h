@@ -63,7 +63,7 @@ public:
     //! forbid calls of MainSystem constructor, as this would lead to an unusable system
     static MainSystem* ForbidConstructor()
     {
-        CHECKandTHROWstring("MainSystem() may not be called. Use AddSystem() of exudyn.SystemContainer() to create a MainSystem inside SystemContainer.");
+        CHECKandTHROWstring("MainSystem() may not be called. Use AddSystem() of exudyn.SystemContainer() to create a MainSystem inside SystemContainer.", ExudynModelError);
         return new MainSystem(); //this is never called
     }
 

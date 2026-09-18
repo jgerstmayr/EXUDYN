@@ -226,18 +226,18 @@ Index MainObjectFactory::AddMainNode(MainSystem& mainSystem, const py::dict& d)
 				}
 				else
 				{
-					PyError(STDstring("AddNode, arg:dict['nodeType'] contains invalid node type '") + nameString + "'");
+					PyError(STDstring("AddNode, arg:dict['nodeType'] contains invalid node type '") + nameString + "'", PyErrorType::valueError);
 				}
 
 			}
 			else
 			{
-				PyError("AddNode, arg:dict['nodeType'] must be of string type");
+				PyError("AddNode, arg:dict['nodeType'] must be of string type", PyErrorType::typeError);
 			}
 		}
 		else
 		{
-			PyError("AddNode, arg:dict must contain item 'nodeType'");
+			PyError("AddNode, arg:dict must contain item 'nodeType'", PyErrorType::valueError);
 		}
 	}
 	return EXUstd::InvalidIndex;
@@ -294,18 +294,18 @@ Index MainObjectFactory::AddMainObject(MainSystem& mainSystem, const py::dict& d
 				}
 				else
 				{
-					PyError(STDstring("AddObject, arg:dict['objectType'] contains invalid object type '") + nameString + "'");
+					PyError(STDstring("AddObject, arg:dict['objectType'] contains invalid object type '") + nameString + "'", PyErrorType::valueError);
 				}
 
 			}
 			else
 			{
-				PyError("AddObject, arg:dict['objectType'] must be of string type");
+				PyError("AddObject, arg:dict['objectType'] must be of string type", PyErrorType::typeError);
 			}
 		}
 		else
 		{
-			PyError("AddObject, arg:dict must contain item 'objectType'");
+			PyError("AddObject, arg:dict must contain item 'objectType'", PyErrorType::valueError);
 		}
 	}
 	return EXUstd::InvalidIndex;
@@ -358,18 +358,18 @@ Index MainObjectFactory::AddMainMarker(MainSystem& mainSystem, const py::dict& d
 				}
 				else
 				{
-					PyError(STDstring("AddMarker, arg:dict['markerType'] contains invalid marker type '") + nameString + "'");
+					PyError(STDstring("AddMarker, arg:dict['markerType'] contains invalid marker type '") + nameString + "'", PyErrorType::valueError);
 				}
 
 			}
 			else
 			{
-				PyError("AddMarker, arg:dict['markerType'] must be of string type");
+				PyError("AddMarker, arg:dict['markerType'] must be of string type", PyErrorType::typeError);
 			}
 		}
 		else
 		{
-			PyError("AddMarker, arg:dict must contain item 'markerType'");
+			PyError("AddMarker, arg:dict must contain item 'markerType'", PyErrorType::valueError);
 		}
 	}
 	return EXUstd::InvalidIndex;
@@ -421,18 +421,18 @@ Index MainObjectFactory::AddMainLoad(MainSystem& mainSystem, const py::dict& d)
 				}
 				else
 				{
-					PyError(STDstring("AddLoad, arg:dict['loadType'] contains invalid load type '") + nameString + "'");
+					PyError(STDstring("AddLoad, arg:dict['loadType'] contains invalid load type '") + nameString + "'", PyErrorType::valueError);
 				}
 
 			}
 			else
 			{
-				PyError("AddLoad, arg:dict['loadType'] must be of string type");
+				PyError("AddLoad, arg:dict['loadType'] must be of string type", PyErrorType::typeError);
 			}
 		}
 		else
 		{
-			PyError("AddLoad, arg:dict must contain item 'loadType'");
+			PyError("AddLoad, arg:dict must contain item 'loadType'", PyErrorType::valueError);
 		}
 	}
 	return EXUstd::InvalidIndex;
@@ -486,18 +486,18 @@ Index MainObjectFactory::AddMainSensor(MainSystem& mainSystem, const py::dict& d
 				}
 				else
 				{
-					PyError(STDstring("AddSensor, arg:dict['sensorType'] contains invalid sensor type '") + nameString + "'");
+					PyError(STDstring("AddSensor, arg:dict['sensorType'] contains invalid sensor type '") + nameString + "'", PyErrorType::valueError);
 				}
 
 			}
 			else
 			{
-				PyError("AddSensor, arg:dict['sensorType'] must be of string type");
+				PyError("AddSensor, arg:dict['sensorType'] must be of string type", PyErrorType::typeError);
 			}
 		}
 		else
 		{
-			PyError("AddSensor, arg:dict must contain item 'sensorType'");
+			PyError("AddSensor, arg:dict must contain item 'sensorType'", PyErrorType::valueError);
 		}
 	}
 	return EXUstd::InvalidIndex;
@@ -526,7 +526,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 				if ((Index)nameString.size() > baseItemLength && nameString.substr(0, baseItemLength) == baseItem && isdigit(nameString[baseItemLength]))
 				{
 					STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-					PyError(s + ", arg:dict['name'] may not have the format '" + baseItem + "[0-9][...]'");
+					PyError(s + ", arg:dict['name'] may not have the format '" + baseItem + "[0-9][...]'", PyErrorType::valueError);
 					errorFound = true;
 				}
 
@@ -538,7 +538,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 						if (item->GetName() == nameString)
 						{
 							STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added");
+							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added", PyErrorType::modelError);
 							errorFound = true;
 							break;
 						}
@@ -551,7 +551,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 						if (item->GetName() == nameString)
 						{
 							STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added");
+							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added", PyErrorType::modelError);
 							errorFound = true;
 							break;
 						}
@@ -564,7 +564,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 						if (item->GetName() == nameString)
 						{
 							STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added");
+							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added", PyErrorType::modelError);
 							errorFound = true;
 							break;
 						}
@@ -577,7 +577,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 						if (item->GetName() == nameString)
 						{
 							STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added");
+							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added", PyErrorType::modelError);
 							errorFound = true;
 							break;
 						}
@@ -590,7 +590,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 						if (item->GetName() == nameString)
 						{
 							STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added");
+							PyError(s + ", arg:dict['name'] '" + nameString + "' already exists; item not added", PyErrorType::modelError);
 							errorFound = true;
 							break;
 						}
@@ -602,7 +602,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 		else
 		{
 			STDstring s = baseItem; s[0] = toupper(s[0]);	s = "Add" + s; //generate string for error messages, e.g. "AddNode"
-			PyError(s + ", arg:dict['name'] must be a valid string");
+			PyError(s + ", arg:dict['name'] must be a valid string", PyErrorType::typeError);
 			errorFound = true;
 		}
 	}

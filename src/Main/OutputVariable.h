@@ -234,7 +234,7 @@ namespace Joint {
 
 	inline Index AxisNumber(Type var) 
 	{
-		CHECKandTHROW(var <= 6 and var > 0, "Joint::AxisNumber: joint out of range");
+		CHECKandTHROW(var <= 6 and var > 0, "Joint::AxisNumber: joint out of range", ExudynIndexError);
 		return map2AxisNumber[(Index)var];
 	}
 
