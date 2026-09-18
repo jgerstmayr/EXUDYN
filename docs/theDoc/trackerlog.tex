@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.170.dev1, 
+  \item Exudyn version = 1.11.171.dev1, 
   \item last change =  2026-09-18, 
   \item Number of issues = 2512, 
-  \item Number of resolved issues = 2243 (170 in current version), 
+  \item Number of resolved issues = 2244 (171 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.171}:  resolved Issue 2505: {\bf a test model page is in no toctree}
+(documentation)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.}
+    \item {\bf notes: Fixed in revision2026 step R7.1.2: docs/RST/TestModels/sphereTriangleTest.rst was a STALE generated file; not a missing index entry. TestModelsIndex.rst is generated from the keys of TestExamplesReferenceSolution(); and sphereTriangleTest.py moved into DeliberatelyNotRun() (unstable explicit integrator; phase R10); so the generator stopped listing it and stopped writing its page - the old page stayed behind. Verified by deleting it and re-running the generators: it is not recreated. sphinx-build -W --keep-going now succeeds; and exudev docs is strict by default so the local build applies the same gate as the GitLab docs job.}
+    \item   date resolved: {\bf 2026-09-18 09:13},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.170}:  resolved Issue 2510: {\bf data files referenced by examples and test models are not in the repository}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

@@ -199,6 +199,9 @@ def BuildParsers():
                     'revision2026 phase R7 replaces it.')
     docs.add_argument('--keep-cache', action='store_true',
                       help='incremental build (drop -E); faster, but stale pages are possible')
+    docs.add_argument('--no-strict', action='store_true',
+                      help='do not turn warnings into errors; the default is -W --keep-going, '
+                           'which is what the GitLab docs job runs')
     docs.add_argument('--open', action='store_true', help='open _build/index.html afterwards')
     docs.set_defaults(function=commands.Docs)
 

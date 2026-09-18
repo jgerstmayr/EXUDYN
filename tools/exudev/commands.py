@@ -424,6 +424,14 @@ def Docs(options):
     argv = ['python', '-m', 'sphinx', '-b', 'html', '.', '_build']
     if not options.keep_cache:
         argv += ['-E']                   #read all files; no stale pages from the environment cache
+
+    #-W --keep-going is what the GitLab docs job runs, so the local build must use it too: without
+    #it a warning passes here and fails there, which is the failure mode of #2508 in another tool.
+    #--keep-going reports every warning rather than stopping at the first, which is what you want
+    #when you are about to fix them
+    if not options.no_strict:
+        argv += ['-W', '--keep-going']
+
     argv += runner.QuietFlag('sphinx-build', options.verbose)
 
     steps = [Step('html documentation (' + environment + ')',

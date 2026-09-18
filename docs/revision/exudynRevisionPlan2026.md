@@ -1349,12 +1349,22 @@ here, because they describe the developer workflow rather than the user document
     Genuinely geometric figures, if any appear, keep a pre-rendered SVG.
 
 <a id="r7-1-2"></a>
-**R7.1.2** *(sub-step of R7.1; noticed 2026-09-18)* **A generated page is in no toctree** (#2505).
-    The sphinx build prints `docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not
-    included in any toctree` - the page is generated but unreachable, findable only by search. The
-    build is not run with `-W` here, so nothing fails today; the check is whether the generator that
-    writes the TestModels pages also writes their index entry, in which case this is one missing
-    entry rather than one missing page.
+**R7.1.2** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r7-1-2) — *(sub-step of R7.1;
+    done out of order because it was the last red job in CI)* **A generated page was in no
+    toctree** (#2505). `docs/RST/TestModels/sphereTriangleTest.rst` produced
+    `WARNING: document isn't included in any toctree`, and the GitLab docs job runs
+    `sphinx-build -W`, so that single warning failed the job.
+
+    **It was a stale generated file, not a missing index entry.** `TestModelsIndex.rst` is built
+    from the keys of `TestExamplesReferenceSolution()`, and `sphereTriangleTest.py` moved into
+    `DeliberatelyNotRun()` - its explicit integrator goes unstable, phase R10. The generator
+    therefore stopped listing it *and* stopped writing its page; the page from before simply stayed
+    behind. Confirmed by deleting it and regenerating: it is not recreated. Removed, and
+    `sphinx-build -b html . _build -E -W --keep-going` then succeeds.
+
+    **`exudev docs` is now strict by default** (`-W --keep-going`, with `--no-strict` to opt out),
+    because the local build must apply the gate CI applies - a warning that passes here and fails
+    there is the failure mode of #2508 in a second tool.
 
 <a id="r7-2"></a>
 **R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**

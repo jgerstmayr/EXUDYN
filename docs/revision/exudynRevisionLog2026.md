@@ -6547,3 +6547,33 @@ correctly; checked with `git diff --numstat`, which shows line counts rather tha
 
 **`humanRobotInteraction.py`** stays excluded, as the maintainer confirmed: its own header says the
 geometry comes from GrabCAD, and it reads it from an absolute path on the author machine.
+
+
+<a id="r7-1-2"></a>
+### R7.1.2 - a stale generated page failed the docs job
+
+**DONE 2026-09-18** - issue #2505. Done out of order, in the middle of phase R5, because after the
+other three jobs were fixed it was the last red job in CI.
+
+`docs/RST/TestModels/sphereTriangleTest.rst` produced
+
+```
+WARNING: document isn't included in any toctree [toc.not_included]
+```
+
+and the GitLab docs job runs `sphinx-build -W`, so one warning failed it.
+
+**The obvious fix would have been the wrong one.** Adding the page to the index looks right until
+you ask where the index comes from: `TestModelsIndex.rst` is generated from the keys of
+`TestExamplesReferenceSolution()`, and `sphereTriangleTest.py` is not among them - it sits in
+`DeliberatelyNotRun()` because its explicit integrator goes unstable (3.8226 on an AVX2 Windows
+build, 69880 on a baseline one, 59370 on Linux; phase R10, #2466). The generator stopped listing it
+**and** stopped writing its page; the page from an earlier run simply stayed behind.
+
+Confirmed rather than assumed: the file was deleted and the generators re-run - it is **not**
+recreated. So it was a stale artefact, and removing it restores the agreement between index and
+pages that the generator intends. `sphinx-build -b html . _build -E -W --keep-going` then succeeds.
+
+**`exudev docs` is now strict by default** - `-W --keep-going`, with `--no-strict` to opt out. The
+local build has to apply the gate CI applies; a warning that passes locally and fails in CI is
+exactly #2508 in a second tool, and that one cost a whole pipeline to find.

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.170.dev1, 
++  Exudyn version = 1.11.171.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2512, 
-+  Number of resolved issues = 2243 (170 in current version), 
++  Number of resolved issues = 2244 (171 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.171: resolved Issue 2505: a test model page is in no toctree (documentation)
+    - issue author: Claude-JG
+    - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.
+    - **notes:** Fixed in revision2026 step R7.1.2: docs/RST/TestModels/sphereTriangleTest.rst was a STALE generated file; not a missing index entry. TestModelsIndex.rst is generated from the keys of TestExamplesReferenceSolution(); and sphereTriangleTest.py moved into DeliberatelyNotRun() (unstable explicit integrator; phase R10); so the generator stopped listing it and stopped writing its page - the old page stayed behind. Verified by deleting it and re-running the generators: it is not recreated. sphinx-build -W --keep-going now succeeds; and exudev docs is strict by default so the local build applies the same gate as the GitLab docs job.
+    - date resolved: **2026-09-18 09:13**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.170: resolved Issue 2510: data files referenced by examples and test models are not in the repository (testing)
     - issue author: Claude-JG
     - description:  Inventory taken 2026-09-18 (revision2026 step R5.18.2). (1) docs/verification/ does not exist and was NEVER committed - git log shows no commit touching it - although four test models read from it: sliderCrank3Dtest.py and sliderCrank3Dbenchmark.py want Slidercrank3DiftommBenchmark/ (the Masarati; Masoudi; Chaojie; KarthikBushan; PingZhou and Gonzalez comparison solutions) and heavyTop.py and explicitLieGroupIntegratorPythonTest.py want HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt and HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt. Those reads sit inside "if useGraphics" blocks; so the suite passes without them and only the comparison plots are lost - which is why nobody noticed. (2) python/Examples/testData/objImportTest.obj is missing; it is the only thing stopping pymeshlabFileImport.py. (3) python/TestModels/testData/gyro.stl is missing; needed by netgenSTLtest.py. NOT missing and NOT to be restored: humanRobotInteraction.py and the ROS and URDF examples read files the repository never contained by design (GrabCAD download; a ROS installation). The maintainer has the files in the old repository.
@@ -7735,11 +7741,6 @@ Open issues
  * :textred:`open issue 2508:` checkExtras passed locally and failed in CI because of an untracked file
     - issue author: Claude-JG
     - description:  tools/checkExtras.py built its set of "local module names" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: "import pytest" in test_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported "UNCOVERED IMPORTS: pytest ... needed by [tests]" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in [dependency-groups]; not in any extra.
-    - date raised: 2026-09-18 
-
- * :textblue:`open issue 2505:` a test model page is in no toctree
-    - issue author: Claude-JG
-    - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.
     - date raised: 2026-09-18 
 
  * :textblue:`open issue 2498:` no test checks the member functions an item type must provide
