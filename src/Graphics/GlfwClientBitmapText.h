@@ -335,8 +335,8 @@ public:
 					else if (ci0 == 0xC2 && ci1 == 0xB9) { ci = 175; } //^1
 					else if (ci0 == 0xC2 && ci1 == 0xB2) { ci = 176; } //^2
 					else if (ci0 == 0xC2 && ci1 == 0xB3) { ci = 177; } //^3
-					else if (ci0 == 0xC2 && ci1 == 0xB5) { ci = 149; } //µ (alternative, directly from keyboard)
-					else if (ci0 == 0xC2 && ci1 == 0xB0) { ci = 174; } //° (use ^0 as ° is not any more available since 1.10.11!)
+					else if (ci0 == 0xC2 && ci1 == 0xB5) { ci = 149; } //Âµ (alternative, directly from keyboard)
+					else if (ci0 == 0xC2 && ci1 == 0xB0) { ci = 174; } //Â° (use ^0 as Â° is not any more available since 1.10.11!)
 					else if (ci0 == 0xC2 && ci1 == 0xB7) { ci = 215; } //mult (x or .); currently only x available!
 					else if (ci0 == 0xC2 && ci1 == 0x97) { ci = 215; } //mult (x or .); currently only x available!
 					else if (ci0 == 0xC2 && ci1 == 0xBF) { ci = 127; } //inverted/framed ?

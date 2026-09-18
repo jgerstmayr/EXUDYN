@@ -4,7 +4,7 @@
 * @details		Details:
 * 				- solves a dynamic system with constraints
 *               - either use Newmark-based formulas with index-2 reduction, or use generalized-alpha with index 3 constraints
-*               - in the final version it should include GGL stabilization, Brüls/Arnold implementation of gen-alpha and Lie group integration
+*               - in the final version it should include GGL stabilization, BrÃ¼ls/Arnold implementation of gen-alpha and Lie group integration
 *				- step is solved by nonlinear iteration and Newton's method for accelerations
 *
 * @author		Gerstmayr Johannes

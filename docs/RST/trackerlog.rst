@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.188.dev1, 
++  Exudyn version = 1.11.190.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2532, 
-+  Number of resolved issues = 2261 (188 in current version), 
++  Number of issues = 2534, 
++  Number of resolved issues = 2263 (190 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.190: resolved Issue 2533: thirteen tracked text files are not UTF-8 (fix)
+    - issue author: Claude-JG
+    - description:  Eleven C++ sources and one example are cp1252 (a degree sign, a micro sign, an en dash, German umlauts), and docs/theDoc/trackerlog.tex is written by issueTracker.py through an open() with no encoding argument - so it takes the Windows code page. Step R0.6 made the GENERATORS explicit about utf-8; the sources themselves were never converted. A tool that assumes UTF-8 either crashes on them or rewrites them wholesale. Convert them, fix the writer, and add a check so it cannot come back. Note the coupling: docs/theDoc/theDoc.tex declares the latin1 option of inputenc while four other .tex files already contain UTF-8 bytes - that declaration is already wrong for them.
+    - **notes:** Thirteen files converted to UTF-8, LICENSE.txt among them - it credits Camilla Loewy of GLFW and every UTF-8 reader showed that name as mojibake. issueTracker.py:678 (and three version writers) got encoding=utf-8, which was what produced the only non-UTF-8 generated file. docs/theDoc/theDoc.tex now declares the utf8 option of inputenc instead of latin1 - four other .tex files in that directory already held UTF-8 bytes, so the old declaration was already wrong for them; the PDF was NOT built to verify this. New tool tools/checkEncoding.py runs in exudev generate --all-checks and takes --write to convert; it reads git ls-files and exempts python/TestModels/testData/rotorAnsys.rst by name, an ANSYS result file that happens to end in .rst.
+    - date resolved: **2026-09-18 21:35**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
+ * Version 1.11.189: resolved Issue 2532: eight user-facing not-implemented messages call themselves SYSTEM ERROR (fix)
+    - issue author: Claude-JG
+    - description:  GetOutputVariableConnector and GetAccessFunctionBody of several objects report "not implemented" with SysError - which prints a SYSTEM ERROR block and means "please report this" - although the user reaches them directly with mbs.GetObjectOutput(...) or by attaching a marker to an object that does not support that access type. Step R6.3.6 gave them PyErrorType::notImplementedError which is the honest Python type; the helper is still the wrong one. Change the eight calls to PyError and keep the explicit type (PyError defaults to runtimeError).
+    - **notes:** The eight calls are PyError now, keeping the PyErrorType::notImplementedError that step R6.3.6 gave them (PyError defaults to runtimeError, so the type has to stay written out). The printed block says User ERROR instead of SYSTEM ERROR; the Python type was already right.
+    - date resolved: **2026-09-18 21:35**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.188: resolved Issue 2530: the error block is printed to the console although the exception already says it (change)
     - issue author: Claude-JG
     - description:  Since revision2026 step R6.3.5 the exception carries the message and the location; the 5-line ==== block printed by PyError and SysError repeats it on the console. Worse: a caught exception still prints the block, so a GUI or a parameter variation that handles errors floods the terminal with SYSTEM ERROR text for something it handled. Print the block to the pout LOG FILE only (never to the console) - on a long unattended run the file is the only record, and the console has the traceback. Requires a file-only write on OutputBuffer, because pout cannot separate the two channels. Also make the ofstream overloads write the identical block: they currently append Exudyn: parsing of Python file terminated ... which is the fixed sentence that R6.3.5 already removed from the exception.

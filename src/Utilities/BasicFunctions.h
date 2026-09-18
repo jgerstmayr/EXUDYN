@@ -216,7 +216,7 @@ namespace EXUstd {
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//@brief Sorts an array x(1..x.Length()) into ascending numerical order by Shell’s method (diminishing increment sort).
+	//@brief Sorts an array x(1..x.Length()) into ascending numerical order by Shellâ€™s method (diminishing increment sort).
 	//! 'array' is replaced on output by its sorted rearrangement. 
 	//! needed member functions of array: operator[], Index NumberOfItems()
 	//! needed capability of items: operator>, copy constructor (operator=)

@@ -1,6 +1,6 @@
 /** ***********************************************************************************************
 * @file			Threading.cpp
-* @brief		Implementation of micro-multithreading tools, taken and adapted from NGsolve project; thanks to Joachim Schöberl!!!
+* @brief		Implementation of micro-multithreading tools, taken and adapted from NGsolve project; thanks to Joachim SchÃ¶berl!!!
 * @details		Details:
 *               This file adapts / duplicates parts of NGsolve: https://github.com/NGSolve/ngsolve ; see also https://ngsolve.org/ 
 *
@@ -435,7 +435,7 @@ namespace ExuThreading {
 	//	parallel vector operations needed = 2.45914, GFlops = 0.811991, result = 3.68913e+11
 	//	factor threads = 1, vector size = 20480001
 	//	parallel vector operations needed = 2.38116, GFlops = 0.834284, result = 5.19046e+11
-	//	Drücken Sie eine beliebige Taste . . .
+	//	DrÃ¼cken Sie eine beliebige Taste . . .
 
 	//pure AVX results, when TaskManager is running, but ParallelFor not used:
 		//vector operations needed = 1.47524, GFlops = 1.35584, result = 1.15479e+10

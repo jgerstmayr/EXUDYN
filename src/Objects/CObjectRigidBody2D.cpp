@@ -50,7 +50,7 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 
 		Vector2D com = parameters.physicsCenterOfMass;
 
-		//–m * A * \tilde \bar u_{ COM } \bar G
+		//â€“m * A * \tilde \bar u_{ COM } \bar G
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
 		Real sinPhi = sin(phi);
 		Real cosPhi = cos(phi);
@@ -83,7 +83,7 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 	Vector2D com = parameters.physicsCenterOfMass;
 	if (!(com == 0.)) //component-wise compare
 	{
-		//–m * A * \tilde \bar u_{ COM } \bar G
+		//â€“m * A * \tilde \bar u_{ COM } \bar G
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
 		Real sinPhi = sin(phi);
 		Real cosPhi = cos(phi);

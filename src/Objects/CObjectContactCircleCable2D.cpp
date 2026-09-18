@@ -154,7 +154,7 @@ OutputVariableType CObjectContactCircleCable2D::GetOutputVariableTypes() const
 //! provide according output variable in "value"
 void CObjectContactCircleCable2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	SysError("ObjectContactCircleCable2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
+	PyError("ObjectContactCircleCable2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
 }
 
 

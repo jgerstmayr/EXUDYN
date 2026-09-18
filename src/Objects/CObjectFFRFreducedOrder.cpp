@@ -306,7 +306,7 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//note that in FEM.py and in the paper (Zwölfer, Gerstmayr, 2021, Acta Mechanica), terms are added to RHS (+), here they are added to LHS (-=)
+		//note that in FEM.py and in the paper (ZwÃ¶lfer, Gerstmayr, 2021, Acta Mechanica), terms are added to RHS (+), here they are added to LHS (-=)
 		//Q_tt
 		//force[0:self.dim3D] -= (A @ omega3Dtilde @ (self.totalMass*self.chiUtilde + self.mPhitTPsiTilde @ zetaI) @ omega3D +
 		//			2 * A @ self.mPhitTPsiTilde @ zeta_tI @ omega3D) #identical to FFRF up to 1e-16

@@ -38,9 +38,9 @@ plt.legend(loc='upper right')
 plt.show() #sometimes needed to update plot
 #colors, line style and markers:
 plt.plot([1,2,3,4,5], [1,2,3,4,10], 'go-') # 'g'reen 'd'ots '-'solid line
-	# 'r*--' : ‘red stars with dashed lines’
-	# 'ks.' : ‘black squares with dotted line’ (‘k’ stands for black)
-	# * 'bD-.' : ‘blue diamonds with dash-dot line’
+	# 'r*--' : â€˜red stars with dashed linesâ€™
+	# 'ks.' : â€˜black squares with dotted lineâ€™ (â€˜kâ€™ stands for black)
+	# * 'bD-.' : â€˜blue diamonds with dash-dot lineâ€™
 	# colors: b: blue,g: green,r: red,c: cyan,m: magenta,y: yellow,k: black,w: white
 	# markers: point, pixel,circle: .,o   triangles: v^<>  s8*P+xDd
 	# line style: ':', '-.', '--', '-'

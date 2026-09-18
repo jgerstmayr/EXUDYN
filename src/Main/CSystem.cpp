@@ -860,7 +860,7 @@ void CSystem::PreComputeItemLists()
 			}
 			else 
 			{ 
-				SysError("CSystem::PreComputeItemLists(...): object "+EXUstd::ToString(i) + ": ODE2 type not implemented", PyErrorType::notImplementedError); 
+				PyError("CSystem::PreComputeItemLists(...): object "+EXUstd::ToString(i) + ": ODE2 type not implemented", PyErrorType::notImplementedError); 
 			}
 		}
 

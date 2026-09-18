@@ -89,7 +89,7 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 	if (!(parameters.physicsCenterOfMass == 0.)) //component-wise compare
 	{
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> mRTheta; //off-diagonal mass term
-		//–m * A * \tilde \bar u_{ COM } \bar G
+		//â€“m * A * \tilde \bar u_{ COM } \bar G
 		EXUmath::MultMatrixMatrix(RigidBodyMath::Vector2SkewMatrix((-parameters.physicsMass)*parameters.physicsCenterOfMass), Glocal, GlocalInertia);
 		EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix(), GlocalInertia, mRTheta);
 		Index nRotationCoordinates = Glocal.NumberOfColumns();
@@ -748,7 +748,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //	if (!(parameters.physicsCenterOfMass == 0.)) //component-wise compare
 //	{
 //		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> mRTheta; //off-diagonal mass term
-//		//–m * A * \tilde \bar u_{ COM } \bar G
+//		//â€“m * A * \tilde \bar u_{ COM } \bar G
 //		EXUmath::MultMatrixMatrix(RigidBodyMath::Vector2SkewMatrix((-parameters.physicsMass)*parameters.physicsCenterOfMass), Glocal, GlocalInertia);
 //		EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix(), GlocalInertia, mRTheta);
 //

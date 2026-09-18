@@ -95,7 +95,7 @@ tree = mbs.AddObject(ObjectKinematicTree(nodeNumber=nGeneric, jointTypes=[exu.Jo
 
 
 
-# Federdämpfer hinzufügen
+# FederdÃ¤mpfer hinzufÃ¼gen
 mLink3 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=tree,linkNumber=n-1,
                                         localPosition = [L3,0,0])) # Marker am Ende des 3. Balkens
 
@@ -105,7 +105,7 @@ mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground,
                                         localPosition = [0,0,0])) # Marker auf dem Boden
 
 #+++++++++++++++++++++++++++++++++++++
-#FederDämpfer auf den Boden 1. Versuch
+#FederDÃ¤mpfer auf den Boden 1. Versuch
 #++++++++++++++++++++++++++++++++++++
 
 # k=10e5

@@ -938,7 +938,7 @@ void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, 
 			}
 			else
 			{
-				//! directly add triangles to search tree (this is non-parallelized, but avoids overly many boxes filled for 45° triangles):
+				//! directly add triangles to search tree (this is non-parallelized, but avoids overly many boxes filled for 45Â° triangles):
 				//Index offset = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex]; //unused
 				for (Index j = 0;
 					j < trigsRigidBodyBasedDynamicStartIndex; j++)
@@ -1074,7 +1074,7 @@ void GeneralContact::ComputeDataAndBBancfCable2D(const CSystemData& systemData, 
 			ContactHelper::ComputePoly3rdOrderMinMax(c4y, item.L, fMinY, fMaxY);
 
 			Box3D box(Vector3D({fMinX, fMinY, 0.}), Vector3D({fMaxX, fMaxY, 0.}));
-			box.Increase(item.halfHeight* 1.414213562373096, item.halfHeight* 1.414213562373096, 0.); //in all directions, worst case is 45°
+			box.Increase(item.halfHeight* 1.414213562373096, item.halfHeight* 1.414213562373096, 0.); //in all directions, worst case is 45Â°
 			this->allBoundingBoxes[gj] = box;
 
 			/*

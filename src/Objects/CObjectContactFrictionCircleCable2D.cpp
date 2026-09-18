@@ -219,7 +219,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 
 					if (abs((int)isSlipStick) == absValueSlipCase)
 					{
-						//Escalona (2017, Simulation of the rope–sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
+						//Escalona (2017, Simulation of the ropeâ€“sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
 						fTangent = parameters.frictionCoefficient*fabs(fNormal)*(Real)isSlipStick; // EXUstd::Sgn(diffStickPos);
 						//fTangent = parameters.frictionCoefficient*fabs(fNormal)*EXUstd::Sgn(fTangent);
 					}
@@ -563,7 +563,7 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 
 				if (abs((int)isSlipStick) == absValueSlipCase)
 				{
-					//Escalona (2017, Simulation of the rope–sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
+					//Escalona (2017, Simulation of the ropeâ€“sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
 					fTangent = parameters.frictionCoefficient*fabs(fNormal)*(Real)isSlipStick; // EXUstd::Sgn(diffStickPos);
 				}
 				if (variableType == OutputVariableType::Coordinates)

@@ -160,7 +160,7 @@ OutputVariableType CObjectJointPrismatic2D::GetOutputVariableTypes() const
 //! provide according output variable in "value"
 void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	SysError("CObjectJointPrismatic2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
+	PyError("CObjectJointPrismatic2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
 }
 
 

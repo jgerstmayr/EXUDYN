@@ -229,6 +229,13 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 <a id="r3-9-1"></a>
 **R3.9.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r3-9-1) — *(sub-step of R3.9, found by the gates of the next step)* **`checkExtras.py` did not know `python/testing/`** (#2514).
 
+<a id="r3-11"></a>
+**R3.11** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r3-11) — *(new step, on the maintainer's
+    instruction 2026-09-18)*
+    **Every tracked text file is UTF-8** (#2533), and `tools/checkEncoding.py` keeps it that way
+    in `exudev generate --all-checks`. R0.6 made the **generators** explicit about `utf-8`; the
+    **sources** were never converted.
+
 <a id="r3-10"></a>
 **R3.10** **DONE 2026-09-10** — `docs/doxygen/` removed. → [log](exudynRevisionLog2026.md#r3-10)
 
@@ -717,6 +724,11 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     line then gives all 433 Linalg and 55 Utilities sites the meaning *"an Exudyn bug, please report
     it"* without touching any of them - and it is only safe once no user-facing site still relies on
     the default.
+
+<a id="r6-3-12"></a>
+**R6.3.12** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-3-12) — *(sub-step of R6.3)*
+    **Eight user-facing "not implemented" sites stop calling themselves SYSTEM ERROR** (#2532):
+    `SysError` → `PyError`, keeping the type R6.3.6 gave them.
 
 <a id="r6-3-11"></a>
 **R6.3.11** *(sub-step of R6.3; raised 2026-09-18)* **A typed exception from the solver no

@@ -97,7 +97,7 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE1::GetAccessFunction(AccessFunctionType accessType, Matrix& value) const
 {
-	SysError("CObjectGenericODE1:GetAccessFunction not available", PyErrorType::notImplementedError);
+	PyError("CObjectGenericODE1:GetAccessFunction not available", PyErrorType::notImplementedError);
 }
 
 //! provide according output variable in "value"

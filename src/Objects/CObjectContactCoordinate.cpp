@@ -82,7 +82,7 @@ OutputVariableType CObjectContactCoordinate::GetOutputVariableTypes() const
 //! provide according output variable in "value"
 void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	SysError("CObjectContactCoordinate::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
+	PyError("CObjectContactCoordinate::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
 }
 
 

@@ -278,7 +278,7 @@ JacobianType::Type CObjectGenericODE2::GetAvailableJacobians() const
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE2::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
-	SysError("CObjectGenericODE2:GetAccessFunctionBody not available", PyErrorType::notImplementedError);
+	PyError("CObjectGenericODE2:GetAccessFunctionBody not available", PyErrorType::notImplementedError);
 }
 
 //! provide according output variable in "value"

@@ -7078,6 +7078,74 @@ for a LaTeX original that never existed.
 ---
 
 
+<a id="r3-11"></a>
+### R3.11 — every tracked text file is UTF-8
+
+**DONE 2026-09-18** (#2533). New step, on the maintainer's instruction, from a defect the
+mapping of R6.3.6 walked into twice.
+
+Thirteen tracked text files were not UTF-8: eleven C++ sources and one example carried cp1252
+bytes — a degree sign, a micro sign, an en dash, German umlauts — plus `LICENSE.txt` and
+the generated `docs/theDoc/trackerlog.tex`.
+
+**Why this is not cosmetic.** A tool that walks the tree assuming UTF-8 either stops with a
+`UnicodeDecodeError` halfway through a run, or — worse — reads with a fallback and writes
+back UTF-8, rewriting every byte of a file it was asked to change in one place. Both happened
+while R6.3.6 was mapping error sites: the mapper crashed on `CObjectFFRFreducedOrder.cpp` and
+had to be taught to read and write each file in its own encoding.
+
+`LICENSE.txt` is the one worth naming: it credits *Camilla Löwy* of GLFW, and every UTF-8 reader
+showed that name as mojibake. The conversion fixes the spelling of a real person's name.
+
+#### The generated file, and the LaTeX declaration behind it
+
+`trackerlog.tex` was the only non-UTF-8 file the generators **write**: `issueTracker.py:678` had
+a plain `open(path, 'w')`, which on Windows takes the code page. R0.6 made the generators
+explicit about `utf-8` at their read and write sites; this one was missed because it is not in
+`tools/generators/`. Three more `open()` calls in the same file (the version writers) got the
+argument as well.
+
+That pulled in something else. `docs/theDoc/theDoc.tex` declared
+`\usepackage[latin1]{inputenc}` — and **four other `.tex` files in that directory already
+contained UTF-8 bytes**: `interfaces.tex`, `itemDefinition.tex`, `pythonUtilitiesDescription.tex`
+and `theory.tex`. So the declaration was already wrong for them, and those characters already
+rendered wrong in the PDF. It is now `utf8`, which is right for all five. **Not verified by a
+build**: no LaTeX run was made here, so the PDF should be built once before a release.
+
+#### The check
+
+`tools/checkEncoding.py`, in `exudev generate --all-checks` between `checkExtras` and
+`checkPython`. It reads `git ls-files`, so an untracked scratch file cannot fail it, and it takes
+`--write` to convert. One file is exempt **by name**, not by guessing:
+`python/TestModels/testData/rotorAnsys.rst` is an ANSYS result file that happens to end in
+`.rst`. Guessing whether a file is binary is exactly the cleverness that makes a check
+untrustworthy.
+
+---
+
+
+<a id="r6-3-12"></a>
+### R6.3.12 — a user-facing "not implemented" is not a SYSTEM ERROR
+
+**DONE 2026-09-18** (#2532).
+
+Eight sites reported *"not implemented"* with `SysError`, which prints a **SYSTEM ERROR** block
+and whose whole meaning is *please report this* — although a user reaches them directly:
+
+- `GetOutputVariableConnector` of `ObjectContactCircleCable2D`, `ObjectContactCoordinate`,
+  `ObjectJointPrismatic2D`, `ObjectJointRevolute2D` — reached by `mbs.GetObjectOutput(...)`;
+- `GetAccessFunctionBody` of `ObjectGenericODE1`, `ObjectGenericODE2`, `ObjectKinematicTree` —
+  reached by attaching a marker or load the object does not support;
+- `CSystem::PreComputeItemLists`, reached at `Assemble()`.
+
+Step R6.3.6 gave all eight `PyErrorType::notImplementedError`, which is the honest Python type.
+The helper stayed wrong, and R6.3.6 recorded that rather than fixing it, because changing a
+helper is not typing a site. They are now `PyError` with the same explicit type — the type
+has to stay written out, since `PyError` defaults to `runtimeError`.
+
+---
+
+
 <a id="r6-3-6-objects"></a>
 ### R6.3.6 — the mapping, area by area: `src/Objects`
 
