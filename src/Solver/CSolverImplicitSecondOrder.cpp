@@ -398,7 +398,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator
 				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations)
 			{
-				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile, PyErrorType::valueError);
+				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", PyErrorType::valueError);
 			}
 
 			//initialize for Jacobian computation

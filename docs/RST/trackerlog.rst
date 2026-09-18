@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.196.dev1, 
++  Exudyn version = 1.11.197.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2538, 
-+  Number of resolved issues = 2269 (196 in current version), 
++  Number of issues = 2539, 
++  Number of resolved issues = 2270 (197 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.197: resolved Issue 2538: an error raised by a macro never reaches the solver file (fix)
+    - issue author: Claude-JG
+    - description:  PyError, SysError and PyWarning take an std::ofstream and write the message to it; CHECKandTHROW and CHECKandTHROWstring write nothing - and after step R6.3.6 those are more than 1100 call sites carrying a real type. So the message that ends a solver run can be missing from exactly the file someone opens afterwards to find out why it ended. Catch it where the file is known: CSolverBase::SolveSystem is the only place that holds file.solverFile and it wraps all three solver phases. Write the same block there that the pout log file gets and re-raise. With that in place the twelve PyError/SysError calls that pass file.solverFile would write twice - so the two ofstream overloads go and the argument is dropped at those sites: one writer, one rule. PyWarning keeps its ofstream overload because a warning throws nothing and the outer catch can never see it.
+    - **notes:** CSolverBase::SolveSystem wraps its three phases in a try and writes whatever escapes to file.solverFile with ErrorMessageBlock - the same block the pout log file gets - then re-raises. That covers every helper, including the 1100+ CHECKandTHROW sites that could never pass a file. The twelve PyError/SysError calls that passed file.solverFile would then have written twice, so the two ofstream overloads are removed and the argument dropped: one writer, one rule. PyWarning keeps its overload because a warning throws nothing and that catch can never see it. The rule for all three channels is written into CODING_STYLE section 10.7; VerboseWrite already honoured verboseMode and verboseModeFile independently, so the error row was the only broken one. Tested: test_aMacroErrorReachesTheSolverFile uses a forceUserFunction returning the wrong size - a plain CHECKandTHROW inside CObjectGenericODE2 - and finds the message in the solver file.
+    - date resolved: **2026-09-18 23:41**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.196: resolved Issue 2537: an Exudyn exception stringifies the error that caused it instead of chaining it (improvement)
     - issue author: Claude-JG
     - description:  A user function that raises ZeroDivisionError reaches Python as a ModelError whose MESSAGE contains the words ZeroDivisionError: float division by zero. The original object is gone: e.__cause__ is None and the traceback that pointed into the user function survives only as printed text. py::raise_from (pytypes.h:818) sets __cause__ and __context__ and keeps the traceback - it needs the registered Python class as a PyObject\* and the original exception as an object. Carry the original from the handler that caught it to the pybind boundary and chain it in one exception translator. Split off from step R6.3.5 on 2026-09-18 and confirmed by the maintainer after reading the model in Spyder.

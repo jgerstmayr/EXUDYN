@@ -233,6 +233,94 @@ def test_deprecationIsReportedOncePerLocation():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#an error that ends a solver run is in the solver file, whatever raised it (step R6.8, #2538)
+
+def _SolveAndReadTheSolverFile(tmp_path, buildSystem):
+    """run a solve that fails, with a solver information file, and return (exception, fileText)"""
+    import numpy as np                                            # noqa: F401 - used by callers
+
+    (mbs, simulationSettings) = buildSystem()
+    simulationSettings.solutionSettings.solverInformationFileName = str(tmp_path / "solver.txt")
+
+    caught = None
+    try:
+        mbs.SolveDynamic(simulationSettings)
+    except BaseException as exception:                            # noqa: BLE001 - re-reported below
+        caught = exception
+
+    with io.open(str(tmp_path / "solver.txt"), encoding="utf8") as solverFile:
+        return (caught, solverFile.read())
+
+
+def test_aMacroErrorReachesTheSolverFile(tmp_path):
+    """THE point of step R6.8. PyError and SysError could write to the solver file themselves;
+    CHECKandTHROW could not, and it is 1100+ call sites - so the message that ended a run could
+    be missing from exactly the file someone opens to find out why. The one writer is now
+    CSolverBase::SolveSystem, which catches it where the file is known."""
+    import numpy as np
+    from exudyn.itemInterface import NodeGenericODE2, ObjectGenericODE2
+
+    def BuildSystem():
+        systemContainer = exu.SystemContainer()
+        mbs = systemContainer.AddSystem()
+        nodeNumber = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0., 0.],
+                                                 initialCoordinates=[0., 0.],
+                                                 initialCoordinates_t=[0., 0.],
+                                                 numberOfODE2Coordinates=2))
+
+        def AVectorOfTheWrongSize(mbs2, t, itemNumber, q, q_t):
+            return [1.]                     #the object has 2 coordinates: a CHECKandTHROW fires
+
+        mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nodeNumber], massMatrix=np.eye(2),
+                                        stiffnessMatrix=np.eye(2),
+                                        forceUserFunction=AVectorOfTheWrongSize))
+        mbs.Assemble()
+
+        simulationSettings = exu.SimulationSettings()
+        simulationSettings.timeIntegration.numberOfSteps = 1
+        simulationSettings.timeIntegration.endTime = 0.01
+        simulationSettings.timeIntegration.verboseMode = 0
+        simulationSettings.timeIntegration.verboseModeFile = 1
+        simulationSettings.solutionSettings.writeSolutionToFile = False
+
+        return (mbs, simulationSettings)
+
+    (caught, fileText) = _SolveAndReadTheSolverFile(tmp_path, BuildSystem)
+
+    assert isinstance(caught, exu.ExudynValueError)   #the type step R6.3.6 gave that check
+    assert "forceUserFunction" in fileText            #and the message is IN THE FILE
+    assert "=====" in fileText                        #as the same block every other channel gets
+
+
+def test_aSolverFailureReachesTheSolverFile(tmp_path):
+    """the other half: a SysError used to write the file through an ofstream overload that step
+    R6.8 removed, so this path now depends on the same single writer"""
+    from exudyn.itemInterface import (NodePoint, ObjectMassPoint, MarkerNodeCoordinate,
+                                      LoadCoordinate)
+
+    systemContainer = exu.SystemContainer()
+    mbs = systemContainer.AddSystem()
+    nodeNumber = mbs.AddNode(NodePoint(referenceCoordinates=[0., 0., 0.]))
+    mbs.AddObject(ObjectMassPoint(physicsMass=1., nodeNumber=nodeNumber))
+    markerNumber = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeNumber, coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber=markerNumber, load=10.))  #nothing holds the body
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.staticSolver.verboseMode = 0
+    simulationSettings.staticSolver.verboseModeFile = 1
+    simulationSettings.solutionSettings.solverInformationFileName = str(tmp_path / "static.txt")
+
+    with pytest.raises(exu.SolverError):
+        mbs.SolveStatic(simulationSettings)
+
+    with io.open(str(tmp_path / "static.txt"), encoding="utf8") as solverFile:
+        fileText = solverFile.read()
+    assert "singular" in fileText
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the two lists of classes must agree, and only one direction of that fails to compile
 
 def test_everyCppClassIsRegistered():

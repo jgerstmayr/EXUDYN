@@ -150,7 +150,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 		if (!file.solutionFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
 			output.writeToSolutionFile = false;
-			SysError(STDstring("failed to open solution file '") + solutionFileName + "'", file.solverFile, PyErrorType::valueError);
+			SysError(STDstring("failed to open solution file '") + solutionFileName + "'", PyErrorType::valueError);
 		}
 		else
 		{
@@ -172,7 +172,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 		
 		if (!file.solverFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
-			SysError(STDstring("failed to open solution file '") + solverFileName + "'", file.solverFile, PyErrorType::valueError);
+			SysError(STDstring("failed to open solution file '") + solverFileName + "'", PyErrorType::valueError);
 		}
 		else
 		{
@@ -204,7 +204,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
                 if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
                 {
-                    SysError(STDstring("failed to open sensor file '") + sensorFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile, PyErrorType::valueError);
+                    SysError(STDstring("failed to open sensor file '") + sensorFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", PyErrorType::valueError);
                     file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
                 }
                 else
@@ -268,7 +268,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	computationalSystem.GetPostProcessData()->SetSolutionMessage(simulationSettings.solutionSettings.solutionInformation);
 
 	//some pre-checks for solver
-	if (!computationalSystem.IsSystemConsistent()) { PyError("Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)", file.solverFile, PyErrorType::modelError); return false; }
+	if (!computationalSystem.IsSystemConsistent()) { PyError("Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)", PyErrorType::modelError); return false; }
 
 	computationalSystem.GetSystemData().GetNumberOfComputationCoordinates(data.nODE2, data.nODE1, data.nAE, data.nData);
 	data.nSys = data.nODE2 + data.nODE1 + data.nAE;
@@ -283,7 +283,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 
 	if (data.nSys == 0)
 	{
-		PyError("Solver: cannot solve for system size = 0", file.solverFile, PyErrorType::modelError);
+		PyError("Solver: cannot solve for system size = 0", PyErrorType::modelError);
 		return false;
 	}
 
@@ -302,7 +302,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	}
 	else
 	{
-		PyError("Solver:InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile, PyErrorType::valueError);
+		PyError("Solver:InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", PyErrorType::valueError);
 		data.SetLinearSolverType(LinearSolverType::_None);
 		return false;
 	}
@@ -340,7 +340,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	//}
 	else
 	{
-		PyError("Solver:InitializeSolverData: Unsupported solver type in simulationSettings.linearSolverType", file.solverFile, PyErrorType::valueError);
+		PyError("Solver:InitializeSolverData: Unsupported solver type in simulationSettings.linearSolverType", PyErrorType::valueError);
 	}
 
 	//++++++++++++++++++++++++++++++
@@ -546,6 +546,30 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 
 }
 
+//! THE ERROR THAT ENDS A RUN GOES INTO THE SOLVER FILE, WHATEVER RAISED IT (#2538, revision2026
+//! step R6.8). PyError and SysError used to take the file and write it themselves, which covered
+//! twelve call sites and left the 1100+ CHECKandTHROW sites writing nothing at all - so the last
+//! message of a run could be missing from exactly the file someone opens to find out why it ended.
+//! It is written HERE, once, because SolveSystem is the only place that holds the file. The block
+//! is the same one the pout log file gets (ErrorMessageBlock, step R6.3.10), so the two files
+//! cannot tell different stories about the same run.
+void WriteErrorToSolverFile(std::ofstream& solverFile, const char* message)
+{
+	if (!solverFile.is_open()) { return; }
+
+	STDstring fileName;
+	Index lineNumber;
+	PyGetCurrentFileInformation(fileName, lineNumber);
+	//what() already ends in " [Python file '...', line N]" (ErrorMessageWithLocation, #2527)
+	//and the block header says it again; drop the duplicate rather than print the location twice
+	STDstring text = message;
+	size_t locationStart = text.rfind(" [Python file '");
+	if (locationStart != std::string::npos && text.back() == ']') { text.erase(locationStart); }
+
+	solverFile << ErrorMessageBlock("ERROR", text, fileName, lineNumber);
+	solverFile.flush(); //an aborted run is exactly what an unflushed log loses
+}
+
 //! specific call to the start solver
 bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -557,32 +581,44 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 		return false; //no success because stopped
 	}
 	bool success = true; //local success variable
-	SolverExceptionHandling([&]
-	{
-		success = InitializeSolver(computationalSystem, simulationSettings);
-	}, "CSolverBase::InitializeSolver");
-
-	globalTimers.Reset();
-	timer.Reset(simulationSettings.displayComputationTime);
-	timer.total = -EXUstd::GetTimeInSeconds();
-	output.cpuSolverStartTime = -timer.total; //exactly the same!
-	output.cpuLastTimePrinted = output.cpuSolverStartTime; //this should be close to start of first step
-
-	if (success)
+	try
 	{
 		SolverExceptionHandling([&]
 		{
-			success = SolveSteps(computationalSystem, simulationSettings);
-		}, "CSolverBase::SolveSteps");
+			success = InitializeSolver(computationalSystem, simulationSettings);
+		}, "CSolverBase::InitializeSolver");
+
+		globalTimers.Reset();
+		timer.Reset(simulationSettings.displayComputationTime);
+		timer.total = -EXUstd::GetTimeInSeconds();
+		output.cpuSolverStartTime = -timer.total; //exactly the same!
+		output.cpuLastTimePrinted = output.cpuSolverStartTime; //this should be close to start of first step
+
+		if (success)
+		{
+			SolverExceptionHandling([&]
+			{
+				success = SolveSteps(computationalSystem, simulationSettings);
+			}, "CSolverBase::SolveSteps");
+		}
+		timer.total += EXUstd::GetTimeInSeconds();
+		output.finishedSuccessfully = success;
+
+		SolverExceptionHandling([&]
+		{
+			FinalizeSolver(computationalSystem, simulationSettings);
+		}, "CSolverBase::FinalizeSolver");
 	}
-	timer.total += EXUstd::GetTimeInSeconds();
-	output.finishedSuccessfully = success;
-
-	SolverExceptionHandling([&]
+	catch (const std::exception& exception) //every Exudyn class and every pybind class is one
 	{
-		FinalizeSolver(computationalSystem, simulationSettings);
-	}, "CSolverBase::FinalizeSolver");
-
+		WriteErrorToSolverFile(file.solverFile, exception.what());
+		throw;
+	}
+	catch (...)
+	{
+		WriteErrorToSolverFile(file.solverFile, "unknown exception (not derived from std::exception)");
+		throw;
+	}
 
 	return success;
 }
@@ -2039,7 +2075,7 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 					{
 						STDstring msg = "CSolverBase::WriteSensorsToFile: storeInternal == True : seems that number of output values of sensor (sensor number ";
 						msg += EXUstd::ToString(cnt) + ") changed; consider storeInternal == False for this sensor and write to file";
-						PyError(msg, file.solverFile, PyErrorType::modelError);
+						PyError(msg, PyErrorType::modelError);
 					}
 				}
 				item->GetInternalStorage().AppendRow(output.sensorValuesTemp2);

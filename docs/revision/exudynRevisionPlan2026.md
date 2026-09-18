@@ -799,23 +799,12 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     found and fixed (#2432). → [log](exudynRevisionLog2026.md#r6-7)
 
 <a id="r6-8"></a>
-**R6.8** *(phase R6, after R6.3; requested by the maintainer 2026-09-18)* **An error must reach the
-    log file, whichever helper raised it.** `PyError`, `SysError` and `PyWarning` take an
-    `std::ofstream&` and write the message to it; **`CHECKandTHROW` and `CHECKandTHROWstring` write
-    nothing** — 1194 of the 2249 call sites of fact 30. So the message that ends a solver run can
-    be missing from exactly the file someone reads afterwards to find out why it ended.
+**R6.8** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-8) — *(phase R6)*
+    **An error reaches the log file, whichever helper raised it** (#2538). One writer:
+    `CSolverBase::SolveSystem` catches what ends a run where the solver file is known. The
+    `std::ofstream&` overloads of `PyError` and `SysError` are gone with it, and the rule for all
+    three channels is in `CODING_STYLE.md` §10.7.
 
-    Two parts:
-
-    - **catch it where the file is known.** The solver holds the solver file, so it catches the
-      exception, writes the final message there if the file is open, and re-raises. That is also
-      where a diverged run gets its one clear last line.
-    - **the same is lost in the `printToConsole` / `printToFile` redirection** (maintainer): a
-      message suppressed for the console must still reach the file. Check both switches against
-      all five helpers and make the rule one rule.
-
-    Deliberately its own step and not part of R6.3: R6.3 decides what is raised, this one decides
-    where it is written, and mixing them would make both diffs unreadable.
 
 ## R7 — Documentation
  (~3 weeks)  <!-- old Phase 6 -->

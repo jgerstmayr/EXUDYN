@@ -450,15 +450,12 @@ std::string ErrorMessageBlock(const char* heading, const std::string& message,
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
+//! There is no ofstream overload any more (#2538, revision2026 step R6.8). It wrote the block to
+//! the solver file for twelve call sites, while the 1100+ CHECKandTHROW sites could not pass a file
+//! at all - so the rule depended on which helper a check happened to be written with.
+//! CSolverBase::SolveSystem now catches what ends a run where the file is known and writes it
+//! there, which covers every helper.
 void PyError(std::string error_msg, PyErrorType errorType)
-{
-	std::ofstream dummy; //ofstream which is not active
-	PyError(error_msg, dummy, errorType);
-}
-
-//!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
-//! additional output to file
-void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType) 
 {
 	StopRendererOnError(); //stop graphics, etc.
 	STDstring fileName;
@@ -470,13 +467,8 @@ void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 	//would still say it, which is what floods the terminal of a GUI or a parameter variation that
 	//handles its own errors. The log file is a different matter: on a long unattended run nothing
 	//else records that this happened.
-	STDstring block = ErrorMessageBlock("User ERROR", error_msg, fileName, lineNumber);
-	outputBuffer.WriteToFileOnly(block);
+	outputBuffer.WriteToFileOnly(ErrorMessageBlock("User ERROR", error_msg, fileName, lineNumber));
 
-	if (file.is_open())
-	{
-		file << block;
-	}
 	//WHAT IS THROWN CARRIES THE DETAIL (#2527, revision2026 step R6.3.5). Until now it was the fixed
 	//sentence "Exudyn: parsing of Python file terminated due to Python (user) error", identical for
 	//a bad item number, a string written into a number and a missing marker; the explanation was
@@ -487,15 +479,8 @@ void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
+//! no ofstream overload, for the reason written at PyError above (#2538)
 void SysError(std::string error_msg, PyErrorType errorType)
-{
-	std::ofstream dummy; //ofstream which is not active
-	SysError(error_msg, dummy, errorType);
-}
-
-//! prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
-//! additional output to file
-void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 {
 	StopRendererOnError(); //stop graphics, etc.
 
@@ -504,13 +489,7 @@ void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType)
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
 	//file only, for the reasons written at the same place in PyError (#2530)
-	STDstring block = ErrorMessageBlock("SYSTEM ERROR", error_msg, fileName, lineNumber);
-	outputBuffer.WriteToFileOnly(block);
-
-	if (file.is_open())
-	{
-		file << block;
-	}
+	outputBuffer.WriteToFileOnly(ErrorMessageBlock("SYSTEM ERROR", error_msg, fileName, lineNumber));
 	//an Exudyn invariant broke: exudyn.InternalError, which IS a RuntimeError, so an existing
 	//"except RuntimeError" keeps catching it while the type now says "please report this" (#2521).
 	//The message goes with it: an internal error that reaches a developer as a fixed sentence is a

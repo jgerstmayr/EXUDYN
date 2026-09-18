@@ -315,10 +315,34 @@ shows it once per call site instead of once per call (revision2026 step R6.3.4).
   parameter variation that handles its own errors. So `str(exception)` has to be worth reading.
 - The location in both is the outermost frame outside the `exudyn` package, so a solver-time
   error names the user's own line and not `solver.py`.
-- Two files can record an error: the `pout` log file (`exu.SetWriteToFile`), which is the only
-  record of a long unattended run, and the solver file passed to the `std::ofstream&` overloads.
-  Both write the identical text, from `ErrorMessageBlock` — do not add a sentence to one of
-  them.
+
+### 10.7 Which channel gets what
+
+There are three channels and one rule per kind of message (revision2026 steps R6.3.10 and R6.8).
+All of them write the same text, from `ErrorMessageBlock` — do not add a sentence to one of
+them.
+
+| | console | `pout` log file (`exu.SetWriteToFile`) | solver file |
+|---|---|---|---|
+| **error** — `PyError`, `SysError`, **and any macro throw** | never | always | always |
+| **warning** — `PyWarning` | `writeToConsole` | `writeToFile` | only where the call passes the file |
+| **solver progress** — `VerboseWrite` | `verboseMode` | `writeToFile` | `verboseModeFile` |
+
+**An error never goes to the console**, because the exception already carries the same message
+and the same location, and a *caught* exception would otherwise flood the terminal of a GUI or a
+parameter variation that handles its own errors (§10.6).
+
+**An error always reaches every open log file, and you do not write it.** `PyError` and
+`SysError` used to take an `std::ofstream&`; they no longer do. The solver file is written by
+`CSolverBase::SolveSystem`, which catches what ends a run where the file is known — so a
+`CHECKandTHROW`, which can pass no file at all and is 1100+ call sites, reaches the file exactly
+like a `PyError`. Before R6.8 that depended on which helper a check happened to be written with.
+
+`PyWarning` keeps its `std::ofstream&` overload: a warning throws nothing, so that catch can
+never see it, and passing the file is the only way a warning reaches the solver log.
+
+`exudyn.config.suppressWarnings` suppresses a warning on **both** channels, deliberately: a
+warning the user switched off should not fill the log file either.
 - Name the function: `MainSystem::GetObject: access to invalid object number 7`.
 - Do not write `ERROR:` or `Python ERROR:` — the helper adds the heading.
 

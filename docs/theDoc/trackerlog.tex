@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.196.dev1, 
+  \item Exudyn version = 1.11.197.dev1, 
   \item last change =  2026-09-18, 
-  \item Number of issues = 2538, 
-  \item Number of resolved issues = 2269 (196 in current version), 
+  \item Number of issues = 2539, 
+  \item Number of resolved issues = 2270 (197 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.197}:  resolved Issue 2538: {\bf an error raised by a macro never reaches the solver file}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: PyError, SysError and PyWarning take an std::ofstream and write the message to it; CHECKandTHROW and CHECKandTHROWstring write nothing - and after step R6.3.6 those are more than 1100 call sites carrying a real type. So the message that ends a solver run can be missing from exactly the file someone opens afterwards to find out why it ended. Catch it where the file is known: CSolverBase::SolveSystem is the only place that holds file.solverFile and it wraps all three solver phases. Write the same block there that the pout log file gets and re-raise. With that in place the twelve PyError/SysError calls that pass file.solverFile would write twice - so the two ofstream overloads go and the argument is dropped at those sites: one writer, one rule. PyWarning keeps its ofstream overload because a warning throws nothing and the outer catch can never see it.}
+    \item {\bf notes: CSolverBase::SolveSystem wraps its three phases in a try and writes whatever escapes to file.solverFile with ErrorMessageBlock - the same block the pout log file gets - then re-raises. That covers every helper, including the 1100+ CHECKandTHROW sites that could never pass a file. The twelve PyError/SysError calls that passed file.solverFile would then have written twice, so the two ofstream overloads are removed and the argument dropped: one writer, one rule. PyWarning keeps its overload because a warning throws nothing and that catch can never see it. The rule for all three channels is written into CODING\_STYLE section 10.7; VerboseWrite already honoured verboseMode and verboseModeFile independently, so the error row was the only broken one. Tested: test\_aMacroErrorReachesTheSolverFile uses a forceUserFunction returning the wrong size - a plain CHECKandTHROW inside CObjectGenericODE2 - and finds the message in the solver file.}
+    \item   date resolved: {\bf 2026-09-18 23:41},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.196}:  resolved Issue 2537: {\bf an Exudyn exception stringifies the error that caused it instead of chaining it}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

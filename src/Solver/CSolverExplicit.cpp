@@ -824,7 +824,7 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 		}
 		default:
 		{
-			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType (method misses implementation)!", file.solverFile, PyErrorType::valueError);
+			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType (method misses implementation)!", PyErrorType::valueError);
 			return 0;
 		}
 	}
@@ -850,7 +850,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 		{
 			if (node->GetNumberOfAECoordinates() != 0)
 			{
-				PyError(STDstring("SolverExplicit: explicit integrator detected node ") + EXUstd::ToString(cnt) + " which contains algebraic variables; aborting solver", file.solverFile, PyErrorType::modelError);
+				PyError(STDstring("SolverExplicit: explicit integrator detected node ") + EXUstd::ToString(cnt) + " which contains algebraic variables; aborting solver", PyErrorType::modelError);
 			}
 			cnt++;
 		}
@@ -890,7 +890,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 							else if (!EXUstd::IsOfType(node.GetNodeGroup(), CNodeGroup::ODE2variables))
 							{
 								PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-									EXUstd::ToString(cnt) + " which contains marker to node other than ODE2; aborting solver", file.solverFile, PyErrorType::modelError);
+									EXUstd::ToString(cnt) + " which contains marker to node other than ODE2; aborting solver", PyErrorType::modelError);
 							}
 							else //this must give the coordinate that should be constrained
 							{
@@ -902,18 +902,18 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 						else
 						{
 							PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-								EXUstd::ToString(cnt) + " which contains marker to node other than NodeCoordinate; aborting solver", file.solverFile, PyErrorType::modelError);
+								EXUstd::ToString(cnt) + " which contains marker to node other than NodeCoordinate; aborting solver", PyErrorType::modelError);
 						}
 					}
 					if (markerGroundNode != 1)
 					{
 						PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-							EXUstd::ToString(cnt) + "  that does not have one ground node; aborting solver", file.solverFile, PyErrorType::modelError);
+							EXUstd::ToString(cnt) + "  that does not have one ground node; aborting solver", PyErrorType::modelError);
 					}
 					else if (markerNodeCoordinate != 2)
 					{
 						PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
-							EXUstd::ToString(cnt) + " which contains markers other than MarkerNodeCoordinate; aborting solver", file.solverFile, PyErrorType::modelError);
+							EXUstd::ToString(cnt) + " which contains markers other than MarkerNodeCoordinate; aborting solver", PyErrorType::modelError);
 					}
 
 				}
@@ -921,7 +921,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 				if (failed)
 				{
 					PyError(STDstring("SolverExplicit: explicit integrator detected object ") + 
-						EXUstd::ToString(cnt) + " which contains constraints that cannot be solved; aborting solver", file.solverFile, PyErrorType::modelError);
+						EXUstd::ToString(cnt) + " which contains constraints that cannot be solved; aborting solver", PyErrorType::modelError);
 				}
 			}
 			cnt++;
@@ -929,7 +929,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 
 		Verbose(2, "constrainedODE2Coordinates = " + EXUstd::ToString(constrainedODE2Coordinates) + "\n");
 		//check if all constraints are of CoordinateConstraint type
-		//SysError("SolverExplicit: eliminateCoordinateConstraints = True not implemented", file.solverFile);
+		//SysError("SolverExplicit: eliminateCoordinateConstraints = True not implemented");
 	}
 
 }

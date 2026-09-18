@@ -115,10 +115,11 @@ void StopRendererOnError(); //!< raise globalPyRuntimeErrorFlag, which shuts the
 
 void PyDeprecated(std::string message); //!< raises a Python DeprecationWarning: filterable, promotable with -W error::DeprecationWarning, and reported once per source location instead of on every call (#2522)
 
-void SysError(std::string error_msg, std::ofstream& file, PyErrorType errorType = PyErrorType::internalError); //!< prints a formated system (internal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar; additionally writes to file if file.is_open()=true
-
-void PyError(std::string error_msg, std::ofstream& file, PyErrorType errorType = PyErrorType::runtimeError); //!< prints a formated python error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar; additionally writes to file if file.is_open()=true
-
+//NOTE there is no PyError/SysError overload taking an ofstream any more (#2538, revision2026 step
+//R6.8): an error that ends a solver run is written to the solver file by CSolverBase::SolveSystem,
+//which catches it where the file is known. That covers every helper, including the 1100+ macro
+//sites that could never pass a file. PyWarning keeps the overload, because a warning throws
+//nothing and that catch can never see it.
 void PyWarning(std::string warning_msg, std::ofstream& file); //!< prints a formated python warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar; additionally writes to file if file.is_open()=true
 
 

@@ -7146,6 +7146,101 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-8"></a>
+### R6.8 — the error is in the log file, whichever helper raised it
+
+**DONE 2026-09-18** (#2538).
+
+`PyError`, `SysError` and `PyWarning` took an `std::ofstream&` and wrote the message to it.
+`CHECKandTHROW` and `CHECKandTHROWstring` could not — and after step R6.3.6 those are 1100+
+call sites carrying a real type. So whether the message that ended a run appeared in the solver
+file depended on **which helper the check happened to be written with**, which is not a rule at
+all.
+
+#### One writer
+
+`CSolverBase::SolveSystem` is the only place that holds `file.solverFile`, and it already wraps
+all three solver phases. It now wraps them in a `try` as well: whatever escapes is written there
+and re-raised.
+
+```cpp
+catch (const std::exception& exception) //every Exudyn class and every pybind class is one
+{
+    WriteErrorToSolverFile(file.solverFile, exception.what());
+    throw;
+}
+```
+
+The block is `ErrorMessageBlock(...)`, the same function the `pout` log file uses since R6.3.10,
+so the two files cannot tell different stories about the same run.
+
+#### And then the overloads went
+
+With that in place the twelve `PyError`/`SysError` calls that passed `file.solverFile` would
+have written the same block twice. The two overloads are **removed** and the argument dropped at
+those sites: one writer, one rule — the step's own sentence *"make the rule one rule"*, in
+code rather than in a comment.
+
+`PyWarning` keeps its overload. A warning throws nothing, so the catch above can never see it,
+and passing the file is the only way a warning reaches the solver log.
+
+#### The rule, checked against all five helpers and written down
+
+| | console | `pout` log file | solver file |
+|---|---|---|---|
+| error (`PyError`, `SysError`, **any macro throw**) | never (R6.3.10) | always | always (new) |
+| warning (`PyWarning`) | `writeToConsole` | `writeToFile` | only where the call passes the file |
+| solver progress (`VerboseWrite`) | `verboseMode` | `writeToFile` | `verboseModeFile` |
+
+The maintainer asked to check the console/file switches against all five helpers. `VerboseWrite`
+already honoured `verboseMode` and `verboseModeFile` **independently**, so *"a message suppressed
+for the console must still reach the file"* already held there — it was the **error** row that
+was broken, and it is the row this step fixes. The table is now `CODING_STYLE.md` §10.7.
+
+One thing decided rather than changed silently: `exudyn.config.suppressWarnings` suppresses a
+warning on **both** channels. Kept — a warning the user switched off should not fill the log
+either — and written down.
+
+#### Tested, for once
+
+Unlike R6.3.11, this one is observable from Python, so it is a test rather than a claim:
+`test_aMacroErrorReachesTheSolverFile` runs a `forceUserFunction` that returns a vector of the
+wrong size — a plain `CHECKandTHROW` deep inside `CObjectGenericODE2`, which could never pass
+a file — and asserts the message is in the solver file. A second case covers the singular
+system, whose `SysError` used to write the file through the overload that this step removed.
+
+A detail worth the three lines it cost: `what()` already ends in
+`[Python file '...', line N]` (R6.3.5) and the block header says it again, so the writer
+strips the duplicate. Printing the same location twice in the one file a user reads after a
+failed run is the sort of thing that makes a log look automatic rather than written.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-18)
+
+**R6.8** *(phase R6, after R6.3; requested by the maintainer 2026-09-18)* **An error must reach the
+    log file, whichever helper raised it.** `PyError`, `SysError` and `PyWarning` take an
+    `std::ofstream&` and write the message to it; **`CHECKandTHROW` and `CHECKandTHROWstring` write
+    nothing** — 1194 of the 2249 call sites of fact 30. So the message that ends a solver run can
+    be missing from exactly the file someone reads afterwards to find out why it ended.
+
+    Two parts:
+
+    - **catch it where the file is known.** The solver holds the solver file, so it catches the
+      exception, writes the final message there if the file is open, and re-raises. That is also
+      where a diverged run gets its one clear last line.
+    - **the same is lost in the `printToConsole` / `printToFile` redirection** (maintainer): a
+      message suppressed for the console must still reach the file. Check both switches against
+      all five helpers and make the rule one rule.
+
+    Deliberately its own step and not part of R6.3: R6.3 decides what is raised, this one decides
+    where it is written, and mixing them would make both diffs unreadable.
+
+---
+
+
 <a id="r6-3-8"></a>
 ### R6.3.8 — the exception carries what caused it
 
