@@ -24,7 +24,7 @@ You can view and download this file on Github: `ANCFgeneralContactCircle.py <htt
    
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.beams import *
    import numpy as np
    from math import sin, cos, sqrt, pi

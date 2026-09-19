@@ -27,7 +27,7 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
    if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import exudyn
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    import numpy as np
    from math import sqrt, sin, cos

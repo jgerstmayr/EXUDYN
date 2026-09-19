@@ -16,7 +16,7 @@ if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('A
 from exudyn.itemInterface import *
 import numpy as np
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 #
 from math import sin, cos, pi
 

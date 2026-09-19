@@ -16,7 +16,7 @@ import exudyn as exu
 from exudyn.utilities import InertiaCuboid, SensorBody
 #to be sure to have all items and functions imported, just do:
 #from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 
 SC = exu.SystemContainer()

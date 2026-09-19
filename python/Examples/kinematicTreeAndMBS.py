@@ -18,7 +18,7 @@ from copy import copy, deepcopy
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 from exudyn.rigidBodyUtilities import Skew, Skew2Vec
 from exudyn.robotics import *
 

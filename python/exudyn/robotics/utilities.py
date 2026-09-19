@@ -14,7 +14,7 @@ import numpy as np
 from math import sin, cos
 import exudyn
 from exudyn.mainSystemExtensions import CreateDistanceSensor
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 from exudyn.rigidBodyUtilities import HT2translation, HT2rotationMatrix
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)

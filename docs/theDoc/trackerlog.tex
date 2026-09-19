@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.207.dev1, 
+  \item Exudyn version = 1.11.208.dev1, 
   \item last change =  2026-09-19, 
   \item Number of issues = 2557, 
-  \item Number of resolved issues = 2280 (207 in current version), 
+  \item Number of resolved issues = 2281 (208 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.208}:  resolved Issue 2553: {\bf the comment "only import if it does not conflict" reads as advice not to import}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: 458 tracked files carry "import exudyn.graphics as graphics \#only import if it does not conflict". The comment was meant to warn that the name graphics can collide with another package or a local variable, but it reads as a condition on the import itself, and it has been copied into every example and test model. Remove the comment; the import stays. The copies under docs/RST/Examples and docs/RST/TestModels are generated from the .py files and follow by regeneration. See revision2026 step R11.4.2.}
+    \item {\bf notes: Removed from 240 tracked files (253 occurrences): the examples, the test models, the utility modules, the performance models and the converted manual; the copies under docs/RST followed by regeneration. The import itself is unchanged. Two occurrences were written with a space after the hash, so the removal was a regular expression rather than a literal search. The warning behind the comment is real - the name graphics can be shadowed - and belongs in the documentation of exudyn.graphics once, not in every model.}
+    \item   date resolved: {\bf 2026-09-19 23:20},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.207}:  resolved Issue 2549: {\bf the hand-written documentation chapters are LaTeX and have to become Markdown}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

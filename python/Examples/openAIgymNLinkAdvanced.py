@@ -21,7 +21,7 @@ import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.utilities import ObjectGround, VObjectGround, RigidBodyInertia, HTtranslate, HTtranslateY, HT0,\
                             MarkerNodeCoordinate, LoadCoordinate, LoadSolutionFile, MarkerKinematicTreeRigid, Force
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 from exudyn.robotics import Robot, RobotLink, VRobotLink, RobotBase, VRobotBase, RobotTool, VRobotTool
 from exudyn.artificialIntelligence import OpenAIGymInterfaceEnv, spaces, logger
 #from exudyn.artificialIntelligence import *

@@ -10541,3 +10541,22 @@ mini examples, two compilers, two distributions. The one defect the work found (
     on is new, and is worth stopping the pipeline for. No job in `.gitlab-ci.yml` may fail silently
     any more.
 
+<a id="r11-4-2"></a>
+### R11.4.2 — a comment that told 458 files not to import
+
+**DONE 2026-09-19** (#2553). The maintainer wrote `#only import if it does not conflict` behind
+`import exudyn.graphics as graphics` to warn that the name can collide with another package or
+a local variable. Read years later it says something else: that the import is conditional, that
+it might be a bad idea. And it was copied, as such lines are — **253 occurrences in 240
+tracked files**: 132 examples, 96 test models, the utility modules, the performance models, the
+converted manual.
+
+The comment is gone, the import untouched. The ~180 copies under `docs/RST/Examples` and
+`docs/RST/TestModels` followed by regeneration, which is the point of them being generated.
+Two of the 253 were written `# only import...` with a space, which is why this was a regular
+expression and not a literal search.
+
+**Worth keeping**: the warning itself is real — `graphics` *can* be shadowed. It belongs in the
+documentation of `exudyn.graphics`, once, not in every model that uses it (rule 10).
+
+---

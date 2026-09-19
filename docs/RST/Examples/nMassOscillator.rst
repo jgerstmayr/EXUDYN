@@ -25,7 +25,7 @@ You can view and download this file on Github: `nMassOscillator.py <https://gith
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    import matplotlib.pyplot as plt
    from exudyn.interactive import InteractiveDialog

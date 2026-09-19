@@ -27,7 +27,7 @@ You can view and download this file on Github: `ANCFbeltDrive.py <https://github
    from exudyn.itemInterface import *
    import numpy as np
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.beams import *
    from math import sin, cos, sqrt, pi
    

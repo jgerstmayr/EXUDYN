@@ -16,7 +16,7 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from math import sin, cos
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 
 useGraphics = True #without test
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

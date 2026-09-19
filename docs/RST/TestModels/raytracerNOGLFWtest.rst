@@ -28,7 +28,7 @@ You can view and download this file on Github: `raytracerNOGLFWtest.py <https://
    if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    from math import sin, cos
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

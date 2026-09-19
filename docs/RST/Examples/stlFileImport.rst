@@ -25,7 +25,7 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict #includes graphics and rigid body utilities
+   import exudyn.graphics as graphics#includes graphics and rigid body utilities
    import numpy as np
    
    SC = exu.SystemContainer()

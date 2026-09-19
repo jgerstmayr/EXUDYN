@@ -16,7 +16,7 @@
 ## import exudyn package and utilities, create system
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

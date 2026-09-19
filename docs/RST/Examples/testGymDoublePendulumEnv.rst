@@ -27,7 +27,7 @@ You can view and download this file on Github: `testGymDoublePendulumEnv.py <htt
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import exudyn
    from math import sin, cos
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    import math
    
    import math

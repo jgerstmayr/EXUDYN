@@ -16,7 +16,7 @@ import exudyn as exu
 #a local run must not open a plot window when windows are suppressed (#2477)
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 SC = exu.SystemContainer()
@@ -368,7 +368,7 @@ if False:
     import matplotlib.ticker as ticker
     import exudyn as exu
     from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-    import exudyn.graphics as graphics #only import if it does not conflict
+    import exudyn.graphics as graphics
     CC = PlotLineCode
     comp = 1 #1=x, 2=y, ...
     var = ''

@@ -16,7 +16,7 @@ sys.exudynFast = True
 import exudyn as exu
 esym = exu.symbolic
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 #from math import pi, sin, cos
 

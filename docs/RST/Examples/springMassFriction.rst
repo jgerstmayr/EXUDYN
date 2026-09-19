@@ -25,7 +25,7 @@ You can view and download this file on Github: `springMassFriction.py <https://g
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.physics import StribeckFunction
    import matplotlib.pyplot as plt
    

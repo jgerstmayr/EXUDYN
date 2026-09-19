@@ -14,7 +14,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 
 useGraphics = True #without test
@@ -35,7 +35,7 @@ testErrorTotal = 0
 #create single mass point:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -60,7 +60,7 @@ testErrorTotal += testError
 #create single rigid body:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -89,7 +89,7 @@ testErrorTotal += testError
 #create spring-damper:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -124,7 +124,7 @@ testErrorTotal += testError
 #create mass point with cartesian spring damper:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -158,7 +158,7 @@ testErrorTotal += testError
 #create rigid body with revolute joint:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -188,7 +188,7 @@ testErrorTotal += testError
 #create rigid body with prismatic joint:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -221,7 +221,7 @@ testErrorTotal += testError
 #create rigid body with spherical joint:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -252,7 +252,7 @@ exu.Print('solution of mainSystemExtensions test SJ=',testError)
 #create rigid body with generic joint, universal joint case with axes tilted by 0.125*pi around X:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -302,7 +302,7 @@ exu.Print('solution of mainSystemExtensions test GJ=',testError)
 #create single mass point and compute linearized system and eigenvalues:
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -336,7 +336,7 @@ testErrorTotal += testError
 #create rigid body with generic joint: compute system DOF
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -383,7 +383,7 @@ testErrorTotal += testError
 #create rigid body and mass point with distance constraint
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

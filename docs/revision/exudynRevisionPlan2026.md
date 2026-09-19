@@ -1407,7 +1407,8 @@ debt stays visible and each item can be closed on evidence.
     integrated (maintainer, 2026-09-19).
 
 <a id="r11-4-2"></a>
-**R11.4.2** *(sub-step of R11.4)* **Remove the comment *"only import if it does not conflict"***
+**R11.4.2** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r11-4-2) *(sub-step of R11.4)*
+    **Remove the comment *"only import if it does not conflict"***
     (#2553). It stands in **458 tracked files** behind `import exudyn.graphics as graphics`. It was
     meant to warn that the name can collide with another package or a local variable; it reads as a
     condition on the import. The import stays, the comment goes. The copies under

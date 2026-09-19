@@ -52,7 +52,7 @@ You can view and download this file on Github: `ROSTurtle.py <https://github.com
    import sys
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    # import needed ROS modules and messages
    import rospy

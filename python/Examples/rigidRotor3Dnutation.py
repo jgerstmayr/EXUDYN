@@ -15,7 +15,7 @@ sys.path.append('../TestModels')            #for modelUnitTest as this example m
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 
 import time
 import numpy as np

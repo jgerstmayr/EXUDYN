@@ -29,7 +29,7 @@ We import the exudyn library and the interface for all nodes, objects, markers, 
   import exudyn as exu
   from exudyn.utilities import Point, NodePointGround, MassPoint, MarkerNodeCoordinate,\
                                CoordinateSpringDamper, LoadCoordinate, SensorObject
-  import exudyn.graphics as graphics #only import if it does not conflict
+  import exudyn.graphics as graphics
   import numpy as np #for postprocessing
 ```
 

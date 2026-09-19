@@ -54,7 +54,7 @@ from exudyn.itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorC
                            MarkerBodyRigid, ObjectJointRevolute2D, SensorLoad)
 from exudyn.utilities import (AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid,
                               OutputFilePath)
-import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 from exudyn.beams import *
 
 #import visHelper

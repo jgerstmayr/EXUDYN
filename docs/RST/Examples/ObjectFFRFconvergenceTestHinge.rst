@@ -28,7 +28,7 @@ You can view and download this file on Github: `ObjectFFRFconvergenceTestHinge.p
    if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.FEM import *
    from exudyn.graphicsDataUtilities import *
    import time 
@@ -403,7 +403,7 @@ You can view and download this file on Github: `ObjectFFRFconvergenceTestHinge.p
        import matplotlib.ticker as ticker
        import exudyn as exu
        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-       import exudyn.graphics as graphics #only import if it does not conflict
+       import exudyn.graphics as graphics
        CC = PlotLineCode
        comp = 3 #1=x, 2=y, ...
        var = 'Vel'

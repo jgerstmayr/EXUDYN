@@ -33,7 +33,7 @@ You can view and download this file on Github: `openAIgymInterfaceTest.py <https
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import numpy as np
    from math import sin, cos
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.artificialIntelligence import *
    import math
    

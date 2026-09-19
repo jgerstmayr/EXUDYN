@@ -25,7 +25,7 @@ You can view and download this file on Github: `bungeeJump.py <https://github.co
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.beams import *
    
    import numpy as np

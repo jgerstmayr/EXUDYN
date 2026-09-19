@@ -24,7 +24,7 @@ You can view and download this file on Github: `distanceSensor.py <https://githu
    
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

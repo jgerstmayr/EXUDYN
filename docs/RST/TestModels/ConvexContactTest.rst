@@ -26,7 +26,7 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import numpy as np
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

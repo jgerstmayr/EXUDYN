@@ -25,7 +25,7 @@ You can view and download this file on Github: `ANCFrotatingCable2D.py <https://
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    from math import sin
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()

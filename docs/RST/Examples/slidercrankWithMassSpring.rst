@@ -28,7 +28,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    import numpy as np
    import matplotlib.pyplot as plt

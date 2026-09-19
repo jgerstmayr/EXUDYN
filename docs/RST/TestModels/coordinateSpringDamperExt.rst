@@ -28,7 +28,7 @@ You can view and download this file on Github: `coordinateSpringDamperExt.py <ht
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import numpy as np
    from math import sqrt
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

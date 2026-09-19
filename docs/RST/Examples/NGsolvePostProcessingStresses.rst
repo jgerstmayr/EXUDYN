@@ -29,7 +29,7 @@ You can view and download this file on Github: `NGsolvePostProcessingStresses.py
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.FEM import *
    from exudyn.graphicsDataUtilities import *
    

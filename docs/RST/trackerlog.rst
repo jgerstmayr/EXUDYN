@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.207.dev1, 
++  Exudyn version = 1.11.208.dev1, 
 +  last change =  2026-09-19, 
 +  Number of issues = 2557, 
-+  Number of resolved issues = 2280 (207 in current version), 
++  Number of resolved issues = 2281 (208 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.208: resolved Issue 2553: the comment "only import if it does not conflict" reads as advice not to import (docu)
+    - issue author: Claude-JG
+    - description:  458 tracked files carry "import exudyn.graphics as graphics #only import if it does not conflict". The comment was meant to warn that the name graphics can collide with another package or a local variable, but it reads as a condition on the import itself, and it has been copied into every example and test model. Remove the comment; the import stays. The copies under docs/RST/Examples and docs/RST/TestModels are generated from the .py files and follow by regeneration. See revision2026 step R11.4.2.
+    - **notes:** Removed from 240 tracked files (253 occurrences): the examples, the test models, the utility modules, the performance models and the converted manual; the copies under docs/RST followed by regeneration. The import itself is unchanged. Two occurrences were written with a space after the hash, so the removal was a regular expression rather than a literal search. The warning behind the comment is real - the name graphics can be shadowed - and belongs in the documentation of exudyn.graphics once, not in every model.
+    - date resolved: **2026-09-19 23:20**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.207: resolved Issue 2549: the hand-written documentation chapters are LaTeX and have to become Markdown (docu)
     - issue author: Claude-JG
     - description:  The seven chapters that are still LaTeX - gettingStarted, introduction, tutorial, GUI, notation, theory, solver - are the original sources; the generated .rst does not carry all of their information, so each one is converted by hand-checked machine conversion and then becomes the source itself. tools/tex2md.py is the one-shot converter for it and is deleted again in step R7.1.7. A converted chapter leaves filesParsed in doc2rst.py in the same commit, so that its generated .rst files and their duplicate labels disappear with it. See revision2026 step R7.1.5.
@@ -7909,11 +7915,6 @@ Open issues
  * **open issue 2554:** checkPreAssembleConsistencies.cpp is one file for five item types
     - issue author: Claude-JG
     - description:  src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.
-    - date raised: 2026-09-19 
-
- * **open issue 2553:** the comment "only import if it does not conflict" reads as advice not to import
-    - issue author: Claude-JG
-    - description:  458 tracked files carry "import exudyn.graphics as graphics #only import if it does not conflict". The comment was meant to warn that the name graphics can collide with another package or a local variable, but it reads as a condition on the import itself, and it has been copied into every example and test model. Remove the comment; the import stays. The copies under docs/RST/Examples and docs/RST/TestModels are generated from the .py files and follow by regeneration. See revision2026 step R11.4.2.
     - date raised: 2026-09-19 
 
  * **open issue 2552:** five modules belong in exudyn/misc rather than in the package root

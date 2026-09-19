@@ -24,7 +24,7 @@ You can view and download this file on Github: `kinematicTreeConstraintTest.py <
    
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import exudyn.graphics as graphics #only import if it does not conflict
+   import exudyn.graphics as graphics
    from exudyn.FEM import *
    
    import numpy as np
