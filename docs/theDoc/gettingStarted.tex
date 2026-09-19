@@ -175,28 +175,31 @@ The following people have contributed to Python and C++ library implementations,
 %
 \mysubsubsectionlabel{Requirements for \codeName ?}{sec:install:installinstructions:requirements}
 
-\codeName only works with Python. Thus, you need an appropriate Python installation.
-So far (2025-07), we thoroughly tested
+\codeName is a Python package with a compiled core, so what you need is a Python it was built for.
+
+\mybold{Wheels are published for Python 3.10, 3.11, 3.12, 3.13 and 3.14}, on Windows, Linux and
+MacOS. Newer Python versions are usually added in line with the Python release cycle (every
+October).
+
+\mybold{64-bit only.} \codeName has not been built for 32-bit systems for years, and since
+revision2026 step R2.6 the 32-bit build configurations no longer exist. If you still read advice
+about matching 32-bit and 64-bit installations, it is out of date.
+
 \bi
-  \item Currently (2025-07), we support Python 3.9 - Python 3.13 \mybold{conda environments} on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues); the upgrades to newer Python versions will usually be done in line with new Python releases (every October).
-  \item \mybold{Anaconda 2025-06, 64bit, Python 3.12} with Spyder 6.0
-  \item \mybold{Anaconda 2023-07, 64bit, Python 3.11} with Spyder 5.4
-  \item \mybold{Anaconda 2021-11, 64bit, Python 3.9}\footnote{older Anaconda3 versions can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/}}
-  \item \mybold{Spyder 5.1.5} (with Python 3.9.7, 64bit) and \mybold{Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{Note that it is important that Spyder, Python and \codeName  are \mybold{either} 32bit \mybold{or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}; Spyder works with all virtual environments
+  \item \mybold{conda environments} are what the developers use and what is tested most; the
+        environment decides which Python you get, and \texttt{pip install exudyn} inside it
+        installs the matching wheel.
+  \item \mybold{Spyder} (any recent version), \mybold{Visual Studio Code} and \mybold{Jupyter}
+        all work with default settings. Spyder works with all virtual environments.
+  \item The Python running your script and the Python \codeName was installed into must be the
+        same one. In an environment that is automatic; outside one it is the usual source of
+        \texttt{import exudyn} failing, see \refSection{sec:install:troubleshootingfaq}.
 \ei
-Many alternative options exist:
-\bi
-  %\item In case that you have an older CPU, which does not support AVX2, use: \codeName with Python 3.6.5, or compile without AVX flags for your machine.\footnote{e.g.\ Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
-  %\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and exudyn are \mybold{either} 32bit \mybold{or} 64bit}. 
-  \item Many users report successful use of \codeName with \mybold{Visual Studio Code}. \mybold{Jupyter} has been tested with some examples; both environments should work with default settings.
-  %\item Anaconda 2020-11 with \mybold{Python 3.8} and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since \codeName version 1.0.182.
-  %\item Anaconda 2021-11 with \mybold{Python 3.9} and Spyder 5.1.5: Tested with current version (1.1.99), TestSuite runs without problems.
-  \item Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
-  %\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and exudyn are \mybold{either} 32bit \mybold{or} 64bit. 
-%Anaconda3-5.2.0-Windows-x86\_64.exe
-\ei
-If you plan to extend the C++ code, we recommend to use Microsoft Visual Studio (VS2022) and previously VS2017\footnote{Note: VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver.} to compile your code, which offers Python 3.x compatibility.
-Remember that Python versions and the version of the \codeName module must be identical (e.g., Python 3.9 64 bit \mybold{both} in the \codeName module and e.g.\ in Spyder).
+
+\noindent If you plan to extend the C++ code, use \mybold{Microsoft Visual Studio 2022}, which is
+the primary development environment of the project and supports mixed Python/C++
+debugging\footnote{VS2019 has problems with the library 'Eigen' and leads to erroneous results
+with the sparse solver; it is not supported.}.
 
 \mysubsubsubsection{Run without Anaconda}
 If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:
@@ -263,41 +266,31 @@ If the PyPi index is not updated, it may help to use
 A way to install the Python package \codeName is to use the so-called 'wheels' (file ending \texttt{.whl}).
 NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!
 
-\noindent \mybold{Ubuntu}:\vspace{6pt}\\
-Wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn/\#files}{https://pypi.org/project/exudyn/\#files}, for many Python versions and architectures.
-\vspace{6pt}\\
-For Ubuntu 18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
-\bi
-  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp36-cp36-linux\_x86\_64.whl
-\ei
-For Ubuntu 20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
-\bi
-  \item \texttt{Python 3.8, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp38-cp38-linux\_x86\_64.whl
-\ei
-We regularly upgrade to newer Ubuntu versions (like 24.04) and we did not observe any issues.
-NOTE that your installation may have environments with different Python versions, so install that \codeName version appropriately!
-If the wheel installation does not work on Ubuntu, it is highly recommended to build \codeName for your specific system as given in \refSection{sec:install:installinstructions:buildubuntu}.
+Wheels can be downloaded directly from
+\exuUrl{https://pypi.org/project/exudyn/\#files}{https://pypi.org/project/exudyn/\#files}, one per
+Python version and platform. The file name says which one it is: \texttt{cp313} means CPython 3.13,
+and the last part names the platform.
 
-\noindent \mybold{Windows}:\vspace{6pt}\\
-First, open an Anaconda prompt:
+\noindent Check which Python you are about to install into:
 \bi
-  \item EITHER calling the Anaconda prompt directly using: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-  \item You can check your Python version then, by running \texttt{python}\footnote{\texttt{python3} under Ubuntu 18.04}, the output reads like:
-  \bi
-    \item[] \texttt{Python 3.6.5 \textbar Anaconda, Inc.\textbar\ (default, Mar 29 2018, 13:32:41) \lbrack MSC v.1900 64 bit (AMD64)\rbrack\ on win32}
-    \item[] ...
-  \ei
-  \item type \texttt{exit()} to close Python
+  \item[] \texttt{python -{}-version}
 \ei
+\noindent and then install the matching wheel (the version number \texttt{1.11.0} below is an
+example):
+\bi
+  \item \mybold{Windows}, Python 3.13: \texttt{pip install exudyn-1.11.0-cp313-cp313-win\_amd64.whl}
+  \item \mybold{Linux}, Python 3.13: \texttt{pip3 install exudyn-1.11.0-cp313-cp313-manylinux\_2\_28\_x86\_64.whl}
+  \item \mybold{MacOS}, Python 3.13: \texttt{pip3 install exudyn-1.11.0-cp313-cp313-macosx\_11\_0\_arm64.whl}
+\ei
+\noindent The same pattern holds for \texttt{cp310} to \texttt{cp314}. Installing a wheel built
+for a different Python version fails with a message about the wheel not being supported on this
+platform, which is the intended outcome rather than a problem to work around.
+
+\noindent If no wheel works on your system, build \codeName for it as described in
+\refSection{sec:install:installinstructions:buildubuntu}.
 %
 %\noindent \mybold{Go to the folder} \texttt{Exudyn\_git/main} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), Python version (3.6 or 3.7) and 32 or 64 bits.
 %
-For Windows the installation commands may read (version number 1.0.20 may be different):
-\bi
-  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win32.whl
-  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win\_amd64.whl
-  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp37-cp37m-win\_amd64.whl
-\ei
 
 %%+++++++++++++++++++++++++++++++++++++
 %\mysubsubsection{Work without installation and editing \texttt{sys.path}}
@@ -318,7 +311,7 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 %\label{sec:build:windows}
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 \bi
-  \item you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
+  \item you need an appropriate compiler (Microsoft Visual Studio 2022; see \refSection{sec:install:installinstructions:requirements})
   \item install your Anaconda distribution including Spyder or use VisualStudioCode; you can also use a miniconda (only numpy is really required and distribution tools)
   \item close all Python programs (e.g. Spyder, Jupyter, ...) 
   \item run an Anaconda prompt (may need to be run as administrator, depends on installation)
@@ -667,7 +660,7 @@ Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
 \mybold{There are several reasons and workarounds}:
 \bi
 \item[$\ra$] You mixed up 32 and 64 bits version (see below) 
-\item[$\ra$] You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
+\item[$\ra$] You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.13.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
 \ei
 %
 \item \mybold{Import of exudyn C++ module failed Warning: ...}:
@@ -676,7 +669,6 @@ Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
 \item[$\ra$] A known reason is that your CPU \mybold{does not support AVX2}, while \codeName is compiled with the AVX2 option\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \mybold{not} support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this}.
 \item[$\ra$] \mybold{solution}: since \codeName\ 2.0 there is nothing to do: the regular module \texttt{exudynCPP} is compiled for the baseline instruction set on every platform and runs on a CPU without AVX2. Only the optional \texttt{exudynCPPfast} module, which you get by setting \texttt{sys.exudynFast = True} before importing \codeName, uses AVX2; that request is silently ignored on a CPU which does not support it. The separate \texttt{exudynCPPnoAVX} module and the \texttt{sys.exudynCPUhasAVX2} switch no longer exist.
 \item[$\ra$] you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
-\item[$\ra$] \mybold{DEPRECATED workaround} to solve the AVX problem: use the Python 3.6 version (up to \codeName V1.2.28 only the 32bit version), which is compiled without AVX2.
 \item[$\ra$] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName helps.
 \ei
 \ei
@@ -688,7 +680,7 @@ Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
   \item Typical Python \mybold{syntax error} with missing braces:
 \plainlststyle
 \begin{lstlisting}
-  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py", line 42
+  File "C:\DATA\cpp\EXUDYN_git\python\Examples\springDamperTutorial.py", line 42
       nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
              ^
   SyntaxError: invalid syntax
@@ -709,7 +701,7 @@ Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
 \item Typical Python \mybold{import error} message on Linux / Ubuntu if Python modules are missing:
 \plainlststyle
 \begin{lstlisting}
-  Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 
+  Python WARNING [file '/home/johannes/.local/lib/python3.13/site-packages/exudyn/solver.py', line 236]: 
   Error when executing process ShowVisualizationSettingsDialog':
   ModuleNotFoundError: No module named 'tkinter'
 \end{lstlisting}

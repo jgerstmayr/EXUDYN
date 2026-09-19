@@ -12,22 +12,31 @@ Requirements for Exudyn ?
 -------------------------
 
 
-Exudyn only works with Python. Thus, you need an appropriate Python installation.
-So far (2025-07), we thoroughly tested
+Exudyn is a Python package with a compiled core, so what you need is a Python it was built for.
 
-+  Currently (2025-07), we support Python 3.9 - Python 3.13 \ **conda environments**\  on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues); the upgrades to newer Python versions will usually be done in line with new Python releases (every October).
-+  \ **Anaconda 2025-06, 64bit, Python 3.12**\  with Spyder 6.0
-+  \ **Anaconda 2023-07, 64bit, Python 3.11**\  with Spyder 5.4
-+  \ **Anaconda 2021-11, 64bit, Python 3.9**\ \ (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
-+  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation\ (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
+\ **Wheels are published for Python 3.10, 3.11, 3.12, 3.13 and 3.14**\ , on Windows, Linux and
+MacOS. Newer Python versions are usually added in line with the Python release cycle (every
+October).
 
-Many alternative options exist:
+\ **64-bit only.**\  Exudyn has not been built for 32-bit systems for years, and since
+revision2026 step R2.6 the 32-bit build configurations no longer exist. If you still read advice
+about matching 32-bit and 64-bit installations, it is out of date.
 
-+  Many users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
-+  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\ (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
 
-If you plan to extend the C++ code, we recommend to use Microsoft Visual Studio (VS2022) and previously VS2017\ (Note: VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver.) to compile your code, which offers Python 3.x compatibility.
-Remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.9 64 bit \ **both**\  in the Exudyn module and e.g. in Spyder).
++  \ **conda environments**\  are what the developers use and what is tested most; the
+        environment decides which Python you get, and \ ``pip install exudyn``\  inside it
+        installs the matching wheel.
++  \ **Spyder**\  (any recent version), \ **Visual Studio Code**\  and \ **Jupyter**\ 
+        all work with default settings. Spyder works with all virtual environments.
++  The Python running your script and the Python Exudyn was installed into must be the
+        same one. In an environment that is automatic; outside one it is the usual source of
+        \ ``import exudyn``\  failing, see Section :ref:`sec-install-troubleshootingfaq`\ .
+
+
+If you plan to extend the C++ code, use \ **Microsoft Visual Studio 2022**\ , which is
+the primary development environment of the project and supports mixed Python/C++
+debugging\ (VS2019 has problems with the library 'Eigen' and leads to erroneous results
+with the sparse solver; it is not supported.).
 
 
 Run without Anaconda
@@ -110,41 +119,28 @@ Install from specific Wheel (Ubuntu and Windows)
 A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ).
 NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!
 
-\ **Ubuntu**\ :
+Wheels can be downloaded directly from
+`https://pypi.org/project/exudyn/\#files <https://pypi.org/project/exudyn/\#files>`_, one per
+Python version and platform. The file name says which one it is: \ ``cp313``\  means CPython 3.13,
+and the last part names the platform.
 
-Wheels can be downloaded directly from `https://pypi.org/project/exudyn/\#files <https://pypi.org/project/exudyn/\#files>`_, for many Python versions and architectures.
+Check which Python you are about to install into:
 
+   \ ``python --version``\ 
 
-For Ubuntu 18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
+and then install the matching wheel (the version number \ ``1.11.0``\  below is an
+example):
 
-+  \ ``Python 3.6, 64bit``\ : pip3 install dist\ :math:`\backslash`\ exudyn-1.0.20-cp36-cp36-linux_x86_64.whl
++  \ **Windows**\ , Python 3.13: \ ``pip install exudyn-1.11.0-cp313-cp313-win_amd64.whl``\ 
++  \ **Linux**\ , Python 3.13: \ ``pip3 install exudyn-1.11.0-cp313-cp313-manylinux_2_28_x86_64.whl``\ 
++  \ **MacOS**\ , Python 3.13: \ ``pip3 install exudyn-1.11.0-cp313-cp313-macosx_11_0_arm64.whl``\ 
 
-For Ubuntu 20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
+The same pattern holds for \ ``cp310``\  to \ ``cp314``\ . Installing a wheel built
+for a different Python version fails with a message about the wheel not being supported on this
+platform, which is the intended outcome rather than a problem to work around.
 
-+  \ ``Python 3.8, 64bit``\ : pip3 install dist\ :math:`\backslash`\ exudyn-1.0.20-cp38-cp38-linux_x86_64.whl
-
-We regularly upgrade to newer Ubuntu versions (like 24.04) and we did not observe any issues.
-NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
-If the wheel installation does not work on Ubuntu, it is highly recommended to build Exudyn for your specific system as given in Section :ref:`sec-install-installinstructions-buildubuntu`\ .
-
-\ **Windows**\ :
-
-First, open an Anaconda prompt:
-
-+  EITHER calling the Anaconda prompt directly using: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-+  You can check your Python version then, by running \ ``python``\ \ (\ ``python3``\  under Ubuntu 18.04), the output reads like:
-  
-   \ ``Python 3.6.5 | Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [ MSC v.1900 64 bit (AMD64)] on win32``\ 
-   ...
-  
-+  type \ ``exit()``\  to close Python
-
-For Windows the installation commands may read (version number 1.0.20 may be different):
-
-+  \ ``Python 3.6, 32bit``\ : pip install dist\ :math:`\backslash`\ exudyn-1.0.20-cp36-cp36m-win32.whl
-+  \ ``Python 3.6, 64bit``\ : pip install dist\ :math:`\backslash`\ exudyn-1.0.20-cp36-cp36m-win_amd64.whl
-+  \ ``Python 3.7, 64bit``\ : pip install dist\ :math:`\backslash`\ exudyn-1.0.20-cp37-cp37m-win_amd64.whl
-
+If no wheel works on your system, build Exudyn for it as described in
+Section :ref:`sec-install-installinstructions-buildubuntu`\ .
 
 
 
@@ -157,7 +153,7 @@ Build and install Exudyn under Windows 10
 
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 
-+  you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
++  you need an appropriate compiler (Microsoft Visual Studio 2022; see Section :ref:`sec-install-installinstructions-requirements`\ )
 +  install your Anaconda distribution including Spyder or use VisualStudioCode; you can also use a miniconda (only numpy is really required and distribution tools)
 +  close all Python programs (e.g. Spyder, Jupyter, ...) 
 +  run an Anaconda prompt (may need to be run as administrator, depends on installation)

@@ -891,9 +891,10 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 **R7.4** Convert `trackerlog.tex` into `CHANGELOG.md`.
 
 <a id="r7-5"></a>
-**R7.5** *(phase R7)* **Rewrite the installation documentation** (#2388). `gettingStarted.tex` still
-    describes Python 3.6/3.7, 32-bit Anaconda and wheel names from 2020; rewrite against what is
-    shipped (cp310-cp314, 64-bit only). With step R7.1 this moves to the RST side.
+**R7.5** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r7-5) — *(phase R7)*
+    **The installation documentation says what is shipped** (#2388): Python 3.10-3.14, 64-bit
+    only, one wheel-name rule instead of three examples from 2020.
+
 
 <a id="r7-6"></a>
 **R7.6** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r7-6) — *(phase R7; approved

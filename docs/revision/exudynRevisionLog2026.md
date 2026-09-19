@@ -7146,6 +7146,68 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r7-5"></a>
+### R7.5 — the installation documentation says what is shipped
+
+**DONE 2026-09-19** (#2388).
+
+The chapter a new user reads first was telling them to install **Python 3.6.5 from the Anaconda
+archive**, to match 32-bit and 64-bit installations, and to pick a wheel called
+`exudyn-1.0.20-cp36-cp36m-win32.whl`. Exudyn has not shipped a 32-bit build for years, and
+since step R2.6 the configurations do not exist at all.
+
+#### What it says now
+
+Against what CI actually publishes — `cp310` to `cp314`, Windows, Linux, MacOS:
+
+- **Wheels are published for Python 3.10 to 3.14**, with the note that new versions follow the
+  Python release cycle.
+- **64-bit only**, stated once, with the reason — *"if you still read advice about matching
+  32-bit and 64-bit installations, it is out of date"*. That sentence exists because the advice
+  it contradicts is still in circulation elsewhere.
+- conda environments first, because that is what the developers use and what makes the
+  version question disappear; Spyder, VS Code and Jupyter all work with default settings.
+- **One rule instead of three examples.** The wheel section used to list specific file names
+  from 2020 for Python 3.6 and 3.7. It now explains the name — `cp313` means CPython 3.13, the
+  last part is the platform — shows one line per operating system, and says that installing
+  the wrong wheel fails with a message about the platform, *"which is the intended outcome
+  rather than a problem to work around"*.
+- Visual Studio **2022** for the C++ side, which is the project invariant; the text recommended
+  VS2017.
+
+Four smaller corrections while there: a deprecated AVX workaround that told users to install
+the Python 3.6 build (the line above it already says *"since Exudyn 2.0 there is nothing to
+do"*), an example traceback still showing `main\pythonDev\Examples`, and two
+illustrative paths dated to Python 3.6.
+
+#### What was deliberately left
+
+The platform build sections carry dated observations — *"Mac OS X 10.11.6 El Capitan, Mac Pro
+(2010) ... Anaconda Navigator 1.9.7"*, *"Ubuntu 18.04 with the original Python"*. Those are
+records of what was tried on which machine, and they read as history rather than as advice. They
+belong to **R7.2**, which carries the revision into the documentation, not to a step about what
+is shipped today.
+
+#### Written in LaTeX, for the same reason as R6.4
+
+R7.1 converts these files to Markdown, so this is LaTeX that will be translated shortly. The
+alternative was leaving Python 3.6.5 in the page a user reads first until that migration lands.
+The strict Sphinx build (`exudev docs`, `sphinx-build -W`) passes and the PDF still builds with
+the same 74 known errors of #2545.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-19)
+
+**R7.5** *(phase R7)* **Rewrite the installation documentation** (#2388). `gettingStarted.tex` still
+    describes Python 3.6/3.7, 32-bit Anaconda and wheel names from 2020; rewrite against what is
+    shipped (cp310-cp314, 64-bit only). With step R7.1 this moves to the RST side.
+
+---
+
+
 <a id="r7-1-3"></a>
 ### R7.1.3 — theDoc.pdf builds again
 

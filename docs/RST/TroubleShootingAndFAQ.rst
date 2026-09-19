@@ -48,7 +48,7 @@ Typical \ **error messages if 32/64 bits versions are mixed**\ :
 \ **There are several reasons and workarounds**\ :
 
   |  →  You mixed up 32 and 64 bits version (see below) 
-  |  →  You are using an exudyn version for Python \ :math:`x_1.y_1`\  (e.g., 3.6.\ :math:`z_1`\ ) different from the Python \ :math:`x_2.y_2`\  version in your Anaconda (e.g., 3.7.\ :math:`z_2`\ ); note that \ :math:`x_1=x_2`\  and \ :math:`y_1=y_2`\  must be obeyed while \ :math:`z_1`\  and \ :math:`z_2`\  may be different
+  |  →  You are using an exudyn version for Python \ :math:`x_1.y_1`\  (e.g., 3.13.\ :math:`z_1`\ ) different from the Python \ :math:`x_2.y_2`\  version in your Anaconda (e.g., 3.7.\ :math:`z_2`\ ); note that \ :math:`x_1=x_2`\  and \ :math:`y_1=y_2`\  must be obeyed while \ :math:`z_1`\  and \ :math:`z_2`\  may be different
 
 +  \ **Import of exudyn C++ module failed Warning: ...**\ :
 
@@ -56,7 +56,6 @@ Typical \ **error messages if 32/64 bits versions are mixed**\ :
   |  →  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option\ (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \ **not**\  support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
   |  →  \ **solution**\ : since Exudyn 2.0 there is nothing to do: the regular module \ ``exudynCPP``\  is compiled for the baseline instruction set on every platform and runs on a CPU without AVX2. Only the optional \ ``exudynCPPfast``\  module, which you get by setting \ ``sys.exudynFast = True``\  before importing Exudyn, uses AVX2; that request is silently ignored on a CPU which does not support it. The separate \ ``exudynCPPnoAVX``\  module and the \ ``sys.exudynCPUhasAVX2``\  switch no longer exist.
   |  →  you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
-  |  →  \ **DEPRECATED workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2.
   |  →  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) \ :math:`\ra`\  very often a new installation of Anaconda and Exudyn helps.
 
 
@@ -67,7 +66,7 @@ Typical \ **error messages if 32/64 bits versions are mixed**\ :
 
 .. code-block:: 
 
-  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py", line 42
+  File "C:\DATA\cpp\EXUDYN_git\python\Examples\springDamperTutorial.py", line 42
       nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
              ^
   SyntaxError: invalid syntax
@@ -91,7 +90,7 @@ Typical \ **error messages if 32/64 bits versions are mixed**\ :
 
 .. code-block:: 
 
-  Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 
+  Python WARNING [file '/home/johannes/.local/lib/python3.13/site-packages/exudyn/solver.py', line 236]: 
   Error when executing process ShowVisualizationSettingsDialog':
   ModuleNotFoundError: No module named 'tkinter'
 

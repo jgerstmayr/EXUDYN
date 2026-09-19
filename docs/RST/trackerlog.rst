@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.204.dev1, 
++  Exudyn version = 1.11.205.dev1, 
 +  last change =  2026-09-19, 
 +  Number of issues = 2546, 
-+  Number of resolved issues = 2277 (204 in current version), 
++  Number of resolved issues = 2278 (205 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.205: resolved Issue 2388: the installation documentation is years out of date (docu)
+    - issue author: Claude-JG
+    - description:  docs/theDoc/gettingStarted.tex still instructs users with Python 3.6 and 3.7; 32 bit Anaconda; Spyder 4.1.3 and wheel names like exudyn-1.0.20-cp36-cp36m-win32.whl; and it discusses choosing between 32 and 64 bit installations. None of that has been built for years and after revision2026 step R2.6 the 32 bit build configurations no longer exist at all. The install section needs rewriting against the versions that are actually shipped (cp310-cp314; 64 bit only). Found during revision2026 step R2.6
+    - **notes:** The requirements section is written against what CI publishes - wheels for Python 3.10 to 3.14 on Windows, Linux and MacOS, 64-bit only, with one sentence saying that advice about matching 32-bit and 64-bit installations is out of date. The wheel section explains the naming rule (cp313 means CPython 3.13) and shows one line per operating system instead of three file names from 2020 for Python 3.6 and 3.7. Visual Studio 2022 replaces the VS2017 recommendation. Also removed: a deprecated AVX workaround pointing at the Python 3.6 build, an example traceback with a main-pythonDev path, and two paths dated to Python 3.6. The dated per-machine notes in the platform build sections stay - they read as history and belong to step R7.2.
+    - date resolved: **2026-09-19 19:09**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.204: :textred:`resolved BUG 2544` : issue text is written into trackerlog.tex without escaping 
     - issue author: Claude-JG
     - description:  issueTracker.py writes every issue name, description and resolution note straight into docs/theDoc/trackerlog.tex, which is LaTeX. A caret, an underscore, a hash, an ampersand or a backslash command in an issue is therefore executed or aborts pdflatex. Both already happen: issue 2398 says O(N^2) per step and produces "Missing $ inserted", and an issue that mentioned a backslash-input command made the build stop with "File not found" 629 pages in. The RST writer has the same question with different characters. Escape at the writer, where the format is known, rather than asking every issue author to think about LaTeX.
@@ -7921,11 +7927,6 @@ Open issues
  * **open issue 2400:** computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
     - issue author: Claude-JG
     - description:  the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
-    - date raised: 2026-09-12 
-
- * **open issue 2388:** the installation documentation is years out of date
-    - issue author: Claude-JG
-    - description:  docs/theDoc/gettingStarted.tex still instructs users with Python 3.6 and 3.7; 32 bit Anaconda; Spyder 4.1.3 and wheel names like exudyn-1.0.20-cp36-cp36m-win32.whl; and it discusses choosing between 32 and 64 bit installations. None of that has been built for years and after revision2026 step R2.6 the 32 bit build configurations no longer exist at all. The install section needs rewriting against the versions that are actually shipped (cp310-cp314; 64 bit only). Found during revision2026 step R2.6
     - date raised: 2026-09-12 
 
  * **open issue 2350:** MacOS               
