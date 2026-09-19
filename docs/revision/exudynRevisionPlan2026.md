@@ -253,19 +253,11 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R4.3** **DONE 2026-09-14** — re-point the generators at `definitions/`, then split them into emitters (`tools/generators/`). → [log](exudynRevisionLog2026.md#r4-3)
 
 <a id="r4-3-1"></a>
-**R4.3.1** *(sub-step of R4.3; found 2026-09-18 while doing R7.6)* **`mainSystemExtensionDocsEmitter.py`
-    writes none of its five outputs** (#2526). The file ends in the middle of `main()` — no write
-    call and no `__main__` block — so the generator runs, exits 0, prints nothing and produces
-    nothing. `MainSystemExt.rst`, `MainSystemCreateExt.rst`, `stubAutoBindingsExt.pyi`,
-    `docs/theDoc/MainSystemExt.tex` and `MainSystemCreateExt.tex` have been frozen at their
-    committed content since the split of R4.3 part 2e.
+**R4.3.1** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r4-3-1) — *(sub-step of R4.3)*
+    **The emitter writes its five outputs again** (#2526), and `generate.py` now **fails** a
+    stage that exits 0 without producing any of its declared outputs — the part that matters
+    beyond the one file.
 
-    **The regeneration gate cannot see this**: a generator that writes nothing always agrees with
-    the commit. That is the part worth fixing beyond the one file — a stage that produces none
-    of its declared outputs should fail, and `generate.py` already knows what each stage writes.
-
-    The writing half is in git: `94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py`, lines
-    1050-1119.
 
 <a id="r4-4"></a>
 **R4.4** **DONE 2026-09-15** — emitters read members directly (R4.4.1); one Python/C++ conversion layer `PyConversion.h` (R4.4.3); Jinja2 measured and not adopted (R4.4.2). → [log](exudynRevisionLog2026.md#r4-4)

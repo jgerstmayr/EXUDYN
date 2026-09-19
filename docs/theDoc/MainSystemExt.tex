@@ -1,5 +1,5 @@
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L784}{SolutionViewer}{}}}\label{sec:mainsystemextensions:SolutionViewer}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py\#L798}{SolutionViewer}{}}}\label{sec:mainsystemextensions:SolutionViewer}
 ({\it solution}= None, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it runOnStart}= True, {\it runMode}= 2, {\it fontSize}= 12, {\it title}= '', {\it checkRenderEngineStopFlag}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -40,23 +40,23 @@
 %
 \noindent For examples on SolutionViewer see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py}{\texttt{ANCFcableCantilevered.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py}{\texttt{ANCFslidingJoint.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcableCantilevered.py}{\texttt{ANCFcableCantilevered.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py}{\texttt{ANCFslidingJoint.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py}{\texttt{ANCFCableBeamDampingTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py}{\texttt{ANCFCableBeamDampingTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L228}{PlotSensor}{}}}\label{sec:mainsystemextensions:PlotSensor}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L172}{PlotSensor}{}}}\label{sec:mainsystemextensions:PlotSensor}
 ({\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it legendArgs}= None, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -93,10 +93,10 @@
 \item[]{\it majorTicksX}: number of major ticks on x-axis; default: 10
 \item[]{\it majorTicksY}: number of major ticks on y-axis; default: 10
 \item[]{\it colorCodeOffset}: int offset for color code, color codes going from 0 to 27 (see PlotLineCode(...)); automatic line/color codes are used if no colors and lineStyles are used
-\item[]{\it colors}: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named\_colors.html
+\item[]{\it colors}: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named_colors.html
 \item[]{\it lineStyles}: line style is automatically selected from colorCodeOffset if lineStyles=[]; otherwise define for all lines with string or with list of strings, chosing from '-', '--', '-.', ':', or ''
 \item[]{\it lineWidths}: float to define line width by float (default=1); either use single float for all sensors or list of floats with length >= number of sensors
-\item[]{\it markerStyles}: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers\_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle
+\item[]{\it markerStyles}: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle
 \item[]{\it markerSizes}: float to define marker size by float (default=6); either use single float for all sensors or list of floats with length >= number of sensors
 \item[]{\it markerDensity}: if int, it defines approx. the total number of markers used along each graph; if float, this defines the distance of markers relative to the diagonal of the plot (default=0.08); if None, it adds a marker to every data point if marker style is specified for sensor
 \item[]{\it newFigure}: if True, a new matplotlib.pyplot figure is created; otherwise, existing figures are overwritten
@@ -110,7 +110,7 @@
 \item[]{\it minorTicksYon}: if True, turn minor ticks for y-axis on
 \item[]{\it logScaleX}: use log scale for x-axis
 \item[]{\it logScaleY}: use log scale for y-axis
-\item[]{\it fileCommentChar}: if exists, defines the comment character in files (\#, %, ...)
+\item[]{\it fileCommentChar}: if exists, defines the comment character in files (#, \%, ...)
 \item[]{\it fileDelimiterChar}: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 \end{itemize}
 \item[--]
@@ -149,23 +149,23 @@
 %
 \noindent For examples on PlotSensor see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py}{\texttt{beltDriveALE.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py}{\texttt{beltDriveALE.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py}{\texttt{ANCFCableBeamDampingTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py}{\texttt{ANCFCableBeamDampingTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157}{SolveStatic}{}}}\label{sec:mainsystemextensions:SolveStatic}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L137}{SolveStatic}{}}}\label{sec:mainsystemextensions:SolveStatic}
 ({\it simulationSettings}= None, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -218,23 +218,23 @@
 %
 \noindent For examples on SolveStatic see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py}{\texttt{3SpringsDistance.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py}{\texttt{ALEANCFpipe.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py}{\texttt{ANCFcantileverTest.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/3SpringsDistance.py}{\texttt{3SpringsDistance.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py}{\texttt{ALEANCFpipe.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py}{\texttt{ANCFcantileverTest.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L225}{SolveDynamic}{}}}\label{sec:mainsystemextensions:SolveDynamic}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L216}{SolveDynamic}{}}}\label{sec:mainsystemextensions:SolveDynamic}
 ({\it simulationSettings}= None, {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -289,23 +289,23 @@
 %
 \noindent For examples on SolveDynamic see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py}{\texttt{3SpringsDistance.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py}{\texttt{ALEANCFpipe.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/3SpringsDistance.py}{\texttt{3SpringsDistance.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py}{\texttt{ALEANCFpipe.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L379}{ComputeLinearizedSystem}{}}}\label{sec:mainsystemextensions:ComputeLinearizedSystem}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L396}{ComputeLinearizedSystem}{}}}\label{sec:mainsystemextensions:ComputeLinearizedSystem}
 ({\it simulationSettings}= None, {\it projectIntoConstraintNullspace}= False, {\it singularValuesTolerance}= 1e-12, {\it returnConstraintJacobian}= False, {\it returnConstraintNullspace}= False, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -362,15 +362,15 @@
 %
 \noindent For examples on ComputeLinearizedSystem see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L518}{ComputeODE2Eigenvalues}{}}}\label{sec:mainsystemextensions:ComputeODE2Eigenvalues}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L530}{ComputeODE2Eigenvalues}{}}}\label{sec:mainsystemextensions:ComputeODE2Eigenvalues}
 ({\it simulationSettings}= None, {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -440,21 +440,21 @@
 %
 \noindent For examples on ComputeODE2Eigenvalues see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillator.py}{\texttt{nMassOscillator.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFThinPlateTests.py}{\texttt{ANCFThinPlateTests.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py}{\texttt{complexEigenvaluesTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py}{\texttt{nMassOscillator.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py}{\texttt{ANCFThinPlateTests.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py}{\texttt{complexEigenvaluesTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L745}{ComputeSystemDegreeOfFreedom}{}}}\label{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L776}{ComputeSystemDegreeOfFreedom}{}}}\label{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}
 ({\it simulationSettings}= None, {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -463,7 +463,7 @@
 {\bf function description}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]compute system DOF numerically, considering Gr{\"u}bler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
+\item[]compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 \item[]- NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
 \end{itemize}
 \item[--]
@@ -509,141 +509,10 @@
 %
 \noindent For examples on ComputeSystemDegreeOfFreedom see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
-\ei
-
-%
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L312}{CreateDistanceSensorGeometry}{}}}\label{sec:mainsystemextensions:CreateDistanceSensorGeometry}
-({\it meshPoints}, {\it meshTrigs}, {\it rigidBodyMarkerIndex}, {\it searchTreeCellSize}= [8,8,8])
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
-\item[]Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
-\item[]- NOTE that this function is added to MainSystem via Python function CreateDistanceSensorGeometry.
-\end{itemize}
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it meshPoints}: list of points (3D), as returned by graphics.ToPointsAndTrigs()
-\item[]{\it meshTrigs}: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
-\item[]{\it rigidBodyMarkerIndex}: rigid body marker to which the triangles are fixed on (ground or moving object)
-\item[]{\it searchTreeCellSize}: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
-\end{itemize}
-\item[--]
-{\bf output}: (type: int) returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
-\item[--]
-{\bf notes}: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
-\vspace{12pt}\end{itemize}
-%
-
-%
-\noindent For examples on CreateDistanceSensorGeometry see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py}{\texttt{mobileMecanumWheelRobotWithLidar.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
-\ei
-
-%
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L345}{CreateDistanceSensor}{}}}\label{sec:mainsystemextensions:CreateDistanceSensor}
-({\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= exudyn.graphics.color.red)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
-\item[]- NOTE that this function is added to MainSystem via Python function CreateDistanceSensor.
-\end{itemize}
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it generalContactIndex}: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
-\item[]{\it positionOrMarker}: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
-\item[]{\it dirSensor}: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
-\item[]{\it minDistance}: the minimum distance which is accepted; smaller distance will be ignored
-\item[]{\it maxDistance}: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
-\item[]{\it cylinderRadius}: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
-\item[]{\it selectedTypeIndex}: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
-\item[]{\it storeInternal}: like with any SensorUserFunction, setting to True stores sensor data internally
-\item[]{\it fileName}: if defined, recorded data of SensorUserFunction is written to specified file
-\item[]{\it measureVelocity}: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
-\item[]{\it addGraphicsObject}: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
-\item[]{\it drawDisplaced}: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
-\item[]{\it color}: optional color for 'laser beam' to be drawn
-\end{itemize}
-\item[--]
-{\bf output}: (type: SensorIndex) creates sensor and returns according sensor number of SensorUserFunction
-\item[--]
-{\bf notes}: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
-\vspace{12pt}\end{itemize}
-%
-
-%
-\noindent For examples on CreateDistanceSensor see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
-\ei
-
-%
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1011}{DrawSystemGraph}{}}}\label{sec:mainsystemextensions:DrawSystemGraph}
-({\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True, {\it tightLayout}= True, {\it showGraph}= True, {\it addItemData}= False, {\it addAnnotations}= False)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
-\item[]- NOTE that this function is added to MainSystem via Python function DrawSystemGraph.
-\end{itemize}
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it showLoads}: toggle appearance of loads in mbs
-\item[]{\it showSensors}: toggle appearance of sensors in mbs
-\item[]{\it useItemNames}: if True, object names are shown instead of basic object types (Node, Load, ...)
-\item[]{\it useItemTypes}: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
-\item[]{\it addItemTypeNames}: if True, type nymes (Node, Load, etc.) are added
-\item[]{\it multiLine}: if True, labels are multiline, improving readability; ignored if showGraph = False
-\item[]{\it fontSizeFactor}: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
-\item[]{\it showLegend}: shows legend for different item types
-\item[]{\it layoutDistanceFactor}: this factor influences the arrangement of labels; larger distance values lead to circle-like results
-\item[]{\it layoutIterations}: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
-\item[]{\it tightLayout}: if True, uses matplotlib plt.tight\_layout() which may raise warning
-\item[]{\it showGraph}: if True, graph is plotted with matplotlib
-\item[]{\it addItemData}: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
-\item[]{\it addAnnotations}: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
-\end{itemize}
-\item[--]
-{\bf output}: (type: [Any, Any, Any]) returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
-\vspace{12pt}\end{itemize}
-%
-
-%
-\noindent For examples on DrawSystemGraph see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py}{\texttt{rigidBodyTutorial3withMarkers.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
 \ei
 
 %

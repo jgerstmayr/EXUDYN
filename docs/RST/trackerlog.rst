@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.200.dev1, 
++  Exudyn version = 1.11.201.dev1, 
 +  last change =  2026-09-19, 
 +  Number of issues = 2543, 
-+  Number of resolved issues = 2273 (200 in current version), 
++  Number of resolved issues = 2274 (201 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.201: :textred:`resolved BUG 2526` : mainSystemExtensionDocsEmitter writes none of its five outputs 
+    - issue author: Claude-JG
+    - description:  The file ends in the middle of main() - no write call and no __main__ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing #2525\, whose new link prefix could not reach those five files.
+    - **notes:** The writing half was recovered from 94710e6^ and the loop body completed; the emitter writes its five outputs again and has a __main__ block. Five days of freezing came to ~1000 changed lines, most of it GitHub links still pointing at main/pythonDev - what step R7.6 could not repair - plus downstream changes in __init__.pyi and docs/RST/cInterface/MainSystem.rst. Not restored: the original also overwrote python/exudyn/mainSystemExtensions.py, a hand-written module this generator parses, which is not a declared output of the stage. And generate.py now FAILS a stage that exits 0 without producing any declared output - verified by commenting the writes out again and seeing it fire. Two generators that write only on change declare writesOnlyWhenChanged=True.
+    - date resolved: **2026-09-19 08:12**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.200: resolved Issue 2542: the exception types are decided but not documented for users (docu)
     - issue author: Claude-JG
     - description:  Step R6.3 built nine exception classes and decided what each one means; nothing tells a USER about them. The only places that describe the taxonomy are docs/dev/CODING_STYLE.md section 10, which is written for someone adding a check in C++, and the revision log, which is a record. A user needs the other direction: which type to catch, what it says about whose mistake it was, and what to do about it - including the one case with a concrete action behind it, catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation.
@@ -8907,11 +8913,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2526:` mainSystemExtensionDocsEmitter writes none of its five outputs
-    - issue author: Claude-JG
-    - description:  The file ends in the middle of main() - no write call and no __main__ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing #2525\, whose new link prefix could not reach those five files.
-    - date raised: 2026-09-18 
 
  * :textred:`open BUG 2517:` the gate environment can hold a stale exudyn wheel
     - issue author: Claude-JG

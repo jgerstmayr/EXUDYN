@@ -4,7 +4,7 @@
 
 Function: SolutionViewer
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L784>`__\ (\ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
+`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py\#L798>`__\ (\ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
 - | \ *function description*\ :
   | open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
@@ -34,7 +34,7 @@ Function: SolutionViewer
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcableCantilevered.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM)
 
 
 
@@ -42,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensor
 ^^^^^^^^^^^^^^^^^^^^
-`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L228>`__\ (\ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``legendArgs = None``\ , \ ``**kwargs``\ )
+`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py\#L172>`__\ (\ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``legendArgs = None``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage.
@@ -86,7 +86,7 @@ Function: PlotSensor
   | \ ``minorTicksYon``\ : if True, turn minor ticks for y-axis on
   | \ ``logScaleX``\ : use log scale for x-axis
   | \ ``logScaleY``\ : use log scale for y-axis
-  | \ ``fileCommentChar``\ : if exists, defines the comment character in files (\#, 
+  | \ ``fileCommentChar``\ : if exists, defines the comment character in files (#, \%, ...)
   | \ ``fileDelimiterChar``\ : if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 - | \ *output*\ :
   | (type: [Any, Any, Any, Any]) plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
@@ -124,7 +124,7 @@ Function: PlotSensor
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM)
+    \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM)
 
 
 
@@ -132,7 +132,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolveStatic
 ^^^^^^^^^^^^^^^^^^^^^
-`SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157>`__\ (\ ``simulationSettings = None``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
+`SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L137>`__\ (\ ``simulationSettings = None``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
@@ -174,7 +174,7 @@ Function: SolveStatic
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py>`_\  (Ex), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py>`_\  (Ex), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_\  (Ex), \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py>`_\  (Ex), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TM)
+    \ `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/3SpringsDistance.py>`_\  (Ex), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py>`_\  (Ex), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py>`_\  (Ex), \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py>`_\  (Ex), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py>`_\  (TM)
 
 
 
@@ -182,7 +182,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolveDynamic
 ^^^^^^^^^^^^^^^^^^^^^^
-`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L225>`__\ (\ ``simulationSettings = None``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
+`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L216>`__\ (\ ``simulationSettings = None``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
@@ -226,7 +226,7 @@ Function: SolveDynamic
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py>`_\  (Ex), \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py>`_\  (Ex), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `abaqusImportTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py>`_\  (TM), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM)
+    \ `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/3SpringsDistance.py>`_\  (Ex), \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py>`_\  (Ex), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py>`_\  (Ex), \ `abaqusImportTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py>`_\  (TM), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py>`_\  (TM), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py>`_\  (TM)
 
 
 
@@ -234,7 +234,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeLinearizedSystem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L379>`__\ (\ ``simulationSettings = None``\ , \ ``projectIntoConstraintNullspace = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``returnConstraintJacobian = False``\ , \ ``returnConstraintNullspace = False``\ , \ ``autoAssemble = True``\ )
+`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L396>`__\ (\ ``simulationSettings = None``\ , \ ``projectIntoConstraintNullspace = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``returnConstraintJacobian = False``\ , \ ``returnConstraintNullspace = False``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
@@ -280,7 +280,7 @@ Function: ComputeLinearizedSystem
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TM), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py>`_\  (TM), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -288,7 +288,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeODE2Eigenvalues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L518>`__\ (\ ``simulationSettings = None``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ , \ ``computeComplexEigenvalues = False``\ , \ ``ignoreAlgebraicEquations = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``autoAssemble = True``\ )
+`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L530>`__\ (\ ``simulationSettings = None``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ , \ ``computeComplexEigenvalues = False``\ , \ ``ignoreAlgebraicEquations = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see Section :ref:`sec-mbs-systemdata`\ ); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
@@ -347,7 +347,7 @@ Function: ComputeODE2Eigenvalues
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `nMassOscillator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillator.py>`_\  (Ex), \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex), \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM)
+    \ `nMassOscillator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py>`_\  (Ex), \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex), \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM)
 
 
 
@@ -355,7 +355,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSystemDegreeOfFreedom
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L745>`__\ (\ ``simulationSettings = None``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ , \ ``autoAssemble = True``\ )
+`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py\#L776>`__\ (\ ``simulationSettings = None``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
@@ -399,98 +399,5 @@ Function: ComputeSystemDegreeOfFreedom
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
-
-
-
-.. _sec-mainsystemextensions-createdistancesensorgeometry:
-
-Function: CreateDistanceSensorGeometry
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L312>`__\ (\ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
-
-- | \ *function description*\ :
-  | Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
-  | Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
-  | - NOTE that this function is added to MainSystem via Python function CreateDistanceSensorGeometry.
-- | \ *input*\ :
-  | \ ``meshPoints``\ : list of points (3D), as returned by graphics.ToPointsAndTrigs()
-  | \ ``meshTrigs``\ : list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
-  | \ ``rigidBodyMarkerIndex``\ : rigid body marker to which the triangles are fixed on (ground or moving object)
-  | \ ``searchTreeCellSize``\ : size of search tree (X,Y,Z); use larger values in directions where more triangles are located
-- | \ *output*\ :
-  | (type: int) returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
-- | \ *notes*\ :
-  | should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py>`_\  (TM)
-
-
-
-.. _sec-mainsystemextensions-createdistancesensor:
-
-Function: CreateDistanceSensor
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L345>`__\ (\ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = exudyn.graphics.color.red``\ )
-
-- | \ *function description*\ :
-  | Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
-  | - NOTE that this function is added to MainSystem via Python function CreateDistanceSensor.
-- | \ *input*\ :
-  | \ ``generalContactIndex``\ : the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
-  | \ ``positionOrMarker``\ : either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
-  | \ ``dirSensor``\ : the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
-  | \ ``minDistance``\ : the minimum distance which is accepted; smaller distance will be ignored
-  | \ ``maxDistance``\ : the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
-  | \ ``cylinderRadius``\ : in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
-  | \ ``selectedTypeIndex``\ : either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
-  | \ ``storeInternal``\ : like with any SensorUserFunction, setting to True stores sensor data internally
-  | \ ``fileName``\ : if defined, recorded data of SensorUserFunction is written to specified file
-  | \ ``measureVelocity``\ : if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
-  | \ ``addGraphicsObject``\ : if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
-  | \ ``drawDisplaced``\ : if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
-  | \ ``color``\ : optional color for 'laser beam' to be drawn
-- | \ *output*\ :
-  | (type: SensorIndex) creates sensor and returns according sensor number of SensorUserFunction
-- | \ *notes*\ :
-  | use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py>`_\  (TM)
-
-
-
-.. _sec-mainsystemextensions-drawsystemgraph:
-
-Function: DrawSystemGraph
-^^^^^^^^^^^^^^^^^^^^^^^^^
-`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1011>`__\ (\ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ , \ ``showGraph = True``\ , \ ``addItemData = False``\ , \ ``addAnnotations = False``\ )
-
-- | \ *function description*\ :
-  | helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
-  | - NOTE that this function is added to MainSystem via Python function DrawSystemGraph.
-- | \ *input*\ :
-  | \ ``showLoads``\ : toggle appearance of loads in mbs
-  | \ ``showSensors``\ : toggle appearance of sensors in mbs
-  | \ ``useItemNames``\ : if True, object names are shown instead of basic object types (Node, Load, ...)
-  | \ ``useItemTypes``\ : if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
-  | \ ``addItemTypeNames``\ : if True, type nymes (Node, Load, etc.) are added
-  | \ ``multiLine``\ : if True, labels are multiline, improving readability; ignored if showGraph = False
-  | \ ``fontSizeFactor``\ : use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
-  | \ ``showLegend``\ : shows legend for different item types
-  | \ ``layoutDistanceFactor``\ : this factor influences the arrangement of labels; larger distance values lead to circle-like results
-  | \ ``layoutIterations``\ : more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
-  | \ ``tightLayout``\ : if True, uses matplotlib plt.tight_layout() which may raise warning
-  | \ ``showGraph``\ : if True, graph is plotted with matplotlib
-  | \ ``addItemData``\ : if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
-  | \ ``addAnnotations``\ : add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
-- | \ *output*\ :
-  | (type: [Any, Any, Any]) returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(...)
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 

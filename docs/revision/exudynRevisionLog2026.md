@@ -7146,6 +7146,92 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r4-3-1"></a>
+### R4.3.1 — a generator that wrote nothing, and the gate that could not see it
+
+**DONE 2026-09-19** (#2526). Found on 2026-09-18 while doing R7.6, fixed here.
+
+`mainSystemExtensionDocsEmitter.py` ended **in the middle of `main()`** — no write call, no
+`__main__` block. It ran on every regeneration, exited 0, printed nothing and produced nothing.
+Five outputs were frozen at their committed content from 2026-09-14 to 2026-09-19:
+`MainSystemExt.rst`, `MainSystemCreateExt.rst`, `stubAutoBindingsExt.pyi`,
+`docs/theDoc/MainSystemExt.tex` and `MainSystemCreateExt.tex`.
+
+The writing half was recovered from `94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py`
+and the loop body completed. What five days of freezing had accumulated:
+
+| file | lines changed |
+|---|---:|
+| `docs/theDoc/MainSystemCreateExt.tex` | 433 |
+| `docs/theDoc/MainSystemExt.tex` | 249 |
+| `MainSystemCreateExt.rst` | 181 |
+| `MainSystemExt.rst` | 123 |
+| `stubAutoBindingsExt.pyi` | 32 |
+
+and, downstream of those, `python/exudyn/__init__.pyi` and `docs/RST/cInterface/MainSystem.rst`.
+Most of it is what step R7.6 could not repair: every GitHub link in these files still pointed at
+`main/pythonDev/`, a tree that R3.1 and R3.8 dissolved. R7.6 fixed 368 files and named these
+five as the ones a working generator would have fixed with them.
+
+#### Two decisions while restoring
+
+- The original opened `stubAutoBindingsExt.pyi` with mode `w` **inside** the per-class loop and
+  then wrote it a second time with the same content. Only the last class would ever have
+  survived, and the second write was dead. There is one class today, which is why neither half
+  was ever visible. It writes one file for all classes now.
+- The original also wrote **`python/exudyn/mainSystemExtensions.py`** — a hand-written module
+  that this generator *parses* — from the `exu.MainSystem.X = ...` lines it had collected.
+  That is not among the stage's declared outputs and it is **not** restored. Bringing it back
+  would have let a documentation generator overwrite a source file.
+
+#### The part that matters beyond one file
+
+**A generator that writes nothing always agrees with the commit.** The regeneration check
+compares the tree against HEAD; a stage producing no output passes it forever. So `generate.py`,
+which already declares what each stage writes, now checks it:
+
+```
+ERROR: tools/generators/mainSystemExtensionDocsEmitter.py exited 0 but produced no output:
+  | tools/generators/generated/MainSystemExt.rst
+  | ... 
+  | a generator that writes nothing always agrees with the commit, so the
+  | regeneration check cannot see this - hence the check here
+```
+
+**Verified by breaking it on purpose**: with the five `Write(...)` calls commented out,
+`generate.py --only mainSystemExtensionDocsEmitter` fails with exactly that message; restored,
+it passes. A check of this kind is worth nothing unless it has been seen to fire.
+
+A stage fails if a declared output does not exist, or if it touched none of them. **Two
+generators legitimately touch nothing** — `typesEmitter` and `structureHeaderEmitter` compare
+before they write (`WriteTextIfDifferent`), so an unchanged run writes no file. They say so with
+`writesOnlyWhenChanged=True` on their `Stage`, which also documents which generators are
+idempotent writers. The first version of this check did not know that and reported both as
+broken — a false alarm found by running it, not by reasoning about it.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-19)
+
+**R4.3.1** *(sub-step of R4.3; found 2026-09-18 while doing R7.6)* **`mainSystemExtensionDocsEmitter.py`
+    writes none of its five outputs** (#2526). The file ends in the middle of `main()` — no write
+    call and no `__main__` block — so the generator runs, exits 0, prints nothing and produces
+    nothing. `MainSystemExt.rst`, `MainSystemCreateExt.rst`, `stubAutoBindingsExt.pyi`,
+    `docs/theDoc/MainSystemExt.tex` and `MainSystemCreateExt.tex` have been frozen at their
+    committed content since the split of R4.3 part 2e.
+
+    **The regeneration gate cannot see this**: a generator that writes nothing always agrees with
+    the commit. That is the part worth fixing beyond the one file — a stage that produces none
+    of its declared outputs should fail, and `generate.py` already knows what each stage writes.
+
+    The writing half is in git: `94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py`, lines
+    1050-1119.
+
+---
+
+
 <a id="r6-4"></a>
 ### R6.4 — the error taxonomy, written for the user
 

@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.200.dev1, 
+  \item Exudyn version = 1.11.201.dev1, 
   \item last change =  2026-09-19, 
   \item Number of issues = 2543, 
-  \item Number of resolved issues = 2273 (200 in current version), 
+  \item Number of resolved issues = 2274 (201 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.201}: {\bf \color{warningRed}  resolved BUG 2526}: {\bf mainSystemExtensionDocsEmitter writes none of its five outputs}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The file ends in the middle of main() - no write call and no \_\_main\_\_ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing \#2525\, whose new link prefix could not reach those five files.}
+    \item {\bf notes: The writing half was recovered from 94710e6^ and the loop body completed; the emitter writes its five outputs again and has a \_\_main\_\_ block. Five days of freezing came to ~1000 changed lines, most of it GitHub links still pointing at main/pythonDev - what step R7.6 could not repair - plus downstream changes in \_\_init\_\_.pyi and docs/RST/cInterface/MainSystem.rst. Not restored: the original also overwrote python/exudyn/mainSystemExtensions.py, a hand-written module this generator parses, which is not a declared output of the stage. And generate.py now FAILS a stage that exits 0 without producing any declared output - verified by commenting the writes out again and seeing it fire. Two generators that write only on change declare writesOnlyWhenChanged=True.}
+    \item   date resolved: {\bf 2026-09-19 08:12},
+date raised: 2026-09-18 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.200}:  resolved Issue 2542: {\bf the exception types are decided but not documented for users}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13820,12 +13828,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2526}:  {\bf mainSystemExtensionDocsEmitter writes none of its five outputs}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: The file ends in the middle of main() - no write call and no \_\_main\_\_ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing \#2525\, whose new link prefix could not reach those five files.}
-    \item date raised: 2026-09-18 
-  \ei
   \item open {\bf BUG 2517}:  {\bf the gate environment can hold a stale exudyn wheel}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

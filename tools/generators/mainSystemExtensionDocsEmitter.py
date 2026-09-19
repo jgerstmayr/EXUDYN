@@ -65,4 +65,56 @@ def main():
                 latexExtensions[belongsTo] = ''
                 rstExtensions[belongsTo] = ''
                 pyiExtensions[belongsTo] = ''
-            
+
+            latexTemp = sFuncLatex + '\n'
+            rstTemp = '\n' + sFuncRST
+            pyiExtensions[belongsTo] += sPyi
+
+            if addExampleReferences:
+                latexTemp += sExamples
+                rstTemp += '\n' + sExamplesRST
+
+            #the Create* functions of mainSystemExtensions.py go into their OWN pair of files, so
+            #that the reference manual can put them in front of everything else; the rest is
+            #collected per class that it is added to
+            if moduleNamePython != 'mainSystemExtensions':
+                latexExtensions[belongsTo] += latexTemp
+                rstExtensions[belongsTo] += rstTemp
+            else:
+                latexExtensionsMainSystem += latexTemp
+                rstExtensionsMainSystem += rstTemp
+
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #WRITE, which is what this file stopped doing between 2026-09-14 and 2026-09-19 (#2526). The
+    #split of step R4.3 part 2e carried the loop across and not the writes, so the generator ran,
+    #exited 0 and produced nothing - and the regeneration gate could not see it, because a
+    #generator that writes nothing always agrees with the commit.
+    written = []
+
+    def Write(fileName, content):
+        with io.open(fileName, 'w', encoding='utf8') as file:
+            file.write(content)
+        written.append(fileName)
+
+    stubContent = ''
+    for key in latexExtensions:
+        Write(paths.generatedDir + key + 'Ext.rst', rstExtensions[key])
+        Write(theDocDir + '/' + key + 'Ext.tex', latexExtensions[key])
+        #ONE stub file for all keys: the original opened it with 'w' inside the loop, so only the
+        #last class would have survived, and then wrote it a second time with the same content.
+        #There is one key today, which is why nobody ever saw either half of that
+        stubContent += '\nclass ' + key + ':\n' + pyiExtensions[key]
+
+    Write(paths.generatedDir + 'stubAutoBindingsExt.pyi', stubContent)
+    Write(paths.generatedDir + 'MainSystemCreateExt.rst', rstExtensionsMainSystem)
+    Write(theDocDir + '/MainSystemCreateExt.tex', latexExtensionsMainSystem)
+
+    #NOT written, deliberately: the original wrote python/exudyn/mainSystemExtensions.py from the
+    #'exu.MainSystem.X = ...' lines it collected - overwriting a hand-written module that this
+    #generator PARSES. It is not among the declared outputs of the stage and it is not restored.
+
+    print('mainSystemExtensionDocsEmitter: ' + str(len(written)) + ' file(s) written')
+
+
+if __name__ == '__main__':
+    main()

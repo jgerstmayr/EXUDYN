@@ -4,7 +4,7 @@
 
 Function: CreateGround
 ^^^^^^^^^^^^^^^^^^^^^^
-`CreateGround <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L278>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``show = True``\ )
+`CreateGround <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L308>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create a ground object, using arguments of ObjectGround; this function is mainly added for consistency with other mainSystemExtensions
@@ -34,7 +34,7 @@ Function: CreateGround
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/basicTutorial2024.py>`_\  (Ex), \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM)
+    \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py>`_\  (Ex), \ `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/basicTutorial2024.py>`_\  (Ex), \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beamTutorial.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py>`_\  (TM)
 
 
 
@@ -42,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateMassPoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateMassPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L346>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``initialDisplacement = [0.,0.,0.]``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``physicsMass = 0``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
+`CreateMassPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L367>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``initialDisplacement = [0.,0.,0.]``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``physicsMass = 0``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
 
 - | \ *function description*\ :
   | helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint
@@ -84,7 +84,7 @@ Function: CreateMassPoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/basicTutorial2024.py>`_\  (Ex), \ `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py>`_\  (Ex), \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `createContactSphereSphere.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createContactSphereSphere.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `deleteItemsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/deleteItemsTest.py>`_\  (TM)
+    \ `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/basicTutorial2024.py>`_\  (Ex), \ `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamper.py>`_\  (Ex), \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `createContactSphereSphere.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createContactSphereSphere.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `deleteItemsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/deleteItemsTest.py>`_\  (TM)
 
 
 
@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRigidBody
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L480>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``initialAngularVelocity = [0.,0.,0.]``\ , \ ``initialDisplacement = None``\ , \ ``initialRotationMatrix = None``\ , \ ``inertia = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``nodeType = exudyn.NodeType.RotationEulerParameters``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
+`CreateRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L494>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``initialAngularVelocity = [0.,0.,0.]``\ , \ ``initialDisplacement = None``\ , \ ``initialRotationMatrix = None``\ , \ ``inertia = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``nodeType = exudyn.NodeType.RotationEulerParameters``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
 
 - | \ *function description*\ :
   | helper function to create 3D (or 2D) rigid body object and node; all quantities are global (angular velocity, etc.); use this function to easily create a rigid body; graphics can be directly obtained from inertia object, e.g. in case of cylindrical or cuboid shape
@@ -143,7 +143,7 @@ Function: CreateRigidBody
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py>`_\  (TM)
 
 
 
@@ -151,7 +151,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L718>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``referenceLength = None``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``force = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L732>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``referenceLength = None``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``force = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
@@ -204,7 +204,7 @@ Function: CreateSpringDamper
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/basicTutorial2024.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_\  (Ex), \ `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/loadUserFunctionTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+    \ `basicTutorial2024.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/basicTutorial2024.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py>`_\  (Ex), \ `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -212,7 +212,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateCartesianSpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateCartesianSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L827>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = [0.,0.,0.]``\ , \ ``damping = [0.,0.,0.]``\ , \ ``offset = [0.,0.,0.]``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateCartesianSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L845>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = [0.,0.,0.]``\ , \ ``damping = [0.,0.,0.]``\ , \ ``offset = [0.,0.,0.]``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create CartesianSpringDamper connector, using arguments from ObjectConnectorCartesianSpringDamper
@@ -261,7 +261,7 @@ Function: CreateCartesianSpringDamper
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py>`_\  (Ex), \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+    \ `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamper.py>`_\  (Ex), \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -269,7 +269,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRigidBodySpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRigidBodySpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L902>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = np.zeros((6,6))``\ , \ ``damping = np.zeros((6,6))``\ , \ ``offset = [0.,0.,0.,0.,0.,0.]``\ , \ ``rotationMatrixJoint = np.eye(3)``\ , \ ``useGlobalFrame = True``\ , \ ``intrinsicFormulation = True``\ , \ ``springForceTorqueUserFunction = 0``\ , \ ``postNewtonStepUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateRigidBodySpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L940>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = np.zeros((6,6))``\ , \ ``damping = np.zeros((6,6))``\ , \ ``offset = [0.,0.,0.,0.,0.,0.]``\ , \ ``rotationMatrixJoint = np.eye(3)``\ , \ ``useGlobalFrame = True``\ , \ ``intrinsicFormulation = True``\ , \ ``springForceTorqueUserFunction = 0``\ , \ ``postNewtonStepUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation
@@ -303,7 +303,7 @@ Function: CreateRigidBodySpringDamper
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `rigidBodySpringDamperIntrinsic.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodySpringDamperIntrinsic.py>`_\  (TM)
+    \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `rigidBodySpringDamperIntrinsic.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodySpringDamperIntrinsic.py>`_\  (TM)
 
 
 
@@ -311,7 +311,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateTorsionalSpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateTorsionalSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1008>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = [0.,0.,0.]``\ , \ ``axis = [0.,0.,0.]``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``offset = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``torque = 0.``\ , \ ``useGlobalFrame = True``\ , \ ``springTorqueUserFunction = 0``\ , \ ``unlimitedRotations = True``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateTorsionalSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1053>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = [0.,0.,0.]``\ , \ ``axis = [0.,0.,0.]``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``offset = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``torque = 0.``\ , \ ``useGlobalFrame = True``\ , \ ``springTorqueUserFunction = 0``\ , \ ``unlimitedRotations = True``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create TorsionalSpringDamper connector, using arguments from ObjectConnectorTorsionalSpringDamper, see there for the full documentation
@@ -343,7 +343,7 @@ Function: CreateTorsionalSpringDamper
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM)
+    \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM)
 
 
 
@@ -351,7 +351,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRevoluteJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1162>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1197>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -395,7 +395,7 @@ Function: CreateRevoluteJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM)
+    \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM)
 
 
 
@@ -403,7 +403,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreatePrismaticJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreatePrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1262>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreatePrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1297>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -448,7 +448,7 @@ Function: CreatePrismaticJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pickleCopyMbs.py>`_\  (TM), \ `relativeRotationTranslationMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/relativeRotationTranslationMechanism.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py>`_\  (TM), \ `relativeRotationTranslationMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/relativeRotationTranslationMechanism.py>`_\  (TM)
 
 
 
@@ -456,7 +456,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSphericalJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSphericalJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1353>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``jointRadius = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateSphericalJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1391>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``jointRadius = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed
@@ -500,7 +500,7 @@ Function: CreateSphericalJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py>`_\  (Ex), \ `NGsolveCreateFFRFreducedOrder.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCreateFFRFreducedOrder.py>`_\  (Ex), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+    \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py>`_\  (Ex), \ `NGsolveCreateFFRFreducedOrder.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCreateFFRFreducedOrder.py>`_\  (Ex), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -508,7 +508,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateGenericJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateGenericJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1436>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``rotationMatrixAxes = np.eye(3)``\ , \ ``constrainedAxes = [1,1,1, 1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``offsetUserFunction = 0``\ , \ ``offsetUserFunction_t = 0``\ , \ ``show = True``\ , \ ``axesRadius = 0.1``\ , \ ``axesLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateGenericJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1470>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``rotationMatrixAxes = np.eye(3)``\ , \ ``constrainedAxes = [1,1,1, 1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``offsetUserFunction = 0``\ , \ ``offsetUserFunction_t = 0``\ , \ ``show = True``\ , \ ``axesRadius = 0.1``\ , \ ``axesLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
@@ -558,7 +558,7 @@ Function: CreateGenericJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pistonEngine.py>`_\  (Ex), \ `universalJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/universalJoint.py>`_\  (Ex), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM)
+    \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pistonEngine.py>`_\  (Ex), \ `universalJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/universalJoint.py>`_\  (Ex), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py>`_\  (TM), \ `ANCFThinPlateTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py>`_\  (TM)
 
 
 
@@ -566,7 +566,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateDistanceConstraint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1547>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``distance = None``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateDistanceConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1575>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``distance = None``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``bodyList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
@@ -622,7 +622,7 @@ Function: CreateDistanceConstraint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py>`_\  (Ex), \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `deleteItemsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/deleteItemsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `taskmanagerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/taskmanagerTest.py>`_\  (TM)
+    \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py>`_\  (Ex), \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py>`_\  (Ex), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `deleteItemsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/deleteItemsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `taskmanagerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/taskmanagerTest.py>`_\  (TM)
 
 
 
@@ -630,7 +630,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateCoordinateConstraint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateCoordinateConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1681>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``coordinates = [None, None]``\ , \ ``offset = 0.``\ , \ ``factorValue1 = 1.``\ , \ ``velocityLevel = False``\ , \ ``offsetUserFunction = 0``\ , \ ``offsetUserFunction_t = 0``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateCoordinateConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1715>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``coordinates = [None, None]``\ , \ ``offset = 0.``\ , \ ``factorValue1 = 1.``\ , \ ``velocityLevel = False``\ , \ ``offsetUserFunction = 0``\ , \ ``offsetUserFunction_t = 0``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed
@@ -680,7 +680,7 @@ Function: CreateCoordinateConstraint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM)
+    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py>`_\  (Ex), \ `involuteGearGraphics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py>`_\  (TM), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM)
 
 
 
@@ -688,7 +688,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRollingDisc
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRollingDisc <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1822>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``axisPosition = []``\ , \ ``axisVector = [1,0,0]``\ , \ ``discRadius = 0.``\ , \ ``planePosition = [0,0,0]``\ , \ ``planeNormal = [0,0,1]``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``activeConnector = True``\ , \ ``show = True``\ , \ ``discWidth = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateRollingDisc <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1855>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``axisPosition = []``\ , \ ``axisVector = [1,0,0]``\ , \ ``discRadius = 0.``\ , \ ``planePosition = [0,0,0]``\ , \ ``planeNormal = [0,0,1]``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``activeConnector = True``\ , \ ``show = True``\ , \ ``discWidth = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create an ideal rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed; some constraint conditions may be deactivated, e.g. to resolve redundancy of constraints for multi-wheel vehicles
@@ -741,7 +741,7 @@ Function: CreateRollingDisc
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `createRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscTest.py>`_\  (TM)
+    \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `createRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscTest.py>`_\  (TM)
 
 
 
@@ -749,7 +749,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRollingDiscPenalty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRollingDiscPenalty <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1931>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``axisPosition = []``\ , \ ``axisVector = [1,0,0]``\ , \ ``discRadius = 0.``\ , \ ``planePosition = [0,0,0]``\ , \ ``planeNormal = [0,0,1]``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``dryFriction = [0,0]``\ , \ ``dryFrictionAngle = 0.``\ , \ ``dryFrictionProportionalZone = 0.``\ , \ ``viscousFriction = [0,0]``\ , \ ``rollingFrictionViscous = 0.``\ , \ ``useLinearProportionalZone = False``\ , \ ``activeConnector = True``\ , \ ``show = True``\ , \ ``discWidth = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateRollingDiscPenalty <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L1962>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``axisPosition = []``\ , \ ``axisVector = [1,0,0]``\ , \ ``discRadius = 0.``\ , \ ``planePosition = [0,0,0]``\ , \ ``planeNormal = [0,0,1]``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``dryFriction = [0,0]``\ , \ ``dryFrictionAngle = 0.``\ , \ ``dryFrictionProportionalZone = 0.``\ , \ ``viscousFriction = [0,0]``\ , \ ``rollingFrictionViscous = 0.``\ , \ ``useLinearProportionalZone = False``\ , \ ``activeConnector = True``\ , \ ``show = True``\ , \ ``discWidth = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create penalty-based rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed
@@ -809,7 +809,7 @@ Function: CreateRollingDiscPenalty
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM)
+    \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `createRollingDiscPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py>`_\  (TM)
 
 
 
@@ -817,7 +817,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSphereSphereContact
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSphereSphereContact <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L2036>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``spheresRadii = [-1,-1]``\ , \ ``isHollowSphere1 = False``\ , \ ``dynamicFriction = 0.``\ , \ ``frictionProportionalZone = 1e-3``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``contactStiffnessExponent = 1``\ , \ ``constantPullOffForce = 0``\ , \ ``contactPlasticityRatio = 0``\ , \ ``adhesionCoefficient = 0``\ , \ ``adhesionExponent = 1``\ , \ ``restitutionCoefficient = 1``\ , \ ``minimumImpactVelocity = 0``\ , \ ``impactModel = 0``\ , \ ``dataInitialCoordinates = [0,0,0,0]``\ , \ ``activeConnector = True``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = False``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateSphereSphereContact <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L2094>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``spheresRadii = [-1,-1]``\ , \ ``isHollowSphere1 = False``\ , \ ``dynamicFriction = 0.``\ , \ ``frictionProportionalZone = 1e-3``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``contactStiffnessExponent = 1``\ , \ ``constantPullOffForce = 0``\ , \ ``contactPlasticityRatio = 0``\ , \ ``adhesionCoefficient = 0``\ , \ ``adhesionExponent = 1``\ , \ ``restitutionCoefficient = 1``\ , \ ``minimumImpactVelocity = 0``\ , \ ``impactModel = 0``\ , \ ``dataInitialCoordinates = [0,0,0,0]``\ , \ ``activeConnector = True``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = False``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create penalty-based sphere-sphere contact between two rigid bodies, mass points (if friction coefficient is zero) or according nodes; the contact is based on ObjectContactSphereSphere; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
@@ -851,7 +851,7 @@ Function: CreateSphereSphereContact
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `createContactSphereSphere.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createContactSphereSphere.py>`_\  (TM), \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact.py>`_\  (TM), \ `createSphereQuadContact2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact2.py>`_\  (TM), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereTriangleContact.py>`_\  (TM)
+    \ `createContactSphereSphere.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createContactSphereSphere.py>`_\  (TM), \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py>`_\  (TM), \ `createSphereQuadContact2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact2.py>`_\  (TM), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py>`_\  (TM)
 
 
 
@@ -859,7 +859,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSphereQuadContact
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSphereQuadContact <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L2173>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``radiusSphere = 0``\ , \ ``quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]])``\ , \ ``includeEdges = 15``\ , \ ``dynamicFriction = 0.``\ , \ ``frictionProportionalZone = 1e-3``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``contactStiffnessExponent = 1``\ , \ ``restitutionCoefficient = 1``\ , \ ``minimumImpactVelocity = 0``\ , \ ``impactModel = 0``\ , \ ``dataInitialCoordinates = [0,0,0,0]``\ , \ ``activeConnector = True``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``show = False``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateSphereQuadContact <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L2238>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``radiusSphere = 0``\ , \ ``quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]])``\ , \ ``includeEdges = 15``\ , \ ``dynamicFriction = 0.``\ , \ ``frictionProportionalZone = 1e-3``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``contactStiffnessExponent = 1``\ , \ ``restitutionCoefficient = 1``\ , \ ``minimumImpactVelocity = 0``\ , \ ``impactModel = 0``\ , \ ``dataInitialCoordinates = [0,0,0,0]``\ , \ ``activeConnector = True``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``show = False``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
@@ -890,7 +890,7 @@ Function: CreateSphereQuadContact
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `rendererNOGLFWexample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rendererNOGLFWexample.py>`_\  (Ex), \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact.py>`_\  (TM), \ `createSphereQuadContact2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact2.py>`_\  (TM), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereTriangleContact.py>`_\  (TM)
+    \ `rendererNOGLFWexample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rendererNOGLFWexample.py>`_\  (Ex), \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py>`_\  (TM), \ `createSphereQuadContact2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact2.py>`_\  (TM), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py>`_\  (TM)
 
 
 
@@ -898,7 +898,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSphereTriangleContact
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSphereTriangleContact <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L2309>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``radiusSphere = 0``\ , \ ``trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]])``\ , \ ``includeEdges = 7``\ , \ ``dynamicFriction = 0.``\ , \ ``frictionProportionalZone = 1e-3``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``contactStiffnessExponent = 1``\ , \ ``restitutionCoefficient = 1``\ , \ ``minimumImpactVelocity = 0``\ , \ ``impactModel = 0``\ , \ ``dataInitialCoordinates = [0,0,0,0]``\ , \ ``activeConnector = True``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``show = False``\ , \ ``color = exudyn.graphics.color.default``\ )
+`CreateSphereTriangleContact <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L2378>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``radiusSphere = 0``\ , \ ``trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]])``\ , \ ``includeEdges = 7``\ , \ ``dynamicFriction = 0.``\ , \ ``frictionProportionalZone = 1e-3``\ , \ ``contactStiffness = 0.``\ , \ ``contactDamping = 0.``\ , \ ``contactStiffnessExponent = 1``\ , \ ``restitutionCoefficient = 1``\ , \ ``minimumImpactVelocity = 0``\ , \ ``impactModel = 0``\ , \ ``dataInitialCoordinates = [0,0,0,0]``\ , \ ``activeConnector = True``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``show = False``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
@@ -929,7 +929,7 @@ Function: CreateSphereTriangleContact
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact.py>`_\  (TM), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereTriangleContact.py>`_\  (TM)
+    \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py>`_\  (TM), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py>`_\  (TM)
 
 
 
@@ -937,7 +937,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateKinematicTree
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L2438>`__\ (\ ``name = ''``\ , \ ``listOfTreeLinks = []``\ , \ ``referenceCoordinates = None``\ , \ ``initialCoordinates = None``\ , \ ``initialCoordinates_t = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``baseOffset = [0.,0.,0.]``\ , \ ``linkForces = None``\ , \ ``linkTorques = None``\ , \ ``jointForceVector = None``\ , \ ``jointPositionOffsetVector = None``\ , \ ``jointVelocityOffsetVector = None``\ , \ ``forceUserFunction = 0``\ , \ ``jointRadius = 0.05``\ , \ ``jointWidth = 0.12``\ , \ ``colors = exudyn.graphics.color.default``\ , \ ``colorsJoints = exudyn.graphics.color.default``\ , \ ``baseGraphicsDataList = None``\ , \ ``linkRoundness = 0.2``\ , \ ``show = True``\ )
+`CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L2508>`__\ (\ ``name = ''``\ , \ ``listOfTreeLinks = []``\ , \ ``referenceCoordinates = None``\ , \ ``initialCoordinates = None``\ , \ ``initialCoordinates_t = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``baseOffset = [0.,0.,0.]``\ , \ ``linkForces = None``\ , \ ``linkTorques = None``\ , \ ``jointForceVector = None``\ , \ ``jointPositionOffsetVector = None``\ , \ ``jointVelocityOffsetVector = None``\ , \ ``forceUserFunction = 0``\ , \ ``jointRadius = 0.05``\ , \ ``jointWidth = 0.12``\ , \ ``colors = exudyn.graphics.color.default``\ , \ ``colorsJoints = exudyn.graphics.color.default``\ , \ ``baseGraphicsDataList = None``\ , \ ``linkRoundness = 0.2``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint; uses TreeLink as defined in exudyn.rigidBodyUtilities
@@ -971,7 +971,7 @@ Function: CreateKinematicTree
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createKinematicTreeTest.py>`_\  (TM), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `openAIgymNLinkAdvanced.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py>`_\  (Ex), \ `openAIgymNLinkContinuous.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py>`_\  (Ex), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py>`_\  (TM), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
 
 
 
@@ -979,7 +979,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateFFRFReducedOrderObject
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateFFRFReducedOrderObject <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L2771>`__\ (\ ``name``\ , \ ``femInterface``\ , \ ``referencePosition = [0., 0., 0.]``\ , \ ``initialVelocity = [0., 0., 0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialAngularVelocity = [0., 0., 0.]``\ , \ ``massProportionalDamping = 0.``\ , \ ``stiffnessProportionalDamping = 0.``\ , \ ``gravity = [0., 0., 0.]``\ , \ ``color = exudyn.graphics.color.defaultFFRF``\ , \ ``superElementRigidMarkersOffsets = None``\ , \ ``showMarkers = True``\ , \ ``verbose = False``\ )
+`CreateFFRFReducedOrderObject <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L2815>`__\ (\ ``name``\ , \ ``femInterface``\ , \ ``referencePosition = [0., 0., 0.]``\ , \ ``initialVelocity = [0., 0., 0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialAngularVelocity = [0., 0., 0.]``\ , \ ``massProportionalDamping = 0.``\ , \ ``stiffnessProportionalDamping = 0.``\ , \ ``gravity = [0., 0., 0.]``\ , \ ``color = exudyn.graphics.color.defaultFFRF``\ , \ ``superElementRigidMarkersOffsets = None``\ , \ ``showMarkers = True``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
   | Create an FFRF reduced order object; the function adds SuperElementRigid markers if boundaries are defined in the given femInterface and thus enables straightforward integration of flexible bodies into a multibody system
@@ -1044,7 +1044,7 @@ Function: CreateFFRFReducedOrderObject
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolveCreateFFRFreducedOrder.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCreateFFRFreducedOrder.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex)
+    \ `NGsolveCreateFFRFreducedOrder.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCreateFFRFreducedOrder.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex)
 
 
 
@@ -1052,7 +1052,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateForce
 ^^^^^^^^^^^^^^^^^^^^^
-`CreateForce <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L2940>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
+`CreateForce <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L3010>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create force applied to given body
@@ -1091,7 +1091,7 @@ Function: CreateForce
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py>`_\  (Ex), \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/loadUserFunctionTest.py>`_\  (TM)
+    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py>`_\  (Ex), \ `cartesianSpringDamper.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamper.py>`_\  (Ex), \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py>`_\  (TM)
 
 
 
@@ -1099,7 +1099,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateTorque
 ^^^^^^^^^^^^^^^^^^^^^^
-`CreateTorque <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L3026>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
+`CreateTorque <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L3097>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create torque applied to given body
@@ -1139,5 +1139,98 @@ Function: CreateTorque
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createFunctionsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pickleCopyMbs.py>`_\  (TM)
+    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py>`_\  (Ex), \ `chatGPTupdate2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py>`_\  (TM), \ `createFunctionsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pickleCopyMbs.py>`_\  (TM)
+
+
+
+.. _sec-mainsystemextensions-createdistancesensorgeometry:
+
+Function: CreateDistanceSensorGeometry
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L3251>`__\ (\ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
+
+- | \ *function description*\ :
+  | Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
+  | Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
+  | - NOTE that this function is added to MainSystem via Python function CreateDistanceSensorGeometry.
+- | \ *input*\ :
+  | \ ``meshPoints``\ : list of points (3D), as returned by graphics.ToPointsAndTrigs()
+  | \ ``meshTrigs``\ : list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
+  | \ ``rigidBodyMarkerIndex``\ : rigid body marker to which the triangles are fixed on (ground or moving object)
+  | \ ``searchTreeCellSize``\ : size of search tree (X,Y,Z); use larger values in directions where more triangles are located
+- | \ *output*\ :
+  | (type: int) returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
+- | \ *notes*\ :
+  | should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py>`_\  (TM)
+
+
+
+.. _sec-mainsystemextensions-createdistancesensor:
+
+Function: CreateDistanceSensor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L3283>`__\ (\ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = exudyn.graphics.color.red``\ )
+
+- | \ *function description*\ :
+  | Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
+  | - NOTE that this function is added to MainSystem via Python function CreateDistanceSensor.
+- | \ *input*\ :
+  | \ ``generalContactIndex``\ : the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
+  | \ ``positionOrMarker``\ : either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
+  | \ ``dirSensor``\ : the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
+  | \ ``minDistance``\ : the minimum distance which is accepted; smaller distance will be ignored
+  | \ ``maxDistance``\ : the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
+  | \ ``cylinderRadius``\ : in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
+  | \ ``selectedTypeIndex``\ : either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
+  | \ ``storeInternal``\ : like with any SensorUserFunction, setting to True stores sensor data internally
+  | \ ``fileName``\ : if defined, recorded data of SensorUserFunction is written to specified file
+  | \ ``measureVelocity``\ : if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
+  | \ ``addGraphicsObject``\ : if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+  | \ ``drawDisplaced``\ : if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+  | \ ``color``\ : optional color for 'laser beam' to be drawn
+- | \ *output*\ :
+  | (type: SensorIndex) creates sensor and returns according sensor number of SensorUserFunction
+- | \ *notes*\ :
+  | use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py>`_\  (TM), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/laserScannerTest.py>`_\  (TM)
+
+
+
+.. _sec-mainsystemextensions-drawsystemgraph:
+
+Function: DrawSystemGraph
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/mainSystemExtensions.py\#L3358>`__\ (\ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ , \ ``showGraph = True``\ , \ ``addItemData = False``\ , \ ``addAnnotations = False``\ )
+
+- | \ *function description*\ :
+  | helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
+  | - NOTE that this function is added to MainSystem via Python function DrawSystemGraph.
+- | \ *input*\ :
+  | \ ``showLoads``\ : toggle appearance of loads in mbs
+  | \ ``showSensors``\ : toggle appearance of sensors in mbs
+  | \ ``useItemNames``\ : if True, object names are shown instead of basic object types (Node, Load, ...)
+  | \ ``useItemTypes``\ : if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+  | \ ``addItemTypeNames``\ : if True, type nymes (Node, Load, etc.) are added
+  | \ ``multiLine``\ : if True, labels are multiline, improving readability; ignored if showGraph = False
+  | \ ``fontSizeFactor``\ : use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
+  | \ ``showLegend``\ : shows legend for different item types
+  | \ ``layoutDistanceFactor``\ : this factor influences the arrangement of labels; larger distance values lead to circle-like results
+  | \ ``layoutIterations``\ : more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
+  | \ ``tightLayout``\ : if True, uses matplotlib plt.tight_layout() which may raise warning
+  | \ ``showGraph``\ : if True, graph is plotted with matplotlib
+  | \ ``addItemData``\ : if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
+  | \ ``addAnnotations``\ : add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
+- | \ *output*\ :
+  | (type: [Any, Any, Any]) returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(...)
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
