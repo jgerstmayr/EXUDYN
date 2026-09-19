@@ -7146,6 +7146,76 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-4"></a>
+### R6.4 — the error taxonomy, written for the user
+
+**DONE 2026-09-19** (#2542). The last step of phase R6.
+
+R6.3 built nine exception classes and decided what each one means. Until now the only places
+that said so were `CODING_STYLE.md` §10 — written for someone **adding a check in C++** —
+and the revision log, which is a record. A user needs the other direction: which type to catch,
+what it says about **whose mistake it was**, and what to do next.
+
+It is now a subsection of *Exudyn Basics* in `introduction.tex`, directly **before** *Removing
+convergence problems and solver failures* — the taxonomy first, then the tuning advice that
+one of its entries points at. Five parts:
+
+1. **The nine types**, each with the built-in it also derives from, what it means, and an
+   example. The ordering is by who is at fault: the user's own value, then the model, then the
+   solver, then *not implemented*, and `InternalError` last with *"this one is a bug in Exudyn,
+   not in your model — please report it"*.
+2. **Catching a solver failure**, which is the one case with a concrete action behind it and the
+   reason the step exists. Two worked examples: retry with smaller steps, and score a failed run
+   in a parameter variation so the sweep continues. With the note that
+   `except exudyn.ExudynError` does **not** catch `KeyboardInterrupt`, so a long sweep can still
+   be stopped — which is what step R6.1 was about.
+3. **An error inside your own user function**: it arrives as `ModelError`, and the original is
+   `__cause__` with its traceback (R6.3.8).
+4. **Where the message is written**: the console shows it once, as the traceback; every open log
+   file gets the block, whatever raised it (R6.3.10, R6.8).
+5. **Deprecation warnings** and `python -W error::DeprecationWarning`, and the switches:
+   `config.suppressWarnings`, `special.exceptions.parameterRangeChecks` and its two siblings.
+
+#### Written in LaTeX, on purpose
+
+The obvious objection: R7.1 converts these `.tex` files to Markdown, so why write LaTeX in
+September 2026? Because the step says *"it goes into the user documentation, not only into a dev
+note"*, and the user documentation **today** is the `.tex` → RST/PDF pipeline. A Markdown
+file would have been cleaner to write and invisible to every reader until R7.1 lands. The
+conversion will carry this along with everything else.
+
+Two things that had to match the house style rather than my habits: each `\item` is **one long
+line**, because reStructuredText continues a bullet at the marker column and an indented
+continuation becomes a block quote; and the sub-headings use `\mysubsubsubsectionlabel`, which
+`autoGenerateHelper.py` knows. Verified by `exudev docs`, which runs `sphinx-build -W`: the
+strict build passes.
+
+#### Noticed, not fixed
+
+The neighbouring text still tells users to look in `main/pythonDev/Examples` and
+`main/pythonDev/TestModels`, which became `python/Examples` and `python/TestModels` in steps
+R3.1, R3.8 and R3.9. That belongs to step **R7.2**, which exists to carry the revision into the
+documentation, and it is noted here rather than fixed in passing (rule 9).
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-19)
+
+**R6.4** *(phase R6, after R6.3)* **Document the error taxonomy**: for each exception type, what
+    it means in Exudyn, what a user should do about it, and which layer raises it. It is the
+    written form of what R6.7 and R6.3 decide, and what R6.1 catches against — so it is written
+    after them, not before, and it goes into the user documentation, not only into a dev note.
+
+    The exception classes themselves are decided and built in R6.3; this step writes down what
+    each one means, which layer raises it, and what a user should do about it — including the
+    one case with a concrete user action behind it: catching a solver failure to retry with a
+    smaller step, or to score a failed run in a parameter variation.
+
+---
+
+
 <a id="r6-2"></a>
 ### R6.2 — which binary was imported, and why
 

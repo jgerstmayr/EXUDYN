@@ -920,6 +920,103 @@ However, the output of the performance tests is not stored on github.
 We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsectionlabel{Errors: what \codeName\ raises, and what to do about it}{sec:overview:basics:errors}
+%
+Every error that \codeName\ reports from its C++ core arrives in Python as an exception with a
+\mybold{type}. The type answers the first question a user has -- \mybold{whose mistake was it} --
+before the message is even read.
+
+All of them derive from \texttt{exudyn.ExudynError}, and each of them \mybold{also} derives from
+the built-in exception that fits, so an \texttt{except ValueError} written before \codeName\ 2.0
+keeps working:
+\bi
+  \item \texttt{exudyn.ExudynTypeError} (also a \texttt{TypeError}): the object cannot be that parameter at all -- a list where a number belongs, a string where a function belongs.
+  \item \texttt{exudyn.ExudynValueError} (also a \texttt{ValueError}): the kind of value is right and the value is not -- a vector of the wrong length, an unknown parameter name, \texttt{numberOfSteps=-1}, an output variable this item does not have.
+  \item \texttt{exudyn.ExudynIndexError} (also an \texttt{IndexError}): an index outside its range -- \texttt{mbs.GetObject(99)} in a system with three objects.
+  \item \texttt{exudyn.ModelError} (also a \texttt{ValueError}): the model \mybold{as built} does not hold together -- a load on a marker that does not exist, a node used by an object but never added, a function called before \texttt{mbs.Assemble()}. Most of these are raised by \texttt{Assemble()}, which checks the whole system.
+  \item \texttt{exudyn.SolverError} (also a \texttt{RuntimeError}): the solver cannot continue -- a singular system matrix, no convergence, divergence. See \refSection{sec:overview:basics:convergenceproblems} for what to do.
+  \item \texttt{exudyn.NotImplementedFeatureError} (also a \texttt{NotImplementedError}): the feature or the combination does not exist -- a jacobian that is not implemented for this element, a solver that cannot handle this constraint. \mybold{Neither your mistake nor a bug}; the message usually names a way around it.
+  \item \texttt{exudyn.ExudynArithmeticError} (also an \texttt{ArithmeticError}): division by zero, root of a negative number.
+  \item \texttt{exudyn.InternalError} (also a \texttt{RuntimeError}): an \codeName\ invariant broke. \mybold{This one is a bug in \codeName, not in your model} -- please report it with the message and, if possible, a model that shows it.
+\ei
+
+\noindent So \texttt{except exudyn.ExudynError} catches everything \codeName\ raises, while
+\texttt{except IndexError} or \texttt{except ValueError} still do what they always did.
+
+\mysubsubsubsectionlabel{Catching a solver failure}{sec:overview:basics:errors:solver}
+%
+The case with a concrete action behind it: a solve that fails is a normal event in a parameter
+study, and it should not end the study.
+\pythonstyle\begin{lstlisting}
+  try:
+      mbs.SolveDynamic(simulationSettings)
+  except exudyn.SolverError:
+      #the solver stopped: retry with smaller steps
+      simulationSettings.timeIntegration.numberOfSteps *= 10
+      mbs.SolveDynamic(simulationSettings)
+  except exudyn.ModelError as e:
+      #the model itself is wrong - retrying will not help
+      print('this model cannot be solved:', e)
+\end{lstlisting}
+
+\noindent In a parameter variation, score the failed run instead of letting it stop the sweep:
+\pythonstyle\begin{lstlisting}
+  def ParameterFunction(parameterDict):
+      ...
+      try: mbs.SolveDynamic(simulationSettings)
+      except exudyn.ExudynError: return 1e10   #a very bad score, so the optimizer moves away from here
+      return mbs.GetSensorValues(sensorNumber)[0]
+\end{lstlisting}
+
+\noindent Note that \texttt{except exudyn.ExudynError} does \mybold{not} catch
+\texttt{KeyboardInterrupt}: a long sweep can still be stopped with Ctrl-C.
+
+\mysubsubsubsection{An error inside your own user function}
+%
+If a Python user function -- \texttt{springForceUserFunction} and its kin -- raises, \codeName\
+reports it as a \texttt{ModelError}, because a user function is part of the model. The original
+exception is \mybold{not} lost: it is attached as \texttt{\_\_cause\_\_}, with its own traceback,
+so Spyder and VS Code show the chain and jump to the line inside your function.
+\pythonstyle\begin{lstlisting}
+  try:
+      mbs.SolveDynamic(simulationSettings)
+  except exudyn.ModelError as e:
+      print(type(e.__cause__))   #<class 'ZeroDivisionError'>, raised in your user function
+\end{lstlisting}
+
+\mysubsubsubsectionlabel{Where the message is written}{sec:overview:basics:errors:where}
+%
+The exception carries the message and the location, so the \mybold{console shows it once} -- as
+the Python traceback, and not a second time as a printed block. A caught exception therefore
+prints nothing at all, which is what makes a parameter variation readable.
+
+\noindent The log files are the other way round: an error is written to \mybold{every open log
+file}, whatever raised it.
+\bi
+  \item the \texttt{exudyn} output file, if one was opened with \texttt{exu.SetWriteToFile(...)};
+  \item the solver information file, if \texttt{solutionSettings.solverInformationFileName} is set.
+\ei
+\noindent On a long unattended run those files are the only record that anything happened.
+
+\mysubsubsubsectionlabel{Deprecation warnings}{sec:overview:basics:errors:deprecation}
+%
+A name that is on its way out raises a real Python \texttt{DeprecationWarning} -- once per place
+in your code, not once per call. To find every use before a release removes the old name, run
+your script with
+\plainlststyle\begin{lstlisting}
+  python -W error::DeprecationWarning yourModel.py
+\end{lstlisting}
+\noindent which turns each of them into an error at the line that caused it.
+
+\mysubsubsubsectionlabel{Switches}{sec:overview:basics:errors:switches}
+%
+\bi
+  \item \texttt{exudyn.config.suppressWarnings = True}: no warnings, on the console or in a file.
+  \item \texttt{exudyn.special.exceptions.parameterRangeChecks = False}: do not check parameter ranges; faster, and a wrong value then reaches the computation instead of being reported.
+  \item \texttt{exudyn.special.exceptions.dictionaryVersionMismatch}, \texttt{.dictionaryNonCopyable}: turn those two specific errors off.
+\ei
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsectionlabel{Removing convergence problems and solver failures}{sec:overview:basics:convergenceproblems}
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user. 

@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.199.dev1, 
+  \item Exudyn version = 1.11.200.dev1, 
   \item last change =  2026-09-19, 
-  \item Number of issues = 2542, 
-  \item Number of resolved issues = 2272 (199 in current version), 
+  \item Number of issues = 2543, 
+  \item Number of resolved issues = 2273 (200 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.200}:  resolved Issue 2542: {\bf the exception types are decided but not documented for users}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Step R6.3 built nine exception classes and decided what each one means; nothing tells a USER about them. The only places that describe the taxonomy are docs/dev/CODING\_STYLE.md section 10, which is written for someone adding a check in C++, and the revision log, which is a record. A user needs the other direction: which type to catch, what it says about whose mistake it was, and what to do about it - including the one case with a concrete action behind it, catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation.}
+    \item {\bf notes: Written as a subsection of Exudyn Basics in docs/theDoc/introduction.tex, before "Removing convergence problems and solver failures": the nine types with the built-in each also derives from and what each says about whose mistake it was; catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation; an error inside a user function arriving as ModelError with the original as \_\_cause\_\_; where the message is written (console once, every open log file); deprecation warnings and the switches. In LaTeX because that is the user documentation today - R7.1 will convert it with the rest. exudev docs (sphinx-build -W) passes.}
+    \item   date resolved: {\bf 2026-09-19 07:51},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.199}:  resolved Issue 2540: {\bf the binary selection in \_\_init\_\_.py is a nest of try/except blocks}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

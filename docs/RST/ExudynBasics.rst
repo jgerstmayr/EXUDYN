@@ -665,6 +665,141 @@ However, the output of the performance tests is not stored on github.
 We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
 
 
+.. _sec-overview-basics-errors:
+
+
+Errors: what Exudyn raises, and what to do about it
+---------------------------------------------------
+
+Every error that Exudyn reports from its C++ core arrives in Python as an exception with a
+\ **type**\ . The type answers the first question a user has -- \ **whose mistake was it**\  --
+before the message is even read.
+
+All of them derive from \ ``exudyn.ExudynError``\ , and each of them \ **also**\  derives from
+the built-in exception that fits, so an \ ``except ValueError``\  written before Exudyn 2.0
+keeps working:
+
++  \ ``exudyn.ExudynTypeError``\  (also a \ ``TypeError``\ ): the object cannot be that parameter at all -- a list where a number belongs, a string where a function belongs.
++  \ ``exudyn.ExudynValueError``\  (also a \ ``ValueError``\ ): the kind of value is right and the value is not -- a vector of the wrong length, an unknown parameter name, \ ``numberOfSteps=-1``\ , an output variable this item does not have.
++  \ ``exudyn.ExudynIndexError``\  (also an \ ``IndexError``\ ): an index outside its range -- \ ``mbs.GetObject(99)``\  in a system with three objects.
++  \ ``exudyn.ModelError``\  (also a \ ``ValueError``\ ): the model \ **as built**\  does not hold together -- a load on a marker that does not exist, a node used by an object but never added, a function called before \ ``mbs.Assemble()``\ . Most of these are raised by \ ``Assemble()``\ , which checks the whole system.
++  \ ``exudyn.SolverError``\  (also a \ ``RuntimeError``\ ): the solver cannot continue -- a singular system matrix, no convergence, divergence. See Section :ref:`sec-overview-basics-convergenceproblems`\  for what to do.
++  \ ``exudyn.NotImplementedFeatureError``\  (also a \ ``NotImplementedError``\ ): the feature or the combination does not exist -- a jacobian that is not implemented for this element, a solver that cannot handle this constraint. \ **Neither your mistake nor a bug**\ ; the message usually names a way around it.
++  \ ``exudyn.ExudynArithmeticError``\  (also an \ ``ArithmeticError``\ ): division by zero, root of a negative number.
++  \ ``exudyn.InternalError``\  (also a \ ``RuntimeError``\ ): an Exudyn invariant broke. \ **This one is a bug in Exudyn, not in your model**\  -- please report it with the message and, if possible, a model that shows it.
+
+
+So \ ``except exudyn.ExudynError``\  catches everything Exudyn raises, while
+\ ``except IndexError``\  or \ ``except ValueError``\  still do what they always did.
+
+
+.. _sec-overview-basics-errors-solver:
+
+
+Catching a solver failure
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The case with a concrete action behind it: a solve that fails is a normal event in a parameter
+study, and it should not end the study.
+
+.. code-block:: python
+
+  try:
+      mbs.SolveDynamic(simulationSettings)
+  except exudyn.SolverError:
+      #the solver stopped: retry with smaller steps
+      simulationSettings.timeIntegration.numberOfSteps *= 10
+      mbs.SolveDynamic(simulationSettings)
+  except exudyn.ModelError as e:
+      #the model itself is wrong - retrying will not help
+      print('this model cannot be solved:', e)
+
+
+
+In a parameter variation, score the failed run instead of letting it stop the sweep:
+
+.. code-block:: python
+
+  def ParameterFunction(parameterDict):
+      ...
+      try: mbs.SolveDynamic(simulationSettings)
+      except exudyn.ExudynError: return 1e10   #a very bad score, so the optimizer moves away from here
+      return mbs.GetSensorValues(sensorNumber)[0]
+
+
+
+Note that \ ``except exudyn.ExudynError``\  does \ **not**\  catch
+\ ``KeyboardInterrupt``\ : a long sweep can still be stopped with Ctrl-C.
+
+
+An error inside your own user function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If a Python user function -- \ ``springForceUserFunction``\  and its kin -- raises, Exudyn
+reports it as a \ ``ModelError``\ , because a user function is part of the model. The original
+exception is \ **not**\  lost: it is attached as \ ``__cause__``\ , with its own traceback,
+so Spyder and VS Code show the chain and jump to the line inside your function.
+
+.. code-block:: python
+
+  try:
+      mbs.SolveDynamic(simulationSettings)
+  except exudyn.ModelError as e:
+      print(type(e.__cause__))   #<class 'ZeroDivisionError'>, raised in your user function
+
+
+
+
+.. _sec-overview-basics-errors-where:
+
+
+Where the message is written
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The exception carries the message and the location, so the \ **console shows it once**\  -- as
+the Python traceback, and not a second time as a printed block. A caught exception therefore
+prints nothing at all, which is what makes a parameter variation readable.
+
+The log files are the other way round: an error is written to \ **every open log
+file**\ , whatever raised it.
+
++  the \ ``exudyn``\  output file, if one was opened with \ ``exu.SetWriteToFile(...)``\ ;
++  the solver information file, if \ ``solutionSettings.solverInformationFileName``\  is set.
+
+On a long unattended run those files are the only record that anything happened.
+
+
+.. _sec-overview-basics-errors-deprecation:
+
+
+Deprecation warnings
+^^^^^^^^^^^^^^^^^^^^
+
+A name that is on its way out raises a real Python \ ``DeprecationWarning``\  -- once per place
+in your code, not once per call. To find every use before a release removes the old name, run
+your script with
+
+.. code-block:: 
+
+  python -W error::DeprecationWarning yourModel.py
+
+
+which turns each of them into an error at the line that caused it.
+
+
+.. _sec-overview-basics-errors-switches:
+
+
+Switches
+^^^^^^^^
+
+
++  \ ``exudyn.config.suppressWarnings = True``\ : no warnings, on the console or in a file.
++  \ ``exudyn.special.exceptions.parameterRangeChecks = False``\ : do not check parameter ranges; faster, and a wrong value then reaches the computation instead of being reported.
++  \ ``exudyn.special.exceptions.dictionaryVersionMismatch``\ , \ ``.dictionaryNonCopyable``\ : turn those two specific errors off.
+
+
+
 .. _sec-overview-basics-convergenceproblems:
 
 

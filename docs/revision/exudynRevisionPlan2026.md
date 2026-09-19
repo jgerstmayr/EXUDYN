@@ -754,15 +754,13 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     solver stops failing silently (#2536).
 
 <a id="r6-4"></a>
-**R6.4** *(phase R6, after R6.3)* **Document the error taxonomy**: for each exception type, what
-    it means in Exudyn, what a user should do about it, and which layer raises it. It is the
-    written form of what R6.7 and R6.3 decide, and what R6.1 catches against — so it is written
-    after them, not before, and it goes into the user documentation, not only into a dev note.
+**R6.4** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r6-4) — *(phase R6)*
+    **The error taxonomy is in the user documentation** (#2542): what each of the nine types
+    means, what to do about it, and how to catch a solver failure to retry or to score a failed
+    run. `introduction.tex`, section *Errors: what Exudyn raises, and what to do about it*.
 
-    The exception classes themselves are decided and built in R6.3; this step writes down what
-    each one means, which layer raises it, and what a user should do about it — including the
-    one case with a concrete user action behind it: catching a solver failure to retry with a
-    smaller step, or to score a failed run in a parameter variation.
+    **Phase R6 is complete with this step.**
+
 
 <a id="r6-5"></a>
 **R6.5** **DONE 2026-09-15** — A user switch for parameter range checks. → [log](exudynRevisionLog2026.md#r6-5)

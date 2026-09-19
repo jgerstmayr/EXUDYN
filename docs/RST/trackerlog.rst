@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.199.dev1, 
++  Exudyn version = 1.11.200.dev1, 
 +  last change =  2026-09-19, 
-+  Number of issues = 2542, 
-+  Number of resolved issues = 2272 (199 in current version), 
++  Number of issues = 2543, 
++  Number of resolved issues = 2273 (200 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.200: resolved Issue 2542: the exception types are decided but not documented for users (docu)
+    - issue author: Claude-JG
+    - description:  Step R6.3 built nine exception classes and decided what each one means; nothing tells a USER about them. The only places that describe the taxonomy are docs/dev/CODING_STYLE.md section 10, which is written for someone adding a check in C++, and the revision log, which is a record. A user needs the other direction: which type to catch, what it says about whose mistake it was, and what to do about it - including the one case with a concrete action behind it, catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation.
+    - **notes:** Written as a subsection of Exudyn Basics in docs/theDoc/introduction.tex, before "Removing convergence problems and solver failures": the nine types with the built-in each also derives from and what each says about whose mistake it was; catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation; an error inside a user function arriving as ModelError with the original as __cause__; where the message is written (console once, every open log file); deprecation warnings and the switches. In LaTeX because that is the user documentation today - R7.1 will convert it with the rest. exudev docs (sphinx-build -W) passes.
+    - date resolved: **2026-09-19 07:51**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.199: resolved Issue 2540: the binary selection in __init__.py is a nest of try/except blocks (improvement)
     - issue author: Claude-JG
     - description:  Four nested try/except blocks choose between exudynCPPfast and exudynCPP and between the installed-package and the Visual Studio layout. Nothing records which one was taken, the decisions are printed unconditionally or not at all, and a total failure raises one sentence about 32/64 bit versions that names neither the candidates nor the reason each failed - and 32-bit builds were dropped long ago. Make it one function that returns its log, print the log under an env var, and raise a single ImportError listing every attempt. Hard prerequisite for phase R9, where a plugin is bound to the module it was built against and which one was loaded has to be answerable.
