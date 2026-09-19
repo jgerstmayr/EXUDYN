@@ -157,6 +157,7 @@ def Generate(options):
         checks = [(['python', 'tools/checkAll.py', '--check'],                'checkAll'),
                   (['python', 'tools/checkExtras.py', '--check'],             'checkExtras'),
                   (['python', 'tools/checkEncoding.py', '--check'],          'checkEncoding'),
+                  (['python', 'tools/checkMathMacros.py', '--check'],       'checkMathMacros'),
                   (['python', 'tools/checkPython.py', '--check'],             'checkPython (ruff)'),
                   (['python', 'tools/checkPython.py', '--stubs', '--check'],  'checkPython (stubs)'),
                   (['python', 'tools/gen_sources.py', '--check'],             'gen_sources'),

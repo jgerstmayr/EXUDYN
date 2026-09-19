@@ -7344,6 +7344,27 @@ The converter now prints every dropped LaTeX figure caption and every macro it d
 
 **The last chapter decided where `README.rst` comes from** (info document D11, below).
 
+#### The macros MathJax did not have (maintainer, 2026-09-19)
+
+*"many formulas do not render: `\pv`, `\fv`, etc."* — and they did not, in every chapter.
+
+The cause is the same mechanism that made the conversion cheap. The old `.tex` — `.rst` converter
+**expanded** the macros: `\qv` was written into the `.rst` as `\mathbf{q}`, so MathJax never saw a
+project macro and `conf.py` only ever needed the few that survived expansion — **118 of the
+document's 204**. The Markdown keeps `\qv`, so MathJax needs all of them.
+
+**46 macros were missing**, led by `\qv` (226 uses), `\fv` (156), `\vv` (133), `\pv` (129),
+`\Jm` (127). They are declared in `conf.py` now, which is also where they will *live*: the two
+files that define them, `docincludes.sty` and the preamble of `theDoc.tex`, die with the LaTeX
+build (D8).
+
+**This is the one silent loss the word count could not catch**, because nothing on the build side
+can: Sphinx does not read math, MathJax runs in the reader's browser, and an undeclared macro
+renders as its own source without a warning anywhere. So it gets a gate:
+**`tools/checkMathMacros.py`**, now the eighth check of `exudev generate --all-checks`. It collects
+every macro used inside `$...$` in `docs/manual/*.md`, subtracts what `conf.py` declares and what
+MathJax knows by itself, and fails on the rest.
+
 #### `README.rst`: one file, three places
 
 `gettingStarted.tex` began with 57 lines of **raw RST**, and that block was `README.rst`, the

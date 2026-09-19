@@ -198,6 +198,60 @@ mathjax3_config = {
             '[+]': ['mathtools']
         },
         'macros': { #write defs without '\' at beginning; use [,n] with n arguments
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the rest of the document's macros, revision2026 step R7.1.5 (#2549).
+#Until the chapters became Markdown, the .tex -> .rst converter EXPANDED these
+#(\qv was written into the .rst as \mathbf{q}), so MathJax never saw them and conf.py
+#carried only the ones that survived expansion. The Markdown keeps the macro, so every
+#macro a chapter uses has to be declared here - and here is now the ONLY place they live,
+#because docincludes.sty and theDoc.tex die with the LaTeX build (info document D8).
+            'ANCFdk': r'{\LU{0}{\dv_k}}',
+            'ANCFdkO': r'{\LU{0}{\dv_{0,k}}}',
+            'ANCFdkOtp': r'{\LU{0}{\dv_{0,k}\tp}}',
+            'ANCFdkt': r'{\LU{0}{\dot\dv_k}}',
+            'Am': r'{\mathbf{A}}',
+            'Dm': r'{\mathbf{D}}',
+            'Em': r'{\mathbf{E}}',
+            'Gm': r'{\mathbf{G}}',
+            'Im': r'{\mathbf{I}}',
+            'ImThree': r'{\mathbf{I}_{3 \times 3}}',
+            'Jm': r'{\mathbf{J}}',
+            'Km': r'{\mathbf{K}}',
+            'Mm': r'{\mathbf{M}}',
+            'Pm': r'{\mathbf{P}}',
+            'Rm': r'{\mathbf{R}}',
+            'Sm': r'{\mathbf{S}}',
+            'Tm': r'{\mathbf{T}}',
+            'av': r'{\mathbf{a}}',
+            'bv': r'{\mathbf{b}}',
+            'cv': r'{\mathbf{c}}',
+            'diffANCF': [r'{\frac{\partial #1}{\partial \qv_{ANCF}}}', 1],
+            'diffANCFdk': r'{\diffANCFmI{\ANCFdk}}',
+            'diffANCFmI': [r'{\frac{\partial #1}{\partial \qv_{ANCF,m1}}}', 1],
+            'diffANCFmIt': [r'{\frac{\partial #1}{\partial \dot \qv_{ANCF,m1}}}', 1],
+            'diffANCFt': [r'{\frac{\partial #1}{\partial \dot \qv_{ANCF}}}', 1],
+            'diffmI': [r'{\frac{\partial #1}{\partial \qv_{m1}}}', 1],
+            'diffmIt': [r'{\frac{\partial #1}{\partial \dot \qv_{m1}}}', 1],
+            'diffmOI': [r'{\frac{\partial #1}{\partial \qv_{m0,m1}}}', 1],
+            'diffmOIt': [r'{\frac{\partial #1}{\partial \dot \qv_{m0,m1}}}', 1],
+            'diffmOt': [r'{\frac{\partial #1}{\partial \dot \qv_{m0}}}', 1],
+            'dv': r'{\mathbf{d}}',
+            'ev': r'{\mathbf{e}}',
+            'fv': r'{\mathbf{f}}',
+            'gv': r'{\mathbf{g}}',
+            'hv': r'{\mathbf{h}}',
+            'nv': r'{\mathbf{n}}',
+            'pv': r'{\mathbf{p}}',
+            'qv': r'{\mathbf{q}}',
+            'rv': r'{\mathbf{r}}',
+            'sv': r'{\mathbf{s}}',
+            'tv': r'{\mathbf{t}}',
+            'uv': r'{\mathbf{u}}',
+            'vv': r'{\mathbf{v}}',
+            'xv': r'{\mathbf{x}}',
+            'yv': r'{\mathbf{y}}',
+            'zv': r'{\mathbf{z}}',
+
             'vspace': [r'{}',1], #does not work with mathjax
 #misc
             'ra': r'{\rightarrow}',
