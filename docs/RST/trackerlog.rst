@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.207.dev1, 
 +  last change =  2026-09-19, 
-+  Number of issues = 2552, 
++  Number of issues = 2557, 
 +  Number of resolved issues = 2280 (207 in current version), 
 
 ************
@@ -7895,6 +7895,31 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2556:** the src/Objects folder holds nodes, markers, loads, sensors and system code
+    - issue author: Claude-JG
+    - description:  src/Objects/ is named after one of the five item types but holds all of them, plus checkPreAssembleConsistencies.cpp and evaluateUserFunctions.cpp, which are system code, and the UpdateGraphics functions, which are graphics. Split it into ImplObjects, ImplNodes and ImplMarkers (loads and sensors are short and stay in one file each, in System); the Visu files go to Graphics and the two system files to System. Deliberately a small change and not a systematic restructuring of the whole tree. Every moved file is a tracked file and the vcxproj, sources.json and gen_sources follow. See revision2026 step R11.4.5.
+    - date raised: 2026-09-19 
+
+ * **open issue 2555:** all UpdateGraphics functions live in a file named after the first item that had one
+    - issue author: Claude-JG
+    - description:  src/Objects/VisuNodePoint.cpp holds ~79 UpdateGraphics implementations - every node, object, marker, load and sensor - in 4171 lines, under a name that only made sense when VisualizationNodePoint was the first item to have one. Split it the same way as checkPreAssembleConsistencies, into Visu<ItemType>.cpp. To be measured first: whether each UpdateGraphics can instead go into its own CItem\*.cpp, which would be the natural place; the question is compilation time, because pybind11 is not included in most of those files today. See revision2026 step R11.4.4.
+    - date raised: 2026-09-19 
+
+ * **open issue 2554:** checkPreAssembleConsistencies.cpp is one file for five item types
+    - issue author: Claude-JG
+    - description:  src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.
+    - date raised: 2026-09-19 
+
+ * **open issue 2553:** the comment "only import if it does not conflict" reads as advice not to import
+    - issue author: Claude-JG
+    - description:  458 tracked files carry "import exudyn.graphics as graphics #only import if it does not conflict". The comment was meant to warn that the name graphics can collide with another package or a local variable, but it reads as a condition on the import itself, and it has been copied into every example and test model. Remove the comment; the import stays. The copies under docs/RST/Examples and docs/RST/TestModels are generated from the .py files and follow by regeneration. See revision2026 step R11.4.2.
+    - date raised: 2026-09-19 
+
+ * **open issue 2552:** five modules belong in exudyn/misc rather than in the package root
+    - issue author: Claude-JG
+    - description:  docmeta.py, GUI.py, resultsMonitor.py, extensionRegistry.py and mainSystemExtensions.py sit next to the modelling modules in python/exudyn/ although none of them is one: docmeta and extensionRegistry are machinery, GUI and resultsMonitor are tools, mainSystemExtensions is the extension mechanism. Move them into python/exudyn/misc/ and leave their content alone - resultsMonitor is being revised in another session at the same time, so this step is a pure relocation and the references to it are fixed when those changes are integrated. See revision2026 step R11.4.1.
+    - date raised: 2026-09-19 
 
  * **open issue 2550:** citations are silently dropped from the HTML documentation
     - issue author: Claude-JG

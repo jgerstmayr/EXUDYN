@@ -1390,3 +1390,55 @@ debt stays visible and each item can be closed on evidence.
     compile-time sizes where the size is known, more use of homogeneous transformations in the
     rigid-body kinematics, and the object loop of `ODE2RHS` itself. Steered by the benchmark of
     R11.2; a compile-flag decision alone (step R2.16) cannot achieve this.
+<a id="r11-4"></a>
+**R11.4** *(maintainer, 2026-09-19; **before R7 is finished**)* **The layout tasks that the
+    documentation depends on.** A deliberate interruption of the documentation phase: *"at least the
+    implementation files part will be needed for documentation on how to add new Exudyn items"* —
+    a how-to that names `checkPreAssembleConsistencies.cpp` and `VisuNodePoint.cpp` as they are today
+    would have to be rewritten a month later. Five sub-steps, each with its own issue and commit.
+
+<a id="r11-4-1"></a>
+**R11.4.1** *(sub-step of R11.4)* **Five modules move into `exudyn/misc/`** (#2552): `docmeta.py`,
+    `GUI.py`, `resultsMonitor.py`, `extensionRegistry.py`, `mainSystemExtensions.py`. None of them
+    is a modelling module: two are machinery, two are tools, one is the extension mechanism.
+
+    **Relocation only.** `resultsMonitor.py` is being revised in another session at the same time,
+    so its content is not touched here and the references to it are fixed when those changes are
+    integrated (maintainer, 2026-09-19).
+
+<a id="r11-4-2"></a>
+**R11.4.2** *(sub-step of R11.4)* **Remove the comment *"only import if it does not conflict"***
+    (#2553). It stands in **458 tracked files** behind `import exudyn.graphics as graphics`. It was
+    meant to warn that the name can collide with another package or a local variable; it reads as a
+    condition on the import. The import stays, the comment goes. The copies under
+    `docs/RST/Examples` and `docs/RST/TestModels` are generated and follow by regeneration.
+
+<a id="r11-4-3"></a>
+**R11.4.3** *(sub-step of R11.4)* **Split `checkPreAssembleConsistencies.cpp`** (#2554): 62
+    implementations for all five item types in 2,602 lines, into
+    `checkPreAssembleConsistencies<ItemType>.cpp`. **Five files and not one per item**: each file
+    includes pybind11, and that include dominates the compilation time.
+
+<a id="r11-4-4"></a>
+**R11.4.4** *(sub-step of R11.4)* **The `UpdateGraphics` functions leave `VisuNodePoint.cpp`**
+    (#2555): ~79 implementations for every node, object, marker, load and sensor in 4,171 lines,
+    under a name that only made sense when `VisualizationNodePoint` was the first item to have one.
+    Same split as R11.4.3, into `Visu<ItemType>.cpp`.
+
+    **To be measured first** (maintainer): whether each `UpdateGraphics` can instead go into its own
+    `CItem*.cpp`, which is where it belongs. The question is compilation time, because pybind11 is
+    not included in most of those files today. If the measurement says it is affordable, that is
+    what happens instead.
+
+<a id="r11-4-5"></a>
+**R11.4.5** *(sub-step of R11.4, after R11.4.3 and R11.4.4)* **`src/Objects/` becomes three
+    folders** (#2556): `ImplObjects`, `ImplNodes`, `ImplMarkers`. Loads and sensors are one short
+    file each and stay in `System`; the `Visu<ItemType>.cpp` files go to `Graphics`, and
+    `checkPreAssembleConsistencies*.cpp` and `evaluateUserFunctions.cpp` to `System`, where they
+    belong.
+
+    The maintainer's own framing, kept because it is the decision: *"the folder structure is
+    certainly not very systematic, but I would rather vote to stay with the smaller changes rather
+    than restructuring everything."* Every file here is a tracked file, so the move needs approval
+    when the step runs; `msvc/cppsrc.vcxproj`, `sources.json` and `tools/gen_sources.py` follow.
+
