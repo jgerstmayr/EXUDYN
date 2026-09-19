@@ -10,12 +10,12 @@ Exudyn documentation
 
    docs/RST/Exudyn
    docs/RST/InstallationAndGettingStartedIndex
-   docs/RST/OverviewOnExudynIndex
    docs/RST/TheoryAndFormulationsIndex
    docs/manual/notation
    docs/manual/GUI
    docs/manual/solver
    docs/manual/tutorial
+   docs/manual/introduction
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::

@@ -40,7 +40,7 @@ versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis
 filesParsed=[
               'version.txt',
               'gettingStarted.tex',
-              'introduction.tex',
+              #introduction.tex was converted to docs/manual/introduction.md in revision2026 step R7.1.5
               #tutorial.tex was converted to docs/manual/tutorial.md in revision2026 step R7.1.5
               #GUI.tex was converted to docs/manual/GUI.md in revision2026 step R7.1.5
               #notation.tex was converted to docs/manual/notation.md in revision2026 step R7.1.5
@@ -58,6 +58,7 @@ convertedChapters=[
               'docs/manual/GUI',
               'docs/manual/solver',
               'docs/manual/tutorial',
+              'docs/manual/introduction',
             ]
 
 undefLabelList = [

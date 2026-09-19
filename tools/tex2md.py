@@ -20,6 +20,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import argparse
 import io
+import os
 import re
 import sys
 
@@ -35,11 +36,19 @@ def RefLabel(label):
 def ReadArgument(text, start):
     """read one {...} argument that starts at text[start]=='{'; returns (content, indexAfter)"""
     assert text[start] == '{'
+    def Escaped(i):
+        """a brace is escaped only after an ODD number of backslashes: \\{ is escaped, \\\\{ is a
+        LaTeX line break followed by an ordinary brace"""
+        backslashes = 0
+        while i - 1 - backslashes >= 0 and text[i - 1 - backslashes] == '\\':
+            backslashes += 1
+        return backslashes % 2 == 1
+
     depth = 0
     for i in range(start, len(text)):
-        if text[i] == '{' and (i == 0 or text[i - 1] != '\\'):
+        if text[i] == '{' and not Escaped(i):
             depth += 1
-        elif text[i] == '}' and text[i - 1] != '\\':
+        elif text[i] == '}' and not Escaped(i):
             depth -= 1
             if depth == 0:
                 return (text[start + 1:i], i + 1)
@@ -114,6 +123,22 @@ def ResolveRSTSwitches(text):
     text = ReplaceCommand(text, 'onlyRST', 1, lambda a: a)
     text = ReplaceCommand(text, 'ignoreRST', 1, lambda a: '')
     return text
+
+
+def DropLatexFigures(text):
+    """A \\begin{figure} .. \\end{figure} environment is the LaTeX half of a figure whose other
+    half is the RST/Markdown one in the \\onlyRST branch - in introduction.tex the tikz pictures
+    are written bare rather than inside \\ignoreRST. They are dropped, and each dropped caption is
+    PRINTED, because a figure that vanishes without a word is exactly the failure this tool must
+    not have (revision2026 step R7.1.5). The tikz sources themselves go with step R7.1.9, which
+    replaces them by mermaid."""
+    def Drop(match):
+        caption = re.search(r'\\caption\{(.{0,60})', match.group(0), flags=re.S)
+        print('   dropped LaTeX figure: ' +
+              (caption.group(1).replace(chr(10), ' ') if caption is not None else '(no caption)'))
+        return ''
+
+    return re.sub(r'\\begin\{figure\}(?:\[[^\]]*\])?.*?\\end\{figure\}', Drop, text, flags=re.S)
 
 
 def ConvertSections(text):
@@ -246,6 +271,36 @@ def ConvertListings(text):
     return re.sub(pattern, Block, text, flags=re.S)
 
 
+def ImagePath(image):
+    """the image as the .tex writes it, from the repository root and often without an
+    extension (LaTeX picks one); the document needs a source-relative path WITH the extension
+    that is actually on disk"""
+    image = image.strip().lstrip('/')
+    #some .tex files write the path relative to docs/theDoc/ instead of from the root
+    if not os.path.exists(image) and os.path.exists('docs/theDoc/' + image):
+        image = 'docs/theDoc/' + image
+    if not os.path.exists(image) and os.path.exists('docs/theDoc/' + image + '.png'):
+        image = 'docs/theDoc/' + image
+    if os.path.splitext(image)[1] == '':
+        for extension in ['.png', '.jpg', '.jpeg', '.svg', '.pdf']:
+            if os.path.exists(image + extension):
+                image = image + extension
+                break
+        else:
+            print('   WARNING: no image file found for ' + image)
+            image = image + '.png'
+    return '/' + image
+
+
+def LatexRSTFigure(image, label, texWidth, pixels, caption):
+    """\\LatexRSTfigure{image}{label}{LaTeX width}{pixel width}{caption}: of the two widths only
+    the pixel one survives, the LaTeX one dies with the PDF (info document D8)"""
+    return (chr(10) + '(' + RefLabel(label) + ')=' + chr(10) +
+            '```{figure} ' + ImagePath(image) + chr(10) +
+            ':width: ' + pixels.strip() + chr(10) + chr(10) +
+            ' '.join(caption.split()) + chr(10) + '```' + chr(10))
+
+
 def ConvertRSTFigures(text):
     """the \\onlyRST branches contain RST directives written by hand; a figure becomes the MyST
     figure directive, with the label above it as a MyST target"""
@@ -254,10 +309,7 @@ def ConvertRSTFigures(text):
         lines = ['']
         if label is not None:
             lines += ['(' + RefLabel(label) + ')=']
-        image = image.strip()
-        if not image.startswith('/'):   #the .tex writes it from the repository root
-            image = '/' + image
-        lines += ['```{figure} ' + image]
+        lines += ['```{figure} ' + ImagePath(image)]
         for option in re.findall(r':([a-z]+):\s*(\S+)', options or ''):
             lines += [':' + option[0] + ': ' + option[1]]
         lines += ['', caption.strip(), '```', '']
@@ -277,19 +329,18 @@ def ConvertInline(text):
     text = ReplaceCommand(text, 'textit', 1, lambda a: '*' + a.strip() + '*')
     text = ReplaceCommand(text, 'noindent', 0, lambda: '')
     #abbreviations: the target lives in the generated abbreviation page
-    for name in ['hac', 'hacs', 'acf', 'acl', 'ac']:
+    for name in ['hac', 'hacs', 'acf', 'acl', 'acs', 'ac']:
         #an abbreviation target is a bare label, not a section: {ref} without explicit text
         #cannot find a title for it, and the strict build calls that an error
         text = ReplaceCommand(text, name, 1,
                               lambda a: '{ref}`' + a.strip() + ' <' + a.strip() + '>`')
+    text = ReplaceCommand(text, 'refSectionA', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'refSection', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
+    text = re.sub(r'\\lbrack(?![A-Za-z])', '[', text)
+    text = re.sub(r'\\rbrack(?![A-Za-z])', ']', text)
     #\LatexRSTfigure{image}{label}{LaTeX width}{pixel width}{caption}: the two widths are for
     #the two outputs, and only the pixel one survives
-    text = ReplaceCommand(text, 'LatexRSTfigure', 5,
-                          lambda image, label, texWidth, pixels, caption:
-                          '\n(' + RefLabel(label) + ')=\n```{figure} /docs/theDoc/' +
-                          image.strip() + '.png\n:width: ' + pixels.strip() + '\n\n' +
-                          caption.strip() + '\n```\n')
+    text = ReplaceCommand(text, 'LatexRSTfigure', 5, LatexRSTFigure)
     for name in ['eqq', 'eqref']:
         text = ReplaceCommand(text, name, 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'ref', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
@@ -372,6 +423,7 @@ def Convert(text):
     text = StripComments(text)
     text = ConvertListings(text)        #code first: nothing else may touch its content
     text = ResolveRSTSwitches(text)
+    text = DropLatexFigures(text)       #after the switches: what is left is LaTeX-only
     text = ConvertRSTFigures(text)
     text = ConvertDisplayMath(text)
     (text, pieces) = ProtectMath(text)
