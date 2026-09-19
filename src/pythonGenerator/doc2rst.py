@@ -39,7 +39,7 @@ versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis
 #main files
 filesParsed=[
               'version.txt',
-              'gettingStarted.tex',
+              #gettingStarted.tex was converted to docs/manual/gettingStarted.md in revision2026 step R7.1.5
               #introduction.tex was converted to docs/manual/introduction.md in revision2026 step R7.1.5
               #tutorial.tex was converted to docs/manual/tutorial.md in revision2026 step R7.1.5
               #GUI.tex was converted to docs/manual/GUI.md in revision2026 step R7.1.5
@@ -54,12 +54,14 @@ filesParsed=[
 #when index.md becomes hand-written in step R7.1.7 (decision D10), because a table of contents is
 #a human decision and a generator should not own it.
 convertedChapters=[
+              'README',   #the landing page is the first document of the manual (R7.1.5)
               'docs/manual/notation',
               'docs/manual/GUI',
               'docs/manual/solver',
               'docs/manual/tutorial',
               'docs/manual/introduction',
               'docs/manual/theory',
+              'docs/manual/gettingStarted',
             ]
 
 undefLabelList = [
@@ -339,7 +341,11 @@ sRSTreduced += '\n\n\\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <htt
 sRSTreduced += '`Read the Docs <https://exudyn.readthedocs.io/>`_ and'
 sRSTreduced += ' for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 
-if True:
+#README.rst is NOT generated any more (revision2026 step R7.1.5): it is the GitHub and PyPI
+#landing page, it has to stay RST because that is what PyPI renders, and its source -
+#gettingStarted.tex - has become docs/manual/gettingStarted.md, which includes README.rst rather
+#than repeating it. issueTracker.py keeps its version line current.
+if False:
     #this is the file used by github directly
     rstFile = 'README.rst'
     

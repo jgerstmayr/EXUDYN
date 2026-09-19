@@ -167,13 +167,22 @@ def ConvertLists(text):
             item = re.sub(r'^\s*\[[^\]]*\]', '', item)   #\item[] and \item[label]
             mark = bullet if bullet == '-' else str(number + 1) + '.'
             own = []                        #the item's own text, as one line
-            nested = []                     #a sub-list that was converted before this one
+            block = []                      #sub-lists and code fences, kept as their own lines
+            inFence = False
             for line in item.split('\n'):
-                if line.lstrip()[:2] in ['- ', '1.'] or (len(nested) != 0 and line.startswith('  ')):
-                    nested += ['  ' + line.strip() if not line.startswith('  ') else '  ' + line]
+                if line.strip().startswith('```'):
+                    #a code fence inside an item: indented by 2, so that it stays part of the item
+                    inFence = not inFence
+                    block += ['  ' + line.strip()]
+                elif inFence:
+                    block += ['  ' + line]      #code, verbatim
+                elif line.lstrip()[:2] in ['- ', '1.'] or (len(block) != 0 and line.startswith('  ')):
+                    block += ['  ' + line.strip() if not line.startswith('  ') else '  ' + line]
                 elif line.strip() != '':
                     own += [line.strip()]
-            lines += [mark + ' ' + ' '.join(own)] + nested
+            lines += [mark + ' ' + ' '.join(own)]
+            if len(block) != 0:
+                lines += [''] + block + ['']
         return '\n' + '\n'.join(lines) + '\n'
 
     #(?!\\b[in]\b) makes the match stop at the first inner list, i.e. picks the innermost one
@@ -348,6 +357,7 @@ def ConvertInline(text):
     text = ReplaceCommand(text, 'exuUrl', 2, lambda url, name: '[' + name.strip() + '](' + url.strip() + ')')
     text = ReplaceCommand(text, 'newpage', 0, lambda: '')
     text = ReplaceCommand(text, 'clearpage', 0, lambda: '')
+    text = ReplaceCommand(text, 'rstStartNewLine', 0, lambda: '')
     #a rule between the parts of a tutorial: a thematic break says the same in Markdown
     text = ReplaceCommand(text, 'horizontalRuler', 0, lambda: '\n---\n')
     text = ReplaceCommand(text, 'eq', 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
@@ -414,7 +424,7 @@ def Tidy(text):
 
 def ReportUnknown(text):
     """every backslash command left outside math - the point of the tool is to name them"""
-    text = re.sub(r'^```.*?^```', '', text, flags=re.S | re.M)   #code is not LaTeX
+    text = re.sub(r'^[ ]*```.*?^[ ]*```', '', text, flags=re.S | re.M)  #code is not LaTeX
     (stripped, _) = ProtectMath(text)
     found = {}
     for match in re.finditer(r'\\([A-Za-z]+)', stripped):

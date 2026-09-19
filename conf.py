@@ -80,7 +80,11 @@ numfig = True #uses numbers for figures, see https://www.sphinx-doc.org/en/maste
 templates_path = ['_templates']
 #everything that is not documentation; before the flatten a single 'main/*' covered src,
 #include, libs, obj and pythonDev, so each of them has to be named individually now
-exclude_patterns = ['README.rst','rotorAnsys.rst',
+#NOTE README.rst is NOT excluded: since revision2026 step R7.1.5 it is a document of the
+#documentation itself (the first page of the user manual) as well as the GitHub and PyPI
+#landing page. One file, three places - and its image paths stay relative to the repository
+#root, which is what GitHub and PyPI need.
+exclude_patterns = ['rotorAnsys.rst',
                     'src/*','msvc/*','include/*','libs/*','python/*',
                     'tools/generators/generated/*',   #generated RST fragments, not documents
                     '_build/*','build/*','dist/*','tmp/*','.pytest_cache/*',

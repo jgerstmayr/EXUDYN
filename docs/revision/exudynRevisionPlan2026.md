@@ -978,14 +978,20 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     **Absorbs #2547**, the five `docs/howTo/` files that are shell transcripts: they need the
     same conversion and they are excluded from the documentation until they get it.
 
-    **`notation`, `GUI` and `solver` are converted (2026-09-19)**, with `tools/tex2md.py` — a
-    one-shot converter that is deleted again in R7.1.7. Remaining: `tutorial` (1132),
-    `introduction` (1588), `theory` (2923), the `theDoc.tex` preamble, and `gettingStarted` (990),
-    which is held back deliberately: its first 57 lines are **raw RST inside `\onlyRST`** and are
-    the source of `README.rst`, the GitHub and PyPI landing page. Converting it therefore also
-    decides where `README.rst` comes from once `doc2rst.py` is gone — it stays RST, because that
-    is what PyPI renders, so it becomes a hand-written file rather than a generated one. That is a
-    decision to take with the maintainer before the chapter is touched. Each conversion removes its chapter
+    **ALL SEVEN CHAPTERS ARE CONVERTED (2026-09-19)** with `tools/tex2md.py`, a one-shot converter
+    that is deleted again in R7.1.7: `notation`, `GUI`, `solver`, `tutorial`, `introduction`,
+    `theory`, `gettingStarted`. `docs/theDoc/` holds no hand-written chapter any more.
+
+    The eighth item of the original list, the `theDoc.tex` preamble (515 lines), is **not
+    converted**: it is the LaTeX document skeleton — packages, title page, `\input` list — and
+    contributes nothing to the HTML. It dies with the LaTeX build in R7.1.7 (D8).
+
+    `README.rst` became hand-written and a document of the documentation in the same step
+    (info document D11).
+
+    What remains open in R7.1.5: the **splitting of the large chapters** into sub-documents
+    (`theory` is 2,518 lines, `gettingStarted` 750), which is the second half of "convert first,
+    split after". Each conversion removes its chapter
     from `filesParsed` in `doc2rst.py` in the same commit, because two copies of a chapter define
     the same labels twice and the strict build stops.
 

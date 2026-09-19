@@ -9,13 +9,14 @@ Exudyn documentation
    :caption: Exudyn User Manual
 
    docs/RST/Exudyn
-   docs/RST/InstallationAndGettingStartedIndex
+   README
    docs/manual/notation
    docs/manual/GUI
    docs/manual/solver
    docs/manual/tutorial
    docs/manual/introduction
    docs/manual/theory
+   docs/manual/gettingStarted
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::

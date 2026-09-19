@@ -7326,6 +7326,38 @@ shows today. Turning them into mermaid is D9 and is **one coherent piece of work
 chapters that have figures**, so it is its own sub-step, **R7.1.9**, rather than a third of it
 buried in each chapter commit.
 
+#### Chapters 4 to 8: `tutorial`, `introduction`, `theory`, `gettingStarted`
+
+**2026-09-19.** The rest of the conversion, one commit each. What each one taught the converter is
+in its commit message; three findings are worth keeping here.
+
+**The contact theory reached the HTML documentation for the first time** (~7,200 words). No `.rst`
+file for it had ever existed: `index.rst` carried a hand-patched label whose whole content was
+*"See according section in theDoc.pdf"*. That is why `theory.md` has 9,079 long words against the
+RST'"'"'s 7,454, and why `undefLabelList` in `doc2rst.py` lost an entry.
+
+**Silent losses are the failure mode of this job, and the word count is what catches them.** The
+build cannot: dropped content is still valid Markdown. Three real losses were found that way —
+20 table rows in `GUI` (an unknown `\rowTableFour`), blank lines as paragraph separators, and code
+fences inside list items collapsed into one line — and none of them raised a warning anywhere.
+The converter now prints every dropped LaTeX figure caption and every macro it does not know.
+
+**The last chapter decided where `README.rst` comes from** (info document D11, below).
+
+#### `README.rst`: one file, three places
+
+`gettingStarted.tex` began with 57 lines of **raw RST**, and that block was `README.rst`, the
+GitHub and PyPI landing page. With the chapter becoming Markdown, the generator that produced it
+goes away, so the maintainer decided (2026-09-19): **`README.rst` stays RST and becomes
+hand-written**, and `issueTracker.py` stamps its one version line, next to `version.txt`,
+`versionName.txt` and `versionCpp.cpp`.
+
+It is now also a **document of the documentation**, the first page of the user manual. The first
+attempt was to `.. include::` it into the getting-started chapter, which fails in a way worth
+recording: **an included file'"'"'s relative image paths resolve against the INCLUDING document**, so
+Sphinx looked for `docs/manual/docs/demo/screenshots/...`. As its own document at the repository
+root it keeps exactly the relative paths that GitHub and PyPI need, and there is still one copy.
+
 #### Also found
 
 `docs/theDoc/jacobians.tex` (82 lines) is **entirely commented out and `\input` by nothing** — not

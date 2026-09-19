@@ -432,6 +432,7 @@ def UpdateDateAndVersion(updateVersion = True):
     cppVersionFile = directoryString + 'versionCpp.cpp'
     texVersionFile = '..\\..\\version.txt'   #at the repository ROOT since revision2026 step R3.4; versionName.txt stays in docs/theDoc/
     texVersionNameFile = '..\\..\\docs\\theDoc\\versionName.txt'
+    readmeFile = '..\\..\\README.rst'   #hand-written since revision2026 step R7.1.5, except for its version line
 
     #pyVersionFile = '..\\..\\src\\pythonGenerator\\exudynVersion.py'
     #[release,version] = GetReleaseAndVersion()
@@ -476,6 +477,24 @@ def UpdateDateAndVersion(updateVersion = True):
         file=open(texVersionNameFile,'w', encoding='utf-8')  #clear file by one write access
         file.write(versionNameString)
         file.close()
+
+        #++++++++++++++++
+        #README.rst is the GitHub and PyPI landing page and is hand-written (revision2026 step
+        #R7.1.5); it used to be generated from gettingStarted.tex, and the only part of it that
+        #has to follow the version is this one line, so it is stamped here rather than by a
+        #second mechanism. A README without that line is left alone.
+        readmeVersionLine = '+  Exudyn version = '
+        readmeText = io.open(readmeFile, encoding='utf-8', newline='').read()
+        readmeLines = readmeText.split('\n')
+        for (i, line) in enumerate(readmeLines):
+            if line.startswith(readmeVersionLine):
+                ending = '\r' if line.endswith('\r') else ''
+                readmeLines[i] = (readmeVersionLine + releaseVersionDev + ' ' +
+                                  versionNameString + ending)
+                io.open(readmeFile, 'w', encoding='utf-8', newline='').write('\n'.join(readmeLines))
+                break
+        else:
+            print('WARNING: no version line found in ' + readmeFile)
 
     
         #++++++++++++++++
