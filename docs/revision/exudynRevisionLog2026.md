@@ -7302,6 +7302,30 @@ the entire difference is RST markup tokens (`math`, `mathbf`, `list-table`, `wid
 `header-rows`, `code-block`) — no prose is missing. The built page has 31 math nodes, 4
 highlighted Python blocks and the figure.
 
+#### Chapter 3: `solver` — nested lists, and the figures left as they are
+
+**2026-09-19.** `solver.tex` (951 lines) is `docs/manual/solver.md`: 19 headings, 8 figures, the
+heaviest math of the three so far. Seven of its generated `.rst` files go with it.
+
+The construct it added is **nested lists**. The first version converted `\bi .. \ei` with a
+non-greedy match, so a list inside an `\item` **ate its parent's `\ei`** and the rest of the parent
+list came out as top-level items. Lists are now converted **innermost first**, and an inner list
+becomes an indented sub-list. Also new: `\LatexRSTfigure` (five arguments, two of which are the
+LaTeX and the pixel width — only the pixel one survives), `\eqq`/`\eqref`, and the macros that
+expand to *words* rather than symbols (`\SON`, `\FON`, `\AEN`), which MathJax resolves inside math
+but which have to be written out in prose.
+
+Check: **5,500 words in the seven generated `.rst` files against 5,255**, and of the words of five
+letters or more that the RST has and the Markdown does not, **all but one are markup**
+(`mathbf` 288 — because the RST expands `\qv` into `\mathbf{q}` while the Markdown keeps the
+macro — plus `label`, `Section`, `numref`).
+
+**The eight figures stay PNG for now.** The chapter carries 14 `tikzpicture` environments inside
+`\ignoreRST`, each with a hand-made PNG twin in `\onlyRST`; the conversion keeps what the HTML
+shows today. Turning them into mermaid is D9 and is **one coherent piece of work across all three
+chapters that have figures**, so it is its own sub-step, **R7.1.9**, rather than a third of it
+buried in each chapter commit.
+
 #### Also found
 
 `docs/theDoc/jacobians.tex` (82 lines) is **entirely commented out and `\input` by nothing** — not

@@ -130,20 +130,33 @@ def ConvertSections(text):
 
 
 def ConvertLists(text):
-    """\\bi .. \\item .. \\ei -> a Markdown list; \\ben/\\een -> a numbered one"""
-    def Convert(match, bullet):
-        body = match.group(1)
-        items = [item.strip() for item in re.split(r'\\item(?![A-Za-z])', body) if item.strip() != '']
+    """\\bi .. \\item .. \\ei -> a Markdown list, \\ben/\\een -> a numbered one. The INNERMOST list is
+    converted first, so that a list inside an \\item becomes an indented sub-list instead of
+    swallowing its parent's \\ei (which is what a non-greedy outer match does)."""
+    def Convert(match):
+        bullet = '-' if match.group(1) == 'i' else '1.'
+        items = [item for item in re.split(r'\\item(?![A-Za-z])', match.group(2))
+                 if item.strip() != '']
         lines = []
-        for (i, item) in enumerate(items):
-            mark = bullet if bullet != '1.' else str(i + 1) + '.'
-            item = re.sub(r'\s*\n\s*', ' ', item).strip()
-            lines += [mark + ' ' + item]
+        for (number, item) in enumerate(items):
+            item = re.sub(r'^\s*\[[^\]]*\]', '', item)   #\item[] and \item[label]
+            mark = bullet if bullet == '-' else str(number + 1) + '.'
+            own = []                        #the item's own text, as one line
+            nested = []                     #a sub-list that was converted before this one
+            for line in item.split('\n'):
+                if line.lstrip()[:2] in ['- ', '1.'] or (len(nested) != 0 and line.startswith('  ')):
+                    nested += ['  ' + line.strip() if not line.startswith('  ') else '  ' + line]
+                elif line.strip() != '':
+                    own += [line.strip()]
+            lines += [mark + ' ' + ' '.join(own)] + nested
         return '\n' + '\n'.join(lines) + '\n'
 
-    text = re.sub(r'\\bi\b(.*?)\\ei\b', lambda m: Convert(m, '-'), text, flags=re.S)
-    text = re.sub(r'\\ben\b(.*?)\\een\b', lambda m: Convert(m, '1.'), text, flags=re.S)
-    return text
+    #(?!\\b[in]\b) makes the match stop at the first inner list, i.e. picks the innermost one
+    pattern = re.compile(r'\\b([in])\b((?:(?!\\b[in]\b).)*?)\\e[in]\b', re.S)
+    while True:
+        (text, count) = pattern.subn(Convert, text)
+        if count == 0:
+            return text
 
 
 def ConvertDisplayMath(text):
@@ -267,6 +280,15 @@ def ConvertInline(text):
         text = ReplaceCommand(text, name, 1,
                               lambda a: '{ref}`' + a.strip() + ' <' + a.strip() + '>`')
     text = ReplaceCommand(text, 'refSection', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
+    #\LatexRSTfigure{image}{label}{LaTeX width}{pixel width}{caption}: the two widths are for
+    #the two outputs, and only the pixel one survives
+    text = ReplaceCommand(text, 'LatexRSTfigure', 5,
+                          lambda image, label, texWidth, pixels, caption:
+                          '\n(' + RefLabel(label) + ')=\n```{figure} /docs/theDoc/' +
+                          image.strip() + '.png\n:width: ' + pixels.strip() + '\n\n' +
+                          caption.strip() + '\n```\n')
+    for name in ['eqq', 'eqref']:
+        text = ReplaceCommand(text, name, 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'ref', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'fig', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'exuUrl', 2, lambda url, name: '[' + name.strip() + '](' + url.strip() + ')')
@@ -282,7 +304,20 @@ def ConvertInline(text):
     text = ReplaceCommand(text, 'vspace', 1, lambda a: '')
     text = ReplaceCommand(text, 'hspace', 1, lambda a: ' ')
     text = re.sub(r'\\codeName\b', 'Exudyn', text)
+    #macros that expand to WORDS, not to symbols; inside math MathJax knows them (conf.py),
+    #outside it they have to be written out
+    words = {'SON': '$2^\\mathrm{nd}$ order differential equations',
+             'FON': '$1^\\mathrm{st}$ order differential equations',
+             'AEN': 'algebraic equations',
+             'SYSN': 'number of coordinates of the system equations',
+             'textdegree':-1}
+    for (name, replacement) in words.items():
+        if replacement == -1:
+            replacement = chr(176)
+        #a function as the replacement: the text has backslashes of its own
+        text = re.sub(r'\\' + name + r'(?![A-Za-z])', lambda m, r=replacement: r, text)
     text = re.sub(r'\\ ', ' ', text)
+    text = re.sub(r'\\\\?(?=\\s*$)', '', text, flags=re.M)   #a trailing \\ or \\ at a line end
     text = re.sub(r'\\%', '%', text)
     text = re.sub(r'\\&', '&', text)
     text = re.sub(r'\\_', '_', text)

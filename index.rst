@@ -13,9 +13,9 @@ Exudyn documentation
    docs/RST/OverviewOnExudynIndex
    docs/RST/TutorialIndex
    docs/RST/TheoryAndFormulationsIndex
-   docs/RST/SolversIndex
    docs/manual/notation
    docs/manual/GUI
+   docs/manual/solver
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::

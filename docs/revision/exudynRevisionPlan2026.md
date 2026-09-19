@@ -935,6 +935,14 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `docs/theDoc/` then holds nothing and is deleted with the LaTeX build (D8), together with
     `docs/RST/`. **Both are tracked-file deletions and need explicit approval** when the step runs.
 
+    **The figures move to `docs/figures/`** (maintainer, 2026-09-19). The 85 images live in
+    `docs/theDoc/figures/` today and are referenced from 40 files — the chapters, the generated
+    `.rst`, **and four generators** (`doc2rst.py`, `itemDocsEmitter.py`, `itemDefsObjects.py`,
+    `itemDefsMarkers.py`), which is why this is **one commit of its own**, made when `docs/theDoc/`
+    is emptied rather than piecemeal: a half-moved figure directory breaks both builds at once.
+    Until then the converted chapters keep writing `/docs/theDoc/figures/...`, and that one path is
+    what the move rewrites.
+
     **The splitting question of R7.1.5 is decided with it (2026-09-19): convert first, split
     after.** A chapter becomes one `.md` with the same content, which can be diffed against the
     `.rst` that Sphinx renders today; where a chapter is then cut into sub-documents is a separate,
@@ -970,9 +978,14 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     **Absorbs #2547**, the five `docs/howTo/` files that are shell transcripts: they need the
     same conversion and they are excluded from the documentation until they get it.
 
-    **`notation` and `GUI` are converted (2026-09-19)**, with `tools/tex2md.py` — a one-shot
-    converter that is deleted again in R7.1.7. Remaining: `gettingStarted` (990), `solver` (951),
-    `tutorial` (1132), `introduction` (1588), `theory` (2923), and the `theDoc.tex` preamble. Each conversion removes its chapter
+    **`notation`, `GUI` and `solver` are converted (2026-09-19)**, with `tools/tex2md.py` — a
+    one-shot converter that is deleted again in R7.1.7. Remaining: `tutorial` (1132),
+    `introduction` (1588), `theory` (2923), the `theDoc.tex` preamble, and `gettingStarted` (990),
+    which is held back deliberately: its first 57 lines are **raw RST inside `\onlyRST`** and are
+    the source of `README.rst`, the GitHub and PyPI landing page. Converting it therefore also
+    decides where `README.rst` comes from once `doc2rst.py` is gone — it stays RST, because that
+    is what PyPI renders, so it becomes a hand-written file rather than a generated one. That is a
+    decision to take with the maintainer before the chapter is touched. Each conversion removes its chapter
     from `filesParsed` in `doc2rst.py` in the same commit, because two copies of a chapter define
     the same labels twice and the strict build stops.
 
@@ -980,6 +993,17 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     convert their 13 tikz pictures into mermaid blocks and drop the duplicated PNG.
 
     **After R7.1.8**, which decides where a converted chapter is written to.
+
+<a id="r7-1-9"></a>
+**R7.1.9** *(sub-step of R7.1, after R7.1.5; added 2026-09-19)* **The tikz twins become mermaid**
+    (decision D9, R7.1.1). 13 `tikzpicture` environments in `introduction`, `solver` and `theory`,
+    each with a hand-made PNG beside it that the HTML has always shown instead. One pass over all
+    three chapters rather than a third of the job in each chapter commit: the diagrams share a
+    style, and the point of the step is that the **duplicate ends** — the mermaid text becomes
+    the single source and the PNG is deleted.
+
+    Until this step runs, a converted chapter keeps the PNG it shows today, so the documentation
+    never loses a figure in between.
 
 <a id="r7-1-6"></a>
 **R7.1.6** *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** The larger half by

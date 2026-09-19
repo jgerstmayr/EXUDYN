@@ -46,7 +46,7 @@ filesParsed=[
               #notation.tex was converted to docs/manual/notation.md in revision2026 step R7.1.5
 
               'theory.tex',
-              'solver.tex',
+              #solver.tex was converted to docs/manual/solver.md in revision2026 step R7.1.5
             ]
 
 #chapters that are already MyST Markdown and are NOT parsed from LaTeX any more (step R7.1.5).
@@ -56,6 +56,7 @@ filesParsed=[
 convertedChapters=[
               'docs/manual/notation',
               'docs/manual/GUI',
+              'docs/manual/solver',
             ]
 
 undefLabelList = [
