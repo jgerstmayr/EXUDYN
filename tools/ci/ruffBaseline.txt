@@ -6,11 +6,6 @@
 
 1	python/exudyn/FEM.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/GUI.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
-1	python/exudyn/__init__.py	F403	`from .exudynCPP import *` used; unable to detect undefined names
-1	python/exudyn/__init__.py	F403	`from .exudynCPPfast import *` used; unable to detect undefined names
-1	python/exudyn/__init__.py	F403	`from exudynCPP import *` used; unable to detect undefined names
-4	python/exudyn/__init__.py	F405	`config` may be undefined, or defined from star imports
-1	python/exudyn/__init__.py	F405	`special` may be undefined, or defined from star imports
 9	python/exudyn/advancedUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/advancedUtilities.py	E731	Do not assign a `lambda` expression, use a `def`
 3	python/exudyn/advancedUtilities.py	E741	Ambiguous variable name: `l`

@@ -64,7 +64,7 @@ else:
 #can be honoured. A wrong answer costs speed, never a crash, which is why it may be this simple.
 #It replaces a read of numpy.core._multiarray_umath.__cpu_features__, which no longer exists in
 #numpy >= 2.0 (where the old code simply ASSUMED AVX2) and was skipped altogether on Linux.
-def __CpuHasAVX2():
+def _CpuHasAVX2():
     """True if this CPU *and* the operating system support AVX2; False whenever that cannot be
     established, so that the safe module is used."""
     try:
@@ -89,30 +89,85 @@ def __CpuHasAVX2():
         pass
     return False #unknown platform or a failed check: use the module that always works
 
-try:
-    #for regular loading in installed python package
-    if __useExudynFast:
-        if not __CpuHasAVX2():
-            __useExudynFast = False
-            print('exudyn fast version needs AVX2, which this CPU does not report; '
-                  'using the regular version')
+#ONE FUNCTION DECIDES AND IMPORTS (#2540, revision2026 step R6.2). It used to be a nest of four
+#try/except blocks whose failure message named neither what was tried nor why, and whose decisions
+#were printed unconditionally or not at all. Two properties matter here and are the reason this is
+#a function and not a script:
+#  - it is TESTABLE: it returns the log of what it tried, which python/testing/test_import.py reads;
+#  - a total failure raises ONE ImportError that lists every candidate and the reason each was
+#    skipped or failed, instead of the last error or a sentence about 32/64 bits.
+#This is a hard prerequisite for phase R9: a plugin is bound to the module it was built against, so
+#which one was loaded, and why, has to be answerable.
+def _ImportCompiledModule(useExudynFast):
+    """Import the compiled module: exudynCPPfast if it was asked for AND this CPU reports AVX2,
+    otherwise exudynCPP. Each candidate is tried as a package module first and then as a top-level
+    module, which is the Visual Studio layout (exudynCPP lies in Release or Debug).
+
+    Returns (moduleName, module, attempts), where attempts is a list of (what, outcome) in the
+    order they happened. Raises ImportError naming every attempt if none of them worked."""
+    import importlib
+
+    attempts = []
+    candidates = []
+    if useExudynFast:
+        if _CpuHasAVX2():
+            candidates.append('exudynCPPfast')
         else:
+            attempts.append(('exudynCPPfast', 'skipped: this CPU does not report AVX2'))
+    candidates.append('exudynCPP')
+
+    for name in candidates:
+        for relative in (True, False):
             try:
-                from .exudynCPPfast import *
-                print('Imported exudyn fast version without range checks')
-            except ImportError:
-                __useExudynFast = False
-                print('Import of exudyn fast version failed; falling back to regular version')
+                module = importlib.import_module('.' + name if relative else name,
+                                                 __name__ if relative else None)
+                attempts.append((('.' if relative else '') + name, 'imported'))
 
-    if not __useExudynFast:
-        from .exudynCPP import *
+                return (name, module, attempts)
+            except ImportError as importError:
+                attempts.append((('.' if relative else '') + name, str(importError)))
 
-except ImportError:
-    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
-    try:
-        from exudynCPP import *
-    except ImportError:
-        raise ImportError('Import of exudyn C++ module failed; check 32/64 bits versions, restart your iPython console or try to uninstall and install exudyn')
+    raise ImportError('Exudyn could not import its compiled module. Tried, in order:\n  '
+                      + '\n  '.join(what + '  ->  ' + outcome for (what, outcome) in attempts)
+                      + '\nCheck that the wheel matches this Python version and platform, restart '
+                        'the console (a partially imported module stays cached), or reinstall.')
+
+
+(_compiledModuleName, _compiledModule, _importAttempts) = _ImportCompiledModule(__useExudynFast)
+
+#the star import, done by hand because the module name is a variable; __all__ if the module has
+#one, otherwise every public name - which is exactly what 'from X import *' would take
+_exportedNames = getattr(_compiledModule, '__all__', None)
+if _exportedNames is None:
+    _exportedNames = [__name for __name in vars(_compiledModule) if not __name.startswith('_')]
+globals().update({__name: getattr(_compiledModule, __name) for __name in _exportedNames})
+
+#the two the rest of this file uses, written out so that a reader and a static checker can see
+#where they come from. The star import above used to make them invisible to both (#2540).
+config = _compiledModule.config       #exudyn.config: the run-time settings object
+special = _compiledModule.special     #exudyn.special: the rarely needed corners
+
+if _compiledModuleName == 'exudynCPPfast':
+    #not behind the switch below: running without range checks is worth saying every time
+    print('Imported exudyn fast version without range checks')
+elif __useExudynFast:
+    #the user ASKED for the fast module and did not get it; say so, and say why. Falling back
+    #in silence is how someone spends an afternoon wondering where the speed went
+    print('NOTE: exudyn fast version was requested but not loaded; using the regular version.'
+          ' Reason: ' + _importAttempts[0][1]
+          + '  (set EXUDYN_IMPORT_VERBOSE=1 for everything that was tried)')
+__useExudynFast = (_compiledModuleName == 'exudynCPPfast')
+
+#EXUDYN_IMPORT_VERBOSE=1 prints what was tried and what came of it. For a user who reports "it
+#imports the wrong one" or "it does not import at all", this is the whole answer in four lines.
+try:
+    import os as __os
+    if __os.environ.get('EXUDYN_IMPORT_VERBOSE', '').strip().lower() in ('1', 'true', 'yes'):
+        print('NOTE: exudyn module selection:')
+        for (__what, __outcome) in _importAttempts:
+            print('  ' + __what + '  ->  ' + __outcome)
+except Exception:
+    pass #a failed environment read must never stop the import
 
 #import very useful solver functionality into exudyn module (==> available as exu.SolveStatic, etc.)
 try:

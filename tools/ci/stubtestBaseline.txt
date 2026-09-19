@@ -202,6 +202,7 @@ exudyn.VisualizationSettings
 exudyn.VisualizationSettings.GetDictionaryWithTypeInfo
 exudyn.VisualizationSettings.window
 exudyn.artificialIntelligence
+exudyn.config
 exudyn.machines.i
 exudyn.machines.x
 exudyn.particles.SC
@@ -274,5 +275,6 @@ exudyn.solver.rho
 exudyn.solver.springK
 exudyn.solver.springL
 exudyn.solver.thetaZZ
+exudyn.special
 exudyn.symbolic
 exudyn.utilities.__all__

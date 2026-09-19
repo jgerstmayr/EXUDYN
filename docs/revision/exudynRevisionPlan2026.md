@@ -553,13 +553,14 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 
 <a id="r6-2"></a>
-**R6.2** Rewrite binary selection in `__init__.py` as one testable function that logs its decision
-    under an env var and raises a single clear `ImportError` listing everything tried. Replace
-    the lexicographic `numpy.__version__ <= '2.0'` compare with `packaging.version` or a probe.
-    **Hard prerequisite for phase R9.**
+**R6.2** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r6-2) — *(phase R6)*
+    **The binary selection is one testable function** (#2540) that returns its log, prints it
+    under `EXUDYN_IMPORT_VERBOSE`, and raises a single `ImportError` listing every candidate and
+    why it was skipped or failed. Prerequisite for phase R9, done.
+
 
 <a id="r6-3"></a>
-**R6.3** *(phase R6, after R6.7; **in progress**, evidence taken 2026-09-18)* **Give every error
+**R6.3** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r6-3-done) — *(phase R6, after R6.7)* **Give every error
     the type it deserves, and the helpers the shape they need.** The maintainer released the four
     helpers for revision in this step: `PyError`, `SysError`, `PyWarning` and `CHECKandTHROW` may
     be rewritten, not only re-typed.
@@ -767,31 +768,11 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 **R6.5** **DONE 2026-09-15** — A user switch for parameter range checks. → [log](exudynRevisionLog2026.md#r6-5)
 
 <a id="r6-6"></a>
-**R6.6** *(phase R6)* **C++ user errors inspect the Python source** (#2423). `PyError`/`PyWarning` call
-    `PyGetCurrentFileInformation` (`src/Main/Stdoutput.cpp:259`), which calls
-    `inspect.getframeinfo`; that scans `sys.modules` and reads the source file. The ~38000 probe
-    errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
-    after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
-    The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
+**R6.6** **DONE 2026-09-19 — absorbed by R6.3.5** → [log](exudynRevisionLog2026.md#r6-6) — *(phase R6)*
+    `inspect.getframeinfo` is gone, `inspect.currentframe()` is kept, and a user function still
+    reports its own line — which was the acceptance criterion. The 9 s of #2423 did not
+    reproduce; the measurement is in the log.
 
-    **Measured again 2026-09-18 (step R6.3.5), and the cost did not reproduce.** That step replaced
-    `inspect.getframeinfo` with `f_code.co_filename` / `f_lineno` for a different reason - the
-    location was wrong, not slow - and the timing did not move: `parameterConversionTest.py`, the
-    model with ~38000 probe errors, takes **5.89 s** inside `runTestSuite.py` with the scan removed
-    against **5.73-5.88 s** in the three preceding committed logs with it in place. So the expensive
-    part of this step is **already gone and it bought nothing measurable**; whatever is left of
-    R6.6, it should not be justified by the 9 s number until that is re-measured on a case that
-    still shows it.
-
-    **What must not be lost** (maintainer, 2026-09-18): this mechanism is the reason an error inside
-    a *user function* - `springForceUserFunction` and its kin - reports the line inside that
-    function. `inspect.currentframe()` called from C++ returns the innermost **Python** frame, which
-    during a user-function callback is the user's own code; nothing else the C++ side can reach
-    knows that line. The same holds wherever C++ calls back into Python, the renderer's GUI
-    callbacks included. So the step replaces `getframeinfo` - which scans `sys.modules` and reads
-    the source file - with the two frame attributes, and keeps `currentframe()`. **A user-function
-    model that reports the wrong line, or no line, fails this step.** Outside that case the
-    mechanism may be dropped where it costs more than it says.
 
 <a id="r6-7"></a>
 **R6.7** **DONE 2026-09-18** — a wrong parameter raises `TypeError` when the object cannot be that

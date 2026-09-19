@@ -7146,6 +7146,184 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r6-2"></a>
+### R6.2 — which binary was imported, and why
+
+**DONE 2026-09-19** (#2540).
+
+Four nested `try`/`except` blocks chose between `exudynCPPfast` and `exudynCPP`, and between the
+installed-package and the Visual Studio layout. Nothing recorded which path was taken, the
+decisions were printed unconditionally or not at all, and a total failure raised **one sentence**
+:
+
+```
+Import of exudyn C++ module failed; check 32/64 bits versions, restart your iPython console ...
+```
+
+which named no candidate, no reason, and advised checking 32-bit builds that Exudyn stopped
+shipping years ago.
+
+It is now `_ImportCompiledModule(useExudynFast)`: it returns `(name, module, attempts)`, where
+`attempts` is every candidate with what came of it, and raises **one** `ImportError` listing all
+of them when none works. `EXUDYN_IMPORT_VERBOSE=1` prints the log:
+
+```
+NOTE: exudyn module selection:
+  .exudynCPPfast  ->  No module named 'exudyn.exudynCPPfast'
+  exudynCPPfast  ->  No module named 'exudynCPPfast'
+  .exudynCPP  ->  imported
+```
+
+The star import became `globals().update(...)`, because the module name is now a variable; it
+takes `__all__` if the module has one and every public name otherwise, which is what
+`from X import *` does.
+
+#### A silence that was worse than a message
+
+The old code printed *"Import of exudyn fast version failed; falling back to regular version"*.
+The first version of this rewrite put that behind the env var — and that is wrong: a user who
+**asked** for the fast module and silently got the safe one spends an afternoon wondering where
+the speed went. The notice is unconditional again, and now says **why**:
+
+```
+NOTE: exudyn fast version was requested but not loaded; using the regular version.
+ Reason: No module named 'exudyn.exudynCPPfast'  (set EXUDYN_IMPORT_VERBOSE=1 for everything ...)
+```
+
+#### Two things the step named that turned out not to exist
+
+The plan asked to *"replace the lexicographic `numpy.__version__ <= '2.0'` compare with
+`packaging.version` or a probe"*. **That compare is gone**, removed with the AVX2 rewrite of
+R2.10, which replaced a read of `numpy.core._multiarray_umath.__cpu_features__`. The two version
+compares left in the package (`FEM.py`, `artificialIntelligence.py`) both compare **integers**,
+not strings. And `packaging` is not a dependency of Exudyn: adding one for a compare that no
+longer exists would have been a rule 6 violation bought for nothing.
+
+#### What the change exposed (#2541)
+
+`config` and `special` are now assigned by name rather than arriving through a star import, so
+a reader and a static checker can see where they come from. stubtest immediately reported both
+as *"not present in stub"* — and they never were. **`exudyn.config` is the run-time settings
+object** (`outputDirectory`, `printToConsole`, `suppressWarnings`, `precision`) and no IDE has
+ever completed it, because neither it nor its C++ class appears in `__init__.pyi`. The star
+import had hidden that from stubtest, not fixed it. Both are in the stubtest backlog with
+#2541, which is generator work: emit `Config` and `Special` like the other bound structures.
+
+Five ruff findings disappeared with the star imports (three `F403`, two `F405`); the baseline
+is at 143 tolerated findings.
+
+`python/testing/test_import.py` is new: it asserts the log ends with the import that worked, that
+the log names the module the names actually came from, that a skipped fast module says **AVX2**
+in its reason, and — with `importlib.import_module` monkeypatched to always fail — that
+the `ImportError` lists every candidate.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-19)
+
+**R6.2** Rewrite binary selection in `__init__.py` as one testable function that logs its decision
+    under an env var and raises a single clear `ImportError` listing everything tried. Replace
+    the lexicographic `numpy.__version__ <= '2.0'` compare with `packaging.version` or a probe.
+    **Hard prerequisite for phase R9.**
+
+---
+
+
+<a id="r6-6"></a>
+### R6.6 — absorbed by R6.3.5
+
+**DONE 2026-09-19.** No work of its own: step R6.3.5 did it on 2026-09-18, for a different
+reason, and this entry records that the acceptance criteria hold.
+
+The step asked for `inspect.getframeinfo` — which scans `sys.modules` and **reads the source
+file** — to be replaced by `f_code.co_filename` and `f_lineno`, while keeping
+`inspect.currentframe()`, because that is the only way C++ can learn which line of a **user
+function** raised. `Stdoutput.cpp` today:
+
+```cpp
+py::object frame = inspect.attr("currentframe")();
+//getframeinfo() is deliberately NOT used: it scans sys.modules and READS THE SOURCE FILE ...
+fileName = py::cast<std::string>(chosen.attr("f_code").attr("co_filename"));
+lineNumber = int(py::int_(chosen.attr("f_lineno")));
+```
+
+**The acceptance criterion was "a user-function model that reports the wrong line, or no line,
+fails this step".** It reports the right line, and since R6.3.8 it is checked by a test rather
+than by reading: `test_theCauseKeepsTheTracebackIntoTheUserFunction` asserts that the
+`__cause__` traceback of a failing `loadUserFunction` names that function.
+
+**And the step's premise did not survive measurement**, which is the part worth keeping. R6.6
+existed because #2423 measured 9 s of `getframeinfo` in a model provoking ~38000 errors. After
+the replacement `parameterConversionTest.py` takes **5.89 s** inside `runTestSuite.py` against
+**5.73-5.88 s** in the three preceding committed logs with the scan still in place, and 6.04 s
+against 6.12 s standalone on the same wheel pair. The 9 s did not reproduce. The change was
+right for the reason R6.3.5 made it — the location was **wrong**, naming `solver.py` instead
+of the user's line — and not for the reason this step was written.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-19)
+
+**R6.6** *(phase R6)* **C++ user errors inspect the Python source** (#2423). `PyError`/`PyWarning` call
+    `PyGetCurrentFileInformation` (`src/Main/Stdoutput.cpp:259`), which calls
+    `inspect.getframeinfo`; that scans `sys.modules` and reads the source file. The ~38000 probe
+    errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
+    after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
+    The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
+
+    **Measured again 2026-09-18 (step R6.3.5), and the cost did not reproduce.** That step replaced
+    `inspect.getframeinfo` with `f_code.co_filename` / `f_lineno` for a different reason - the
+    location was wrong, not slow - and the timing did not move: `parameterConversionTest.py`, the
+    model with ~38000 probe errors, takes **5.89 s** inside `runTestSuite.py` with the scan removed
+    against **5.73-5.88 s** in the three preceding committed logs with it in place. So the expensive
+    part of this step is **already gone and it bought nothing measurable**; whatever is left of
+    R6.6, it should not be justified by the 9 s number until that is re-measured on a case that
+    still shows it.
+
+    **What must not be lost** (maintainer, 2026-09-18): this mechanism is the reason an error inside
+    a *user function* - `springForceUserFunction` and its kin - reports the line inside that
+    function. `inspect.currentframe()` called from C++ returns the innermost **Python** frame, which
+    during a user-function callback is the user's own code; nothing else the C++ side can reach
+    knows that line. The same holds wherever C++ calls back into Python, the renderer's GUI
+    callbacks included. So the step replaces `getframeinfo` - which scans `sys.modules` and reads
+    the source file - with the two frame attributes, and keeps `currentframe()`. **A user-function
+    model that reports the wrong line, or no line, fails this step.** Outside that case the
+    mechanism may be dropped where it costs more than it says.
+
+---
+
+
+<a id="r6-3-done"></a>
+### R6.3 — closed: every error has a type, a message and a place
+
+**DONE 2026-09-19.** Thirteen sub-steps, R6.3.1 to R6.3.13, each with its own entry above.
+This closes the parent.
+
+What a user gets now, where before there was a `RuntimeError` carrying the sentence *"parsing of
+Python file terminated"*:
+
+```python
+except exudyn.ExudynError          #everything Exudyn raises from C++
+except IndexError                  #mbs.GetObject(99)
+except ValueError                  #a wrong size, an unknown parameter name, numberOfSteps=-1
+except TypeError                   #a list where a function belongs
+except NotImplementedError         #a feature combination that does not exist
+except exudyn.ModelError           #the model as built does not hold together
+except exudyn.SolverError          #a singular system matrix
+except exudyn.InternalError        #an Exudyn bug: please report it
+```
+
+with the message in the exception rather than only on the console, the location being the
+user's own Python line rather than `solver.py`, the original exception hanging under it as
+`__cause__`, and the whole block in the log file instead of the terminal.
+
+---
+
+
 <a id="r6-1"></a>
 ### R6.1 — every bare `except:` in the package names what it catches
 

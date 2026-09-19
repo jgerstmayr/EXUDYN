@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.198.dev1, 
-+  last change =  2026-09-18, 
-+  Number of issues = 2540, 
-+  Number of resolved issues = 2271 (198 in current version), 
++  Exudyn version = 1.11.199.dev1, 
++  last change =  2026-09-19, 
++  Number of issues = 2542, 
++  Number of resolved issues = 2272 (199 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.199: resolved Issue 2540: the binary selection in __init__.py is a nest of try/except blocks (improvement)
+    - issue author: Claude-JG
+    - description:  Four nested try/except blocks choose between exudynCPPfast and exudynCPP and between the installed-package and the Visual Studio layout. Nothing records which one was taken, the decisions are printed unconditionally or not at all, and a total failure raises one sentence about 32/64 bit versions that names neither the candidates nor the reason each failed - and 32-bit builds were dropped long ago. Make it one function that returns its log, print the log under an env var, and raise a single ImportError listing every attempt. Hard prerequisite for phase R9, where a plugin is bound to the module it was built against and which one was loaded has to be answerable.
+    - **notes:** _ImportCompiledModule(useExudynFast) returns (name, module, attempts) and raises one ImportError listing every candidate and why it was skipped or failed; EXUDYN_IMPORT_VERBOSE=1 prints the log; a fast module that was asked for and not loaded says so unconditionally, with the reason. The star import became globals().update(...) because the module name is a variable. The lexicographic numpy version compare the issue named no longer exists - it went with the AVX2 rewrite of R2.10 - so no packaging dependency was added for it. New python/testing/test_import.py covers the log and the failure message.
+    - date resolved: **2026-09-19 07:44**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.198: resolved Issue 2539: a bare except in the shipped package swallows Ctrl-C (fix)
     - issue author: Claude-JG
     - description:  52 bare except: remain in python/exudyn/ across 16 files. A bare except catches KeyboardInterrupt and SystemExit as well - so Ctrl-C is swallowed wherever one wraps something long: the inverse-kinematics SolveSystem in robotics/roboticsCore.py, the ffmpeg run in interactive.py, the multiprocessing pool in FEM.py. The larger group - 23 of them - guards an optional import and therefore reports a broken installation of scipy or roboticstoolbox as "the package is missing". Name what is caught: ImportError for a dependency probe, the specific error for a feature probe, and except Exception for something that must survive an external tool or a users own code - which still lets KeyboardInterrupt through. The 16 E722 entries of tools/ci/ruffBaseline.txt are the inventory and must disappear with the step.
@@ -7841,6 +7847,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2541:** exudyn.config and exudyn.special are in no stub file
+    - issue author: Claude-JG
+    - description:  exudyn.config is the run-time settings object (outputDirectory, printToConsole, suppressWarnings, precision) and exudyn.special holds the rarely needed corners; neither the objects nor their C++ classes Config and Special appear in python/exudyn/__init__.pyi, so no IDE completes exudyn.config.outputDirectory. The gap is older than this issue - stubtest simply did not check them while they arrived through a star import, and step R6.2 made them plain package attributes, which exposed it. Both are in the stubtest backlog with this number. The fix is generator work: emit Config and Special like the other bound structures.
+    - date raised: 2026-09-19 
 
  * :textblue:`open issue 2511:` the ROS examples were last tested in 2023 and nobody can run them
     - issue author: Claude-JG

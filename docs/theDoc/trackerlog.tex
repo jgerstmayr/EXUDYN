@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.198.dev1, 
-  \item last change =  2026-09-18, 
-  \item Number of issues = 2540, 
-  \item Number of resolved issues = 2271 (198 in current version), 
+  \item Exudyn version = 1.11.199.dev1, 
+  \item last change =  2026-09-19, 
+  \item Number of issues = 2542, 
+  \item Number of resolved issues = 2272 (199 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.199}:  resolved Issue 2540: {\bf the binary selection in \_\_init\_\_.py is a nest of try/except blocks}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Four nested try/except blocks choose between exudynCPPfast and exudynCPP and between the installed-package and the Visual Studio layout. Nothing records which one was taken, the decisions are printed unconditionally or not at all, and a total failure raises one sentence about 32/64 bit versions that names neither the candidates nor the reason each failed - and 32-bit builds were dropped long ago. Make it one function that returns its log, print the log under an env var, and raise a single ImportError listing every attempt. Hard prerequisite for phase R9, where a plugin is bound to the module it was built against and which one was loaded has to be answerable.}
+    \item {\bf notes: \_ImportCompiledModule(useExudynFast) returns (name, module, attempts) and raises one ImportError listing every candidate and why it was skipped or failed; EXUDYN\_IMPORT\_VERBOSE=1 prints the log; a fast module that was asked for and not loaded says so unconditionally, with the reason. The star import became globals().update(...) because the module name is a variable. The lexicographic numpy version compare the issue named no longer exists - it went with the AVX2 rewrite of R2.10 - so no packaging dependency was added for it. New python/testing/test\_import.py covers the log and the failure message.}
+    \item   date resolved: {\bf 2026-09-19 07:44},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.198}:  resolved Issue 2539: {\bf a bare except in the shipped package swallows Ctrl-C}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
