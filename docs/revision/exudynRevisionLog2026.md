@@ -7275,6 +7275,33 @@ The surplus is the **citations**: `latexConverter.py` deletes every `\cite` with
 replacement, which is why the rendered page says *"by the main developer ."* today. The
 Markdown keeps the keys in brackets, and **#2550** asks for a references page to point them at.
 
+#### Chapter 2: `GUI` — code, figures, and a silent dropping
+
+**2026-09-19.** `GUI.tex` (319 lines) is `docs/manual/GUI.md`: 13 headings, 4 Python listings, 6
+tables, one figure. It added four constructs to the converter — `lstlisting` blocks (converted
+first, so that no other pass touches code), `\exuUrl`, `\ref`/`\fig`, and the hand-written RST
+`figure::` directives inside `\onlyRST` — and it taught two things the first chapter could not:
+
+- **an image path is relative to the document**, not to the repository: the `.tex` writes
+  `docs/theDoc/figures/...`, which from `docs/manual/GUI.md` means `docs/manual/docs/theDoc/...`.
+  A leading `/` makes Sphinx read it from the source directory.
+- **`\rowTableFour` existed and the converter knew only `\rowTable` and `\rowTableThree`** — so
+  **20 rows of the GraphicsData parameter tables disappeared without a word**. Caught by the word
+  count against the RST (2,164 against 2,687), not by the build, because dropped content is still
+  valid Markdown. The row pattern now takes any `\rowTable...` variant, **and a table that still
+  contains a macro the tool does not know prints a warning** — silence is the one failure mode
+  this tool must not have.
+
+A third bug came out of the same check: `StripComments` dropped **blank** lines as well as comment
+lines, and in Markdown a blank line is not whitespace but the paragraph separator (and what ends a
+directive's option block). Re-running the fixed converter over `notation.tex` reproduces the
+committed `notation.md` except for the two hand edits made there, so that chapter was unaffected.
+
+Final count: **2,687 words in the six generated `.rst` files against 2,632 in the Markdown**, and
+the entire difference is RST markup tokens (`math`, `mathbf`, `list-table`, `widths`,
+`header-rows`, `code-block`) — no prose is missing. The built page has 31 math nodes, 4
+highlighted Python blocks and the figure.
+
 #### Also found
 
 `docs/theDoc/jacobians.tex` (82 lines) is **entirely commented out and `\input` by nothing** — not

@@ -228,3 +228,4 @@ When the solution viewer starts, it should show the stresses in a flexible swing
 
 
 NOTE: this tutorial has been mostly created with ChatGPT-4, and curated hereafter!
+

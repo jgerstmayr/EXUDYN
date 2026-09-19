@@ -42,7 +42,7 @@ filesParsed=[
               'gettingStarted.tex',
               'introduction.tex',
               'tutorial.tex',
-              'GUI.tex',
+              #GUI.tex was converted to docs/manual/GUI.md in revision2026 step R7.1.5
               #notation.tex was converted to docs/manual/notation.md in revision2026 step R7.1.5
 
               'theory.tex',
@@ -55,6 +55,7 @@ filesParsed=[
 #a human decision and a generator should not own it.
 convertedChapters=[
               'docs/manual/notation',
+              'docs/manual/GUI',
             ]
 
 undefLabelList = [

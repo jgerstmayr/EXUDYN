@@ -970,9 +970,9 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     **Absorbs #2547**, the five `docs/howTo/` files that are shell transcripts: they need the
     same conversion and they are excluded from the documentation until they get it.
 
-    **`notation` is converted (2026-09-19)**, with `tools/tex2md.py` — a one-shot converter that
-    is deleted again in R7.1.7. Remaining: `GUI`, `gettingStarted`, `solver`, `tutorial`,
-    `introduction`, `theory`, and the `theDoc.tex` preamble. Each conversion removes its chapter
+    **`notation` and `GUI` are converted (2026-09-19)**, with `tools/tex2md.py` — a one-shot
+    converter that is deleted again in R7.1.7. Remaining: `gettingStarted` (990), `solver` (951),
+    `tutorial` (1132), `introduction` (1588), `theory` (2923), and the `theDoc.tex` preamble. Each conversion removes its chapter
     from `filesParsed` in `doc2rst.py` in the same commit, because two copies of a chapter define
     the same labels twice and the strict build stops.
 

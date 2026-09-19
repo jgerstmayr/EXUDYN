@@ -101,8 +101,9 @@ def StripComments(text):
                 break
             result += line[i]
             i += 1
-        if i == 0 and result == '':
-            continue            #a line that was nothing but a comment
+        if result == '' and line.strip() != '':
+            continue            #a line that was nothing but a comment; a BLANK line is kept,
+                                #because in Markdown it separates paragraphs
         outLines += [result.rstrip()]
     return '\n'.join(outLines)
 
@@ -175,7 +176,9 @@ def ConvertTables(text):
     def Convert(match):
         body = match.group(2)
         rows = []
-        for rowMatch in re.finditer(r'\\rowTable(Three|)\s*', body):
+        #every \rowTable... variant: Three, Four, Five, ... - the cell count is read from the
+        #braces that follow, so the name does not matter
+        for rowMatch in re.finditer(r'\\rowTable[A-Za-z]*\s*', body):
             index = rowMatch.end()
             cells = []
             while index < len(body) and body[index] == '{':
@@ -184,6 +187,10 @@ def ConvertTables(text):
             rows += [cells]
         if len(rows) == 0:
             return ''
+        consumed = re.sub(r'\\rowTable[A-Za-z]*\s*(?:\{(?:[^{}]|\{[^{}]*\})*\})*', '', body)
+        leftOver = re.findall(r'\\[A-Za-z]+', re.sub(r'(?<!\\)\$(?:\\.|[^$\\])*\$', '', consumed))
+        if len(leftOver) != 0:  #a macro inside a table that is not a row: say so, never drop it
+            print('WARNING: unhandled inside a table: ' + ' '.join(sorted(set(leftOver))))
         width = max(len(row) for row in rows)
         rows = [row + [''] * (width - len(row)) for row in rows]
         #the header of a \startTable is in the macro arguments, a \startGenericTable has it as row 0
@@ -207,6 +214,44 @@ def ConvertTables(text):
                   Convert, text, flags=re.S)
 
 
+def ConvertListings(text):
+    """\\pythonstyle\\begin{lstlisting} .. \\end{lstlisting} -> a fenced Python block; the
+    content is code and must not be touched by any other pass, so this runs before them"""
+    def Block(match):
+        options = match.group(1) or ''
+        language = 'python'
+        if 'language=' in options and 'Python' not in options:
+            language = ''                 #a listing that says it is something else
+        body = match.group(2).strip(chr(10))
+        return eol_ + '```' + language + chr(10) + body + chr(10) + '```' + eol_
+
+    eol_ = chr(10)
+    pattern = (r'(?:\\pythonstyle\s*)?\\begin\{lstlisting\}(\[[^\]]*\])?(.*?)\\end\{lstlisting\}')
+    return re.sub(pattern, Block, text, flags=re.S)
+
+
+def ConvertRSTFigures(text):
+    """the \\onlyRST branches contain RST directives written by hand; a figure becomes the MyST
+    figure directive, with the label above it as a MyST target"""
+    def Block(match):
+        (label, image, options, caption) = match.groups()
+        lines = ['']
+        if label is not None:
+            lines += ['(' + RefLabel(label) + ')=']
+        image = image.strip()
+        if not image.startswith('/'):   #the .tex writes it from the repository root
+            image = '/' + image
+        lines += ['```{figure} ' + image]
+        for option in re.findall(r':([a-z]+):\s*(\S+)', options or ''):
+            lines += [':' + option[0] + ': ' + option[1]]
+        lines += ['', caption.strip(), '```', '']
+        return chr(10).join(lines)
+
+    pattern = (r'(?:\.\.\s+_([^:\n]+):\s*\n)?\.\.\s+figure::\s*(\S+)\s*\n'
+               r'((?:\s+:[a-z]+:[^\n]*\n)*)\s*\n(\s+[^\n]+)\n')
+    return re.sub(pattern, Block, text)
+
+
 def ConvertInline(text):
     """the one-argument text macros, and the ones that take none"""
     text = ReplaceCommand(text, 'texttt', 1, lambda a: '`' + a.replace('\\_', '_').replace('\\&', '&') + '`')
@@ -222,6 +267,10 @@ def ConvertInline(text):
         text = ReplaceCommand(text, name, 1,
                               lambda a: '{ref}`' + a.strip() + ' <' + a.strip() + '>`')
     text = ReplaceCommand(text, 'refSection', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
+    text = ReplaceCommand(text, 'ref', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
+    text = ReplaceCommand(text, 'fig', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
+    text = ReplaceCommand(text, 'exuUrl', 2, lambda url, name: '[' + name.strip() + '](' + url.strip() + ')')
+    text = ReplaceCommand(text, 'newpage', 0, lambda: '')
     text = ReplaceCommand(text, 'eq', 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'refChapter', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'footnote', 1, lambda a: ' (' + a.strip() + ')')
@@ -279,7 +328,9 @@ def ReportUnknown(text):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def Convert(text):
     text = StripComments(text)
+    text = ConvertListings(text)        #code first: nothing else may touch its content
     text = ResolveRSTSwitches(text)
+    text = ConvertRSTFigures(text)
     text = ConvertDisplayMath(text)
     (text, pieces) = ProtectMath(text)
     text = ConvertSections(text)
