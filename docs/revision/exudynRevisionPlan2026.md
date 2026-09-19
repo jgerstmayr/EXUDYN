@@ -785,6 +785,18 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 ## R7 — Documentation
  (~3 weeks)  <!-- old Phase 6 -->
 
+<a id="r5-18-6"></a>
+**R5.18.6** *(sub-step of R5.18, added 2026-09-19)* **A gate that fails at random is worse than no
+    gate** (#2551). `checkPython.py --stubs --check` reports
+    *"exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime"* on roughly one run in
+    three, with nothing changed in between (measured: one failure in three consecutive runs).
+    `_ControlPanel` derives from a tkinter widget, and `tk` exists only once a `Tk` instance has
+    been created, so whether stubtest sees it depends on import order or on a display. Either make
+    the probe deterministic or put the name in the curated noise list **with the reason** — an
+    intermittent gate trains everyone to rerun until green, which costs more than it protects.
+
+    Found while working on R7.1.5 and **not caused by it**.
+
 <a id="r7-1"></a>
 **R7.1** Sphinx (readthedocs) stays; the sources become **MyST Markdown** (`myst-parser`, dev-only):
     hand-written chapters are converted from `.tex`, generated reference pages come from the docs
@@ -951,7 +963,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     documents out of the 9 chapters holds.
 
 <a id="r7-1-5"></a>
-**R7.1.5** **IN PROGRESS** (#2549) → [log](exudynRevisionLog2026.md#r7-1-5) *(sub-step of R7.1,
+**R7.1.5** **DONE 2026-09-19** (#2549) → [log](exudynRevisionLog2026.md#r7-1-5) *(sub-step of R7.1,
     after R7.1.4)* **Convert the hand-written chapters to Markdown**,
     one commit each. Nine files, ~8,800 lines: `jacobians` (82), `notation` (269), `GUI` (319),
     `theDoc` preamble (513), `gettingStarted` (990), `solver` (951), `tutorial` (1132),
@@ -989,9 +1001,9 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `README.rst` became hand-written and a document of the documentation in the same step
     (info document D11).
 
-    What remains open in R7.1.5: the **splitting of the large chapters** into sub-documents
-    (`theory` is 2,518 lines, `gettingStarted` 750), which is the second half of "convert first,
-    split after". Each conversion removes its chapter
+    **The split is done too (2026-09-19)**: 22 documents, named `<chapterStem><Section>.md` so
+    that the chapter is readable from the filename. One commit per chapter, each a pure move
+    verified word by word. **R7.1.5 is complete.** Each conversion removes its chapter
     from `filesParsed` in `doc2rst.py` in the same commit, because two copies of a chapter define
     the same labels twice and the strict build stops.
 

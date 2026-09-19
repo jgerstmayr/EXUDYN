@@ -7344,6 +7344,31 @@ The converter now prints every dropped LaTeX figure caption and every macro it d
 
 **The last chapter decided where `README.rst` comes from** (info document D11, below).
 
+#### The split, and the naming rule
+
+**2026-09-19**, one commit per chapter, each a pure move: every line ends in exactly one file,
+heading levels shift up by one, the chapter file keeps its intro and gains a `{toctree}`. Verified
+word by word against the file before the split — **nothing lost in any of the four**, the only
+added words being the toctree itself.
+
+**The naming rule the maintainer asked for: `<chapterStem><Section>.md`**, so the chapter is
+readable from the filename — `theory.md`, `theoryModal.md`, `theoryContact.md`.
+
+| chapter | parts |
+|---|---|
+| `theory` (2,518) | `theory` 18, `theoryMultibody` 294, `theoryDynamics` 264, `theoryRotations` 652, `theoryIntegrationPoints` 36, `theoryModal` 436, `theoryContact` 823 |
+| `tutorial` (1,220) | `tutorial` 292 (intro + the first tutorial), `tutorialRigidBody` 428, `tutorialFlexibleBeams` 176, `tutorialSymbolic` 116, `tutorialFFRF` 213 |
+| `introduction` (1,347) | `introduction` 195, `introductionBasics` 758, `introductionAdvanced` 227, `introductionCppCode` 173 |
+| `gettingStarted` (780) | `gettingStarted` 194, `gettingStartedInstall` 317, `gettingStartedFAQ` 274 |
+
+`notation` (258), `GUI` (257) and `solver` (555) stayed whole: each is one page a reader can hold
+in view, and `solver` is one argument from the explicit methods to the generalized-alpha Newton.
+
+**22 documents** out of the seven chapters, against a target of "not more than 20". The two over
+are `theoryIntegrationPoints` — which was to be merged into `theoryModal`, but that would have
+put it *after* the modal section when it belongs before — and `tutorialSymbolic`, which is a
+self-contained tutorial people link to directly.
+
 #### The macros MathJax did not have (maintainer, 2026-09-19)
 
 *"many formulas do not render: `\pv`, `\fv`, etc."* — and they did not, in every chapter.

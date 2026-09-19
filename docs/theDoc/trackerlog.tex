@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.206.dev1, 
+  \item Exudyn version = 1.11.207.dev1, 
   \item last change =  2026-09-19, 
-  \item Number of issues = 2551, 
-  \item Number of resolved issues = 2279 (206 in current version), 
+  \item Number of issues = 2552, 
+  \item Number of resolved issues = 2280 (207 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.207}:  resolved Issue 2549: {\bf the hand-written documentation chapters are LaTeX and have to become Markdown}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The seven chapters that are still LaTeX - gettingStarted, introduction, tutorial, GUI, notation, theory, solver - are the original sources; the generated .rst does not carry all of their information, so each one is converted by hand-checked machine conversion and then becomes the source itself. tools/tex2md.py is the one-shot converter for it and is deleted again in step R7.1.7. A converted chapter leaves filesParsed in doc2rst.py in the same commit, so that its generated .rst files and their duplicate labels disappear with it. See revision2026 step R7.1.5.}
+    \item {\bf notes: All seven hand-written chapters are MyST Markdown in docs/manual/ and split into 22 documents named <chapterStem><Section>.md. The theDoc.tex preamble is not converted: it is the LaTeX skeleton and dies with the LaTeX build. tools/tex2md.py did the conversion and is deleted again in step R7.1.7. Each chapter was checked word by word against the .rst Sphinx rendered before it; the only differences are markup tokens, plus three places where the old path was worse - dropped citations, a Windows path whose backslashes were eaten, and the contact theory (7200 words) which had no .rst at all and reaches the HTML for the first time. The conversion also found that conf.py declared only 118 of the 204 math macros, because the old converter expanded them; all 46 the chapters use are declared now and tools/checkMathMacros.py is the eighth check of exudev generate --all-checks. README.rst became hand-written and a document of the documentation (D11), with its version line stamped by issueTracker.py.}
+    \item   date resolved: {\bf 2026-09-19 22:54},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.206}:  resolved Issue 2546: {\bf the developer documentation is written as Markdown and published nowhere}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13870,6 +13879,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2551}:  {\bf the stub check is intermittent: resultsMonitor.\_ControlPanel.tk fails about one run in three}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: checkPython.py --stubs --check reports "exudyn.misc.resultsMonitor.\_ControlPanel.tk is not present at runtime" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. \_ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.}
+    \item date raised: 2026-09-19 
+  \ei
   \item open {\bf BUG 2545}:  {\bf the documentation emitters do not escape LaTeX either}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

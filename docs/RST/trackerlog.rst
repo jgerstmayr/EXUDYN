@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.206.dev1, 
++  Exudyn version = 1.11.207.dev1, 
 +  last change =  2026-09-19, 
-+  Number of issues = 2551, 
-+  Number of resolved issues = 2279 (206 in current version), 
++  Number of issues = 2552, 
++  Number of resolved issues = 2280 (207 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.207: resolved Issue 2549: the hand-written documentation chapters are LaTeX and have to become Markdown (docu)
+    - issue author: Claude-JG
+    - description:  The seven chapters that are still LaTeX - gettingStarted, introduction, tutorial, GUI, notation, theory, solver - are the original sources; the generated .rst does not carry all of their information, so each one is converted by hand-checked machine conversion and then becomes the source itself. tools/tex2md.py is the one-shot converter for it and is deleted again in step R7.1.7. A converted chapter leaves filesParsed in doc2rst.py in the same commit, so that its generated .rst files and their duplicate labels disappear with it. See revision2026 step R7.1.5.
+    - **notes:** All seven hand-written chapters are MyST Markdown in docs/manual/ and split into 22 documents named <chapterStem><Section>.md. The theDoc.tex preamble is not converted: it is the LaTeX skeleton and dies with the LaTeX build. tools/tex2md.py did the conversion and is deleted again in step R7.1.7. Each chapter was checked word by word against the .rst Sphinx rendered before it; the only differences are markup tokens, plus three places where the old path was worse - dropped citations, a Windows path whose backslashes were eaten, and the contact theory (7200 words) which had no .rst at all and reaches the HTML for the first time. The conversion also found that conf.py declared only 118 of the 204 math macros, because the old converter expanded them; all 46 the chapters use are declared now and tools/checkMathMacros.py is the eighth check of exudev generate --all-checks. README.rst became hand-written and a document of the documentation (D11), with its version line stamped by issueTracker.py.
+    - date resolved: **2026-09-19 22:54**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.206: resolved Issue 2546: the developer documentation is written as Markdown and published nowhere (docu)
     - issue author: Claude-JG
     - description:  docs/dev/ARCHITECTURE.md, CODING_STYLE.md, WORKFLOW.md and README.md, the howTo notes and the README files of definitions/ and the generators are written as documentation and are visible only to someone with a clone. Sphinx reads only RST today. Add myst-parser, give them toctree entries, and they are on readthedocs with everything else - which is also the cheapest possible test of the MyST path that step R7.1 rests on, on real files rather than on a sample.
@@ -7895,11 +7901,6 @@ Open issues
     - description:  latexConverter.py removes every cite command without replacement, so the rendered pages contain sentences such as "similar but much more advanced and modular as earlier solvers by the main developer ." with the references simply gone - visible today in LHSRHSNamingConventionsInEXUDYN and in the theory chapter. The Markdown conversion of step R7.1.5 writes the citation keys in brackets instead, which is readable but not linked. The documentation needs a references page fed from docs/theDoc/bibliographyDoc.bib, and the keys need to point at it; sphinxcontrib-bibtex would do it as a dev-only dependency.
     - date raised: 2026-09-19 
 
- * **open issue 2549:** the hand-written documentation chapters are LaTeX and have to become Markdown
-    - issue author: Claude-JG
-    - description:  The seven chapters that are still LaTeX - gettingStarted, introduction, tutorial, GUI, notation, theory, solver - are the original sources; the generated .rst does not carry all of their information, so each one is converted by hand-checked machine conversion and then becomes the source itself. tools/tex2md.py is the one-shot converter for it and is deleted again in step R7.1.7. A converted chapter leaves filesParsed in doc2rst.py in the same commit, so that its generated .rst files and their duplicate labels disappear with it. See revision2026 step R7.1.5.
-    - date raised: 2026-09-19 
-
  * :textred:`open issue 2548:` generated and hand-written documentation share directories and nothing says which is which
     - issue author: Claude-JG
     - description:  Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.
@@ -8958,6 +8959,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2551:` the stub check is intermittent: resultsMonitor._ControlPanel.tk fails about one run in three
+    - issue author: Claude-JG
+    - description:  checkPython.py --stubs --check reports "exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. _ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.
+    - date raised: 2026-09-19 
 
  * :textred:`open BUG 2545:` the documentation emitters do not escape LaTeX either
     - issue author: Claude-JG
