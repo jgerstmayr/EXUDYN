@@ -914,8 +914,9 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     chapters next to 8 emitter-written `.tex` files, `trackerlog.tex` and `versionName.txt` from the
     issue tracker, and the LaTeX build products (`theDoc.pdf`, `.aux`, `.log`, `.toc`, ...).
 
-    **The recommendation**, to be confirmed before conversion starts, is a three-way split by
-    *origin*, with the target layout after R7.1.6:
+    **DECIDED 2026-09-19 (info document D10): the recommendation below is the target layout**, and
+    the conversion of R7.1.5 writes into `docs/manual/` from its first chapter on. It is a three-way
+    split by *origin*:
 
     | directory | what | in git |
     |---|---|---|
@@ -933,9 +934,12 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `docs/theDoc/` then holds nothing and is deleted with the LaTeX build (D8), together with
     `docs/RST/`. **Both are tracked-file deletions and need explicit approval** when the step runs.
 
-    **Open sub-question for the same decision**: whether `docs/manual/` is split further by chapter
-    (see the splitting question the maintainer added to R7.1.5) - the two are one layout decision
-    and should be answered together.
+    **The splitting question of R7.1.5 is decided with it (2026-09-19): convert first, split
+    after.** A chapter becomes one `.md` with the same content, which can be diffed against the
+    `.rst` that Sphinx renders today; where a chapter is then cut into sub-documents is a separate,
+    content-preserving commit, decided with the rendered pages in front of us. A chapter that is cut
+    becomes a directory `docs/manual/<chapter>/` with its own index - and the target of at most ~20
+    documents out of the 9 chapters holds.
 
 <a id="r7-1-5"></a>
 **R7.1.5** *(sub-step of R7.1, after R7.1.4)* **Convert the hand-written chapters to Markdown**,
@@ -945,6 +949,11 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     (math, `\refSection`, listings, figures) are answered on a small file before a large one
     depends on the answer.
     Before conversion, suggest and decide with the maintainer how to split the larger files into smaller subfiles (but try to avoid having more than 20 documents out of the 9). Either first only convert, then restructure or do both at the same time - whatever works better.
+
+    **DECIDED 2026-09-19: convert first, split after** (see R7.1.8). Each chapter is converted 1:1
+    into one `docs/manual/<chapter>.md`, so the conversion is checkable against the generated `.rst`;
+    the cuts are proposed afterwards, per chapter, with the rendered pages available. Target: at
+    most ~20 documents out of the 9 chapters.
 
     **The check is the RST**: each chapter already has a generated `.rst`, so a conversion can be
     compared against what Sphinx renders today rather than judged by eye.
