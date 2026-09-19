@@ -47,7 +47,7 @@ Python parts, see {ref}`fig-exudyn-candpython`.
   - `exudyn.itemInterface`: contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
   - `exudyn.FEM`: everything related to finite element import and creation of model order reduction flexible bodies
   - `exudyn.lieGroupBasics`: a collection of Python functions for Lie group methods (SO3, SE3, log, exp, Texp, ...)
-  - `exudyn.mainSystemExtensions`: mapping of some functions to MainSystem (mbs)
+  - `exudyn.misc.mainSystemExtensions`: mapping of some functions to MainSystem (mbs)
   - `exudyn.physics`: containing helper functions, which are physics related such as friction
   - `exudyn.plot`: contains PlotSensor(...), a very versatile interface to matplotlib and other valuable helper functions
   - `exudyn.processing`: methods for optimization, parameter variation, sensitivity analysis, etc.

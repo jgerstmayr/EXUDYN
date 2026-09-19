@@ -12,7 +12,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn.robotics as rob
 from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HTtranslate

@@ -10560,3 +10560,36 @@ expression and not a literal search.
 documentation of `exudyn.graphics`, once, not in every model that uses it (rule 10).
 
 ---
+
+<a id="r11-4-1"></a>
+### R11.4.1 — five modules move into `exudyn/misc`
+
+**DONE 2026-09-19** (#2552). `docmeta.py`, `GUI.py`, `resultsMonitor.py`,
+`extensionRegistry.py` and `mainSystemExtensions.py` are in `python/exudyn/misc/` with a
+`__init__.py` that says what the subpackage is for. **Not one line of their content changed**
+— `resultsMonitor.py` is being revised in another session at the same time.
+
+What had to follow the move, which is the interesting part of a relocation:
+
+- **23 files** referencing `exudyn.<module>`, including **9 occurrences inside**
+  `src/Main/rendererPythonInterface.cpp` <<D>> the renderer builds its dialogs by executing
+  Python source held as C++ strings, so a module path lives in the C++ too;
+- `setup.py`, whose `find_namespace_packages(include=...)` enumerates the shipped packages, so
+  without it the subpackage would simply not be in the wheel;
+- `tools/generators/utilityDocsModel.py`, which has its own list of the documented modules;
+- the ruff baseline, where the findings are keyed by path (three entries re-pathed, none new);
+- `checkAll.py`, which wants an explicit `__all__` in every module, `__init__.py` included.
+
+**Tested without touching the maintainer's environment.** `venvExuP313` holds a build from the
+parallel session, so the wheel went into **`venvP312`** instead: `exudyn/misc/` ships with all
+five modules, all five import, and the full suite passes there (115 test models + 23 mini
+examples, 31 s).
+
+**Noticed, not fixed** (it belongs to the session that is revising the module): importing
+`exudyn.misc.resultsMonitor` prints *"ERROR in resultsMonitor: filename missing / use option -h
+for help"* <<D>> the module runs its command line at import time. The installed package in
+`venvExuP313` has the same property in a new `__main__.py`, which is why
+`allExudynModulesTest.py` fails there: that test imports every `.py` it finds in the installed
+package.
+
+---

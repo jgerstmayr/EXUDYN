@@ -28,7 +28,7 @@
 #   4. Minor formatting/spacing differences; logic is otherwise identical.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn as exu
 import exudyn.itemInterface as eii

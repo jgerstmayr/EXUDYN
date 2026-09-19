@@ -13,10 +13,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import is necessary, otherwise the solvers cannot be called
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn
-from exudyn.extensionRegistry import extends
+from exudyn.misc.extensionRegistry import extends
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [

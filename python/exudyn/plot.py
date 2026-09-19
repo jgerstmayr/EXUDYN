@@ -14,7 +14,7 @@
 
 import numpy as np #for loading
 import exudyn #for sensor index
-from exudyn.extensionRegistry import extends
+from exudyn.misc.extensionRegistry import extends
 from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 from exudyn.basicUtilities import OutputFilePath #merge with exudyn.config.outputDirectory (#2454)
 from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)

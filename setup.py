@@ -980,7 +980,7 @@ setup(
     version=__version__,
 #
     package_dir={'':'python'},      #only add packages from that dir; must include a __init__.py file
-    packages=find_namespace_packages(where='python', include=('exudyn', 'exudyn.robotics', 'exudyn.types')),
+    packages=find_namespace_packages(where='python', include=('exudyn', 'exudyn.misc', 'exudyn.robotics', 'exudyn.types')),
     package_data=addPackageData,
 #
     ext_modules=ext_modules,

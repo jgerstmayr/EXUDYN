@@ -1398,7 +1398,8 @@ debt stays visible and each item can be closed on evidence.
     would have to be rewritten a month later. Five sub-steps, each with its own issue and commit.
 
 <a id="r11-4-1"></a>
-**R11.4.1** *(sub-step of R11.4)* **Five modules move into `exudyn/misc/`** (#2552): `docmeta.py`,
+**R11.4.1** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r11-4-1) *(sub-step of R11.4)*
+    **Five modules move into `exudyn/misc/`** (#2552): `docmeta.py`,
     `GUI.py`, `resultsMonitor.py`, `extensionRegistry.py`, `mainSystemExtensions.py`. None of them
     is a modelling module: two are machinery, two are tools, one is the extension mechanism.
 

@@ -12,7 +12,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn
 from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation, Skew

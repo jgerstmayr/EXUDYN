@@ -13,7 +13,7 @@
 import numpy as np
 from math import sin, cos
 import exudyn
-from exudyn.mainSystemExtensions import CreateDistanceSensor
+from exudyn.misc.mainSystemExtensions import CreateDistanceSensor
 import exudyn.graphics as graphics
 from exudyn.rigidBodyUtilities import HT2translation, HT2rotationMatrix
 

@@ -468,14 +468,14 @@ mbs = SC.AddSystem()
 %++++++++++++++++++++
 \mysubsubsection{MainSystem extensions (create)}
 \label{sec:mainsystem:pythonExtensionsCreate}
-This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.mainSystemExtensions} or \texttt{exudyn.utilities}
+This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.misc.mainSystemExtensions} or \texttt{exudyn.utilities}
 
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
 import exudyn as exu           
 from exudyn.utilities import * 
-#alternative: import exudyn.mainSystemExtensions
+#alternative: import exudyn.misc.mainSystemExtensions
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 #
@@ -491,7 +491,7 @@ b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.
 %++++++++++++++++++++
 \mysubsubsection{MainSystem extensions (general)}
 \label{sec:mainsystem:pythonExtensions}
-This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.mainSystemExtensions} or \texttt{exudyn.utilities}
+This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.misc.mainSystemExtensions} or \texttt{exudyn.utilities}
 
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]

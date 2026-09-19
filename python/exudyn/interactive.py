@@ -17,7 +17,7 @@ from math import sin, pi #for animation
 import copy           #copy numpy objects
 import exudyn
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
-from exudyn.extensionRegistry import extends
+from exudyn.misc.extensionRegistry import extends
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -122,7 +122,7 @@ class InteractiveDialog:
         try:
             import tkinter
             import tkinter.font as tkFont
-            from exudyn.GUI import GetTkRootAndNewWindow
+            from exudyn.misc.GUI import GetTkRootAndNewWindow
         except ImportError:
             raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
 
@@ -1040,7 +1040,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
         import tkinter.font as tkFont
         from tkinter import filedialog
         from tkinter import messagebox
-        #from exudyn.GUI import GetTkRootAndNewWindow
+        #from exudyn.misc.GUI import GetTkRootAndNewWindow
     except ImportError:
         raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
 

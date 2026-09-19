@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.208.dev1, 
++  Exudyn version = 1.11.209.dev1, 
 +  last change =  2026-09-19, 
 +  Number of issues = 2557, 
-+  Number of resolved issues = 2281 (208 in current version), 
++  Number of resolved issues = 2282 (209 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.209: resolved Issue 2552: five modules belong in exudyn/misc rather than in the package root (improvement)
+    - issue author: Claude-JG
+    - description:  docmeta.py, GUI.py, resultsMonitor.py, extensionRegistry.py and mainSystemExtensions.py sit next to the modelling modules in python/exudyn/ although none of them is one: docmeta and extensionRegistry are machinery, GUI and resultsMonitor are tools, mainSystemExtensions is the extension mechanism. Move them into python/exudyn/misc/ and leave their content alone - resultsMonitor is being revised in another session at the same time, so this step is a pure relocation and the references to it are fixed when those changes are integrated. See revision2026 step R11.4.1.
+    - **notes:** docmeta.py, GUI.py, resultsMonitor.py, extensionRegistry.py and mainSystemExtensions.py are in python/exudyn/misc/ with an __init__.py that says what the subpackage is for; their content is untouched. Followed the move: 23 files referencing exudyn.<module> - among them src/Main/rendererPythonInterface.cpp with 9 occurrences, because the renderer builds its dialogs from Python source held in C++ strings - setup.py, where the shipped packages are enumerated, the module list of tools/generators/utilityDocsModel.py, three re-pathed entries of the ruff baseline and the __all__ check. Tested by building into venvP312 rather than venvExuP313, which holds a build from the parallel session: all five modules ship and import, and the full test suite passes there.
+    - date resolved: **2026-09-19 23:27**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.208: resolved Issue 2553: the comment "only import if it does not conflict" reads as advice not to import (docu)
     - issue author: Claude-JG
     - description:  458 tracked files carry "import exudyn.graphics as graphics #only import if it does not conflict". The comment was meant to warn that the name graphics can collide with another package or a local variable, but it reads as a condition on the import itself, and it has been copied into every example and test model. Remove the comment; the import stays. The copies under docs/RST/Examples and docs/RST/TestModels are generated from the .py files and follow by regeneration. See revision2026 step R11.4.2.
@@ -7915,11 +7921,6 @@ Open issues
  * **open issue 2554:** checkPreAssembleConsistencies.cpp is one file for five item types
     - issue author: Claude-JG
     - description:  src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.
-    - date raised: 2026-09-19 
-
- * **open issue 2552:** five modules belong in exudyn/misc rather than in the package root
-    - issue author: Claude-JG
-    - description:  docmeta.py, GUI.py, resultsMonitor.py, extensionRegistry.py and mainSystemExtensions.py sit next to the modelling modules in python/exudyn/ although none of them is one: docmeta and extensionRegistry are machinery, GUI and resultsMonitor are tools, mainSystemExtensions is the extension mechanism. Move them into python/exudyn/misc/ and leave their content alone - resultsMonitor is being revised in another session at the same time, so this step is a pure relocation and the references to it are fixed when those changes are integrated. See revision2026 step R11.4.1.
     - date raised: 2026-09-19 
 
  * **open issue 2550:** citations are silently dropped from the HTML documentation

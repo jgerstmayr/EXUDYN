@@ -13,7 +13,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 from exudyn.basicUtilities import OutputFilePath #exudyn.config.outputDirectory (#2454)
 from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)

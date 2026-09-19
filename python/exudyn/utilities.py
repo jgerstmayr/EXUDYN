@@ -29,7 +29,7 @@ from exudyn.itemInterface import * # noqa: F403, F401
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
                          GenerateStraightBeam # noqa # pylint: disable=unused-import
 #MainSystem extensions that were defined here before revision2026 step R4.22.2:
-from exudyn.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
+from exudyn.misc.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
 
 #the exported names are those of the imported modules (revision2026 step R4.22.3); helper imports such as np or sqrt
 #are not part of it - import them explicitly

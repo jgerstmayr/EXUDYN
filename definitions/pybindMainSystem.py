@@ -319,12 +319,12 @@ pb.DefLatexFinishTable()#only finalize latex table
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create extensions
-pb.DefLatexStartClass('MainSystem extensions (create)',"This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.mainSystemExtensions} or \\texttt{exudyn.utilities}", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
+pb.DefLatexStartClass('MainSystem extensions (create)',"This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.misc.mainSystemExtensions} or \\texttt{exudyn.utilities}", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu           
 from exudyn.utilities import * 
-#alternative: import exudyn.mainSystemExtensions
+#alternative: import exudyn.misc.mainSystemExtensions
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 #
@@ -341,7 +341,7 @@ pb.ExtensionRST('MainSystemCreateExt') #written by tools/generators/mainSystemEx
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #function extensions
-pb.DefLatexStartClass('MainSystem extensions (general)','This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.mainSystemExtensions} or \\texttt{exudyn.utilities}', subSection=True,labelName='sec:mainsystem:pythonExtensions')
+pb.DefLatexStartClass('MainSystem extensions (general)','This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.misc.mainSystemExtensions} or \\texttt{exudyn.utilities}', subSection=True,labelName='sec:mainsystem:pythonExtensions')
 
 pb.AddDocuCodeBlock(code="""
 #this example sketches the usage 

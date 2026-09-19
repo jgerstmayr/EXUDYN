@@ -14,11 +14,11 @@ Python Utility Functions
    FEM
    graphics
    graphicsDataUtilities
-   GUI
+   misc.GUI
    interactive
    kinematicTree
    lieGroupBasics
-   mainSystemExtensions
+   misc.mainSystemExtensions
    particles
    physics
    plot

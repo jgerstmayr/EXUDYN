@@ -13,7 +13,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import numpy as np #LoadSolutionFile
 import exudyn.itemInterface as eii
 import exudyn as exu 

@@ -15,9 +15,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import exudyn #does not work out of exudyn.__init__.py
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import exudyn as exu
-from exudyn.extensionRegistry import extends, install
+from exudyn.misc.extensionRegistry import extends, install
 import exudyn.plot
 import exudyn.solver
 import exudyn.interactive

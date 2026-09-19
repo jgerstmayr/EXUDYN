@@ -103,11 +103,11 @@ filesParsed=[
              'FEM.py',
              'graphics.py',
              'graphicsDataUtilities.py',
-             'GUI.py', 
+             'misc/GUI.py', 
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
-             'mainSystemExtensions.py', 
+             'misc/mainSystemExtensions.py', 
              'particles.py',
              'physics.py',
              'plot.py',

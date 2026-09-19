@@ -15,7 +15,7 @@
 
 
 
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import numpy as np
 from numpy.linalg import norm
 from math import sin, cos, tan, atan2, sqrt

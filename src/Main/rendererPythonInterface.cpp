@@ -378,18 +378,18 @@ void PyProcessShowVisualizationSettingsDialog()
 import exudyn
 import numpy as np
 try:
-    import exudyn.GUI #this may also fail because of tkinter
+    import exudyn.misc.GUI #this may also fail because of tkinter
     try:
-        guiSC = exudyn.GUI.GetRendererSystemContainer()
+        guiSC = exudyn.misc.GUI.GetRendererSystemContainer()
         if guiSC == None:
             print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
         else:
-            exudyn.GUI.EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exudyn, 'Visualization Settings') 
+            exudyn.misc.GUI.EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exudyn, 'Visualization Settings') 
     except Exception as exceptionVariable:
         print("edit dialog for visualizationSettings failed")
         print(exceptionVariable) #not necessary, but can help to identify reason
 except:
-    print("visualizationSettings dialog failed: cannot import exudyn.GUI / tkinter; tkinter probably missing")
+    print("visualizationSettings dialog failed: cannot import exudyn.misc.GUI / tkinter; tkinter probably missing")
 
 )PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
@@ -406,7 +406,7 @@ void PyProcessShowHelpDialog()
     std::string str = R"PY(
 import tkinter as tk
 import exudyn
-from exudyn.GUI import GetTkRootAndNewWindow
+from exudyn.misc.GUI import GetTkRootAndNewWindow
 
 [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
 
@@ -505,7 +505,7 @@ import tkinter.font
 import traceback #for exception printing
 from tkinter import ttk
 from tkinter import scrolledtext
-from exudyn.GUI import GetTkRootAndNewWindow
+from exudyn.misc.GUI import GetTkRootAndNewWindow
 
 [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
 commandString = ''
@@ -652,12 +652,12 @@ void PyProcessShowRightMouseSelectionDialog(Index itemID)
     STDstring strName = "edit item";
     STDstring str = "import exudyn\n";
     str += "import numpy as np\n";
-    str += "import exudyn.GUI\n";
+    str += "import exudyn.misc.GUI\n";
     //str += "d=exudyn.GetInternalSelectionDict()\n";
     str += "d=exudyn.sys['currentRendererSelectionDict']\n";
     str += "try:\n";
     str += "    strName = 'properties of <' + d['name'] + '>'\n";
-    str += "    exudyn.GUI.EditDictionary(d,False,dialogName=strName)\n";
+    str += "    exudyn.misc.GUI.EditDictionary(d,False,dialogName=strName)\n";
     str += "except:\n";
     str += "    print('showing of dictionary failed')\n";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
@@ -680,7 +680,7 @@ void PyProcessAskQuit()
 try:
     import exudyn
     import tkinter as tk
-    from exudyn.GUI import GetTkRootAndNewWindow
+    from exudyn.misc.GUI import GetTkRootAndNewWindow
 
     response = False #if user just shuts window
 

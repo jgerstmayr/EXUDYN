@@ -137,20 +137,20 @@ Details on visualization settings and its substructures are provided in {ref}`se
 The visualization settings dialog is shown exemplarily in {ref}`fig-visualizationsettings`.
 Note that this dialog is automatically created and uses Python's `tkinter`, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
 
-The appearance of visualization settings dialogs may be adjusted by directly modifying `exudyn.GUI` variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
+The appearance of visualization settings dialogs may be adjusted by directly modifying `exudyn.misc.GUI` variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
 
 ```python
-  import exudyn.GUI
-  exudyn.GUI.dialogDefaultWidth             #unscaled width of, e.g., right-mouse-button dialog
-  exudyn.GUI.treeEditDefaultWidth = 800
-  exudyn.GUI.treeEditDefaultHeight = 600
-  exudyn.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
-  exudyn.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened each time the dialog is opened
+  import exudyn.misc.GUI
+  exudyn.misc.GUI.dialogDefaultWidth             #unscaled width of, e.g., right-mouse-button dialog
+  exudyn.misc.GUI.treeEditDefaultWidth = 800
+  exudyn.misc.GUI.treeEditDefaultHeight = 600
+  exudyn.misc.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
+  exudyn.misc.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened each time the dialog is opened
   #
-  exudyn.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
-  exudyn.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the `tkinter` internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
+  exudyn.misc.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
+  exudyn.misc.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the `tkinter` internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
   #
-  exudyn.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
+  exudyn.misc.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
 ```
 
 (fig-visualizationsettings)=

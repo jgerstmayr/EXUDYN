@@ -17,7 +17,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # exudyn imports
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *

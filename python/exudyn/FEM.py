@@ -13,7 +13,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
-from exudyn.docmeta import docmeta
+from exudyn.misc.docmeta import docmeta
 import exudyn as exu
 from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 import exudyn.itemInterface as eii
