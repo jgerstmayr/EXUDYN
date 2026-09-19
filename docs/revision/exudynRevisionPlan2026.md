@@ -877,6 +877,58 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     that remain are the same class in other emitters and are #2545 — worth fixing only if the
     PDF survives R7.1.
 
+<a id="r7-1-4"></a>
+**R7.1.4** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r7-1-4) — *(sub-step of R7.1; step 1 of
+    the maintainer's "A then C", 2026-09-19)*
+    **The Markdown that already exists becomes documentation** (#2546). `myst-parser` in the
+    docs dependency group and in `conf.py`, and eleven Markdown files in the toctree: the four
+    `docs/dev/` documents, `CONTRIBUTING.md`, the READMEs of `definitions/`, the generators and
+    `exudev`, and the three `docs/howTo/` notes that are really Markdown.
+
+    It is also the cheapest possible test of the MyST path the rest of R7.1 rests on — on the
+    project's own files rather than on a sample — and it paid immediately: the strict build
+    found eleven broken cross-references nobody could see while the files were clone-only, and
+    #2547, five how-to files that are `.txt` renamed to `.md`.
+
+<a id="r7-1-5"></a>
+**R7.1.5** *(sub-step of R7.1, after R7.1.4)* **Convert the hand-written chapters to Markdown**,
+    one commit each. Nine files, ~8,800 lines: `jacobians` (82), `notation` (269), `GUI` (319),
+    `theDoc` preamble (513), `gettingStarted` (990), `solver` (951), `tutorial` (1132),
+    `introduction` (1588), `theory` (2923) — smallest first, so that the converter questions
+    (math, `\refSection`, listings, figures) are answered on a small file before a large one
+    depends on the answer.
+
+    **The check is the RST**: each chapter already has a generated `.rst`, so a conversion can be
+    compared against what Sphinx renders today rather than judged by eye.
+
+    **Absorbs #2547**, the five `docs/howTo/` files that are shell transcripts: they need the
+    same conversion and they are excluded from the documentation until they get it.
+
+    **Blocked on the tikz decision of R7.1.1** for the three chapters that contain figures.
+
+<a id="r7-1-6"></a>
+**R7.1.6** *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** The larger half by
+    volume — 8 generated `.tex` files, ~43,000 lines — and the smaller half by risk, because
+    it is emitter code and not prose. `itemDocsEmitter`, `structureDocsEmitter`,
+    `utilityDocsEmitter`, `mainSystemExtensionDocsEmitter` and the tracker's own writer emit `.md`
+    instead of `.tex` + `.rst`.
+
+    **#2545 evaporates here** rather than being fixed: the 74 remaining LaTeX escaping errors
+    exist only because the emitters write LaTeX.
+
+    **Needs the PDF decision** (see R7.1): if the PDF survives, this step keeps a `latexpdf` path
+    and the front page and table of contents that go with it.
+
+<a id="r7-1-7"></a>
+**R7.1.7** *(sub-step of R7.1, last)* **Delete the converters**: `src/pythonGenerator/doc2rst.py`
+    (680 lines), `latexConverter.py` (836) and the parts of `autoGenerateHelper.py` (1815) that
+    only served them. Check first what has to survive — the abbreviation list at the end of
+    `doc2rst.py` is named in R7.1 as one such thing.
+
+    **This is also where R7.3 becomes possible**: with no `.tex` → `.rst` conversion, the 498
+    committed generated `.rst` files stop being an input to anything and can be built in CI
+    instead of committed.
+
 <a id="r7-2"></a>
 **R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**
     Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and
@@ -888,7 +940,19 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     asset.
 
 <a id="r7-4"></a>
-**R7.4** Convert `trackerlog.tex` into `CHANGELOG.md`.
+**R7.4** *(phase R7, **after R8.5**; deferred 2026-09-19)* Convert `trackerlog.tex` into
+    `CHANGELOG.md`.
+
+    **Moved behind R8.5 deliberately.** R8.5 migrates `trackerlog.txt` to one JSON file per
+    issue and adds a `resolvedInVersion` field for exactly this purpose — its own text says it
+    *"makes R7.4's CHANGELOG.md a pure rendering job instead of a second mechanism"*. Writing the
+    converter now means writing it against the comma-escaped flat file first and against JSON
+    afterwards, i.e. writing it twice.
+
+    Note that #2544 fixed the LaTeX escaping of issue text in the meantime; the RST writer has
+    the same question with different characters, and a Markdown writer will have it again with a
+    third set. One escaping decision per output format belongs in the rendering job, not spread
+    over three writers.
 
 <a id="r7-5"></a>
 **R7.5** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r7-5) — *(phase R7)*

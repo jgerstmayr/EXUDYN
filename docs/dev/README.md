@@ -1,6 +1,6 @@
 # Exudyn developer documentation
 
-Developer-facing notes. Users start at [`README.rst`](../../README.rst) and
+Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstmayr/EXUDYN/blob/master/README.rst) and
 [`INSTALL.txt`](../../INSTALL.txt) in the repository root, or at the
 [online documentation](https://exudyn.readthedocs.io/).
 
@@ -11,11 +11,11 @@ Developer-facing notes. Users start at [`README.rst`](../../README.rst) and
 | [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
-| [../revision/exudynRevisionInfo2026.md](../revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
-| [../revision/exudynRevisionPlan2026.md](../revision/exudynRevisionPlan2026.md) | the restructuring plan, in steps R0.1 ... R11.x |
-| [../revision/exudynRevisionLog2026.md](../revision/exudynRevisionLog2026.md) | the record of the steps already closed — the revision / migration document |
+| [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
+| [exudynRevisionPlan2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026.md) | the restructuring plan, in steps R0.1 ... R11.x |
+| [exudynRevisionLog2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md) | the record of the steps already closed — the revision / migration document |
 | [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | how to contribute from outside |
-| [../../CLAUDE.md](../../CLAUDE.md) | the working contract for Claude Code sessions |
+| [CLAUDE.md](https://github.com/jgerstmayr/EXUDYN/blob/master/CLAUDE.md) | the working contract for Claude Code sessions |
 
 ## Repository layout
 
@@ -71,13 +71,13 @@ archived internal repository and on GitHub.
 | file | what it is for |
 |---|---|
 | [condaEnvironments.md](../howTo/condaEnvironments.md) | environment recipes, the package→feature map, the scipy pin |
-| [buildFromSource.md](../howTo/buildFromSource.md) | the canonical build reference, Windows and Linux |
+| [buildFromSource.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildFromSource.md) | the canonical build reference, Windows and Linux *(not converted yet, #2547)* |
 | [buildQuirks.md](../howTo/buildQuirks.md) | traps that cost real time: MSVC↔GCC flags, `/bigobj`, ABI tags, debugging a startup crash |
-| [gccVsMsvcTraps.md](../howTo/gccVsMsvcTraps.md) | the MSVC→GCC porting logbook — what broke and why |
-| [visualStudio2022.md](../howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
-| [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
+| [gccVsMsvcTraps.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md) | the MSVC→GCC porting logbook — what broke and why |
+| [visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
+| [sphinxDocs.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/sphinxDocs.md) | building the documentation locally |
 | [convertVideosFfmpeg.md](../howTo/convertVideosFfmpeg.md) | producing the demo animations |
-| [matplotlibExamples.md](../howTo/matplotlibExamples.md) | plotting recipes used in examples |
+| [matplotlibExamples.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/matplotlibExamples.md) | plotting recipes used in examples |
 
 macOS setup is covered in `docs/theDoc/introduction.tex`, not here.
 

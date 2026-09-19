@@ -81,8 +81,22 @@ templates_path = ['_templates']
 #everything that is not documentation; before the flatten a single 'main/*' covered src,
 #include, libs, obj and pythonDev, so each of them has to be named individually now
 exclude_patterns = ['README.rst','rotorAnsys.rst',
-                    'src/*','msvc/*','include/*','libs/*','python/*','tools/*',
-                    '_build/*','build/*','dist/*']
+                    'src/*','msvc/*','include/*','libs/*','python/*',
+                    'tools/generators/generated/*',   #generated RST fragments, not documents
+                    '_build/*','build/*','dist/*','tmp/*','.pytest_cache/*',
+                    'README.md',                      #the GitHub landing page, like README.rst
+                    #the five how-to files that are still .txt renamed to .md (#2547): every '#'
+                    #line is a shell comment and would render as a heading. They join the
+                    #documentation when they are actually converted, in step R7.1.5
+                    'docs/howTo/buildFromSource.md', 'docs/howTo/gccVsMsvcTraps.md',
+                    'docs/howTo/matplotlibExamples.md', 'docs/howTo/sphinxDocs.md',
+                    'docs/howTo/visualStudio2022.md',
+                    #Markdown that is NOT documentation (revision2026 step R7.1.4). Sphinx reads .md
+                    #since myst_parser was added, and everything it can read must either be in a
+                    #toctree or excluded - a page in neither fails the strict build (step R7.1.2).
+                    'docs/revision/*',   #the revision plan, log and info: a working record
+                    'CLAUDE.md',         #the working contract for Claude Code sessions
+                    'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
 
 #for google search index file, placed into root folder
 html_extra_path = ['docs/extraHtml/googleeeca4e2177bc5628.html']
@@ -101,7 +115,16 @@ html_theme = "sphinx_rtd_theme"
 extensions = [
    'sphinx_search.extension', #pip install readthedocs-sphinx-search
    'sphinx_copybutton',
+   'myst_parser',             #Markdown sources (revision2026 step R7.1.4, #2546); the migration of
+                              #step R7.1 converts the .tex chapters into this format
 ]
+
+#a .md file is a document, a .rst file is a document; nothing else changes
+source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
+
+#a heading gets an anchor, so that [text](OTHER.md#a-heading) works between Markdown files - which
+#is how the developer documentation already cross-references itself
+myst_heading_anchors = 3
 #html_theme_path = ["_themes", ]
 
 #for custom layout:

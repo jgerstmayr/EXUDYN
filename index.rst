@@ -26,8 +26,27 @@ Exudyn documentation
    docs/RST/structures/StructuresAndSettingsIndex.rst
 
 .. toctree::
+   :caption: Developer documentation
+
+   docs/dev/README
+   docs/dev/ARCHITECTURE
+   docs/dev/CODING_STYLE
+   docs/dev/WORKFLOW
+   definitions/README
+   tools/generators/README
+   tools/exudev/README
+   CONTRIBUTING
+
+.. toctree::
+   :caption: How-to notes
+
+   docs/howTo/buildQuirks
+   docs/howTo/condaEnvironments
+   docs/howTo/convertVideosFfmpeg
+
+.. toctree::
    :caption: Misc
-   
+
    docs/RST/Abbreviations
    docs/RST/ExamplesIndex
    docs/RST/TestModelsIndex

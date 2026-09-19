@@ -143,7 +143,7 @@ Historical note: `ODE2` corresponds to `SOS2` / `EvalF2` in HOTINT, `ODE1` to `E
 A comment that explains why code is the way it is cites the **issue** (`#2411`), not a step of the
 revision plan: comments stay for years, issue numbers are stable and the issue names its plan step.
 Plan steps are cited in issues and commit messages as "revision2026 step R4.10.3" (see
-[`exudynRevisionInfo2026.md`](../revision/exudynRevisionInfo2026.md) §1).
+[`exudynRevisionInfo2026.md`](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) §1).
 
 ## 7. File headers
 

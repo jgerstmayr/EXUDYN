@@ -129,6 +129,7 @@ docs = [
     "sphinx-rtd-theme",
     "readthedocs-sphinx-search",
     "sphinx-copybutton",
+    "myst-parser",          #Markdown sources (revision2026 step R7.1.4); RST stays readable too
     ]
 lint = [
     "pydoclint==0.9.1",     #the baseline tools/ci/pydoclintBaseline.txt holds this version's messages

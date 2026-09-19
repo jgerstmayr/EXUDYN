@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.205.dev1, 
++  Exudyn version = 1.11.206.dev1, 
 +  last change =  2026-09-19, 
-+  Number of issues = 2546, 
-+  Number of resolved issues = 2278 (205 in current version), 
++  Number of issues = 2548, 
++  Number of resolved issues = 2279 (206 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.206: resolved Issue 2546: the developer documentation is written as Markdown and published nowhere (docu)
+    - issue author: Claude-JG
+    - description:  docs/dev/ARCHITECTURE.md, CODING_STYLE.md, WORKFLOW.md and README.md, the howTo notes and the README files of definitions/ and the generators are written as documentation and are visible only to someone with a clone. Sphinx reads only RST today. Add myst-parser, give them toctree entries, and they are on readthedocs with everything else - which is also the cheapest possible test of the MyST path that step R7.1 rests on, on real files rather than on a sample.
+    - **notes:** myst-parser is in the docs dependency group and in conf.py, with myst_heading_anchors = 3 so that anchor links between Markdown files work, and eleven Markdown documents are in the toctree: the four docs/dev files, CONTRIBUTING.md, the READMEs of definitions/, the generators and exudev, and the three docs/howTo notes that are really Markdown. The strict build found eleven broken cross-references that were invisible while the files were clone-only, and #2547 - five how-to files that are .txt renamed to .md. convertVideosFfmpeg.md was converted as the example of what those need. The premise of R7.1 holds: the two formats coexist, which is what makes a chapter-by-chapter conversion possible.
+    - date resolved: **2026-09-19 19:36**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.205: resolved Issue 2388: the installation documentation is years out of date (docu)
     - issue author: Claude-JG
     - description:  docs/theDoc/gettingStarted.tex still instructs users with Python 3.6 and 3.7; 32 bit Anaconda; Spyder 4.1.3 and wheel names like exudyn-1.0.20-cp36-cp36m-win32.whl; and it discusses choosing between 32 and 64 bit installations. None of that has been built for years and after revision2026 step R2.6 the 32 bit build configurations no longer exist at all. The install section needs rewriting against the versions that are actually shipped (cp310-cp314; 64 bit only). Found during revision2026 step R2.6
@@ -7883,6 +7889,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2547:** five howTo files are .txt renamed to .md
+    - issue author: Claude-JG
+    - description:  buildFromSource.md, gccVsMsvcTraps.md, matplotlibExamples.md, sphinxDocs.md and visualStudio2022.md were renamed from .txt in step R3.6 and never converted: they have no fenced code blocks, and every line beginning with a hash - a shell comment - renders as a heading. buildFromSource.md is the canonical build reference and the worst affected. They are excluded from the documentation until they are converted, and linked to GitHub from the developer index so that nothing points at a page that does not exist. convertVideosFfmpeg.md was converted as an example of what they need.
+    - date raised: 2026-09-19 
 
  * **open issue 2541:** exudyn.config and exudyn.special are in no stub file
     - issue author: Claude-JG

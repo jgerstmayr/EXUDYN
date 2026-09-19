@@ -1,3 +1,5 @@
+# Contributing to Exudyn
+
 Currently, contributing is only possible by directly contacting the authors (e.g. writing an Issue or Discussion where you mention your requested change)
 You can also write an email to reply.exudyn@gmail.com
 

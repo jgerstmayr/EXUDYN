@@ -419,6 +419,10 @@ Exudyn documentation
     #+++++++++++++++++++++++++
     
     #+++++++++++++++++++++++++
+    #NOTE index.rst IS GENERATED HERE. The Markdown documents of revision2026 step R7.1.4 (#2546)
+    #are therefore listed in this template and not in index.rst, where a hand edit is overwritten by
+    #the next regeneration. A .md file that Sphinx can read must be either in one of these toctrees
+    #or in exclude_patterns of conf.py: a document in neither fails the strict build (step R7.1.2).
     #create primary toc
     indexRST += """
 .. toctree::
@@ -448,8 +452,27 @@ Exudyn documentation
    docs/RST/structures/StructuresAndSettingsIndex.rst
 
 .. toctree::
+   :caption: Developer documentation
+
+   docs/dev/README
+   docs/dev/ARCHITECTURE
+   docs/dev/CODING_STYLE
+   docs/dev/WORKFLOW
+   definitions/README
+   tools/generators/README
+   tools/exudev/README
+   CONTRIBUTING
+
+.. toctree::
+   :caption: How-to notes
+
+   docs/howTo/buildQuirks
+   docs/howTo/condaEnvironments
+   docs/howTo/convertVideosFfmpeg
+
+.. toctree::
    :caption: Misc
-   
+
    docs/RST/Abbreviations
    docs/RST/ExamplesIndex
    docs/RST/TestModelsIndex
