@@ -231,15 +231,18 @@ def ConvertListings(text):
     """\\pythonstyle\\begin{lstlisting} .. \\end{lstlisting} -> a fenced Python block; the
     content is code and must not be touched by any other pass, so this runs before them"""
     def Block(match):
-        options = match.group(1) or ''
-        language = 'python'
+        style = match.group(1) or ''
+        options = match.group(2) or ''
+        #\plainlststyle is used for CONSOLE OUTPUT, which is not Python and must not be
+        #highlighted as if it were
+        language = '' if 'plain' in style else 'python'
         if 'language=' in options and 'Python' not in options:
             language = ''                 #a listing that says it is something else
-        body = match.group(2).strip(chr(10))
+        body = match.group(3).strip(chr(10))
         return eol_ + '```' + language + chr(10) + body + chr(10) + '```' + eol_
 
     eol_ = chr(10)
-    pattern = (r'(?:\\pythonstyle\s*)?\\begin\{lstlisting\}(\[[^\]]*\])?(.*?)\\end\{lstlisting\}')
+    pattern = (r'(?:\\([a-zA-Z]*lststyle|pythonstyle)\s*)?\\begin\{lstlisting\}(\[[^\]]*\])?(.*?)\\end\{lstlisting\}')
     return re.sub(pattern, Block, text, flags=re.S)
 
 
@@ -293,6 +296,9 @@ def ConvertInline(text):
     text = ReplaceCommand(text, 'fig', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'exuUrl', 2, lambda url, name: '[' + name.strip() + '](' + url.strip() + ')')
     text = ReplaceCommand(text, 'newpage', 0, lambda: '')
+    text = ReplaceCommand(text, 'clearpage', 0, lambda: '')
+    #a rule between the parts of a tutorial: a thematic break says the same in Markdown
+    text = ReplaceCommand(text, 'horizontalRuler', 0, lambda: '\n---\n')
     text = ReplaceCommand(text, 'eq', 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'refChapter', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'footnote', 1, lambda a: ' (' + a.strip() + ')')
@@ -353,6 +359,7 @@ def Tidy(text):
 
 def ReportUnknown(text):
     """every backslash command left outside math - the point of the tool is to name them"""
+    text = re.sub(r'^```.*?^```', '', text, flags=re.S | re.M)   #code is not LaTeX
     (stripped, _) = ProtectMath(text)
     found = {}
     for match in re.finditer(r'\\([A-Za-z]+)', stripped):

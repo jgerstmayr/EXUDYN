@@ -41,7 +41,7 @@ filesParsed=[
               'version.txt',
               'gettingStarted.tex',
               'introduction.tex',
-              'tutorial.tex',
+              #tutorial.tex was converted to docs/manual/tutorial.md in revision2026 step R7.1.5
               #GUI.tex was converted to docs/manual/GUI.md in revision2026 step R7.1.5
               #notation.tex was converted to docs/manual/notation.md in revision2026 step R7.1.5
 
@@ -57,6 +57,7 @@ convertedChapters=[
               'docs/manual/notation',
               'docs/manual/GUI',
               'docs/manual/solver',
+              'docs/manual/tutorial',
             ]
 
 undefLabelList = [
