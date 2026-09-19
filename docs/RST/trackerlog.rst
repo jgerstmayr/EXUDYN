@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.206.dev1, 
 +  last change =  2026-09-19, 
-+  Number of issues = 2548, 
++  Number of issues = 2549, 
 +  Number of resolved issues = 2279 (206 in current version), 
 
 ************
@@ -7889,6 +7889,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textred:`open issue 2548:` generated and hand-written documentation share directories and nothing says which is which
+    - issue author: Claude-JG
+    - description:  Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.
+    - date raised: 2026-09-19 
 
  * **open issue 2547:** five howTo files are .txt renamed to .md
     - issue author: Claude-JG

@@ -660,6 +660,9 @@ Moved to [`exudynRevisionPlan2026.md`](exudynRevisionPlan2026.md) on 2026-09-15.
 | D6 | **GitHub `master` frozen** until v2.0 | No intermediate public state; months of local iteration are fine. Requires step R1.7. |
 | D7 | **Log retention on GitHub is tiered**: drop everything before 1.9; keep Windows-only / single-platform logs for 1.9 and 1.10; keep all platforms for the current version. Full history is conserved in the internal repository. | The per-release logs carry genuinely useful cross-version, cross-platform comparisons, but hundreds of files inflate every `--depth 1` clone. Applied 2026-09-09. They stay **tracked** — the `.gitignore` deliberately does not cover them. Since revision2026 step R3.8 they are `python/logs/testmodels/`, `python/logs/examples/` and `python/logs/performance/`. |
 
+| D8 | **`theDoc.pdf` in its present form does not survive 2.0** (maintainer, 2026-09-19). The LaTeX documentation build ends with phase R7; `.tex` as a *source* format is allowed only in special, tiny cases, and none is foreseen. | The PDF exists because the sources were LaTeX. Once they are Markdown, keeping it means keeping a LaTeX toolchain, the escaping questions of #2544/#2545 and a second rendering of every page, for an artefact the HTML documentation already covers. Removes the `latexpdf` requirement from step R7.1.6. |
+| D9 | **mermaid replaces tikz** for the 13 flowcharts (maintainer, 2026-09-19), as recommended in step R7.1.1. | They are node-and-arrow diagrams, not geometry; mermaid is text, so it diffs and reviews like code, MyST and GitHub render it natively, and the hand-maintained PNG twin of each figure ends - rule 10. With D8 there is no PDF to pre-render SVG for. |
+
 ### Open
 
 - Whether `exudynFast` also ships or stays user-built for the *default* wheel — currently
