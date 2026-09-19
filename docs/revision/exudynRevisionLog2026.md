@@ -7215,6 +7215,75 @@ lines of `conf.py`.
 ---
 
 
+<a id="r7-1-8"></a>
+### R7.1.8 — which files are generated, and where the two kinds live
+
+**DONE 2026-09-19** (#2548). Raised by the maintainer after R7.1.4: *"having a mixed directory
+with auto-generated and manually generated files is not preferable and dangerous"*.
+
+Nothing in the tree marked a generated file — no banner, no directory, no `.gitattributes`.
+`CLAUDE.md` rule 1 now names all of them, and says that the list is dated and that R7.1.6 and
+R7.1.7 replace it with one sentence. `.gitattributes` marks `docs/RST/**`, `index.rst`,
+`README.rst` and the future `docs/generated/**` as `linguist-generated`.
+
+**The decided layout** (info document D10) is by origin: `docs/manual/` hand-written,
+`docs/generated/` emitter and tracker output, `docs/dev/` and `docs/howTo/` unchanged, a banner
+in the first line of every emitted file, and a **hand-written** `index.md` — a table of
+contents is a human decision, and the generator owning it is what went wrong in R7.1.4.
+
+---
+
+<a id="r7-1-5"></a>
+### R7.1.5 — the chapters become Markdown: `notation`, and the converter
+
+**IN PROGRESS** (#2549). First chapter converted 2026-09-19.
+
+#### What the first conversion answered
+
+**Math needs no conversion at all.** `conf.py` already declares the document's ~150 macros to
+MathJax (`mathjax3_config`), so `$\qv\cConfig$`, `\LU{0b}{\Rot}` and the `\mr{..}` matrices carry
+over verbatim. That single fact is why `tools/tex2md.py` is 300 lines instead of 3000, and it
+means the conversion is about *structure* — headings, lists, tables, references — not about
+formulas.
+
+Three things the strict build found, all now handled by the converter:
+
+- an **abbreviation target is a bare label without a title**, so `{ref}`ODE2`` cannot find link
+  text and `-W` calls that an error; it has to be `` {ref}`ODE2 <ODE2>` `` (58 of them in this
+  chapter alone);
+- the `.tex` heading depths are relative to the whole document **and are not locally
+  consistent** — `notation.tex` puts a `\mysubsubsection` directly under a `\mysection` — so
+  the headings are renumbered by a walk over the nesting, not by a global mapping;
+- `\onlyRST{..}` / `\ignoreRST{..}`: the RST branch is kept and the LaTeX branch dropped,
+  which is now simply correct rather than a choice (D8: there is no PDF).
+
+#### Removing a chapter from the LaTeX pipeline is part of the same commit
+
+A converted chapter leaves `filesParsed` in `doc2rst.py` immediately, because otherwise both
+copies define `sec:generalnotation` and the build fails on duplicate labels. That deletes five
+generated files — `Notation.rst`, `NotationIndex.rst`,
+`LHSRHSNamingConventionsInEXUDYN.rst`, `SystemAssembly.rst`,
+`NomenclatureForSystemEquationsOfMotionAndSolvers.rst` — and `docs/theDoc/notation.tex`
+itself, the source that has moved. `\input{notation}` in `theDoc.tex` is commented out with the
+reason.
+
+#### The check, and one thing the old path was losing
+
+Word count against the four generated `.rst` files, after subtracting the `:math:` and `:ref:`
+role names: **2,979 words in the RST, 3,005 in the Markdown**, and **56 table rows in both**.
+The surplus is the **citations**: `latexConverter.py` deletes every `\cite` without
+replacement, which is why the rendered page says *"by the main developer ."* today. The
+Markdown keeps the keys in brackets, and **#2550** asks for a references page to point them at.
+
+#### Also found
+
+`docs/theDoc/jacobians.tex` (82 lines) is **entirely commented out and `\input` by nothing** — not
+by `theDoc.tex`, not by `doc2rst.py`. It renders no page today, so it is 8 chapters to convert,
+not 9; deleting it was approved by the maintainer (2026-09-19) and done here rather than converting it.
+
+---
+
+
 <a id="r7-5"></a>
 ### R7.5 — the installation documentation says what is shipped
 

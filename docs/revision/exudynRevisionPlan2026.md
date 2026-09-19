@@ -902,7 +902,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     #2547, five how-to files that are `.txt` renamed to `.md`.
 
 <a id="r7-1-8"></a>
-**R7.1.8** *(sub-step of R7.1; **decide before R7.1.5 starts**. Numbered 8 because step numbers are
+**R7.1.8** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r7-1-8) *(sub-step of R7.1;
+    decided before R7.1.5 started. Numbered 8 because step numbers are
     permanent and R7.1.5-R7.1.7 were written first; it runs before them.)*
     **One directory is either generated or hand-written, and says which** (#2548). Raised by the maintainer
     2026-09-19 after a hand edit to `index.rst` - a generated file that looks hand-written - was
@@ -942,7 +943,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     documents out of the 9 chapters holds.
 
 <a id="r7-1-5"></a>
-**R7.1.5** *(sub-step of R7.1, after R7.1.4)* **Convert the hand-written chapters to Markdown**,
+**R7.1.5** **IN PROGRESS** (#2549) → [log](exudynRevisionLog2026.md#r7-1-5) *(sub-step of R7.1,
+    after R7.1.4)* **Convert the hand-written chapters to Markdown**,
     one commit each. Nine files, ~8,800 lines: `jacobians` (82), `notation` (269), `GUI` (319),
     `theDoc` preamble (513), `gettingStarted` (990), `solver` (951), `tutorial` (1132),
     `introduction` (1588), `theory` (2923) — smallest first, so that the converter questions
@@ -955,11 +957,24 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     the cuts are proposed afterwards, per chapter, with the rendered pages available. Target: at
     most ~20 documents out of the 9 chapters.
 
+    **Measured 2026-09-19, before starting: it is 8 files, not 9.** `jacobians.tex` (82 lines) is
+    **entirely commented out** - not one line of content is active - and no file `\input`s it:
+    neither `theDoc.tex` nor `doc2rst.py` mentions it. It produces no page today and there is
+    nothing to convert. Proposal: **delete it** (a tracked file, so it needs approval) rather than
+    carry it into `docs/manual/`. The included chapters are `gettingStarted`, `introduction`,
+    `tutorial`, `notation`, `theory`, `GUI`, `solver`, plus the `theDoc.tex` preamble.
+
     **The check is the RST**: each chapter already has a generated `.rst`, so a conversion can be
     compared against what Sphinx renders today rather than judged by eye.
 
     **Absorbs #2547**, the five `docs/howTo/` files that are shell transcripts: they need the
     same conversion and they are excluded from the documentation until they get it.
+
+    **`notation` is converted (2026-09-19)**, with `tools/tex2md.py` — a one-shot converter that
+    is deleted again in R7.1.7. Remaining: `GUI`, `gettingStarted`, `solver`, `tutorial`,
+    `introduction`, `theory`, and the `theDoc.tex` preamble. Each conversion removes its chapter
+    from `filesParsed` in `doc2rst.py` in the same commit, because two copies of a chapter define
+    the same labels twice and the strict build stops.
 
     **Unblocked 2026-09-19**: R7.1.1 decided mermaid, so `introduction`, `solver` and `theory`
     convert their 13 tikz pictures into mermaid blocks and drop the duplicated PNG.
@@ -973,8 +988,13 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `utilityDocsEmitter`, `mainSystemExtensionDocsEmitter` and the tracker's own writer emit `.md`
     instead of `.tex` + `.rst`.
 
-    **#2545 evaporates here** rather than being fixed: the 74 remaining LaTeX escaping errors
-    exist only because the emitters write LaTeX.
+    **#2545 is resolved here, not abandoned**: the 74 remaining errors are *LaTeX* escaping errors,
+    and they exist only because the emitters write LaTeX - deleting the LaTeX writers ends them at
+    the source, which is why fixing them separately would be work thrown away. But the requirement
+    behind the issue does **not** disappear and moves with the code: **the Markdown writers escape
+    too**, at the writer, where the output format is known. Different characters (`*`, `_`, `` ` ``,
+    `#`, `|` in tables, `<`), same rule - an author writes text, not markup. #2545 is resolved with
+    that note when this step lands, and the escaping test that comes with it is what proves it.
 
     **No `latexpdf` path** (maintainer, 2026-09-19; info document D8): the PDF does not survive
     2.0, so this step emits Markdown only and the LaTeX writers of the emitters are deleted rather

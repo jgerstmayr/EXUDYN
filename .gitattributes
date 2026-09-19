@@ -82,3 +82,17 @@ main/pythonDev/TestModels/testData/*.rst    binary
 *.otf           binary
 *.woff          binary
 *.woff2         binary
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Generated documentation (revision2026 step R7.1.8, #2548)
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# These files are written by src/pythonGenerator/doc2rst.py and by the docs emitters; a hand
+# edit to one of them survives until the next tools/regenerate.py and no longer. linguist-generated
+# collapses them in GitHub diffs and keeps them out of the language statistics, which is the only
+# mark a reader gets until R7.1.6 moves all generated documentation into docs/generated/.
+docs/RST/**     linguist-generated=true
+index.rst       linguist-generated=true
+README.rst      linguist-generated=true
+
+# the target directory of R7.1.6, marked in advance so that the first file written there is marked
+docs/generated/**  linguist-generated=true

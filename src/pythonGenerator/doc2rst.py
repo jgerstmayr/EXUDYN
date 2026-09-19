@@ -43,9 +43,18 @@ filesParsed=[
               'introduction.tex',
               'tutorial.tex',
               'GUI.tex',
-              'notation.tex',
+              #notation.tex was converted to docs/manual/notation.md in revision2026 step R7.1.5
+
               'theory.tex',
               'solver.tex',
+            ]
+
+#chapters that are already MyST Markdown and are NOT parsed from LaTeX any more (step R7.1.5).
+#They are appended to the user manual toctree below; the reading order of the manual is restored
+#when index.md becomes hand-written in step R7.1.7 (decision D10), because a table of contents is
+#a human decision and a generator should not own it.
+convertedChapters=[
+              'docs/manual/notation',
             ]
 
 undefLabelList = [
@@ -436,6 +445,9 @@ Exudyn documentation
                 indexRST += '   '+filename+'Index\n'
             else:
                 indexRST += '   '+filename+'\n'
+
+    for chapter in convertedChapters: #step R7.1.5, see convertedChapters above
+        indexRST += '   '+chapter+'\n'
 
 # .. toctree::
 #    :caption: Python utility functions

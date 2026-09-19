@@ -125,6 +125,14 @@ source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 #a heading gets an anchor, so that [text](OTHER.md#a-heading) works between Markdown files - which
 #is how the developer documentation already cross-references itself
 myst_heading_anchors = 3
+
+#WITHOUT dollarmath, MyST treats $...$ as ordinary text: the page then shows the LaTeX source
+#and MathJax is not even loaded on it (measured on the first converted chapter, step R7.1.5).
+#amsmath is for the align/aligned environments the chapters use. The macros themselves
+#(\qv, \LU, \mr, ...) are resolved by MathJax through mathjax3_config below, which is why a
+#converted chapter carries its math over verbatim - and also why the .md does NOT render in a
+#plain Markdown preview such as the one of VS Code, which knows none of this project's macros.
+myst_enable_extensions = ['dollarmath', 'amsmath']
 #html_theme_path = ["_themes", ]
 
 #for custom layout:
