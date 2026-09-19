@@ -133,6 +133,44 @@ stubtestBaselineFile = os.path.join(repositoryRoot, 'tools', 'ci', 'stubtestBase
 mypyConfigFile = os.path.join(repositoryRoot, 'tools', 'ci', 'mypyStubtest.ini')
 
 
+def InstalledExudynVersion():
+    """the version of the exudyn this interpreter would import, or None if it cannot be imported"""
+    environment = dict(os.environ)
+    environment['EXUDYN_SUPPRESS_UI_WINDOW_OPEN'] = '1'      #importing exudyn opens a window, #2477
+    probe = subprocess.run([sys.executable, '-c', 'import exudyn; print(exudyn.__version__)'],
+                           cwd=repositoryRoot, capture_output=True, text=True, env=environment)
+    if probe.returncode != 0 or not probe.stdout.strip():
+        return None
+
+    return probe.stdout.strip().splitlines()[-1]
+
+
+def RefuseAStaleWheel():
+    """THE STUB CHECK READS THE INSTALLED PACKAGE, NOT THE SOURCE TREE (#2517, revision2026 step
+    R5.18.5). If the wheel in this environment is older than the working tree, stubtest compares
+    the committed stubs against a module that does not contain what was just written - and reports
+    OK. That happened: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1, and
+    the stub gate described a module without the nine new exception classes.
+
+    A green gate that means nothing is worse than a red one, so this refuses rather than warns."""
+    with open(os.path.join(repositoryRoot, 'version.txt'), 'r', encoding='utf8') as file:
+        expected = file.read().strip()
+
+    installed = InstalledExudynVersion()
+    if installed is None:
+        raise SystemExit('the stub check compares the stubs against the INSTALLED exudyn, and this '
+                         'environment has none that can be imported.\n'
+                         'Build into it first:  exudev build --env <thisEnvironment>')
+    if installed != expected:
+        raise SystemExit('the stub check compares the stubs against the INSTALLED exudyn, and this '
+                         'environment holds ' + installed + ' while version.txt says ' + expected
+                         + '.\nWhatever it reported would describe the wrong module, so it refuses '
+                         'to run. Build into this environment first:\n'
+                         '    exudev build --env <thisEnvironment>\n'
+                         '(the version moves on every ResolveIssue, so this is expected right '
+                         'after closing an issue and before the next build)')
+
+
 def RunStubtest(generate=False):
     command = [sys.executable, '-m', 'mypy.stubtest', 'exudyn',
                '--ignore-positional-only',                  #pybind reports every argument as positional
@@ -172,6 +210,7 @@ def GeneratedEntries(process):
 
 
 def CheckStubs(args):
+    RefuseAStaleWheel()                  #before anything else: #2517
     if args.write:
         entries = GeneratedEntries(RunStubtest(generate=True))
         header = ['#Backlog of tools/checkPython.py --stubs (revision2026 step R5.5.4): the stub-vs-module',

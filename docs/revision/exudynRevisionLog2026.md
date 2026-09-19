@@ -7146,6 +7146,74 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r5-18-5"></a>
+### R5.18.5 — a gate that described the wrong module
+
+**DONE 2026-09-19** (#2517). The last open step of phase R5.
+
+The gates run in `venvExuP313`; `exudev build` installed into `venvP313`. So a C++ change could
+be built and every gate could still run against a wheel from an earlier version — **a green
+result that means nothing**. Seen for real on 2026-09-18: `venvExuP313` held `1.11.173.dev1`
+while the sources were at `1.11.176.dev1`, and the stub gate happily described a module that
+did not contain the nine new exception classes.
+
+The step offered two fixes and called the second the stronger one. **Both are in.**
+
+#### The first half, done on the way
+
+`exudev build --env venvExuP313` builds and installs into the generator environment, added on
+2026-09-18 when the maintainer asked why `--env` was not available for `build`. Every build in
+this session has gone through it. That removes the *cause* in the normal workflow.
+
+#### The second half, which is the rule
+
+`tools/checkPython.py --stubs` now **refuses to run** when the installed exudyn is not the one
+the working tree describes:
+
+```
+the stub check compares the stubs against the INSTALLED exudyn, and this environment holds
+1.11.201.dev1 while version.txt says 1.11.999.dev1.
+Whatever it reported would describe the wrong module, so it refuses to run. Build into this
+environment first:
+    exudev build --env <thisEnvironment>
+(the version moves on every ResolveIssue, so this is expected right after closing an issue
+ and before the next build)
+```
+
+**Verified by faking the mismatch**: with `version.txt` set to a version nothing has built, the
+check exits 1 with that message; restored, it passes. As in R4.3.1, a refusal that has never
+been seen to fire is not yet a check.
+
+It lives in the **tool** and not in the driver on purpose: `python tools/checkPython.py --stubs
+--check` is a command a person or a CI job can run directly, and the rule has to hold there
+too. It is the one check that imports the package; the other five are static and need no wheel.
+
+#### What is deliberately NOT guarded, and why
+
+- **The other five checks** (`checkAll`, `checkExtras`, `checkEncoding`, ruff, `gen_sources`)
+  read the source tree and never import exudyn. Blocking them on the wheel would mean the gate
+  refuses to run in the window between `ResolveIssue` — which moves `version.txt` — and the
+  next build, for no reason. A gate that fights the workflow is a gate that gets skipped.
+- **The test suite.** A stale wheel there is the same lie, but its log file is named
+  `testSuiteLog_V<version>_...`, so a run against the wrong wheel is identifiable afterwards;
+  and `exudev test` legitimately targets environments other than the one just built. Named here
+  rather than guarded silently.
+
+#### Phase R5 is complete
+
+Fifty-five steps, and the last of them is a check that stops a check from lying.
+
+---
+
+
+
+#### Plan text at closing (archived 2026-09-19)
+
+**R5.18.5** *(sub-step of R5.18; found while building for step R6.3.1)* **The gate environment can hold a stale wheel** (#2517). The gates run in `venvExuP313`; `exudev build` installs into `venvP313`. So a C++ change can be built and every gate can still run against a wheel from an earlier version - a green result that means nothing. Seen for real: `venvExuP313` held `1.11.173.dev1` while the sources were at `1.11.176.dev1`, and the stub gate happily described a module that did not contain the nine new classes. Either `exudev build` installs into the generator environment as well, or the checks refuse to run when the installed version differs from `version.txt`. The second is the stronger rule and costs one comparison.
+
+---
+
+
 <a id="r4-3-1"></a>
 ### R4.3.1 — a generator that wrote nothing, and the gate that could not see it
 

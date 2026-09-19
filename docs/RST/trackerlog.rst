@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.201.dev1, 
++  Exudyn version = 1.11.202.dev1, 
 +  last change =  2026-09-19, 
 +  Number of issues = 2543, 
-+  Number of resolved issues = 2274 (201 in current version), 
++  Number of resolved issues = 2275 (202 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.202: :textred:`resolved BUG 2517` : the gate environment can hold a stale exudyn wheel 
+    - issue author: Claude-JG
+    - description:  The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.
+    - **notes:** Both halves. exudev build --env <environment> builds and installs into the generator environment (added 2026-09-18), which removes the cause in the normal workflow; and tools/checkPython.py --stubs now REFUSES to run when the installed exudyn version differs from version.txt, naming both versions and the command that fixes it. The refusal is in the tool and not in the exudev driver, because checkPython.py --stubs --check is a command a person or a CI job runs directly. Verified by faking the mismatch: it exits 1 with that message. The other five checks are static and are deliberately not guarded - blocking them between ResolveIssue and the next build would make the gate fight the workflow. The test suite is not guarded either; its log file carries the version, and exudev test legitimately targets other environments.
+    - date resolved: **2026-09-19 09:54**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.201: :textred:`resolved BUG 2526` : mainSystemExtensionDocsEmitter writes none of its five outputs 
     - issue author: Claude-JG
     - description:  The file ends in the middle of main() - no write call and no __main__ block - so the generator runs\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\, MainSystemCreateExt.rst\, stubAutoBindingsExt.pyi\, docs/theDoc/MainSystemExt.tex\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing #2525\, whose new link prefix could not reach those five files.
@@ -8913,11 +8919,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2517:` the gate environment can hold a stale exudyn wheel
-    - issue author: Claude-JG
-    - description:  The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.
-    - date raised: 2026-09-18 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG
