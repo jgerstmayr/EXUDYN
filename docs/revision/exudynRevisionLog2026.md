@@ -7369,6 +7369,12 @@ are `theoryIntegrationPoints` — which was to be merged into `theoryModal`, but
 put it *after* the modal section when it belongs before — and `tutorialSymbolic`, which is a
 self-contained tutorial people link to directly.
 
+**Note 2026-09-19**: `theoryIntegrationPoints.md` was renamed to **`theoryFEM.md`** at the
+maintainer's request, right after the split: the page is to collect what the documentation says
+about finite elements, of which the integration rules are the first section. Its heading is
+*Finite elements* now, with *Integration points* below it; the `sec-integrationpoints` label is
+unchanged, so every reference to it still resolves.
+
 #### The macros MathJax did not have (maintainer, 2026-09-19)
 
 *"many formulas do not render: `\pv`, `\fv`, etc."* — and they did not, in every chapter.

@@ -11,7 +11,7 @@ Furthermore, the general notations are described in {ref}`sec-generalnotation` a
 theoryMultibody
 theoryDynamics
 theoryRotations
-theoryIntegrationPoints
+theoryFEM
 theoryModal
 theoryContact
 ```
