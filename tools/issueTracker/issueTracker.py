@@ -149,13 +149,31 @@ def UpdateFiles():
 
 
 #%%******************************************************************************************************
-def ToLatex(s): #replace _ and other symbols to fit into latex code
+def ToLatex(s):
+    """Every LaTeX special character in issue text becomes literal text (#2544).
 
-    s = s.replace('_','\\_')
-    # s = s.replace('{','\{')
-    # s = s.replace('}','\}')
-    s = s.replace('#','\\#')
-    s = s.replace('&','\\&')
+    trackerlog.tex is LaTeX, and its content is written by whoever raises an issue. Until
+    2026-09-19 only _ # & were escaped, so a caret, a percent sign or a backslash command in any
+    description was executed or aborted pdflatex - and both already happened: issue 2398 says
+    "O(N^2) per step", and an issue that mentioned a backslash-input command stopped the build 629
+    pages in, after six minutes.
+
+    ESCAPING IS TOTAL, by the maintainer's decision of 2026-09-19. A handful of issues from 2016-2020
+    contain deliberate markup ({\bf ATTENTION} in #0139, math in #0273) and now render as the
+    characters they are. That is the trade: the documentation build can never again be broken by
+    what someone typed into the tracker, and nobody has to think about LaTeX to raise an issue.
+
+    The backslash goes FIRST, or it would escape the backslashes the other rules introduce."""
+    s = s.replace(chr(92), chr(92) + 'textbackslash{}')      #before everything else
+    s = s.replace('{', chr(92) + '{')
+    s = s.replace('}', chr(92) + '}')
+    s = s.replace('_', chr(92) + '_')
+    s = s.replace('#', chr(92) + '#')
+    s = s.replace('&', chr(92) + '&')
+    s = s.replace('$', chr(92) + '$')
+    s = s.replace('%', chr(92) + '%')
+    s = s.replace('^', chr(92) + 'textasciicircum{}')
+    s = s.replace('~', chr(92) + 'textasciitilde{}')
 
     return s
 

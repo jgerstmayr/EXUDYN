@@ -228,7 +228,7 @@
 \item[]{\it damping}: scalar damping coefficient
 \item[]{\it force}: scalar additional force applied
 \item[]{\it velocityOffset}: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
-\item[]{\it springForceUserFunction}: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)->float ; this function replaces the internal connector force computation
+\item[]{\it springForceUserFunction}: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force computation
 \item[]{\it bodyOrNodeList}: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it drawSize}: general drawing size of connector
@@ -685,7 +685,7 @@
 \item[]{\it constrainedAxes}: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; each entry may only be 0 (=free) axis or 1 (=constrained axis); ALL constrained Axes are defined relative to reference rotation of body0 times rotation0
 \item[]{\it useGlobalFrame}: if False, the position is defined in the local coordinate system of body0, otherwise it is defined in global coordinates
 \item[]{\it offsetUserFunction}: a user function offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset. This allows to realize rheonomic joints and allows kinematic simulation
-\item[]{\it offsetUserFunction\_t}: a user function offsetUserFunction_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
+\item[]{\it offsetUserFunction\_t}: a user function offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it axesRadius}: radius of axes for connector graphical representation
 \item[]{\it axesLength}: length of axes for connector graphical representation
@@ -836,7 +836,7 @@
 \item[]{\it coordinates}: a list of two coordinates for the respective bodies (in case of ground, it shall be None)
 \item[]{\it offset}: an fixed offset between the two coordinate values
 \item[]{\it factorValue1}: an additional factor multiplied with coordinate value1 used in algebraic equation, to enable (e.g. gear) ratio between coordinates
-\item[]{\it velocityLevel}: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; if True, the offsetUserFunction_t is considered and offsetUserFunction is ignored
+\item[]{\it velocityLevel}: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; if True, the offsetUserFunction\_t is considered and offsetUserFunction is ignored
 \item[]{\it offsetUserFunction}: a Python function which defines the time-dependent offset; see description in CoordinateConstraint
 \item[]{\it offsetUserFunction\_t}: time derivative of offsetUserFunction; needed for velocity level constraints; see description in CoordinateConstraint
 \item[]{\it show}: if True, connector visualization is drawn
@@ -1580,7 +1580,7 @@
 \item[]{\it showLegend}: shows legend for different item types
 \item[]{\it layoutDistanceFactor}: this factor influences the arrangement of labels; larger distance values lead to circle-like results
 \item[]{\it layoutIterations}: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
-\item[]{\it tightLayout}: if True, uses matplotlib plt.tight_layout() which may raise warning
+\item[]{\it tightLayout}: if True, uses matplotlib plt.tight\_layout() which may raise warning
 \item[]{\it showGraph}: if True, graph is plotted with matplotlib
 \item[]{\it addItemData}: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
 \item[]{\it addAnnotations}: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)

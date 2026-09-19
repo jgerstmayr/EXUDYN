@@ -896,8 +896,8 @@ After the video has been created, you should delete the single images:
 
 The main collection of examples and models is available under
 \bi
-  \item \texttt{main/pythonDev/Examples}
-  \item \texttt{main/pythonDev/TestModels}
+  \item \texttt{python/Examples}
+  \item \texttt{python/TestModels}
 \ei
 You can use these examples to build up your own realistic models of multibody systems.
 Very often, these models show the way which already works. Alternative ways may exist, but
@@ -908,7 +908,7 @@ papers of the literature or analytical solutions, there are many models which ma
 mechanical values and these models may not be converged in space or time 
 (in order to keep running our test suite in less than a minute).
 
-Finally, note that the \texttt{main/pythonDev/TestModels} are often only intended to preserve functionality
+Finally, note that the \texttt{python/TestModels} are often only intended to preserve functionality
 in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the 
 implemented methods. The \texttt{TestModels} are used in the \codeName \mybold{TestSuite} \texttt{testing/runTestSuite.py}
 which is run after a full build of Python versions. Output for very version is written

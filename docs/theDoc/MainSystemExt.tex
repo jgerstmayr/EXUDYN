@@ -93,10 +93,10 @@
 \item[]{\it majorTicksX}: number of major ticks on x-axis; default: 10
 \item[]{\it majorTicksY}: number of major ticks on y-axis; default: 10
 \item[]{\it colorCodeOffset}: int offset for color code, color codes going from 0 to 27 (see PlotLineCode(...)); automatic line/color codes are used if no colors and lineStyles are used
-\item[]{\it colors}: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named_colors.html
+\item[]{\it colors}: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named\_colors.html
 \item[]{\it lineStyles}: line style is automatically selected from colorCodeOffset if lineStyles=[]; otherwise define for all lines with string or with list of strings, chosing from '-', '--', '-.', ':', or ''
 \item[]{\it lineWidths}: float to define line width by float (default=1); either use single float for all sensors or list of floats with length >= number of sensors
-\item[]{\it markerStyles}: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle
+\item[]{\it markerStyles}: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers\_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle
 \item[]{\it markerSizes}: float to define marker size by float (default=6); either use single float for all sensors or list of floats with length >= number of sensors
 \item[]{\it markerDensity}: if int, it defines approx. the total number of markers used along each graph; if float, this defines the distance of markers relative to the diagonal of the plot (default=0.08); if None, it adds a marker to every data point if marker style is specified for sensor
 \item[]{\it newFigure}: if True, a new matplotlib.pyplot figure is created; otherwise, existing figures are overwritten

@@ -868,6 +868,15 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     because the local build must apply the gate CI applies - a warning that passes here and fails
     there is the failure mode of #2508 in a second tool.
 
+<a id="r7-1-3"></a>
+**R7.1.3** **DONE 2026-09-19** → [log](exudynRevisionLog2026.md#r7-1-3) — *(sub-step of R7.1; the
+    repair half of the maintainer's "A then C", 2026-09-19)*
+    **`theDoc.pdf` can be built again** (#2543, #2544). Four causes, all restructuring fallout;
+    the largest was that `issueTracker.py` wrote issue text into LaTeX without escaping it.
+    Errors went 158 → **74**, and a complete PDF is produced where none was before. The 74
+    that remain are the same class in other emitters and are #2545 — worth fixing only if the
+    PDF survives R7.1.
+
 <a id="r7-2"></a>
 **R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**
     Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and

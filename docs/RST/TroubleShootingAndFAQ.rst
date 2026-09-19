@@ -334,7 +334,7 @@ FAQ
 
 .. code-block:: 
 
-  File "C:/DATA/cpp/EXUDYN_git/main/pythonDev/...<file name>", line XXX, in <module>
+  File "C:/DATA/cpp/EXUDYN_git/python/...<file name>", line XXX, in <module>
   solver.SolveSystem(...)
   SystemError: <built-in method SolveSystem of PyCapsule object at 0x0CC63590> returned a result with an error set
 

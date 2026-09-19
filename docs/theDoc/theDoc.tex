@@ -331,7 +331,9 @@ columns=flexible, %do not add Phantom spaces at "'"
 	{\tiny (mesh and FEM-model generated with NETGEN and NGsolve -- 647058 total coordinates)}
 \end{center}
 \vspace{0.2cm}
-{\small Exudyn version = \input{version.txt}} \input{versionName.txt}}\\
+%version.txt is at the REPOSITORY ROOT since revision2026 step R3.4; versionName.txt stays here.
+%The line also had one closing brace too many, which ended \small before the version name (#2543)
+{\small Exudyn version = \input{../../version.txt} \input{versionName.txt}}\\
 {\small (\input{buildDate})}\\
 {\small CHECK \refSection{sec:issueTracker} for changes from previous versions!!!\\}
 \vspace{0.7cm}
@@ -414,7 +416,7 @@ The tool automatically detects the type of file and visualizes all given columns
 columns of the file.
 
 For running the results monitor, start a terminal (linux) or an Anaconda prompt (windows). 
-Either you copy the \texttt{resultsLoader.py}, located in the \texttt{main/pythonDev/exudyn} subfolder of the repository, to your desired/current directory or you call it from a relative path from your current directory.
+Either you copy the \texttt{resultsLoader.py}, located in the \texttt{python/exudyn} subfolder of the repository, to your desired/current directory or you call it from a relative path from your current directory.
 %Just run the tool, if \codeName\ is installed, by typing \texttt{python resultsMonitor.py file.txt} to continuously visualize the results in \texttt{file.txt}.
 Usage is described by typing \texttt{python resultsMonitor.py -h}, as given in the following listing:
 \plainlststyle

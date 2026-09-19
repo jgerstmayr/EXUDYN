@@ -393,7 +393,7 @@ In order to make full usage of the C++ code and extending it, you can use:
 +  get the files from git
 +  put them into a local directory (recommended: \ ``C:/DATA/cpp/EXUDYN_git``\ )
 +  start \ ``main_sln.sln``\  with Visual Studio (recommended version: 2017, otherwise you have to manually adapt)
-+  compile the code and run \ ``main/pythonDev/pytest.py``\  example code
++  compile the code and run \ ``python/pytest.py``\  example code
 +  adapt \ ``pytest.py``\  for your applications
 +  extend the C++ source code
 +  link it to your own code

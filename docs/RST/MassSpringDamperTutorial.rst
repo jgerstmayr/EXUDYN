@@ -3,11 +3,11 @@ Mass-Spring-Damper tutorial
 
 The Python source code of the first tutorial can be found in the file:
 
-   \ ``main/pythonDev/Examples/springDamperTutorial.py``\ 
+   \ ``python/Examples/springDamperTutorial.py``\ 
 
 A similar version based on a simplified approach (using a 3D mass point) is available as, which uses simplified approaches:
 
-   \ ``main/pythonDev/Examples/springDamperTutorialNew.py``\ 
+   \ ``python/Examples/springDamperTutorialNew.py``\ 
 
 The following tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 

@@ -6,12 +6,12 @@ Rigid body and joints tutorial
 
 The Python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:
 
-   \ ``main/pythonDev/Examples/rigidBodyTutorial3.py``\ 
+   \ ``python/Examples/rigidBodyTutorial3.py``\ 
 
 For alternative approaches, see
 
-   \ ``main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py``\ 
-   \ ``main/pythonDev/Examples/rigidBodyTutorial2.py``\ 
+   \ ``python/Examples/rigidBodyTutorial3withMarkers.py``\ 
+   \ ``python/Examples/rigidBodyTutorial2.py``\ 
 
 \ **NOTE**\  that the youtube video uses a slightly older way of creating graphics using \ ``GraphicsData...``\  functions, which
 can be easily replaced by the newer \ ``graphics. ...``\  commands shown here. Their interface is identical.

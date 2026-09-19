@@ -165,6 +165,25 @@ def LatexString2RSTspecial(s, replaceMarkups = True): #replace \_ \{ etc. for RS
 
 
 
+def EscapeUnderscoresOutsideMath(s):
+    """Escape the underscores LaTeX would read as a subscript, and ONLY those (#2543).
+
+    A docstring is Markdown with $...$ math (CODING_STYLE section 8), so an underscore inside $...$
+    is a subscript and must stay; everywhere else it is part of a Python name - deltaL_t,
+    plt.tight_layout, offsetUserFunction_t - and LaTeX answers "Missing $ inserted". The parameter
+    NAME in front of a description was escaped and the description itself was not, which is how
+    132 errors reached a document nobody could build.
+
+    An underscore that already carries a backslash is left alone, so this can run over text that
+    has been through ToLatex()."""
+    parts = s.split('$')
+    for (index, part) in enumerate(parts):
+        if index % 2 == 0:                       #outside $...$; odd indices are the math spans
+            parts[index] = re.sub(r'(?<!\\)_', r'\\_', part)
+
+    return '$'.join(parts)
+
+
 #convert string into latex format, reagrind _ and {}
 def ToLatex(s, replaceCurlyBracket=True): #replace _ and other symbols to fit into latex code
     if replaceCurlyBracket:
@@ -486,9 +505,10 @@ def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
                         if s.find(':') != -1 and (' ' not in s[:s.find(':')]): #first occurance = argument; may not have spaces
                             n=s.find(':')
                             sr = RSTmarkup(s[:n].replace('\\_','_'),'``') + LatexString2RSTspecial(s[n:], replaceMarkups = replaceMarkups) #in this string, there should be no markup ...
-                            s = '{\\it '+s[:n].replace('_','\\_')+'}'+ s[n:]
+                            s = '{\\it '+s[:n].replace('_','\\_')+'}'+ EscapeUnderscoresOutsideMath(s[n:])
                         else:
                             sr = LatexString2RSTspecial(s, replaceMarkups = replaceMarkups)
+                            s = EscapeUnderscoresOutsideMath(s)
                         sLatex += sSpaces*2+'\\item[]'+s+'\n'
                         sRST += '  | '+RemoveIndentation(sr) + '\n'
                     

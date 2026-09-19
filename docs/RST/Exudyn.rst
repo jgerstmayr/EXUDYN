@@ -40,7 +40,7 @@ Exudyn
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
 
-+  Exudyn version = 1.11.202.dev1 (McLaughlin)
++  Exudyn version = 1.11.204.dev1 (McLaughlin)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: ../theDoc/figures/ExudynLOGO1.9.jpg
@@ -83,7 +83,7 @@ For license, see LICENSE.txt in the root github folder on github!
 If you like using Exudyn, please add a *star* on github and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-In addition to the tutorials in the documentation, many ( **250+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
+In addition to the tutorials in the documentation, many ( **250+** ) examples can be downloaded on github under python/Examples and python/TestModels . They are also on ReadTheDocs.
 
 Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 

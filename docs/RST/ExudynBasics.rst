@@ -641,8 +641,8 @@ Examples, test models and test suite
 
 The main collection of examples and models is available under
 
-+  \ ``main/pythonDev/Examples``\ 
-+  \ ``main/pythonDev/TestModels``\ 
++  \ ``python/Examples``\ 
++  \ ``python/TestModels``\ 
 
 You can use these examples to build up your own realistic models of multibody systems.
 Very often, these models show the way which already works. Alternative ways may exist, but
@@ -653,7 +653,7 @@ papers of the literature or analytical solutions, there are many models which ma
 mechanical values and these models may not be converged in space or time 
 (in order to keep running our test suite in less than a minute).
 
-Finally, note that the \ ``main/pythonDev/TestModels``\  are often only intended to preserve functionality
+Finally, note that the \ ``python/TestModels``\  are often only intended to preserve functionality
 in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the 
 implemented methods. The \ ``TestModels``\  are used in the Exudyn \ **TestSuite**\  \ ``testing/runTestSuite.py``\ 
 which is run after a full build of Python versions. Output for very version is written

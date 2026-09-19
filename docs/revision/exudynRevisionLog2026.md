@@ -7146,6 +7146,76 @@ has to stay written out, since `PyError` defaults to `runtimeError`.
 ---
 
 
+<a id="r7-1-3"></a>
+### R7.1.3 — theDoc.pdf builds again
+
+**DONE 2026-09-19** (#2543, #2544). The repair half of the maintainer's *"do A then C"*.
+
+The plan recorded the failure as one line: *"Known: the LaTeX PDF build currently fails (files
+missing or changed); this surfaces here."* MiKTeX is installed on the maintainer's machine, so
+it was measured instead. **Four causes, and the fourth is the one that mattered.**
+
+| # | cause | fatal |
+|---|---|---|
+| 1 | the title page reads `version.txt` beside itself; it moved to the repository root in R3.4 | yes |
+| 2 | 19 references to `main/pythonDev` in five hand-written `.tex` files, a tree R3.1 and R3.8 dissolved; one is a listing input, which aborts | yes |
+| 3 | `theDoc.tex` line 334 had one closing brace too many on the version line | no |
+| 4 | **`trackerlog.tex` is generated from issue text that was not escaped for LaTeX** | yes |
+
+#### The fourth found itself
+
+Cause 4 was found in the most direct way available: the issue **describing** causes 1-3
+mentioned a backslash-input command, the tracker wrote it into `trackerlog.tex` unescaped, and
+LaTeX executed it — stopping the build with *"File not found"* **629 pages in**, after six
+minutes. Writing the bug report triggered the bug.
+
+It was not new. `ToLatex()` escaped `_`, `#` and `&` and nothing else, so issue #2398's
+*"O(N^2) per step"* has been producing *"Missing $ inserted"* for as long as it has existed.
+
+**Escaping is now total** (maintainer decision, 2026-09-19): backslash first, then braces, `_`,
+`#`, `&`, `$`, `%`, `^`, `~`. The measurement that made this a decision rather than an
+obvious fix: 32 issue fields contain a backslash, 24 a brace — and a few of those are
+**deliberate** LaTeX from 2016-2020 (`{\bf ATTENTION}` in #0139, math in #0273), which now
+render as the characters they are. The trade the maintainer took: the documentation build can
+never again be broken by what someone typed into the tracker, and nobody has to think about
+LaTeX to raise an issue.
+
+#### And a second escaping bug, one layer down
+
+With the build running to the end, 132 non-fatal errors remained. Their cause: a generated
+parameter description escaped the underscore in the parameter **name** and not in the
+**description** after it, so `deltaL_t`, `plt.tight_layout` and `offsetUserFunction_t` all read
+as subscripts. `EscapeUnderscoresOutsideMath()` fixes that, and it is careful about the one
+case where an underscore is meant: a docstring is Markdown with `$...$` math (CODING_STYLE §8),
+so the function escapes outside the math spans only, and leaves an already-escaped `\_` alone.
+
+#### Where it stands
+
+| | before | after |
+|---|---|---|
+| PDF produced | **no** | **yes**, 8.4 MB |
+| LaTeX errors | 158, fatal | 74, none fatal |
+
+**This unblocks R7.3**, which wants the PDF built in CI instead of committed: CI cannot build a
+document that does not compile.
+
+The remaining 74 are the same class of escaping bug in the **other** documentation emitters —
+an issue number `(#2477)` in a docstring, a `^` in a table, underscores in
+`itemDefinition.tex` and `pythonUtilitiesDescription.tex`. They garble passages; they do not
+stop the build. Raised as **#2545** with the recommendation attached: the honest fix is one
+escaping function at every LaTeX text boundary in the docs emitters, and **R7.1 deletes that
+whole path**, so it is worth doing only if the PDF survives the Markdown migration. That is the
+question the maintainer left open when choosing "A then C".
+
+#### Not touched
+
+The five `main/pythonDev` occurrences in the generated `trackerlog.tex` are historical issue
+text — one of them is literally the issue *about* the move — and they are correct as
+history.
+
+---
+
+
 <a id="r5-18-5"></a>
 ### R5.18.5 — a gate that described the wrong module
 

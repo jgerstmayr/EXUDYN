@@ -10,7 +10,7 @@ This section will show:
 
 A large number of examples, some of them quite advanced, can be found in:
 
-   \ ``main/pythonDev/Examples``\ 
-   \ ``main/pythonDev/TestModels``\ 
+   \ ``python/Examples``\ 
+   \ ``python/TestModels``\ 
 
 

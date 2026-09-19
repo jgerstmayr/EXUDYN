@@ -42,7 +42,7 @@ For license, see LICENSE.txt in the root github folder on github!
 If you like using Exudyn, please add a *star* on github and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-In addition to the tutorials in the documentation, many ( **250+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
+In addition to the tutorials in the documentation, many ( **250+** ) examples can be downloaded on github under python/Examples and python/TestModels . They are also on ReadTheDocs.
 
 Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 
@@ -520,7 +520,7 @@ In order to make full usage of the C++ code and extending it, you can use:
     \item get the files from git
     \item put them into a local directory (recommended: \texttt{C:/DATA/cpp/EXUDYN\_git})
     \item start \texttt{main\_sln.sln} with Visual Studio (recommended version: 2017, otherwise you have to manually adapt)
-    \item compile the code and run \texttt{main/pythonDev/pytest.py} example code
+    \item compile the code and run \texttt{python/pytest.py} example code
     \item adapt \texttt{pytest.py} for your applications
     \item extend the C++ source code
     \item link it to your own code
@@ -575,13 +575,13 @@ In order to test the following example, which creates a \ac{mbs}, adds a node, a
 Hereafter, press the play button or \texttt{F5} in Spyder.
 %\lstinputlisting[language=Python]{../../main/bin/WorkingRelease/myFirstExample.py}
 \ignoreRST{
-\pythonexternal[language=Python, frame=single, float, label=lst:firstexample, caption=My first example]{../../main/pythonDev/Examples/myFirstExample.py}
+\pythonexternal[language=Python, frame=single, float, label=lst:firstexample, caption=My first example]{../../python/Examples/myFirstExample.py}
 }
 
 If successful, the IPython Console of Spyder will print something like:
 \begin{lstlisting}
-  runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py', 
-    wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
+  runfile('C:/DATA/cpp/EXUDYN_git/python/Examples/myFirstExample.py', 
+    wdir='C:/DATA/cpp/EXUDYN_git/python/Examples')
   +++++++++++++++++++++++++++++++
   EXUDYN V1.2.9 solver: implicit second order time integration
   STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
@@ -958,7 +958,7 @@ which draws the according object in red and others gray/transparent (but sometim
 \bi
 \item[$\ra$] Typical \mybold{time integration errors} may look like:
 \begin{lstlisting}
-  File "C:/DATA/cpp/EXUDYN\_git/main/pythonDev/...<file name>", line XXX, in <module>
+  File "C:/DATA/cpp/EXUDYN\_git/python/...<file name>", line XXX, in <module>
   solver.SolveSystem(...)
   SystemError: <built-in method SolveSystem of PyCapsule object at 0x0CC63590> returned a result with an error set
 \end{lstlisting}

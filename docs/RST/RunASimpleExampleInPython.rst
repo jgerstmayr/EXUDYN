@@ -19,8 +19,8 @@ If successful, the IPython Console of Spyder will print something like:
 
 .. code-block:: 
 
-  runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py', 
-    wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
+  runfile('C:/DATA/cpp/EXUDYN_git/python/Examples/myFirstExample.py', 
+    wdir='C:/DATA/cpp/EXUDYN_git/python/Examples')
   +++++++++++++++++++++++++++++++
   EXUDYN V1.2.9 solver: implicit second order time integration
   STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1

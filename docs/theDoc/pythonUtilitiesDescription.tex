@@ -555,7 +555,7 @@
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it fileName}: file name (possibly including path) for HDF5 file, including file ending
-\item[]{\it dataDict}: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function
+\item[]{\it dataDict}: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr\_matrix, Python function
 \end{itemize}
 \item[--]
 {\bf output}: None
@@ -1019,7 +1019,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 {\bf function description}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]clear all workspace variables except for system variables with '_' at beginning,
+\item[]clear all workspace variables except for system variables with '\_' at beginning,
 \item[]'func' or 'module' in name; it also deletes all items in exudyn.sys and exudyn.variables,
 \item[]EXCEPT from exudyn.sys['renderState'] for pertaining the previous view of the renderer
 \end{itemize}
@@ -3450,7 +3450,7 @@ export to EXUDYN objects
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it material}: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
 \item[]{\it outputVariableType}: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
-\item[]{\it numberOfThreads}: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if __name__ == '__main__':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
+\item[]{\it numberOfThreads}: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
 \item[--]\textcolor{steelblue}{\bf notes}: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
@@ -5806,7 +5806,7 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
 \setlength{\itemindent}{-0.7cm}
 \item[]compute generalized mass matrix M and generalized force terms for
 \item[]kinematic tree, using current state (joint) variables q and
-\item[]joint velocities q_t. The generalized force terms f = fGeneralized
+\item[]joint velocities q\_t. The generalized force terms f = fGeneralized
 \item[]contain Coriolis and gravity if given in the kinematicTree.
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
@@ -5904,7 +5904,7 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
 \setlength{\itemindent}{-0.7cm}
 \item[]compute generalized mass matrix M and generalized force terms for
 \item[]kinematic tree, using current state (joint) variables q and
-\item[]joint velocities q_t. The generalized force terms f = fGeneralized
+\item[]joint velocities q\_t. The generalized force terms f = fGeneralized
 \item[]contain Coriolis and gravity if given in the kinematicTree.
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
@@ -6933,7 +6933,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]internal function to return Exudyn version string, which allows to identify how results have been obtained
-\item[]writes something like 'Exudyn version = 1.11.158.dev1; Python3.13.15; Windows x86_64 AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
+\item[]writes something like 'Exudyn version = 1.11.158.dev1; Python3.13.15; Windows x86\_64 AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
 \end{itemize}
 \item[--]
 {\bf notes}: If exudyn C++ module is not available, it outputs the Python version
@@ -9702,7 +9702,7 @@ by inheritance with class MyClass(ROSInterface)
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]find msgs types here
-\item[]{\it http}://docs.ros.org/en/melodic/api/std_msgs/html/index-msg.html
+\item[]{\it http}://docs.ros.org/en/melodic/api/std\_msgs/html/index-msg.html
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   publisher for poses, pubType = PoseStamped,
@@ -10981,7 +10981,7 @@ by inheritance with class MyClass(ROSInterface)
 \setlength{\itemindent}{-0.7cm}
 \item[]Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in
 \item[]site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details.
-\item[]The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
+\item[]The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.\_\_all\_\_ !
 \end{itemize}
 \item[--]
 {\bf input}: \vspace{-6pt}

@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.202.dev1, 
++  Exudyn version = 1.11.204.dev1, 
 +  last change =  2026-09-19, 
-+  Number of issues = 2543, 
-+  Number of resolved issues = 2275 (202 in current version), 
++  Number of issues = 2546, 
++  Number of resolved issues = 2277 (204 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.204: :textred:`resolved BUG 2544` : issue text is written into trackerlog.tex without escaping 
+    - issue author: Claude-JG
+    - description:  issueTracker.py writes every issue name, description and resolution note straight into docs/theDoc/trackerlog.tex, which is LaTeX. A caret, an underscore, a hash, an ampersand or a backslash command in an issue is therefore executed or aborts pdflatex. Both already happen: issue 2398 says O(N^2) per step and produces "Missing $ inserted", and an issue that mentioned a backslash-input command made the build stop with "File not found" 629 pages in. The RST writer has the same question with different characters. Escape at the writer, where the format is known, rather than asking every issue author to think about LaTeX.
+    - **notes:** ToLatex() in issueTracker.py escapes every LaTeX special character now - backslash first, then braces, underscore, hash, ampersand, dollar, percent, caret, tilde. Escaping is total by the maintainer decision of 2026-09-19: the few issues from 2016-2020 that contain deliberate markup render as the characters they are, and in exchange the documentation build cannot be broken by what someone types into the tracker. Found because the issue describing the OTHER PDF causes mentioned a backslash command, which LaTeX then executed 629 pages into the build.
+    - date resolved: **2026-09-19 17:24**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
+ * Version 1.11.203: :textred:`resolved BUG 2543` : theDoc.pdf cannot be built any more 
+    - issue author: Claude-JG
+    - description:  pdflatex on docs/theDoc/theDoc.tex fails, and the plan recorded only that it does. Measured 2026-09-19. (1) fatal: the title page reads version.txt beside itself, and version.txt moved to the repository root in step R3.4. (2) fatal: 19 references to the tree main-pythonDev in five hand-written .tex files, which steps R3.1 and R3.8 dissolved; one of them is a listing input, which aborts the run. (3) non-fatal: theDoc.tex line 334 had one closing brace too many on the version line. (4) THE BIG ONE, found while fixing the others: trackerlog.tex is generated from issue text that is not escaped for LaTeX at all, so a caret, an underscore, a hash or a backslash command in any issue description is executed or aborts the build. This blocks step R7.3, which wants the PDF built in CI instead of committed.
+    - **notes:** Four causes, all restructuring fallout. Fixed: the title page reads ../../version.txt (root since R3.4); 19 main-pythonDev references in five hand-written .tex files rewritten to python/...; the extra closing brace on theDoc.tex line 334; and, the big one, issue text is escaped for LaTeX now (#2544). A complete 8.4 MB PDF is produced where none was before, and the error count went from 158 fatal to 74 non-fatal. The remainder is the same escaping bug in the other documentation emitters, raised separately. This unblocks R7.3.
+    - date resolved: **2026-09-19 17:24**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.202: :textred:`resolved BUG 2517` : the gate environment can hold a stale exudyn wheel 
     - issue author: Claude-JG
     - description:  The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.
@@ -8919,6 +8931,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2545:` the documentation emitters do not escape LaTeX either
+    - issue author: Claude-JG
+    - description:  After the tracker was fixed, theDoc.pdf builds with 74 non-fatal LaTeX errors. They are the same class one layer down: an issue number in a docstring writes a bare hash, a table writes a bare caret, and underscores survive in itemDefinition.tex and pythonUtilitiesDescription.tex where the emitter path differs from the one fixed in step R7.1.3. Passages are garbled; the build completes. The honest fix is ONE escaping function applied at every LaTeX text boundary in the docs emitters, rather than chasing call sites. Note before starting it: step R7.1 deletes the LaTeX path entirely, so this is worth doing only if the PDF survives the Markdown migration.
+    - date raised: 2026-09-19 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG

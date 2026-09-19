@@ -4,7 +4,7 @@ Flexible beams tutorial
 This tutorial briefly introduces two simple planar beams and how to work with them with utility functions.
 The python source code of the beam tutorial can be found at:
 
-   \ ``main/pythonDev/Examples/beamTutorial.py``\ 
+   \ ``python/Examples/beamTutorial.py``\ 
 
 The tutorial uses the GeometricallyExactBeam2D, which is a shear deformable Reissner-Timoshenko beam, and a thin cable ANCFCable2D, which represents a large deformation Bernoulli-Euler beam.
 
