@@ -45,7 +45,7 @@ filesParsed=[
               #GUI.tex was converted to docs/manual/GUI.md in revision2026 step R7.1.5
               #notation.tex was converted to docs/manual/notation.md in revision2026 step R7.1.5
 
-              'theory.tex',
+              #theory.tex was converted to docs/manual/theory.md in revision2026 step R7.1.5
               #solver.tex was converted to docs/manual/solver.md in revision2026 step R7.1.5
             ]
 
@@ -59,10 +59,11 @@ convertedChapters=[
               'docs/manual/solver',
               'docs/manual/tutorial',
               'docs/manual/introduction',
+              'docs/manual/theory',
             ]
 
 undefLabelList = [
-    ('Theory: Contact','seccontacttheory'),
+    #('Theory: Contact','seccontacttheory'), #defined by docs/manual/theory.md since revision2026 step R7.1.5
     #('List of Abbreviations','sec-listofabbreviations'),
     ##('Render State','sec-renderstate'),
     ##('GraphicsData','sec-graphicsdata'),

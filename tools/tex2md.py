@@ -353,6 +353,10 @@ def ConvertInline(text):
     text = ReplaceCommand(text, 'eq', 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'refChapter', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'footnote', 1, lambda a: ' (' + a.strip() + ')')
+    #the colour macros of the contact chapter are MathJax macros (conf.py); the few occurrences
+    #OUTSIDE math are prose that names the colour itself
+    for name in ['termA', 'termC']:
+        text = ReplaceCommand(text, name, 1, lambda a: a.strip())
     #citations are DROPPED by the current LaTeX->RST path, which is why the HTML has sentences
     #ending in "by the main developer ." - keep them readable until #2550 gives them a page
     text = ReplaceCommand(text, 'cite', 1,

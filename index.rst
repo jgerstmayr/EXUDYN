@@ -10,12 +10,12 @@ Exudyn documentation
 
    docs/RST/Exudyn
    docs/RST/InstallationAndGettingStartedIndex
-   docs/RST/TheoryAndFormulationsIndex
    docs/manual/notation
    docs/manual/GUI
    docs/manual/solver
    docs/manual/tutorial
    docs/manual/introduction
+   docs/manual/theory
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::
@@ -57,13 +57,6 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
-
-.. _seccontacttheory:
-
-Theory: Contact
-===============
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 Further information
 ===================
