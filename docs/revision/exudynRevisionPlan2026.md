@@ -1517,10 +1517,12 @@ debt stays visible and each item can be closed on evidence.
     `docs/RST/Examples` and `docs/RST/TestModels` are generated and follow by regeneration.
 
 <a id="r11-4-3"></a>
-**R11.4.3** *(sub-step of R11.4)* **Split `checkPreAssembleConsistencies.cpp`** (#2554): 62
-    implementations for all five item types in 2,602 lines, into
-    `checkPreAssembleConsistencies<ItemType>.cpp`. **Five files and not one per item**: each file
-    includes pybind11, and that include dominates the compilation time.
+**R11.4.3** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r11-4-3) *(sub-step of R11.4)*
+    **Split `checkPreAssembleConsistencies.cpp`** (#2554). Measured while doing it: **49** functions
+    in **four** kinds, not 62 in five — `MainLoad` has no such check. 2,602 lines became
+    `checkPreAssembleConsistencies{Objects,Markers,Nodes,Sensors}.cpp` plus a header for what
+    they share. **One file per kind and not one per item**: each includes pybind11, and that
+    include dominates the compilation time.
 
 <a id="r11-4-4"></a>
 **R11.4.4** *(sub-step of R11.4)* **The `UpdateGraphics` functions leave `VisuNodePoint.cpp`**

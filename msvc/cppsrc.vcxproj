@@ -129,7 +129,10 @@
     <ClCompile Include="..\src\Main\MainSystemContainer.cpp" />
     <ClCompile Include="..\src\Main\rendererPythonInterface.cpp" />
     <ClCompile Include="..\src\Main\Stdoutput.cpp" />
-    <ClCompile Include="..\src\Objects\checkPreAssembleConsistencies.cpp" />
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesMarkers.cpp" />
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesNodes.cpp" />
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesObjects.cpp" />
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesSensors.cpp" />
     <ClCompile Include="..\src\Objects\CMarkerBodiesRelativeRotationCoordinate.cpp" />
     <ClCompile Include="..\src\Objects\CMarkerBodiesRelativeTranslationCoordinate.cpp" />
     <ClCompile Include="..\src\Objects\CMarkerBodyBeamShape.cpp" />

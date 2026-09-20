@@ -10702,3 +10702,29 @@ the curated list, **with that reason written next to it**, and not in the genera
 which is meant to shrink. Five consecutive runs of the gate, all green.
 
 ---
+
+<a id="r11-4-3"></a>
+### R11.4.3 — one file of consistency checks becomes four
+
+**DONE 2026-09-20** (#2554). `checkPreAssembleConsistencies.cpp`, 2,602 lines, is
+`checkPreAssembleConsistencies{Objects,Markers,Nodes,Sensors}.cpp` — 1,881 / 436 / 155 / 207
+lines, 28 / 10 / 5 / 6 functions.
+
+**Four files, not the five the step asked for**: there is no load among them. The functions are
+`MainXxx::CheckPreAssembleConsistency`, and `MainLoad*` has none — a load is checked elsewhere.
+Counting them before splitting is what showed it.
+
+**The includes do not follow the kind of the file**, which the first build said plainly: a
+*sensor* check dereferences `CObjectKinematicTree`, a *marker* check looks at the body it is
+attached to. So each file gets the headers whose class its own bodies name — and a
+`MainObjectX.h` also brings `CObjectX`, which is the name the bodies actually use. Result: 35
+headers for the objects, 11 / 8 / 8 for the rest, against 55 in the one file.
+
+The three things they share — `toleranceChecks`, `toleranceNorm` and the `IsInRange` template
+of the `ContactSphere*` checks — are in a new `checkPreAssembleConsistencies.h`.
+
+`msvc/cppsrc.vcxproj`, `cppsrc.vcxproj.filters` and `sources.json` (both its lists — the old
+file was in `minimal` too) name the four files now; `gen_sources --check` is what proves that,
+and it passes.
+
+---

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.215.dev1, 
++  Exudyn version = 1.11.216.dev1, 
 +  last change =  2026-09-20, 
 +  Number of issues = 2562, 
-+  Number of resolved issues = 2288 (215 in current version), 
++  Number of resolved issues = 2289 (216 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.216: resolved Issue 2554: checkPreAssembleConsistencies.cpp is one file for five item types (improvement)
+    - issue author: Claude-JG
+    - description:  src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.
+    - **notes:** checkPreAssembleConsistencies.cpp (2602 lines, 49 functions) is now four files: Objects 28, Markers 10, Nodes 5, Sensors 6 - four and not five, because MainLoad has no CheckPreAssembleConsistency. The shared tolerances and the IsInRange template moved to a new checkPreAssembleConsistencies.h. The includes do not follow the kind of the file, which the first build showed: a sensor check dereferences CObjectKinematicTree and a marker check looks at the body it is attached to, so each file gets the headers whose class its own bodies name (35 for the objects, 11/8/8 for the rest, against 55 in the one file). vcxproj, filters and both lists of sources.json follow; gen_sources --check passes, the suite is 116 + 23 and pytest 174.
+    - date resolved: **2026-09-20 14:29**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.215: resolved Issue 2560: a module deleted from the package is still shipped in the wheel (fix)
     - issue author: Claude-JG
     - description:  After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/__init__.py still did "from .mainSystemExtensions import ..." and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.\* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.
@@ -7952,11 +7958,6 @@ Open issues
  * **open issue 2555:** all UpdateGraphics functions live in a file named after the first item that had one
     - issue author: Claude-JG
     - description:  src/Objects/VisuNodePoint.cpp holds ~79 UpdateGraphics implementations - every node, object, marker, load and sensor - in 4171 lines, under a name that only made sense when VisualizationNodePoint was the first item to have one. Split it the same way as checkPreAssembleConsistencies, into Visu<ItemType>.cpp. To be measured first: whether each UpdateGraphics can instead go into its own CItem\*.cpp, which would be the natural place; the question is compilation time, because pybind11 is not included in most of those files today. See revision2026 step R11.4.4.
-    - date raised: 2026-09-19 
-
- * **open issue 2554:** checkPreAssembleConsistencies.cpp is one file for five item types
-    - issue author: Claude-JG
-    - description:  src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.
     - date raised: 2026-09-19 
 
  * **open issue 2550:** citations are silently dropped from the HTML documentation

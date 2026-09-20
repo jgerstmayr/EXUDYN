@@ -285,7 +285,16 @@
     <ClCompile Include="..\src\Graphics\GlfwClient.cpp">
       <Filter>CPPvisualization</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\checkPreAssembleConsistencies.cpp">
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesMarkers.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesNodes.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesObjects.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\checkPreAssembleConsistenciesSensors.cpp">
       <Filter>CPPitems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\GlfwClientExtended.cpp">

@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.215.dev1, 
+  \item Exudyn version = 1.11.216.dev1, 
   \item last change =  2026-09-20, 
   \item Number of issues = 2562, 
-  \item Number of resolved issues = 2288 (215 in current version), 
+  \item Number of resolved issues = 2289 (216 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.216}:  resolved Issue 2554: {\bf checkPreAssembleConsistencies.cpp is one file for five item types}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.}
+    \item {\bf notes: checkPreAssembleConsistencies.cpp (2602 lines, 49 functions) is now four files: Objects 28, Markers 10, Nodes 5, Sensors 6 - four and not five, because MainLoad has no CheckPreAssembleConsistency. The shared tolerances and the IsInRange template moved to a new checkPreAssembleConsistencies.h. The includes do not follow the kind of the file, which the first build showed: a sensor check dereferences CObjectKinematicTree and a marker check looks at the body it is attached to, so each file gets the headers whose class its own bodies name (35 for the objects, 11/8/8 for the rest, against 55 in the one file). vcxproj, filters and both lists of sources.json follow; gen\_sources --check passes, the suite is 116 + 23 and pytest 174.}
+    \item   date resolved: {\bf 2026-09-20 14:29},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.215}:  resolved Issue 2560: {\bf a module deleted from the package is still shipped in the wheel}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
