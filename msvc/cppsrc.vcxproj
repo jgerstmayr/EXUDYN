@@ -219,7 +219,7 @@
     <ClCompile Include="..\src\Objects\CObjectRigidBody2D.cpp" />
     <ClCompile Include="..\src\Objects\CObjectRotationalMass1D.cpp" />
     <ClCompile Include="..\src\Objects\evaluateUserFunctions.cpp" />
-    <ClCompile Include="..\src\Objects\VisuNodePoint.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectSuperElement.cpp" />
     <ClCompile Include="..\src\Pymodules\PybindModule.cpp" />
     <ClCompile Include="..\src\Pymodules\Pybind_manual_classes.cpp" />
     <ClCompile Include="..\src\Pymodules\Pybind_modules.cpp" />

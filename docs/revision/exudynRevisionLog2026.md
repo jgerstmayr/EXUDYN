@@ -10728,3 +10728,55 @@ file was in `minimal` too) name the four files now; `gen_sources --check` is wha
 and it passes.
 
 ---
+
+<a id="r11-4-4"></a>
+### R11.4.4 — every `UpdateGraphics` moves next to its item
+
+**DONE 2026-09-20** (#2555). `VisuNodePoint.cpp` is gone: 4,171 lines, **79** `UpdateGraphics`
+implementations of every node, object, marker, load and sensor, under the name of the first item
+that ever had one. Each function now sits in the file of its own item — **72 files**: 68
+existing `C<Item>.cpp`, the three loads in `System/CLoad.cpp`, the six sensors in
+`System/CSensor.cpp`, and a new `CObjectSuperElement.cpp` for the one item that had no
+implementation file at all.
+
+The maintainer decided this over the five `Visu<ItemType>.cpp` files the step originally asked
+for: *"no problem if it slightly impacts compilation time — the structure gets much nicer"*.
+
+#### What the file-local helpers became
+
+`src/Graphics/VisualizationItemHelpers.h`: the constant `drawNodesMarkersLoadsWithFaces` (used
+by ~25 of the functions, of every kind) and the two templates behind the ANCF cables and the
+3D beams (two callers each). They had to be **cut out of the source before splitting it**, not
+copied: the first attempt let them travel along with the function above them, and the build
+said *"function template already defined"* twice.
+
+#### The includes, and one that landed inside a function
+
+Each target file gets the headers whose classes its own bodies name — an `UpdateGraphics`
+reaches for other items (a sliding joint draws the cable it slides on), so the includes follow
+the *code*, not the kind of the file.
+
+One of them landed **inside a function body**: the mover put the block after the last
+`#include` in the file, and `CMarkerBodyBeamShape.cpp` carries a commented-out
+`//#include <typeinfo>` in the middle of a function. The compiler reported it far away, as
+*"a namespace definition must be at file scope"* in `RigidBodyMath.h`, which is what such an
+error looks like. The rule is now "the last `#include` **at line start**", and a check confirms
+that all 73 blocks are at file scope.
+
+#### The four `EXUDYN_MINIMAL_COMPILATION` regions are gone
+
+They existed because one file held every item: a minimal build had to compile it and then
+exclude four fifths of it by preprocessor. Now the minimal build simply compiles fewer files — the six item files that `sources.json` already lists — and `VisuNodePoint.cpp` leaves both
+lists.
+
+#### The verification, and what it says about the tests
+
+`runTestSuite` (116 + 23), `pytest` (174) and all eight checks pass — **but none of them calls
+an `UpdateGraphics`**: that code runs only when the renderer runs, and every runner suppresses
+the renderer. So the move was verified textually instead: **all 79 bodies, normalized for
+whitespace, are identical to the ones in the deleted file**, and none is missing.
+
+That gap is now **#2562** (step R5.18.9): ~4,000 lines of drawing code with no test that
+can execute them.
+
+---

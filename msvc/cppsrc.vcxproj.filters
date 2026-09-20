@@ -264,7 +264,7 @@
     <ClCompile Include="..\src\Solver\CSolverBase.cpp">
       <Filter>CPPsystemAndSolver</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\VisuNodePoint.cpp">
+    <ClCompile Include="..\src\Objects\CObjectSuperElement.cpp">
       <Filter>CPPvisualization</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\VisualizationPrimitives.cpp">

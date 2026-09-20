@@ -583,7 +583,18 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 `parameterConversionTestReference.txt` rather than as a surprise.
 
 
-<a id="r6-1"></a>
+<a id="r5-18-9"></a>
+**R5.18.9** *(sub-step of R5.18, added 2026-09-20)* **Nothing in the test suite ever calls
+    `UpdateGraphics`** (#2562). The drawing code of every item — ~4,000
+    lines — runs only when the renderer runs, and every runner sets
+    `EXUDYN_SUPPRESS_UI_WINDOW_OPEN`. Moving all 79 of those functions in R11.4.4 could therefore be
+    verified only by the compiler and by comparing the text of the bodies before and after.
+
+    What would make it testable: a headless path that updates the graphics data of a model and
+    returns a summary of it (triangles, lines, texts per item). The data already exists in
+    `VisualizationSystemData`; only the binding and the comparison are missing.
+
+
 **R6.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-1) — *(phase R6)*
     **Every bare `except:` in `python/exudyn/` names what it catches** (#2539): 52 of them in 16
     files, plus a docstring example. The 16 `E722` entries of the ruff baseline are gone, and the
@@ -1525,7 +1536,8 @@ debt stays visible and each item can be closed on evidence.
     include dominates the compilation time.
 
 <a id="r11-4-4"></a>
-**R11.4.4** *(sub-step of R11.4)* **The `UpdateGraphics` functions leave `VisuNodePoint.cpp`**
+**R11.4.4** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r11-4-4) *(sub-step of R11.4)*
+    **The `UpdateGraphics` functions leave `VisuNodePoint.cpp`**
     (#2555): ~79 implementations for every node, object, marker, load and sensor in 4,171 lines,
     under a name that only made sense when `VisualizationNodePoint` was the first item to have one.
     Same split as R11.4.3, into `Visu<ItemType>.cpp`.

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.216.dev1, 
++  Exudyn version = 1.11.217.dev1, 
 +  last change =  2026-09-20, 
-+  Number of issues = 2562, 
-+  Number of resolved issues = 2289 (216 in current version), 
++  Number of issues = 2563, 
++  Number of resolved issues = 2290 (217 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.217: resolved Issue 2555: all UpdateGraphics functions live in a file named after the first item that had one (improvement)
+    - issue author: Claude-JG
+    - description:  src/Objects/VisuNodePoint.cpp holds ~79 UpdateGraphics implementations - every node, object, marker, load and sensor - in 4171 lines, under a name that only made sense when VisualizationNodePoint was the first item to have one. Split it the same way as checkPreAssembleConsistencies, into Visu<ItemType>.cpp. To be measured first: whether each UpdateGraphics can instead go into its own CItem\*.cpp, which would be the natural place; the question is compilation time, because pybind11 is not included in most of those files today. See revision2026 step R11.4.4.
+    - **notes:** VisuNodePoint.cpp is gone: its 79 UpdateGraphics implementations sit in the file of their own item - 68 existing C<Item>.cpp, the three loads in System/CLoad.cpp, the six sensors in System/CSensor.cpp, and a new CObjectSuperElement.cpp for the item that had no implementation file. The maintainer chose this over five Visu<ItemType>.cpp files. The file-local helpers (the drawNodesMarkersLoadsWithFaces constant and the two templates for the ANCF cables and the 3D beams) are in the new src/Graphics/VisualizationItemHelpers.h. The four EXUDYN_MINIMAL_COMPILATION regions disappear: a minimal build now compiles fewer files instead of excluding four fifths of one file. Verified textually - all 79 bodies are identical to the ones in the deleted file - because no test calls UpdateGraphics at all, which is now its own issue.
+    - date resolved: **2026-09-20 14:41**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.216: resolved Issue 2554: checkPreAssembleConsistencies.cpp is one file for five item types (improvement)
     - issue author: Claude-JG
     - description:  src/Objects/checkPreAssembleConsistencies.cpp holds 62 CheckPreAssembleConsistency implementations for objects, nodes, markers, loads and sensors in 2602 lines. Split it into five files, checkPreAssembleConsistencies<ItemType>.cpp, one per item type - five and not one per item, because each file includes pybind11 and that include dominates the compilation time. See revision2026 step R11.4.3.
@@ -7950,14 +7956,14 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 2562:** nothing in the test suite ever calls UpdateGraphics
+    - issue author: Claude-JG
+    - description:  The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9.
+    - date raised: 2026-09-20 
+
  * **open issue 2556:** the src/Objects folder holds nodes, markers, loads, sensors and system code
     - issue author: Claude-JG
     - description:  src/Objects/ is named after one of the five item types but holds all of them, plus checkPreAssembleConsistencies.cpp and evaluateUserFunctions.cpp, which are system code, and the UpdateGraphics functions, which are graphics. Split it into ImplObjects, ImplNodes and ImplMarkers (loads and sensors are short and stay in one file each, in System); the Visu files go to Graphics and the two system files to System. Deliberately a small change and not a systematic restructuring of the whole tree. Every moved file is a tracked file and the vcxproj, sources.json and gen_sources follow. See revision2026 step R11.4.5.
-    - date raised: 2026-09-19 
-
- * **open issue 2555:** all UpdateGraphics functions live in a file named after the first item that had one
-    - issue author: Claude-JG
-    - description:  src/Objects/VisuNodePoint.cpp holds ~79 UpdateGraphics implementations - every node, object, marker, load and sensor - in 4171 lines, under a name that only made sense when VisualizationNodePoint was the first item to have one. Split it the same way as checkPreAssembleConsistencies, into Visu<ItemType>.cpp. To be measured first: whether each UpdateGraphics can instead go into its own CItem\*.cpp, which would be the natural place; the question is compilation time, because pybind11 is not included in most of those files today. See revision2026 step R11.4.4.
     - date raised: 2026-09-19 
 
  * **open issue 2550:** citations are silently dropped from the HTML documentation

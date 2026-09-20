@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.216.dev1, 
+  \item Exudyn version = 1.11.217.dev1, 
   \item last change =  2026-09-20, 
-  \item Number of issues = 2562, 
-  \item Number of resolved issues = 2289 (216 in current version), 
+  \item Number of issues = 2563, 
+  \item Number of resolved issues = 2290 (217 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.217}:  resolved Issue 2555: {\bf all UpdateGraphics functions live in a file named after the first item that had one}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: src/Objects/VisuNodePoint.cpp holds \textasciitilde{}79 UpdateGraphics implementations - every node, object, marker, load and sensor - in 4171 lines, under a name that only made sense when VisualizationNodePoint was the first item to have one. Split it the same way as checkPreAssembleConsistencies, into Visu<ItemType>.cpp. To be measured first: whether each UpdateGraphics can instead go into its own CItem*.cpp, which would be the natural place; the question is compilation time, because pybind11 is not included in most of those files today. See revision2026 step R11.4.4.}
+    \item {\bf notes: VisuNodePoint.cpp is gone: its 79 UpdateGraphics implementations sit in the file of their own item - 68 existing C<Item>.cpp, the three loads in System/CLoad.cpp, the six sensors in System/CSensor.cpp, and a new CObjectSuperElement.cpp for the item that had no implementation file. The maintainer chose this over five Visu<ItemType>.cpp files. The file-local helpers (the drawNodesMarkersLoadsWithFaces constant and the two templates for the ANCF cables and the 3D beams) are in the new src/Graphics/VisualizationItemHelpers.h. The four EXUDYN\_MINIMAL\_COMPILATION regions disappear: a minimal build now compiles fewer files instead of excluding four fifths of one file. Verified textually - all 79 bodies are identical to the ones in the deleted file - because no test calls UpdateGraphics at all, which is now its own issue.}
+    \item   date resolved: {\bf 2026-09-20 14:41},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.216}:  resolved Issue 2554: {\bf checkPreAssembleConsistencies.cpp is one file for five item types}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
