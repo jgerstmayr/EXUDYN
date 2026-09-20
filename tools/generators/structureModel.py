@@ -256,6 +256,17 @@ def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
     return (latexStr, rstStr)
 
 
+def ParameterChanges2Markdown(parameterChangesList):
+    """the deprecated parameters of a structure, as a Markdown list (revision2026 step R7.1.6)"""
+    if len(parameterChangesList) == 0:
+        return ''
+    text = '\nThe following parameter changes have been made:\n\n'
+    for parameter in parameterChangesList:
+        text += ('- `' + parameter[0] + '` ' + chr(8594) + ' `' + parameter[1] + '` (changed in '
+                 'version ' + parameter[2] + ', expires: ' + parameter[3] + ')\n')
+    return text + '\n'
+
+
 def ParameterDescription2DocString(text):
     if text.strip().startswith('$'): #formula at beginning
         listStrip = text.split('$')

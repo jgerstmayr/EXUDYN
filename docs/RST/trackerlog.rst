@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.221.dev1, 
 +  last change =  2026-09-20, 
-+  Number of issues = 2565, 
++  Number of issues = 2566, 
 +  Number of resolved issues = 2294 (221 in current version), 
 
 ************
@@ -7979,6 +7979,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2565:** the documentation emitters write LaTeX and RST
+    - issue author: Claude-JG
+    - description:  itemDocsEmitter, structureDocsEmitter, utilityDocsEmitter, mainSystemExtensionDocsEmitter and the issue tracker write 8 .tex files (~43000 lines) and the .rst pages beside them, through the PyLatexRST helper that builds both formats in one walk over the model. The PDF does not survive 2.0 (decision D8) and the RST pipeline goes in step R7.1.7, so the emitters emit Markdown into docs/generated/ instead - one emitter at a time, each with its old outputs deleted in the same commit. This is where #2545 (the LaTeX escaping of the emitters) and #2550 (the dropped citations) end. See revision2026 step R7.1.6.
+    - date raised: 2026-09-20 
 
  * **open issue 2562:** nothing in the test suite ever calls UpdateGraphics
     - issue author: Claude-JG

@@ -1115,7 +1115,12 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     never loses a figure in between.
 
 <a id="r7-1-6"></a>
-**R7.1.6** *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** The larger half by
+**R7.1.6** **IN PROGRESS** (#2565) → [log](exudynRevisionLog2026.md#r7-1-6)
+    *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** **Done: the structures**
+    (`structureDocsEmitter`, 2026-09-20) — `interfaces.tex` and `docs/RST/structures/` are
+    replaced by `docs/generated/structures/*.md`. Remaining: the items, the utility functions, and
+    the MainSystem extensions together with `pybindEmitter`, whose output the latter is spliced
+    into. The larger half by
     volume — 8 generated `.tex` files, ~43,000 lines — and the smaller half by risk, because
     it is emitter code and not prose. `itemDocsEmitter`, `structureDocsEmitter`,
     `utilityDocsEmitter`, `mainSystemExtensionDocsEmitter` and the tracker's own writer emit `.md`

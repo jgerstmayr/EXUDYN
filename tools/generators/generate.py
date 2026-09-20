@@ -65,7 +65,7 @@ stages = [
            A + 'DictionariesGetSet.h', A + 'pybind_modules.h'], writesOnlyWhenChanged=True),
     Stage('tools/generators/structureStubEmitter.py', ['definitions'], [G + 'stubSystemStructures.pyi']),
     Stage('tools/generators/structureDocsEmitter.py', ['definitions'],
-          ['docs/RST/structures', 'docs/theDoc/interfaces.tex']),
+          ['docs/generated/structures']),   #Markdown since revision2026 step R7.1.6
     Stage('tools/generators/mainSystemExtensionDocsEmitter.py', ['python/exudyn/*.py'],
           [G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst', G + 'stubAutoBindingsExt.pyi',
            'docs/theDoc/MainSystemExt.tex', 'docs/theDoc/MainSystemCreateExt.tex']),

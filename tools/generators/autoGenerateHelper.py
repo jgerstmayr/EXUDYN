@@ -925,27 +925,56 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#a class that handles triples of strings: Pybind, Latex, RST
+#the LaTeX of definitions/ and of the docstrings becomes Markdown with the same converter the
+#chapters used (revision2026 step R7.1.6); tools/tex2md.py goes away in R7.1.7, together with the
+#LaTeX and RST halves of the class below
+import sys
+_toolsDirectory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+if _toolsDirectory not in sys.path:
+    sys.path.insert(0, _toolsDirectory)
+from tex2md import ConvertText as LatexText2Markdown                    # noqa: E402
+
+
+def MarkdownLabel(latexLabel):
+    """a LaTeX label as a MyST target: the same name the RST side uses, so that every reference
+    that exists today keeps working"""
+    return '(' + Latex2RSTlabel(latexLabel) + ')='
+
+
+def MarkdownHeading(title, level):
+    """level 0 is the chapter itself; the emitters count sub-sections from 1, as LaTeX does"""
+    return '#' * (level + 1) + ' ' + title
+
+
+def MarkdownCell(text):
+    """a table cell holds no line break and no bare pipe"""
+    return ' '.join(str(text).split()).replace('|', '\\|')
+
+
+#a class that handles strings of Pybind, Latex, RST and Markdown
 class PyLatexRST:
     #initialize strings
-    def __init__(self, sPy='', sLatex='', sRST='', sPyi=''):
-        
+    def __init__(self, sPy='', sLatex='', sRST='', sPyi='', sMarkdown=''):
+
         self.sPy = sPy
         self.sLatex = sLatex
         self.sRST = sRST
         self.sPyi = sPyi
+        self.sMarkdown = sMarkdown   #revision2026 step R7.1.6; LaTeX and RST go in R7.1.7
         self.rstFileLists = [] #contains tuples (filename, text)
         self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
 
-    def Reset(self): 
+    def Reset(self):
         self.sPy = ''
         self.sLatex = ''
         self.sRST = ''
+        self.sMarkdown = ''
         self.rstFileLists = [] #contains tuples (filename, text)
         self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
         
     def __add__(self, other):
-        return PyLatexRST(self.sPy+other.sPy,self.sLatex+other.sLatex,self.sRST+other.sRST)
+        return PyLatexRST(self.sPy+other.sPy, self.sLatex+other.sLatex, self.sRST+other.sRST,
+                          sMarkdown=self.sMarkdown+other.sMarkdown)
 
     #x += PyLatexRST('a','b','c')
     def __iadd__(self, other):
@@ -968,6 +997,11 @@ class PyLatexRST:
     def RSTAdd(self, s):
         self.sRST += s
 
+    def MarkdownStr(self): return self.sMarkdown
+
+    def MarkdownAdd(self, s):
+        self.sMarkdown += s
+
     #start new file in 
     def CreateNewRSTfile(self, fileName):
         if self.rstCurrentFileName != '':
@@ -985,6 +1019,15 @@ class PyLatexRST:
         if section != '':
             self.sLatex += '\\my'+'sub'*sectionLevel + 'section{' + section + '}\n'
 
+            #Markdown: a blank line first - a target glued to the paragraph above it is not a
+            #target - then the target, so that a {ref} to it finds a heading with a title
+            if not self.sMarkdown.endswith('\n\n'):
+                self.sMarkdown += ('\n' if self.sMarkdown.endswith('\n')
+                                   else '\n\n')
+            if sectionLabel != '':
+                self.sMarkdown += MarkdownLabel(sectionLabel) + '\n'
+            self.sMarkdown += MarkdownHeading(section, sectionLevel) + '\n\n'
+
             if not preNewLine:  #always needed for section label and heading
                 self.sRST += '\n'
             if sectionLabel != '':
@@ -998,6 +1041,7 @@ class PyLatexRST:
 
         self.sLatex += text
         self.sRST += LatexString2RST(text)
+        self.sMarkdown += LatexText2Markdown(text) + '\n'
 
     #add inline reference in latex format, converted to RST: latex labels have ':' as separator, in RST have '-'
     def AddInlineRef(self, ref):
@@ -1422,6 +1466,20 @@ class PyLatexRST:
         self.sLatex += '    ' + sSize + ' & '
         self.sLatex += '    ' + sDefaultVal + ' & '
         self.sLatex += '    ' + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+
+        #Markdown: the same row, in a table whose header the emitter wrote (step R7.1.6). The
+        #name cell carries the FULL access path where there is one - 'SC.visualizationSettings.
+        #general.autoFitScene' is what a user types, and the RST rows carried it for that reason.
+        markdownName = pythonName + ('(...)' if isFunction and sDefaultVal != ''
+                                     else '()' if isFunction else '')
+        nameCell = '`' + MarkdownCell(markdownName) + '`'
+        for path in typicalPaths:
+            separator = '.' if path != '' else ''
+            nameCell += '<br>`' + MarkdownCell(path + separator + pythonName) + '`'
+        self.sMarkdown += ('| ' + nameCell + ' | ' + MarkdownCell(typeName)
+                           + ' | ' + MarkdownCell(sSize) + ' | '
+                           + (MarkdownCell(sDefaultVal) if sDefaultVal != '' else '')
+                           + ' | ' + MarkdownCell(LatexText2Markdown(description)) + ' |\n')
         
 
         #RST:

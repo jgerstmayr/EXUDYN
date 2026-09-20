@@ -433,6 +433,31 @@ def ReportUnknown(text):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def ConvertText(text):
+    """One piece of running text, not a file: the description of a parameter, a class or a
+    function as `definitions/` and the docstrings write it. Used by the documentation emitters
+    of revision2026 step R7.1.6, which have the same LaTeX to convert as the chapters did - so
+    they call this rather than growing a second converter.
+
+    Math is left alone (conf.py declares the macros to MathJax); everything else that the
+    project writes in prose is turned into Markdown."""
+    text = StripComments(text)
+    text = ResolveRSTSwitches(text)
+    text = ConvertDisplayMath(text)
+    (text, pieces) = ProtectMath(text)
+    text = ConvertSections(text)
+    text = ConvertTables(text)
+    text = ConvertLists(text)
+    text = ConvertInline(text)
+    #helpers that exist only to lay out a LaTeX table
+    text = re.sub(r'\\tabnewline\s*', '', text)
+    text = RestoreMath(text, pieces)
+    text = re.sub(r'(?m)^[ \t]+', '', text)          #no stray indentation from the .tex source
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def Convert(text):
     text = StripComments(text)
     text = ConvertListings(text)        #code first: nothing else may touch its content
