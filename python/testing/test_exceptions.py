@@ -28,6 +28,9 @@ import warnings
 import pytest
 
 import exudyn as exu
+import exudyn.utilities  # noqa: F401 - installs the MainSystem extensions; the solver-file
+                         # tests call mbs.SolveDynamic, and until 2026-09-20 they relied on
+                         # another test file having imported them first (#2561)
 
 #name in the exudyn module -> the built-in it must also be catchable as
 exceptionClasses = {

@@ -112,6 +112,7 @@ def TestExamplesReferenceSolution():
         'raytracerNOGLFWtest.py':0.28151013387134,                  #new 2026-01-03
         'reevingSystemSpringsTest.py':2.215557571743302,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'relativeRotationTranslationMechanism.py': 1.509631854432179,#new 2026-09-11
+        'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes
         'revoluteJointPrismaticJointTest.py':1.2538806799241744,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBody2Dtest.py': -0.5055295700922418,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,

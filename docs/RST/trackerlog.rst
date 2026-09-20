@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.209.dev1, 
-+  last change =  2026-09-19, 
-+  Number of issues = 2557, 
-+  Number of resolved issues = 2282 (209 in current version), 
++  Exudyn version = 1.11.212.dev1, 
++  last change =  2026-09-20, 
++  Number of issues = 2562, 
++  Number of resolved issues = 2285 (212 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.212: resolved Issue 2561: test_exceptions.py relied on another test file importing the MainSystem extensions (testing)
+    - issue author: Claude-JG
+    - description:  The solver-file tests of step R6.8 call mbs.SolveDynamic, which exists only once exudyn.utilities (or exudyn.misc.mainSystemExtensions) has been imported - and test_exceptions.py imported neither. Under pytest -n 8 it passed as long as the worker that ran it had already run a test that does import them; adding one test model changed the distribution and three tests failed with FileNotFoundError, because the AttributeError was swallowed by the except BaseException of the helper. Fixed by importing exudyn.utilities in the test file. The wider question stays open: a test file that depends on an import made elsewhere is a test that passes by luck, and the helper that catches BaseException hides which error it was.
+    - **notes:** test_exceptions.py imports exudyn.utilities now, so the MainSystem extensions it uses are installed by the file that uses them rather than by whichever test file ran before it in the same pytest worker. The three failures appeared when adding resultsMonitorTest.py changed the distribution of pytest -n 8. The wider point is recorded in revision2026 step R6.8.1: a test that depends on an import made elsewhere passes by luck, and the helper that catches BaseException hid which error it was.
+    - date resolved: **2026-09-20 09:40**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
+ * Version 1.11.211: resolved Issue 2558: command line of the exudyn package (extension)
+    - issue author: Claude-JG
+    - description:  python/exudyn/__main__.py so that "python -m exudyn <command>" gives the small things one wants from a shell without writing a script: monitor (the results monitor), plot (PlotSensor on files), info (version, paths, module, optional packages - what a bug report needs) and demo. The commands sit in a plain dictionary CommandTable() and each is imported when it is called, so that revision2026 R9.6 can add plugin commands through entry points. Deliberately no console script in pyproject.toml: nothing goes on PATH until the command set has settled. See revision2026 step R8.8.
+    - **notes:** python/exudyn/__main__.py: python -m exudyn monitor|plot|info|demo, commands in a plain CommandTable() dictionary, each imported when it is called, so R9.6 can add plugin commands through entry points. No console script in pyproject.toml for now. Note for the test suite: importing a __main__ RUNS it, so __main__.py had to enter the excludeModules list of allExudynModulesTest.py.
+    - date resolved: **2026-09-20 09:34**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
+ * Version 1.11.210: resolved Issue 2557: resultsMonitor rewrite (extension)
+    - issue author: Claude-JG
+    - description:  python/exudyn/resultsMonitor.py was a 2021 script inside the package: it read sys.argv and called plt.ion() at import time, its __all__ listed 34 script locals, it was excluded from allExudynModulesTest.py and carried a ruff E402 and a stubtest baseline entry. It becomes exudyn/misc/resultsMonitor.py: the library function MonitorResults(...), an argparse CLI behind it, file selection by dialog or --last, a tkinter control panel (stdlib only), a settings file in ~/.exudyn/, incremental reading instead of re-parsing the whole file on every tick, and --once so that a run without windows draws once and cannot hang - which is what makes resultsMonitorTest.py possible. See revision2026 step R6.9.
+    - **notes:** Written in a parallel session and integrated here: exudyn/misc/resultsMonitor.py with MonitorResults(...), an argparse CLI, file selection by dialog or --last, a tkinter control panel, a settings file in ~/.exudyn/, incremental reading and --once - which is what makes python/TestModels/resultsMonitorTest.py possible (1.2 s; four file types, the incremental reader including a torn last line, the buffer reset after an overwrite, eight command-line return codes). The integration meant the reference-solution entry, the excludeModules list of allExudynModulesTest.py, two processing.py docstrings and one example header. The ruff E402 entry and the allExudynModulesTest exclusion are gone.
+    - date resolved: **2026-09-20 09:34**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
  * Version 1.11.209: resolved Issue 2552: five modules belong in exudyn/misc rather than in the package root (improvement)
     - issue author: Claude-JG
     - description:  docmeta.py, GUI.py, resultsMonitor.py, extensionRegistry.py and mainSystemExtensions.py sit next to the modelling modules in python/exudyn/ although none of them is one: docmeta and extensionRegistry are machinery, GUI and resultsMonitor are tools, mainSystemExtensions is the extension mechanism. Move them into python/exudyn/misc/ and leave their content alone - resultsMonitor is being revised in another session at the same time, so this step is a pure relocation and the references to it are fixed when those changes are integrated. See revision2026 step R11.4.1.
@@ -7907,6 +7925,16 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textred:`open issue 2560:` a module deleted from the package is still shipped in the wheel
+    - issue author: Claude-JG
+    - description:  After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/__init__.py still did "from .mainSystemExtensions import ..." and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.\* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.
+    - date raised: 2026-09-20 
+
+ * **open issue 2559:** the documentation knows neither the new monitor nor the package command line
+    - issue author: Claude-JG
+    - description:  docs/theDoc/theDoc.tex still describes the results monitor as "copy resultsLoader.py to your directory and call python resultsMonitor.py file.txt", and pastes a -h output that no longer exists; the section is hand-written LaTeX in a file that is otherwise the LaTeX skeleton. And "python -m exudyn" is documented nowhere, because it did not exist. Needed: the monitor section rewritten as Markdown in docs/manual/ - the three ways to call it, the file dialog and --last, the control panel, the settings file, and a pointer to "python -m exudyn monitor --help" rather than a pasted option list that goes stale - and a page for the four commands of the package command line, with "info" named in CONTRIBUTING.md as what to paste into a bug report. See revision2026 step R7.7.
+    - date raised: 2026-09-20 
 
  * **open issue 2556:** the src/Objects folder holds nodes, markers, loads, sensors and system code
     - issue author: Claude-JG

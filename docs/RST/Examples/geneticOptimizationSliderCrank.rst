@@ -16,7 +16,7 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
    # Details:  Slider crank model with verification in MATLAB for machine dynamics course
    #           optionally, the slider crank is mounted on a floating frame, leading to vibrations
    #           if the system is unbalanced
-   #           Use this example in combination with cmd: 'python resultsMonitor.py solution/geneticSliderCrank.txt'
+   #           Use this example in combination with cmd: 'python -m exudyn monitor solution/geneticSliderCrank.txt'
    #
    # Author:   Johannes Gerstmayr
    # Date:     2019-12-07 (created)

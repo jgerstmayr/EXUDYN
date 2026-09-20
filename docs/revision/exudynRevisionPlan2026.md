@@ -514,6 +514,46 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 <a id="r5-18-3"></a>
 **R5.18.3** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-3) — *(sub-step of R5.18; found by the first GitLab run after the driver landed)* **A gate that was green locally and red in CI** (#2508).
 
+<a id="r5-18-7"></a>
+**R5.18.7** *(sub-step of R5.18, added 2026-09-19)* **A gate that fails at random is worse than no
+    gate** (#2551). `checkPython.py --stubs --check` reports
+    *"exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime"* on roughly one run in
+    three, with nothing changed in between (measured: one failure in three consecutive runs).
+    `_ControlPanel` derives from a tkinter widget, and `tk` exists only once a `Tk` instance has
+    been created, so whether stubtest sees it depends on import order or on a display. Either make
+    the probe deterministic or put the name in the curated noise list **with the reason** — an
+    intermittent gate trains everyone to rerun until green, which costs more than it protects.
+
+    Found while working on R7.1.5 and **not caused by it**.
+
+    *(Numbered R5.18.6 when it was written and corrected to R5.18.7 on 2026-09-20: R5.18.6 was
+    already taken by the `exudev build --env NAME` step of 2026-09-18. Step numbers are
+    permanent, so the one that was never used is the one that moves.)*
+
+<a id="r5-18-8"></a>
+**R5.18.8** **HIGH** *(sub-step of R5.18, added 2026-09-20)* **A module deleted from the package
+    is still shipped in the wheel** (#2560). After `resultsMonitor.py` moved to
+    `exudyn/misc/`, the installed package still held the old file: `exudev build` installs with
+    `pip --force-reinstall --no-deps`, and the stale module and its `.pyc` survived. stubtest then
+    walks the *installed* package, finds `exudyn.resultsMonitor`, cannot import it and reports an
+    error about a module that no longer exists.
+
+    **Measured 2026-09-20, and it is worse than an install artefact.** The stale copy lives in
+    **`build/lib.<platform>/exudyn/`**, the tree setuptools copies the package from: all five
+    modules that moved in R11.4.1 were still there, and
+    `dist/exudyn-1.11.212.dev1-cp313-cp313-win_amd64.whl` **shipped `exudyn/resultsMonitor.py`**,
+    a file that does not exist in the source any more. A release built without cleaning would ship
+    deleted modules to users.
+
+    It also **masked a real bug**: `exudyn/__init__.py` still did
+    `from .mainSystemExtensions import ...`, which only worked because the stale copy was there.
+    Deleting the `build/lib.*/exudyn` trees made the import fail immediately, which is how it was
+    found.
+
+    So: `exudev build` removes the package tree under `build/lib.*` before building (or passes a
+    clean build directory), and the release step verifies that the wheel's module set matches the
+    source. It cost time twice in one day: here, and through a leftover `__main__`.
+
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
 An error has four separable properties, and mixing them is what made this phase read as a list of
@@ -782,20 +822,42 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     three channels is in `CODING_STYLE.md` §10.7.
 
 
-## R7 — Documentation
- (~3 weeks)  <!-- old Phase 6 -->
+<a id="r6-8-1"></a>
+**R6.8.1** **DONE 2026-09-20** *(sub-step of R6.8)* **A test that passed by luck** (#2561). The
+    solver-file tests of R6.8 call `mbs.SolveDynamic`, which exists only once
+    `exudyn.utilities` (or `exudyn.misc.mainSystemExtensions`) has been imported — and
+    `test_exceptions.py` imported neither. Under `pytest -n 8` it passed as long as the worker
+    that ran it had already run a test file that does import them. Adding one test model
+    changed the distribution, and three tests failed with `FileNotFoundError`, because the
+    `AttributeError` was swallowed by the `except BaseException` of the helper.
 
-<a id="r5-18-6"></a>
-**R5.18.6** *(sub-step of R5.18, added 2026-09-19)* **A gate that fails at random is worse than no
-    gate** (#2551). `checkPython.py --stubs --check` reports
-    *"exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime"* on roughly one run in
-    three, with nothing changed in between (measured: one failure in three consecutive runs).
-    `_ControlPanel` derives from a tkinter widget, and `tk` exists only once a `Tk` instance has
-    been created, so whether stubtest sees it depends on import order or on a display. Either make
-    the probe deterministic or put the name in the curated noise list **with the reason** — an
-    intermittent gate trains everyone to rerun until green, which costs more than it protects.
+    Fixed by importing `exudyn.utilities` in the test file. **What stays open** and is worth a
+    sweep when R5 is revisited: a test file that depends on an import made in another test file
+    passes by luck, and a helper that catches `BaseException` and reports only its own next
+    failure hides which error actually happened.
 
-    Found while working on R7.1.5 and **not caused by it**.
+<a id="r6-9"></a>
+**R6.9** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The results monitor
+    becomes `exudyn.misc.resultsMonitor`** (#2557). The 2021 script inside the package — it read
+    `sys.argv` and called `plt.ion()` while being *imported* — is a module now:
+    `MonitorResults(...)` callable from a script or Spyder, an `argparse` CLI behind it, file
+    selection by dialog or `--last` instead of a file name that had to be typed in the right
+    directory, a tkinter control panel (stdlib, no new dependency), a settings file in
+    `~/.exudyn/`, incremental reading instead of re-parsing the whole file on every tick, and
+    `--once`, which is what makes it testable at all: `python/TestModels/resultsMonitorTest.py`
+    (1.2 s) covers the four file types, the incremental reader including a torn last line, the
+    buffer reset after a file is overwritten, and eight command-line return codes.
+
+    It also removes three pieces of debt: the ruff `E402` baseline entry, the stubtest baseline
+    entry and the `allExudynModulesTest` exclusion — the module is importable now, so the test
+    covers it.
+
+    Written in a parallel session; this session integrated it, which meant the reference-solution
+    entry, the `excludeModules` list (where `__main__.py` had to take the place the monitor left,
+    because importing a `__main__` *runs* it), the two `processing.py` docstrings and the example
+    that tells the reader how to watch its own output.
+
+## R7 — Documentation (~3 weeks)  <!-- old Phase 6 -->
 
 <a id="r7-1"></a>
 **R7.1** Sphinx (readthedocs) stays; the sources become **MyST Markdown** (`myst-parser`, dev-only):
@@ -1089,6 +1151,27 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `main/pythonDev/` became `python/` in R3.1, R3.8 and R3.9; four generators built the URL by
     hand. One prefix in `generatorPaths.py` now, and 368 documentation files repaired.
 
+<a id="r7-7"></a>
+**R7.7** *(phase R7; after R7.1.5, which it is written in)* **Document the results monitor and the
+    package command line** (#2559). Both changed under the documentation's feet in R6.9 and R8.8.
+
+    - **The monitor.** `docs/theDoc/theDoc.tex` still says *"copy `resultsLoader.py` to your
+      directory and call `python resultsMonitor.py file.txt`"* and pastes a `-h` output that no
+      longer exists. It is rewritten as Markdown in `docs/manual/`: the three ways to call it (the
+      package command line, `python -m exudyn.misc.resultsMonitor`, and `MonitorResults(...)` from
+      a script), the file dialog and `--last`, the control panel, the settings file, and a
+      **pointer to `--help` instead of a pasted option list** that goes stale the next time an
+      option is added.
+    - **The command line.** `python -m exudyn` is documented nowhere, because it did not exist. It
+      needs a page of its own with the four commands, and `info` named in `CONTRIBUTING.md` as the
+      thing to paste into a bug report.
+
+    **Correction to R7.1.5 while doing it**: `theDoc.tex` is *not* purely the LaTeX skeleton, as
+    that step assumed. Besides the preamble it carries the section headers that wrap the generated
+    chapters (`sec:pythonUtilityFunctions`, `sec:item:reference:manual`, `sec:settingsStructures`,
+    `sec:issueTracker`, `License`) and this one hand-written section. R7.1.6 and R7.1.7 must not
+    delete it without moving those.
+
 ## R8 — Process  <!-- old Phase 7 -->
 
 <a id="r8-1"></a>
@@ -1227,6 +1310,21 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     [API changes for the v2.0 release notes](exudynRevisionInfo2026.md#api-changes-v2), which is
     complete only once the other steps are done - hence last. Decide then whether it ships in the
     package (users run it) or stays in `tools/`. The plan continues in a new document after this step.
+
+<a id="r8-8"></a>
+**R8.8** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The installed package
+    gets a command line: `python -m exudyn <command>`** (#2558). `monitor`, `plot`, `info`, `demo`,
+    in a plain dispatch dictionary `CommandTable()`, each command imported when it is called.
+    `info` prints what a bug report needs: version, `config.Version(True)`, package path,
+    `EXUDYN_MODULE`, output directory, Python, platform and which of numpy, scipy, matplotlib,
+    networkx, ngsolve and pytest are installed.
+
+    **Deliberately not a console script**: nothing goes on `PATH` until the command set has settled,
+    so `pyproject.toml` is untouched. The dispatch dictionary is the extension point for **R9.6**,
+    which can add plugin commands through `importlib.metadata` entry points.
+
+    This is the user-facing counterpart of `tools/exudev`, which stays the maintainer driver and
+    keeps its rule of never importing exudyn.
 
 ## R9 — Compiled user extensions (after R6)  <!-- old Phase 8 -->
 

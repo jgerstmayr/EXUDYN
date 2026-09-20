@@ -185,10 +185,10 @@ except ImportError:
     #import exudyn.demos as demos
 
 try:
-    from .mainSystemExtensions import JointPreCheckCalcBodyMarkers #import just some function, will assign MainSystem patches
+    from .misc.mainSystemExtensions import JointPreCheckCalcBodyMarkers #import just some function, will assign MainSystem patches
 except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from mainSystemExtensions import JointPreCheckCalcBodyMarkers #noqa: F401 - importing the module assigns the MainSystem patches
+    from misc.mainSystemExtensions import JointPreCheckCalcBodyMarkers #noqa: F401 - importing the module assigns the MainSystem patches
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

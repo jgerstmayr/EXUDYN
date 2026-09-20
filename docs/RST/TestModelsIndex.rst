@@ -99,6 +99,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/raytracerNOGLFWtest
    TestModels/reevingSystemSpringsTest
    TestModels/relativeRotationTranslationMechanism
+   TestModels/resultsMonitorTest
    TestModels/revoluteJointPrismaticJointTest
    TestModels/rigidBody2Dtest
    TestModels/rigidBodyAsUserFunctionTest

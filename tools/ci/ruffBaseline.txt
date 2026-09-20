@@ -16,7 +16,6 @@
 2	python/exudyn/lieGroupBasics.py	E741	Ambiguous variable name: `I`
 1	python/exudyn/misc/GUI.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 8	python/exudyn/misc/mainSystemExtensions.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
-5	python/exudyn/misc/resultsMonitor.py	E402	Module level import not at top of file
 26	python/exudyn/plot.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 5	python/exudyn/processing.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 2	python/exudyn/rigidBodyUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks

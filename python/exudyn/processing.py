@@ -566,7 +566,7 @@ def GeneticOptimization(objectiveFunction, parameters,
         useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
         showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
         numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
-        resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
+        resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use 'python -m exudyn monitor <file>' to track results in realtime
         clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
         useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
         useMPI: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used
@@ -913,7 +913,7 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
         verbose: prints solver information into console, e.g. number of iterations 'nit', number of funcion evaluations 'nfev', status etc.
         showProgress: if True, shows for every iteration objective function value, current iteration number, time needed for current iteration, maximum number of iterations and loss (current value of objective function)
         addComputationIndex: if True, key 'computationIndex' is added for consistency reasons with GeneticOptimizaiton to every parameterDict in the call to parameterFunction(); however, the value is always 0, because no multi threading is used in Minimize(...)
-        resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
+        resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use 'python -m exudyn monitor <file>' to track results in realtime
         useScipyBounds: if True, use scipy.optimize.minimize() option 'bounds' to apply bounds on variable specified in ParameterDict. Note, this option is only used by some specific methods of scipy.optimize.minimize()! method='Nelder-Mead' ignores this option for example! if False, option 'enforceBounds' will be set to False!
         args: extra arguments passed to the objective function and its derivatives (fun, jac and hess functions).
 

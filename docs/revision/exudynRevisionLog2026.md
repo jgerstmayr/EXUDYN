@@ -10593,3 +10593,52 @@ for help"* <<D>> the module runs its command line at import time. The installed 
 package.
 
 ---
+
+<a id="r6-9"></a>
+### R6.9 and R8.8 — the results monitor and the package command line, integrated
+
+**DONE 2026-09-20** (#2557, #2558; written in a parallel session, handed over through
+`tmp/handoverToRevisionSession.md`). `exudyn.misc.resultsMonitor` replaces the 2021 script that
+parsed `sys.argv` while being imported, and `python -m exudyn monitor|plot|info|demo` gives the
+small things one wants from a shell. The handover document lists what the files are; this entry
+records what the **integration** turned up, which is the part that was not visible from the
+other clone.
+
+#### Three adaptions that are each a small lesson
+
+- **`allExudynModulesTest.py`**: `resultsMonitor.py` leaves the exclusion list and `__main__.py`
+  takes its place, because the model imports every `.py` of the installed package with
+  `spec_from_file_location`, which makes `__name__ == "__main__"` and therefore *runs* the CLI.
+- **`runTestSuiteRefSol.py`**: a test model without a reference solution is not run at all, so
+  the new `resultsMonitorTest.py` needed its entry to become part of the suite (116 models now).
+- The two `processing.py` docstrings and one example header still told the reader to call
+  `python resultsMonitor.py file.txt`; they are the source of the generated documentation, so
+  the regeneration carried the new command into it.
+
+#### Two defects the integration exposed
+
+**A test that passed by luck** (#2561, step R6.8.1). `test_exceptions.py` calls
+`mbs.SolveDynamic`, which exists only once the MainSystem extensions have been imported — and
+the file imported neither `exudyn.utilities` nor the extensions module. Under `pytest -n 8` it
+passed as long as the worker that ran it had already run a file that does. **Adding one test
+model changed the distribution** and three tests failed with `FileNotFoundError`, because the
+`AttributeError` had been swallowed by an `except BaseException`.
+
+**The wheel shipped a module that no longer exists** (#2560, step R5.18.8, HIGH). After the
+five modules moved in R11.4.1, `build/lib.<platform>/exudyn/` still held all five, and
+setuptools copies the package from there: the built wheel contained `exudyn/resultsMonitor.py`.
+A release built without cleaning would ship deleted modules to users. It also **masked a real
+bug**: `exudyn/__init__.py` still did `from .mainSystemExtensions import ...`, which worked only
+because the stale copy was there. Deleting the `build/lib.*/exudyn` trees made the import fail
+at once — which is how it was found, and the reason the import is now
+`from .misc.mainSystemExtensions import ...`.
+
+#### Where the documentation stands
+
+Neither is documented: step **R7.7** (#2559). `theDoc.tex` still says *"copy `resultsLoader.py`
+to your directory"* and pastes a `-h` output that no longer exists, and `python -m exudyn` is
+described nowhere. That step also carries a **correction to R7.1.5**: `theDoc.tex` is not purely
+the LaTeX skeleton — it holds the section headers that wrap the generated chapters and this
+one hand-written section, so R7.1.6 and R7.1.7 must not delete it without moving them.
+
+---

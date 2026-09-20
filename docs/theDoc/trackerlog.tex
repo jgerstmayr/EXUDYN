@@ -9,15 +9,42 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.209.dev1, 
-  \item last change =  2026-09-19, 
-  \item Number of issues = 2557, 
-  \item Number of resolved issues = 2282 (209 in current version), 
+  \item Exudyn version = 1.11.212.dev1, 
+  \item last change =  2026-09-20, 
+  \item Number of issues = 2562, 
+  \item Number of resolved issues = 2285 (212 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.212}:  resolved Issue 2561: {\bf test\_exceptions.py relied on another test file importing the MainSystem extensions}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The solver-file tests of step R6.8 call mbs.SolveDynamic, which exists only once exudyn.utilities (or exudyn.misc.mainSystemExtensions) has been imported - and test\_exceptions.py imported neither. Under pytest -n 8 it passed as long as the worker that ran it had already run a test that does import them; adding one test model changed the distribution and three tests failed with FileNotFoundError, because the AttributeError was swallowed by the except BaseException of the helper. Fixed by importing exudyn.utilities in the test file. The wider question stays open: a test file that depends on an import made elsewhere is a test that passes by luck, and the helper that catches BaseException hides which error it was.}
+    \item {\bf notes: test\_exceptions.py imports exudyn.utilities now, so the MainSystem extensions it uses are installed by the file that uses them rather than by whichever test file ran before it in the same pytest worker. The three failures appeared when adding resultsMonitorTest.py changed the distribution of pytest -n 8. The wider point is recorded in revision2026 step R6.8.1: a test that depends on an import made elsewhere passes by luck, and the helper that catches BaseException hid which error it was.}
+    \item   date resolved: {\bf 2026-09-20 09:40},
+date raised: 2026-09-20 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.211}:  resolved Issue 2558: {\bf command line of the exudyn package}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: python/exudyn/\_\_main\_\_.py so that "python -m exudyn <command>" gives the small things one wants from a shell without writing a script: monitor (the results monitor), plot (PlotSensor on files), info (version, paths, module, optional packages - what a bug report needs) and demo. The commands sit in a plain dictionary CommandTable() and each is imported when it is called, so that revision2026 R9.6 can add plugin commands through entry points. Deliberately no console script in pyproject.toml: nothing goes on PATH until the command set has settled. See revision2026 step R8.8.}
+    \item {\bf notes: python/exudyn/\_\_main\_\_.py: python -m exudyn monitor|plot|info|demo, commands in a plain CommandTable() dictionary, each imported when it is called, so R9.6 can add plugin commands through entry points. No console script in pyproject.toml for now. Note for the test suite: importing a \_\_main\_\_ RUNS it, so \_\_main\_\_.py had to enter the excludeModules list of allExudynModulesTest.py.}
+    \item   date resolved: {\bf 2026-09-20 09:34},
+date raised: 2026-09-20 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.210}:  resolved Issue 2557: {\bf resultsMonitor rewrite}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: python/exudyn/resultsMonitor.py was a 2021 script inside the package: it read sys.argv and called plt.ion() at import time, its \_\_all\_\_ listed 34 script locals, it was excluded from allExudynModulesTest.py and carried a ruff E402 and a stubtest baseline entry. It becomes exudyn/misc/resultsMonitor.py: the library function MonitorResults(...), an argparse CLI behind it, file selection by dialog or --last, a tkinter control panel (stdlib only), a settings file in \textasciitilde{}/.exudyn/, incremental reading instead of re-parsing the whole file on every tick, and --once so that a run without windows draws once and cannot hang - which is what makes resultsMonitorTest.py possible. See revision2026 step R6.9.}
+    \item {\bf notes: Written in a parallel session and integrated here: exudyn/misc/resultsMonitor.py with MonitorResults(...), an argparse CLI, file selection by dialog or --last, a tkinter control panel, a settings file in \textasciitilde{}/.exudyn/, incremental reading and --once - which is what makes python/TestModels/resultsMonitorTest.py possible (1.2 s; four file types, the incremental reader including a torn last line, the buffer reset after an overwrite, eight command-line return codes). The integration meant the reference-solution entry, the excludeModules list of allExudynModulesTest.py, two processing.py docstrings and one example header. The ruff E402 entry and the allExudynModulesTest exclusion are gone.}
+    \item   date resolved: {\bf 2026-09-20 09:34},
+date raised: 2026-09-20 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.209}:  resolved Issue 2552: {\bf five modules belong in exudyn/misc rather than in the package root}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

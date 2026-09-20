@@ -54,7 +54,7 @@ You can view and download this file on Github: `allExudynModulesTest.py <https:/
    exu.Print('first module location=',str(allModules[0]))
    
    excludeModules = ['__init__.py', #fail
-                     'resultsMonitor.py', #can only be called from command line with args
+                     '__main__.py',       #the command line of the package; importing it RUNS it
                      'rosInterface.py',   #rospy usually missing
                      #'artificialIntelligence.py'
                      ]
