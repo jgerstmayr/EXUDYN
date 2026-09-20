@@ -54,11 +54,9 @@ tier1Paths = [
 #Tier 2: documentation. Differences warn but do not fail.
 tier2Paths = [
     'docs/theDoc/itemDefinition.tex',
-    'docs/theDoc/interfaces.tex',
-    'docs/theDoc/manual_interfaces.tex',
-    'docs/theDoc/pythonUtilitiesDescription.tex',
-    'docs/theDoc/MainSystemExt.tex',
-    'docs/theDoc/MainSystemCreateExt.tex',
+    #the emitter output of revision2026 step R7.1.6; the .tex and .rst pages it replaces are gone,
+    #and until this line was written nothing compared the Markdown against the commit
+    'docs/generated',
     'docs/RST',
     'index.rst',
     'README.rst',

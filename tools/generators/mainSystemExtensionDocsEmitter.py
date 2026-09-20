@@ -2,11 +2,11 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits the documentation and stubs of the Python functions added to MainSystem
-#           (@extends(exudyn.MainSystem)): MainSystemExt.rst and MainSystemCreateExt.rst in
-#           tools/generators/generated/ (read by pybindEmitter.py, so this runs first),
-#           docs/theDoc/MainSystemExt.tex, MainSystemCreateExt.tex and stubAutoBindingsExt.pyi
-#           (read by createStubFiles.py). Moved out of utilitiesDocuGenerator.py (revision plan
-#           revision2026 step R4.3, part 2e).
+#           (@extends(exudyn.MainSystem)): MainSystemExt and MainSystemCreateExt as .md and .rst
+#           in tools/generators/generated/ (read by pybindEmitter.py, so this runs first), and
+#           stubAutoBindingsExt.pyi (read by createStubFiles.py). Moved out of
+#           utilitiesDocuGenerator.py (revision plan revision2026 step R4.3, part 2e); the .tex
+#           files are gone since revision2026 step R7.1.6.
 #
 # Usage:    python tools/generators/mainSystemExtensionDocsEmitter.py
 #
@@ -30,10 +30,12 @@ from utilityDocsModel import *                                                  
 def main():
     latexExtensions = {} #for C++ extension functions
     rstExtensions = {} #for C++ extension functions
+    markdownExtensions = {} #revision2026 step R7.1.6; spliced by pybindEmitter, like the RST
     pyiExtensions = {} #for stub files of C++ extension functions
     #special strings, to put MainSystemExtensions (CreateMassPoint, ...) on top of RST and Latex description!
     latexExtensionsMainSystem = ''
     rstExtensionsMainSystem = ''
+    markdownExtensionsMainSystem = ''
 
     for fileName in filesParsed:
         [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
@@ -61,9 +63,16 @@ def main():
             [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, 
                                                                                   createPyiFile=True)
             
+            #the Markdown twin, written from the parsed dictionary (revision2026 step R7.1.6);
+            #the heading is one level below the class section that pybindEmitter puts it into
+            markdownTemp = FunctionDescription2Markdown(funcDict, moduleNamePython, fileName,
+                                                        headingLevel=3,
+                                                        labelModule='mainsystemextensions')
+
             if belongsTo not in latexExtensions:
                 latexExtensions[belongsTo] = ''
                 rstExtensions[belongsTo] = ''
+                markdownExtensions[belongsTo] = ''
                 pyiExtensions[belongsTo] = ''
 
             latexTemp = sFuncLatex + '\n'
@@ -73,6 +82,7 @@ def main():
             if addExampleReferences:
                 latexTemp += sExamples
                 rstTemp += '\n' + sExamplesRST
+                markdownTemp += KeywordExamplesMarkdown('UtilityFunction', exampleFunctionName)
 
             #the Create* functions of mainSystemExtensions.py go into their OWN pair of files, so
             #that the reference manual can put them in front of everything else; the rest is
@@ -80,9 +90,11 @@ def main():
             if moduleNamePython != 'mainSystemExtensions':
                 latexExtensions[belongsTo] += latexTemp
                 rstExtensions[belongsTo] += rstTemp
+                markdownExtensions[belongsTo] += markdownTemp
             else:
                 latexExtensionsMainSystem += latexTemp
                 rstExtensionsMainSystem += rstTemp
+                markdownExtensionsMainSystem += markdownTemp
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #WRITE, which is what this file stopped doing between 2026-09-14 and 2026-09-19 (#2526). The
@@ -99,7 +111,8 @@ def main():
     stubContent = ''
     for key in latexExtensions:
         Write(paths.generatedDir + key + 'Ext.rst', rstExtensions[key])
-        Write(theDocDir + '/' + key + 'Ext.tex', latexExtensions[key])
+        Write(paths.generatedDir + key + 'Ext.md', markdownExtensions[key])
+        #docs/theDoc/<key>Ext.tex is not written since revision2026 step R7.1.6
         #ONE stub file for all keys: the original opened it with 'w' inside the loop, so only the
         #last class would have survived, and then wrote it a second time with the same content.
         #There is one key today, which is why nobody ever saw either half of that
@@ -107,7 +120,7 @@ def main():
 
     Write(paths.generatedDir + 'stubAutoBindingsExt.pyi', stubContent)
     Write(paths.generatedDir + 'MainSystemCreateExt.rst', rstExtensionsMainSystem)
-    Write(theDocDir + '/MainSystemCreateExt.tex', latexExtensionsMainSystem)
+    Write(paths.generatedDir + 'MainSystemCreateExt.md', markdownExtensionsMainSystem)
 
     #NOT written, deliberately: the original wrote python/exudyn/mainSystemExtensions.py from the
     #'exu.MainSystem.X = ...' lines it collected - overwriting a hand-written module that this

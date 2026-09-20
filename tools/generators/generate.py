@@ -66,18 +66,23 @@ stages = [
     Stage('tools/generators/structureStubEmitter.py', ['definitions'], [G + 'stubSystemStructures.pyi']),
     Stage('tools/generators/structureDocsEmitter.py', ['definitions'],
           ['docs/generated/structures']),   #Markdown since revision2026 step R7.1.6
+    #the *Ext fragments are inputs of pybindEmitter, not documentation of their own; Markdown
+    #since revision2026 step R7.1.6
     Stage('tools/generators/mainSystemExtensionDocsEmitter.py', ['python/exudyn/*.py'],
-          [G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst', G + 'stubAutoBindingsExt.pyi',
-           'docs/theDoc/MainSystemExt.tex', 'docs/theDoc/MainSystemCreateExt.tex']),
+          [G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst', G + 'MainSystemExt.md',
+           G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
           #Markdown since revision2026 step R7.1.6; confHelperPyUtilities.py is not documentation
           #but data for conf.py, which reads it from docs/RST/
           ['docs/generated/pythonUtilities', 'docs/RST/confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
-          ['definitions', G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst'],
+          ['definitions', G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst',
+           G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
            G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
-           'docs/theDoc/manual_interfaces.tex', 'docs/RST/cInterface', 'docs/RST/confHelper.py']),
+           #Markdown since revision2026 step R7.1.6; confHelper.py is not documentation but data
+           #for conf.py, which reads it from docs/RST/
+           'docs/generated/cInterface', 'docs/RST/confHelper.py']),
     Stage('tools/generators/createStubFiles.py',
           ['tools/generators/stubHeader.pyi', G + 'stubEnums.pyi', G + 'stubSystemStructures.pyi',
            G + 'stubAutoBindings.pyi', G + 'stubAutoBindingsExt.pyi', G + 'stubSymbolic.pyi'],

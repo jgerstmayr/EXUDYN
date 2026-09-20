@@ -962,6 +962,7 @@ class PyLatexRST:
         self.sPyi = sPyi
         self.sMarkdown = sMarkdown   #revision2026 step R7.1.6; LaTeX and RST go in R7.1.7
         self.rstFileLists = [] #contains tuples (filename, text)
+        self.markdownFileLists = [] #the same split, in Markdown (revision2026 step R7.1.6)
         self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
 
     def Reset(self):
@@ -970,8 +971,9 @@ class PyLatexRST:
         self.sRST = ''
         self.sMarkdown = ''
         self.rstFileLists = [] #contains tuples (filename, text)
+        self.markdownFileLists = []
         self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
-        
+
     def __add__(self, other):
         return PyLatexRST(self.sPy+other.sPy, self.sLatex+other.sLatex, self.sRST+other.sRST,
                           sMarkdown=self.sMarkdown+other.sMarkdown)
@@ -1006,7 +1008,9 @@ class PyLatexRST:
     def CreateNewRSTfile(self, fileName):
         if self.rstCurrentFileName != '':
             self.rstFileLists += [(self.rstCurrentFileName, self.sRST)]
+            self.markdownFileLists += [(self.rstCurrentFileName, self.sMarkdown)]
             self.sRST = '' #start new text
+            self.sMarkdown = ''
         self.rstCurrentFileName = fileName
     
 
@@ -1043,10 +1047,30 @@ class PyLatexRST:
         self.sRST += LatexString2RST(text)
         self.sMarkdown += LatexText2Markdown(text) + '\n'
 
+    #one entry of what LaTeX draws as a table row and RST as a list item: a function, a data
+    #member or an operator of a class, in Markdown (revision2026 step R7.1.6)
+    def MarkdownEntry(self, signature, description, example=''):
+        text = '- **`' + signature.strip() + '`**'
+        description = LatexText2Markdown(description).replace('\n', ' ').strip()
+        if description != '':
+            text += ': ' + description
+        text += '\n'
+
+        if example != '':
+            code = example.replace('\\\\', '\n').replace('\\#', '#').replace('\\TAB', '  ')
+            code = RemoveIndentation(code, '', False).strip('\n')
+            #two spaces, so that the fenced block belongs to the list item above it
+            text += '\n  *Example*:\n\n  ```python\n'
+            for line in code.split('\n'):
+                text += ('  ' + line).rstrip() + '\n'
+            text += '  ```\n\n'
+        return text
+
     #add inline reference in latex format, converted to RST: latex labels have ':' as separator, in RST have '-'
     def AddInlineRef(self, ref):
         self.sLatex += '\\refSection{'+ref+'}'
         self.sRST += ' :ref:`'+Latex2RSTlabel(ref)+'`\\ '
+        self.sMarkdown += ' {ref}`' + Latex2RSTlabel(ref) + '` '
 
         
     #add python style code blocks to latex and RST
@@ -1068,6 +1092,9 @@ class PyLatexRST:
         self.sRST += RemoveIndentation(code, spaces,False)
         #print(RemoveIndentation(code, '   '))
         self.sRST += '\n'*(code.strip(' ')[-1] != '\n')
+
+        self.sMarkdown += ('\n```' + 'python'*pythonStyle + '\n'
+                           + RemoveIndentation(code, '', False).strip('\n') + '\n```\n\n')
         
 
     #add python style code blocks to latex and RST
@@ -1086,8 +1113,11 @@ class PyLatexRST:
                     print('WARNING: AddDocuList: illegal itemText:'+itemText)
                 
                 self.sRST += rstItem + RemoveIndentation(LatexString2RST(item), '  | ')[1:] + sEnd
-    
+
+                self.sMarkdown += '- ' + LatexText2Markdown(item).replace('\n', ' ').strip() + '\n'
+
             self.sRST += '\n'
+            self.sMarkdown += '\n'
             self.sLatex += '\\ei'
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1110,6 +1140,8 @@ class PyLatexRST:
             addInfo = ' regarding **'+classStr[ni+1:]+'**'
             classStr = classStr[:ni]
         self.sRST += '\n\\ The class **'+classStr+'** has the following **functions and structures**'+addInfo+':\n\n'
+        self.sMarkdown += ('\nThe class **' + classStr + '** has the following **functions and '
+                           + 'structures**' + addInfo.replace('\\ ', ' ') + ':\n\n')
 
     #start a new table to describe class bindings in latex;
     def DefLatexStartTable3(self, headers=[]):
@@ -1121,6 +1153,8 @@ class PyLatexRST:
         self.sLatex += '\\bf '+headers[0]+' & \\bf '+headers[1]+' & \\bf '+headers[2]+' \\\\ \\hline\n'
 
         self.sRST += '\n'
+        self.sMarkdown += ('\n| ' + ' | '.join([MarkdownCell(h) for h in headers[:3]])
+                           + ' |\n|---|---|---|\n')
 
     #start a new table to describe class bindings in latex;
     def DefItemStartTable(self, classStr=''):
@@ -1139,6 +1173,7 @@ class PyLatexRST:
         self.sLatex += '\\end{longtable}\n'
         self.sLatex += '\\end{center}\n'
         self.sRST += '\n\n' #empty line closes list block
+        self.sMarkdown += '\n'
 
     def DefStartEnumClass(self, className, description, subSection=False, labelName='', cClass=None):
         if cClass==None:
@@ -1186,6 +1221,12 @@ class PyLatexRST:
     
         self.sRST += '\n'+RSTheaderString(LatexString2RST(sectionName), 1+1*subSection) + '\n'
         self.sRST += RemoveIndentation(LatexString2RST(description)) + '\n' #empty line needed for list
+
+        self.sMarkdown += '\n'
+        if labelName != '':
+            self.sMarkdown += MarkdownLabel(labelName) + '\n'
+        self.sMarkdown += MarkdownHeading(LatexText2Markdown(sectionName), 1+1*subSection) + '\n\n'
+        self.sMarkdown += LatexText2Markdown(description) + '\n\n'
     
     #start class definition
     def DefPyStartClass(self, cClass, pyClass, description, subSection = False, labelName='', 
@@ -1229,12 +1270,14 @@ class PyLatexRST:
     
         self.DefLatexFinishTable()
         self.sRST += '\n'
+        self.sMarkdown += '\n'
 
     #add latex table entry / RST list entry for data variable
     def DefLatexDataAccess(self, name, description, dataType = '', isTopLevel = False): 
         self.sLatex += '  ' + Str2Latex(name) + ' & '+Str2Latex(description) + '\\\\ \\hline  \n'
         self.sRST += '* | ' + '**'+Str2Latex(name)+'**:\n'
         self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        self.sMarkdown += self.MarkdownEntry(name, description)
         
         if dataType != '':
             pyiIndent = ''
@@ -1257,6 +1300,7 @@ class PyLatexRST:
         self.sLatex += '  operator ' + Str2Latex(name) + '('+argStr+') & '+Str2Latex(description) + '\\\\ \\hline  \n'
         self.sRST += '* | operator ' + '**'+Str2Latex(name)+'**\\ ('+argStr+'):\n'
         self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        self.sMarkdown += self.MarkdownEntry('operator ' + name + '(' + argStr + ')', description)
         
         if returnType != '':
             pyiIndent = ''
@@ -1360,6 +1404,7 @@ class PyLatexRST:
         self.sPy += '\n'
 
         examplePyi = '' #the stub block below runs whether or not the function is documented
+        exampleSource = example #the LaTeX branch below rewrites 'example' in place
         if addDocu:
             self.sLatex += sLadd
             self.sRST += sRadd
@@ -1384,6 +1429,9 @@ class PyLatexRST:
                 self.sRST += '  | *Example*:\n\n'
                 self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding
             self.sLatex += '\\\\ \\hline \n'
+
+            signature = sLadd.strip().replace('\\_', '_') + ')'*addBraces
+            self.sMarkdown += self.MarkdownEntry(signature, description, example=exampleSource)
     
         #the stub describes what the module HAS; addDocu only decides whether the function
         #is DOCUMENTED. Every deprecated function carries addDocu=False and was therefore
@@ -1559,6 +1607,11 @@ class PyLatexRST:
         #description:
         s += RemoveIndentation(LatexString2RST(cols[2]), '  | ') + '\n'
         self.sRST += s
+
+        typeCell = cols[1] if typeList[1] == '' else typeList[1] + ', ' + cols[1]
+        self.sMarkdown += ('| ' + MarkdownCell(cols[0]) + ' | '
+                           + MarkdownCell(LatexText2Markdown(typeCell)) + ' | '
+                           + MarkdownCell(LatexText2Markdown(cols[2])) + ' |\n')
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

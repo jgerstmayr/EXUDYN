@@ -34,7 +34,8 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, \
 ADD_DOCSTRINGS = True
 
 maxWarningsMutableArgs = 200 #warnings in case of list or dict default args (mutable args)
-from autoGenerateHelper import MarkdownLabel, MarkdownHeading, LatexText2Markdown   # noqa: E402
+from autoGenerateHelper import MarkdownLabel, MarkdownHeading, LatexText2Markdown, \
+                               KeywordExamplesMarkdown                             # noqa: E402
 #list of functions for which mutable args have been checked:
 mutableArgsFunctionsChecked = [
     'GenerateStraightLineANCFCable','GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', 'GenerateStraightBeam', #beams
@@ -698,7 +699,8 @@ def Tags2Markdown(itemDict, tags):
 
 
 def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
-                                isClassFunction=False, className='', headingLevel=3):
+                                isClassFunction=False, className='', headingLevel=3,
+                                labelModule=''):
     """The documentation of one function or class method, as Markdown (revision2026 step R7.1.6).
 
     Written from the parsed dictionary rather than from the LaTeX, so that it says what it means:
@@ -719,8 +721,10 @@ def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
         arguments += [argument + (' = ' + default if len(default) != 0 else '')]
     signature = functionName + '(' + ', '.join(arguments) + ')'
 
-    label = 'sec:' + moduleNamePython + ':' + (className + ':' if isClassFunction else '') \
-        + functionName
+    #the MainSystem extensions are documented under the class they are added to, not under the
+    #module they live in, and their labels say so (revision2026 step R7.1.6)
+    label = 'sec:' + (labelModule if labelModule != '' else moduleNamePython) + ':' \
+        + (className + ':' if isClassFunction else '') + functionName
     text = '\n' + MarkdownLabel(label) + '\n'
     text += MarkdownHeading(('Class function: ' if isClassFunction else 'Function: ')
                             + functionName, headingLevel) + '\n\n'

@@ -467,7 +467,7 @@ Exudyn documentation
 #    :maxdepth: 3
    
    # docs/RST/items/index.rst
-    indexRST += """   docs/RST/cInterface/CInterfaceIndex
+    indexRST += """   docs/generated/cInterface/cInterfaceIndex
 
 .. toctree::
    :caption: Reference Manual

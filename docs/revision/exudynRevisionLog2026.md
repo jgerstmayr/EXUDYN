@@ -10976,6 +10976,32 @@ written for the chapters in R7.1.5 — it gained a `ConvertText` entry point for
 rather than a file. The emitters had exactly the LaTeX the chapters had, so they do not get a
 second converter; both die together in R7.1.7.
 
+#### The third and fourth emitters: the Python-C++ command interface (2026-09-20)
+
+`pybindEmitter` and `mainSystemExtensionDocsEmitter` are one piece of work: the extensions
+emitter writes the `@extends(exudyn.MainSystem)` functions as fragments, and `pybindEmitter`
+splices them into the MainSystem page. `docs/theDoc/manual_interfaces.tex` (2,213 lines),
+`MainSystemExt.tex`, `MainSystemCreateExt.tex` and `docs/RST/cInterface/` are gone; the
+chapter is **10 Markdown pages** in `docs/generated/cInterface/`, with the index carrying
+`sec:pcpp:command:interface`. The fragments stay in `tools/generators/generated/` as `.md`
+*and* `.rst`, because the RST branch still reads them from there; both die in R7.1.7.
+
+Unlike the utility emitter, this one goes entirely through `PyLatexRST`, so the work was to
+give that class its Markdown branches: the sections, the code blocks, the lists, the class
+tables — a LaTeX `longtable`, an RST list block, and now a bullet per entry with the
+signature in backticks and the example as a fenced block — and the file split, which now
+carries `markdownFileLists` beside `rstFileLists`. **Those branches are what the item
+reference manual will use next**, which is why this pair came before the larger emitter.
+
+The word count against the deleted RST leaves **two words**, `block` and `linenos`: RST markup
+of the code blocks. Nothing else of the chapter is missing.
+
+**A gap closed on the way.** `tools/regenerate.py` compares the generated files against the
+commit by path, and its tier-2 list still named the four `.tex` files that R7.1.6 had already
+deleted — while `docs/generated/`, where the pages had moved, was in neither tier. For two
+steps the Markdown was therefore generated and never compared. The list now names
+`docs/generated`.
+
 #### The second emitter: the utility functions (2026-09-20)
 
 `utilityDocsEmitter` wrote `docs/theDoc/pythonUtilitiesDescription.tex` (11,360 lines) and
