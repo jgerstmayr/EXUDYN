@@ -96,7 +96,7 @@ stages = [
 #deliberately NOT stages:
 #  makeAllBinariesScripts.py  writes only docs/theDoc/buildDate.tex, a volatile timestamp (revision2026 step R7.1)
 #  tools/issueTracker/issueTracker.py  a different tool on a different trigger; it owns the
-#                                      version files and trackerlog.{tex,rst,html}
+#                                      version files, trackerlog.html and trackerlog.md
 
 
 def _Overlaps(readPath, writePath):

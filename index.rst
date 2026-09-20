@@ -58,7 +58,7 @@ Exudyn documentation
    docs/RST/Abbreviations
    docs/RST/ExamplesIndex
    docs/RST/TestModelsIndex
-   docs/RST/trackerlog
+   docs/generated/trackerlog
 
 Indices and tables
 ==================

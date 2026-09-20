@@ -1115,13 +1115,15 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     never loses a figure in between.
 
 <a id="r7-1-6"></a>
-**R7.1.6** **IN PROGRESS** (#2565) → [log](exudynRevisionLog2026.md#r7-1-6)
-    *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** **Done: every docs emitter but the issue
-    tracker's** (2026-09-20) — `interfaces.tex`, `pythonUtilitiesDescription.tex`,
-    `manual_interfaces.tex`, `MainSystemExt.tex`, `MainSystemCreateExt.tex`, `itemDefinition.tex`
-    and all of their RST pages are replaced by `docs/generated/`: `structures/` (7 pages),
-    `pythonUtilities/` (31), `cInterface/` (10) and `items/` (109). Remaining: the issue tracker's
-    own writer — which is where #2545 ends. The larger half by
+**R7.1.6** **DONE 2026-09-20** (#2565, #2545) → [log](exudynRevisionLog2026.md#r7-1-6)
+    *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** **Done, all five emitters** —
+    `interfaces.tex`, `pythonUtilitiesDescription.tex`, `manual_interfaces.tex`,
+    `MainSystemExt.tex`, `MainSystemCreateExt.tex`, `itemDefinition.tex`, `trackerlog.tex` and all
+    of their RST pages are replaced by 158 Markdown pages in `docs/generated/`: `structures/` (7),
+    `pythonUtilities/` (31), `cInterface/` (10), `items/` (109) and `trackerlog.md`. #2545 is
+    resolved with the escaping moved to `issueTracker.ToMarkdown` and tested;
+    **#2550 stays open** — the Markdown carries the citation keys in brackets, which is
+    readable but not linked. The larger half by
     volume — 8 generated `.tex` files, ~43,000 lines — and the smaller half by risk, because
     it is emitter code and not prose. `itemDocsEmitter`, `structureDocsEmitter`,
     `utilityDocsEmitter`, `mainSystemExtensionDocsEmitter` and the tracker's own writer emit `.md`

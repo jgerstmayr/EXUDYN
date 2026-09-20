@@ -10976,6 +10976,39 @@ written for the chapters in R7.1.5 — it gained a `ConvertText` entry point for
 rather than a file. The emitters had exactly the LaTeX the chapters had, so they do not get a
 second converter; both die together in R7.1.7.
 
+#### The last emitter: the issue tracker, and where #2545 ends (2026-09-20)
+
+`issueTracker.py` wrote `docs/theDoc/trackerlog.tex` and `docs/RST/trackerlog.rst`; it writes
+`docs/generated/trackerlog.md` now, and `trackerlog.html`, which is the developers' own view,
+is untouched. `ConvertToLatex` became `ConvertToMarkdown` — one writer instead of two
+interleaved ones — and the RST helpers it needed (`RSTheaderString`, `EscapeRSTmarkup`, the
+import of `autoGenerateHelper`) went with the file they served. The colours of the open issues
+were RST roles; they are the same CSS classes of `docs/_static/custom.css`, written as inline
+HTML.
+
+**#2545 is resolved here, as the step said it would be.** The 74 LaTeX escaping errors lived
+in the LaTeX writers, and the LaTeX writers are gone: no generated `.tex` file is left but
+`abbreviations` and `buildDate`. The requirement moved with the code instead of disappearing.
+`ToMarkdown` escapes the backslash first — or it would escape the escapes the other rules
+introduce — and then `` ` `` `*` `_` `[` `]` `<` `>` `#` `|`, the same total escaping as
+`ToLatex` and for the same reason: an author writes text into the tracker, not markup, and the
+writer is the one place that knows the output format. `python/testing/test_issueTracker.py`
+is the proof the issue asked for: one test per special character, three shapes that actually
+occur in the tracker (`*.md`, `CIBW_`, an unpaired backtick), the backslash-first rule, and
+that an ordinary sentence arrives untouched.
+
+The word count against the deleted RST: 57,208 words to 57,989, and the nine words absent are
+the names of four colour roles that were declared and never used, and five lowercase `:ref:`
+target names — the readable form of each stands in both files.
+
+**What R7.1.6 leaves behind.** Five emitters, 158 Markdown pages, and these deletions:
+`interfaces.tex`, `pythonUtilitiesDescription.tex`, `manual_interfaces.tex`,
+`MainSystemExt.tex`, `MainSystemCreateExt.tex`, `itemDefinition.tex`, `trackerlog.tex` and the
+`.rst` pages beside all of them. The **citations** are a side effect worth naming: the RST
+dropped every `\cite` without replacement, so the published HTML said *"see e.g. ."*; the
+Markdown carries the key in brackets. That is readable, not linked, so **#2550 stays open** —
+it wants a references page fed from the `.bib`.
+
 #### The item reference manual, the largest chapter (2026-09-20)
 
 `itemDefinition.tex` was 14,053 lines and `docs/RST/items/` 109 files; both are gone. The

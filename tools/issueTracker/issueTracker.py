@@ -26,13 +26,8 @@ relative_path = '../generators'   #autoGenerateHelper moved to tools/generators 
 helperPath = os.path.join(absolute_path, relative_path)
 sys.path.append(helperPath)
 
-from autoGenerateHelper import LatexString2RST #temporary: goes when the tracker logs are converted to Markdown
-
-def RSTheaderString(header, level=1):
-    """RST section header; the tracker only uses level 1 (overline and underline with '*')"""
-    if level != 1:
-        raise ValueError('RSTheaderString: only level 1 is used by the issue tracker')
-    return '*'*len(header)+'\n'+header+'\n'+'*'*len(header)+'\n'
+#autoGenerateHelper is not needed any more: the tracker wrote LaTeX and RST until
+#revision2026 step R7.1.6 and writes Markdown now, which needs no conversion helper
 
 
 #filename without file ending:
@@ -145,7 +140,25 @@ def ResolvedIssues2Version(resolvedIssues, totalResolvedIssues):
 def UpdateFiles():
     UpdateDateAndVersion()
     ConvertToHTML() #update html version of issue tracker
-    ConvertToLatex() #update html version of issue tracker
+    ConvertToMarkdown() #update html version of issue tracker
+
+
+#%%******************************************************************************************************
+def ToMarkdown(s):
+    """Every Markdown special character in issue text becomes literal text (#2545).
+
+    The same rule as ToLatex above, for the format that replaces it in revision2026 step R7.1.6:
+    an author writes text into the tracker, not markup, and the writer knows the output format -
+    so the writer escapes. The characters are different (a backtick opens code, an underscore or
+    a star opens emphasis, a pipe splits a table cell, a '<' opens an HTML tag), the rule is not.
+
+    The backslash goes FIRST, or it would escape the backslashes the other rules introduce."""
+    s = s.replace(chr(92), chr(92) + chr(92))        #before everything else
+    #the dollar is in this list because conf.py enables the dollarmath extension: a price
+    #or a shell prompt in an issue would otherwise open math (found by checkMathMacros)
+    for character in ['`', '*', '_', '[', ']', '<', '>', '#', '|', '$']:
+        s = s.replace(character, chr(92) + character)
+    return s
 
 
 #%%******************************************************************************************************
@@ -515,30 +528,8 @@ def UpdateDateAndVersion(updateVersion = True):
         # file.close()
 
 #%%******************************************************************************************************
-#Escape the RST markup characters that free-text issue fields keep producing by accident.
-#
-#Issue text is written by people describing code, so it naturally contains characters RST reads as
-#markup - and docs/RST/trackerlog.rst is GENERATED from it, while the docs CI job runs
-#sphinx-build with -W, so a single such character fails the nightly pipeline. Asking issue authors
-#to avoid punctuation is not a mechanism; escaping on conversion is (#2401).
-#
-#Handled, all three observed in real issue text:
-#  CIBW_   a word ending in '_' is an RST link reference          -> ERROR: Unknown target name
-#  *.md    a lone '*' opens inline emphasis that never closes     -> WARNING: start-string
-#  `       an odd number of backticks opens an inline literal     -> WARNING: start-string
-#
-#LatexString2RST already escapes '*' when called with replaceMarkups=True; this adds the two it
-#does not cover. It is applied ONLY to the tracker's own free-text fields, so the shared generator
-#behaviour that the rest of the documentation depends on is untouched.
-def EscapeRSTmarkup(s):
-    #a trailing underscore is a reference only where the word actually ends
-    s = re.sub(r'([A-Za-z0-9])_(?=[\s,.;:)\]]|$)', r'\1\\_', s)
-
-    #an unpaired backtick: escape them all when the count is odd, which is the accidental case
-    if s.count('`') % 2 == 1:
-        s = s.replace('`', '\\`')
-
-    return s
+#the escaping of the tracker's free-text fields is ToMarkdown above (#2545); the RST escaper
+#that stood here went with docs/RST/trackerlog.rst in revision2026 step R7.1.6
 
 
 #%%******************************************************************************************************
@@ -690,239 +681,121 @@ def ConvertToHTML(): #convert all issues to a .html file
 
 
 #%%******************************************************************************************************
-def ConvertToLatex(): #convert resolved issues of current release to latex
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+def ConvertToMarkdown():
+    """docs/generated/trackerlog.md: the resolved issues per release, the open issues and the
+    known bugs. Markdown since revision2026 step R7.1.6; it wrote docs/theDoc/trackerlog.tex and
+    docs/RST/trackerlog.rst until then, and the colours of the open issues, which were RST roles,
+    are the CSS classes of docs/_static/custom.css written as inline HTML."""
+    fileRead=open(trackerFile+'.txt','r', encoding='utf-8')
     fileLines = fileRead.readlines()
     fileRead.close()
-    
+
     [releaseString,versionString] = GetReleaseAndVersionString()
     [majorCurrent,microCurrent,minorCurrent] = GetMajorMinorMicroVersion()
 
     releaseVersionDev = VersionString()
-    release = majorCurrent # releaseString.split('.')[0]
-    #versionMinor = str(release2).split('.')[1]
 
-    numberOfRaised = len(fileLines)-nHeaderLines   
+    numberOfRaised = len(fileLines)-nHeaderLines
     numberOfResolved = minorCurrent
     lastChangeDate = fileLines[trackerDateLine].split('=')[1][0:-1] #without EOL
     totalResolved = versionResolved[-1] + numberOfResolved
 
-    bugstr = '' #string will contain bugs
-    
-    #makes problems? fileWrite=open('../../docs/theDoc/'+trackerFile+'.tex','w')  #write file
-    trackerFileTex = '..\\..\\docs\\theDoc\\'+trackerFile+'.tex'
-    absPathTexFile = os.path.abspath(trackerFileTex)
-    #utf-8 explicitly: without it this takes the Windows code page and trackerlog.tex became
-    #the only non-UTF-8 file the generators write (#2533)
-    fileWrite=open(absPathTexFile,'w', encoding='utf-8')  #write file
-    fileRST=io.open('../../docs/RST/'+trackerFile+'.rst','w', encoding='utf-8')  #write file; utf-8 needed for sphinx
+    def Colour(cssClass, text):
+        return '<span class="' + cssClass + '">' + text + '</span>'
 
-    try:
-        sInfo =  'This section contains resolved issues per release and known bugs. Use this information to understand changes compared to previous versions. The author field is omitted if it was Johannes Gerstmayr (JG).\n'
-        sInfo += 'The extension \\texttt{.dev1} is not added in the issues list (e.g., 1.2.2.dev1==1.2.2), as it only marks versions that will not be available in pypi with standard pip install, but only with the \\texttt{-}\\texttt{-pre} option or by specifying the exact version name, see versions on \\exuUrl{https://pypi.org/project/exudyn/}{https://pypi.org/project/exudyn/}.\n'
-        sInfo += 'BUG numbers refer to the according issue numbers.\n'
-        #sInfo += 'For details, see the \\texttt{trackerlog.html} file.\n'
-        versionInfo = ''
-        versionInfo += '\\noindent General information on current version:\n'
-        versionInfo += '\\bi \n'
-        versionInfo += '  \\item Exudyn version = '+releaseVersionDev+', \n'
-        versionInfo += '  \\item last change = '+lastChangeDate+', \n'
-        versionInfo += '  \\item Number of issues = ' + str(numberOfRaised) + ', \n'
-        versionInfo += '  \\item Number of resolved issues = '  + str(totalResolved) + ' ('+str(numberOfResolved) +' in current version), \n'
-        
-        
-        fileWrite.write('%automatically generated by issueTracker\n')
-        fileWrite.write('%\n')
-        fileWrite.write(sInfo)
-        fileWrite.write('\n')
-        fileWrite.write('\n')
-        fileWrite.write('\n')
-        fileWrite.write('\n')
-        fileWrite.write(versionInfo)
-        fileWrite.write('\\ei\n')
-        
-        fileWrite.write('\n')
-        fileWrite.write('\\mysubsection{Resolved issues and resolved bugs}\n')
-        fileWrite.write('\\par \\noindent The following list contains the issues which have been {\\bf RESOLVED} in the according version:\n')
-        
-        #fileWrite.write('\\bi \\footnotesize \n')
-        fileWrite.write('\\bi \\setlength\\itemsep{-4pt} \\scriptsize \n') #slightly smaller than footnotesize
-    
-        fileRST.write('.. role:: textred\n') #defined in docs/_static/custom.css
-        fileRST.write('.. role:: textorange\n')
-        fileRST.write('.. role:: textblue\n')
-        fileRST.write('.. role:: textgreen\n')
-        fileRST.write('.. role:: boldred\n')
-        fileRST.write('.. role:: boldorange\n')
-        fileRST.write('.. role:: boldblue\n')
-        fileRST.write('.. role:: boldgreen\n')
+    text = ('<!-- GENERATED by tools/issueTracker/issueTracker.py from trackerlog.txt '
+            '- do not edit -->\n'
+            '(sec-issuetracker)=\n'
+            '# Issue tracker\n\n')
+    text += ('This section contains resolved issues per release and known bugs. Use this '
+             'information to understand changes compared to previous versions. The author field '
+             'is omitted if it was Johannes Gerstmayr (JG).\n'
+             'The extension `.dev1` is not added in the issues list (e.g., 1.2.2.dev1==1.2.2), '
+             'as it only marks versions that will not be available in pypi with standard pip '
+             'install, but only with the `--pre` option or by specifying the exact version name, '
+             'see versions on <https://pypi.org/project/exudyn/>.\n'
+             'BUG numbers refer to the according issue numbers.\n\n')
+    text += ('General information on current version:\n\n'
+             '- Exudyn version = ' + releaseVersionDev + '\n'
+             '- last change = ' + lastChangeDate + '\n'
+             '- Number of issues = ' + str(numberOfRaised) + '\n'
+             '- Number of resolved issues = ' + str(totalResolved)
+             + ' (' + str(numberOfResolved) + ' in current version)\n\n')
 
-        fileRST.write('\n')
-        fileRST.write('.. _sec-issuetracker:\n')
-        fileRST.write('\n')
-        fileRST.write('=============\n')
-        fileRST.write('Issue tracker\n')
-        fileRST.write('=============\n')
-        fileRST.write('\n')
-        fileRST.write(LatexString2RST(sInfo))
-        fileRST.write('\n')
-        fileRST.write(LatexString2RST(versionInfo))
-        fileRST.write('\n')
+    text += ('## Resolved issues and resolved bugs\n\n'
+             'The following list contains the issues which have been **RESOLVED** in the '
+             'according version:\n\n')
 
-        sRST = ''
-        bugRST = ''
-        sRST += RSTheaderString('Version '+releaseString, level=1)+'\n'
-        
-        openRST = ''
-        openRST += '\n'+RSTheaderString('Open issues', level=1)+'\n'
+    resolved = '### Version ' + releaseString + '\n\n'
+    openIssues = ''
+    bugs = ''
 
-        issueList = GetIssues()
-        issueListSorted = sorted(issueList, key = lambda i: i['date resolved'])
-        resolvedCnt = 0
-        issueCnt = 0
-        IDS = '  ' #additional space
-        rstSpace = '    - '
-        previousRelease = (majorCurrent,microCurrent)
-        vIssueRelease = 1 #for now
-        
-        for issue in reversed(issueListSorted):
-            si = ''
-            rst = ''
-            #vIssue = numberOfResolved - resolvedCnt #version in which issue has been resolved
-            [vIssueMinor, vIssueMicro] = ResolvedIssues2Version(resolvedCnt, totalResolved)
-            rNew = previousRelease
-            if vIssueMinor >= 0:
-                rNew = (vIssueRelease, vIssueMinor)
+    issueList = GetIssues()
+    issueListSorted = sorted(issueList, key = lambda i: i['date resolved'])
+    resolvedCnt = 0
+    previousRelease = (majorCurrent,microCurrent)
+    vIssueRelease = 1 #for now
+
+    for issue in reversed(issueListSorted):
+        [vIssueMinor, vIssueMicro] = ResolvedIssues2Version(resolvedCnt, totalResolved)
+        rNew = (vIssueRelease, vIssueMinor) if vIssueMinor >= 0 else (0,1)
+
+        if (rNew[0] < previousRelease[0] or
+            (rNew[0] == previousRelease[0] and rNew[1] < previousRelease[1]) ):
+            resolved += '\n### Version '+str(rNew[0])+'.'+str(rNew[1])+'\n\n'
+            previousRelease = rNew
+
+        #the details of one issue, as the sub-list of its entry
+        details = ''
+        if issue['author'] != 'JG':
+            details += '  - issue author: '+ToMarkdown(issue['author'])+'\n'
+        details += '  - description: '+ToMarkdown(issue['description'])+'\n'
+        if len(issue['notes'].strip(' ')) != 0:
+            details += '  - **notes:** '+ToMarkdown(issue['notes'])+'\n'
+
+        details += '  - '
+        if len(issue['date resolved']) != 0:
+            details += 'date resolved: **'+issue['date resolved'].strip()+'**, '
+        details += 'date raised: '+issue['date raised'].strip()
+        if issue['resolved author'] != 'JG' and len(issue['resolved author']) != 0:
+            details += ', resolved by: '+ToMarkdown(issue['resolved author'])
+        details += '\n'
+
+        title = ToMarkdown(issue['issue'].strip(' '))
+
+        if issue['status'] == 'RESOLVED' and issue['type'] not in typesNotInReleaseNotes:
+            entry = ('- Version '+str(rNew[0])+'.'+str(rNew[1])+'.'+str(vIssueMicro)+': ')
+            if issue['type'] == 'BUG':
+                entry += Colour('textred', 'resolved BUG '+issue['number'])+': '+title
             else:
-                # rNew = 0.1 #this is the very early version
-                rNew = (0,1) #this is the very early version
+                entry += ('resolved Issue '+issue['number']+': '+title
+                          + ' ('+issue['type'].lower()+')')
+            resolved += entry + '\n' + details
+        elif issue['status'] == 'RAISED' and issue['type'] == 'BUG':
+            bugs += '- '+Colour('textred', 'open BUG '+issue['number']+':')+' '+title+'\n'
+            bugs += details
+        elif issue['status'] == 'RAISED':       #an ABANDONED issue is not an open one
+            cssClass = {'high': 'textred', 'med': 'textorange',
+                        'low': 'textblue'}.get(issue['priority'].lower(), 'boldblue')
+            openIssues += ('- '+Colour(cssClass, 'open issue '+issue['number']+':')+' '
+                           + title+'\n')
+            openIssues += details
 
-            if (rNew[0] < previousRelease[0] or 
-                (rNew[0] == previousRelease[0] and rNew[1] < previousRelease[1]) ):
-                sRST += '\n'
-                sRST += RSTheaderString('Version '+str(rNew[0])+'.'+str(rNew[1]), level=1) + '\n'
-                previousRelease = rNew
-                
-            #si += '  \\bi\n'
-            #si += '  \\begin{itemize}[label=$\\bullet$]\n'
-            si += '  \\begin{itemize} \\setlength\\itemsep{-1pt}\n'
-            if issue['author'] != 'JG':
-                si += IDS+'  \\item issue author: '+issue['author']+'\n'
-                rst += rstSpace+'issue author: '+issue['author']+'\n'
-    
-            #+++++++++++++++++        
-            #description
-            si += IDS+'  \\item {description:'+ToLatex(issue['description'])+'}\n'
-            rst += rstSpace+'description: '+EscapeRSTmarkup(LatexString2RST(issue['description'], replaceMarkups=True))+'\n'
-            
-            if len(issue['notes'].strip(' ')) != 0:
-                si += IDS+'  \\item {\\bf notes: '+ToLatex(issue['notes'])+'}\n'
-                rst += rstSpace+'**notes:** '+EscapeRSTmarkup(LatexString2RST(issue['notes'], replaceMarkups=True))+'\n'
-    
-            #+++++++++++++++++
-            #resolved
-            si += IDS+'  \\item '
-            rst += rstSpace
-            if len(issue['date resolved']) != 0:
-                si += '  date resolved: {\\bf '+issue['date resolved']+'},\n'
-                rst += 'date resolved: **'+(issue['date resolved']).strip()+'**\\ , '
-                
-            si += 'date raised: '+issue['date raised']+' '
-            rst += 'date raised: '+issue['date raised']+' '
-            if issue['resolved author'] != 'JG' and len(issue['resolved author']) != 0:
-                si += '(resolved by: '+issue['resolved author']+')'
-                rst += '\n'+rstSpace+'resolved by: '+issue['resolved author']
+        #CLOSED, not resolved: the version a past issue is listed under is derived from this
+        #counter, so counting only RESOLVED would renumber every historical entry as soon as
+        #one issue is abandoned. An abandoned issue keeps its place and is simply not printed
+        if issue['status'] in closedStatuses:
+            resolvedCnt += 1
 
-            #+++++++++++++++++
-            si += '\n  \\ei\n'
-            rst += '\n'
-            
-            if issue['status'] == 'RESOLVED' and issue['type'] not in typesNotInReleaseNotes:
-                s2 = '  \\item[] {\\bf Version '+str(release)+'.'+str(vIssueMinor)+'.'+str(vIssueMicro)+'}:' #' \\vspace{-6pt} \n'
-                rst2 = ' * Version '+str(rNew[0])+'.'+str(rNew[1])+'.'+str(vIssueMicro) + ': '
-                # attrPre = ''
-                attrPost = ''
-                attrPostRST = ''
-                if issue['type'] == 'BUG':
-                    s2 += ' {\\bf \\color{warningRed}'
-                    attrPost = '}'
-                    rst2 += ':textred:`'
-                    attrPostRST = '` '
+    text += resolved
+    text += '\n## Open issues\n\n' + openIssues
+    text += '\n## Known bugs\n\n' + bugs
 
-                if issue['type'] == 'BUG':
-                    s2 += '  resolved BUG '
-                    rst2 += 'resolved BUG '
-                else:
-                    s2 += '  resolved Issue '
-                    rst2 += 'resolved Issue '
-                s2 += issue['number']+attrPost+': {\\bf '+ToLatex(issue['issue']).strip(' ')+'}\n'
-                rst2 += issue['number']+attrPostRST+': '+EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True).strip(' '))+' '
-                if issue['type'] != 'BUG':
-                    s2 += '('+issue['type'].lower()+')\n'
-                    rst2 += '('+issue['type'].lower()+')'
-                s2 += '\\vspace{-6pt} '
-                rst2 += '\n'
-
-                if vIssueMinor >= 0:
-                    fileWrite.write(s2+si) #latex does not include 0.1 issues
-                sRST += rst2 + rst
-                issueCnt += 1
-            elif issue['status'] == 'RAISED' and issue['type'] == 'BUG':
-                bugstr += '  \\item open {\\bf BUG '+issue['number'] + '}: '
-                bugstr += ' {\\bf '+ToLatex(issue['issue']).strip(' ')+'}\n'
-                bugstr += si
-                bugRST += ' * :textred:`open BUG '+issue['number'] +':` ' + EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True)) + '\n'
-                bugRST += rst + '\n'
-            elif issue['status'] == 'RAISED':               #an ABANDONED issue is not an open one
-                preRST = '**'
-                postRST = '**'
-    
-                if issue['priority'].lower() == 'high' :
-                    preRST = ':textred:`' #bold not needed, as item heading is anyway bold ...
-                    postRST = '`'
-                elif issue['priority'].lower() == 'med' :
-                    preRST = ':textorange:`'
-                    postRST = '`'
-                elif issue['priority'].lower() == 'low' :
-                    preRST = ':textblue:`'
-                    postRST = '`'
-
-                openRST += ' * '+preRST+'open issue '+issue['number'] + ':' + postRST + ' ' + EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True)) + '\n'
-                openRST += rst + '\n'
-                
-            #CLOSED, not resolved: the version a past issue is listed under is derived from this
-            #counter, so counting only RESOLVED would renumber every historical entry as soon as
-            #one issue is abandoned. An abandoned issue keeps its place and is simply not printed
-            if issue['status'] in closedStatuses:
-                resolvedCnt += 1        
-        
-        if issueCnt == 0:
-            fileWrite.write('\\item[]\n %dummy item in order to avoid problems if list is empty\n')
-        fileWrite.write('\\ei\n')
-        
-        fileWrite.write('\\mysubsection{Known open bugs}\n')
-        if len(bugstr) != 0:
-            fileWrite.write('\\bi \\footnotesize \n')
-            fileWrite.write(bugstr)
-            fileWrite.write('\\ei\n')
-
-        sRST += openRST
-
-        sRST += RSTheaderString('Known bugs', level=1)+'\n'
-        sRST += bugRST
-        fileRST.write(sRST+'\n')
-        
-        fileWrite.write('%end of file\n')
-    finally:
-        fileWrite.close()
-        fileRST.close()
-
-
-
-
-
-
-
+    markdownFile = os.path.abspath(os.path.join('..', '..', 'docs', 'generated',
+                                                trackerFile+'.md'))
+    os.makedirs(os.path.dirname(markdownFile), exist_ok=True)
+    with io.open(markdownFile, 'w', encoding='utf-8', newline='\n') as file:
+        file.write(text)
 
 #%%******************************************************************************************************
 #%%******************************************************************************************************
@@ -1000,7 +873,7 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
 
     UpdateDateAndVersion(updateVersion=False) #do not change version files!
     ConvertToHTML() #update html version of issue tracker
-    ConvertToLatex() #update latex issues in docu (only contains resolved issues in version and bugs)
+    ConvertToMarkdown() #update latex issues in docu (only contains resolved issues in version and bugs)
 
     #report the number that was actually assigned, and return it: it is needed for the commit
     #message and the documentation, and reconstructing it by hand afterwards gets it wrong
@@ -1049,7 +922,7 @@ def ModifyDictIssue(issueDict): #raise a new issue into list (append to end of l
     fileWrite.close()
 
     ConvertToHTML() #update html version of issue tracker
-    ConvertToLatex() #update html version of issue tracker
+    ConvertToMarkdown() #update html version of issue tracker
 
 #%%******************************************************************************************************
 #use this to resolve an issue
@@ -1076,7 +949,7 @@ def ChangeIssue(issueNumber, key, value): #raise a new issue into list (append t
     
     UpdateDateAndVersion()
     ConvertToHTML() #update html version of issue tracker
-    ConvertToLatex() #update html version of issue tracker
+    ConvertToMarkdown() #update html version of issue tracker
 
 #%%******************************************************************************************************
 #use this to resolve an issue
@@ -1104,7 +977,7 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
 
     UpdateDateAndVersion()
     ConvertToHTML() #update html version of issue tracker
-    ConvertToLatex() #update html version of issue tracker
+    ConvertToMarkdown() #update html version of issue tracker
 
     return issueNumber
 
@@ -1141,7 +1014,7 @@ def AbandonIssue(issueNumber, reason, author='JG'):
 
     UpdateDateAndVersion()
     ConvertToHTML()
-    ConvertToLatex()
+    ConvertToMarkdown()
 
     return issueNumber
 
