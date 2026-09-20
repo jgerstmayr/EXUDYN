@@ -17,6 +17,8 @@ Exudyn documentation
    docs/manual/introduction
    docs/manual/theory
    docs/manual/gettingStarted
+   docs/manual/commandLine
+   docs/manual/resultsMonitor
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::

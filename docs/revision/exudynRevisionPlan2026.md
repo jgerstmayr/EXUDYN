@@ -1152,7 +1152,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     hand. One prefix in `generatorPaths.py` now, and 368 documentation files repaired.
 
 <a id="r7-7"></a>
-**R7.7** *(phase R7; after R7.1.5, which it is written in)* **Document the results monitor and the
+**R7.7** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r7-7) *(phase R7; after R7.1.5)*
+    **Document the results monitor and the
     package command line** (#2559). Both changed under the documentation's feet in R6.9 and R8.8.
 
     - **The monitor.** `docs/theDoc/theDoc.tex` still says *"copy `resultsLoader.py` to your

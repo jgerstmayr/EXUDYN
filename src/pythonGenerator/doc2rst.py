@@ -62,6 +62,8 @@ convertedChapters=[
               'docs/manual/introduction',
               'docs/manual/theory',
               'docs/manual/gettingStarted',
+              'docs/manual/commandLine',    #step R7.7 (#2559)
+              'docs/manual/resultsMonitor', #step R7.7 (#2559); carries the sec:resultsMonitor label
             ]
 
 undefLabelList = [

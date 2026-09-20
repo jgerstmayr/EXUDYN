@@ -10,6 +10,10 @@ unexpected crash as in early days of scientific codes.
 For basic information on exception handling, see also the according section on
 Exceptions and Error Messages. In the following, typical error messages are listed.
 
+Before asking anywhere, run `python -m exudyn info`: it prints the version, the location of the
+installed package, which compiled module is loaded and which optional packages are present, which
+is what most answers need to start from, see {ref}`sec-commandline`.
+
  **Python import errors**:
 
 - Sometimes the Exudyn module cannot be loaded into Python. Typical **error messages if Python versions are not compatible** are: \ Typical **error messages if 32/64 bits versions are mixed**:\ **There are several reasons and workarounds**:

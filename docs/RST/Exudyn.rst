@@ -40,7 +40,7 @@ Exudyn
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
 
-+  Exudyn version = 1.11.212.dev1 (McLaughlin)Changes can be tracked in the :ref:`Issue tracker <sec-issuetracker>` 
++  Exudyn version = 1.11.213.dev1 (McLaughlin)Changes can be tracked in the :ref:`Issue tracker <sec-issuetracker>` 
 
 For searching on Read the Docs (especially with the search preview), add \* or ~1 / ~2 / ... to your search to search more general, e.g., FEMinter\* to search for FEMinterface, or objetfrf~3 to find ObjectFFRF. Your search preview usually finds less results than the search when pressing Enter. See also `Read the Docs documentation <https://docs.readthedocs.io/en/stable/server-side-search/syntax.html#special-queries>`_ 
 

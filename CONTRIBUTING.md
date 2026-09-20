@@ -4,6 +4,18 @@ Currently, contributing is only possible by directly contacting the authors (e.g
 You can also write an email to reply.exudyn@gmail.com
 
 Due to programming workflows and the very limited ressources for code review, the current repository is not fully open. 
+
+**When you report a problem, start with the output of**
+
+```
+python -m exudyn info
+```
+
+It prints the version, the location of the installed package, which compiled module is loaded,
+the Python version and platform, and which optional packages are present. That is what most
+answers need to start from, and it saves a round of questions.
+
+
 However, it would be opened if sufficient requests exist.
 
 

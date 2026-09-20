@@ -502,6 +502,10 @@ The real benefit of powerful multi-body simulation emerges only if combined with
 Therefore, Exudyn has been integrated into the Python language, which offers a virtually unlimited number of methods of post-processing, evaluation and optimization.
 In this section, two methods that are directly integrated into Exudyn are revisited.
 
+Both write their results to the file given as `resultsFile` while they run, and such a run is
+usually long. `python -m exudyn monitor --last` shows that file as it grows, see
+{ref}`sec-resultsmonitor`.
+
 (sec-parametervariation)=
 ### Parameter Variation
 

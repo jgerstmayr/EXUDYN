@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.212.dev1, 
+  \item Exudyn version = 1.11.213.dev1, 
   \item last change =  2026-09-20, 
   \item Number of issues = 2562, 
-  \item Number of resolved issues = 2285 (212 in current version), 
+  \item Number of resolved issues = 2286 (213 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.213}:  resolved Issue 2559: {\bf the documentation knows neither the new monitor nor the package command line}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: docs/theDoc/theDoc.tex still describes the results monitor as "copy resultsLoader.py to your directory and call python resultsMonitor.py file.txt", and pastes a -h output that no longer exists; the section is hand-written LaTeX in a file that is otherwise the LaTeX skeleton. And "python -m exudyn" is documented nowhere, because it did not exist. Needed: the monitor section rewritten as Markdown in docs/manual/ - the three ways to call it, the file dialog and --last, the control panel, the settings file, and a pointer to "python -m exudyn monitor --help" rather than a pasted option list that goes stale - and a page for the four commands of the package command line, with "info" named in CONTRIBUTING.md as what to paste into a bug report. See revision2026 step R7.7.}
+    \item {\bf notes: Two pages in docs/manual/: commandLine.md for python -m exudyn (the four commands, info as what to paste into a bug report, and why there is deliberately no console script yet) and resultsMonitor.md, which carries the old sec:resultsMonitor label so references still resolve. Neither pastes an option list - both end at --help, since a pasted list going stale is what this step repairs: theDoc.tex still described copying resultsLoader.py and printed the options of a script that no longer exists, and those 30 lines are removed. The chapters that are already Markdown got the cross-references a reader needs: gettingStarted (demo and info as the check that needs no file), gettingStartedFAQ (run info before asking) and solver.md at parameter variation and optimization, which write the resultsFile the monitor shows. CONTRIBUTING.md asks for the info block.}
+    \item   date resolved: {\bf 2026-09-20 14:12},
+date raised: 2026-09-20 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.212}:  resolved Issue 2561: {\bf test\_exceptions.py relied on another test file importing the MainSystem extensions}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

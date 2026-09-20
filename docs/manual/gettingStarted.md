@@ -130,6 +130,9 @@ For specific open issues, see `trackerlog.html` -- a document only intended for 
 
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.
 
+The shortest check needs no file at all: `python -m exudyn demo` runs a built-in model, and
+`python -m exudyn info` prints what is installed and where, see {ref}`sec-commandline`.
+
 In order to start, run the Python interpreter Spyder (or any preferred Python environment).
 In order to test the following example, which creates a {ref}`mbs <mbs>`, adds a node, an object, a marker and a load and simulates everything with default values,
 

@@ -10642,3 +10642,32 @@ the LaTeX skeleton — it holds the section headers that wrap the generated chap
 one hand-written section, so R7.1.6 and R7.1.7 must not delete it without moving them.
 
 ---
+
+<a id="r7-7"></a>
+### R7.7 — the monitor and the command line, documented
+
+**DONE 2026-09-20** (#2559). Two pages in `docs/manual/`, both in the user manual:
+`commandLine.md` (`python -m exudyn`: the four commands, `info` as the thing to paste into a
+bug report, and why it is deliberately not on the `PATH` yet) and `resultsMonitor.md`, which
+carries the old `sec:resultsMonitor` label so that every reference to it still resolves.
+
+**Neither page pastes an option list.** Both end at `--help`, because the thing being repaired
+here is a pasted option list that went stale: `theDoc.tex` still told the reader to *"copy
+`resultsLoader.py` to your desired/current directory"* and printed the options of a script that
+no longer exists. Those 30 lines are gone, with a comment in their place saying where the
+section went.
+
+#### The converted chapters, too
+
+The maintainer asked not to forget the chapters that are already Markdown. Checked: none of
+them mentioned the monitor <<D>> the old text lived only in `theDoc.tex`, which was never part of
+the HTML <<D>> but three of them are where a reader would want to know:
+
+- `gettingStarted.md`: `python -m exudyn demo` and `info` as the check that needs no file;
+- `gettingStartedFAQ.md`: run `info` **before asking anywhere**;
+- `solver.md`, at parameter variation and optimization: those write a `resultsFile` while they
+  run, and that is exactly what the monitor is for.
+
+`CONTRIBUTING.md` asks for the `info` block as the first thing in a problem report.
+
+---

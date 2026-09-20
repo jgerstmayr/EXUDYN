@@ -408,35 +408,9 @@ Furthermore, angles are generally provided in radian ($2\pi$ equals 360$^o$) and
 Functions have been implemented, if not otherwise mentioned, by Johannes Gerstmayr.
 
 
-\mysubsectionlabel{Utility: ResultsMonitor}{sec:resultsMonitor}
-The results monitor is a special tool, which allows to monitor results during simulation.
-This is intended, e.g., to show results for long-term simulations or to visualize results for teaching.
-The tool can visualize time dependent data (e.g., from sensors or solution files) or data from optimization.
-The tool automatically detects the type of file and visualizes all given columns (default) or selected 
-columns of the file.
-
-For running the results monitor, start a terminal (linux) or an Anaconda prompt (windows). 
-Either you copy the \texttt{resultsLoader.py}, located in the \texttt{python/exudyn} subfolder of the repository, to your desired/current directory or you call it from a relative path from your current directory.
-%Just run the tool, if \codeName\ is installed, by typing \texttt{python resultsMonitor.py file.txt} to continuously visualize the results in \texttt{file.txt}.
-Usage is described by typing \texttt{python resultsMonitor.py -h}, as given in the following listing:
-\plainlststyle
-{\ttfamily \footnotesize
-\begin{lstlisting}[breaklines=true]
-usage for resultsLoader:
-  python resultsLoader.py file.txt
-options:
-  -xcols i,j,..: comma-separated columns (NO SPACES!) to be plotted on x-axis
-  -ycols i,j,..: comma-separated columns (NO SPACES!) to be plotted on y-axis
-  -logx: use log scale for x-axis
-  -logy: use log scale for y-axis
-  -sizex float: float = x-size of one subplot in inches (default=5)
-  -sizey float: float = y-size of one subplot in inches (default=5)
-  -update float: float = update period in seconds
-  -color char: char = line color code according to pyplot, default=b (blue)
-  -style char: char = line symbol according to pyplot, default="-"
-example: (to be called from windows Anaconda prompt or in linux terminal in the directory where file.txt lies)
-  python resultsMonitor.py file.txt -logy -xcols 0,1 -ycols 2,3 -update 0.2
-\end{lstlisting} }
+%the ResultsMonitor section moved to docs/manual/resultsMonitor.md in revision2026 step R7.7
+%(#2559): it described copying resultsLoader.py and pasted a -h output of a script that no
+%longer exists. The Markdown page carries the sec:resultsMonitor label.
 \pythonstyle
 \iftoggle{compileAll}
 {

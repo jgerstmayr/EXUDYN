@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.212.dev1, 
++  Exudyn version = 1.11.213.dev1, 
 +  last change =  2026-09-20, 
 +  Number of issues = 2562, 
-+  Number of resolved issues = 2285 (212 in current version), 
++  Number of resolved issues = 2286 (213 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.213: resolved Issue 2559: the documentation knows neither the new monitor nor the package command line (docu)
+    - issue author: Claude-JG
+    - description:  docs/theDoc/theDoc.tex still describes the results monitor as "copy resultsLoader.py to your directory and call python resultsMonitor.py file.txt", and pastes a -h output that no longer exists; the section is hand-written LaTeX in a file that is otherwise the LaTeX skeleton. And "python -m exudyn" is documented nowhere, because it did not exist. Needed: the monitor section rewritten as Markdown in docs/manual/ - the three ways to call it, the file dialog and --last, the control panel, the settings file, and a pointer to "python -m exudyn monitor --help" rather than a pasted option list that goes stale - and a page for the four commands of the package command line, with "info" named in CONTRIBUTING.md as what to paste into a bug report. See revision2026 step R7.7.
+    - **notes:** Two pages in docs/manual/: commandLine.md for python -m exudyn (the four commands, info as what to paste into a bug report, and why there is deliberately no console script yet) and resultsMonitor.md, which carries the old sec:resultsMonitor label so references still resolve. Neither pastes an option list - both end at --help, since a pasted list going stale is what this step repairs: theDoc.tex still described copying resultsLoader.py and printed the options of a script that no longer exists, and those 30 lines are removed. The chapters that are already Markdown got the cross-references a reader needs: gettingStarted (demo and info as the check that needs no file), gettingStartedFAQ (run info before asking) and solver.md at parameter variation and optimization, which write the resultsFile the monitor shows. CONTRIBUTING.md asks for the info block.
+    - date resolved: **2026-09-20 14:12**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
  * Version 1.11.212: resolved Issue 2561: test_exceptions.py relied on another test file importing the MainSystem extensions (testing)
     - issue author: Claude-JG
     - description:  The solver-file tests of step R6.8 call mbs.SolveDynamic, which exists only once exudyn.utilities (or exudyn.misc.mainSystemExtensions) has been imported - and test_exceptions.py imported neither. Under pytest -n 8 it passed as long as the worker that ran it had already run a test that does import them; adding one test model changed the distribution and three tests failed with FileNotFoundError, because the AttributeError was swallowed by the except BaseException of the helper. Fixed by importing exudyn.utilities in the test file. The wider question stays open: a test file that depends on an import made elsewhere is a test that passes by luck, and the helper that catches BaseException hides which error it was.
@@ -7929,11 +7935,6 @@ Open issues
  * :textred:`open issue 2560:` a module deleted from the package is still shipped in the wheel
     - issue author: Claude-JG
     - description:  After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/__init__.py still did "from .mainSystemExtensions import ..." and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.\* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.
-    - date raised: 2026-09-20 
-
- * **open issue 2559:** the documentation knows neither the new monitor nor the package command line
-    - issue author: Claude-JG
-    - description:  docs/theDoc/theDoc.tex still describes the results monitor as "copy resultsLoader.py to your directory and call python resultsMonitor.py file.txt", and pastes a -h output that no longer exists; the section is hand-written LaTeX in a file that is otherwise the LaTeX skeleton. And "python -m exudyn" is documented nowhere, because it did not exist. Needed: the monitor section rewritten as Markdown in docs/manual/ - the three ways to call it, the file dialog and --last, the control panel, the settings file, and a pointer to "python -m exudyn monitor --help" rather than a pasted option list that goes stale - and a page for the four commands of the package command line, with "info" named in CONTRIBUTING.md as what to paste into a bug report. See revision2026 step R7.7.
     - date raised: 2026-09-20 
 
  * **open issue 2556:** the src/Objects folder holds nodes, markers, loads, sensors and system code
