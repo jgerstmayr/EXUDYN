@@ -9,6 +9,7 @@ This chapter lists the basic interface functions which can be used to set up a E
 This chapter lists the basic interface functions which can be used to set up
 a Exudyn model in Python. Note that some functions or classes will be used in examples, which are explained in detail later on.
 In the following, some basic steps and concepts for usage are shown, references to all functions are placed hereafter:
+
 To import the module, just include the Exudyn module in Python:
 
 ```python
@@ -22,6 +23,7 @@ from exudyn.itemInterface import *
 ```
 
 Note that including `exudyn.utilities` will cover `itemInterface`. Also note that `from ... import *` is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.
+
 The general hub to multibody dynamics models is provided by the classes `SystemContainer` and `MainSystem`, except for some very basic system functionality (which is inside the Exudyn module).
 
 You can create a new `SystemContainer`, which is a class that is initialized by assigning a system container to a variable, usually denoted as `SC`:
@@ -31,6 +33,7 @@ SC = exu.SystemContainer()
 ```
 
 Note that creating a second `exu.SystemContainer()` will be independent of `SC` and therefore makes no sense if you do not intend to work with two different containers.
+
 To add a MainSystem to system container `SC` and store as variable `mbs`, write:
 
 ```python
@@ -81,7 +84,7 @@ SC.Reset()
 If you run a parameter variation (check `Examples/parameterVariationExample.py`), you may reset or delete the created `MainSystem` `mbs` and the `SystemContainer` `SC` before creating new instances in order to avoid memory growth.
 
 (sec-itemindex)=
-## Item index
+### Item index
 
 Many functions will work with node numbers (`NodeIndex`), object numbers (`ObjectIndex`),marker numbers (`MarkerIndex`) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.
 
@@ -90,13 +93,13 @@ For example, the command `mbs.AddNode(...)` returns a `NodeIndex`. For these ind
 - You can create any item index, e.g., using `ni = NodeIndex(42)` or `oi = ObjectIndex(42)`
 - The benefit of these indices comes as they may not be mixed up, e.g., using an object index instead of a node index.
 - You can convert any item index, e.g., NodeIndex `ni` into an integer number using `int(ni)` of `ni.GetIndex()`
-- Still, you can use integers as initialization for item numbers, e.g.:\\`mbs.AddObject(MassPoint(nodeNumber=13, ...))`\\However, it must be a pure integer type.
+- Still, you can use integers as initialization for item numbers, e.g.:   `mbs.AddObject(MassPoint(nodeNumber=13, ...))`   However, it must be a pure integer type.
 - You can make integer calculations with such indices, e.g., `oi = 2*ObjectIndex(42)+1` restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a `int` type andoperating on mixed indices is not checked (but may raise exceptions in future).
 - You can also print item indices, e.g., `print(ni)` as it converts to string by default.
 - If you are unsure about the type of an index, use `ni.GetTypeString()` to show the index type.
 
 (sec-generalpythoninterface-copyref)=
-## Copying and referencing C++ objects
+### Copying and referencing C++ objects
 
 As a key concept to working with Exudyn , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
@@ -133,9 +136,10 @@ del SC                             #references to SystemContainer deleted
 ```
 
 (sec-cinterface-exceptions)=
-## Exceptions and Error Messages
+### Exceptions and Error Messages
 
 There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called `ValueError`, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.
+
 As an example, a type conversion error is raised when providing wrong argument types, e.g., try `exu.config.Version('abc')`:
 
 ```
@@ -151,6 +155,7 @@ Invoked with: 'abc'
 ```
 
 Note that your particular error message may be different.
+
 Another error results from internal type and range checking, saying User ERROR, as it is due to a wrong input of the user. For this, we try
 
 ```python
@@ -176,4 +181,5 @@ RuntimeError: Exudyn: parsing of Python file terminated due to Python (user) err
 ```
 
 Finally, there may be system errors. They may be caused due to previous wrong input, but if there is no reason seen, it may be appropriate to report this error on [github.com/jgerstmayr/EXUDYN/](https://github.com/jgerstmayr/EXUDYN) .
+
 Be careful in reading and interpreting such error messages. You should **read them from top to bottom**, as the cause may be in the beginning. Often files and line numbers of errors are provided (e.g., if you have a longer script). In the ultimate case, try to comment parts of your code or deactivate items to see where the error comes from. See also section on Trouble shooting and FAQ.

@@ -44,6 +44,7 @@ BUILT_IN = set("""
     color textcolor colorbox
     substack choose binom over atop stackrel overset underset
     mbox prime rm bf it sf tt backslash not
+    lVert rVert mathrel
     """.split())
 
 
@@ -71,7 +72,10 @@ def main():
     args = parser.parse_args()
 
     declared = DeclaredMacros('conf.py')
-    used = UsedMacros(sorted(glob.glob('docs/manual/*.md')))
+    #the hand-written chapters and, since revision2026 step R7.1.6, the emitter output: the item
+    #reference manual carries most of the document's math
+    used = UsedMacros(sorted(glob.glob('docs/manual/*.md')
+                             + glob.glob('docs/generated/**/*.md', recursive=True)))
     missing = {name: files for (name, files) in used.items()
                if name not in declared and name not in BUILT_IN}
 

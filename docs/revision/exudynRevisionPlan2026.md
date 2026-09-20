@@ -1116,13 +1116,12 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 <a id="r7-1-6"></a>
 **R7.1.6** **IN PROGRESS** (#2565) → [log](exudynRevisionLog2026.md#r7-1-6)
-    *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** **Done: the structures, the utility
-    functions and the Python-C++ command interface** (2026-09-20) — `interfaces.tex`,
-    `pythonUtilitiesDescription.tex`, `manual_interfaces.tex`, `MainSystemExt.tex`,
-    `MainSystemCreateExt.tex` and their RST pages are replaced by `docs/generated/structures/`
-    (7 pages), `docs/generated/pythonUtilities/` (31) and `docs/generated/cInterface/` (10).
-    Remaining: the items (`itemDefinition.tex`, 14,053 lines) and the issue tracker's own writer
-    — which is where #2545 ends. The larger half by
+    *(sub-step of R7.1, after R7.1.5)* **The emitters write Markdown.** **Done: every docs emitter but the issue
+    tracker's** (2026-09-20) — `interfaces.tex`, `pythonUtilitiesDescription.tex`,
+    `manual_interfaces.tex`, `MainSystemExt.tex`, `MainSystemCreateExt.tex`, `itemDefinition.tex`
+    and all of their RST pages are replaced by `docs/generated/`: `structures/` (7 pages),
+    `pythonUtilities/` (31), `cInterface/` (10) and `items/` (109). Remaining: the issue tracker's
+    own writer — which is where #2545 ends. The larger half by
     volume — 8 generated `.tex` files, ~43,000 lines — and the smaller half by risk, because
     it is emitter code and not prose. `itemDocsEmitter`, `structureDocsEmitter`,
     `utilityDocsEmitter`, `mainSystemExtensionDocsEmitter` and the tracker's own writer emit `.md`

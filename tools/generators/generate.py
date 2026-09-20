@@ -58,7 +58,9 @@ stages = [
           writesOnlyWhenChanged=True),
     Stage('tools/generators/miniExampleEmitter.py', ['definitions'], ['python/MiniExamples']),
     Stage('tools/generators/itemDocsEmitter.py', ['definitions'],
-          ['docs/RST/items', 'docs/theDoc/itemDefinition.tex', 'docs/RST/confHelperItems.py']),
+          #Markdown since revision2026 step R7.1.6; confHelperItems.py is not documentation but
+          #data for conf.py, which reads it from docs/RST/
+          ['docs/generated/items', 'docs/RST/confHelperItems.py']),
     Stage('tools/generators/structureHeaderEmitter.py', ['definitions'],
           [A + 'SimulationSettings.h', A + 'VisualizationSettings.h', A + 'CSolverStructures.h',
            A + 'MainSolver.h', A + 'PyStructuralElementsDataStructures.h', A + 'BeamSectionGeometry.h',

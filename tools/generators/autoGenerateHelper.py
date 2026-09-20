@@ -1045,7 +1045,12 @@ class PyLatexRST:
 
         self.sLatex += text
         self.sRST += LatexString2RST(text)
-        self.sMarkdown += LatexText2Markdown(text) + '\n'
+        #a paragraph of its own: two AddDocu calls in a row are two paragraphs, not one
+        markdownText = LatexText2Markdown(text)
+        if markdownText != '':
+            if self.sMarkdown != '' and not self.sMarkdown.endswith('\n\n'):
+                self.sMarkdown += '\n' if self.sMarkdown.endswith('\n') else '\n\n'
+            self.sMarkdown += markdownText + '\n'
 
     #one entry of what LaTeX draws as a table row and RST as a list item: a function, a data
     #member or an operator of a class, in Markdown (revision2026 step R7.1.6)
@@ -1167,6 +1172,8 @@ class PyLatexRST:
         self.sLatex += sTemp
 
         self.sRST += '\n'
+        self.sMarkdown += ('\n| Name | type | size | default value | description |\n'
+                           + '|---|---|---|---|---|\n')
 
     #finish latex table for class bindings 
     def DefLatexFinishTable(self):
@@ -1568,7 +1575,19 @@ class PyLatexRST:
         self.sLatex += ' '*4 + sSize + ' & '
         self.sLatex += ' '*4 + sDefaultVal + ' & '
         self.sLatex += ' '*4 + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
-        
+
+        #Markdown (revision2026 step R7.1.6): a real table, where LaTeX has a longtable and RST a
+        #list block; \tabnewline is a LaTeX line break for column widths and means nothing here
+        def MarkdownTableCell(content):
+            return MarkdownCell(LatexText2Markdown(content.replace('\\tabnewline', ' ')))
+
+        nameCell = '**' + pythonName + '**'
+        if sSymbol.strip() != '':
+            nameCell += ' $' + sSymbol.strip().strip('$') + '$'
+        self.sMarkdown += ('| ' + nameCell + ' | ' + MarkdownTableCell(typeName) + ' | '
+                           + MarkdownTableCell(sSize) + ' | ' + MarkdownTableCell(sDefaultVal)
+                           + ' | ' + MarkdownTableCell(description) + ' |\n')
+
         #RST:
         s = '* | **' + pythonName + '** ['
         
@@ -1774,32 +1793,78 @@ def ExtractExamplesWithKeyword(keyword, dirPath, checkPreString=True):
 #generate latex string containing a list of file references (and hyperref links), 
 #based on a search through Examples and TestModels
 #if latex is false, formatting is clean to be used in RST
-def KeywordExamplesMarkdown(itemType, itemName, itemShortName='', maximumFiles=8):
-    """The examples and test models that use this item or function, as a Markdown line of links
-    (revision2026 step R7.1.6). The LaTeX and RST twin above does the same for the formats that
-    go away in R7.1.7; both read the same files through ExtractExamplesWithKeyword."""
-    keywords = ([itemName + '('] if itemType == 'UtilityFunction'
-                else ['mbs.Add' + itemType + '(' + itemName + '('])
+#the keywords under which the examples of an item are searched; shared by the LaTeX/RST
+#writer below and by KeywordExamplesMarkdown, so that both find the same files (revision2026
+#step R7.1.6). A Create* function creates the item without naming it, so it is searched too.
+createFunctionOfItem = {
+    'ObjectFFRF': 'AddObjectFFRF(',
+    'ObjectFFRFreducedOrder': 'AddObjectFFRFreducedOrderWithUserFunctions(',
+    'ObjectRigidBody': 'CreateRigidBody(',
+    'NodeRigidBodyEP': 'CreateRigidBody(',
+    'ObjectConnectorSpringDamper': 'CreateSpringDamper(',
+    'ObjectConnectorCartesianSpringDamper': 'CreateCartesianSpringDamper(',
+    'ObjectConnectorRigidBodySpringDamper': 'CreateRigidBodySpringDamper(',
+    'ObjectConnectorTorsionalSpringDamper': 'CreateTorsionalSpringDamper(',
+    'ObjectJointRevoluteZ': 'CreateRevoluteJoint(',
+    'ObjectPrismaticJointX': 'CreatePrismaticJoint(',
+    'ObjectJointSpherical': 'CreateSphericalJoint(',
+    'ObjectJointGeneric': 'CreateGenericJoint(',
+    'ObjectConnectorDistance': 'CreateDistanceConstraint(',
+    'ObjectConnectorCoordinate': 'CreateCoordinateConstraint(',
+    'ObjectJointRollingDisc': 'CreateRollingDisc(',
+    'ObjectConnectorRollingDiscPenalty': 'CreateRollingDiscPenalty(',
+    #mbs. avoids the ambiguity with robot.CreateKinematicTree
+    'ObjectKinematicTree': 'mbs.CreateKinematicTree(',
+    'LoadForceVector': 'CreateForce(',
+    'LoadTorqueVector': 'CreateTorque(',
+    }
+
+
+def ExampleKeywords(itemType, itemName, itemShortName=''):
+    """what to search the Examples and TestModels folders for"""
+    if itemType == 'UtilityFunction':
+        return [itemName + '(']
+
+    keywords = ['mbs.Add' + itemType + '(' + itemName + '(']
+    if itemName in createFunctionOfItem:
+        keywords += [createFunctionOfItem[itemName]]
     if itemShortName != '' and itemName != itemShortName:
         keywords += ['mbs.Add' + itemType + '(' + itemShortName + '(']
+    return keywords
+
+
+def KeywordExamplesMarkdown(itemType, itemName, itemShortName=''):
+    """The examples and test models that use this item or function, as a Markdown line of links
+    (revision2026 step R7.1.6). The LaTeX and RST twin below does the same for the formats that
+    go away in R7.1.7; both search the same keywords and stop after the same number of files -
+    an item that appears in fifty examples would otherwise push its own description off the
+    page."""
+    keywords = ExampleKeywords(itemType, itemName, itemShortName)
+    maxExamples = 5 if itemType == 'UtilityFunction' else 12
 
     links = []
-    for folder in ['Examples', 'TestModels']:
+    truncated = False
+    for (folderIndex, folder) in enumerate(['Examples', 'TestModels']):
         found = []
         for keyword in keywords:
             for name in ExtractExamplesWithKeyword(keyword=keyword,
                                                    dirPath=paths.pythonDir + folder):
                 if name not in found:
                     found += [name]
+
         abbreviation = ' (Ex)' if folder == 'Examples' else ' (TM)'
-        for name in found[:maximumFiles]:
+        for name in found:
+            #the cap runs over both folders, as in the LaTeX and RST writer
+            if len(links) >= maxExamples + 3*folderIndex:
+                truncated = True
+                break
             links += ['[`' + name + '`](' + paths.githubSourceURL + folder + '/' + name + ')'
                       + abbreviation]
 
     if len(links) == 0:
         return ''
     return ('\nRelevant Examples (Ex) and TestModels (TM) with weblink to github: '
-            + ', '.join(links) + '\n\n')
+            + ', '.join(links) + (', ...' if truncated else '') + '\n\n')
 
 
 def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex = True):
@@ -1815,70 +1880,16 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
     testModelString = ' (TestModels/)'
     examplesString = ' (Examples/)'
 
-    if itemType != 'UtilityFunction':
-        keywords = ['mbs.Add'+itemType+'('+itemName+'(']
-        if itemName == 'ObjectFFRF':
-            keywords += ['AddObjectFFRF('] #additional keyword
-        if itemName == 'ObjectFFRFreducedOrder':
-            keywords += ['AddObjectFFRFreducedOrderWithUserFunctions('] #additional keyword
-
-        #too often:
-        # if itemName == 'ObjectGround':
-            # keywords += ['CreateGround('] #additional keyword
-        # if itemName == 'ObjectMassPoint':
-            # keywords += ['CreateMassPoint('] #additional keyword
-
-        if itemName == 'ObjectRigidBody' or itemName == 'NodeRigidBodyEP':
-            keywords += ['CreateRigidBody('] #additional keyword
-
-        if itemName == 'ObjectConnectorSpringDamper':
-            keywords += ['CreateSpringDamper('] #additional keyword
-        if itemName == 'ObjectConnectorCartesianSpringDamper':
-            keywords += ['CreateCartesianSpringDamper('] #additional keyword
-        if itemName == 'ObjectConnectorRigidBodySpringDamper':
-            keywords += ['CreateRigidBodySpringDamper('] #additional keyword
-        if itemName == 'ObjectConnectorTorsionalSpringDamper':
-            keywords += ['CreateTorsionalSpringDamper('] #additional keyword
-        if itemName == 'ObjectJointRevoluteZ':
-            keywords += ['CreateRevoluteJoint('] #additional keyword
-        if itemName == 'ObjectPrismaticJointX':
-            keywords += ['CreatePrismaticJoint('] #additional keyword
-        if itemName == 'ObjectJointSpherical':
-            keywords += ['CreateSphericalJoint('] #additional keyword
-        if itemName == 'ObjectJointGeneric':
-            keywords += ['CreateGenericJoint('] #additional keyword
-        if itemName == 'ObjectConnectorDistance':
-            keywords += ['CreateDistanceConstraint('] #additional keyword
-        if itemName == 'ObjectConnectorCoordinate':
-            keywords += ['CreateCoordinateConstraint('] #additional keyword
-        if itemName == 'ObjectJointRollingDisc':
-            keywords += ['CreateRollingDisc('] #additional keyword
-        if itemName == 'ObjectConnectorRollingDiscPenalty':
-            keywords += ['CreateRollingDiscPenalty('] #additional keyword
-
-        if itemName == 'ObjectKinematicTree':
-            keywords += ['mbs.CreateKinematicTree('] #avoid ambiguation with robot.CreateKinematicTree
-
-        if itemName == 'LoadForceVector':
-            keywords += ['CreateForce('] #additional keyword
-        if itemName == 'LoadTorqueVector':
-            keywords += ['CreateTorque('] #additional keyword
-
-
-
-    else:
+    keywords = ExampleKeywords(itemType, itemName, itemShortName)
+    if itemType == 'UtilityFunction':
         testModelString = ' (TM)'
         examplesString = ' (Ex)'
         ufMode = True
-        keywords = [itemName + '(']
-        sepItem1 = ', \n'     #for items, put example in separate line, for utility functions, use one liner
-        sepItem2 = ''   #for items, put example in separate line, for utility functions, use one liner
+        sepItem1 = ', \n'     #utility functions are written as one line
+        sepItem2 = ''
         maxExamples = 5   #only 5+3 examples for utility functions
-        initString = ' \\item \\footnotesize '*useLatex2    #smaller font for utility function
+        initString = ' \\item \\footnotesize '*useLatex2 #smaller font
 
-
-    if itemShortName != '' and itemName != itemShortName:
-        keywords += ['mbs.Add'+itemType+'('+itemShortName+'(']
 
     processFolders = ['Examples','TestModels']
     folderAbrv = [examplesString, testModelString]

@@ -25,7 +25,7 @@ Exudyn documentation
    :caption: Reference Manual
 
    docs/generated/pythonUtilities/utilitiesIndex
-   docs/RST/items/itemsIndex.rst
+   docs/generated/items/itemsIndex
    docs/generated/structures/structuresIndex
 
 .. toctree::

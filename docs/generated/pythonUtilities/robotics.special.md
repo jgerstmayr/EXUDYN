@@ -43,7 +43,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - **input**: robot: robot class JointStiffness: joint stiffness matrix HT: actual pose as homogeneous transformaton matrix mode: rotational or translational part of the movement singularWeight: Weighting of singular configurations where the value would be infinity,default value=1000
 - **output**: stiffness manipulability measure as scalar value, defined as minimum Eigenvalaue of the Cartesian stiffness matrix Cartesian stiffness matrix
 - **author**: Martin Sereinig
-- **status**: this function is {\bf currently under development} and under testing!
+- **status**: this function is **currently under development** and under testing!
 
 
 (sec-special-jointjacobian)=
@@ -80,7 +80,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - **output**: dynamic manipulability measure as scalar value, defined as minimum Eigenvalaue of the dynamic manipulability matrix N dynamic manipulability matrix
 - **author**: Martin Sereinig
 - **notes**: acceleration dependent manipulability definded by Chiacchio, see [Chiacchio1998], eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )
-- **status**: this function is {\bf currently under development} and under testing!
+- **status**: this function is **currently under development** and under testing!
 
 
 (sec-special-calculateallmeasures)=
@@ -92,4 +92,4 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - **input**: robot: robot class robotDic: robot dictionary q: joint position vector mode: trans or rot, for used parts of the manipulator Jacobi Matrix Tmax: maximum joint torques mode: rotational or translational part of the movement flag: flag vector to swich individual measure on and of [flagmv,flagmf,flagmst,flagma] = [1,1,1,1]
 - **output**: [mv,mf,mst,mstM,ma,maM]
 - **author**: Martin Sereinig
-- **status**: this function is {\bf currently under development} and under testing!
+- **status**: this function is **currently under development** and under testing!

@@ -336,6 +336,9 @@ mathjax3_config = {
             'SON': r'{$2^\mathrm{nd}$ order differential equations}',
             'FON': r'{$1^\mathrm{st}$ order differential equations}',
             'AEN': r'{algebraic equations}',
+            'Bm': r'{\mathbf{B}}',
+            'Cm': r'{\mathbf{C}}',
+            'Fm': r'{\mathbf{F}}',
             'SYSN': r'{system equations}',
 
 #configurations subscripts
@@ -380,8 +383,23 @@ mathjax3_config = {
 #solver:
             'acc': r'{\ddot \mathbf{q}}',
             'GA': r'{G\alpha}',
+            'Hm': r'{\mathbf{H}}',
+            'ImTwo': r'{\mathbf{I}_{2 \times 2}}',
+            'Lm': r'{\mathbf{L}}',
+            'Qm': r'{\mathbf{Q}}',
+            'Vm': r'{\mathbf{V}}',
+            'Wm': r'{\mathbf{W}}',
+            'Xm': r'{\mathbf{X}}',
+            'Ym': r'{\mathbf{Y}}',
             'aalg': r'{\mathbf{a}}',
+            'iv': r'{\mathbf{i}}',
+            'jv': r'{\mathbf{j}}',
+            'kv': r'{\mathbf{k}}',
+            'lv': r'{\mathbf{l}}',
+            'mv': r'{\mathbf{m}}',
+            'ov': r'{\mathbf{o}}',
             'vel': r'{\mathbf{v}}',
+            'wv': r'{\mathbf{w}}',
 
             }                       
         }                           

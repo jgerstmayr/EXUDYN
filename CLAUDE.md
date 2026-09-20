@@ -64,8 +64,8 @@ version.txt                               version — an OUTPUT of issueTracker.
    - **Everything under `docs/generated/`** - the emitter output of revision2026 step R7.1.6,
      each file saying so in its first line. This is where the pages of the structures, the Python
      utility functions and the Python-C++ command interface live.
-   - **Three `.tex` files in `docs/theDoc/`** still come from the docs emitters: `itemDefinition`,
-     `abbreviations`, `buildDate`; `trackerlog.tex` and `versionName.txt` come from
+   - **Two `.tex` files in `docs/theDoc/`** still come from the docs emitters: `abbreviations`
+     and `buildDate`; `trackerlog.tex` and `versionName.txt` come from
      `issueTracker.py`. The other `.tex` files in that directory are hand-written chapters.
      **This mixed directory is the dangerous one**, and revision2026 step **R7.1.8** is about
      ending it.

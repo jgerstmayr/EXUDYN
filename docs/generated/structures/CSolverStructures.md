@@ -46,7 +46,6 @@ CSolverTimer has the following items:
 
 
 
-
 (sec-solveriterationdata)=
 ### SolverIterationData
 

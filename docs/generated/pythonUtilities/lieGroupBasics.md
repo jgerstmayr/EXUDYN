@@ -7,7 +7,7 @@ Lie group methods and formulas for Lie group integration.
 
 - **Author**: Stefan Holzinger, Johannes Gerstmayr
 - **Date**: 2020-09-11
-- **References**: \ For details on Lie group methods used here, see the references [Henderson1977; Simo1988; Bruels2011; Sonneville2014; Sonneville2017; Terze2016; Mueller2017]. Lie group methods for rotation vector are described in Holzinger and Gerstmayr [HolzingerGerstmayr2020; Holzinger2021].
+- **References**: For details on Lie group methods used here, see the references [Henderson1977; Simo1988; Bruels2011; Sonneville2014; Sonneville2017; Terze2016; Mueller2017]. Lie group methods for rotation vector are described in Holzinger and Gerstmayr [HolzingerGerstmayr2020; Holzinger2021].
 
 (sec-liegroupbasics-sinc)=
 ## Function: Sinc

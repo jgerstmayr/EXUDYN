@@ -82,7 +82,7 @@ The class **MatrixContainer** has the following **functions and structures**:
 
 
 (sec-graphicsmateriallist)=
-## GraphicsMaterialList
+### GraphicsMaterialList
 
 The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials. Materials can be accessed via the variable materials in renderer of SystemContainer.
 
@@ -140,9 +140,11 @@ The class **GraphicsMaterialList** has the following **functions and structures*
 
 
 
-## Vector3DList
+### Vector3DList
 
-The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. \ \ Usage:
+The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++.   
+
+Usage:
 
 - Create empty `Vector3DList` with `x = Vector3DList()`
 - Create `Vector3DList` with list of numpy arrays:`x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])`
@@ -164,11 +166,14 @@ The class **Vector3DList** has the following **functions and structures**:
 
 
 
-## Vector2DList
+### Vector2DList
 
-The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++. \ \ Usage: 
+The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++.   
+
+Usage: 
 - Create empty `Vector2DList` with `x = Vector2DList()`
-- Create `Vector2DList` with list of numpy arrays:\\`x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])`
+- Create `Vector2DList` with list of numpy arrays:  
+`x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])`
 - Create `Vector2DList` with list of lists `x = Vector2DList([[1.,2.], [4.,5.]])`
 - Append item: `x.Append([0.,2.])`
 - Convert into list of numpy arrays: `x.GetPythonObject()`
@@ -188,9 +193,11 @@ The class **Vector2DList** has the following **functions and structures**:
 
 
 
-## Vector6DList
+### Vector6DList
 
-The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++. \ \ Usage: 
+The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++.   
+
+Usage: 
 - Create empty `Vector6DList` with `x = Vector6DList()`
 - Convert into list of numpy arrays: `x.GetPythonObject()`
 - similar to Vector3DList !
@@ -209,11 +216,14 @@ The class **Vector6DList** has the following **functions and structures**:
 
 
 
-## Matrix3DList
+### Matrix3DList
 
-The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \ \ Usage: 
+The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++.   
+
+Usage: 
 - Create empty `Matrix3DList` with `x = Matrix3DList()`
-- Create `Matrix3DList` with list of numpy arrays:\\`x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])`
+- Create `Matrix3DList` with list of numpy arrays:  
+`x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])`
 - Create `Matrix3DList` with one matrix `x = Matrix3DList(13.*numpy.eye(3))`
 - Append item: `x.Append(numpy.eye(3))`
 - Convert into list of numpy arrays: `x.GetPythonObject()`
@@ -231,11 +241,14 @@ The class **Matrix3DList** has the following **functions and structures**:
 
 
 
-## Matrix6DList
+### Matrix6DList
 
-The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++. \ \ Usage: 
+The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++.   
+
+Usage: 
 - Create empty `Matrix6DList` with `x = Matrix6DList()`
-- Create `Matrix6DList` with list of numpy arrays:\\`x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])`
+- Create `Matrix6DList` with list of numpy arrays:  
+`x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])`
 - Append item: `x.Append(numpy.eye(6))`
 - Convert into list of numpy arrays: `x.GetPythonObject()`
 - similar to Matrix3DList !

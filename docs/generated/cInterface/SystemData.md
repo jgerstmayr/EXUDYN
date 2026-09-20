@@ -172,7 +172,7 @@ The class **MainSystemData** has the following **functions and structures**:
 
 
 (sec-mbs-systemdata-coordinates)=
-## SystemData: Access coordinates
+### SystemData: Access coordinates
 
 
 
@@ -329,7 +329,7 @@ The class **MainSystemData** has the following **functions and structures** rega
 
 
 (sec-systemdata-objectltg)=
-## SystemData: Get object LTG coordinate mappings
+### SystemData: Get object LTG coordinate mappings
 
 
 

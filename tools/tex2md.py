@@ -273,6 +273,12 @@ def ConvertListings(text):
         if 'language=' in options and 'Python' not in options:
             language = ''                 #a listing that says it is something else
         body = match.group(3).strip(chr(10))
+        #the listings of the item definitions are indented like the Python source they sit in;
+        #that common indentation is not the code's own (revision2026 step R7.1.6)
+        indents = [len(line) - len(line.lstrip()) for line in body.split(chr(10))
+                   if line.strip() != '']
+        if len(indents) != 0 and min(indents) != 0:
+            body = chr(10).join(line[min(indents):] for line in body.split(chr(10)))
         return eol_ + '```' + language + chr(10) + body + chr(10) + '```' + eol_
 
     eol_ = chr(10)
@@ -331,14 +337,34 @@ def ConvertRSTFigures(text):
 
 def ConvertInline(text):
     """the one-argument text macros, and the ones that take none"""
+    #the brace form of bold and italics, which the item definitions use: {\bf name}
+    text = re.sub(r'\{\\bf\s+([^{}]*)\}', lambda m: '**' + m.group(1).strip() + '**', text)
+    text = re.sub(r'\{\\it\s+([^{}]*)\}', lambda m: '*' + m.group(1).strip() + '*', text)
     text = ReplaceCommand(text, 'texttt', 1, lambda a: '`' + a.replace('\\_', '_').replace('\\&', '&') + '`')
     text = ReplaceCommand(text, 'mybold', 1, lambda a: '**' + a.strip() + '**')
     text = ReplaceCommand(text, 'textbf', 1, lambda a: '**' + a.strip() + '**')
     text = ReplaceCommand(text, 'myitalics', 1, lambda a: '*' + a.strip() + '*')
     text = ReplaceCommand(text, 'textit', 1, lambda a: '*' + a.strip() + '*')
     text = ReplaceCommand(text, 'noindent', 0, lambda: '')
+    #the user function blocks of the item definitions; the old RST left these as raw LaTeX
+    text = ReplaceCommand(text, 'userFunctionExample', 1, lambda a: '*Example*:')
+    text = ReplaceCommand(text, 'userFunction', 1,
+                          lambda a: '**Userfunction**: `' + a.strip() + '`')
+    text = ReplaceCommand(text, 'returnValue', 0, lambda: '**return value**')
+    text = ReplaceCommand(text, 'paragraph', 1, lambda a: '**' + a.strip() + '**')
+    text = ReplaceCommand(text, 'mysmall', 0, lambda: '')
+    text = ReplaceCommand(text, 'phantom', 1, lambda a: '')   #LaTeX spacing, nothing in Markdown
+    text = ReplaceCommand(text, 'text', 1, lambda a: a.strip())  #\text outside math is prose
+    #a LaTeX line break in running prose; inside math it is protected, and a table cell collapses
+    #it back to a space
+    text = re.sub(r'\\\\[ \t]*', '  \n', text)
+    #\addExampleImage{X} shows docs/theDoc/figures/X.png next to the item description
+    text = ReplaceCommand(text, 'addExampleImage', 1,
+                          lambda a: '\n\n```{image} ' + ImagePath('docs/theDoc/figures/'
+                                                                 + a.strip() + '.png')
+                                  + '\n:width: 400\n```\n')
     #abbreviations: the target lives in the generated abbreviation page
-    for name in ['hac', 'hacs', 'acf', 'acl', 'acs', 'ac']:
+    for name in ['hac', 'hacs', 'acf', 'acl', 'acs', 'acp', 'ac']:
         #an abbreviation target is a bare label, not a section: {ref} without explicit text
         #cannot find a title for it, and the strict build calls that an error
         text = ReplaceCommand(text, name, 1,
@@ -350,7 +376,7 @@ def ConvertInline(text):
     #\LatexRSTfigure{image}{label}{LaTeX width}{pixel width}{caption}: the two widths are for
     #the two outputs, and only the pixel one survives
     text = ReplaceCommand(text, 'LatexRSTfigure', 5, LatexRSTFigure)
-    for name in ['eqq', 'eqref']:
+    for name in ['eqq', 'eqref', 'eqs']:
         text = ReplaceCommand(text, name, 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'ref', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'fig', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
@@ -402,8 +428,11 @@ def NormalizeHeadings(text):
     under a \\mysection), so this is a walk over the nesting and not a global mapping."""
     result = []
     stack = []                              #the source depths currently open
+    inCode = False                          #a '# comment' of a Python example is not a heading
     for line in text.split('\n'):
-        match = re.match(r'^(#+) (.*)$', line)
+        if line.lstrip().startswith('```'):
+            inCode = not inCode
+        match = None if inCode else re.match(r'^(#+) (.*)$', line)
         if match is None:
             result += [line]
             continue
@@ -433,6 +462,20 @@ def ReportUnknown(text):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def DedentOutsideCode(text):
+    """the .tex sources indent their prose, and that indentation means nothing in Markdown - but
+    inside a fenced block it is the Python code's own (revision2026 step R7.1.6)"""
+    lines = []
+    inCode = False
+    for line in text.split(chr(10)):
+        if line.lstrip().startswith('```'):
+            inCode = not inCode
+            lines += [line.lstrip()]
+            continue
+        lines += [line if inCode else line.lstrip(' ' + chr(9))]
+    return chr(10).join(lines)
+
+
 def ConvertText(text):
     """One piece of running text, not a file: the description of a parameter, a class or a
     function as `definitions/` and the docstrings write it. Used by the documentation emitters
@@ -443,6 +486,10 @@ def ConvertText(text):
     project writes in prose is turned into Markdown."""
     text = StripComments(text)
     text = ResolveRSTSwitches(text)
+    #the item definitions put their figures into the \onlyRST branch, as RST directives
+    text = ConvertRSTFigures(text)
+    #a listing becomes a fenced block first: its content is code and no later pass may touch it
+    text = ConvertListings(text)
     text = ConvertDisplayMath(text)
     (text, pieces) = ProtectMath(text)
     text = ConvertSections(text)
@@ -452,7 +499,7 @@ def ConvertText(text):
     #helpers that exist only to lay out a LaTeX table
     text = re.sub(r'\\tabnewline\s*', '', text)
     text = RestoreMath(text, pieces)
-    text = re.sub(r'(?m)^[ \t]+', '', text)          #no stray indentation from the .tex source
+    text = DedentOutsideCode(text)                   #no stray indentation from the .tex source
     text = re.sub(r'\n{3,}', '\n\n', text)
     return text.strip()
 

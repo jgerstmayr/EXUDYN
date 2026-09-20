@@ -10976,6 +10976,41 @@ written for the chapters in R7.1.5 — it gained a `ConvertText` entry point for
 rather than a file. The emitters had exactly the LaTeX the chapters had, so they do not get a
 second converter; both die together in R7.1.7.
 
+#### The item reference manual, the largest chapter (2026-09-20)
+
+`itemDefinition.tex` was 14,053 lines and `docs/RST/items/` 109 files; both are gone. The
+chapter is **109 Markdown pages** in `docs/generated/items/` — one per item, one index per
+item type, and the chapter index carrying `sec:item:reference:manual`. The emitter already
+went through `PyLatexRST`, so the branches written for the C interface did most of the work;
+what it needed of its own was the parameter table, which is a LaTeX `longtable`, an RST list
+block and now a real Markdown table with the symbol set in math beside the name.
+
+**The converter learned five things from this chapter**, because the item definitions write
+LaTeX that the hand-written chapters never did:
+
+- the **figures**, which the item definitions put into their `\onlyRST` branch as RST
+  directives — without them, thirteen `{ref}` targets did not exist and the strict build said
+  so. `ConvertRSTFigures` now runs inside `ConvertText`.
+- the **listings**: a user function example was carried over as raw `\begin{lstlisting}`, and
+  the pass that removes the .tex indentation had flattened its Python. Listings are fenced
+  first, and the dedent leaves fenced blocks alone.
+- `\userFunction`, `\returnValue`, `\addExampleImage`, `{\bf ...}` and five more — the old
+  RST left these as **raw LaTeX in the HTML**; they render now.
+- **`NormalizeHeadings` read the `# comments` of Python examples as headings**, which is how a
+  mini example could shift the heading levels of the page under it. It skips fenced blocks.
+- **18 math macros** (`\wv`, `\Qm`, `\ImTwo`, ...) that only the item chapter uses. The
+  `checkMathMacros` gate now reads `docs/generated/` as well, which is how they were found:
+  before this step it looked at the hand-written chapters only.
+
+**What the word count found.** 126 example links short: the Markdown writer knew only the
+plain keyword, not the `Create*` twin that creates the item without naming it, and capped at
+8 files where the RST caps at 12. The keyword table now lives in one function,
+`ExampleKeywords`, that both writers call. What remains, against 51,754 words of deleted RST,
+is the macro expansion (`mathbf`, 2,695 times), the word `default` that the RST repeated in
+every parameter and the table now has in its header, the abbreviations `(Ex)`/`(TM)` in place
+of `(Examples/)`/`(TestModels/)`, the RST markup, and the *"the web version may not be
+complete, see theDoc.pdf"* note that stood under all 97 items and goes with the PDF (D8).
+
 #### The third and fourth emitters: the Python-C++ command interface (2026-09-20)
 
 `pybindEmitter` and `mainSystemExtensionDocsEmitter` are one piece of work: the extensions

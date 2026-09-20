@@ -15,7 +15,7 @@ their shared helpers (`autoGenerateHelper.py`, `generatorPaths.py`), `createStub
 | `itemInterfaceEmitter.py` | emits `python/exudyn/itemInterface.py` from `definitions/`; `--output` for another target | `tools/regenerate.py` |
 | `itemHeaderEmitter.py` | emits the per-item C++ headers `C/Main/Visu<Item>.h`, `PySymbolicUserFunctionSet.h` / `PythonUserFunctionsTemplates.h` and `objectFactoryAutoReg.h`; `--output-dir` for another target | `tools/regenerate.py` |
 | `miniExampleEmitter.py` | emits `python/MiniExamples/<Item>.py` and `miniExamplesFileList.py`; `--output-dir` | `tools/regenerate.py` |
-| `itemDocsEmitter.py` | emits the item reference documentation: `docs/RST/items/*.rst`, `docs/theDoc/itemDefinition.tex`, `docs/RST/confHelperItems.py` | `tools/regenerate.py` |
+| `itemDocsEmitter.py` | emits the item reference manual: `docs/generated/items/*.md` (one page per item, one index per item type) and `docs/RST/confHelperItems.py` | `tools/regenerate.py` |
 | `structureModel.py` | facts about structures shared by the structure emitters: type tables, predicates on classes and parameters, sorted parameters, typical paths, the old string records | the structure emitters |
 | `structureHeaderEmitter.py` | emits the structure C++ headers (`SimulationSettings.h`, `VisualizationSettings.h`, ...), `DictionariesGetSet.h` and `pybind_modules.h` | `tools/regenerate.py` |
 | `structureStubEmitter.py` | emits the stub fragment `tools/generators/generated/stubSystemStructures.pyi` read by `createStubFiles.py` | `tools/regenerate.py` |
