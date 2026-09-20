@@ -10671,3 +10671,34 @@ the HTML <<D>> but three of them are where a reader would want to know:
 `CONTRIBUTING.md` asks for the `info` block as the first thing in a problem report.
 
 ---
+
+<a id="r5-18-8"></a>
+### R5.18.7 and R5.18.8 — two gates that lied
+
+**DONE 2026-09-20** (#2551, #2560). Both were found while integrating the parallel session, and
+both are of the same family: a check that says something other than what is true.
+
+#### The wheel shipped a module the source does not have (#2560, was HIGH)
+
+`exudev build` now **removes `build/lib.<platform>/exudyn` before every build**, not only with
+`--clean`. That tree is what setuptools copies the package from, so a module deleted from
+`python/exudyn` survived there and was copied into the wheel <<D>> which is how
+`exudyn/resultsMonitor.py` was still being shipped after step R11.4.1 moved it, and how a broken
+`from .mainSystemExtensions import ...` in `exudyn/__init__.py` stayed invisible. Only the `.py`
+copies go; the C++ objects in `build/temp.*` stay, so the one-minute wheel is untouched.
+
+And because a fix one has to remember is not a fix, the build gained a step that **compares the
+wheel's `exudyn/*.py` against `python/exudyn` and fails on a difference**. It was tested the way
+such a check should be: a ghost module was planted in `build/lib.*/exudyn`, a wheel was built
+the way `pip wheel` builds it, and the step reported
+*"in the wheel but NOT in python/: exudyn/ghostModule.py"* and returned 1.
+
+#### The stub gate failed one run in three (#2551)
+
+`exudyn.misc.resultsMonitor._ControlPanel.tk`: a tkinter widget carries the attributes of the
+`Tk` instance it belongs to, and `tk` exists only once a root has been created <<D>> so whether
+stubtest sees it depends on import order and on a display. It is in `stubtestNoise.txt` now,
+the curated list, **with that reason written next to it**, and not in the generated backlog,
+which is meant to shrink. Five consecutive runs of the gate, all green.
+
+---

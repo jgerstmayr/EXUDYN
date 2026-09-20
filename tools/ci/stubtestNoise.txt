@@ -25,3 +25,9 @@ exudyn\.T2
 #the compiled modules themselves have no separate stub; exudyn/__init__.pyi describes them
 exudyn\.exudynCPP
 exudyn\.exudynCPPfast
+
+#a tkinter widget carries the attributes of the Tk instance it belongs to, and "tk" exists only
+#once a Tk root has been created - so whether stubtest sees it depends on import order and on a
+#display being there. It made the gate fail about one run in three with nothing changed in
+#between (#2551, revision2026 step R5.18.7); the control panel itself is a private class.
+exudyn\.misc\.resultsMonitor\._ControlPanel\..*

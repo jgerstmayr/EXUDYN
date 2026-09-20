@@ -16,6 +16,7 @@
 import glob
 import os
 import shutil
+import zipfile
 import sys
 
 import runner
@@ -170,6 +171,89 @@ def Generate(options):
 
 
 #%%******************************************************************************************************
+def PackageFilesOfSource():
+    """the .py files of python/exudyn, as paths relative to python/ with forward slashes"""
+    root = runner.RepositoryRoot()
+    package = os.path.join(root, 'python')
+    found = set()
+    for (directory, _, fileNames) in os.walk(os.path.join(package, 'exudyn')):
+        for fileName in fileNames:
+            if fileName.endswith('.py'):
+                relative = os.path.relpath(os.path.join(directory, fileName), package)
+                found.add(relative.replace(os.sep, '/'))
+    return found
+
+
+#%%******************************************************************************************************
+def StalePackageCopies():
+    """The package trees setuptools copies the wheel from: build/lib.<platform>/exudyn.
+
+    They are the reason for #2560: a module DELETED from python/exudyn stays in build/lib.*,
+    setuptools copies it into the wheel, and the wheel then ships a file that the source does not
+    have. That shipped a removed exudyn/resultsMonitor.py in step R11.4.1 and masked a broken
+    import in exudyn/__init__.py for half a day. Only the .py copies are removed here; the C++
+    objects live in build/temp.* and stay, so the one-minute wheel is unaffected."""
+    root = runner.RepositoryRoot()
+    return [path for path in glob.glob(os.path.join(root, 'build', 'lib.*', 'exudyn'))
+            if os.path.isdir(path)]
+
+
+#%%******************************************************************************************************
+def ClearStalePackageCopyStep():
+    """#2560: remove build/lib.*/exudyn before the wheel is built"""
+    root = runner.RepositoryRoot()
+
+    def Action():
+        directories = StalePackageCopies()
+        for directory in directories:
+            print('  remove ' + os.path.relpath(directory, root))
+            shutil.rmtree(directory, ignore_errors=True)
+        if not directories:
+            print('  nothing to remove')
+        return 0
+
+    directories = StalePackageCopies()
+    listing = ['remove ' + os.path.relpath(directory, root) for directory in directories]
+    return Step('clear the stale package copy in build/', action=Action,
+                note='\n'.join(listing) or 'build/lib.*/exudyn does not exist at the moment')
+
+
+#%%******************************************************************************************************
+def WheelContentCheckStep(pythonTag, environment, options):
+    """#2560, the other half: say it rather than trust it. The .py files of the wheel must be
+    exactly the .py files of python/exudyn."""
+    root = runner.RepositoryRoot()
+
+    def Action():
+        wheel = WheelForVersion(pythonTag or runner.PythonTagOfEnvironment(environment, options))
+        if wheel is None:
+            print('  no wheel found in dist/ - nothing to check')
+            return 0
+
+        with zipfile.ZipFile(wheel) as archive:
+            inWheel = {name for name in archive.namelist()
+                       if name.startswith('exudyn/') and name.endswith('.py')}
+        inSource = PackageFilesOfSource()
+
+        surplus = sorted(inWheel - inSource)
+        missing = sorted(inSource - inWheel)
+        for name in surplus:
+            print('  *** in the wheel but NOT in python/: ' + name)
+        for name in missing:
+            print('  *** in python/ but NOT in the wheel: ' + name)
+        if surplus or missing:
+            print('  ' + os.path.basename(wheel) + ' does not match the source. A stale copy in')
+            print('  build/lib.*/exudyn is the usual cause (#2560); "exudev clean" removes it.')
+            return 1
+
+        print('  ' + str(len(inWheel)) + ' package files, the same set as in python/exudyn')
+        return 0
+
+    return Step('check the wheel against the source', action=Action,
+                note='compare the exudyn/*.py files of the new wheel with python/exudyn (#2560)')
+
+
+#%%******************************************************************************************************
 def Build(options):
     """Build the wheel and install it. By default: no clean, no regeneration, no docs, no tests -
     the ~1 minute command (maintainer 2026-09-18). 'build --complete' is the whole path, see
@@ -197,6 +281,10 @@ def Build(options):
     if options.clean:
         steps += Clean(OptionsWith(options, dist=False, linux=False, all=False))
 
+    #ALWAYS, not only with --clean: a module deleted from python/exudyn survives in build/lib.* and
+    #is copied into the wheel from there (#2560, step R5.18.8)
+    steps += [ClearStalePackageCopyStep()]
+
     buildEnvironment = BuildEnvironment(options)
 
     for (pythonTag, environment) in targets:
@@ -207,6 +295,8 @@ def Build(options):
         steps += [Step('build the wheel for ' + environment,
                        argv=runner.InEnvironment(environment, wheelArgv, options),
                        cwd=root, env=buildEnvironment)]
+
+        steps += [WheelContentCheckStep(pythonTag, environment, options)]
 
         if not options.no_install:
             #installed BY PATH, not with --find-links=dist: 'clean' keeps dist/ on purpose and every

@@ -515,7 +515,8 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.18.3** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18-3) — *(sub-step of R5.18; found by the first GitLab run after the driver landed)* **A gate that was green locally and red in CI** (#2508).
 
 <a id="r5-18-7"></a>
-**R5.18.7** *(sub-step of R5.18, added 2026-09-19)* **A gate that fails at random is worse than no
+**R5.18.7** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r5-18-8) *(sub-step of R5.18)*
+    **A gate that fails at random is worse than no
     gate** (#2551). `checkPython.py --stubs --check` reports
     *"exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime"* on roughly one run in
     three, with nothing changed in between (measured: one failure in three consecutive runs).
@@ -531,7 +532,8 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     permanent, so the one that was never used is the one that moves.)*
 
 <a id="r5-18-8"></a>
-**R5.18.8** **HIGH** *(sub-step of R5.18, added 2026-09-20)* **A module deleted from the package
+**R5.18.8** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r5-18-8) *(sub-step of R5.18)*
+    **A module deleted from the package
     is still shipped in the wheel** (#2560). After `resultsMonitor.py` moved to
     `exudyn/misc/`, the installed package still held the old file: `exudev build` installs with
     `pip --force-reinstall --no-deps`, and the stale module and its `.pyc` survived. stubtest then

@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.213.dev1, 
++  Exudyn version = 1.11.215.dev1, 
 +  last change =  2026-09-20, 
 +  Number of issues = 2562, 
-+  Number of resolved issues = 2286 (213 in current version), 
++  Number of resolved issues = 2288 (215 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.215: resolved Issue 2560: a module deleted from the package is still shipped in the wheel (fix)
+    - issue author: Claude-JG
+    - description:  After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/__init__.py still did "from .mainSystemExtensions import ..." and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.\* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.
+    - **notes:** exudev build removes build/lib.<platform>/exudyn before every build, not only with --clean: that tree is what setuptools copies the package from, so a module deleted from python/exudyn survived there and went into the wheel. Only the .py copies are removed; the C++ objects in build/temp.\* stay, so the one-minute wheel is unaffected. A second step compares the wheel exudyn/\*.py against python/exudyn and fails on a difference - tested by planting a ghost module in build/lib.\*/exudyn and building a wheel the way pip wheel builds it: the step reported it and returned 1.
+    - date resolved: **2026-09-20 14:19**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
+ * Version 1.11.214: :textred:`resolved BUG 2551` : the stub check is intermittent: resultsMonitor._ControlPanel.tk fails about one run in three 
+    - issue author: Claude-JG
+    - description:  checkPython.py --stubs --check reports "exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. _ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.
+    - **notes:** exudyn.misc.resultsMonitor._ControlPanel.\* is in tools/ci/stubtestNoise.txt, the curated list, with the reason next to it: a tkinter widget carries the attributes of the Tk instance it belongs to and tk exists only once a root has been created, so whether stubtest sees it depends on import order and on a display. Not in the generated backlog, which is meant to shrink. Five consecutive runs of the gate, all green.
+    - date resolved: **2026-09-20 14:19**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.213: resolved Issue 2559: the documentation knows neither the new monitor nor the package command line (docu)
     - issue author: Claude-JG
     - description:  docs/theDoc/theDoc.tex still describes the results monitor as "copy resultsLoader.py to your directory and call python resultsMonitor.py file.txt", and pastes a -h output that no longer exists; the section is hand-written LaTeX in a file that is otherwise the LaTeX skeleton. And "python -m exudyn" is documented nowhere, because it did not exist. Needed: the monitor section rewritten as Markdown in docs/manual/ - the three ways to call it, the file dialog and --last, the control panel, the settings file, and a pointer to "python -m exudyn monitor --help" rather than a pasted option list that goes stale - and a page for the four commands of the package command line, with "info" named in CONTRIBUTING.md as what to paste into a bug report. See revision2026 step R7.7.
@@ -7932,11 +7944,6 @@ Version 0.1
 Open issues
 ***********
 
- * :textred:`open issue 2560:` a module deleted from the package is still shipped in the wheel
-    - issue author: Claude-JG
-    - description:  After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/__init__.py still did "from .mainSystemExtensions import ..." and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.\* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.
-    - date raised: 2026-09-20 
-
  * **open issue 2556:** the src/Objects folder holds nodes, markers, loads, sensors and system code
     - issue author: Claude-JG
     - description:  src/Objects/ is named after one of the five item types but holds all of them, plus checkPreAssembleConsistencies.cpp and evaluateUserFunctions.cpp, which are system code, and the UpdateGraphics functions, which are graphics. Split it into ImplObjects, ImplNodes and ImplMarkers (loads and sensors are short and stay in one file each, in System); the Visu files go to Graphics and the two system files to System. Deliberately a small change and not a systematic restructuring of the whole tree. Every moved file is a tracked file and the vcxproj, sources.json and gen_sources follow. See revision2026 step R11.4.5.
@@ -9015,11 +9022,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2551:` the stub check is intermittent: resultsMonitor._ControlPanel.tk fails about one run in three
-    - issue author: Claude-JG
-    - description:  checkPython.py --stubs --check reports "exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. _ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.
-    - date raised: 2026-09-19 
 
  * :textred:`open BUG 2545:` the documentation emitters do not escape LaTeX either
     - issue author: Claude-JG

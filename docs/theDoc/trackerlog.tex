@@ -9,15 +9,32 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.213.dev1, 
+  \item Exudyn version = 1.11.215.dev1, 
   \item last change =  2026-09-20, 
   \item Number of issues = 2562, 
-  \item Number of resolved issues = 2286 (213 in current version), 
+  \item Number of resolved issues = 2288 (215 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.215}:  resolved Issue 2560: {\bf a module deleted from the package is still shipped in the wheel}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/\_\_init\_\_.py still did "from .mainSystemExtensions import ..." and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.}
+    \item {\bf notes: exudev build removes build/lib.<platform>/exudyn before every build, not only with --clean: that tree is what setuptools copies the package from, so a module deleted from python/exudyn survived there and went into the wheel. Only the .py copies are removed; the C++ objects in build/temp.* stay, so the one-minute wheel is unaffected. A second step compares the wheel exudyn/*.py against python/exudyn and fails on a difference - tested by planting a ghost module in build/lib.*/exudyn and building a wheel the way pip wheel builds it: the step reported it and returned 1.}
+    \item   date resolved: {\bf 2026-09-20 14:19},
+date raised: 2026-09-20 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.214}: {\bf \color{warningRed}  resolved BUG 2551}: {\bf the stub check is intermittent: resultsMonitor.\_ControlPanel.tk fails about one run in three}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: checkPython.py --stubs --check reports "exudyn.misc.resultsMonitor.\_ControlPanel.tk is not present at runtime" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. \_ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.}
+    \item {\bf notes: exudyn.misc.resultsMonitor.\_ControlPanel.* is in tools/ci/stubtestNoise.txt, the curated list, with the reason next to it: a tkinter widget carries the attributes of the Tk instance it belongs to and tk exists only once a root has been created, so whether stubtest sees it depends on import order and on a display. Not in the generated backlog, which is meant to shrink. Five consecutive runs of the gate, all green.}
+    \item   date resolved: {\bf 2026-09-20 14:19},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.213}:  resolved Issue 2559: {\bf the documentation knows neither the new monitor nor the package command line}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13933,12 +13950,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2551}:  {\bf the stub check is intermittent: resultsMonitor.\_ControlPanel.tk fails about one run in three}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: checkPython.py --stubs --check reports "exudyn.misc.resultsMonitor.\_ControlPanel.tk is not present at runtime" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. \_ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.}
-    \item date raised: 2026-09-19 
-  \ei
   \item open {\bf BUG 2545}:  {\bf the documentation emitters do not escape LaTeX either}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
