@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.219.dev1, 
 +  last change =  2026-09-20, 
-+  Number of issues = 2563, 
++  Number of issues = 2564, 
 +  Number of resolved issues = 2292 (219 in current version), 
 
 ************
@@ -7967,6 +7967,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textred:`open issue 2563:` the regenerate step of "exudev generate --all-checks" cannot fail on tier 1 drift
+    - issue author: Claude-JG
+    - description:  tools/regenerate.py fails on tier 1 drift - the API surface that must stay byte-identical - only with --check; exudev generate --all-checks runs it WITHOUT --check, because its job there is to regenerate. The drift is printed ("Generated files differ from the commit") but the exit code is 0, so the step is reported ok and the change sits in the working tree unnoticed. It happened in step R11.4.5: typesEmitter.py looked for the parent header in src/Objects, the folder had been renamed, and ObjectANCFCable2D and ObjectALEANCFCable2D silently lost their item types Body and MultiNoded in python/exudyn/types/items.py - a tier 1 file. Caught by reading an uncommitted diff, not by a gate. Suggestion: after regenerating, run the comparison again in check mode, or let the summary line of that step say TIER 1 DRIFT rather than ok. See revision2026 step R5.18.10.
+    - date raised: 2026-09-20 
 
  * **open issue 2562:** nothing in the test suite ever calls UpdateGraphics
     - issue author: Claude-JG

@@ -51,8 +51,17 @@ def TypeNames(definition):
     if member is not None:
         body = member.get('implementation') or ''
     else: #inherited from a hand-written parent class, e.g. CObjectANCFCable2DBase
-        parentHeader = os.path.join(im.repositoryRoot, 'src', 'Objects', str(definition.get('cParentClass', '')) + '.h')
+        parentHeader = os.path.join(im.repositoryRoot, 'src', 'ImplObjects',
+                                    str(definition.get('cParentClass', '')) + '.h')
         if not os.path.isfile(parentHeader):
+            #a definition WITHOUT a parent class has no header to read, which is normal; a
+            #definition WITH one whose header is not found is a mistake that used to pass as an
+            #empty type list (revision2026 step R11.4.5 renamed the folder and this returned [])
+            if definition.get('cParentClass', ''):
+                print('   WARNING: ' + definition['className'] + ' names the parent class '
+                      + str(definition['cParentClass']) + ', whose header is not at '
+                      + os.path.relpath(parentHeader, im.repositoryRoot)
+                      + ' - its item types cannot be read')
             return []
         text = io.open(parentHeader, encoding='utf8', errors='replace').read()
         match = re.search(r'GetType\(\) const override\s*\{(.*?)\}', text, re.S)

@@ -10813,6 +10813,22 @@ that include it followed by regeneration, and `CContact.h` and two `.cpp` files 
 `docs/dev/ARCHITECTURE.md` describes the module tree, so its table now lists the three folders
 — and its heading said `main/src/`, stale since the flatten of R3.1, which is corrected with it.
 
+#### Found afterwards: a generator that had the folder name in it
+
+**2026-09-20, same day.** `tools/generators/typesEmitter.py` reads the item type bits of an
+object from its hand-written parent header, and had the path `src/Objects/` written into it.
+After the move it found nothing — and **returned an empty list**, so `ObjectANCFCable2D` and
+`ObjectALEANCFCable2D` lost `['Body', 'MultiNoded']` in `python/exudyn/types/items.py`.
+
+Two fixes, one of them the real one: the path is `src/ImplObjects/` now, **and a definition
+that names a parent class whose header is not found prints a warning** instead of quietly
+saying "no types".
+
+The gate did not catch it, which is worth more than the bug: `exudev generate --all-checks`
+regenerates and reports **ok**, because `tools/regenerate.py` fails on tier 1 drift only with
+`--check`. The drift was printed and the step was green. That is **#2563** (step R5.18.10,
+HIGH).
+
 #### R11.4 as a whole
 
 Five sub-steps, five issues, all closed: the modules that moved to `exudyn/misc`, the comment

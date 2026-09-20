@@ -583,6 +583,19 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 `parameterConversionTestReference.txt` rather than as a surprise.
 
 
+<a id="r5-18-10"></a>
+**R5.18.10** **HIGH** *(sub-step of R5.18, added 2026-09-20)* **The regenerate step of
+    `--all-checks` cannot fail on tier 1 drift** (#2563). `tools/regenerate.py`
+    fails on tier 1 drift only with `--check`, and `exudev generate --all-checks` runs it without,
+    because its job there is to regenerate. The drift is *printed* and the step is reported **ok**.
+
+    That is how R11.4.5 changed `python/exudyn/types/items.py` — a tier 1 file — without anything
+    saying so: `typesEmitter.py` looked for the parent header in `src/Objects`, the folder had been
+    renamed, and two items lost their type bits. Caught by reading an uncommitted diff.
+
+    Either run the comparison again in check mode after regenerating, or let that step's summary
+    line say **TIER 1 DRIFT** instead of *ok*.
+
 <a id="r5-18-9"></a>
 **R5.18.9** *(sub-step of R5.18, added 2026-09-20)* **Nothing in the test suite ever calls
     `UpdateGraphics`** (#2562). The drawing code of every item — ~4,000
