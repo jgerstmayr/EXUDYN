@@ -43,9 +43,14 @@ Exudyn documentation
 .. toctree::
    :caption: How-to notes
 
+   docs/howTo/buildFromSource
    docs/howTo/buildQuirks
    docs/howTo/condaEnvironments
    docs/howTo/convertVideosFfmpeg
+   docs/howTo/gccVsMsvcTraps
+   docs/howTo/matplotlibExamples
+   docs/howTo/sphinxDocs
+   docs/howTo/visualStudio2022
 
 .. toctree::
    :caption: Misc

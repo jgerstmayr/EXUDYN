@@ -1,7 +1,15 @@
-===============================================
-GENERAL:
-#pragma once
-==>
+# What MSVC accepts and GCC does not
+
+Exudyn is developed on Windows with MSVC and built on Linux with GCC, and the Linux build is where
+the sloppiness shows. These are the traps that actually cost time, kept because each of them was
+found the hard way; the code has been fixed in every case, so this page is about **not writing them
+again**.
+
+## `#pragma once` is MSVC
+
+GCC accepts it, but the portable form is the include guard, and Exudyn uses both:
+
+```cpp
 #ifdef _MSC_VER
 #pragma once
 #endif
@@ -9,125 +17,112 @@ GENERAL:
 #ifndef RELEASEASSERT__H
 #define RELEASEASSERT__H
 ...
-code
 #endif
+```
 
-#ifdef __GNUC__
-...
+## `std::exception` cannot be constructed with a message
+
+```cpp
+throw std::exception("unexpected EXUDYN internal error");   //MSVC only
+```
+
+GCC's `std::exception` has no such constructor. Exudyn therefore throws `std::runtime_error`, which
+is what `EXUexception` is:
+
+```cpp
+#define EXUexception std::runtime_error
+```
+
+(Since revision2026 step R6.3 there are typed exception classes; see `docs/dev/CODING_STYLE.md`
+§10 for which one a new check should raise.)
+
+## Reserved names
+
+`MINFLOAT` and `MAXFLOAT` are reserved in GCC; Exudyn's own constants are `_MINFLOAT` and
+`_MAXFLOAT`.
+
+`NDEBUG` is already defined by GCC, so define it only if it is not there:
+
+```cpp
+#ifndef NDEBUG
+    #define NDEBUG      //avoids range checks, e.g. in Eigen
 #endif
-===============================================
+```
 
-throw std::exception(...) ==> can only be called in MSVC
-==> alternative: use std::runtime_error
-EXUexception std::runtime_error
+## Headers MSVC pulls in for you
 
-===============================================
-BasicDefinitions:
-MINFLOAT / MAXFLOAT
-change to ==> _MINFLOAT, _MAXFLOAT because reserved word in gcc
+MSVC's headers include each other generously; GCC's do not. Every standard template used must be
+included by name:
 
-
-===============================================
-add to Vector.h (needed for EXUstd::Minimum(...) ):
-#include "Utilities/BasicFunctions.h" //defines Real
-
-===============================================
-ReleaseAssert.h:
-
-#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw std::exception("unexpected EXUDYN internal error"))
-==>not accepted by GCC
-==>maybe inclusion of exception helps?
-
-#include <exception>
-
-===============================================
-ReleaseAssert.h:
-
-
-NDEBUG
-==>already defined in GCC
-	#ifndef NDEBUG
-		#define NDEBUG //used to avoid range checks e.g. in Eigen
-	#endif
-
-
-===============================================
-BasicLinalg.h, SlimArray.h, etc.:
-==>include std template headers separately:
-
-//gcc does not recognize: #include <stdlib.h> // for initialization with std::vector
+```cpp
+//GCC does not get these from <stdlib.h>:
 #include <vector>
 #include <array>
+#include <exception>
+```
 
-===============================================
-GENERAL: SlimArray.h, ResizableArray.h, etc.:
-remove Sort() as it is built upon QuickSort, which is not implemented yet!
+The same holds inside the project: `Vector.h` needs
+`#include "Utilities/BasicFunctions.h"` for `EXUstd::Minimum`, even though MSVC finds it anyway.
 
-===============================================
-Linalg/LinkedDataMatrix.h:45:27: error: class ‘LinkedDataMatrixBase<T>’ does not have any field named ‘MatrixBase’
-==> add <T> to MatrixBase in LinkedDataMatrixBase constructor
+## Templates need `<T>` where MSVC guesses
 
-===============================================
-GraphicsData.h and VisualizationSystemContainer.cpp:
-strcpy_s not working with gcc ==> use strcopy instead
+```
+Linalg/LinkedDataMatrix.h:45:27: error: class 'LinkedDataMatrixBase<T>' does not have any field named 'MatrixBase'
+```
 
-===============================================
-missing virtual destructors in base classes:
-warning: deleting object of polymorphic class type ‘CLoad’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
-==> added virtual constructors to all base classes with virtual functions
-CLoad
-CMarker
-MainLoad
-VisualizationLoad
-....
+The base class in the constructor initializer list must be written with its template argument:
+`MatrixBase<T>`.
 
-added virtual to 
-~ResizableArray() {
+## The Microsoft "safe" functions do not exist
 
-===============================================
-removed virtual from some classes which have no derived class:
-MarkerDataStructure
-~SlimVectorBase() (remove virtual only in the destructor, no other virtual functions)
+`strcpy_s` and friends are MSVC extensions — use `strcpy` (and be careful, which is what `_s` was
+for).
 
+## Virtual destructors
 
-===============================================
-initialization order in constructors:
-In instantiation of ‘VectorBase<T>::VectorBase() [with T = double]’:
-src/Main/CSystemState.h:23:7:   required from here
-src/Linalg/Vector.h:64:11: warning: ‘VectorBase<double>::numberOfItems’ will be initialized after [-Wreorder]
-     Index numberOfItems; //!< currently used number of Reals; represents size of VectorBase (equivalent to numberOfPReals in VectorX)
+```
+warning: deleting object of polymorphic class type 'CLoad' which has non-virtual destructor
+         might cause undefined behavior [-Wdelete-non-virtual-dtor]
+```
 
-==> change:
-    VectorBase(): numberOfItems(0), data(nullptr) {};
-==> to:
-    VectorBase(): data(nullptr), numberOfItems(0) {};
+GCC is right and MSVC is silent: every base class with virtual functions needs a virtual
+destructor. `CLoad`, `CMarker`, `MainLoad`, `VisualizationLoad` and `ResizableArray` all got one.
 
+The other direction is worth doing at the same time: a class with **no** derived class does not
+need `virtual` at all — it was removed from `MarkerDataStructure` and from the destructor of
+`SlimVectorBase`.
 
+## Initialisation order in constructors
 
-===============================================
-Vector.h: include missing file (namespace, function EXUstd::Minimum)
-#include "Utilities/BasicFunctions.h"   //for Minimum
+```
+warning: 'VectorBase<double>::numberOfItems' will be initialized after [-Wreorder]
+```
 
-===============================================
-import error:
->>> import exudyn as e
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ImportError: /usr/local/lib/python3.6/dist-packages/exudyn-0.1.368-py3.6-linux-x86_64.egg/exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol: _ZN27CObjectContactCircleCable2D19maxNumberOfSegmentsE
+Members are initialised in the order they are **declared**, not in the order of the initializer
+list. Write the list in declaration order:
 
-==> this error occured because a static const variable had been used as a template argument:
-ConstSizeVector<maxNumberOfSegments>
-==> this is not available at compile time!
-==> solution: make the variable a 'constexpr':
+```cpp
+VectorBase(): numberOfItems(0), data(nullptr) {};     //warns
+VectorBase(): data(nullptr), numberOfItems(0) {};     //correct
+```
+
+## A `static const` used as a template argument
+
+```
+ImportError: .../exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol:
+    _ZN27CObjectContactCircleCable2D19maxNumberOfSegmentsE
+```
+
+An import error rather than a compile error, which is what makes this one memorable. The cause is a
+`static const Index` used as a template argument — `ConstSizeVector<maxNumberOfSegments>` — which
+needs the value at compile time and a definition at link time. The fix is one word:
+
+```cpp
 static constexpr Index maxNumberOfSegments = 12;
+```
 
-===============================================
+## See also
 
-===============================================
-
-===============================================
-
-
-#end of file: the "various bugs" section was removed 2026-09-10 - those bugs are fixed,
-#and a list of already-corrected line numbers only misleads. The GCC-vs-MSVC traps above are
-#what this file is for.
+- [buildFromSource.md](buildFromSource.md) — building on Linux
+- [buildQuirks.md](buildQuirks.md) — the Windows side
+- `docs/dev/CODING_STYLE.md` — the conventions these traps live under

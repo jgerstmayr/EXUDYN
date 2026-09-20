@@ -1,174 +1,139 @@
-some notes on use of matplotlib in spyder:
+# Matplotlib notes for Exudyn results
 
-#change to interactive plot window:
-%matplotlib auto
+Recipes that come up again and again when plotting Exudyn results by hand. For sensor and solution
+files there is usually no need to write any of this:
+`exudyn.plot.PlotSensor(...)` does it, and `python -m exudyn plot file.txt` does it from a shell.
+These notes are for the cases where you want the figure exactly your way.
 
-#if you want to switch back to "inline", type this:
-%matplotlib inline
+## Spyder: inline or a real window
 
-#Spyder: to use inline plot, change preferences: IPython consolse->Graphics->backend: inline=plot inline, automatic=plot into separate window
+```python
+%matplotlib auto      #plots in their own window
+%matplotlib inline    #plots inside the console
+```
 
-#====================================
-#EXAMPLE for data of Hotint:
+The same switch is in *Preferences → IPython console → Graphics → Backend*: *Inline* draws into the
+console, *Automatic* opens a window. A window is what you want for anything you will zoom into.
+
+## Reading a results file
+
+Exudyn writes comma-separated columns with `#` comment lines, which is exactly what `np.loadtxt`
+expects:
+
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = np.loadtxt('solution.txt', comments='#', delimiter=',')
-plt.plot(data[:,0], data[:,3], 'b-') #plot column 3 over column 0 (time)
-plt.show() #use this in VS2017 to open the plot window!
+data = np.loadtxt('solution/coordinatesSolution.txt', comments='#', delimiter=',')
+plt.plot(data[:, 0], data[:, 3], 'b-')      #column 3 over time (column 0)
+plt.show()
+```
 
-#====================================
-#EXAMPLES:
-import numpy as np
-import matplotlib.pyplot as plt
+`--list-columns` of the results monitor prints which column is which:
+`python -m exudyn monitor solution/coordinatesSolution.txt --list-columns`.
+
+## A plot that is worth putting in a paper
+
+```python
 x = np.linspace(0, 2, 100)
-plt.plot(x, x, label='linear')
-plt.title("interactive test")
-plt.xlabel("index")
-plt.ylabel("ylabel")
+plt.plot(x, x, 'b-', linewidth=0.5, label='linear')   #1.0 is too thick for a PDF; 0.5-0.7 is right
+plt.title('interactive test')
+plt.xlabel('time (s)')
+plt.ylabel('displacement (m)')
 plt.grid(True, 'major', 'both')
-plt.tight_layout() #better arrangement of plot
-
 plt.legend(loc='upper right')
-#The strings 'upper left', 'upper right', 'lower left', 'lower right' place the legend at the corresponding corner of the axes/figure.
-#The strings 'upper center', 'lower center', 'center left', 'center right' place the legend at the center of the corresponding edge of the axes/figure.
-#The string 'center' places the legend at the center of the axes/figure.
-#The string 'best' places the legend at the location, among the nine locations defined so far, with the minimum overlap with other drawn artists. This option can be quite slow for plots with large amounts of data; your plotting speed may benefit from providing a specific location.
+plt.tight_layout()                                    #keeps the labels inside the figure
+plt.savefig('figure.pdf')                             #.png and .svg work the same way
+plt.show()
+```
 
-plt.show() #sometimes needed to update plot
-#colors, line style and markers:
-plt.plot([1,2,3,4,5], [1,2,3,4,10], 'go-') # 'g'reen 'd'ots '-'solid line
-	# 'r*--' : ‘red stars with dashed lines’
-	# 'ks.' : ‘black squares with dotted line’ (‘k’ stands for black)
-	# * 'bD-.' : ‘blue diamonds with dash-dot line’
-	# colors: b: blue,g: green,r: red,c: cyan,m: magenta,y: yellow,k: black,w: white
-	# markers: point, pixel,circle: .,o   triangles: v^<>  s8*P+xDd
-	# line style: ':', '-.', '--', '-'
+`loc` takes `'upper left'`, `'lower right'`, `'center'`, and so on — plus `'best'`, which finds the
+spot with the least overlap and is slow on large data sets.
 
-#line width: 1 is too thick for pdf plots, 0.5 or 0.7 are better
-plt.plot([1,2,3,4,5], [1,2,3,4,10], 'b-', linewidth=0.5) 
+## Colour, marker and line style in one string
 
+```python
+plt.plot([1, 2, 3, 4, 5], [1, 2, 3, 4, 10], 'go-')    #green dots, solid line
+```
 
-#loglog/linear plot:
-ax = plt.axes(xscale='log', yscale='log')
-ax = plt.axes(xscale='linear', yscale='linear')
+- colours: `b` blue, `g` green, `r` red, `c` cyan, `m` magenta, `y` yellow, `k` black, `w` white
+- markers: `.` `o` (point, circle), `v ^ < >` (triangles), `s 8 * P + x D d`
+- lines: `-` `--` `-.` `:`
 
-#grid:
-ax=plt.gca() # get current axes
-ax.grid() #turn grid on/off
-ax.grid(True, 'major', 'both') # possible arguments: {'major', 'minor', 'both'}, {'both', 'x', 'y'}
+So `'r*--'` is red stars on a dashed line, `'ks.'` black squares on a dotted one, `'bD-.'` blue
+diamonds on a dash-dot line.
 
-#set limits (=plot range)
-plt.xlim(xmin,xmax)
-plt.ylim(ymin,ymax)
-ax.xaxis.get_data_interval() #get data interval
-ax.yaxis.get_data_interval()
-plt.ylim(ax.yaxis.get_data_interval()) #set axes to data interval
-ax.autoscale(True) #automatically scale to data==> ax.margins(0.,0.05) works; ax.margins(0) == 100% zoom
+## Axes: scale, limits, grid, ticks
 
-#ticks:
+```python
+ax = plt.axes(xscale='log', yscale='log')     #or 'linear'
+ax = plt.gca()                                #the axes of the current figure
+
+ax.grid(True, 'major', 'both')                #{'major','minor','both'}, {'both','x','y'}
+
+plt.xlim(xMin, xMax)
+plt.ylim(ax.yaxis.get_data_interval())        #exactly the range of the data
+ax.autoscale(True)                            #ax.margins(0., 0.05) leaves a little air
+
 import matplotlib.ticker as ticker
-ax.yaxis.set_major_locator(ticker.MaxNLocator(8)) #use maximum of 8 ticks on y-axis
-ax.minorticks_on() / _off()
+ax.yaxis.set_major_locator(ticker.MaxNLocator(8))     #at most 8 ticks
+ax.minorticks_on()
 
-#fontsize (scale all font sizes):
-plt.rcParams.update({'font.size': 12})
+plt.rcParams.update({'font.size': 12})        #scales every font of the figure
+```
 
-#save figure:
-plt.savefig("figure.pdf")
-plt.savefig("figure.png")
+## Two figures at once
 
-#use solution data:
-lines = np.loadtxt('solution.txt', comments='#', delimiter=',')
+```python
+(figure1, axes1) = plt.subplots()
+(figure2, axes2) = plt.subplots()
 
-#several plot windows at same time (does not work when run in VS2017): 
-fig1, ax1 = plt.subplots()
-fig2, ax2 = plt.subplots()
-ax1.plot(data[:,1], data[:,1+n], plotColorList[iCase], label=legendList[iCase]) #phase plot
-ax2.plot(data[:,0], data[:,1], plotColorList[iCase], label=legendList[iCase]) #time-dependent data
-ax1.grid(True, 'major', 'both')
-ax1.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-ax1.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-ax1.set_title("Phase plot")
-ax1.set_xlabel("displacement (u)")
-ax1.set_ylabel("velocity (v)")
-ax1.legend()
+axes1.plot(data[:, 1], data[:, 2], 'b-', label='case 1')   #phase plot
+axes1.set_title('Phase plot')
+axes1.set_xlabel('displacement (u)')
+axes1.set_ylabel('velocity (v)')
+axes1.grid(True, 'major', 'both')
+axes1.legend()
 
-ax2.grid(True, 'major', 'both')
-ax2.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-ax2.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-ax2.set_xlabel("time (t)")
-ax2.set_ylabel("displacement (u)")
-ax2.legend()
-fig1.tight_layout()
-fig2.tight_layout()
-fig2.show() #bring to front
-fig1.show() #bring to front
-fig1.savefig("figure_phaseplot"+str(casesList[0])+".pdf")
-fig2.savefig("figure_displacement"+str(casesList[0])+".pdf")
+axes2.plot(data[:, 0], data[:, 1], 'b-', label='case 1')   #over time
+axes2.set_xlabel('time (t)')
+axes2.set_ylabel('displacement (u)')
+axes2.legend()
 
-#close all open figures:
-plt.close("all")
+figure1.tight_layout()
+figure2.tight_layout()
+figure1.savefig('phasePlot.pdf')
+figure2.savefig('displacement.pdf')
 
-#use tex in labels:
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "serif",
-    "font.serif": ["Palatino"],
-})
+plt.close('all')          #and this is how you get rid of them again
+```
+
+## A marker on every point, without hiding the line
+
+Three plots on top of each other: the line, a white disc, the marker. The white disc is what keeps
+the line from showing through the marker.
+
+```python
+plt.plot(data[:, 0], data[:, 1], color='blue', linestyle='-', linewidth=2)
+plt.plot(data[:, 0], data[:, 1], color='white', marker='o', linestyle='none', markersize=14)
+plt.plot(data[:, 0], data[:, 1], color='blue', marker='o', linestyle='none', markersize=10)
+
+from matplotlib.lines import Line2D
+legendElements = [Line2D([0], [0.1], color='b', marker='o', markersize=10, lw=2, label='Line')]
+plt.legend(handles=legendElements)
+plt.show()
+```
+
+## LaTeX in the labels
+
+```python
+plt.rcParams.update({'text.usetex': True,
+                     'font.family': 'serif',
+                     'font.serif': ['Palatino']})
 plt.ylabel(r'\bf{phase field} $\phi$', {'color': 'C0', 'fontsize': 20})
 plt.xticks((-1, 0, 1), ('$-1$', r'$\pm 0$', '$+1$'), color='k', size=20)
 plt.text(-1, .30, r'gamma: $\gamma$', {'color': 'r', 'fontsize': 20})
-#see: https://matplotlib.org/3.1.0/gallery/text_labels_and_annotations/usetex_demo.html
+```
 
-#plot lines with markers
-import matplotlib.pyplot as plt
-import numpy as np
-plt.close('all')
-data = np.loadtxt('solution/node.txt', comments='#', delimiter=',')
-# plt.plot(data[:,0], data[:,1], color='red', marker='o',
-#          linestyle='dashed',linewidth=2, markersize=12)
-plt.plot(data[:,0], data[:,1], color='blue', marker='o',
-         linestyle='-',linewidth=2,markersize=10, label='asdf')
-plt.plot(data[:,0], data[:,1], color='white', marker='o',
-          linestyle='none',markersize=14)
-plt.plot(data[:,0], data[:,1], color='blue', marker='o',
-          linestyle='none',markersize=10)
-plt.legend()
-plt.show()
-
-
-from exudyn.plot import PlotSensor
-
-#PlotSensor(mbs, sensorNumbers=s, components=[1], componentsX=[0])
-import matplotlib.pyplot as plt
-import numpy as np
-plt.close('all')
-data = np.loadtxt('solution/node.txt', comments='#', delimiter=',')
-# plt.plot(data[:,0], data[:,1], color='red', marker='o',
-#          linestyle='dashed',linewidth=2, markersize=12)
-plt.plot(data[:,0], data[:,1], color='blue',
-         linestyle='-',linewidth=2)
-plt.plot(data[:,0], data[:,1], color='white', marker='o',
-          linestyle='none',markersize=14)
-plt.plot(data[:,0], data[:,1], color='blue', marker='o',
-          linestyle='none',markersize=10)
-
-from matplotlib.lines import Line2D
-
-#custom legend with line+marker:
-legend_elements = [Line2D([0], [0.1], color='b', marker='o', markersize=10, lw=2, label='Line'),
-                   # Line2D([0], [0], marker='o', color='w', label='Scatter',
-                   #        markerfacecolor='g', markersize=15),
-                   # Patch(facecolor='orange', edgecolor='r',
-                   #       label='Color Patch')
-                   ]
-
-plt.legend(handles=legend_elements)#, loc='center')
-
-#plt.legend()
-plt.show()
-
-
-
-
+This needs a LaTeX installation; see matplotlib's
+[usetex demo](https://matplotlib.org/stable/gallery/text_labels_and_annotations/usetex_demo.html).

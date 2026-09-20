@@ -10822,3 +10822,37 @@ new Exudyn item** — the reason the maintainer interrupted the documentation ph
 now name files that will still be there when it is read.
 
 ---
+
+<a id="r7-1-5-howto"></a>
+### R7.1.5 (last part) — the five how-to files that were shell transcripts
+
+**DONE 2026-09-20** (#2547). `buildFromSource`, `gccVsMsvcTraps`, `matplotlibExamples`,
+`sphinxDocs` and `visualStudio2022` were `.txt` files renamed to `.md` in step R3.6 and never
+converted: no code fences, and every `#` line — a shell comment — would have rendered as a
+heading. They were excluded from the documentation and linked to GitHub with *"(not converted
+yet, #2547)"*. Now they are documents: out of `exclude_patterns`, into the toctree, and the
+developer index links them locally again. **All eight `docs/howTo/` pages are in the
+documentation.**
+
+#### Converting them meant rewriting them
+
+Formatting alone would have produced correct Markdown containing wrong instructions.
+`buildFromSource.md` told the reader to use Anaconda with **Python 3.6**, to `cd` into a
+`main/` directory that no longer exists, and to run `python setup.py bdist_wheel`,
+`bdist_wininst` and `bdist_msi`. It is now written for the repository as it is — `exudev
+build` first, then what that driver actually does — and it keeps what was genuinely useful and
+is nowhere else: the Linux OpenGL/X11 package list, the WSL permission trap, choosing a GCC
+version, and debugging a model under `gdb`.
+
+`sphinxDocs.md` listed `pip install sphinx` and five more; the documentation dependencies are a
+group in `pyproject.toml`, so the page names the group and the `-W` gate instead.
+`visualStudio2022.md` said "add Python 3.9"; it now names the three components that matter and
+why mixed debugging is the reason to use VS2022 at all.
+
+`gccVsMsvcTraps.md` and `matplotlibExamples.md` needed the least: they are knowledge, not
+instructions — what MSVC accepts and GCC does not (nine traps, each with the error message
+that announces it), and the matplotlib recipes. Both are grouped into sections with the code in
+fences now, and the matplotlib page starts by saying that `PlotSensor` and
+`python -m exudyn plot` already do most of it.
+
+---

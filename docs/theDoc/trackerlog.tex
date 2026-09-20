@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.218.dev1, 
+  \item Exudyn version = 1.11.219.dev1, 
   \item last change =  2026-09-20, 
   \item Number of issues = 2563, 
-  \item Number of resolved issues = 2291 (218 in current version), 
+  \item Number of resolved issues = 2292 (219 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.219}:  resolved Issue 2547: {\bf five howTo files are .txt renamed to .md}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: buildFromSource.md, gccVsMsvcTraps.md, matplotlibExamples.md, sphinxDocs.md and visualStudio2022.md were renamed from .txt in step R3.6 and never converted: they have no fenced code blocks, and every line beginning with a hash - a shell comment - renders as a heading. buildFromSource.md is the canonical build reference and the worst affected. They are excluded from the documentation until they are converted, and linked to GitHub from the developer index so that nothing points at a page that does not exist. convertVideosFfmpeg.md was converted as an example of what they need.}
+    \item {\bf notes: buildFromSource, gccVsMsvcTraps, matplotlibExamples, sphinxDocs and visualStudio2022 are real Markdown and are in the documentation: out of exclude\_patterns, into the toctree, and the developer index links them locally again - all eight docs/howTo pages are documents now. Converting them meant rewriting them, because formatting alone would have produced correct Markdown with wrong instructions: buildFromSource described Anaconda with Python 3.6, a main/ directory that no longer exists and setup.py bdist\_wininst; it is written for the repository as it is now and keeps what is nowhere else (the Linux OpenGL/X11 packages, the WSL permission trap, choosing a GCC version, gdb). sphinxDocs names the docs dependency group and the -W gate instead of a pip list, visualStudio2022 the three components that matter. gccVsMsvcTraps and matplotlibExamples are knowledge rather than instructions and needed mainly structure and code fences.}
+    \item   date resolved: {\bf 2026-09-20 18:04},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.218}:  resolved Issue 2556: {\bf the src/Objects folder holds nodes, markers, loads, sensors and system code}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

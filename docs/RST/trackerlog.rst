@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.218.dev1, 
++  Exudyn version = 1.11.219.dev1, 
 +  last change =  2026-09-20, 
 +  Number of issues = 2563, 
-+  Number of resolved issues = 2291 (218 in current version), 
++  Number of resolved issues = 2292 (219 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.219: resolved Issue 2547: five howTo files are .txt renamed to .md (docu)
+    - issue author: Claude-JG
+    - description:  buildFromSource.md, gccVsMsvcTraps.md, matplotlibExamples.md, sphinxDocs.md and visualStudio2022.md were renamed from .txt in step R3.6 and never converted: they have no fenced code blocks, and every line beginning with a hash - a shell comment - renders as a heading. buildFromSource.md is the canonical build reference and the worst affected. They are excluded from the documentation until they are converted, and linked to GitHub from the developer index so that nothing points at a page that does not exist. convertVideosFfmpeg.md was converted as an example of what they need.
+    - **notes:** buildFromSource, gccVsMsvcTraps, matplotlibExamples, sphinxDocs and visualStudio2022 are real Markdown and are in the documentation: out of exclude_patterns, into the toctree, and the developer index links them locally again - all eight docs/howTo pages are documents now. Converting them meant rewriting them, because formatting alone would have produced correct Markdown with wrong instructions: buildFromSource described Anaconda with Python 3.6, a main/ directory that no longer exists and setup.py bdist_wininst; it is written for the repository as it is now and keeps what is nowhere else (the Linux OpenGL/X11 packages, the WSL permission trap, choosing a GCC version, gdb). sphinxDocs names the docs dependency group and the -W gate instead of a pip list, visualStudio2022 the three components that matter. gccVsMsvcTraps and matplotlibExamples are knowledge rather than instructions and needed mainly structure and code fences.
+    - date resolved: **2026-09-20 18:04**\ , date raised: 2026-09-19 
+    - resolved by: Claude-JG
  * Version 1.11.218: resolved Issue 2556: the src/Objects folder holds nodes, markers, loads, sensors and system code (improvement)
     - issue author: Claude-JG
     - description:  src/Objects/ is named after one of the five item types but holds all of them, plus checkPreAssembleConsistencies.cpp and evaluateUserFunctions.cpp, which are system code, and the UpdateGraphics functions, which are graphics. Split it into ImplObjects, ImplNodes and ImplMarkers (loads and sensors are short and stay in one file each, in System); the Visu files go to Graphics and the two system files to System. Deliberately a small change and not a systematic restructuring of the whole tree. Every moved file is a tracked file and the vcxproj, sources.json and gen_sources follow. See revision2026 step R11.4.5.
@@ -7975,11 +7981,6 @@ Open issues
  * :textred:`open issue 2548:` generated and hand-written documentation share directories and nothing says which is which
     - issue author: Claude-JG
     - description:  Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.
-    - date raised: 2026-09-19 
-
- * **open issue 2547:** five howTo files are .txt renamed to .md
-    - issue author: Claude-JG
-    - description:  buildFromSource.md, gccVsMsvcTraps.md, matplotlibExamples.md, sphinxDocs.md and visualStudio2022.md were renamed from .txt in step R3.6 and never converted: they have no fenced code blocks, and every line beginning with a hash - a shell comment - renders as a heading. buildFromSource.md is the canonical build reference and the worst affected. They are excluded from the documentation until they are converted, and linked to GitHub from the developer index so that nothing points at a page that does not exist. convertVideosFfmpeg.md was converted as an example of what they need.
     - date raised: 2026-09-19 
 
  * **open issue 2541:** exudyn.config and exudyn.special are in no stub file

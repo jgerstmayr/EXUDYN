@@ -1062,8 +1062,10 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     **The check is the RST**: each chapter already has a generated `.rst`, so a conversion can be
     compared against what Sphinx renders today rather than judged by eye.
 
-    **Absorbs #2547**, the five `docs/howTo/` files that are shell transcripts: they need the
-    same conversion and they are excluded from the documentation until they get it.
+    **#2547 DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r7-1-5-howto): the five
+    `docs/howTo/` files that were shell transcripts are real Markdown and are in the documentation.
+    Converting them meant rewriting them — `buildFromSource.md` still described Python 3.6, a
+    `main/` directory and `bdist_wininst`.
 
     **ALL SEVEN CHAPTERS ARE CONVERTED (2026-09-19)** with `tools/tex2md.py`, a one-shot converter
     that is deleted again in R7.1.7: `notation`, `GUI`, `solver`, `tutorial`, `introduction`,

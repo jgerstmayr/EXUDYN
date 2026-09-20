@@ -71,13 +71,13 @@ archived internal repository and on GitHub.
 | file | what it is for |
 |---|---|
 | [condaEnvironments.md](../howTo/condaEnvironments.md) | environment recipes, the package→feature map, the scipy pin |
-| [buildFromSource.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildFromSource.md) | the canonical build reference, Windows and Linux *(not converted yet, #2547)* |
+| [buildFromSource.md](../howTo/buildFromSource.md) | the canonical build reference, Windows and Linux |
 | [buildQuirks.md](../howTo/buildQuirks.md) | traps that cost real time: MSVC↔GCC flags, `/bigobj`, ABI tags, debugging a startup crash |
-| [gccVsMsvcTraps.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md) | the MSVC→GCC porting logbook — what broke and why |
-| [visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
-| [sphinxDocs.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/sphinxDocs.md) | building the documentation locally |
+| [gccVsMsvcTraps.md](../howTo/gccVsMsvcTraps.md) | what MSVC accepts and GCC does not, and why |
+| [visualStudio2022.md](../howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
+| [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
 | [convertVideosFfmpeg.md](../howTo/convertVideosFfmpeg.md) | producing the demo animations |
-| [matplotlibExamples.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/matplotlibExamples.md) | plotting recipes used in examples |
+| [matplotlibExamples.md](../howTo/matplotlibExamples.md) | plotting recipes used in examples |
 
 macOS setup is covered in `docs/theDoc/introduction.tex`, not here.
 
