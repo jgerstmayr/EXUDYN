@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.220.dev1, 
++  Exudyn version = 1.11.221.dev1, 
 +  last change =  2026-09-20, 
 +  Number of issues = 2565, 
-+  Number of resolved issues = 2293 (220 in current version), 
++  Number of resolved issues = 2294 (221 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.221: resolved Issue 2563: the regenerate step of "exudev generate --all-checks" cannot fail on tier 1 drift (fix)
+    - issue author: Claude-JG
+    - description:  tools/regenerate.py fails on tier 1 drift - the API surface that must stay byte-identical - only with --check; exudev generate --all-checks runs it WITHOUT --check, because its job there is to regenerate. The drift is printed ("Generated files differ from the commit") but the exit code is 0, so the step is reported ok and the change sits in the working tree unnoticed. It happened in step R11.4.5: typesEmitter.py looked for the parent header in src/Objects, the folder had been renamed, and ObjectANCFCable2D and ObjectALEANCFCable2D silently lost their item types Body and MultiNoded in python/exudyn/types/items.py - a tier 1 file. Caught by reading an uncommitted diff, not by a gate. Suggestion: after regenerating, run the comparison again in check mode, or let the summary line of that step say TIER 1 DRIFT rather than ok. See revision2026 step R5.18.10.
+    - **notes:** The regenerate step of exudev generate --all-checks now carries a verdict: after regenerating it runs the drift comparison again without the generators (--no-run --check) and the summary line says "ok, TIER 1 DRIFT" with three lines explaining what to do. It deliberately does not pass --check to the step itself: that step regenerates, and regenerating after an intended change produces drift by design, so the gate would be red on every legitimate change - the failure mode of #2551. The run is not stopped, because the drift may be what is about to be committed. One rule was added to the runner for it: a verdict beginning with "ok" is a success that has something to say. Tested both ways with a changed description in definitions/itemDefsObjects.py.
+    - date resolved: **2026-09-20 18:59**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
  * Version 1.11.220: resolved Issue 2564: the tikz flow charts and their hand-made PNG twins (docu)
     - issue author: Claude-JG
     - description:  introduction.tex, solver.tex and theory.tex carried 13 tikzpicture environments, and each had a hand-made PNG of the same diagram next to it in an onlyRST branch: the HTML documentation never rendered tikz, it showed the picture, and the two were kept in step by hand. Convert the flow charts to mermaid - text, so they diff and review like code, and rendered by sphinxcontrib-mermaid - and delete the PNG twins. Genuinely geometric figures keep a pre-rendered image. See revision2026 step R7.1.9, maintainer decision D9.
@@ -7973,11 +7979,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * :textred:`open issue 2563:` the regenerate step of "exudev generate --all-checks" cannot fail on tier 1 drift
-    - issue author: Claude-JG
-    - description:  tools/regenerate.py fails on tier 1 drift - the API surface that must stay byte-identical - only with --check; exudev generate --all-checks runs it WITHOUT --check, because its job there is to regenerate. The drift is printed ("Generated files differ from the commit") but the exit code is 0, so the step is reported ok and the change sits in the working tree unnoticed. It happened in step R11.4.5: typesEmitter.py looked for the parent header in src/Objects, the folder had been renamed, and ObjectANCFCable2D and ObjectALEANCFCable2D silently lost their item types Body and MultiNoded in python/exudyn/types/items.py - a tier 1 file. Caught by reading an uncommitted diff, not by a gate. Suggestion: after regenerating, run the comparison again in check mode, or let the summary line of that step say TIER 1 DRIFT rather than ok. See revision2026 step R5.18.10.
-    - date raised: 2026-09-20 
 
  * **open issue 2562:** nothing in the test suite ever calls UpdateGraphics
     - issue author: Claude-JG

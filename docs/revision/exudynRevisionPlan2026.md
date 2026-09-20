@@ -584,8 +584,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 
 <a id="r5-18-10"></a>
-**R5.18.10** **HIGH** *(sub-step of R5.18, added 2026-09-20)* **The regenerate step of
-    `--all-checks` cannot fail on tier 1 drift** (#2563). `tools/regenerate.py`
+**R5.18.10** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r5-18-10) *(sub-step of
+    R5.18)* **The regenerate step of `--all-checks` could not report tier 1 drift** (#2563). `tools/regenerate.py`
     fails on tier 1 drift only with `--check`, and `exudev generate --all-checks` runs it without,
     because its job there is to regenerate. The drift is *printed* and the step is reported **ok**.
 

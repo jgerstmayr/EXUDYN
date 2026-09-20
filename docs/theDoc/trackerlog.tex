@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.220.dev1, 
+  \item Exudyn version = 1.11.221.dev1, 
   \item last change =  2026-09-20, 
   \item Number of issues = 2565, 
-  \item Number of resolved issues = 2293 (220 in current version), 
+  \item Number of resolved issues = 2294 (221 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.221}:  resolved Issue 2563: {\bf the regenerate step of "exudev generate --all-checks" cannot fail on tier 1 drift}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: tools/regenerate.py fails on tier 1 drift - the API surface that must stay byte-identical - only with --check; exudev generate --all-checks runs it WITHOUT --check, because its job there is to regenerate. The drift is printed ("Generated files differ from the commit") but the exit code is 0, so the step is reported ok and the change sits in the working tree unnoticed. It happened in step R11.4.5: typesEmitter.py looked for the parent header in src/Objects, the folder had been renamed, and ObjectANCFCable2D and ObjectALEANCFCable2D silently lost their item types Body and MultiNoded in python/exudyn/types/items.py - a tier 1 file. Caught by reading an uncommitted diff, not by a gate. Suggestion: after regenerating, run the comparison again in check mode, or let the summary line of that step say TIER 1 DRIFT rather than ok. See revision2026 step R5.18.10.}
+    \item {\bf notes: The regenerate step of exudev generate --all-checks now carries a verdict: after regenerating it runs the drift comparison again without the generators (--no-run --check) and the summary line says "ok, TIER 1 DRIFT" with three lines explaining what to do. It deliberately does not pass --check to the step itself: that step regenerates, and regenerating after an intended change produces drift by design, so the gate would be red on every legitimate change - the failure mode of \#2551. The run is not stopped, because the drift may be what is about to be committed. One rule was added to the runner for it: a verdict beginning with "ok" is a success that has something to say. Tested both ways with a changed description in definitions/itemDefsObjects.py.}
+    \item   date resolved: {\bf 2026-09-20 18:59},
+date raised: 2026-09-20 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.220}:  resolved Issue 2564: {\bf the tikz flow charts and their hand-made PNG twins}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

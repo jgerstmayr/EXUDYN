@@ -16,6 +16,7 @@
 import glob
 import os
 import shutil
+import subprocess
 import zipfile
 import sys
 
@@ -139,6 +140,39 @@ def VersionCheckStep(environment, options):
 
 
 #%%******************************************************************************************************
+def RegenerationVerdict(environment, options):
+    """The verdict of the regenerate step: ok, or ok with TIER 1 DRIFT.
+
+    regenerate.py fails on tier 1 drift only with --check, and the step of "generate
+    --all-checks" cannot pass it: regenerating after an intended change produces drift by
+    design. Without this, a generated API file could change and the step still said ok - which
+    is how python/exudyn/types/items.py silently lost two item types in step R11.4.5 (#2563).
+
+    So the comparison runs once more, without the generators (--no-run), and its exit code
+    becomes part of the verdict. The run is NOT stopped: the drift may well be what was
+    intended and is about to be committed."""
+    def Verdict(step, returnCode):
+        if returnCode != 0:
+            return 'FAILED'
+        argv = ['python', 'tools/regenerate.py', '--no-run', '--check']
+        try:
+            completed = subprocess.run(runner.InEnvironment(environment, argv, options),
+                                       cwd=runner.RepositoryRoot(),
+                                       capture_output=True, text=True)
+        except OSError:
+            return 'ok'                  #the drift check could not run; do not invent a verdict
+        if completed.returncode == 0:
+            return 'ok'
+        print('')
+        print('*** TIER 1 DRIFT: the generated API surface differs from the commit.')
+        print('    Intended? Commit the regenerated files. Not intended? A generator or its')
+        print('    input changed unexpectedly - see the list above (revision2026 step R5.18.10).')
+        return 'ok, TIER 1 DRIFT'
+
+    return Verdict
+
+
+#%%******************************************************************************************************
 def Generate(options):
     """Regenerate everything that is generated, and optionally run the checking tools."""
     root = runner.RepositoryRoot()
@@ -152,7 +186,8 @@ def Generate(options):
     argv += runner.QuietFlag('regenerate.py', options.verbose)
 
     steps = [Step('regenerate (' + environment + ')',
-                  argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+                  argv=runner.InEnvironment(environment, argv, options), cwd=root,
+                  verdict=RegenerationVerdict(environment, options))]
 
     if options.all_checks:
         checks = [(['python', 'tools/checkAll.py', '--check'],                'checkAll'),

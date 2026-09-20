@@ -358,7 +358,9 @@ def RunSteps(steps, options):
 
         results += [(step.label, verdict)]
 
-        if verdict != 'ok' and step.check:
+        #a verdict that BEGINS with 'ok' is a success that has something to say - e.g.
+        #'ok, TIER 1 DRIFT' (#2563): it is printed in the summary but does not stop the run
+        if not verdict.startswith('ok') and verdict != 'skipped' and step.check:
             print('*** stopped: "' + step.label + '" returned ' + str(returnCode))
             break
 
@@ -376,7 +378,9 @@ def RunSteps(steps, options):
 
 #%%******************************************************************************************************
 def PrintSummary(results):
-    """The verdict table. 'unknown' is a real answer and is never rounded up to success."""
+    """The verdict table. 'unknown' is a real answer and is never rounded up to success, and a
+    verdict of the form 'ok, SOMETHING' says that the step passed and still has something to
+    report - the tier 1 drift of #2563 is the reason this exists."""
     print('')
     print('+++++ exudev summary +++++')
     width = max([len(label) for (label, verdict) in results] + [10])

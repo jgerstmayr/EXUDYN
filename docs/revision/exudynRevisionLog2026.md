@@ -10912,3 +10912,41 @@ which is a heavier dependency than the project wants for documentation.
 the rest of that group.
 
 ---
+
+<a id="r5-18-10"></a>
+### R5.18.10 — the gate that watched the API surface and said nothing
+
+**DONE 2026-09-20** (#2563). `exudev generate --all-checks` reported the regenerate step as
+**ok** while a tier 1 file — the API surface, which must stay byte-identical — had changed.
+That is how `python/exudyn/types/items.py` lost the item types of two objects in R11.4.5 without
+anything saying so.
+
+#### Why it could not simply pass `--check`
+
+`tools/regenerate.py --check` fails on tier 1 drift, and the obvious fix is to pass it. But that
+step **regenerates**, and regenerating after an intended change produces drift *by design*: the
+gate would be red on every legitimate change, until the generated files are committed — and the
+gates run **before** the commit. A gate that is red whenever you work is the intermittent gate of
+#2551 wearing a different hat.
+
+#### What it does instead
+
+The step keeps its exit code and gains a **verdict**: after regenerating, the comparison runs
+once more without the generators (`--no-run --check`), and the summary line says
+
+```
+  regenerate (venvExuP313)   ok, TIER 1 DRIFT
+```
+
+with three lines above it saying what to do: commit the regenerated files if the change was
+intended, and look at the list if it was not. The run is **not stopped**, because the drift may
+well be exactly what is about to be committed.
+
+That needed one rule in the runner: **a verdict that begins with `ok` is a success that has
+something to say**. It is printed in the table, it does not stop the chain and it does not fail
+the run.
+
+Tested in both directions: a changed description in `definitions/itemDefsObjects.py` produced
+*ok, TIER 1 DRIFT* and the remaining seven checks still ran; reverting it produced *ok*.
+
+---
