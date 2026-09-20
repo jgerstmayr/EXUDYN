@@ -130,6 +130,8 @@ docs = [
     "readthedocs-sphinx-search",
     "sphinx-copybutton",
     "myst-parser",          #Markdown sources (revision2026 step R7.1.4); RST stays readable too
+    "sphinxcontrib-mermaid",#the flow charts (revision2026 step R7.1.9); they were tikz,
+                            #which the HTML never rendered - it showed a hand-made PNG of it
     ]
 lint = [
     "pydoclint==0.9.1",     #the baseline tools/ci/pydoclintBaseline.txt holds this version's messages

@@ -9,7 +9,19 @@ provides a simple, efficient and versatile interface to a general contact module
 
 Note that there are currently only simplistic contact models, such as linear contact and simple damping, which are not representing realistic Hertzian contact (which will be implemented in near future). Furthermore, read the notes in `GeneralContact` carefully, how stiffness and damping is realized -- e.g., stiffness may be a serial spring against the other object, while damping is implemented as parallel damper.
 
- The implemented and possible couplings of contact objects are:
+(fig-available-contact)=
+```{mermaid}
+:caption: Contact: possible coupling of geometrical objects in Exudyn. The diagram existed only as a tikz picture and therefore only in the PDF; it reaches the HTML documentation for the first time with revision2026 step R7.1.9.
+
+flowchart TD
+    available([<b>available contacts</b>]) --> spherical["sphere - sphere, circle - circle"]
+    available --> clustered["clustered sphere - {sphere, triangle}"]
+    available --> sphereTriangle["sphere - triangle"]
+    available --> triangleTriangle["triangle - triangle"]
+    available --> circleCable["circle - ANCFCable2D"]
+```
+
+The implemented and possible couplings of contact objects are:
 
 - simulate spherical particles; in 2D, spheres are represented as circles
 - simulate clustered spherical [circular] particles which consist of rigid bodies made of a cluster of spheres; several contact spheres are attached to one rigid body by using rigid body markers; in 2D, spheres are represented as circles

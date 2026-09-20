@@ -13,10 +13,17 @@ The user has a couple of basic solvers available in Exudyn , see {ref}`fig-avail
 - `exudyn.ComputeODE2Eigenvalues(...)`: computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues
 
 (fig-available-solvers)=
-```{figure} /docs/theDoc/figures/solversAvailableSolvers.png
-:width: 500
+```{mermaid}
+:caption: Basic and advanced solvers in Exudyn ; advanced solvers build upon any basic solver to perform more sophisticated operations
 
-Basic and advanced solvers in Exudyn ; advanced solvers build upon any basic solver to perform more sophisticated operations
+flowchart TD
+    optimization[optimization] --> basicSolvers
+    parameterVariation[parameter variation] --> basicSolvers
+    sensitivityAnalysis[sensitivity analysis] --> basicSolvers
+    basicSolvers([Basic solvers]) --> solveStatic[static solver]
+    basicSolvers --> solveDynamic[dynamic solver]
+    basicSolvers --> computeLinearized[compute linearized system]
+    basicSolvers --> computeEigenvalues[eigenvalue solver]
 ```
 
 There are advanced solvers, like in `exudyn.processing`:
@@ -79,38 +86,97 @@ Settings for the solver substructures, like timer, output, iterations, etc.\, ar
 The description of interfaces for solvers starts in {ref}`sec-mainsolverstatic`.
 
 (fig-solver-time-integration)=
-```{figure} /docs/theDoc/figures/solverTimeIntegration.png
-:width: 400
+```{mermaid}
+:caption: Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.
 
-Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.
+flowchart TD
+    solveSystem([SolveSystem]) --> initialize{"InitializeSolver()?"}
+    initialize -- failed --> initFailed["InitializeSolver() failed"]
+    initialize -- ok --> solveSteps["SolveSteps()"]
+    solveSteps --> finalize["FinalizeSolver()"]
+    initFailed --> finalize
 ```
 
 (fig-solver-initialize-solver)=
-```{figure} /docs/theDoc/figures/solverInitializeSolver.png
-:width: 400
+```{mermaid}
+:caption: Basic solver flow chart for function InitializeSolver().
 
-Basic solver flow chart for function InitializeSolver().
+flowchart TD
+    initializeSolver([InitializeSolver]) --> pre["PreInitializeSolverSpecific()"]
+    pre --> output["InitializeSolverOutput()"]
+    output --> preChecks{"InitializeSolverPreChecks()?"}
+    preChecks -- failed --> initFailed["return False"]
+    preChecks -- ok --> data["InitializeSolverData()"]
+    data --> initialConditions["InitializeSolverInitialConditions()"]
+    initialConditions --> post["PostInitializeSolverSpecific()"]
+    post --> finished["return True"]
 ```
 
 (fig-solver-solve-steps)=
-```{figure} /docs/theDoc/figures/solverSolveSteps.png
-:width: 400
+```{mermaid}
+:caption: Flow chart for SolveSteps(), which is the inner loop of the solver.
 
-Flow chart for SolveSteps(), which is the inner loop of the solver.
+flowchart TD
+    solveSteps([SolveSteps]) --> loop{"simulation finished,<br>or solver failed or stopped?"}
+    loop -- yes --> loopFinished["return True if the end time was reached,<br>otherwise False"]
+    loop -- no --> startOfStep["state.startOfStep = state.current"]
+    startOfStep --> stepReduction{"step finished?"}
+    stepReduction -- yes --> finishStep["increment the step counter"]
+    stepReduction -- no --> initializeStep["update the current time<br>InitializeStep()"]
+    finishStep --> loop
+    initializeStep --> discontinuous{"DiscontinuousIteration()?"}
+    discontinuous -- failed --> reduce["reduce the step<br>(return False at the minimum step size)<br>state.current = state.startOfStep"]
+    discontinuous -- ok --> finishDiscontinuous["FinishStep(); check whether the step size may grow"]
+    reduce --> stepReduction
+    finishDiscontinuous --> finishStep
 ```
 
 (fig-solver-discontinuous-iteration)=
-```{figure} /docs/theDoc/figures/solverDiscontinuousIteration.png
-:width: 400
+```{mermaid}
+:caption: Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, SolveSteps() will try to reduce the step size.
 
-Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, SolveSteps() will try to reduce the step size.
+flowchart TD
+    discontinuousIteration([DiscontinuousIteration]) --> loop{"converged,<br>or iteration count at the maximum?"}
+    loop -- yes --> terminate["return True if successful,<br>False if the maximum was reached"]
+    loop -- no --> newton{"Newton()?"}
+    newton -- failed --> newtonFailed["return False"]
+    newton -- ok --> postNewton["discontinuous iteration counter ++<br>PostNewtonStep()"]
+    postNewton --> error{"error <= tolerance?"}
+    error -- yes --> successful["successful; return True"]
+    error -- no --> reset["state.current = state.startOfStep"]
+    reset --> loop
 ```
 
 (fig-solver-newton-iteration)=
-```{figure} /docs/theDoc/figures/solverNewton.png
-:width: 320
+```{mermaid}
+:caption: Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for newtonResidualMode = 0.
 
-Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for newtonResidualMode = 0.
+flowchart TD
+    newton([Newton]) --> init["state.current = state.startOfStep<br>current.AEcoords = 0"]
+    init --> residual["R = ComputeResidual()<br>res = |R| / nCoords"]
+    residual --> initResidual["initRes = res"]
+    initResidual --> loop{"converged, failed,<br>or iteration count at the maximum?"}
+    loop -- yes --> terminate["return True if successful, otherwise False"]
+    loop -- no --> jacobianRequested{"jacobian requested?"}
+    jacobianRequested -- yes --> updateJacobian["ComputeNewtonJacobian()"]
+    updateJacobian --> factorize{"jacobian.Factorize()?"}
+    factorize -- failed --> factorizeFailed["return False"]
+    factorize -- ok --> solve
+    jacobianRequested -- no --> solve["sol = jacobian.Solve(res)"]
+    solve --> update["ComputeNewtonUpdate() with sol"]
+    update --> residual2["R = ComputeResidual()<br>res = |R| / nCoords"]
+    residual2 --> tolerances{"res <= absTol,<br>or res / initRes <= relTol?"}
+    tolerances -- yes --> converged["newtonSuccess = True"]
+    tolerances -- no --> divergence["if the coordinates are NaN:<br>restart or stop Newton"]
+    divergence --> iterations["beyond maxModNewtonIt:<br>update the jacobian and restart"]
+    iterations --> iterations2["beyond maxModNewtonIt + maxModRestartIt:<br>full Newton"]
+    iterations2 --> contractivity["contractivity = res / lastRes<br>lastRes = res"]
+    contractivity --> restart{"contractivity, diverged or restart flag?"}
+    restart -- restart --> restartIteration["state.current = state.startOfStep<br>state.AEcoords = 0<br>ComputeResidual()"]
+    restart -- continue --> continueNewton[continue Newton]
+    restartIteration --> continueNewton
+    continueNewton --> loop
+    converged --> loop
 ```
 
 (sec-explicitsolver)=
@@ -541,10 +607,18 @@ As an alternative stochastic methods can be use to compute only the objective fu
 The general structure of a (canonical) genetic algorithm is depicted in {ref}`fig-geneticoptimization`.
 
 (fig-geneticoptimization)=
-```{figure} /docs/theDoc/figures/geneticOptimization.png
-:width: 400
+```{mermaid}
+:caption: Basic solver flow chart genetic algorithm / optimization.
 
-Basic solver flow chart genetic algorithm / optimization.
+flowchart TD
+    genetic(["GeneticOptimization(...)"]) --> initial["1. create the initial population S_i with n_pi individuals"]
+    initial --> fitness["2. evaluate the fitness of the population"]
+    fitness --> surviving["3. select the surviving individuals S_s"]
+    surviving --> crossover["4. create the crossover population S_c"]
+    crossover --> mutation["5. create the mutated population S_m"]
+    mutation --> decision{"6. fitness goal reached,<br>or n_g generations computed?"}
+    decision -- no --> fitness
+    decision -- yes --> done[END]
 ```
 
 For details, see the cited literature. Here, we focus on the implementation of the function

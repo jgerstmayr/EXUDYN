@@ -17,10 +17,20 @@ This section will show:
 For an introduction to the solvers, see {ref}`sec-solvers`.
 
 (fig-exudyn-candpython)=
-```{figure} /docs/theDoc/figures/overviewExudynModules.png
-:width: 350
+```{mermaid}
+:caption: Overview on Exudyn C++ and Python modules
 
-Overview on Exudyn C++ and Python modules
+flowchart TD
+    exudyn([exudyn]) --> exudynCPP[<b>exudynCPP</b>: C++ module]
+    exudyn --> python[exudyn Python modules]
+    python --> itemInterface[<b>itemInterface</b>: main interface to the C++ items]
+    python --> solvers[<b>solver</b>: interface to the C++ solvers]
+    python --> utilities[<b>utilities</b>]
+    python --> FEM[<b>FEM</b>: FEM import and preprocessing]
+    python --> plot[<b>plot</b>: interface to matplotlib]
+    python --> processing[<b>processing</b>: parallelisation and optimization]
+    python --> robotics[<b>robotics</b> submodule]
+    python --> more[...]
 ```
 
 (sec-overview-overviewmodules)=
@@ -58,17 +68,40 @@ Python parts, see {ref}`fig-exudyn-candpython`.
   - `exudyn.utilities`: constains helper classes in Python and includes Exudyn main modules `basicUtilities`, `rigidBodyUtilities`, `graphics`, and `itemInterface`, which is recommended to be loaded at beginning of your model file in order to have most necessary functionality at hand
 
 (fig-exudyn-cpp)=
-```{figure} /docs/theDoc/figures/overviewExudynCppModule.png
-:width: 500
+```{mermaid}
+:caption: Overview on Exudyn C++ module
 
-Overview on Exudyn C++ module
+flowchart TD
+    exudynCPP([exudynCPP]) --> systemContainer[SystemContainer]
+    exudynCPP --> solver[static and dynamic solver interfaces]
+    systemContainer --> system["MainSystem (e.g. 'mbs')"]
+    systemContainer --> visualizationSettings[visualizationSettings]
+    systemContainer --> anotherSystem["MainSystem (e.g. 'anotherMbs')"]
+    system --> systemData[systemData]
+    systemData --> systemStates["system states (initial, current, ...)"]
+    anotherSystem --> anotherSystemData[systemData]
+    anotherSystemData --> anotherStates["system states (initial, current, ...)"]
+    solver --> renderer["basic renderer interface (start/stop)"]
+    renderer --> misc[data types, local dictionaries, system-wide settings]
 ```
 
 (fig-system-overview)=
-```{figure} /docs/theDoc/figures/overviewSystemData.png
-:width: 550
+```{mermaid}
+:caption: Overview of systemData
 
-Overview of systemData
+flowchart TD
+    system(["MainSystem ('mbs')"]) --> systemData[systemData]
+    systemData --> systemStates[system states]
+    systemData --> ltg[LTG coordinate index lists]
+    systemData --> nodes[list of nodes]
+    systemData --> objects[list of objects]
+    systemData --> markers[list of markers]
+    systemData --> loads[list of loads]
+    systemData --> sensors[list of sensors]
+    systemStates --> current[current state]
+    systemStates --> initial[initial state]
+    systemStates --> reference[reference state]
+    systemStates --> other[other states]
 ```
 
 SystemData connects items, states and stores the {ref}`LTG <LTG>`. Note that access to items is provided via functions in `MainSystem`.
@@ -104,10 +137,19 @@ Furthermore, the local position in 2D objects is provided by a 3D vector. Usuall
 In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in {ref}`fig-items-interaction`
 
 (fig-items-interaction)=
-```{figure} /docs/theDoc/figures/itemsMultibodySystem.png
-:width: 500
+```{mermaid}
+:caption: Interaction of items in a multibody system
 
-Interaction of items in a multibody system
+flowchart TD
+    load0[load 0] --> marker0[marker 0]
+    marker0 --> object0["object 0 (body)"]
+    object0 --> node0[node 0]
+    marker1[marker 1] --> node0
+    connector[connector] --> marker1
+    connector --> marker2[marker 2]
+    marker2 --> object1["object 1 (body)"]
+    object1 --> node1[node 1]
+    object1 --> node2[node 2]
 ```
 
 Note that both, bodies and connectors (including constraints) are -- computational -- objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.

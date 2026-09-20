@@ -10872,3 +10872,43 @@ fences now, and the matplotlib page starts by saying that `PlotSensor` and
 `python -m exudyn plot` already do most of it.
 
 ---
+
+<a id="r7-1-9"></a>
+### R7.1.9 — the tikz twins become mermaid
+
+**DONE 2026-09-20** (#2564; maintainer decision D9). Twelve flow charts are mermaid now,
+and the eleven hand-made PNGs that were their twins are deleted.
+
+The duplicate is what this step was about: the `.tex` chapters carried **both** representations
+side by side — a `tikzpicture` for the PDF and a `figure::` with a hand-drawn PNG for the
+HTML — and the two were kept in step by hand. The HTML **never** rendered tikz.
+
+| chapter | diagrams |
+|---|---|
+| `solver.md` | the available solvers, and the flow charts of `SolveSystem`, `InitializeSolver`, `SolveSteps`, `DiscontinuousIteration`, `Newton` and the genetic optimization (7) |
+| `introduction.md` | the module overview, the C++ module, `systemData`, and the interaction of items (4) |
+| `theoryContact.md` | the possible couplings of contact objects (1) |
+
+The contact diagram is the one worth naming: it existed **only** as tikz, so no reader of the
+web documentation has ever seen it. It appears there for the first time.
+
+`theoryRotations.md` keeps its images: the homogeneous transformation between two frames is
+geometry, not a flow chart, which is the exception D9 makes.
+
+#### Two things learnt while doing it
+
+**A `{ref}` needs a titled target.** The first attempt put the caption in an italic line under
+the diagram, and four cross references broke: a target above a block with no caption has no
+title. `sphinxcontrib-mermaid` takes `:caption:`, which makes the block a real figure — so
+every existing `{ref}`fig-...`` keeps working, unchanged.
+
+**The diagrams render in the browser, from a CDN.** The extension emits the mermaid source into
+the page and loads the renderer from jsDelivr; readthedocs and GitHub Pages serve it fine, but a
+locally opened `_build` page without internet shows the diagram source rather than the diagram.
+The alternative — pre-rendering to SVG at build time — needs `mermaid-cli` and therefore node,
+which is a heavier dependency than the project wants for documentation.
+
+`sphinxcontrib-mermaid` is in the docs dependency group and in `conf.py`; it is dev-only, like
+the rest of that group.
+
+---

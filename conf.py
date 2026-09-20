@@ -115,6 +115,9 @@ extensions = [
    'sphinx_copybutton',
    'myst_parser',             #Markdown sources (revision2026 step R7.1.4, #2546); the migration of
                               #step R7.1 converts the .tex chapters into this format
+   'sphinxcontrib.mermaid',   #the flow charts of the manual (revision2026 step R7.1.9):
+                              #text rather than a hand-made PNG beside a tikz source that
+                              #only the PDF ever rendered
 ]
 
 #a .md file is a document, a .rst file is a document; nothing else changes

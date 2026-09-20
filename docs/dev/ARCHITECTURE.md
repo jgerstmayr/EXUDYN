@@ -162,12 +162,13 @@ which is exactly the wrong conclusion.
 
 | you want to | start at |
 |---|---|
-| see how the module is created | `main/src/Pymodules/PybindModule.cpp` |
-| follow `mbs.AddObject` into C++ | `main/src/Main/MainObjectFactory.cpp` |
+| see how the module is created | `src/Pymodules/PybindModule.cpp` |
+| follow `mbs.AddObject` into C++ | `src/Main/MainObjectFactory.cpp` |
 | add a new item | [CODING_STYLE.md §9](CODING_STYLE.md#9-adding-a-new-item-node-object-marker-load-sensor) — edit `definitions/`, never the generated header |
-| understand the time loop | `main/src/Solver/CSolverImplicitSecondOrder.cpp` |
+| understand the time loop | `src/Solver/CSolverImplicitSecondOrder.cpp` |
 | debug Python→C++ | VS2022, `Debug|x64`, breakpoint in a `ComputeODE2LHS` |
 
-Figures rendered from the LaTeX sources, if a picture helps: `docs/theDoc/figures/` —
-`overviewExudynModules.png`, `overviewExudynCppModule.png`, `overviewSystemData.png`,
-`itemsMultibodySystem.png`.
+Those four overview diagrams are in the user manual, as mermaid: the module overview and the
+C++ module in `docs/manual/introduction.md`, `systemData` and the interaction of items in
+the same chapter (revision2026 step R7.1.9). They used to be tikz pictures with a
+hand-made PNG beside them.

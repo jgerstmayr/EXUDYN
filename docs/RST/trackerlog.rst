@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.219.dev1, 
++  Exudyn version = 1.11.220.dev1, 
 +  last change =  2026-09-20, 
-+  Number of issues = 2564, 
-+  Number of resolved issues = 2292 (219 in current version), 
++  Number of issues = 2565, 
++  Number of resolved issues = 2293 (220 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.220: resolved Issue 2564: the tikz flow charts and their hand-made PNG twins (docu)
+    - issue author: Claude-JG
+    - description:  introduction.tex, solver.tex and theory.tex carried 13 tikzpicture environments, and each had a hand-made PNG of the same diagram next to it in an onlyRST branch: the HTML documentation never rendered tikz, it showed the picture, and the two were kept in step by hand. Convert the flow charts to mermaid - text, so they diff and review like code, and rendered by sphinxcontrib-mermaid - and delete the PNG twins. Genuinely geometric figures keep a pre-rendered image. See revision2026 step R7.1.9, maintainer decision D9.
+    - **notes:** Twelve flow charts are mermaid in docs/manual/ - seven in solver.md, four in introduction.md and the contact coupling in theoryContact.md, which existed only as tikz and therefore never reached the HTML at all - and the eleven hand-made PNG twins are deleted. theoryRotations.md keeps its images: the homogeneous transformation is geometry, which is the exception D9 makes. The captions go into the :caption: option of the mermaid directive rather than into an italic line, because a {ref} needs a titled target and four cross references broke without it. sphinxcontrib-mermaid is in the docs dependency group and in conf.py; it renders in the browser from a CDN, so a locally opened page without internet shows the diagram source.
+    - date resolved: **2026-09-20 18:34**\ , date raised: 2026-09-20 
+    - resolved by: Claude-JG
  * Version 1.11.219: resolved Issue 2547: five howTo files are .txt renamed to .md (docu)
     - issue author: Claude-JG
     - description:  buildFromSource.md, gccVsMsvcTraps.md, matplotlibExamples.md, sphinxDocs.md and visualStudio2022.md were renamed from .txt in step R3.6 and never converted: they have no fenced code blocks, and every line beginning with a hash - a shell comment - renders as a heading. buildFromSource.md is the canonical build reference and the worst affected. They are excluded from the documentation until they are converted, and linked to GitHub from the developer index so that nothing points at a page that does not exist. convertVideosFfmpeg.md was converted as an example of what they need.

@@ -1103,7 +1103,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     **After R7.1.8**, which decides where a converted chapter is written to.
 
 <a id="r7-1-9"></a>
-**R7.1.9** *(sub-step of R7.1, after R7.1.5; added 2026-09-19)* **The tikz twins become mermaid**
+**R7.1.9** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r7-1-9) *(sub-step of R7.1)*
+    **The tikz twins become mermaid**
     (decision D9, R7.1.1). 13 `tikzpicture` environments in `introduction`, `solver` and `theory`,
     each with a hand-made PNG beside it that the HTML has always shown instead. One pass over all
     three chapters rather than a third of the job in each chapter commit: the diagrams share a
