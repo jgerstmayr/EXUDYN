@@ -70,8 +70,9 @@ stages = [
           [G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst', G + 'stubAutoBindingsExt.pyi',
            'docs/theDoc/MainSystemExt.tex', 'docs/theDoc/MainSystemCreateExt.tex']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
-          ['docs/RST/pythonUtilities', 'docs/theDoc/pythonUtilitiesDescription.tex',
-           'docs/RST/confHelperPyUtilities.py']),
+          #Markdown since revision2026 step R7.1.6; confHelperPyUtilities.py is not documentation
+          #but data for conf.py, which reads it from docs/RST/
+          ['docs/generated/pythonUtilities', 'docs/RST/confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
           ['definitions', G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',

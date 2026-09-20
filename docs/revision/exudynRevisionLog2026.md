@@ -10976,6 +10976,31 @@ written for the chapters in R7.1.5 — it gained a `ConvertText` entry point for
 rather than a file. The emitters had exactly the LaTeX the chapters had, so they do not get a
 second converter; both die together in R7.1.7.
 
+#### The second emitter: the utility functions (2026-09-20)
+
+`utilityDocsEmitter` wrote `docs/theDoc/pythonUtilitiesDescription.tex` (11,360 lines) and
+`docs/RST/pythonUtilities/*.rst`. Both are gone; **31 Markdown pages** are in
+`docs/generated/pythonUtilities/`, one per utility module, with the chapter index carrying the
+`sec:pythonUtilityFunctions` label so that every reference to the chapter still resolves.
+
+This emitter does **not** go through `PyLatexRST`: it builds LaTeX and RST inline, in two
+interleaved branches. Adding a third would have tripled that; instead the Markdown is written
+from the parsed function dictionary by a new `FunctionDescription2Markdown` — a heading with
+the signature, a link to the source line on GitHub, and one bullet per documented tag, with the
+example as a fenced block. That is what remains when R7.1.7 deletes the other two branches.
+
+**The word count found two real losses, in two rounds.** First the *example references* — the
+*"Relevant Examples and TestModels with weblink"* line under each function — which exist only
+in the RST branch; `KeywordExamplesMarkdown` now emits them from the same file scan. Then, on
+the second pass, the **class-level tags**: a class got its description but not its `example`,
+`notes` or `input`, which the RST rendered through `DictToItemsText`. Both renderers are one
+function now, `Tags2Markdown`, used by the functions and the classes alike.
+
+After that, the vocabulary of the deleted RST and of the new Markdown differ by **five words**:
+`Section` and `subsection` (RST markup), `mathbf` (the RST expanded the math macros),
+`pythonUtilities` (the name of the old page) and `Sypder` — a typo in the old preamble, which
+the rewritten one spells correctly.
+
 #### What the check found
 
 Word count of the deleted RST against the new Markdown, words of five letters or more:

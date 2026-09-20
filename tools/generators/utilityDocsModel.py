@@ -34,6 +34,7 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, \
 ADD_DOCSTRINGS = True
 
 maxWarningsMutableArgs = 200 #warnings in case of list or dict default args (mutable args)
+from autoGenerateHelper import MarkdownLabel, MarkdownHeading, LatexText2Markdown   # noqa: E402
 #list of functions for which mutable args have been checked:
 mutableArgsFunctionsChecked = [
     'GenerateStraightLineANCFCable','GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', 'GenerateStraightBeam', #beams
@@ -667,6 +668,66 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     
     return [sLatex,sRST,sPyi,sPy]
 
+
+
+def Tags2Markdown(itemDict, tags):
+    """the documented tags of a function or of a class, as Markdown (revision2026 step R7.1.6);
+    an example is a fenced code block, everything else a bullet"""
+    text = ''
+    for tag in tags:
+        if tag not in itemDict or tag in ['belongsTo']:
+            continue
+        name = {'function': 'function description', 'class': 'class description',
+                'classFunction': 'class function description'}.get(tag, tag)
+        content = RemoveIndentation(itemDict[tag].strip())
+
+        if tag == 'example':
+            code = RemoveIndentation(itemDict[tag].strip(chr(10)).replace(chr(92) + '_', '_'),
+                                     '  ', removeAllSpaces=False, removeIndentation=True)
+            text += chr(10) + '*example*:' + chr(10) * 2 + '```python' + chr(10) \
+                + code.rstrip() + chr(10) + '```' + chr(10) * 2
+            continue
+
+        if tag == 'output':
+            (tagType, content) = TagString2TypeAndString(tag, content)
+            if tagType is not None:
+                content = '(type: ' + tagType + ')' + content
+
+        text += '- **' + name + '**: ' + LatexText2Markdown(content).replace(chr(10), ' ') + chr(10)
+    return text
+
+
+def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
+                                isClassFunction=False, className='', headingLevel=3):
+    """The documentation of one function or class method, as Markdown (revision2026 step R7.1.6).
+
+    Written from the parsed dictionary rather than from the LaTeX, so that it says what it means:
+    a heading with the signature, the source link, and one section per documented tag."""
+    functionName = functionDict['functionName'].replace(chr(92) + '_', '_')
+
+    lineNumber = ''
+    if functionDict['lineNumber'] != 0:
+        lineNumber = '#L' + str(functionDict['lineNumber'] + 1)
+    url = paths.githubSourceURL + 'exudyn/' + pythonFileName + lineNumber
+
+    arguments = []
+    for (index, argument) in enumerate(functionDict['argumentsList']):
+        argument = argument.strip().replace(chr(92) + '_', '_')
+        if argument == '':
+            continue
+        default = functionDict['defaultArgumentsList'][index]
+        arguments += [argument + (' = ' + default if len(default) != 0 else '')]
+    signature = functionName + '(' + ', '.join(arguments) + ')'
+
+    label = 'sec:' + moduleNamePython + ':' + (className + ':' if isClassFunction else '') \
+        + functionName
+    text = '\n' + MarkdownLabel(label) + '\n'
+    text += MarkdownHeading(('Class function: ' if isClassFunction else 'Function: ')
+                            + functionName, headingLevel) + '\n\n'
+    text += '[`' + signature + '`](' + url + ')\n\n'
+
+    text += Tags2Markdown(functionDict, docuTags)
+    return text + '\n'
 
 
 def ModuleNames(fileName):

@@ -1721,6 +1721,34 @@ def ExtractExamplesWithKeyword(keyword, dirPath, checkPreString=True):
 #generate latex string containing a list of file references (and hyperref links), 
 #based on a search through Examples and TestModels
 #if latex is false, formatting is clean to be used in RST
+def KeywordExamplesMarkdown(itemType, itemName, itemShortName='', maximumFiles=8):
+    """The examples and test models that use this item or function, as a Markdown line of links
+    (revision2026 step R7.1.6). The LaTeX and RST twin above does the same for the formats that
+    go away in R7.1.7; both read the same files through ExtractExamplesWithKeyword."""
+    keywords = ([itemName + '('] if itemType == 'UtilityFunction'
+                else ['mbs.Add' + itemType + '(' + itemName + '('])
+    if itemShortName != '' and itemName != itemShortName:
+        keywords += ['mbs.Add' + itemType + '(' + itemShortName + '(']
+
+    links = []
+    for folder in ['Examples', 'TestModels']:
+        found = []
+        for keyword in keywords:
+            for name in ExtractExamplesWithKeyword(keyword=keyword,
+                                                   dirPath=paths.pythonDir + folder):
+                if name not in found:
+                    found += [name]
+        abbreviation = ' (Ex)' if folder == 'Examples' else ' (TM)'
+        for name in found[:maximumFiles]:
+            links += ['[`' + name + '`](' + paths.githubSourceURL + folder + '/' + name + ')'
+                      + abbreviation]
+
+    if len(links) == 0:
+        return ''
+    return ('\nRelevant Examples (Ex) and TestModels (TM) with weblink to github: '
+            + ', '.join(links) + '\n\n')
+
+
 def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex = True):
     useLatex2 = True
     s = ''

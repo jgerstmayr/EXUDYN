@@ -23,17 +23,22 @@ if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
 
 from utilityDocsModel import *                                                   # noqa: E402,F403
+from autoGenerateHelper import MarkdownLabel, MarkdownHeading, LatexText2Markdown, \
+                               KeywordExamplesMarkdown                          # noqa: E402
+from tex2md import NormalizeHeadings                                            # noqa: E402
 
 
 def main():
     print('*****************************************')
     print('create documentation for exudyn utilities')
     listRST = [] #creates tuple of modulename and RST content
+    listMarkdown = []   #(moduleName, Markdown) - revision2026 step R7.1.6
     sLatex = ''
 
     for fileName in filesParsed:
         # print('parse file:',fileName)
         sRST = ''
+        sMarkdown = ''
         [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
         moduleName = fileName[:-3]
         moduleNameLatex = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
@@ -56,12 +61,16 @@ def main():
 
         sRST += RSTlabelString('sec-module-'+moduleNameLatex.replace('.','-'))+'\n'
         sRST += RSTheaderString('Module: '+moduleNameLatex, sectionLevel)+'\n'
+
+        sMarkdown += MarkdownLabel('sec:module:'+moduleNameLatex)+'\n'
+        sMarkdown += MarkdownHeading('Module: '+moduleNameLatex, 1)+'\n\n'
     
         if moduleNamePython != 'mainSystemExtensions': #no description for this!
             #*****************************************************
             if 'Details' in header: #write details as intro to section
                 sLatex += header['Details'] #+ '\n'
                 sRST += LatexString2RSTspecial(RemoveIndentation(header['Details']))
+                sMarkdown += LatexText2Markdown(RemoveIndentation(header['Details'])) + '\n\n'
                 #print('header=\n'+sRST)
             if len(header)>1:
                 sLatex += '\\begin{itemize}[leftmargin=1.4cm]\n'
@@ -69,6 +78,9 @@ def main():
                 sRST += '\n'
                 for tag in headerTags:
                     if tag in header and tag != 'Details' and tag != 'Copyright':
+                        sMarkdown += ('- **' + tag + '**: '
+                                      + LatexText2Markdown(header[tag]).replace('\n', ' ')
+                                      + '\n')
                         if header[tag].find('\\') == -1:
                             sLatex += '\\item[]' + tag + ': ' + header[tag] #+ '\n'
                             sRST += '- '+ tag + ': ' + LatexString2RSTspecial(header[tag].replace('\n',' ')) + '\n'
@@ -89,8 +101,9 @@ def main():
             sRST += '\n'
         else:
             mseText = 'NOTE: This module only contains links for extensions of C++ classes. The description is available in the respective descriptions of the C++ interface.\n'
-            sLatex += mseText 
-            sRST += mseText 
+            sLatex += mseText
+            sRST += mseText
+            sMarkdown += mseText + '\n' 
 
         #*****************************************************
         cnt=0
@@ -139,6 +152,10 @@ def main():
 
                 sLatex += sFuncLatex
                 sRST += sFuncRST
+                sMarkdown += FunctionDescription2Markdown(funcDict, moduleNamePython, fileName,
+                                                         headingLevel=2)
+                if addExampleReferences and not belongsTo:
+                    sMarkdown += KeywordExamplesMarkdown('UtilityFunction', exampleFunctionName)
 
                 if belongsTo:
                     textAdd = 'this function is directly available in MainSystem (mbs); it should be directly called as mbs.'+funcDict['functionName']+'(...).'
@@ -173,6 +190,13 @@ def main():
             #sLatex += '\\bi'
             sLatex += '\\noindent\\textcolor{steelblue}{{\\bf class description}}: ' + classDict['class']
 
+            sMarkdown += ('\n' + MarkdownLabel('sec:module:' + moduleNameLatex + ':class:'
+                                              + classDict['className']) + '\n'
+                          + MarkdownHeading('CLASS ' + classDict['className'] + ' (in module '
+                                            + moduleNameLatex + ')', 2) + '\n\n'
+                          + '**class description**: '
+                          + LatexText2Markdown(classDict['class']).replace('\n', ' ') + '\n\n')
+
             sRST += RSTlabelString('sec-module-'+moduleNameLatex.replace('.','-')+'-class-'+Latex2RSTlabel(classDict['className']))
             sRST += '\n' + RSTheaderString('CLASS '+classDict['className']+' (in module '+moduleNameLatex+')', level = 4)#sectionLevel)
             sRST += RSTmarkup('class description','**', False)+': ' + '\n\n' + \
@@ -182,6 +206,7 @@ def main():
             #sLatex += '\\ei'
             localTags = docuTags.copy()
             localTags.remove('class')
+            sMarkdown += Tags2Markdown(classDict, localTags)
             [sTags, sTagsRST] = DictToItemsText(classDict, localTags, '')
             if sTags != '':
                 sLatex += '\\setlength{\\itemindent}{0.7cm}\n'
@@ -210,6 +235,10 @@ def main():
                                                                                       createPyiFile=False)
                 sLatex += sFuncLatex
                 sRST += sFuncRST
+                sMarkdown += FunctionDescription2Markdown(funcDict, moduleNamePython, fileName,
+                                                         isClassFunction=True,
+                                                         className=classDict['className'],
+                                                         headingLevel=3)
 
                 isFirstFunction=False
 
@@ -218,67 +247,66 @@ def main():
                 [sExamples,sExamplesRST] = GenerateLatexStrKeywordExamples('UtilityFunction', classDict['className'].split('(')[0], '', useLatex=False)
                 sLatex += sExamples
                 sRST += '\n'+sExamplesRST
+                sMarkdown += KeywordExamplesMarkdown('UtilityFunction',
+                                                     classDict['className'].split('(')[0])
 
 
         sRST = sRST #.replace('**kwargs','\\*\\*kwargs').replace('*args','\\*args') #only needed, if not in literal
         #listRST += [(moduleNameLatex, LatexString2RSTspecial(sRST, replaceMarkups=False))]
         listRST += [(moduleNameLatex, sRST)]
+        listMarkdown += [(moduleNameLatex, sMarkdown)]
 
 
 
-    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-    latexFile = theDocDir+'pythonUtilitiesDescription.tex'
-    file=open(latexFile,'w',encoding='utf8')  #clear file by one write access
-    file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    file.write('% description of python utility functions; generated by Johannes Gerstmayr')
-    file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n')
-    file.write(sLatex)
-    file.close()
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #MARKDOWN, revision2026 step R7.1.6. This emitter wrote
+    #docs/theDoc/pythonUtilitiesDescription.tex and docs/RST/pythonUtilities/*.rst until
+    #2026-09-20; the pages are in docs/generated/, where emitter output belongs (D10).
+    markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'pythonUtilities')
+    os.makedirs(markdownDir, exist_ok=True)
 
+    def Banner(title=''):
+        #the page's own H1 comes from the module heading the loop wrote; the index has no such
+        #heading, so it passes a title
+        banner = ('<!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings '
+                  'of python/exudyn - do not edit -->\n')
+        return banner + ('# ' + title + '\n\n' if title != '' else '\n')
 
-    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-    rstFile = rstDir+'pythonUtilities/pythonUtilities.rst'
+    #the chapter label, which the manual references as sec:pythonUtilityFunctions
+    indexText = Banner()
+    indexText += MarkdownLabel('sec:pythonUtilityFunctions') + chr(10)
+    indexText += MarkdownHeading('Python Utility Functions', 0) + chr(10) + chr(10)
+    indexText += '\n'.join([
+        'This chapter describes in every section the functions and classes of the utility modules.',
+        'These modules help to create multibody systems with the Exudyn core module. Functions are',
+        'implemented in Python and can be changed, extended and verified by the user - **check the',
+        'source code** by entering a function in Spyder and pressing **CTRL + left mouse button**.',
+        'These Python functions are much slower than the functions of the C++ core; some matrix',
+        'computations with larger matrices, implemented in numpy and scipy, are parallelised and',
+        'therefore very efficient.',
+        '',
+        'Note that in general functions accept lists and numpy arrays. If not, an error will occur,',
+        'which is easily tracked. Furthermore, angles are generally provided in radian ($2\\pi$ equals',
+        '$360\\,^o$) and no units are used for distances, but it is recommended to use SI units',
+        '(m, kg, s) throughout.',
+        '',
+        'Functions have been implemented, if not otherwise mentioned, by Johannes Gerstmayr.',
+        ])
+    indexText += '\n\n```{toctree}\n:maxdepth: 2\n\n'
 
-    sRSTpreamble = RSTlabelString('sec-pythonUtilityFunctions')
-    sRSTpreamble +="""
-========================
-Python Utility Functions
-========================
+    for (name, markdown) in listMarkdown:
+        page = NormalizeHeadings(Banner() + markdown.strip()) + '\n'
+        with io.open(os.path.join(markdownDir, name + '.md'), 'w', encoding='utf8',
+                     newline='\n') as file:
+            file.write(page)
+        indexText += name + '\n'
 
-This chapter describes in every subsection the functions and classes of the utility modules. 
-These modules help to create multibody systems with the EXUDYN core module. Functions are implemented in Python and can be easily changed, extended and also verified by the user. **Check the source code** by entering these functions in Sypder and pressing ``CTRL + left mouse button``\\ . These Python functions are much slower than the functions available in the C++ core. Some matrix computations with larger matrices implemented in numpy and scipy, however, are parallelized and therefore very efficient.
+    with io.open(os.path.join(markdownDir, 'utilitiesIndex.md'), 'w', encoding='utf8',
+                 newline='\n') as file:
+        file.write(indexText + '```\n')
 
-Note that in general functions accept lists and numpy arrays. If not, an error will occur, which is easily tracked.
-Furthermore, angles are generally provided in radian ($2\\pi$ equals $360\\,^o$) and no units are used for distances, but it is recommended to use SI units (m, kg, s) throughout.
+    print('utilityDocsEmitter: ' + str(len(listMarkdown) + 1) + ' Markdown file(s) written')
 
-Functions have been implemented, if not otherwise mentioned, by Johannes Gerstmayr.
-"""
-    sRSTpreamble = LatexString2RSTspecial(sRSTpreamble, replaceMarkups=False)
-
-
-    if writeRST:
-        file=io.open(rstFile,'w',encoding='utf8')  #clear file by one write access
-        file.write(sRSTpreamble)
-        file.close()
-
-        sRSTindex = RSTheaderString('Python Utility Functions',0)
-        sRSTindex += """
-.. toctree::
-   :maxdepth: 2
-   
-   pythonUtilities
-"""
-
-        for (name, text) in listRST:
-            file=io.open(rstDir+'pythonUtilities/'+name+'.rst','w',encoding='utf8')  #clear file by one write access
-            file.write(text)
-            file.close()
-            sRSTindex += '   '+name+'\n'
-
-        file=io.open(rstDir+'pythonUtilities/index.rst','w',encoding='utf8')  #clear file by one write access
-        file.write(sRSTindex)
-        file.close()
-    
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
     #export data for conf.py
     #write class names for confHelperPyUtilities.py
