@@ -27,7 +27,7 @@
 //#include "Linalg/SearchTree.h"
 //#include "Main/TemporaryComputationData.h"
 //
-//#include "Objects/CObjectANCFCable2DBase.h"
+//#include "ImplObjects/CObjectANCFCable2DBase.h"
 #include "Linalg/Geometry.h"
 
 extern bool warnedComputeEigenValuesANCFcableCircleContact; //low-level warning for ANCF contact; may be eliminated in future

@@ -146,7 +146,7 @@ def Audience(site, kind):
     if site['helper'] == 'CHECKandTHROWcond':
         return 'INTERNAL'
 
-    #src/Objects, src/System, src/Solver, src/Graphics: a check on a MODEL the user built is for
+    #src/ImplObjects, src/System, src/Solver, src/Graphics: a check on a MODEL the user built is for
     #the user; a check on a data structure Exudyn filled in is not. The helper is the best signal
     #that is available here - PyError and PyWarning were written to talk to somebody
     if site['helper'] in ['PyError', 'PyWarning']:

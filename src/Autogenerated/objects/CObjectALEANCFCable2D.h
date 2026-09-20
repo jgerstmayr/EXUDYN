@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-09-20  17:43:25 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,7 +22,7 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-#include "Objects/CObjectANCFCable2DBase.h"
+#include "ImplObjects/CObjectANCFCable2DBase.h"
 
 //! AUTO: Parameters for class CObjectALEANCFCable2DParameters
 class CObjectALEANCFCable2DParameters // AUTO:

@@ -3556,7 +3556,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectANCFCable2D',
-    addIncludesC=r"""#include "Objects/CObjectANCFCable2DBase.h"
+    addIncludesC=r"""#include "ImplObjects/CObjectANCFCable2DBase.h"
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addPublicC=r"""    static constexpr Index nODE2coordinates = 8; //!< fixed size of coordinates used e.g. for ConstSizeVectors    static constexpr Index nShapeFunctions = 4; //!< number of shape functions
@@ -4026,7 +4026,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectALEANCFCable2D',
-    addIncludesC=r"""#include "Objects/CObjectANCFCable2DBase.h"
+    addIncludesC=r"""#include "ImplObjects/CObjectANCFCable2DBase.h"
 """,
     addProtectedC=r"""    mutable bool massTermsALEComputed; //!< flag which shows that ALE mass terms have been computed; will be set to false at time when parameters are set
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation

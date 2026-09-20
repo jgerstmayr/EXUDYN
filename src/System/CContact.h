@@ -30,7 +30,7 @@
 #include "Linalg/SearchTree.h"
 #include "Main/TemporaryComputationData.h"
 
-#include "Objects/CObjectANCFCable2DBase.h"
+#include "ImplObjects/CObjectANCFCable2DBase.h"
 
 //use define because otherwise not correctly applied to templates in linux
 #define DANCFmaxCoordinates 9

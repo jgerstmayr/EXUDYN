@@ -10780,3 +10780,45 @@ That gap is now **#2562** (step R5.18.9): ~4,000 lines of drawing code with no t
 can execute them.
 
 ---
+
+<a id="r11-4-5"></a>
+### R11.4.5 — `src/Objects/` becomes three folders, and R11.4 is complete
+
+**DONE 2026-09-20** (#2556). 93 tracked files moved, approved by the maintainer beforehand:
+
+| to | what |
+|---|---|
+| `src/ImplObjects/` | 53 `CObject*.cpp` and `CObjectANCFCable2DBase.h` |
+| `src/ImplNodes/` | 16 `CNode*.cpp` |
+| `src/ImplMarkers/` | 18 `CMarker*.cpp` |
+| `src/System/` | the five `checkPreAssembleConsistencies*` files and `evaluateUserFunctions.cpp`, next to the loads and sensors that were already there |
+
+The folder was named after one of the five item kinds and held all of them, plus system code,
+plus the graphics of everything. After R11.4.4 there was no `Visu*.cpp` left to move to
+`Graphics/`, so the step turned out one folder smaller than it was written.
+
+#### What had to follow
+
+`gen_sources.py` is the reason this is checkable at all: it validates **every** `ClCompile`,
+`ClInclude` and `None` entry of `cppsrc.vcxproj` **and** `cppsrc.vcxproj.filters` for existence
+and exact case, and refuses a `.cpp` on disk that no project lists. So: both project files, and
+`sources.json` — whose `minimal` list is carried over rather than derived, and therefore had to
+be rewritten by hand.
+
+The one header others include **by path**, `CObjectANCFCable2DBase.h`, is named in
+`definitions/itemDefsObjects.py` — twice, as generator input — so the two generated headers
+that include it followed by regeneration, and `CContact.h` and two `.cpp` files by hand.
+`tools/generators/definitionValidator.py` names it in `parentHeaders`.
+
+`docs/dev/ARCHITECTURE.md` describes the module tree, so its table now lists the three folders
+— and its heading said `main/src/`, stale since the flatten of R3.1, which is corrected with it.
+
+#### R11.4 as a whole
+
+Five sub-steps, five issues, all closed: the modules that moved to `exudyn/misc`, the comment
+that told 458 files not to import, the one file of consistency checks that became four, the 79
+`UpdateGraphics` that moved next to their items, and this. The documentation on **how to add a
+new Exudyn item** — the reason the maintainer interrupted the documentation phase for this — can
+now name files that will still be there when it is read.
+
+---

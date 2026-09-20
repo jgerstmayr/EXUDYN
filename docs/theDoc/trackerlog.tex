@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.217.dev1, 
+  \item Exudyn version = 1.11.218.dev1, 
   \item last change =  2026-09-20, 
   \item Number of issues = 2563, 
-  \item Number of resolved issues = 2290 (217 in current version), 
+  \item Number of resolved issues = 2291 (218 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.218}:  resolved Issue 2556: {\bf the src/Objects folder holds nodes, markers, loads, sensors and system code}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: src/Objects/ is named after one of the five item types but holds all of them, plus checkPreAssembleConsistencies.cpp and evaluateUserFunctions.cpp, which are system code, and the UpdateGraphics functions, which are graphics. Split it into ImplObjects, ImplNodes and ImplMarkers (loads and sensors are short and stay in one file each, in System); the Visu files go to Graphics and the two system files to System. Deliberately a small change and not a systematic restructuring of the whole tree. Every moved file is a tracked file and the vcxproj, sources.json and gen\_sources follow. See revision2026 step R11.4.5.}
+    \item {\bf notes: src/Objects is gone: 53 CObject*.cpp and CObjectANCFCable2DBase.h are in src/ImplObjects, 16 CNode*.cpp in src/ImplNodes, 18 CMarker*.cpp in src/ImplMarkers, and the five checkPreAssembleConsistencies* files and evaluateUserFunctions.cpp in src/System, next to the loads and sensors that were already there. After R11.4.4 there was no Visu*.cpp left to move to Graphics. Both project files, both lists of sources.json (minimal is carried over, not derived, so it was rewritten by hand), definitionValidator.py, the include path of CObjectANCFCable2DBase.h in definitions/itemDefsObjects.py - which carried into the generated headers by regeneration - and the module table of ARCHITECTURE.md follow. gen\_sources --check passes, the suite is 116 + 23 and pytest 174.}
+    \item   date resolved: {\bf 2026-09-20 17:47},
+date raised: 2026-09-19 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.217}:  resolved Issue 2555: {\bf all UpdateGraphics functions live in a file named after the first item that had one}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

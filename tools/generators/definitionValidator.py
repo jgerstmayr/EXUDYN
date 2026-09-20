@@ -53,7 +53,7 @@ structureModules = ['structureDefsSimulationSettings', 'structureDefsVisualizati
 #the hand-written parent classes of the generated item classes
 parentHeaders = ['src/System/CNode.h', 'src/System/CObject.h', 'src/System/CObjectBody.h',
                  'src/System/CObjectConnector.h', 'src/System/CMarker.h', 'src/System/CLoad.h',
-                 'src/System/CSensor.h', 'src/Objects/CObjectANCFCable2DBase.h',
+                 'src/System/CSensor.h', 'src/ImplObjects/CObjectANCFCable2DBase.h',
                  'src/System/MainNode.h', 'src/System/MainObject.h', 'src/System/MainMarker.h',
                  'src/System/MainLoad.h', 'src/System/MainSensor.h',
                  'src/System/VisualizationNode.h', 'src/System/VisualizationObject.h',

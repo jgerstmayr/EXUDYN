@@ -1503,7 +1503,8 @@ debt stays visible and each item can be closed on evidence.
     rigid-body kinematics, and the object loop of `ODE2RHS` itself. Steered by the benchmark of
     R11.2; a compile-flag decision alone (step R2.16) cannot achieve this.
 <a id="r11-4"></a>
-**R11.4** *(maintainer, 2026-09-19; **before R7 is finished**)* **The layout tasks that the
+**R11.4** **DONE 2026-09-20** (all five sub-steps) *(maintainer, 2026-09-19; before R7 is
+    finished)* **The layout tasks that the
     documentation depends on.** A deliberate interruption of the documentation phase: *"at least the
     implementation files part will be needed for documentation on how to add new Exudyn items"* —
     a how-to that names `checkPreAssembleConsistencies.cpp` and `VisuNodePoint.cpp` as they are today
@@ -1548,7 +1549,8 @@ debt stays visible and each item can be closed on evidence.
     what happens instead.
 
 <a id="r11-4-5"></a>
-**R11.4.5** *(sub-step of R11.4, after R11.4.3 and R11.4.4)* **`src/Objects/` becomes three
+**R11.4.5** **DONE 2026-09-20** → [log](exudynRevisionLog2026.md#r11-4-5) *(sub-step of R11.4)*
+    **`src/Objects/` becomes three
     folders** (#2556): `ImplObjects`, `ImplNodes`, `ImplMarkers`. Loads and sensors are one short
     file each and stay in `System`; the `Visu<ItemType>.cpp` files go to `Graphics`, and
     `checkPreAssembleConsistencies*.cpp` and `evaluateUserFunctions.cpp` to `System`, where they
