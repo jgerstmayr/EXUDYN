@@ -366,7 +366,7 @@
     <ClCompile Include="..\src\ImplMarkers\CMarkerKinematicTreeRigid.cpp">
       <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ImplObjects\CObjectConnectorHydraulicsActuatorSimple.cpp">
+    <ClCompile Include="..\src\ImplObjects\CObjectConnectorHydraulicActuatorSimple.cpp">
       <Filter>CPPitems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Utilities\Threading.cpp">

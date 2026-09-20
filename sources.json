@@ -65,7 +65,7 @@
         "src/ImplObjects/CObjectConnectorCoordinateVector.cpp",
         "src/ImplObjects/CObjectConnectorDistance.cpp",
         "src/ImplObjects/CObjectConnectorGravity.cpp",
-        "src/ImplObjects/CObjectConnectorHydraulicsActuatorSimple.cpp",
+        "src/ImplObjects/CObjectConnectorHydraulicActuatorSimple.cpp",
         "src/ImplObjects/CObjectConnectorLinearSpringDamper.cpp",
         "src/ImplObjects/CObjectConnectorReevingSystemSprings.cpp",
         "src/ImplObjects/CObjectConnectorRigidBodySpringDamper.cpp",

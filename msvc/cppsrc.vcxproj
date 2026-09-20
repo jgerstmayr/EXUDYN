@@ -181,7 +181,7 @@
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorCoordinateVector.cpp" />
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorDistance.cpp" />
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorGravity.cpp" />
-    <ClCompile Include="..\src\ImplObjects\CObjectConnectorHydraulicsActuatorSimple.cpp" />
+    <ClCompile Include="..\src\ImplObjects\CObjectConnectorHydraulicActuatorSimple.cpp" />
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorLinearSpringDamper.cpp" />
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorReevingSystemSprings.cpp" />
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorRigidBodySpringDamper.cpp" />
