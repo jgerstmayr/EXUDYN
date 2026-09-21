@@ -9,5 +9,6 @@
   "deadline": "2026-08-12",
   "dateResolved": "2026-02-16 22:46",
   "resolvedAuthor": "JG",
-  "releaseNotes": "was due to NaN in numpy calculation for Bearing graphics; fixed"
+  "releaseNotes": "was due to NaN in numpy calculation for Bearing graphics; fixed",
+  "resolvedInVersion": "1.10.128"
 }

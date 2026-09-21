@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 10:16",
   "resolvedAuthor": "Claude-JG",
   "file": "main/src/Main/Config.h",
-  "releaseNotes": "revision2026 step R5.13: ResolveOutputFileName() in Stdoutput.cpp, applied to solution, solver information, sensor and image files; absolute names raise on open"
+  "releaseNotes": "revision2026 step R5.13: ResolveOutputFileName() in Stdoutput.cpp, applied to solution, solver information, sensor and image files; absolute names raise on open",
+  "resolvedInVersion": "1.11.94"
 }

@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 15:28",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "The 36 models and examples that import matplotlib themselves and call plt.show() now carry a two-line guard right after their exudyn import: it switches to the non-interactive Agg backend when exudyn.special.userInterface.suppressPlots is set. Measured both ways - with EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1 the backend is Agg and plt.show() returns at once; without it the backend stays tkagg. CLAUDE.md gained hard rule 11: a local run of a model or example sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. 171 examples with the same 5 pre-existing failures; suite PASSED; pytest 136 passed. revision2026 step R5.17.1."
+  "releaseNotes": "The 36 models and examples that import matplotlib themselves and call plt.show() now carry a two-line guard right after their exudyn import: it switches to the non-interactive Agg backend when exudyn.special.userInterface.suppressPlots is set. Measured both ways - with EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1 the backend is Agg and plt.show() returns at once; without it the backend stays tkagg. CLAUDE.md gained hard rule 11: a local run of a model or example sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. 171 examples with the same 5 pre-existing failures; suite PASSED; pytest 136 passed. revision2026 step R5.17.1.",
+  "resolvedInVersion": "1.11.114"
 }

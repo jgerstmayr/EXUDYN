@@ -127,9 +127,9 @@ def IssueParser(subParsers, globalParser):
     what it would do and changes nothing - which matters here, because resolving an issue bumps
     the version of the package."""
     issue = subParsers.add_parser('issue', parents=[globalParser],
-        help='the issue tracker: raise, extend, remark, resolve, abandon, show, list, serve',
+        help='the issue tracker: raise, extend, remark, resolve, close, show, list, serve, bump',
         description='The issue tracker of tools/issueTracker/. It also owns the version: the micro '
-                    'number is the count of closed issues, so "resolve" and "abandon" rewrite '
+                    'number is the count of closed issues, so "resolve" and "close" rewrite '
                     'version.txt, versionCpp.cpp, the version line of README.rst and the tracker '
                     'pages. Runs in the current interpreter; no conda environment is involved.')
     verbs = issue.add_subparsers(dest='issueVerb', metavar='<verb>')
@@ -174,13 +174,15 @@ def IssueParser(subParsers, globalParser):
     resolve.add_argument('number', type=int)
     resolve.add_argument('notes', help='the release note: what was done')
 
-    abandon = verbs.add_parser('abandon', parents=[globalParser, author], aliases=['close'],
+    close = verbs.add_parser('close', parents=[globalParser, author], aliases=['abandon'],
         help='close an issue WITHOUT resolving it',
-        description='"decided against", "no longer applies", "superseded": the reason is '
-                    'mandatory. It counts for the version like a resolved issue and appears in '
-                    'the release notes as neither resolved nor open.')
-    abandon.add_argument('number', type=int)
-    abandon.add_argument('reason')
+        description="CLOSED means everything except RESOLVED: obsolete, won't fix, duplicate of "
+                    '#n, superseded, no longer applies, not reproducible, abandoned. The reason '
+                    'names which of them and is mandatory - it is the only record of the '
+                    'decision. A closed issue counts for the version like a resolved one and '
+                    'appears in the release notes as neither resolved nor open.')
+    close.add_argument('number', type=int)
+    close.add_argument('reason', help='WHY - "duplicate of #2134", "superseded by #2500", ...')
 
     show = verbs.add_parser('show', parents=[globalParser], help='one issue, field by field')
     show.add_argument('number', type=int)
@@ -221,6 +223,22 @@ def IssueParser(subParsers, globalParser):
     serve.add_argument('--port', type=int, default=8099, metavar='N', help='default 8099')
     serve.add_argument('--no-browser', action='store_true', dest='noBrowser',
                        help='do not open a browser window; print the address only')
+
+    bump = verbs.add_parser('bump', parents=[globalParser],
+        help='start a new RELEASE: 1.11 -> 1.12, or 1.11 -> 2.0',
+        description='The deliberate maintainer action: it appends one release to '
+                    'tools/issueTracker/releases.json - the version, the count of closed issues '
+                    'it begins at, and its name - and rewrites the version files. The micro '
+                    'version restarts at 0. A MAJOR bump works since revision2026 step R8.4; '
+                    'before it, the major number was written as 1 in the tracker.')
+    bumpWhat = bump.add_mutually_exclusive_group(required=True)
+    bumpWhat.add_argument('--minor', action='store_true', help='1.11 -> 1.12')
+    bumpWhat.add_argument('--major', action='store_true', help='1.11 -> 2.0')
+    bumpWhat.add_argument('--to', metavar='VERSION', dest='to',
+                          help='an explicit release, e.g. 2.0; it must come after the current one')
+    bump.add_argument('--name', metavar='NAME',
+                      help='the release name (jazz legends, alphabetically); releases.json plans '
+                           'the next minor ones, so this is needed for a major release')
 
     mode = verbs.add_parser('mode', parents=[globalParser],
         help='switch between release and development build mode',

@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-17 20:23",
   "resolvedAuthor": "Claude-JG",
   "file": "python/Examples/NGsolveCraigBampton.py",
-  "releaseNotes": "Twelve examples now write their generated FEM data through OutputFilePath into solution/ instead of testData/: ten FEMinterface caches; and the two SaveDictToHDF5 sites which also create the directory themselves because SaveDictToHDF5 - unlike FEMinterface.SaveToFile - does not. Verified by running all 171 examples with the artifacts removed first: the same 5 pre-existing failures; no file left in any testData directory; the meshes land in the per-example output directory. A direct user run without an output directory writes into Examples/solution/; which is ignored. revision2026 step R5.13.3"
+  "releaseNotes": "Twelve examples now write their generated FEM data through OutputFilePath into solution/ instead of testData/: ten FEMinterface caches; and the two SaveDictToHDF5 sites which also create the directory themselves because SaveDictToHDF5 - unlike FEMinterface.SaveToFile - does not. Verified by running all 171 examples with the artifacts removed first: the same 5 pre-existing failures; no file left in any testData directory; the meshes land in the per-example output directory. A direct user run without an output directory writes into Examples/solution/; which is ignored. revision2026 step R5.13.3",
+  "resolvedInVersion": "1.11.129"
 }

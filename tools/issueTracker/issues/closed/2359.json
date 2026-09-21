@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-09 20:57",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/hooks/pre-push",
-  "releaseNotes": "Verified with four cases against local throwaway repositories: v2-dev to github refused, master to github allowed, v2-dev to internal allowed, bare github.com URL refused before network access"
+  "releaseNotes": "Verified with four cases against local throwaway repositories: v2-dev to github refused, master to github allowed, v2-dev to internal allowed, bare github.com URL refused before network access",
+  "resolvedInVersion": "1.11.9"
 }

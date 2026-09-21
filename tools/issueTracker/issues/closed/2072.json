@@ -9,5 +9,6 @@
   "deadline": "2025-11-28",
   "dateResolved": "2025-06-01 19:13",
   "resolvedAuthor": "JG",
-  "releaseNotes": "NOTE that this affects your existing models a lot!"
+  "releaseNotes": "NOTE that this affects your existing models a lot!",
+  "resolvedInVersion": "1.9.161"
 }

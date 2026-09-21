@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-17 18:37",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/checkPython.py",
-  "releaseNotes": "ruff runs over python/exudyn with the rule set written down in pyproject.toml (F and E4/E7/E9; E701/E702/E703 switched off as house style) and tools/checkPython.py judges it against tools/ci/ruffBaseline.txt: the findings present at introduction are tolerated; a new one fails. 335 findings at introduction; 107 of them fixed outright (52 == None; 11 == True/False; 13 not-in/not-is; 21 unused imports and 3 deliberate re-exports marked noqa; one multi-import line; one empty f-string) leaving 228 in the baseline - bare except:; type() comparisons; star imports and unused variables; each of which needs a judgement rather than a rewrite. revision2026 step R5.5"
+  "releaseNotes": "ruff runs over python/exudyn with the rule set written down in pyproject.toml (F and E4/E7/E9; E701/E702/E703 switched off as house style) and tools/checkPython.py judges it against tools/ci/ruffBaseline.txt: the findings present at introduction are tolerated; a new one fails. 335 findings at introduction; 107 of them fixed outright (52 == None; 11 == True/False; 13 not-in/not-is; 21 unused imports and 3 deliberate re-exports marked noqa; one multi-import line; one empty f-string) leaving 228 in the baseline - bare except:; type() comparisons; star imports and unused variables; each of which needs a judgement rather than a rewrite. revision2026 step R5.5",
+  "resolvedInVersion": "1.11.124"
 }

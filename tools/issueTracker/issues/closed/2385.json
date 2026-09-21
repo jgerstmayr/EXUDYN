@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-11 23:52",
   "resolvedAuthor": "Claude-JG",
   "file": "main/CMakeLists.txt",
-  "releaseNotes": "all three deleted (405 lines). main/include/Eigen/CMakeLists.txt is vendored third-party and was left untouched. No generator recreates them. The only reference in the documentation was one passing mention in docs/theDoc/gettingStarted.tex; which now names scikit-build-core alone rather than pointing at files that no longer exist. This also removes the last duplicate of the source list that revision2026 step R2.4 consolidated into main/sources.json"
+  "releaseNotes": "all three deleted (405 lines). main/include/Eigen/CMakeLists.txt is vendored third-party and was left untouched. No generator recreates them. The only reference in the documentation was one passing mention in docs/theDoc/gettingStarted.tex; which now names scikit-build-core alone rather than pointing at files that no longer exist. This also removes the last duplicate of the source list that revision2026 step R2.4 consolidated into main/sources.json",
+  "resolvedInVersion": "1.11.27"
 }

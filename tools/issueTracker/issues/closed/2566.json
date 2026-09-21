@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-21 11:13",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/issueTracker/issueTracker.py",
-  "releaseNotes": "ExtendIssue appends a dated paragraph to the description of an open issue and refuses a closed one; RemarkIssue writes the workingRemarks of an open issue. The field question behind the second half was settled in R8.5.3: notes became releaseNotes (written when the issue closes and published) and workingRemarks (what the work knows meanwhile and cleared when it closes), with effort beside them. The CLI verbs extend and remark came with R8.3."
+  "releaseNotes": "ExtendIssue appends a dated paragraph to the description of an open issue and refuses a closed one; RemarkIssue writes the workingRemarks of an open issue. The field question behind the second half was settled in R8.5.3: notes became releaseNotes (written when the issue closes and published) and workingRemarks (what the work knows meanwhile and cleared when it closes), with effort beside them. The CLI verbs extend and remark came with R8.3.",
+  "resolvedInVersion": "1.11.224"
 }

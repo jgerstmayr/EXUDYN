@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-18 09:13",
   "resolvedAuthor": "Claude-JG",
   "file": "docs/RST/TestModels/sphereTriangleTest.rst",
-  "releaseNotes": "Fixed in revision2026 step R7.1.2: docs/RST/TestModels/sphereTriangleTest.rst was a STALE generated file; not a missing index entry. TestModelsIndex.rst is generated from the keys of TestExamplesReferenceSolution(); and sphereTriangleTest.py moved into DeliberatelyNotRun() (unstable explicit integrator; phase R10); so the generator stopped listing it and stopped writing its page - the old page stayed behind. Verified by deleting it and re-running the generators: it is not recreated. sphinx-build -W --keep-going now succeeds; and exudev docs is strict by default so the local build applies the same gate as the GitLab docs job."
+  "releaseNotes": "Fixed in revision2026 step R7.1.2: docs/RST/TestModels/sphereTriangleTest.rst was a STALE generated file; not a missing index entry. TestModelsIndex.rst is generated from the keys of TestExamplesReferenceSolution(); and sphereTriangleTest.py moved into DeliberatelyNotRun() (unstable explicit integrator; phase R10); so the generator stopped listing it and stopped writing its page - the old page stayed behind. Verified by deleting it and re-running the generators: it is not recreated. sphinx-build -W --keep-going now succeeds; and exudev docs is strict by default so the local build applies the same gate as the GitLab docs job.",
+  "resolvedInVersion": "1.11.171"
 }

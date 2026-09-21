@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": ".github/workflows/wheels.yml",
   "line": "18",
-  "releaseNotes": "continue-on-error removed. fail-fast: false is kept; so one failing wheel still does not cancel the others - but the workflow now reports the failure"
+  "releaseNotes": "continue-on-error removed. fail-fast: false is kept; so one failing wheel still does not cancel the others - but the workflow now reports the failure",
+  "resolvedInVersion": "1.11.31"
 }

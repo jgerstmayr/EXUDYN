@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "conf.py",
   "line": "101",
-  "releaseNotes": "myst-parser is in the docs dependency group and in conf.py, with myst_heading_anchors = 3 so that anchor links between Markdown files work, and eleven Markdown documents are in the toctree: the four docs/dev files, CONTRIBUTING.md, the READMEs of definitions/, the generators and exudev, and the three docs/howTo notes that are really Markdown. The strict build found eleven broken cross-references that were invisible while the files were clone-only, and #2547 - five how-to files that are .txt renamed to .md. convertVideosFfmpeg.md was converted as the example of what those need. The premise of R7.1 holds: the two formats coexist, which is what makes a chapter-by-chapter conversion possible."
+  "releaseNotes": "myst-parser is in the docs dependency group and in conf.py, with myst_heading_anchors = 3 so that anchor links between Markdown files work, and eleven Markdown documents are in the toctree: the four docs/dev files, CONTRIBUTING.md, the READMEs of definitions/, the generators and exudev, and the three docs/howTo notes that are really Markdown. The strict build found eleven broken cross-references that were invisible while the files were clone-only, and #2547 - five how-to files that are .txt renamed to .md. convertVideosFfmpeg.md was converted as the example of what those need. The premise of R7.1 holds: the two formats coexist, which is what makes a chapter-by-chapter conversion possible.",
+  "resolvedInVersion": "1.11.206"
 }

@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 19:59",
   "resolvedAuthor": "Claude-JG",
   "file": "definitions/definitionTypes.py",
-  "releaseNotes": "revision2026 step R4.25: SFNoPybind on 38 members replaces SFPybind on 845; effective flags identical; regeneration no-op"
+  "releaseNotes": "revision2026 step R4.25: SFNoPybind on 38 members replaces SFPybind on 845; effective flags identical; regeneration no-op",
+  "resolvedInVersion": "1.11.76"
 }

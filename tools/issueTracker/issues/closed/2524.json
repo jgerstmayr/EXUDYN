@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/Utilities/ExceptionsTemplates.h",
   "line": "84",
-  "releaseNotes": "the user function handler raises PyErrorType::modelError - a user function is part of the model - and SolverExceptionHandling passes an already-typed exception through instead of re-reporting it as EXUDYN raised internal error. A bare EXUexception still becomes a SysError. The header of the printed block now names the users own file and line. revision2026 step R6.3.5."
+  "releaseNotes": "the user function handler raises PyErrorType::modelError - a user function is part of the model - and SolverExceptionHandling passes an already-typed exception through instead of re-reporting it as EXUDYN raised internal error. A bare EXUexception still becomes a SysError. The header of the printed block now names the users own file and line. revision2026 step R6.3.5.",
+  "resolvedInVersion": "1.11.185"
 }

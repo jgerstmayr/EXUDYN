@@ -9,5 +9,6 @@
   "deadline": "2026-06-14",
   "dateResolved": "2025-12-27 22:01",
   "resolvedAuthor": "JG",
-  "releaseNotes": "CTRL-R used for switching"
+  "releaseNotes": "CTRL-R used for switching",
+  "resolvedInVersion": "1.10.28"
 }

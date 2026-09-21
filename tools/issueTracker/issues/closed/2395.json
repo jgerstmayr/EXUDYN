@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "main/setup.py",
   "line": "146",
-  "releaseNotes": "comment at setup.py:146 corrected: -mavx2 does compile; the failure was at runtime and was the alignment defect of issue 2394. The comment now says so and points at revision2026 step R2.10 for the decision to enable AVX2 on Linux; and at the FMA rounding issue"
+  "releaseNotes": "comment at setup.py:146 corrected: -mavx2 does compile; the failure was at runtime and was the alignment defect of issue 2394. The comment now says so and points at revision2026 step R2.10 for the decision to enable AVX2 on Linux; and at the FMA rounding issue",
+  "resolvedInVersion": "1.11.35"
 }

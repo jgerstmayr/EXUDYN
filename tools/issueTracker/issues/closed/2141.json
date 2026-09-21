@@ -8,5 +8,6 @@
   "dateRaised": "2025-07-10",
   "deadline": "2026-01-06",
   "dateResolved": "2025-07-10 16:53",
-  "resolvedAuthor": "P. Manzl"
+  "resolvedAuthor": "P. Manzl",
+  "resolvedInVersion": "1.10.2"
 }

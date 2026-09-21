@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/logs",
   "line": "0",
-  "releaseNotes": "The four log directories became python/logs/{testmodels; examples; performance; tmp}. 62 tracked logs moved with git mv so history follows them; decision D7 unchanged - they stay tracked. Four logFileName expressions and testRunnerTools.tmpLogDir updated. The -local CI copy still goes to the working directory python/TestModels/; so both artifact globs stayed correct and no workflow file was touched. Verified: ResolveLogFile found the existing performance log under ../logs/performance/ and diverted to ../logs/tmp/."
+  "releaseNotes": "The four log directories became python/logs/{testmodels; examples; performance; tmp}. 62 tracked logs moved with git mv so history follows them; decision D7 unchanged - they stay tracked. Four logFileName expressions and testRunnerTools.tmpLogDir updated. The -local CI copy still goes to the working directory python/TestModels/; so both artifact globs stayed correct and no workflow file was touched. Verified: ResolveLogFile found the existing performance log under ../logs/performance/ and diverted to ../logs/tmp/.",
+  "resolvedInVersion": "1.11.172"
 }

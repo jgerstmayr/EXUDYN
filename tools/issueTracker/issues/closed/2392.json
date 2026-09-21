@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 11:56",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/issueTracker/issueTracker.py",
-  "releaseNotes": "RaiseIssue now returns the assigned number and RaiseIssueDict prints \"issue raised: #NNNN title\"; ResolveIssue prints \"issue resolved: #NNNN title\" before the dict and returns the number. So the number never has to be guessed again"
+  "releaseNotes": "RaiseIssue now returns the assigned number and RaiseIssueDict prints \"issue raised: #NNNN title\"; ResolveIssue prints \"issue resolved: #NNNN title\" before the dict and returns the number. So the number never has to be guessed again",
+  "resolvedInVersion": "1.11.32"
 }

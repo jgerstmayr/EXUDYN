@@ -9,5 +9,6 @@
   "deadline": "2023-11-17",
   "dateResolved": "2025-02-05 08:44",
   "resolvedAuthor": "JG",
-  "releaseNotes": "transferred to issues 1948 and 1953"
+  "releaseNotes": "transferred to issues 1948 and 1953",
+  "resolvedInVersion": "1.9.58"
 }

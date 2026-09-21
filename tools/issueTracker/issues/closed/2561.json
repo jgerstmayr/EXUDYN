@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/testing/test_exceptions.py",
   "line": "30",
-  "releaseNotes": "test_exceptions.py imports exudyn.utilities now, so the MainSystem extensions it uses are installed by the file that uses them rather than by whichever test file ran before it in the same pytest worker. The three failures appeared when adding resultsMonitorTest.py changed the distribution of pytest -n 8. The wider point is recorded in revision2026 step R6.8.1: a test that depends on an import made elsewhere passes by luck, and the helper that catches BaseException hid which error it was."
+  "releaseNotes": "test_exceptions.py imports exudyn.utilities now, so the MainSystem extensions it uses are installed by the file that uses them rather than by whichever test file ran before it in the same pytest worker. The three failures appeared when adding resultsMonitorTest.py changed the distribution of pytest -n 8. The wider point is recorded in revision2026 step R6.8.1: a test that depends on an import made elsewhere passes by luck, and the helper that catches BaseException hid which error it was.",
+  "resolvedInVersion": "1.11.212"
 }

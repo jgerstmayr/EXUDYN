@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.229.dev1
+- Exudyn version = 1.11.232.dev1
 - last change = 2026-09-21
-- Number of issues = 2571
-- Number of resolved issues = 2302 (229 in current version)
+- Number of issues = 2574
+- Number of resolved issues = 2305 (232 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,24 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.232: resolved Issue 2573: the version numbering is derived on every run, so history can move (fix)
+  - issue author: Claude-JG
+  - description: The micro version is a running count of closed issues, and every version number in the release notes was recomputed on each run from a sort by dateResolved. One corrected date, one status changed by hand or one lost file renumbers versions that have already been published, and nothing in the tree would report it - both sides of any comparison came from the same derivation. Revision2026 step R8.4: the releases and their baselines become data (releases.json), every closed issue stores the version its closing produced (resolvedInVersion, D14), tools/checkIssues.py recomputes and compares, and exudev issue bump starts a new release - MINOR and, for the first time, MAJOR: the major number was written as 1 inside GetMajorMinorMicroVersion, so 2.0 could not be expressed at all (maintainer 2026-09-21).
+  - **notes:** The releases are data: tools/issueTracker/releases.json holds each release, the count of closed issues it began at and its name, and exudev issue bump --minor\|--major\|--to starts a new one - MAJOR included, which the tracker could not express because the major number was the literal 1 in GetMajorMinorMicroVersion. Every closed issue stores the version its closing produced (resolvedInVersion); 2302 issues were backfilled and the computation reproduces all 2066 versions the archived 1.11.0 documentation published, with trackerlog.md regenerating byte-identical. tools/checkIssues.py compares the stored version with the recomputed one, refuses two issues sharing a version or an open issue carrying one, and checks that the baselines rise.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-21 15:23**, date raised: 2026-09-21, resolved by: Claude-JG
+- Version 1.11.231: resolved Issue 2572: ABANDONED is one reason, not the status: it becomes CLOSED (change)
+  - issue author: Claude-JG
+  - description: R8.3.1 proposed CLOSED, R8.7 built ABANDONED, and both have stood in the documents since. They do not mean the same thing: abandoned is one reason among several - obsolete, won't fix, duplicate of \#n, superseded, no longer applies, not reproducible - while the status says only that the issue is closed and was not resolved. The status is CLOSED from revision2026 step R8.3.4 on, the kind is named in its mandatory reason, and AbandonIssue stays as a one-line alias of CloseIssue. The count of closed issues, which is the micro version, must not move: it did not.
+  - **notes:** The status of an issue that was not resolved is CLOSED (D13): obsolete, won't fix, duplicate, superseded, no longer applies, not reproducible, abandoned - one status, with the kind in its mandatory reason. CloseIssue replaces AbandonIssue, which stays as an alias; exudev issue close is the verb and abandon its alias; issueStore.knownStatuses is checked by CheckStore. The 15 issues carrying the old spelling were rewritten inside their archive files, and the count of closed issues - the micro version - did not move.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 15:23**, date raised: 2026-09-21, resolved by: Claude-JG
+- Version 1.11.230: resolved Issue 2571: the issue page stays empty: one idle browser socket blocks the server (fix)
+  - issue author: Claude-JG
+  - description: exudev issue serve (revision2026 step R8.5.1) rendered its page and then showed no issues at all, with no error anywhere. The server was a plain http.server.HTTPServer, which is single-threaded: browsers open speculative preconnect sockets that carry no request, serve\_forever accepts one and blocks in readline() until the browser closes it, and every fetch of the page queues behind it. The first request - the page itself - had already been answered, so the shell was there and the data never arrived. Fixed by serving on ThreadingHTTPServer with HTTP/1.1 and a socket timeout, with one lock around the request layer so that writes stay serialized; and by making the page report a failure instead of staying blank.
+  - **notes:** exudev issue serve runs on ThreadingHTTPServer with HTTP/1.1, a socket timeout and one lock around the request layer, so that an idle browser connection cannot block every other request while the store still sees one change at a time. The page also reports what goes wrong instead of staying blank: a fetch that throws, an answer that is not JSON and an error in the page itself become a visible message, and an empty result says so. The test opens an idle socket and then asks a question; on the old single-threaded server it times out.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 15:23**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.229: resolved Issue 2570: changing a field of a closed issue must not be silent (fix)
   - issue author: Claude-JG
   - description: Raising, resolving and closing an issue are ordinary work. Changing a field of an issue that is already CLOSED is not: its text stands in the release notes of a released version, and two of its fields decide the version number. ChangeIssue did it silently, and so did exudev issue modify; the web page of R8.5.1 happened to be narrower only because it did not render the editors for a closed issue. ChangeIssue now refuses a closed issue unless force=True (--force on the command line), refuses status, number, dateRaised and dateResolved always because the tracker writes those, and prints the previous text when a text field is REPLACED rather than extended. The page shows the editors for a closed issue as well, but asks with a confirm dialog before it sends force. Maintainer question 2026-09-21; revision2026 step R8.3.5.

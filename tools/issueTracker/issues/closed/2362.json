@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-10 09:44",
   "resolvedAuthor": "Claude-JG",
   "file": "runTestSuite.py",
-  "releaseNotes": "testRunnerTools.ResolveLogFile diverts to logsTmp when the target exists; --overwrite-log replaces deliberately. Also added package versions and CPU to the header, a per-test overview with runtimes at the end, and EXUDYN_MACHINE_ID for performance logs. Verified: divert leaves the tracked log byte-identical, override replaces it, absent target writes normally"
+  "releaseNotes": "testRunnerTools.ResolveLogFile diverts to logsTmp when the target exists; --overwrite-log replaces deliberately. Also added package versions and CPU to the header, a per-test overview with runtimes at the end, and EXUDYN_MACHINE_ID for performance logs. Verified: divert leaves the tracked log byte-identical, override replaces it, absent target writes normally",
+  "resolvedInVersion": "1.11.12"
 }

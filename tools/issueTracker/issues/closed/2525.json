@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/autoGenerateHelper.py",
   "line": "1783",
-  "releaseNotes": "the prefix lives in generatorPaths.githubSourceURL and the four generators that built it by hand read it: autoGenerateHelper.py\\, utilityDocsModel.py and doc2rst.py twice. 368 generated documentation files repaired. The URLs name master and the new layout\\, so they are right once this work reaches master - one string to change at the release instead of four generators. Five files kept the old links because their generator writes nothing at all\\, raised as #2526. revision2026 step R7.6."
+  "releaseNotes": "the prefix lives in generatorPaths.githubSourceURL and the four generators that built it by hand read it: autoGenerateHelper.py\\, utilityDocsModel.py and doc2rst.py twice. 368 generated documentation files repaired. The URLs name master and the new layout\\, so they are right once this work reaches master - one string to change at the release instead of four generators. Five files kept the old links because their generator writes nothing at all\\, raised as #2526. revision2026 step R7.6.",
+  "resolvedInVersion": "1.11.184"
 }

@@ -94,6 +94,11 @@ def tracker(tmp_path, monkeypatch):
     #real tracker (it also owns version.txt)
     shutil.copytree(os.path.join(trackerDirectory, 'issues'),
                     os.path.join(str(tmp_path), 'issues'))
+    #the releases and their baselines are data since revision2026 step R8.4, and a bump writes
+    #this file - so the copy gets its own
+    shutil.copy(os.path.join(trackerDirectory, 'releases.json'),
+                os.path.join(str(tmp_path), 'releases.json'))
+    module.releasesCache = None
     monkeypatch.setattr(module, 'trackerDirectory', str(tmp_path))
     monkeypatch.setattr(module, 'repositoryRoot', str(tmp_path))
     monkeypatch.setattr(module.issueStore, 'storeDirectory',
@@ -156,16 +161,30 @@ def testResolveWritesTheReleaseNoteAndClearsTheRemarks(tracker):
     assert issue['status'] == 'RESOLVED'
 
 
-def testAbandonAlsoClearsTheRemarks(tracker):
+def testCloseAlsoClearsTheRemarks(tracker):
     number = OpenIssueNumber(tracker)
     tracker.RemarkIssue(number, 'marked for deprecation')
 
-    tracker.AbandonIssue(number, reason='superseded by the new solver', author='Claude-JG')
+    tracker.CloseIssue(number, reason='superseded by the new solver', author='Claude-JG')
 
     issue = tracker.GetIssue(number)
     assert issue['releaseNotes'] == 'superseded by the new solver'
     assert issue['workingRemarks'] == ''
-    assert issue['status'] == 'ABANDONED'
+    assert issue['status'] == 'CLOSED'
+
+
+def testAbandonIssueStillWorks(tracker):
+    """the name the function had between revision2026 steps R8.7 and R8.3.4; a script outside
+    this repository may still call it"""
+    number = OpenIssueNumber(tracker)
+    tracker.AbandonIssue(number, reason='no longer applies')
+    assert tracker.GetIssue(number)['status'] == 'CLOSED'
+
+
+def testTheStatusListIsTheOneTheStoreKnows(tracker):
+    """two lists of statuses in two modules is how 39 spellings of the TYPE got into the tracker"""
+    assert tracker.closedStatuses == tracker.issueStore.closedStatuses
+    assert sorted(tracker.issueStatuses) == sorted(tracker.issueStore.knownStatuses)
 
 
 def testRemarkAppendsAndReplaces(tracker):
@@ -237,9 +256,9 @@ def testTheMicroVersionIsTheCountOfClosedIssues(tracker):
                   if issue['status'].strip() in tracker.closedStatuses])
     [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
 
-    assert major == 1
-    assert minor == len(tracker.versionResolved) - 2
-    assert micro == closed - tracker.versionResolved[-1]
+    release = tracker.CurrentRelease()
+    assert [major, minor] == [int(part) for part in release['version'].split('.')]
+    assert micro == closed - release['baseline']
 
 
 def testResolvingMovesTheVersionByOne(tracker):
@@ -252,9 +271,9 @@ def testResolvingMovesTheVersionByOne(tracker):
     assert after[2] == before[2] + 1 and after[:2] == before[:2]
 
 
-def testAbandoningCountsLikeResolving(tracker):
+def testClosingCountsLikeResolving(tracker):
     before = tracker.GetMajorMinorMicroVersion()
-    tracker.AbandonIssue(OpenIssueNumber(tracker), reason='decided against', author='Claude-JG')
+    tracker.CloseIssue(OpenIssueNumber(tracker), reason='decided against', author='Claude-JG')
     after = tracker.GetMajorMinorMicroVersion()
 
     assert after[2] == before[2] + 1
@@ -263,17 +282,21 @@ def testAbandoningCountsLikeResolving(tracker):
 def testResolvedIssues2VersionOnAndBetweenTheBaselines(tracker):
     """the release notes are grouped by what this returns, so its boundaries matter: a count
     exactly ON a minor baseline belongs to that minor version with micro 0"""
-    baselines = tracker.versionResolved
-    total = baselines[-1] + 10                      #ten issues into the current minor version
+    releases = tracker.Releases()
+    current = releases[-1]
+    previous = releases[-2]
+    total = current['baseline'] + 10                #ten issues into the current release
 
-    #ten issues back from the total is the baseline itself: minor = the last one, micro = 0
-    assert tracker.ResolvedIssues2Version(10, total) == [len(baselines) - 2, 0]
-    #the newest issue is the highest micro of the current minor version
-    assert tracker.ResolvedIssues2Version(0, total) == [len(baselines) - 2, 10]
-    #one below the baseline is the PREVIOUS minor version, at its highest micro
+    minorOf = lambda release: int(release['version'].split('.')[1])
+
+    #ten issues back from the total is the baseline itself: that release, micro 0
+    assert tracker.ResolvedIssues2Version(10, total) == [minorOf(current), 0]
+    #the newest issue is the highest micro of the current release
+    assert tracker.ResolvedIssues2Version(0, total) == [minorOf(current), 10]
+    #one below the baseline is the PREVIOUS release, at its highest micro
     [minor, micro] = tracker.ResolvedIssues2Version(11, total)
-    assert minor == len(baselines) - 3
-    assert micro == baselines[-1] - 1 - baselines[-2]
+    assert minor == minorOf(previous)
+    assert micro == current['baseline'] - 1 - previous['baseline']
 
 
 def testVersionStringFollowsTheBuildMode(tracker, monkeypatch):
@@ -322,7 +345,7 @@ def testEveryWritingVerbIsAStepWithAnActionAndANote():
     verbs = [IssueOptions(issueVerb='extend', number=1, text='t', author='JG'),
              IssueOptions(issueVerb='remark', number=1, text='t', author='JG', replace=False),
              IssueOptions(issueVerb='resolve', number=1, notes='n', author='JG'),
-             IssueOptions(issueVerb='abandon', number=1, reason='r', author='JG'),
+             IssueOptions(issueVerb='close', number=1, reason='r', author='JG'),
              IssueOptions(issueVerb='modify', number=1, field='effort', value='LOW'),
              IssueOptions(issueVerb='mode', release=True, dev=False)]
 
@@ -451,7 +474,7 @@ def testWritingGoesThroughTheTrackerAndItsChecks(server, tracker):
 
 def testTheFieldsTheTrackerOwnsAreNotWritable(server, tracker):
     """the status moves an issue between open/ and closed/ and decides the version; it is written
-    by resolve and abandon, never by a field editor"""
+    by resolve and close, never by a field editor"""
     number = OpenIssueNumber(tracker)
     for field in ['status', 'number', 'dateResolved', 'somethingElse']:
         (status, data) = Call(server, 'POST', '/api/modify',
@@ -570,3 +593,154 @@ def testThePageAsksBeforeItForces(server):
     (status, page) = Call(server, 'GET', '/')
     assert 'confirm(' in page and 'PUBLISHED in the release notes' in page
     assert 'force: closed' in page
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the socket around the request layer (#2571)
+
+def testAnIdleConnectionDoesNotBlockTheServer(server):
+    """A browser opens speculative connections that carry no request. On a single-threaded server
+    one of them is accepted and blocks in readline() until the browser closes it again - and every
+    request behind it waits, which is how the page once rendered and then stayed empty with no
+    error anywhere. This test opens exactly such a socket and then asks a question."""
+    import socket
+    import threading
+    import urllib.request
+
+    httpd = server.MakeServer(0)             #the server Serve() starts, not one built here
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    port = httpd.server_address[1]
+
+    idle = socket.create_connection(('127.0.0.1', port))     #connected, says nothing - ever
+    try:
+        address = 'http://127.0.0.1:' + str(port) + '/api/meta'
+        with urllib.request.urlopen(address, timeout=10) as response:
+            assert response.status == 200
+            assert json.loads(response.read().decode('utf-8'))['total'] > 0
+    finally:
+        idle.close()
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=5)
+
+
+def testThePageSaysSoWhenARequestFails(server):
+    """silence is the one unacceptable outcome: an empty list must be a message, not a blank page"""
+    (status, page) = Call(server, 'GET', '/')
+    assert 'no answer from the server' in page          #fetch threw
+    assert 'did not answer with JSON' in page           #a 500 page instead of an answer
+    assert 'unhandledrejection' in page                 #anything else the page does wrong
+    assert 'no issue matches these filters' in page     #an empty result, said out loud
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the releases and the stored version (revision2026 step R8.4, D14). The micro version is a running
+#count of closed issues, so a published number must not depend on a derivation that can be redone
+#differently tomorrow.
+
+def CheckIssuesModule(tracker):
+    """tools/checkIssues.py, pointed at the tracker of the fixture instead of the real store"""
+    path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         '..', '..', 'tools', 'checkIssues.py'))
+    specification = importlib.util.spec_from_file_location('checkIssuesUnderTest', path)
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    module.issueTracker = tracker
+    module.issueStore = tracker.issueStore
+    return module
+
+
+def testResolvingStoresTheVersionItProduced(tracker):
+    number = OpenIssueNumber(tracker)
+    tracker.ResolveIssue(number, notes='done', author='Claude-JG')
+
+    [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
+    assert tracker.GetIssue(number)['resolvedInVersion'] == \
+           str(major) + '.' + str(minor) + '.' + str(micro)
+
+
+def testClosingStoresItAsWell(tracker):
+    number = OpenIssueNumber(tracker)
+    tracker.CloseIssue(number, reason='superseded', author='Claude-JG')
+    assert tracker.GetIssue(number)['resolvedInVersion'].count('.') == 2
+
+
+def testEveryClosedIssueCarriesTheVersionItProduced(tracker):
+    """the state the backfill left behind, and what the gate compares against"""
+    assert CheckIssuesModule(tracker).CheckStoredVersions() == []
+
+
+def testAMovedVersionIsReported(tracker):
+    """the whole point: a stored number that the recomputation does not reproduce. Nothing in the
+    tree could report this before, because both sides came from the same derivation."""
+    number = ClosedIssueNumber(tracker)
+    issue = tracker.GetIssue(number)
+    issue['resolvedInVersion'] = '1.4.7'                  #as a hand edit or a bad merge would
+    tracker.issueStore.Save(issue)
+
+    messages = CheckIssuesModule(tracker).CheckStoredVersions()
+    assert any('PUBLISHED version number moved' in message for message in messages), messages
+
+
+def testAnOpenIssueMayNotCarryAVersion(tracker):
+    number = OpenIssueNumber(tracker)
+    issue = tracker.GetIssue(number)
+    issue['resolvedInVersion'] = '1.11.5'
+    tracker.issueStore.Save(issue)
+
+    messages = CheckIssuesModule(tracker).CheckStoredVersions()
+    assert any('carries version' in message for message in messages), messages
+
+
+def testBumpingTheMinorReleaseRestartsTheMicroVersion(tracker):
+    before = tracker.CurrentRelease()
+    tracker.BumpRelease(kind='minor')
+
+    [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
+    assert [major, minor] == [int(before['version'].split('.')[0]),
+                              int(before['version'].split('.')[1]) + 1]
+    assert micro == 0
+
+    #the first issue that closes in the new release carries micro 0 - as #2348 does for 1.11
+    number = OpenIssueNumber(tracker)
+    tracker.ResolveIssue(number, notes='the first one', author='Claude-JG')
+    assert tracker.GetIssue(number)['resolvedInVersion'] == str(major) + '.' + str(minor) + '.0'
+    assert tracker.GetMajorMinorMicroVersion() == [major, minor, 0]
+
+
+def testBumpingTheMajorReleaseGoesToTwoZero(tracker):
+    """what could not be expressed before revision2026 step R8.4: the major number was written as
+    1 in GetMajorMinorMicroVersion and the minor was the length of a list"""
+    tracker.BumpRelease(kind='major', name='Newborn')
+
+    assert tracker.GetMajorMinorMicroVersion()[:2] == [2, 0]
+    assert tracker.VersionString().startswith('2.0.0')
+    assert tracker.ReleaseName('2.0') == 'Newborn'
+
+
+def testAMajorReleaseNeedsAName(tracker):
+    """releases.json plans the next MINOR names; 2.0 is a decision and has to be named"""
+    with pytest.raises(ValueError) as error:
+        tracker.BumpRelease(kind='major')
+    assert '--name' in str(error.value)
+
+
+def testARleaseCannotGoBackwardsOrRepeat(tracker):
+    current = tracker.CurrentRelease()['version']
+    for version in [current, '1.0', '0.9']:
+        with pytest.raises(ValueError):
+            tracker.BumpRelease(version=version, name='X')
+
+
+def testTheOldIssuesKeepTheirVersionAcrossABump(tracker):
+    """a bump must not renumber what has been published - the failure this step exists for"""
+    before = {issue['number']: issue['resolvedInVersion'] for issue in tracker.GetIssues()
+              if issue['status'] in tracker.closedStatuses}
+
+    tracker.BumpRelease(kind='minor')
+
+    after = {issue['number']: issue['resolvedInVersion'] for issue in tracker.GetIssues()
+             if issue['status'] in tracker.closedStatuses}
+    assert after == before
+    assert CheckIssuesModule(tracker).CheckStoredVersions() == []

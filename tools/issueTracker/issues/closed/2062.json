@@ -9,5 +9,6 @@
   "deadline": "2025-11-24",
   "dateResolved": "2025-06-01 02:34",
   "resolvedAuthor": "CHANGE",
-  "releaseNotes": "all examples, test models, teaching models and exudyn submodules adapted; old functionality preserved so far with warnings"
+  "releaseNotes": "all examples, test models, teaching models and exudyn submodules adapted; old functionality preserved so far with warnings",
+  "resolvedInVersion": "1.9.157"
 }

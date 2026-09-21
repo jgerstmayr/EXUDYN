@@ -9,5 +9,6 @@
   "deadline": "2026-07-31",
   "dateResolved": "2026-02-01 17:02",
   "resolvedAuthor": "JG",
-  "releaseNotes": "keyPressUserFunction can now be reset by setting it to 0"
+  "releaseNotes": "keyPressUserFunction can now be reset by setting it to 0",
+  "resolvedInVersion": "1.10.81"
 }

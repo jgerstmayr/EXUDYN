@@ -901,8 +901,8 @@ def SwitchBuildMode(tracker, release):
 
 
 def Issue(options):
-    """exudev issue <verb>: raise, extend, remark, resolve, abandon, show, list, modify,
-    triage, serve, mode"""
+    """exudev issue <verb>: raise, extend, remark, resolve, close, show, list, modify,
+    triage, serve, bump, mode"""
     tracker = IssueTracker()
     verb = options.issueVerb
 
@@ -947,13 +947,13 @@ def Issue(options):
                                  author=options.author)
             return 0
 
-    elif verb in ['abandon', 'close']:
+    elif verb in ['close', 'abandon']:
         note = ('close issue ' + str(options.number) + ' WITHOUT resolving it - it counts for the '
                 'version like a resolved one and appears in the release notes as neither')
 
         def Action():
-            tracker.AbandonIssue(IssueNumber(tracker, options.number), reason=options.reason,
-                                 author=options.author)
+            tracker.CloseIssue(IssueNumber(tracker, options.number), reason=options.reason,
+                               author=options.author)
             return 0
 
     elif verb == 'show':
@@ -992,6 +992,18 @@ def Issue(options):
         def Action():
             return IssueServer().Serve(port=options.port, openBrowser=not options.noBrowser,
                                        author=options.author)
+
+    elif verb == 'bump':
+        wanted = (options.to if options.to
+                  else tracker.NextReleaseVersion('major' if options.major else 'minor'))
+        note = ('START RELEASE ' + str(wanted) + ' (now ' + tracker.CurrentRelease()['version']
+                + '): append it to releases.json with the current count of closed issues as its '
+                'baseline, and rewrite the version files. The micro version restarts at 0.')
+
+        def Action():
+            tracker.BumpRelease(kind=('major' if options.major else 'minor'),
+                                version=options.to, name=options.name)
+            return 0
 
     elif verb == 'mode':
         note = ('switch the build mode to ' + ('release' if options.release else 'development')

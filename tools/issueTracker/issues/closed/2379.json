@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 17:03",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pythonDev/TestModels/generalContactImplicit1.py",
-  "releaseNotes": "both tests are now on the UnresolvedOnLinux list with their measured relative differences (sliderCrank3Dbenchmark 2.0e-10; generalContactImplicit1 6.8e-08); so the Linux job reports FAILEDL and exits zero while Windows still enforces them. This records the difference - it does not explain it; the underlying Windows/Linux divergence stays scheduled for revision2026 phase R10, and the list is meant to shrink"
+  "releaseNotes": "both tests are now on the UnresolvedOnLinux list with their measured relative differences (sliderCrank3Dbenchmark 2.0e-10; generalContactImplicit1 6.8e-08); so the Linux job reports FAILEDL and exits zero while Windows still enforces them. This records the difference - it does not explain it; the underlying Windows/Linux divergence stays scheduled for revision2026 phase R10, and the list is meant to shrink",
+  "resolvedInVersion": "1.11.39"
 }

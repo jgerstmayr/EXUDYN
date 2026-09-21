@@ -10,5 +10,6 @@
   "deadline": "2027-03-08",
   "dateResolved": "2026-09-09 22:27",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "GitLab rejects shallow pushes and caps packs at 1.17 GiB; seeded master from an existing full clone in 50-commit chunks, then v2-dev pushed from the shallow clone in 373 KB. Verified 30 refs matching by SHA. Local .git stays at 65 MB"
+  "releaseNotes": "GitLab rejects shallow pushes and caps packs at 1.17 GiB; seeded master from an existing full clone in 50-commit chunks, then v2-dev pushed from the shallow clone in 373 KB. Verified 30 refs matching by SHA. Local .git stays at 65 MB",
+  "resolvedInVersion": "1.11.10"
 }

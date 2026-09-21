@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 20:55",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/itemHeaderEmitter.py",
-  "releaseNotes": "revision2026 step R4.14: 291 item headers in nodes/objects/markers/loads/sensors; generator; 103 sources and vcxproj includes"
+  "releaseNotes": "revision2026 step R4.14: 291 item headers in nodes/objects/markers/loads/sensors; generator; 103 sources and vcxproj includes",
+  "resolvedInVersion": "1.11.82"
 }

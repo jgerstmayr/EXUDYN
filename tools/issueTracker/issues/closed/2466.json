@@ -9,5 +9,6 @@
   "deadline": "2027-03-15",
   "dateResolved": "2026-09-16 23:20",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "setup.py: useAVX2/useAVX512 switches, vector flags moved into exudynCPPfast (with -ffp-contract=off on gcc/clang), exudynCPPnoAVX removed, fast module built for Python 3.13 in a development version. python/exudyn/__init__.py: two candidates and an OS-level AVX2 check replacing the numpy __cpu_features__ read. All 113 Windows reference values re-measured on the baseline module (85 moved, 33 of them past tolerance); sphereTriangleTest.py moved to DeliberatelyNotRun. Suite and pytest green."
+  "releaseNotes": "setup.py: useAVX2/useAVX512 switches, vector flags moved into exudynCPPfast (with -ffp-contract=off on gcc/clang), exudynCPPnoAVX removed, fast module built for Python 3.13 in a development version. python/exudyn/__init__.py: two candidates and an OS-level AVX2 check replacing the numpy __cpu_features__ read. All 113 Windows reference values re-measured on the baseline module (85 moved, 33 of them past tolerance); sphereTriangleTest.py moved to DeliberatelyNotRun. Suite and pytest green.",
+  "resolvedInVersion": "1.11.104"
 }

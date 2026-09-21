@@ -9,5 +9,6 @@
   "deadline": "2022-03-14",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved: src/Linalg/Vector.h allocates through _aligned_malloc on Windows and posix_memalign elsewhere; so vector data is aligned for the AVX paths; and AlignedFree in src/Utilities/BasicDefinitions.h frees it. Revision2026 step R2.10 settled which module carries the vector extensions (only exudynCPPfast) and step R2.10.3 recorded what they change."
+  "releaseNotes": "Resolved: src/Linalg/Vector.h allocates through _aligned_malloc on Windows and posix_memalign elsewhere; so vector data is aligned for the AVX paths; and AlignedFree in src/Utilities/BasicDefinitions.h frees it. Revision2026 step R2.10 settled which module carries the vector extensions (only exudynCPPfast) and step R2.10.3 recorded what they change.",
+  "resolvedInVersion": "1.11.143"
 }

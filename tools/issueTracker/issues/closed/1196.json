@@ -9,5 +9,6 @@
   "deadline": "2022-09-09",
   "dateResolved": "2026-01-04 11:35",
   "resolvedAuthor": "JG",
-  "releaseNotes": "partially resolved and moved to newer issues"
+  "releaseNotes": "partially resolved and moved to newer issues",
+  "resolvedInVersion": "1.10.43"
 }

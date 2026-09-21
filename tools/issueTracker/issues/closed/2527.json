@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/Main/Stdoutput.cpp",
   "line": "333",
-  "releaseNotes": "PyError and SysError throw the actual message plus the Python location instead of a fixed sentence, six of the ten cases of the model of #2523 now say what went wrong. PyGetCurrentFileInformation walks out of the exudyn package\\, so the location is the users own frame and not exudyn/solver.py. revision2026 step R6.3.5."
+  "releaseNotes": "PyError and SysError throw the actual message plus the Python location instead of a fixed sentence, six of the ten cases of the model of #2523 now say what went wrong. PyGetCurrentFileInformation walks out of the exudyn package\\, so the location is the users own frame and not exudyn/solver.py. revision2026 step R6.3.5.",
+  "resolvedInVersion": "1.11.186"
 }

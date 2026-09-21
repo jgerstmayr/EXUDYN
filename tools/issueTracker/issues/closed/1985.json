@@ -9,5 +9,6 @@
   "deadline": "2025-09-29",
   "dateResolved": "2025-05-06 22:20",
   "resolvedAuthor": "JG",
-  "releaseNotes": "shall be resolved with issue 1996, as it natively derives from C++ class"
+  "releaseNotes": "shall be resolved with issue 1996, as it natively derives from C++ class",
+  "resolvedInVersion": "1.9.93"
 }

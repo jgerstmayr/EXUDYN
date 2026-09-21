@@ -11,5 +11,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/Main/OutputVariable.h",
   "line": "301",
-  "releaseNotes": "fixed by the OutputVariableType registrator (revision2026 step R4.1.4): the enum, GetOutputVariableTypeString(); IsOutputVariableTypeForReferenceConfiguration() and the Python enum are now all generated from definitions/outputVariableTypes.py; so a value can no longer exist without a string. Verified: a sensor on CoordinatesTotal writes OutputVariableType = CoordinatesTotal into its solution file header instead of Invalid."
+  "releaseNotes": "fixed by the OutputVariableType registrator (revision2026 step R4.1.4): the enum, GetOutputVariableTypeString(); IsOutputVariableTypeForReferenceConfiguration() and the Python enum are now all generated from definitions/outputVariableTypes.py; so a value can no longer exist without a string. Verified: a sensor on CoordinatesTotal writes OutputVariableType = CoordinatesTotal into its solution file header instead of Invalid.",
+  "resolvedInVersion": "1.11.49"
 }

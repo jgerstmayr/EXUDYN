@@ -9,5 +9,6 @@
   "deadline": "2027-03-15",
   "dateResolved": "2026-09-16 19:59",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "revision2026 step R5.3: new build switch performUnitTests (command line --unittests; EXUDYN_PERFORM_UNIT_TESTS; [tool.exudyn]); off by default; -DPERFORM_UNIT_TESTS also for unix; PERFORM_UNIT_TESTS in the VS Debug configuration. Verified: the tests compile and all pass."
+  "releaseNotes": "revision2026 step R5.3: new build switch performUnitTests (command line --unittests; EXUDYN_PERFORM_UNIT_TESTS; [tool.exudyn]); off by default; -DPERFORM_UNIT_TESTS also for unix; PERFORM_UNIT_TESTS in the VS Debug configuration. Verified: the tests compile and all pass.",
+  "resolvedInVersion": "1.11.102"
 }

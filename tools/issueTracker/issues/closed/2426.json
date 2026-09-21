@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 00:35",
   "resolvedAuthor": "Claude-JG",
   "file": "definitions/definitionTypes.py",
-  "releaseNotes": "item classes construct with their defaults (since 34c4 b). New item flag CFMustBeGiven (Q) on the 25 parameters whose default lies outside their range form; definitionValidator rule 6 requires the flag exactly there. Add/SetWithDictionary raises: parameter MarkerNodeCoordinate.coordinate must be given; the default -1 is only a placeholder. The same switch as range checks turns it off. Docs mark these parameters. Set-later item indices are not range checked and stay with CheckPreAssembleConsistency."
+  "releaseNotes": "item classes construct with their defaults (since 34c4 b). New item flag CFMustBeGiven (Q) on the 25 parameters whose default lies outside their range form; definitionValidator rule 6 requires the flag exactly there. Add/SetWithDictionary raises: parameter MarkerNodeCoordinate.coordinate must be given; the default -1 is only a placeholder. The same switch as range checks turns it off. Docs mark these parameters. Set-later item indices are not range checked and stay with CheckPreAssembleConsistency.",
+  "resolvedInVersion": "1.11.57"
 }

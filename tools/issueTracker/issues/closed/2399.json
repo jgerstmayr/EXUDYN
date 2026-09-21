@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 14:29",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pythonDev/TestModels/runPerformanceTests.py",
-  "releaseNotes": "tests are now grouped as small (few coordinates; ~1e6 steps; measures per step overhead) and large (many coordinates; few steps; measures the work per step where long vectors and AVX2 are visible); and the suite prints a table of every test with its group; its time and its share of the total; plus a subtotal per group. A new large test perfLargeMassSpringChain.py was added: 2000 point masses; 6000 ODE2 coordinates; explicit Euler; deterministic (repeated runs bit identical) and about 4.8 s on Windows. All 7 performance tests pass"
+  "releaseNotes": "tests are now grouped as small (few coordinates; ~1e6 steps; measures per step overhead) and large (many coordinates; few steps; measures the work per step where long vectors and AVX2 are visible); and the suite prints a table of every test with its group; its time and its share of the total; plus a subtotal per group. A new large test perfLargeMassSpringChain.py was added: 2000 point masses; 6000 ODE2 coordinates; explicit Euler; deterministic (repeated runs bit identical) and about 4.8 s on Windows. All 7 performance tests pass",
+  "resolvedInVersion": "1.11.36"
 }

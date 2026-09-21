@@ -9,5 +9,6 @@
   "deadline": "2026-07-30",
   "dateResolved": "2026-01-31 22:12",
   "resolvedAuthor": "JG",
-  "releaseNotes": "check graphics functionality in examples..."
+  "releaseNotes": "check graphics functionality in examples...",
+  "resolvedInVersion": "1.10.79"
 }

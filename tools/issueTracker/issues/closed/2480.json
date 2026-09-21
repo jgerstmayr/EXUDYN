@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 16:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Symbolic.h now includes BasicLinalg.h, <unordered_map> and <typeinfo>; SymbolicVector.h includes Symbolic.h and PybindUtilities.h; SymbolicMatrix.h includes those plus SymbolicVector.h. PybindUtilities.h brings the pybind headers, the py alias and EPyUtils in one line and includes nothing symbolic, so there is no cycle. The proof is a deletion: the four-line include workaround in SymbolicUnitTests.h is gone and the tests compile with the headers in any order. revision2026 step R5.4.7."
+  "releaseNotes": "Symbolic.h now includes BasicLinalg.h, <unordered_map> and <typeinfo>; SymbolicVector.h includes Symbolic.h and PybindUtilities.h; SymbolicMatrix.h includes those plus SymbolicVector.h. PybindUtilities.h brings the pybind headers, the py alias and EPyUtils in one line and includes nothing symbolic, so there is no cycle. The proof is a deletion: the four-line include workaround in SymbolicUnitTests.h is gone and the tests compile with the headers in any order. revision2026 step R5.4.7.",
+  "resolvedInVersion": "1.11.118"
 }

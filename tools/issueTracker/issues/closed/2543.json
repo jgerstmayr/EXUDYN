@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "docs/theDoc/theDoc.tex",
   "line": "334",
-  "releaseNotes": "Four causes, all restructuring fallout. Fixed: the title page reads ../../version.txt (root since R3.4); 19 main-pythonDev references in five hand-written .tex files rewritten to python/...; the extra closing brace on theDoc.tex line 334; and, the big one, issue text is escaped for LaTeX now (#2544). A complete 8.4 MB PDF is produced where none was before, and the error count went from 158 fatal to 74 non-fatal. The remainder is the same escaping bug in the other documentation emitters, raised separately. This unblocks R7.3."
+  "releaseNotes": "Four causes, all restructuring fallout. Fixed: the title page reads ../../version.txt (root since R3.4); 19 main-pythonDev references in five hand-written .tex files rewritten to python/...; the extra closing brace on theDoc.tex line 334; and, the big one, issue text is escaped for LaTeX now (#2544). A complete 8.4 MB PDF is produced where none was before, and the error count went from 158 fatal to 74 non-fatal. The remainder is the same escaping bug in the other documentation emitters, raised separately. This unblocks R7.3.",
+  "resolvedInVersion": "1.11.203"
 }

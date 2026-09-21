@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 20:35",
   "resolvedAuthor": "Claude-JG",
   "file": "setup.py",
-  "releaseNotes": "duplicate of #2427 (revision2026 step R2.17)"
+  "releaseNotes": "duplicate of #2427 (revision2026 step R2.17)",
+  "resolvedInVersion": "1.11.79"
 }

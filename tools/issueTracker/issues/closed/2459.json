@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 17:09",
   "resolvedAuthor": "Claude-JG",
   "file": "main/python/TestModels/runTestSuiteRefSol.py",
-  "releaseNotes": "revision2026 step R5.2: SlowTests/OptionalPackageTests as data; runTestSuite.py --fast (12 s) and pytest markers; nightly unchanged"
+  "releaseNotes": "revision2026 step R5.2: SlowTests/OptionalPackageTests as data; runTestSuite.py --fast (12 s) and pytest markers; nightly unchanged",
+  "resolvedInVersion": "1.11.97"
 }

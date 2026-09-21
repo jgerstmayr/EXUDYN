@@ -9,5 +9,6 @@
   "deadline": "2025-08-04",
   "dateResolved": "2025-05-10 23:23",
   "resolvedAuthor": "JG",
-  "releaseNotes": "included in createFunctionsTest"
+  "releaseNotes": "included in createFunctionsTest",
+  "resolvedInVersion": "1.9.107"
 }

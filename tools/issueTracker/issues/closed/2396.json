@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 08:54",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pythonDev/TestModels/runTestSuiteRefSol.py",
-  "releaseNotes": "revision2026 step R2.16: caused by FMA contraction; -ffp-contract=off removes it; AVX2 stays off for the default Linux wheel; a fast variant must use the flag"
+  "releaseNotes": "revision2026 step R2.16: caused by FMA contraction; -ffp-contract=off removes it; AVX2 stays off for the default Linux wheel; a fast variant must use the flag",
+  "resolvedInVersion": "1.11.91"
 }

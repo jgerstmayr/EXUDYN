@@ -9,5 +9,6 @@
   "deadline": "2025-11-18",
   "dateResolved": "2025-05-22 16:35",
   "resolvedAuthor": "JG",
-  "releaseNotes": "added option openGL.depthSorting which sorts triangles by their depth for improved transparency view (but requires triangles to be small enough)"
+  "releaseNotes": "added option openGL.depthSorting which sorts triangles by their depth for improved transparency view (but requires triangles to be small enough)",
+  "resolvedInVersion": "1.9.142"
 }

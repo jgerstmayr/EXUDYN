@@ -34,6 +34,7 @@
 import json
 import os
 import sys
+import threading
 
 #the tracker is the API; it lives beside this file and is not a package
 if os.path.dirname(os.path.abspath(__file__)) not in sys.path:
@@ -168,8 +169,8 @@ def HandlePost(path, payload):
                                  replace=bool(payload.get('replace')))
     elif path == '/api/resolve':
         issueTracker.ResolveIssue(number, notes=payload.get('notes', ''), author=author)
-    elif path == '/api/abandon':
-        issueTracker.AbandonIssue(number, reason=payload.get('reason', ''), author=author)
+    elif path in ['/api/close', '/api/abandon']:
+        issueTracker.CloseIssue(number, reason=payload.get('reason', ''), author=author)
     elif path == '/api/modify':
         field = payload.get('field', '')
         if field not in issueStore.issueFields:
@@ -208,12 +209,22 @@ def AllowedHost(header):
     return name in ['', 'localhost', '127.0.0.1', '::1']
 
 
+#ONE WRITER AT A TIME. The server is threaded (see Serve), because a browser holds sockets open
+#that carry no request; the store must still see one change at a time.
+requestLock = threading.Lock()
+
+
 def RequestHandler():
     """the handler class, built here so that importing this module costs no http.server import"""
     import http.server
     import urllib.parse
 
     class Handler(http.server.BaseHTTPRequestHandler):
+        #HTTP/1.1 so that a browser may keep a connection open between two fetches; every
+        #response of this server carries a Content-Length, which is what that requires
+        protocol_version = 'HTTP/1.1'
+        timeout = 30                    #an idle connection is closed instead of held forever
+
         #one line per request would bury the output of the tracker functions, which is what the
         #maintainer wants to see in the terminal
         def log_message(self, format, *args):                                 #noqa: A002
@@ -236,7 +247,9 @@ def RequestHandler():
             parts = urllib.parse.urlparse(self.path)
             query = {name: values[0] for (name, values)
                      in urllib.parse.parse_qs(parts.query).items()}
-            self.Respond(HandleRequest('GET', parts.path, query=query))
+            with requestLock:
+                response = HandleRequest('GET', parts.path, query=query)
+            self.Respond(response)
 
         def do_POST(self):                                                    #noqa: N802
             if not AllowedHost(self.headers.get('Host')):
@@ -247,17 +260,33 @@ def RequestHandler():
             except ValueError as error:
                 return self.Respond(ErrorResponse('the request is not JSON: ' + str(error)))
             parts = urllib.parse.urlparse(self.path)
-            self.Respond(HandleRequest('POST', parts.path, payload=payload))
+            with requestLock:
+                response = HandleRequest('POST', parts.path, payload=payload)
+            self.Respond(response)
 
     return Handler
 
 
-def Serve(port=8099, openBrowser=True, author='JG'):
-    """run until Ctrl+C. It is single-threaded on purpose: two browsers writing the same issue
-    through one store would be a merge problem, and one maintainer is the case this serves."""
+def MakeServer(port):
+    """the socket, on the loopback interface and THREADED (#2571). It is a function of its own so
+    that the test can start the very server Serve() starts, rather than one it configures itself -
+    the bug was precisely in this configuration."""
     import http.server
 
-    server = http.server.HTTPServer(('127.0.0.1', port), RequestHandler())
+    server = http.server.ThreadingHTTPServer(('127.0.0.1', port), RequestHandler())
+    server.daemon_threads = True
+    return server
+
+
+def Serve(port=8099, openBrowser=True, author='JG'):
+    """run until Ctrl+C.
+
+    THREADED, and that is not a preference (#2571): a browser opens speculative connections that
+    carry no request, and a single-threaded server accepts one of them and then blocks in
+    readline() until the browser closes it again. The page itself had already been answered, so
+    it rendered - and every fetch behind it waited, with no error anywhere. The store still sees
+    one change at a time, because requestLock is held across each request."""
+    server = MakeServer(port)
     address = 'http://127.0.0.1:' + str(port) + '/'
     print('issue tracker on ' + address + '   (' + str(issueTracker.NumberOfIssues())
           + ' issues, version ' + issueTracker.VersionString() + ', author ' + author + ')')
@@ -303,7 +332,7 @@ pageHtml = """<!DOCTYPE html>
  .nr { font-family: ui-monospace, Consolas, monospace; white-space: nowrap; }
  .tag { font-size: 11px; padding: 1px 5px; border-radius: 3px; background: #8883;
         white-space: nowrap; }
- .RESOLVED { background: #3a9a3a44; } .ABANDONED { background: #99999944; }
+ .RESOLVED { background: #3a9a3a44; } .CLOSED { background: #99999944; }
  .HUGE, .HIGH { background: #d9534f44; } .MEDIUM { background: #f0ad4e44; }
  .LOW { background: #5bc0de44; }
  h2 { margin: 0 0 4px 0; font-size: 17px; }
@@ -361,9 +390,20 @@ function Message(text) {
     box.style.display = text ? 'block' : 'none';
 }
 
+//a failed request must SAY so: this page once rendered its frame and stayed empty, because the
+//server was blocked and nothing ever answered (#2571). Silence is the one unacceptable outcome.
 async function Get(path) {
-    const response = await fetch(path);
-    const data = await response.json();
+    let response;
+    try { response = await fetch(path); }
+    catch (error) { Message('no answer from the server (' + path + '): ' + error); return null; }
+    const text = await response.text();
+    let data = null;
+    try { data = JSON.parse(text); }
+    catch (error) {
+        Message('the server did not answer with JSON (' + response.status + '): '
+                + text.slice(0, 400));
+        return null;
+    }
     if (!response.ok) { Message(data.error || 'request failed'); return null; }
     Message('');
     return data;
@@ -427,8 +467,10 @@ async function LoadList() {
             El('td', {text: issue.title})]);
         list.appendChild(row);
     }
-    document.getElementById('count').textContent = data.matching + ' matching issues'
-        + (data.matching > data.issues.length ? ', ' + data.issues.length + ' shown' : '');
+    document.getElementById('count').textContent = data.matching
+        ? data.matching + ' matching issues'
+            + (data.matching > data.issues.length ? ', ' + data.issues.length + ' shown' : '')
+        : 'no issue matches these filters';
 }
 
 function EnumField(issue, field, values, closed) {
@@ -472,7 +514,7 @@ async function Show(number) {
     const issue = await Get('/api/issue?number=' + number);
     if (!issue) return;
     current = issue;
-    const closed = issue.status === 'RESOLVED' || issue.status === 'ABANDONED';
+    const closed = issue.status !== 'RAISED';
     const pane = document.getElementById('detailPane');
     pane.textContent = '';
     pane.appendChild(El('h2', {text: '#' + issue.number + '  ' + issue.title}));
@@ -512,9 +554,12 @@ async function Show(number) {
             && Post('/api/resolve', {number: issue.number, notes: text})
                    .then(data => data && Show(issue.number))));
 
-    pane.appendChild(WriteBox('reason - abandoning also counts for the version', 'abandon',
-        text => confirm('abandon #' + issue.number + '?')
-            && Post('/api/abandon', {number: issue.number, reason: text})
+    //CLOSED covers everything except RESOLVED - obsolete, won't fix, duplicate, superseded,
+    //not reproducible, abandoned - and the reason says which (D13)
+    pane.appendChild(WriteBox('reason - closing without resolving also counts for the version',
+        'close',
+        text => confirm('close #' + issue.number + ' without resolving it?')
+            && Post('/api/close', {number: issue.number, reason: text})
                    .then(data => data && Show(issue.number))));
 }
 
@@ -552,6 +597,11 @@ function NewIssue() {
         if (data) Show(data.number);
     }})]));
 }
+
+window.addEventListener('error', event => Message('the page has a problem: '
+    + event.message + '  (' + event.filename + ':' + event.lineno + ')'));
+window.addEventListener('unhandledrejection',
+    event => Message('the page has a problem: ' + event.reason));
 
 document.getElementById('newIssue').addEventListener('click', NewIssue);
 document.getElementById('search').addEventListener('input', LoadList);

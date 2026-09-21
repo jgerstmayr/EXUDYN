@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
   "file": "definitions/itemDefsObjects.py",
-  "releaseNotes": "Verified 2026-09-17 on 1.11.135.dev1: mbs.AddObject(ObjectANCFThinPlate()) no longer raises from C++; it adds with its defaults exactly as ObjectMassPoint and ObjectANCFCable2D do; which is the \"expected\" behaviour this issue names. Fixed on the way by the item-interface work of revision2026 step R4.4.3."
+  "releaseNotes": "Verified 2026-09-17 on 1.11.135.dev1: mbs.AddObject(ObjectANCFThinPlate()) no longer raises from C++; it adds with its defaults exactly as ObjectMassPoint and ObjectANCFCable2D do; which is the \"expected\" behaviour this issue names. Fixed on the way by the item-interface work of revision2026 step R4.4.3.",
+  "resolvedInVersion": "1.11.158"
 }

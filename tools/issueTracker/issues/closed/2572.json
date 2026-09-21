@@ -1,0 +1,15 @@
+{
+  "number": 2572,
+  "title": "ABANDONED is one reason, not the status: it becomes CLOSED",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "R8.3.1 proposed CLOSED, R8.7 built ABANDONED, and both have stood in the documents since. They do not mean the same thing: abandoned is one reason among several - obsolete, won't fix, duplicate of #n, superseded, no longer applies, not reproducible - while the status says only that the issue is closed and was not resolved. The status is CLOSED from revision2026 step R8.3.4 on, the kind is named in its mandatory reason, and AbandonIssue stays as a one-line alias of CloseIssue. The count of closed issues, which is the micro version, must not move: it did not.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 15:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The status of an issue that was not resolved is CLOSED (D13): obsolete, won't fix, duplicate, superseded, no longer applies, not reproducible, abandoned - one status, with the kind in its mandatory reason. CloseIssue replaces AbandonIssue, which stays as an alias; exudev issue close is the verb and abandon its alias; issueStore.knownStatuses is checked by CheckStore. The 15 issues carrying the old spelling were rewritten inside their archive files, and the count of closed issues - the micro version - did not move.",
+  "resolvedInVersion": "1.11.231"
+}

@@ -11,5 +11,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/pythonGenerator/objectDefinition.py",
   "line": "397",
-  "releaseNotes": "corrected at the source: objectDefinition.py lines 397-399 declared size 3 for three Vector6D members of NodeRigidBodyRotVecLG; the sibling NodeRigidBodyEP block correctly says 6. Regenerated; only the documentation tables changed (tier 1 API surface byte-identical)."
+  "releaseNotes": "corrected at the source: objectDefinition.py lines 397-399 declared size 3 for three Vector6D members of NodeRigidBodyRotVecLG; the sibling NodeRigidBodyEP block correctly says 6. Regenerated; only the documentation tables changed (tier 1 API surface byte-identical).",
+  "resolvedInVersion": "1.11.48"
 }

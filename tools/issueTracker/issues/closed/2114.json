@@ -8,5 +8,6 @@
   "dateRaised": "2025-06-30",
   "deadline": "2025-12-27",
   "dateResolved": "2025-06-30 14:30",
-  "resolvedAuthor": "S. Weyrer"
+  "resolvedAuthor": "S. Weyrer",
+  "resolvedInVersion": "1.9.213"
 }

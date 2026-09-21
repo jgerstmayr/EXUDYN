@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-09 23:22",
   "resolvedAuthor": "Claude-JG",
   "file": ".gitlab-ci.yml",
-  "releaseNotes": "runTestSuite.py gains --exit-code and loses the -F<NN> log suffix; reproducible vs sensitive tests separated in runTestSuiteRefSol.py; manylinuxBuild.sh deduplicated into tools/ci/buildManylinux.sh. Verified by fault injection. First pipeline run and the weekly schedule are still pending"
+  "releaseNotes": "runTestSuite.py gains --exit-code and loses the -F<NN> log suffix; reproducible vs sensitive tests separated in runTestSuiteRefSol.py; manylinuxBuild.sh deduplicated into tools/ci/buildManylinux.sh. Verified by fault injection. First pipeline run and the weekly schedule are still pending",
+  "resolvedInVersion": "1.11.11"
 }

@@ -9,5 +9,6 @@
   "deadline": "2025-12-29",
   "dateResolved": "2025-07-09 18:43",
   "resolvedAuthor": "JG",
-  "releaseNotes": "see Example involuteGearGraphics.py"
+  "releaseNotes": "see Example involuteGearGraphics.py",
+  "resolvedInVersion": "1.10.0"
 }

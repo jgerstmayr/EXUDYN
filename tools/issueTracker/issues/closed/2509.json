@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/TestModels/symbolicModuleTest.py",
   "line": "217",
-  "releaseNotes": "Fixed in revision2026 step R5.9.3: the SCALAR comparison of symbolicModuleTest.py now uses the same relative tolerance as the vector one; instead of exact equality between two independent implementations of a transcendental function. Found by running the suite on Linux in WSL before restarting the GitLab pipeline - numpy 2.5.3 is what the manylinux job uses; and acosh(2) differs by one ulp there. Verified under numpy 2.2.4; 2.4.6 and 2.5.3: all three return the committed reference 0.9484129575069745 exactly; and a mutation of 1e-12 relative still flags 498 of the about 796 comparisons."
+  "releaseNotes": "Fixed in revision2026 step R5.9.3: the SCALAR comparison of symbolicModuleTest.py now uses the same relative tolerance as the vector one; instead of exact equality between two independent implementations of a transcendental function. Found by running the suite on Linux in WSL before restarting the GitLab pipeline - numpy 2.5.3 is what the manylinux job uses; and acosh(2) differs by one ulp there. Verified under numpy 2.2.4; 2.4.6 and 2.5.3: all three return the committed reference 0.9484129575069745 exactly; and a mutation of 1e-12 relative still flags 498 of the about 796 comparisons.",
+  "resolvedInVersion": "1.11.169"
 }

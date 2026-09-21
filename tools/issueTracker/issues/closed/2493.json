@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-17 20:42",
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/advancedUtilities.py",
-  "releaseNotes": "basicUtilities.CreateDirectoryForFile(fileName) creates the directory of a file that is about to be written and returns the name unchanged; failure is ignored on purpose - creating a directory can fail for reasons that do not stop the write; and the write reports the real problem better. SaveDictToHDF5 now calls it - the behaviour it was missing - and the five hand-written copies in FEM.py (2); plot.py (2) and processing.py now call it instead. Verified: testHDF5loadSave.py writes into a solution/ directory that does not exist yet; without any makedirs in the example. The two examples that needed an os.makedirs line one commit ago no longer do. revision2026 step R5.13.4"
+  "releaseNotes": "basicUtilities.CreateDirectoryForFile(fileName) creates the directory of a file that is about to be written and returns the name unchanged; failure is ignored on purpose - creating a directory can fail for reasons that do not stop the write; and the write reports the real problem better. SaveDictToHDF5 now calls it - the behaviour it was missing - and the five hand-written copies in FEM.py (2); plot.py (2) and processing.py now call it instead. Verified: testHDF5loadSave.py writes into a solution/ directory that does not exist yet; without any makedirs in the example. The two examples that needed an os.makedirs line one commit ago no longer do. revision2026 step R5.13.4",
+  "resolvedInVersion": "1.11.131"
 }

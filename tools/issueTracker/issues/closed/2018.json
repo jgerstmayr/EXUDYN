@@ -8,5 +8,6 @@
   "dateRaised": "2025-05-15",
   "deadline": "2025-11-11",
   "dateResolved": "2025-06-18 22:22",
-  "resolvedAuthor": "JG"
+  "resolvedAuthor": "JG",
+  "resolvedInVersion": "1.9.203"
 }

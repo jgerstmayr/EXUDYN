@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-10 13:08",
   "resolvedAuthor": "Claude-JG",
   "file": "runTestSuiteRefSol.py",
-  "releaseNotes": "List added and wired in; not the fix. Verified Windows still passes 106/106 with the list active and Linux exits 0 while reporting all eight. sphereTriangleTest.py is a divergence rather than an accuracy difference and should be investigated first"
+  "releaseNotes": "List added and wired in; not the fix. Verified Windows still passes 106/106 with the list active and Linux exits 0 while reporting all eight. sphereTriangleTest.py is a divergence rather than an accuracy difference and should be investigated first",
+  "resolvedInVersion": "1.11.13"
 }

@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 22:50",
   "resolvedAuthor": "Claude-JG",
   "file": "definitions/definitionTypes.py",
-  "releaseNotes": "revision2026 step R4.10.3: ItemTypes in 34 nodes/markers; ItemAccessFunctionTypes in 19 objects; cpp bodies removed"
+  "releaseNotes": "revision2026 step R4.10.3: ItemTypes in 34 nodes/markers; ItemAccessFunctionTypes in 19 objects; cpp bodies removed",
+  "resolvedInVersion": "1.11.85"
 }

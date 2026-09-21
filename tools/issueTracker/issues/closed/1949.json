@@ -9,5 +9,6 @@
   "deadline": "2025-08-03",
   "dateResolved": "2025-03-03 20:41",
   "resolvedAuthor": "JG",
-  "releaseNotes": "already done with issue 1957"
+  "releaseNotes": "already done with issue 1957",
+  "resolvedInVersion": "1.9.69"
 }

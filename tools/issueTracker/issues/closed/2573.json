@@ -1,0 +1,16 @@
+{
+  "number": 2573,
+  "title": "the version numbering is derived on every run, so history can move",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "The micro version is a running count of closed issues, and every version number in the release notes was recomputed on each run from a sort by dateResolved. One corrected date, one status changed by hand or one lost file renumbers versions that have already been published, and nothing in the tree would report it - both sides of any comparison came from the same derivation. Revision2026 step R8.4: the releases and their baselines become data (releases.json), every closed issue stores the version its closing produced (resolvedInVersion, D14), tools/checkIssues.py recomputes and compares, and exudev issue bump starts a new release - MINOR and, for the first time, MAJOR: the major number was written as 1 inside GetMajorMinorMicroVersion, so 2.0 could not be expressed at all (maintainer 2026-09-21).",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 15:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The releases are data: tools/issueTracker/releases.json holds each release, the count of closed issues it began at and its name, and exudev issue bump --minor|--major|--to starts a new one - MAJOR included, which the tracker could not express because the major number was the literal 1 in GetMajorMinorMicroVersion. Every closed issue stores the version its closing produced (resolvedInVersion); 2302 issues were backfilled and the computation reproduces all 2066 versions the archived 1.11.0 documentation published, with trackerlog.md regenerating byte-identical. tools/checkIssues.py compares the stored version with the recomputed one, refuses two issues sharing a version or an open issue carrying one, and checks that the baselines rise.",
+  "resolvedInVersion": "1.11.232"
+}

@@ -10,5 +10,6 @@
   "deadline": "2019-07-01",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllMatrixUnitTests.h and AllMatrixVariantsUnitTests.h cover Matrix; ResizableMatrix; ConstSizeMatrix and the linked-data variants; step R5.4.1 completed the variants that had none."
+  "releaseNotes": "Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllMatrixUnitTests.h and AllMatrixVariantsUnitTests.h cover Matrix; ResizableMatrix; ConstSizeMatrix and the linked-data variants; step R5.4.1 completed the variants that had none.",
+  "resolvedInVersion": "1.11.137"
 }

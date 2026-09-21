@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 08:54",
   "resolvedAuthor": "Claude-JG",
   "file": "main/src/Pymodules/pythonTests.cpp",
-  "releaseNotes": "revision2026 step R2.16: tools/benchmarks/avx2Benchmark.py with solver sub timers replaces the dead sweep in PyTest(); an in-Exudyn micro-benchmark is step R11.2"
+  "releaseNotes": "revision2026 step R2.16: tools/benchmarks/avx2Benchmark.py with solver sub timers replaces the dead sweep in PyTest(); an in-Exudyn micro-benchmark is step R11.2",
+  "resolvedInVersion": "1.11.92"
 }

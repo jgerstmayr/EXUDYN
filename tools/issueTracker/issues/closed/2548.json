@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "docs/theDoc",
   "line": "1",
-  "releaseNotes": "One directory is either generated or hand-written and says which. docs/generated/ holds everything the emitters and the issue tracker write, each file saying so in its first line, with a hand-written README.md naming what writes each sub-directory and linguist-generated in .gitattributes; docs/manual/ is the hand-written user manual; index.md and README.rst are hand-written. docs/RST/ and docs/theDoc/ are deleted with the converters (R7.1.7), the figures moved to docs/figures/, and rule 1 of CLAUDE.md is one sentence."
+  "releaseNotes": "One directory is either generated or hand-written and says which. docs/generated/ holds everything the emitters and the issue tracker write, each file saying so in its first line, with a hand-written README.md naming what writes each sub-directory and linguist-generated in .gitattributes; docs/manual/ is the hand-written user manual; index.md and README.rst are hand-written. docs/RST/ and docs/theDoc/ are deleted with the converters (R7.1.7), the figures moved to docs/figures/, and rule 1 of CLAUDE.md is one sentence.",
+  "resolvedInVersion": "1.11.227"
 }

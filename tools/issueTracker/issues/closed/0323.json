@@ -9,5 +9,6 @@
   "deadline": "2020-03-24",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py writes a fixed set of probe values - which includes -1 - into every parameter of every item through each access path and compares type; shape and value that read back against a committed reference; index parameters included. The InvalidIndex cases are called out explicitly in that file (#2426)."
+  "releaseNotes": "Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py writes a fixed set of probe values - which includes -1 - into every parameter of every item through each access path and compares type; shape and value that read back against a committed reference; index parameters included. The InvalidIndex cases are called out explicitly in that file (#2426).",
+  "resolvedInVersion": "1.11.139"
 }

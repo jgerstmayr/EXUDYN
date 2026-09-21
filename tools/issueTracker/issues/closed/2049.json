@@ -9,5 +9,6 @@
   "deadline": "2025-11-22",
   "dateResolved": "2025-05-29 16:22",
   "resolvedAuthor": "JG",
-  "releaseNotes": "SetRenderState is extended by a flag which by default waits until the renderer is fully started or redrawn; this can impede performance, which is why this should be set to False in such cases"
+  "releaseNotes": "SetRenderState is extended by a flag which by default waits until the renderer is fully started or redrawn; this can impede performance, which is why this should be set to False in such cases",
+  "resolvedInVersion": "1.9.154"
 }

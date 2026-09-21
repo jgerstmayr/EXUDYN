@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-13 21:48",
   "resolvedAuthor": "Claude-JG",
   "file": "src/pythonGenerator/systemStructuresDefinition.py",
-  "releaseNotes": "copy-paste error confirmed by the maintainer; the type is now bool. Generated as bool showNodalSlopes; the PySet wrapper with its GetSafelyUInt range check is gone and the stub says bool instead of int. All four C++ uses (VisuNodePoint.cpp:677-802) were already boolean tests. Full rebuild and runTestSuite.py PASSED."
+  "releaseNotes": "copy-paste error confirmed by the maintainer; the type is now bool. Generated as bool showNodalSlopes; the PySet wrapper with its GetSafelyUInt range check is gone and the stub says bool instead of int. All four C++ uses (VisuNodePoint.cpp:677-802) were already boolean tests. Full rebuild and runTestSuite.py PASSED.",
+  "resolvedInVersion": "1.11.50"
 }

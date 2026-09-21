@@ -9,5 +9,6 @@
   "deadline": "2027-03-08",
   "dateResolved": "2026-09-09 18:47",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Examples and TestModels now match the internal repository; a fresh regeneration produces no doc differences"
+  "releaseNotes": "Examples and TestModels now match the internal repository; a fresh regeneration produces no doc differences",
+  "resolvedInVersion": "1.11.3"
 }

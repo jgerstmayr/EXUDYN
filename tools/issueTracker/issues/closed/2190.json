@@ -9,5 +9,6 @@
   "deadline": "2026-07-03",
   "dateResolved": "2026-01-06 22:34",
   "resolvedAuthor": "JG",
-  "releaseNotes": "adapted centerPoint; artifacts may still appear for very out of center models"
+  "releaseNotes": "adapted centerPoint; artifacts may still appear for very out of center models",
+  "resolvedInVersion": "1.10.55"
 }

@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "main/python/TestModels/runTestSuite.py",
   "line": "413",
-  "releaseNotes": "revision2026 step R5.3: runTestSuite.py checked hasattr(exu.solver; RunCppUnitTests) while the binding is on exu.special - the C++ unit tests were reported as skipped even in a build that has them; and the summary called len() on the returned count."
+  "releaseNotes": "revision2026 step R5.3: runTestSuite.py checked hasattr(exu.solver; RunCppUnitTests) while the binding is on exu.special - the C++ unit tests were reported as skipped even in a build that has them; and the summary called len() on the returned count.",
+  "resolvedInVersion": "1.11.101"
 }

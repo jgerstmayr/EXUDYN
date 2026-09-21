@@ -9,5 +9,6 @@
   "deadline": "2026-10-14",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Largely resolved by revision2026 step R4.4.3 and its sub-steps: the item interface converts and checks parameters of every type; a rejected value names the item class and the parameter - for instance \"ObjectGenericODE2: invalid node number detected\" - and the whole behaviour is recorded by parameterConversionTest.py against a committed reference. What is NOT uniform yet is the exception TYPE per kind of error; which is #2432 and revision2026 step R6.7."
+  "releaseNotes": "Largely resolved by revision2026 step R4.4.3 and its sub-steps: the item interface converts and checks parameters of every type; a rejected value names the item class and the parameter - for instance \"ObjectGenericODE2: invalid node number detected\" - and the whole behaviour is recorded by parameterConversionTest.py against a committed reference. What is NOT uniform yet is the exception TYPE per kind of error; which is #2432 and revision2026 step R6.7.",
+  "resolvedInVersion": "1.11.155"
 }

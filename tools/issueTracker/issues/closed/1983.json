@@ -9,5 +9,6 @@
   "deadline": "2025-09-28",
   "dateResolved": "2025-04-01 16:44",
   "resolvedAuthor": "JG",
-  "releaseNotes": "changed ObjectFFRFreducedOrderInterface and FEM class to by default use numpy NPZ format"
+  "releaseNotes": "changed ObjectFFRFreducedOrderInterface and FEM class to by default use numpy NPZ format",
+  "resolvedInVersion": "1.9.84"
 }

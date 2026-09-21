@@ -11,5 +11,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/pythonGenerator/pythonAutoGenerateObjects.py",
   "line": "2029",
-  "releaseNotes": "revision2026 step R4.11: item headers compared with IsEqualIgnoringDateStrings instead of cutting 7 lines"
+  "releaseNotes": "revision2026 step R4.11: item headers compared with IsEqualIgnoringDateStrings instead of cutting 7 lines",
+  "resolvedInVersion": "1.11.74"
 }

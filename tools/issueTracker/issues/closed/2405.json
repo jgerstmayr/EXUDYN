@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 19:04",
   "resolvedAuthor": "Claude-JG",
   "file": "src/pythonGenerator/exudynVersion.py",
-  "releaseNotes": "replaced by one resolver anchored on the repository root: it walks upwards from __file__ (and from the working directory; setup.py and conf.py exec() this file, so __file__ is the executing script there) for a directory holding both pyproject.toml and docs/theDoc/version.txt. Missing or empty is now a RuntimeError naming the file and everything searched. Verified from the repository root, from src/pythonGenerator, and from a directory outside the repository where it now raises instead of returning unknown"
+  "releaseNotes": "replaced by one resolver anchored on the repository root: it walks upwards from __file__ (and from the working directory; setup.py and conf.py exec() this file, so __file__ is the executing script there) for a directory holding both pyproject.toml and docs/theDoc/version.txt. Missing or empty is now a RuntimeError naming the file and everything searched. Verified from the repository root, from src/pythonGenerator, and from a directory outside the repository where it now raises instead of returning unknown",
+  "resolvedInVersion": "1.11.43"
 }

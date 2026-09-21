@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 00:35",
   "resolvedAuthor": "Claude-JG",
   "file": "src/Pymodules/PybindUtilities.h",
-  "releaseNotes": "Real - float and bool item parameters reject NodeIndex/ObjectIndex/MarkerIndex/LoadIndex/SensorIndex with a message naming item and parameter; Index parameters keep accepting them. parameterConversionTest: 618 intended changes (bool already rejected them). Structures follow in 34c5."
+  "releaseNotes": "Real - float and bool item parameters reject NodeIndex/ObjectIndex/MarkerIndex/LoadIndex/SensorIndex with a message naming item and parameter; Index parameters keep accepting them. parameterConversionTest: 618 intended changes (bool already rejected them). Structures follow in 34c5.",
+  "resolvedInVersion": "1.11.56"
 }

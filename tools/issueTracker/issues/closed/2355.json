@@ -9,5 +9,6 @@
   "deadline": "2027-03-08",
   "dateResolved": "2026-09-09 18:49",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Gate order is now: resolve issue, then regenerate, then commit"
+  "releaseNotes": "Gate order is now: resolve issue, then regenerate, then commit",
+  "resolvedInVersion": "1.11.5"
 }

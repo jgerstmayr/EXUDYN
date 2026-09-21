@@ -9,5 +9,6 @@
   "deadline": "2025-11-13",
   "dateResolved": "2025-05-17 21:48",
   "resolvedAuthor": "JG",
-  "releaseNotes": "using graphics.Tube function"
+  "releaseNotes": "using graphics.Tube function",
+  "resolvedInVersion": "1.9.123"
 }

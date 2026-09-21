@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/__main__.py",
   "line": "1",
-  "releaseNotes": "python/exudyn/__main__.py: python -m exudyn monitor|plot|info|demo, commands in a plain CommandTable() dictionary, each imported when it is called, so R9.6 can add plugin commands through entry points. No console script in pyproject.toml for now. Note for the test suite: importing a __main__ RUNS it, so __main__.py had to enter the excludeModules list of allExudynModulesTest.py."
+  "releaseNotes": "python/exudyn/__main__.py: python -m exudyn monitor|plot|info|demo, commands in a plain CommandTable() dictionary, each imported when it is called, so R9.6 can add plugin commands through entry points. No console script in pyproject.toml for now. Note for the test suite: importing a __main__ RUNS it, so __main__.py had to enter the excludeModules list of allExudynModulesTest.py.",
+  "resolvedInVersion": "1.11.211"
 }

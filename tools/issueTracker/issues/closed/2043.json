@@ -9,5 +9,6 @@
   "deadline": "2025-11-18",
   "dateResolved": "2025-05-22 11:00",
   "resolvedAuthor": "JG",
-  "releaseNotes": "seems that removing erroneous info like \"special.\" was sufficient to work"
+  "releaseNotes": "seems that removing erroneous info like \"special.\" was sufficient to work",
+  "resolvedInVersion": "1.9.141"
 }

@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/solver.py",
   "line": "192",
-  "releaseNotes": "except: pass is gone from SolveStatic and SolveDynamic (both branches). A solve that threw now re-raises the original exception with its traceback after printing SolverErrorMessage; a solve that returned False without throwing raises exudyn.SolverError. Model exceptionTypesTest.py case 9 now reads SolverError: CSolverBase::Newton: System Jacobian seems to be singular instead of ValueError: SolveStatic terminated due to errors; case 10 reads ModelError with the user function that divided by zero. except ValueError around a solve still catches the common case because ModelError and ExudynValueError derive from ValueError."
+  "releaseNotes": "except: pass is gone from SolveStatic and SolveDynamic (both branches). A solve that threw now re-raises the original exception with its traceback after printing SolverErrorMessage; a solve that returned False without throwing raises exudyn.SolverError. Model exceptionTypesTest.py case 9 now reads SolverError: CSolverBase::Newton: System Jacobian seems to be singular instead of ValueError: SolveStatic terminated due to errors; case 10 reads ModelError with the user function that divided by zero. except ValueError around a solve still catches the common case because ModelError and ExudynValueError derive from ValueError.",
+  "resolvedInVersion": "1.11.192"
 }

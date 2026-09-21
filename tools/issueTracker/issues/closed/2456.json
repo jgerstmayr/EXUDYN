@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 14:24",
   "resolvedAuthor": "Claude-JG",
   "file": "main/python/TestModels/runTestSuite.py",
-  "releaseNotes": "revision2026 step R5.8: --parallel[=N] runs each model in its own interpreter (22 s -> 11 s with 8 workers); results reported in reference-list order; serial remains the default"
+  "releaseNotes": "revision2026 step R5.8: --parallel[=N] runs each model in its own interpreter (22 s -> 11 s with 8 workers); results reported in reference-list order; serial remains the default",
+  "resolvedInVersion": "1.11.95"
 }

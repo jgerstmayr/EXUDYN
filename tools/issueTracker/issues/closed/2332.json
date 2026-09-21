@@ -9,5 +9,6 @@
   "deadline": "2026-09-29",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "The behaviour asked about is now pinned rather than guessed: parameterConversionTest.py (revision2026 step R4.4.3.1) writes wrong types into every parameter through every access path - the SetNumpyMatrixSafely and SetNumpyVectorSafely paths included - and compares the exception type or the value that reads back against a committed reference; so a change in these checks cannot pass unnoticed. What to do about the inconsistent exception TYPES is #2432."
+  "releaseNotes": "The behaviour asked about is now pinned rather than guessed: parameterConversionTest.py (revision2026 step R4.4.3.1) writes wrong types into every parameter through every access path - the SetNumpyMatrixSafely and SetNumpyVectorSafely paths included - and compares the exception type or the value that reads back against a committed reference; so a change in these checks cannot pass unnoticed. What to do about the inconsistent exception TYPES is #2432.",
+  "resolvedInVersion": "1.11.153"
 }

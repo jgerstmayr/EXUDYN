@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/Objects/CObjectContactCircleCable2D.cpp",
   "line": "157",
-  "releaseNotes": "The eight calls are PyError now, keeping the PyErrorType::notImplementedError that step R6.3.6 gave them (PyError defaults to runtimeError, so the type has to stay written out). The printed block says User ERROR instead of SYSTEM ERROR; the Python type was already right."
+  "releaseNotes": "The eight calls are PyError now, keeping the PyErrorType::notImplementedError that step R6.3.6 gave them (PyError defaults to runtimeError, so the type has to stay written out). The printed block says User ERROR instead of SYSTEM ERROR; the Python type was already right.",
+  "resolvedInVersion": "1.11.189"
 }

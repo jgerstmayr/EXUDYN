@@ -2,12 +2,13 @@
   "number": 1988,
   "title": "exceptions",
   "author": "JG",
-  "status": "ABANDONED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "description": "change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes",
   "dateRaised": "2025-04-10",
   "deadline": "2025-10-07",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Superseded by #2497: the change was never made; but every one of the 59 bare \"except:\" in the shipped package is now listed with file and message in tools/ci/ruffBaseline.txt (revision2026 step R5.5.3) and a new one fails the check. See the successor issue."
+  "releaseNotes": "Superseded by #2497: the change was never made; but every one of the 59 bare \"except:\" in the shipped package is now listed with file and message in tools/ci/ruffBaseline.txt (revision2026 step R5.5.3) and a new one fails the check. See the successor issue.",
+  "resolvedInVersion": "1.11.147"
 }

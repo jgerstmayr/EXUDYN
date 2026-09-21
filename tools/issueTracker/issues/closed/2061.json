@@ -9,5 +9,6 @@
   "deadline": "2025-11-24",
   "dateResolved": "2025-06-03 16:06",
   "resolvedAuthor": "JG",
-  "releaseNotes": "can do read [] access, Set(), New(), etc."
+  "releaseNotes": "can do read [] access, Set(), New(), etc.",
+  "resolvedInVersion": "1.9.169"
 }

@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 22:36",
   "resolvedAuthor": "Claude-JG",
   "file": "src/Main/OutputVariable.h",
-  "releaseNotes": "revision2026 step R4.10.2: Marker::Type and AccessFunctionType generated from enumTypes.py and bound to Python"
+  "releaseNotes": "revision2026 step R4.10.2: Marker::Type and AccessFunctionType generated from enumTypes.py and bound to Python",
+  "resolvedInVersion": "1.11.84"
 }

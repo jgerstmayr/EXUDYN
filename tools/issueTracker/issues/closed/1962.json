@@ -9,5 +9,6 @@
   "deadline": "2025-08-26",
   "dateResolved": "2025-02-28 21:30",
   "resolvedAuthor": "EXTENSION",
-  "releaseNotes": "added options openGL.clippingPlaneNormal and openGL.clippingPlaneDistance to enable simple clipping"
+  "releaseNotes": "added options openGL.clippingPlaneNormal and openGL.clippingPlaneDistance to enable simple clipping",
+  "resolvedInVersion": "1.9.65"
 }

@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/Examples",
   "line": "1",
-  "releaseNotes": "Removed from 240 tracked files (253 occurrences): the examples, the test models, the utility modules, the performance models and the converted manual; the copies under docs/RST followed by regeneration. The import itself is unchanged. Two occurrences were written with a space after the hash, so the removal was a regular expression rather than a literal search. The warning behind the comment is real - the name graphics can be shadowed - and belongs in the documentation of exudyn.graphics once, not in every model."
+  "releaseNotes": "Removed from 240 tracked files (253 occurrences): the examples, the test models, the utility modules, the performance models and the converted manual; the copies under docs/RST followed by regeneration. The import itself is unchanged. Two occurrences were written with a space after the hash, so the removal was a regular expression rather than a literal search. The warning behind the comment is real - the name graphics can be shadowed - and belongs in the documentation of exudyn.graphics once, not in every model.",
+  "resolvedInVersion": "1.11.208"
 }

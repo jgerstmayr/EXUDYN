@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 11:15",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "SparseTripletMatrix::MultMatrixVector sizes the result to NumberOfRows() before zeroing it, as the dense path has always done, and both sparse products now check their sizes. The R5.4.1 container test passes UNSIZED result vectors to both modes; commenting the new SetNumberOfItems out produces exactly one failure. Found on the way: #2476 (step R5.4.6). revision2026 step R5.4.5."
+  "releaseNotes": "SparseTripletMatrix::MultMatrixVector sizes the result to NumberOfRows() before zeroing it, as the dense path has always done, and both sparse products now check their sizes. The R5.4.1 container test passes UNSIZED result vectors to both modes; commenting the new SetNumberOfItems out produces exactly one failure. Found on the way: #2476 (step R5.4.6). revision2026 step R5.4.5.",
+  "resolvedInVersion": "1.11.112"
 }

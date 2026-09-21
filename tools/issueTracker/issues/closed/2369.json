@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-11 11:03",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pythonDev/TestModels/relativeRotationTranslationMechanism.py",
-  "releaseNotes": "Fixed by the maintainer: endTime reduced from 2s to 0.2s. At 2s the mechanism was back in its initial configuration with no displacements, so the norm was ~0. Added to the test suite with reference 1.509631854432179."
+  "releaseNotes": "Fixed by the maintainer: endTime reduced from 2s to 0.2s. At 2s the mechanism was back in its initial configuration with no displacements, so the norm was ~0. Added to the test suite with reference 1.509631854432179.",
+  "resolvedInVersion": "1.11.18"
 }

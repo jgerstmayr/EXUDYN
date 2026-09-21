@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-18 07:10",
   "resolvedAuthor": "Claude-JG",
   "file": "python/TestModels/runTestExamples.py",
-  "releaseNotes": "Fixed in revision2026 step R5.18.1: runTestExamples.py and runPerformanceTests.py both take --exit-code and return non-zero on a failure; tools/exudev/results.py - the log scan that existed only because they could not - is deleted; and the exudev driver passes the flag always. The examples needed an exclusion list first; testRunnerTools.KnownExampleFailures(); or the exit code would have been red on every run; it also reports dead exclusions so the list shrinks. Successor for the three entries that are really missing optional packages: #2507."
+  "releaseNotes": "Fixed in revision2026 step R5.18.1: runTestExamples.py and runPerformanceTests.py both take --exit-code and return non-zero on a failure; tools/exudev/results.py - the log scan that existed only because they could not - is deleted; and the exudev driver passes the flag always. The examples needed an exclusion list first; testRunnerTools.KnownExampleFailures(); or the exit code would have been red on every run; it also reports dead exclusions so the list shrinks. Successor for the three entries that are really missing optional packages: #2507.",
+  "resolvedInVersion": "1.11.164"
 }

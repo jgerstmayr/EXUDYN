@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/TestModels/runTestSuite.py",
   "line": "484",
-  "releaseNotes": "runTestSuite.py remembers the output directory the run started with and puts it BACK after the models instead of clearing it; so both opens of the log resolve to the same file; the -local copy reads through the same resolution; and the directory is cleared only after the file is closed - which is what the original reset was for. Verified 2026-09-17 with EXUDYN_OUTPUTDIRECTORY set: nothing is written into python/TestSuiteLogs (43 files before and after) and the one log outside the tree is complete including the summary; a run without the variable behaves exactly as before. revision2026 step R5.13.5"
+  "releaseNotes": "runTestSuite.py remembers the output directory the run started with and puts it BACK after the models instead of clearing it; so both opens of the log resolve to the same file; the -local copy reads through the same resolution; and the directory is cleared only after the file is closed - which is what the original reset was for. Verified 2026-09-17 with EXUDYN_OUTPUTDIRECTORY set: nothing is written into python/TestSuiteLogs (43 files before and after) and the one log outside the tree is complete including the summary; a run without the variable behaves exactly as before. revision2026 step R5.13.5",
+  "resolvedInVersion": "1.11.160"
 }

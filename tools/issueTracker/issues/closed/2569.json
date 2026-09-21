@@ -10,5 +10,6 @@
   "deadline": "2027-03-20",
   "dateResolved": "2026-09-21 14:11",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "exudev issue serve: a local web page over the issue store (tools/issueTracker/issueServer.py). stdlib http.server and one self-contained HTML page - no new dependency and nothing fetched from outside the server. It lists, searches and filters the backlog and writes through the same tracker functions as the command line, so it cannot store a value the CLI would refuse; status, number and dateResolved are not editable there. It binds 127.0.0.1 and checks the Host header, because the store is the version of the package. Deleting an issue stays a file operation. 12 tests, against the socket-free request layer."
+  "releaseNotes": "exudev issue serve: a local web page over the issue store (tools/issueTracker/issueServer.py). stdlib http.server and one self-contained HTML page - no new dependency and nothing fetched from outside the server. It lists, searches and filters the backlog and writes through the same tracker functions as the command line, so it cannot store a value the CLI would refuse; status, number and dateResolved are not editable there. It binds 127.0.0.1 and checks the Host header, because the store is the version of the package. Deleting an issue stays a file operation. 12 tests, against the socket-free request layer.",
+  "resolvedInVersion": "1.11.228"
 }

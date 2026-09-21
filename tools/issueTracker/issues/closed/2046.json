@@ -9,5 +9,6 @@
   "deadline": "2025-11-21",
   "dateResolved": "2025-05-25 12:32",
   "resolvedAuthor": "JG",
-  "releaseNotes": "note that this is experimental; image resolution shall be small (start with 400x300) as long render times may lead to problems"
+  "releaseNotes": "note that this is experimental; image resolution shall be small (start with 400x300) as long render times may lead to problems",
+  "resolvedInVersion": "1.9.143"
 }

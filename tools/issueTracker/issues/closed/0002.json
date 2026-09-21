@@ -10,5 +10,6 @@
   "deadline": "2019-07-01",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllVectorUnitTests.h; TemplatedVectorArrayUnitTests.h; AllBasicLinalgUnitTests.h and AVXVectorUnitTests.h cover Vector; ResizableVector; SlimVector; ConstSizeVector and LinkedDataVector; run by exu.special.RunCppUnitTests() in every build with EXUDYN_PERFORM_UNIT_TESTS and by the test suite."
+  "releaseNotes": "Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllVectorUnitTests.h; TemplatedVectorArrayUnitTests.h; AllBasicLinalgUnitTests.h and AVXVectorUnitTests.h cover Vector; ResizableVector; SlimVector; ConstSizeVector and LinkedDataVector; run by exu.special.RunCppUnitTests() in every build with EXUDYN_PERFORM_UNIT_TESTS and by the test suite.",
+  "resolvedInVersion": "1.11.136"
 }

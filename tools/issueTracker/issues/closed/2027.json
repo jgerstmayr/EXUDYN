@@ -9,5 +9,6 @@
   "deadline": "2025-11-13",
   "dateResolved": "2025-05-17 23:30",
   "resolvedAuthor": "JG",
-  "releaseNotes": "also done for CreateMassPoint"
+  "releaseNotes": "also done for CreateMassPoint",
+  "resolvedInVersion": "1.9.125"
 }

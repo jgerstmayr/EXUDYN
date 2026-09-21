@@ -9,5 +9,6 @@
   "deadline": "2025-11-27",
   "dateResolved": "2025-06-02 17:44",
   "resolvedAuthor": "JG",
-  "releaseNotes": "can be done with option raytracer.keepWindowActive"
+  "releaseNotes": "can be done with option raytracer.keepWindowActive",
+  "resolvedInVersion": "1.9.165"
 }

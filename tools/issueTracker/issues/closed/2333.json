@@ -9,5 +9,6 @@
   "deadline": "2026-09-29",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Same as #2332: the int/float-convertible cases of CheckForValidUReal and its siblings are probed by parameterConversionTest.py (revision2026 step R4.4.3.1) and their outcome is recorded; the open decision about which exception type each path should raise is #2432 and revision2026 step R6.7."
+  "releaseNotes": "Same as #2332: the int/float-convertible cases of CheckForValidUReal and its siblings are probed by parameterConversionTest.py (revision2026 step R4.4.3.1) and their outcome is recorded; the open decision about which exception type each path should raise is #2432 and revision2026 step R6.7.",
+  "resolvedInVersion": "1.11.154"
 }

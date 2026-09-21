@@ -9,5 +9,6 @@
   "deadline": "2027-03-14",
   "dateResolved": "2026-09-15 19:08",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "revision2026 step R4.23: itemInterfaceEmitter docstrings without arg types; visualization documented; read-only members omitted; pydoclint exclude removed"
+  "releaseNotes": "revision2026 step R4.23: itemInterfaceEmitter docstrings without arg types; visualization documented; read-only members omitted; pydoclint exclude removed",
+  "resolvedInVersion": "1.11.72"
 }

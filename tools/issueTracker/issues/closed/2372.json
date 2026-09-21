@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 01:00",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pyproject.toml",
-  "releaseNotes": "revision2026 step R2.15: license = LicenseRef-EXUDYN-General-License with license-files; setuptools>=77"
+  "releaseNotes": "revision2026 step R2.15: license = LicenseRef-EXUDYN-General-License with license-files; setuptools>=77",
+  "resolvedInVersion": "1.11.88"
 }

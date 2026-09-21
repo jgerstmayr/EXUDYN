@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-11 20:12",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pyproject.toml",
-  "releaseNotes": "[project.optional-dependencies] adds tests / all / rl; all built on the PEP 508 self-reference exudyn[tests]. tools/checkExtras.py AST-scans TestModels; exudyn and Examples and fails when an import is installed by no extra; run in CI as check_extras. Verified by fault injection: a fake import; a removed extra entry and a deleted name-mapping entry each reported with exit 1. rl is deliberately not part of all (torch size and the --index-url CUDA choice); confirmed that allExudynModulesTest.py announces the resulting skip rather than passing vacuously"
+  "releaseNotes": "[project.optional-dependencies] adds tests / all / rl; all built on the PEP 508 self-reference exudyn[tests]. tools/checkExtras.py AST-scans TestModels; exudyn and Examples and fails when an import is installed by no extra; run in CI as check_extras. Verified by fault injection: a fake import; a removed extra entry and a deleted name-mapping entry each reported with exit 1. rl is deliberately not part of all (torch size and the --index-url CUDA choice); confirmed that allExudynModulesTest.py announces the resulting skip rather than passing vacuously",
+  "resolvedInVersion": "1.11.23"
 }

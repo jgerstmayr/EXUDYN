@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 01:00",
   "resolvedAuthor": "Claude-JG",
   "file": "main/obj/cppsrc.vcxproj",
-  "releaseNotes": "revision2026 step R2.15: case corrected and missing entries removed in vcxproj and filters; gen_sources.py --check covers all entries"
+  "releaseNotes": "revision2026 step R2.15: case corrected and missing entries removed in vcxproj and filters; gen_sources.py --check covers all entries",
+  "resolvedInVersion": "1.11.90"
 }

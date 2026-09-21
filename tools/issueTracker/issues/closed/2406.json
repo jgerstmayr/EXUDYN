@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 19:36",
   "resolvedAuthor": "Claude-JG",
   "file": "version.txt",
-  "releaseNotes": "moved with git mv. exudynVersion.py resolves it by walking up for a directory holding both pyproject.toml and version.txt; issueTracker.py writes it there; doc2rst.py special-cases it in the parsed-file loop because every other entry in that list is a LaTeX chapter under docs/theDoc/. regenerate.py excludedPaths, MANIFEST.in and the seven untracked build scripts follow. versionName.txt deliberately stays in docs/theDoc/: nothing builds from it"
+  "releaseNotes": "moved with git mv. exudynVersion.py resolves it by walking up for a directory holding both pyproject.toml and version.txt; issueTracker.py writes it there; doc2rst.py special-cases it in the parsed-file loop because every other entry in that list is a LaTeX chapter under docs/theDoc/. regenerate.py excludedPaths, MANIFEST.in and the seven untracked build scripts follow. versionName.txt deliberately stays in docs/theDoc/: nothing builds from it",
+  "resolvedInVersion": "1.11.44"
 }

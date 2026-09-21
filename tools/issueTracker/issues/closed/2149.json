@@ -9,5 +9,6 @@
   "deadline": "2026-04-14",
   "dateResolved": "2025-10-16 23:02",
   "resolvedAuthor": "JG",
-  "releaseNotes": "some special characters may now appear differently!"
+  "releaseNotes": "some special characters may now appear differently!",
+  "resolvedInVersion": "1.10.11"
 }

@@ -2,12 +2,13 @@
   "number": 865,
   "title": "multithreaded solver",
   "author": "JG",
-  "status": "ABANDONED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "description": "test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False",
   "dateRaised": "2022-01-15",
   "deadline": "2022-03-16",
   "dateResolved": "2025-07-11 15:49",
   "resolvedAuthor": "JG",
-  "releaseNotes": "not relevant any more"
+  "releaseNotes": "not relevant any more",
+  "resolvedInVersion": "1.10.3"
 }

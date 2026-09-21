@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 20:37",
   "resolvedAuthor": "Claude-JG",
   "file": "setup.py",
-  "releaseNotes": "revision2026 step R2.17: setup.py passes all src headers as depends= to the extensions"
+  "releaseNotes": "revision2026 step R2.17: setup.py passes all src headers as depends= to the extensions",
+  "resolvedInVersion": "1.11.80"
 }

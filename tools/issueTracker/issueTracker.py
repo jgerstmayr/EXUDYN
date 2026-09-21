@@ -14,12 +14,13 @@
 # - releaseNotes is written when the issue is CLOSED and is published in the release notes;
 #   workingRemarks is what the work knows meanwhile and is cleared when the issue closes
 # - THIS TOOL OWNS THE VERSION: the micro number is the count of closed issues, so ResolveIssue
-#   and AbandonIssue rewrite version.txt, versionCpp.cpp and the version line of README.rst
+#   and CloseIssue rewrite version.txt, versionCpp.cpp and the version line of README.rst
 #
 # The command line is 'exudev issue <verb>' (revision2026 step R8.3); this module is its API.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import datetime # for current date
+import json
 import os
 import re
 import io
@@ -66,36 +67,80 @@ trackerFile = 'trackerlog'
 trackerDateLine =    2 #line at which the date is given
 trackerReleaseLine = 3 
 trackerVersionLine = 4
-#this number should be set 1 larger than what is written in trackerlog.html (when resolving last issue):
-version0xResolved = 368 #1.0
-version1xResolved = 664 #1.1
-version2xResolved = 842 #1.2 #according to trackerlog.html 'Number of resolved issues'
-version3xResolved = 989 #1.3 #according to trackerlog.html 'Number of resolved issues'
-version4xResolved = 1095#1.4 #according to trackerlog.html 'Number of resolved issues'
-version5xResolved = 1161#1.5 #according to trackerlog.html 'Number of resolved issues'
-version6xResolved = 1280#1.6 #according to trackerlog.html 'Number of resolved issues'
-version7xResolved = 1470#1.7 #according to trackerlog.html 'Number of resolved issues'
-version8xResolved = 1594#1.8 #according to trackerlog.html 'Number of resolved issues'
-version9xResolved = 1676#1.9 #according to trackerlog.html 'Number of resolved issues'
-version10xResolved = 1912#1.10 #according to trackerlog.html 'Number of resolved issues'
-version11xResolved = 2073#1.11 #according to trackerlog.html 'Number of resolved issues'
+#THE RELEASES ARE DATA (revision2026 step R8.4). Until this step the baselines stood here as
+#twelve module constants and the names in a dict beside them, so a minor bump was a hand edit of
+#this file - and a MAJOR bump (1.11 -> 2.0) was not expressible at all: the major number was
+#written as 1 in GetMajorMinorMicroVersion and the minor was the LENGTH of the list.
+#
+#They are releases.json now, and "exudev issue bump --minor | --major | --to 2.0" appends to it.
+#What a baseline means: the count of CLOSED issues at which that release began, so that
+#    micro = closedCount - baseline(current release)
+#which is the definition the micro version has had since 2019.
+releasesFile = 'releases.json'
+releasesCache = None
 
-versionResolved=[0,version0xResolved, version1xResolved, version2xResolved, version3xResolved, 
-                 version4xResolved, version5xResolved, version6xResolved, version7xResolved, version8xResolved,
-                 version9xResolved, version10xResolved, version11xResolved] #also adapt trackerlog.txt release 
+
+def Releases(reload=False):
+    """the releases, oldest first; each is {'version': '1.11', 'baseline': 2073, 'name': '...'}"""
+    global releasesCache
+    if releasesCache is None or reload:
+        releasesCache = issueStore.ReadJson(TrackerPath(releasesFile))
+    return releasesCache['releases']
+
+
+def PlannedNames():
+    """the names of releases that have not happened yet, so that a bump finds its own"""
+    if releasesCache is None:
+        Releases()
+    return releasesCache.get('plannedNames', {})
+
+
+def WriteReleases(data):
+    """releases.json, written by the bump command and by nothing else"""
+    global releasesCache
+    with io.open(TrackerPath(releasesFile), 'w', encoding='utf-8', newline='\n') as file:
+        file.write(json.dumps(data, indent=1, ensure_ascii=False) + '\n')
+    releasesCache = None
+
+
+def CurrentRelease():
+    """the release the micro version counts within: the last one in the file"""
+    return Releases()[-1]
+
+
+def ReleaseOfClosedIndex(closedIndex):
+    """which release the closedIndex-th closed issue belongs to (1-based over the whole history).
+    The last release whose baseline it reaches: baseline 2073 means that the 2073rd closed issue
+    is the FIRST of that release and carries micro 0."""
+    found = Releases()[0]
+    for release in Releases():
+        if closedIndex >= release['baseline']:
+            found = release
+    return found
+
+
+def VersionOfClosedIndex(closedIndex):
+    """the version string the closedIndex-th closed issue produced, e.g. '1.10.160'. This is what
+    ResolveIssue and CloseIssue store in the issue (revision2026 step R8.4(b), D14), and what
+    tools/checkIssues.py recomputes and compares."""
+    release = ReleaseOfClosedIndex(closedIndex)
+    return release['version'] + '.' + str(closedIndex - release['baseline'])
+
+
+def ReleaseName(version):
+    """the jazz legend of a release ('1.11' -> 'McLaughlin'), or '' """
+    for release in Releases():
+        if release['version'] == version:
+            return release['name']
+    return PlannedNames().get(version, '')
+
 
 # versionDev = '' #release (works in pip)
 versionDev = '.dev1' #(development version, get with pip install exudyn --pre)
 
-#subversions use names of jazz legends ... #https://www.britannica.com/topic/list-of-jazz-musicians-2030466
-# +++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++ the release names; doc2rst.py held the second copy and is gone (R7.1.7) ++++++++++
-versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis', '1.4':'Ellington', '1.5':'Fitzgerald', 
-                '1.6':'Gillespie', '1.7':'Hall', '1.8':'Jones', #Jim Hall, Elvin Jones; leave out 'I' as there are not many => two 'M'
-                '1.9':'Krall', '1.10': 'Lagrene', '1.11':'McLaughlin', '1.12':'Metheney', #Bireli Lagrene
-                '1.13':'Newborn', '1.14':'Parker'} #(Phineas) Newborn, (Charlie) Parker, (Jaco) Pastorius, (Oscar) Peterson, #3xP for missing O and Q
-                #(Django) Reinhardt, Scofield, Thielemans, (Steve) Vai, (Sarah) Vaughan
-# +++++++++++++++++++++++++++++++++++++++++++++
+#the release names - jazz legends, alphabetically - moved into releases.json with the baselines
+#(revision2026 step R8.4); ReleaseName() reads them. doc2rst.py held a second copy until R7.1.7.
+#https://www.britannica.com/topic/list-of-jazz-musicians-2030466
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 #THE ISSUE TYPES, in one place (revision2026 step R8.7, #2519). Before this there were three lists -
@@ -117,21 +162,30 @@ issueTypes = {
     'IDEA':        'not yet a feature: how something COULD look. Becomes another issue, or is abandoned',
 }
 
-#THE STATUSES. WORK and TESTING stood in the old list and were never used once in 2519 issues, so
-#they are gone; ABANDONED is what was missing - "decided against", "no longer applies", "not
-#possible" - and without it such issues had to be written as RESOLVED, which is untrue.
+#THE STATUSES. WORK and TESTING stood in the old list and were never used once in 2519 issues,
+#so they are gone; CLOSED is what was missing - without it an issue that was decided against had
+#to be written as RESOLVED, which is untrue.
+#
+#CLOSED means EVERYTHING EXCEPT RESOLVED (maintainer 2026-09-21, D13): obsolete, won't fix,
+#duplicate of #n, superseded, no longer applies, not reproducible, abandoned. The kind is named
+#in the mandatory reason, NOT as a status of its own: the distinction is prose, and every extra
+#status is another branch in every converter. It was called ABANDONED between revision2026 steps
+#R8.7 and R8.3.4 - one reason standing for all of them, which is what made the name wrong.
 issueStatuses = {
-    'RAISED':    'open',
-    'RESOLVED':  'done',
-    'ABANDONED': 'closed WITHOUT being done; the reason belongs in releaseNotes',
+    'RAISED':   'open',
+    'RESOLVED': 'done',
+    'CLOSED':   'closed WITHOUT being done - obsolete, won\'t fix, duplicate, superseded, not '
+                'reproducible, abandoned; the reason is mandatory and belongs in releaseNotes',
 }
 
 #Both count for the version number. The micro version is the count of CLOSED issues, not of
-#resolved ones: if abandoning did not count, then abandoning an already-resolved issue would move
+#resolved ones: if closing did not count, then closing an already-resolved issue would move
 #version.txt BACKWARDS and a released version number would stop being reproducible from this file.
-#The difference shows in the release notes instead - only RESOLVED is listed there as resolved,
-#and ABANDONED is listed nowhere, neither as resolved nor as open.
-closedStatuses = ['RESOLVED', 'ABANDONED']
+#Measured over the released history in fact 31 of the info document: 0 of 2,054 published version
+#numbers moved when 15 issues changed to this status. The difference shows in the release notes
+#instead - only RESOLVED is listed there as resolved, and a CLOSED issue is listed nowhere,
+#neither as resolved nor as open.
+closedStatuses = ['RESOLVED', 'CLOSED']
 
 #types that are not announced as resolved issues: an idea that became a real issue would otherwise
 #be reported twice
@@ -166,14 +220,14 @@ issuePriorities = {
 
 
 def ResolvedIssues2Version(resolvedIssues, totalResolvedIssues):
-    #return [0,totalResolvedIssues-resolvedIssues]
-    cnt = len(versionResolved)-2 #this is the max. minor version number
-    for vr in reversed(versionResolved):
-        if totalResolvedIssues-resolvedIssues >= vr:
-            return [cnt, totalResolvedIssues-vr-resolvedIssues]
-        cnt -= 1
-    raise ValueError('ResolvedIssues2Version: something went wrong')
-    return None
+    """[minor, micro] of an issue that is resolvedIssues places below the newest closed one.
+
+    Kept for callers that counted backwards from the current version; VersionOfClosedIndex() is
+    the direct form and the one the stored version uses (revision2026 step R8.4)."""
+    version = VersionOfClosedIndex(totalResolvedIssues - resolvedIssues)
+    parts = version.split('.')
+    return [int(parts[1]), int(parts[2])]
+
 
 #++++++++++++++++++++++++++++++
 #update all output files with new version, etc.
@@ -377,18 +431,23 @@ def GetReleaseAndVersionString(): #convert all issues to a .html file
 
 
 def GetMajorMinorMicroVersion():
-    """the version, derived from the count of CLOSED issues - resolved and abandoned alike (#2519).
-    The count comes from the store, which adds the closed files it can see to the closedCount each
-    archive file states; an archive that is missing is reported by issueStore.CheckStore() rather
-    than silently lowering the version (revision2026 step R8.5)."""
-    numberOfResolved = issueStore.ClosedCount()
+    """the version, derived from the count of CLOSED issues - resolved and closed-not-resolved
+    alike (#2519). The count comes from the store, which adds the closed files it can see to the
+    closedCount each archive file states; an archive that is missing is reported by
+    issueStore.CheckStore() rather than silently lowering the version (revision2026 step R8.5).
 
-    major = 1
-    minor = (len(versionResolved)-2)
+    The major number comes from the current release since revision2026 step R8.4; it was written
+    as 1 here, which is why 2.0 could not be expressed."""
+    release = CurrentRelease()
+    [major, minor] = [int(part) for part in release['version'].split('.')]
 
-    micro = numberOfResolved-versionResolved[-1] 
-    
+    #max(0, ...): a release begins at the count of the issue that will carry micro 0, so between
+    #the bump and the first closed issue of the new release the difference is -1. That release has
+    #closed nothing yet, and X.Y.0 is what that means (revision2026 step R8.4)
+    micro = max(0, issueStore.ClosedCount() - release['baseline'])
+
     return [major, minor, micro]
+
 
 #%%******************************************************************************************************
 def VersionString():
@@ -453,7 +512,7 @@ def UpdateDateAndVersion(updateVersion = True):
         file.close()
 
         [release, version_] = GetReleaseAndVersionString()
-        versionNameString = '('+versionNames[str(release)]+')'
+        versionNameString = '('+ReleaseName(str(release))+')'
 
         file=open(texVersionNameFile,'w', encoding='utf-8')  #clear file by one write access
         file.write(versionNameString)
@@ -571,7 +630,7 @@ def ConvertToMarkdown():
     numberOfRaised = NumberOfIssues()
     numberOfResolved = minorCurrent
     lastChangeDate = ReadMeta()['lastChange']
-    totalResolved = versionResolved[-1] + numberOfResolved
+    totalResolved = issueStore.ClosedCount()        #the count the current micro counts from
 
     def IssueNumberString(issue):
         #the number is an int in the store; the release notes print it as it was written
@@ -615,7 +674,16 @@ def ConvertToMarkdown():
     vIssueRelease = 1 #for now
 
     for issue in reversed(issueListSorted):
-        [vIssueMinor, vIssueMicro] = ResolvedIssues2Version(resolvedCnt, totalResolved)
+        #THE VERSION COMES FROM THE ISSUE (revision2026 step R8.4(b)). It was recomputed here on
+        #every run, which is what made a published number depend on a sort by dateResolved. The
+        #recomputation is the fallback for an issue that carries no stamp yet, and
+        #tools/checkIssues.py compares the two for every closed issue.
+        stamped = str(issue.get('resolvedInVersion', '')).strip()
+        if stamped.count('.') == 2:
+            parts = stamped.split('.')
+            [vIssueRelease, vIssueMinor, vIssueMicro] = [int(part) for part in parts]
+        else:
+            [vIssueMinor, vIssueMicro] = ResolvedIssues2Version(resolvedCnt, totalResolved)
         rNew = (vIssueRelease, vIssueMinor) if vIssueMinor >= 0 else (0,1)
 
         if (rNew[0] < previousRelease[0] or
@@ -659,7 +727,7 @@ def ConvertToMarkdown():
         elif issue['status'] == 'RAISED' and issue['type'] == 'BUG':
             bugs += '- '+Colour('textred', 'open BUG '+IssueNumberString(issue)+':')+' '+title+'\n'
             bugs += details
-        elif issue['status'] == 'RAISED':       #an ABANDONED issue is not an open one
+        elif issue['status'] == 'RAISED':       #a CLOSED issue is not an open one
             #one spelling per priority since revision2026 step R8.5.3; no priority is the
             #normal case and gets the neutral colour
             cssClass = {'HIGH': 'textred', 'NORMAL': 'textorange',
@@ -670,7 +738,7 @@ def ConvertToMarkdown():
 
         #CLOSED, not resolved: the version a past issue is listed under is derived from this
         #counter, so counting only RESOLVED would renumber every historical entry as soon as
-        #one issue is abandoned. An abandoned issue keeps its place and is simply not printed
+        #one issue is closed. A closed issue keeps its place and is simply not printed
         if issue['status'] in closedStatuses:
             resolvedCnt += 1
 
@@ -728,7 +796,7 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
     #the release note is written when the issue is CLOSED, not when it is raised: it is what the
     #release notes publish. What is known while the work goes on belongs in workingRemarks.
     if issueDict.get('releaseNotes', '').strip() != '':
-        raise ValueError('RaiseIssue: releaseNotes is written by ResolveIssue or AbandonIssue; '
+        raise ValueError('RaiseIssue: releaseNotes is written by ResolveIssue or CloseIssue; '
                          'put what you know now into workingRemarks')
     issueDict['releaseNotes'] = ''
 
@@ -770,10 +838,10 @@ def ChangeIssue(issueNumber, key, value, force=False): #raise a new issue into l
 
     #THE FIELDS THE TRACKER OWNS. 'status' moves an issue between open/ and closed/ and with it
     #the micro version; 'number' is the file name; the two dates are written where they happen.
-    #They are set by RaiseIssue, ResolveIssue and AbandonIssue on the issue itself, never here.
+    #They are set by RaiseIssue, ResolveIssue and CloseIssue on the issue itself, never here.
     if key in ['number', 'status', 'dateRaised', 'dateResolved']:
         raise ValueError('ChangeIssue: "' + key + '" is written by the tracker (RaiseIssue, '
-                         'ResolveIssue, AbandonIssue), not by a field edit')
+                         'ResolveIssue, CloseIssue), not by a field edit')
 
     if d['status'] in closedStatuses and not force:
         raise ValueError(
@@ -864,7 +932,7 @@ def RemarkIssue(issueNumber, text, author='JG', replace=False):
     This is the scratchpad of an issue: "duplicate of #2134", "marked for deprecation", "check
     whether this still happens", "part A solved, B open". It is worth having while the issue is
     open and worthless once it is closed, which is exactly what separates it from the release
-    note - so ResolveIssue and AbandonIssue clear it, and it is never published.
+    note - so ResolveIssue and CloseIssue clear it, and it is never published.
 
     Appends by default, because the previous remark is usually still true; replace=True overwrites
     it. Passing an empty text with replace=True clears the field."""
@@ -897,6 +965,87 @@ def RemarkIssue(issueNumber, text, author='JG', replace=False):
 
 
 #%%******************************************************************************************************
+def NextReleaseVersion(kind):
+    """'minor': 1.11 -> 1.12. 'major': 1.11 -> 2.0. Nothing else is a release step."""
+    [major, minor] = [int(part) for part in CurrentRelease()['version'].split('.')]
+    if kind == 'major':
+        return str(major + 1) + '.0'
+    if kind == 'minor':
+        return str(major) + '.' + str(minor + 1)
+    raise ValueError('NextReleaseVersion: "minor" or "major", not "' + str(kind) + '"')
+
+
+def BumpRelease(kind=None, version=None, name=None):
+    """Start a new release (revision2026 step R8.4). THE explicit maintainer action: it is never
+    a side effect of resolving an issue, because it is a decision about the product.
+
+    It appends one entry to releases.json - the version, the count of closed issues at which it
+    begins, and its name - and rewrites the version files. The micro version restarts at 0.
+
+    Both directions work since this step: a MINOR bump (1.11 -> 1.12) and a MAJOR one
+    (1.11 -> 2.0). The major number used to be written as 1 in GetMajorMinorMicroVersion, so 2.0
+    could not be expressed at all, which is the reason this matters now (maintainer 2026-09-21).
+
+    The baseline is the count of closed issues PLUS ONE: the next issue that closes is the first
+    of the new release and carries micro 0, which is how every release in the file was numbered -
+    1.11.0 is issue #2348, the 2073rd closed issue.
+    """
+    data = issueStore.ReadJson(TrackerPath(releasesFile))
+    current = data['releases'][-1]
+
+    if version is None:
+        version = NextReleaseVersion(kind)
+    version = str(version).strip()
+    if version.count('.') != 1 or not all(part.isdigit() for part in version.split('.')):
+        raise ValueError('BumpRelease: a release is "major.minor", e.g. "2.0", not "' + version + '"')
+
+    existing = [release['version'] for release in data['releases']]
+    if version in existing:
+        raise ValueError('BumpRelease: release ' + version + ' is already in releases.json')
+    if [int(part) for part in version.split('.')] <= [int(part) for part in current['version'].split('.')]:
+        raise ValueError('BumpRelease: ' + version + ' is not after the current release '
+                         + current['version'])
+
+    if name is None or str(name).strip() == '':
+        name = data.get('plannedNames', {}).get(version, '')
+    if str(name).strip() == '':
+        raise ValueError('BumpRelease: release ' + version + ' has no name, and releases.json '
+                         'plans none for it. The names are jazz legends, alphabetically (' +
+                         current['version'] + ' is ' + current['name'] + '); pass --name.')
+
+    baseline = issueStore.ClosedCount() + 1
+    data['releases'].append({'version': version, 'baseline': baseline, 'name': str(name).strip()})
+    data.get('plannedNames', {}).pop(version, None)
+    WriteReleases(data)
+
+    print('release ' + current['version'] + ' (' + current['name'] + ') -> ' + version
+          + ' (' + str(name).strip() + '), starting at closed issue ' + str(baseline))
+    UpdateFiles()
+    print('version is now ' + VersionString())
+    return version
+
+
+#%%******************************************************************************************************
+def StampVersion(issue):
+    """Write into the issue the version its closing produces (revision2026 step R8.4(b), D14).
+
+    The micro version is a running count of closed issues, so every version number in the release
+    notes was DERIVED on each run - from a sort by dateResolved - until this step. One corrected
+    date or one lost file then renumbered versions that have been published, and nothing said so.
+    The number is written down here, once, and tools/checkIssues.py recomputes it later and
+    compares: a number written once and recomputed is a check, the same derivation twice is not.
+
+    An issue that is already closed keeps its version: it has had its place in the count since it
+    closed, and re-resolving it does not give it a new one."""
+    if issue['status'] in closedStatuses and issue.get('resolvedInVersion', '').strip() != '':
+        return issue['resolvedInVersion']
+
+    #this issue is about to become the next closed one, so it carries the count including itself
+    issue['resolvedInVersion'] = VersionOfClosedIndex(issueStore.ClosedCount() + 1)
+    return issue['resolvedInVersion']
+
+
+#%%******************************************************************************************************
 #use this to resolve an issue
 def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into list (append to end of list)
 
@@ -909,6 +1058,7 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
     #what is written here is PUBLISHED - it is the release note of this issue. The remarks that
     #were useful while the work went on ("duplicate of #2134", "part A solved") are not, so they
     #are dropped here rather than carried into the release notes (revision2026 step R8.5.3)
+    StampVersion(d)                 #before the status changes: it counts the issue itself
     d['status'] = 'RESOLVED'
     d['dateResolved'] = GetDateTimeStr()
     d['resolvedAuthor'] = author
@@ -929,25 +1079,32 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
 
 #%%******************************************************************************************************
 #use this to close an issue that will NOT be done
-def AbandonIssue(issueNumber, reason, author='JG'):
-    """Close an issue without doing it: decided against, no longer applies, not possible. The
-    reason is not optional - an abandoned issue with no reason is worse than an open one, because
-    the next person cannot tell whether it was judged or forgotten. The issue keeps its place in
-    the version count (see closedStatuses) and appears in the release notes neither as resolved nor
-    as open."""
+def CloseIssue(issueNumber, reason, author='JG'):
+    """Close an issue without doing it (revision2026 step R8.3.4; it was AbandonIssue before).
+
+    CLOSED covers every way an issue ends except being resolved - obsolete, won't fix, duplicate
+    of #n, superseded, no longer applies, not reproducible, abandoned - and the kind belongs in
+    the reason, which is why the reason is NOT optional: a closed issue without one is worse than
+    an open one, because the next person cannot tell whether it was judged or forgotten.
+
+    The issue keeps its place in the version count (see closedStatuses) and appears in the release
+    notes neither as resolved nor as open."""
 
     if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
         print('Issue: invalid number! Nothing done')
         return None
 
     if reason.strip() == '':
-        raise ValueError('AbandonIssue: say WHY in "reason"; it is the only record of the decision')
+        raise ValueError('CloseIssue: say WHY in "reason" - obsolete, won\'t fix, duplicate of '
+                         '#n, superseded, not reproducible, abandoned; it is the only record of '
+                         'the decision')
 
     d = GetIssue(issueNumber)
 
     #as in ResolveIssue: the reason is the published record of the decision, the working remarks
     #are not and are dropped (revision2026 step R8.5.3)
-    d['status'] = 'ABANDONED'
+    StampVersion(d)                 #a closed issue counts for the version like a resolved one
+    d['status'] = 'CLOSED'
     d['dateResolved'] = GetDateTimeStr()
     d['resolvedAuthor'] = author
     d['releaseNotes'] = reason
@@ -955,7 +1112,7 @@ def AbandonIssue(issueNumber, reason, author='JG'):
 
     ModifyDictIssue(d)
 
-    print('issue abandoned: #' + str(issueNumber) + ' "' + str(d['title']).strip() + '"')
+    print('issue closed: #' + str(issueNumber) + ' "' + str(d['title']).strip() + '"')
     print(d)
 
     UpdateDateAndVersion()
@@ -963,6 +1120,14 @@ def AbandonIssue(issueNumber, reason, author='JG'):
     ConvertToMarkdown()
 
     return issueNumber
+
+
+#%%******************************************************************************************************
+#the name this function had between revision2026 steps R8.7 and R8.3.4; scripts outside this
+#repository may still call it, and it costs one line to keep them working
+def AbandonIssue(issueNumber, reason, author='JG'):
+    """deprecated spelling of CloseIssue (revision2026 step R8.3.4)"""
+    return CloseIssue(issueNumber, reason, author=author)
 
 
 #%%******************************************************************************************************

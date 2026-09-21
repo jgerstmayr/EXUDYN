@@ -9,5 +9,6 @@
   "deadline": "2025-12-12",
   "dateResolved": "2025-06-15 19:55",
   "resolvedAuthor": "JG",
-  "releaseNotes": "add test model createKinematicTreeTest.py"
+  "releaseNotes": "add test model createKinematicTreeTest.py",
+  "resolvedInVersion": "1.9.194"
 }

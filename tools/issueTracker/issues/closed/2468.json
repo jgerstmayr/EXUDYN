@@ -9,5 +9,6 @@
   "deadline": "2027-03-15",
   "dateResolved": "2026-09-16 23:47",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "setup.py writes the effective compiler options of every extension to build/exudynBuildFlags.txt and compares them at the start of the next build; on a difference it removes the object directory AND the linked modules, then recompiles. The stamp sits next to build/temp* and build/lib*, not inside either (MSVC build_temp is build/temp.../Release). Verified: two builds differing only in EXUDYN_EXTRA_COMPILE_ARGS=/arch:AVX2, nothing deleted by hand, give 7380480 and 7400448 byte modules and the expected 0 vs 32 test failures. revision2026 step R2.17.1."
+  "releaseNotes": "setup.py writes the effective compiler options of every extension to build/exudynBuildFlags.txt and compares them at the start of the next build; on a difference it removes the object directory AND the linked modules, then recompiles. The stamp sits next to build/temp* and build/lib*, not inside either (MSVC build_temp is build/temp.../Release). Verified: two builds differing only in EXUDYN_EXTRA_COMPILE_ARGS=/arch:AVX2, nothing deleted by hand, give 7380480 and 7400448 byte modules and the expected 0 vs 32 test failures. revision2026 step R2.17.1.",
+  "resolvedInVersion": "1.11.105"
 }

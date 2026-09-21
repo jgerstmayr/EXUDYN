@@ -9,5 +9,6 @@
   "deadline": "2027-03-08",
   "dateResolved": "2026-09-09 18:47",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Scanned trackerlog.txt for revision2026 step R1.6 first: no credentials, no email addresses, no absolute local paths"
+  "releaseNotes": "Scanned trackerlog.txt for revision2026 step R1.6 first: no credentials, no email addresses, no absolute local paths",
+  "resolvedInVersion": "1.11.4"
 }

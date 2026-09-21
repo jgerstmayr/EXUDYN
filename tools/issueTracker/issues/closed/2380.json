@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 01:00",
   "resolvedAuthor": "Claude-JG",
   "file": "main/setup.py",
-  "releaseNotes": "revision2026 step R2.15: file descriptors 1 and 2 redirected around the compile pool; verified in WSL"
+  "releaseNotes": "revision2026 step R2.15: file descriptors 1 and 2 redirected around the compile pool; verified in WSL",
+  "resolvedInVersion": "1.11.89"
 }

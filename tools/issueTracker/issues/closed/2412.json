@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
   "file": "docs/dev/CODING_STYLE.md",
-  "releaseNotes": "Resolved by revision2026 step R4.6: docs/dev/CODING_STYLE.md states Google style as the convention for python/exudyn - summary; then Args:; Returns:; Note:; Example: - and pydoclint checks it in CI against tools/ci/pydoclintBaseline.txt. The #** doc-comment convention it replaced is marked as removed in the same table."
+  "releaseNotes": "Resolved by revision2026 step R4.6: docs/dev/CODING_STYLE.md states Google style as the convention for python/exudyn - summary; then Args:; Returns:; Note:; Example: - and pydoclint checks it in CI against tools/ci/pydoclintBaseline.txt. The #** doc-comment convention it replaced is marked as removed in the same table.",
+  "resolvedInVersion": "1.11.157"
 }

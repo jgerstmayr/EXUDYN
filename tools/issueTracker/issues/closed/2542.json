@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "docs/theDoc/introduction.tex",
   "line": "930",
-  "releaseNotes": "Written as a subsection of Exudyn Basics in docs/theDoc/introduction.tex, before \"Removing convergence problems and solver failures\": the nine types with the built-in each also derives from and what each says about whose mistake it was; catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation; an error inside a user function arriving as ModelError with the original as __cause__; where the message is written (console once, every open log file); deprecation warnings and the switches. In LaTeX because that is the user documentation today - R7.1 will convert it with the rest. exudev docs (sphinx-build -W) passes."
+  "releaseNotes": "Written as a subsection of Exudyn Basics in docs/theDoc/introduction.tex, before \"Removing convergence problems and solver failures\": the nine types with the built-in each also derives from and what each says about whose mistake it was; catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation; an error inside a user function arriving as ModelError with the original as __cause__; where the message is written (console once, every open log file); deprecation warnings and the switches. In LaTeX because that is the user documentation today - R7.1 will convert it with the rest. exudev docs (sphinx-build -W) passes.",
+  "resolvedInVersion": "1.11.200"
 }

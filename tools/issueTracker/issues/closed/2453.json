@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-16 00:02",
   "resolvedAuthor": "Claude-JG",
   "file": "docs/revision/exudynRevisionInfo2026.md",
-  "releaseNotes": "three revision documents; R numbering; transition table in exudynRevisionInfo2026.md section 15"
+  "releaseNotes": "three revision documents; R numbering; transition table in exudynRevisionInfo2026.md section 15",
+  "resolvedInVersion": "1.11.87"
 }

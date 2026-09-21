@@ -58,7 +58,14 @@ issues/open/2567.json        one file per OPEN issue
 issues/closed/2473.json      ... per issue closed since 1 January of the previous year
 issues/archive/2019.json     ... per YEAR for the older ones, written once
 issues/meta.json             the date of the last change and the version it produced
+releases.json                the releases, their names, and the closed-issue count each began at
 ```
+
+**The version a closed issue produced is stored in it** (`resolvedInVersion`, revision2026 step
+R8.4): the micro version is a running count, so recomputing every number on every run made a
+published version depend on a sort by `dateResolved` — one corrected date renumbered history
+and nothing said so. `python tools/checkIssues.py` recomputes and compares, and that is a check
+only because the number was written down once.
 
 **Every new issue becomes a step in the revision plan** — a new step, or part of an existing step
 where it belongs; small issues may share a step. The tracker describes the issue, the plan says
@@ -81,8 +88,9 @@ exudev issue raise "title" "description" --type FIX --effort LOW --author Claude
 exudev issue extend 2566 "what the analysis turned up"
 exudev issue remark 2566 "duplicate of #2134, check before starting"
 exudev issue resolve 2566 "what was done" --author Claude-JG     #bumps the micro version
-exudev issue abandon 2566 "decided against, because ..."
+exudev issue close 2566 "duplicate of #2134" | "superseded by ..." | "won't fix, because ..."
 exudev issue triage                                #the open issues by type and effort
+exudev issue bump --minor | --major | --to 2.0     #start a RELEASE (maintainer decision)
 exudev issue serve                                 #the same in a browser, read AND write
 exudev issue mode --release | --dev                              #fact 26
 ```
@@ -104,7 +112,7 @@ anything that touches the version.
 
 | `RaiseIssueDict(issueDict)` | same, full control over fields |
 | `ResolveIssue(issueNumber, notes='', author='JG')` | marks `RESOLVED`, stamps date, **bumps the micro version**; `notes` becomes `releaseNotes` and the working remarks are cleared |
-| `AbandonIssue(issueNumber, reason, author='JG')` | closes without resolving; the reason is mandatory and becomes `releaseNotes` |
+| `CloseIssue(issueNumber, reason, author='JG')` | closes without resolving; the reason is mandatory and becomes `releaseNotes` |
 | `ExtendIssue(issueNumber, text, author='JG')` | appends a dated paragraph to the description of an OPEN issue and changes nothing else (R8.3.3) |
 | `RemarkIssue(issueNumber, text, author='JG', replace=False)` | writes `workingRemarks` of an OPEN issue; appends by default (R8.5.3) |
 | `ChangeIssue(issueNumber, key, value)` | change one field; the enum fields are checked here too |
@@ -119,7 +127,7 @@ date resolved, resolved author, file, line, releaseNotes, workingRemarks, effort
 > the issue **closes** and is **published** — in `docs/generated/trackerlog.md` and, later, in
 > `CHANGELOG.md`. `workingRemarks` is what the work knows meanwhile: *duplicate of #2134*,
 > *marked for deprecation*, *check whether this still happens*, *part A solved, B open*. It is
-> worthless once the issue closes, so `ResolveIssue` and `AbandonIssue` **clear** it, and
+> worthless once the issue closes, so `ResolveIssue` and `CloseIssue` **clear** it, and
 > `RaiseIssue` refuses a release note: there is nothing to release yet.
 
 > **`effort` sorts the backlog**, in human working hours without AI assistance:
@@ -140,7 +148,7 @@ date resolved, resolved author, file, line, releaseNotes, workingRemarks, effort
 The value lists live in `issueTracker.py` (`issueStatuses`, `issueTypes`, `issuePriorities`,
 `issueEfforts`) and nowhere else — this used to be a second list here and the two disagreed:
 
-- `status`: `RAISED`, `RESOLVED`, `ABANDONED`
+- `status`: `RAISED`, `RESOLVED`, `CLOSED` — `CLOSED` means everything except resolved (obsolete, won't fix, duplicate, superseded, not reproducible, abandoned), with the kind in the mandatory reason (revision2026 step R8.3.4)
 - `type`: `BUG, FIX, CHANGE, EXTENSION, IMPROVEMENT, TESTING, DOCU, EXAMPLE, CHECK, IDEA`
 - `priority`: `''` (none), `LOW`, `NORMAL`, `HIGH`
 - `effort`: `''` (not classified), `LOW`, `MEDIUM`, `HIGH`, `HUGE`

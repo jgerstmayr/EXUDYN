@@ -9,5 +9,6 @@
   "deadline": "2020-11-08",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Verified 2026-09-17 to be fixed by the later item-interface work: mbs.AddObject(ObjectGenericODE2(nodeNumbers=[-1,-2])) now prints \"ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist\" and raises; instead of crashing without a message. The message names the item class; which is what the issue asked for."
+  "releaseNotes": "Verified 2026-09-17 to be fixed by the later item-interface work: mbs.AddObject(ObjectGenericODE2(nodeNumbers=[-1,-2])) now prints \"ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist\" and raises; instead of crashing without a message. The message names the item class; which is what the issue asked for.",
+  "resolvedInVersion": "1.11.140"
 }

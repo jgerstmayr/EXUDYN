@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/misc/resultsMonitor.py",
   "line": "1",
-  "releaseNotes": "exudyn.misc.resultsMonitor._ControlPanel.* is in tools/ci/stubtestNoise.txt, the curated list, with the reason next to it: a tkinter widget carries the attributes of the Tk instance it belongs to and tk exists only once a root has been created, so whether stubtest sees it depends on import order and on a display. Not in the generated backlog, which is meant to shrink. Five consecutive runs of the gate, all green."
+  "releaseNotes": "exudyn.misc.resultsMonitor._ControlPanel.* is in tools/ci/stubtestNoise.txt, the curated list, with the reason next to it: a tkinter widget carries the attributes of the Tk instance it belongs to and tk exists only once a root has been created, so whether stubtest sees it depends on import order and on a display. Not in the generated backlog, which is meant to shrink. Five consecutive runs of the gate, all green.",
+  "resolvedInVersion": "1.11.214"
 }

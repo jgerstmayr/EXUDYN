@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 23:01",
   "resolvedAuthor": "Claude-JG",
   "file": "src/pythonGenerator/pythonAutoGenerateObjects.py",
-  "releaseNotes": "revision2026 step R4.10.4: generated exudyn/types/items.py and query functions; typeInformationTest agrees with Assemble"
+  "releaseNotes": "revision2026 step R4.10.4: generated exudyn/types/items.py and query functions; typeInformationTest agrees with Assemble",
+  "resolvedInVersion": "1.11.86"
 }

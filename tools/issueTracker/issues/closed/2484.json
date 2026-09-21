@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 16:27",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Removed: src/Pymodules/pythonTests.cpp and src/Pymodules/PybindTests.h, the include and the two m.def bindings in PybindModule.cpp, the ClCompile/ClInclude entries in cppsrc.vcxproj and .filters, and the pythonTests.cpp entry in the hand-maintained minimal list of sources.json. The compile list is now 132 sources, 53 minimal. A comment in tools/benchmarks/avx2Benchmark.py that pointed at the removed sweep was rewritten. Verified: the module builds, exu.Test and exu.CreateTestSystem are gone, gen_sources.py agrees, suite PASSED, pytest passed. revision2026 step R5.4.11."
+  "releaseNotes": "Removed: src/Pymodules/pythonTests.cpp and src/Pymodules/PybindTests.h, the include and the two m.def bindings in PybindModule.cpp, the ClCompile/ClInclude entries in cppsrc.vcxproj and .filters, and the pythonTests.cpp entry in the hand-maintained minimal list of sources.json. The compile list is now 132 sources, 53 minimal. A comment in tools/benchmarks/avx2Benchmark.py that pointed at the removed sweep was rewritten. Verified: the module builds, exu.Test and exu.CreateTestSystem are gone, gen_sources.py agrees, suite PASSED, pytest passed. revision2026 step R5.4.11.",
+  "resolvedInVersion": "1.11.116"
 }

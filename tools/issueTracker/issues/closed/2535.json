@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/solver.py",
   "line": "290",
-  "releaseNotes": "The restore of useNewmark and useIndex2Constraints moved into its own finally block, which runs on every path. It used to sit below the raise in the same finally block, so a failed TrapezoidalIndex2 solve left the users simulationSettings overridden and the next solve in the same script silently used a different integrator."
+  "releaseNotes": "The restore of useNewmark and useIndex2Constraints moved into its own finally block, which runs on every path. It used to sit below the raise in the same finally block, so a failed TrapezoidalIndex2 solve left the users simulationSettings overridden and the next solve in the same script silently used a different integrator.",
+  "resolvedInVersion": "1.11.193"
 }

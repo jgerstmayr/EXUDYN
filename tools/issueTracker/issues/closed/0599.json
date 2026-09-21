@@ -9,5 +9,6 @@
   "deadline": "2021-05-17",
   "dateResolved": "2026-01-04 11:23",
   "resolvedAuthor": "JG",
-  "releaseNotes": "already resolved earlier"
+  "releaseNotes": "already resolved earlier",
+  "resolvedInVersion": "1.10.42"
 }

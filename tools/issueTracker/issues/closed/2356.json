@@ -9,5 +9,6 @@
   "deadline": "2027-03-08",
   "dateResolved": "2026-09-09 18:50",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "goldenFiles_V1.11.5_910e2b5.zip, 871 files; full regeneration on that commit produces no drift, so the commit itself is the reference"
+  "releaseNotes": "goldenFiles_V1.11.5_910e2b5.zip, 871 files; full regeneration on that commit produces no drift, so the commit itself is the reference",
+  "resolvedInVersion": "1.11.6"
 }

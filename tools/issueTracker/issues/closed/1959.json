@@ -2,12 +2,13 @@
   "number": 1959,
   "title": "SphereSphereContact",
   "author": "JG",
-  "status": "ABANDONED",
+  "status": "CLOSED",
   "type": "CHECK",
   "description": "check that position marker works without friction",
   "dateRaised": "2025-02-24",
   "deadline": "2025-08-23",
   "dateResolved": "2025-07-09 18:12",
   "resolvedAuthor": "JG",
-  "releaseNotes": "not needed any more as mass points and point nodes include rotation matrix and angular velocity"
+  "releaseNotes": "not needed any more as mass points and point nodes include rotation matrix and angular velocity",
+  "resolvedInVersion": "1.9.235"
 }

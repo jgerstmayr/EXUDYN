@@ -9,5 +9,6 @@
   "deadline": "2026-08-13",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by revision2026 phase R5 and docs/dev/WORKFLOW.md: the commit tiers and the four gates of section 4 are the checklist this issue asked for - build; regeneration clean; the full test suite; docs and plan updated - together with which tests run when; the pytest collector; the parallel run; and the difference between reproducible and sensitive tests."
+  "releaseNotes": "Resolved by revision2026 phase R5 and docs/dev/WORKFLOW.md: the commit tiers and the four gates of section 4 are the checklist this issue asked for - build; regeneration clean; the full test suite; docs and plan updated - together with which tests run when; the pytest collector; the parallel run; and the difference between reproducible and sensitive tests.",
+  "resolvedInVersion": "1.11.152"
 }

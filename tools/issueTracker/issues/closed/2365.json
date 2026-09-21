@@ -9,5 +9,6 @@
   "deadline": "2027-03-09",
   "dateResolved": "2026-09-10 18:53",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "howTo cut 26 files to 8 all in .md, with the hard-won specifics salvaged into buildQuirks.md; doxygen removed; new docs/dev/ARCHITECTURE.md replaces what doxygen was wanted for. Experimental.h identified as a deliberate feature-flag mechanism and kept"
+  "releaseNotes": "howTo cut 26 files to 8 all in .md, with the hard-won specifics salvaged into buildQuirks.md; doxygen removed; new docs/dev/ARCHITECTURE.md replaces what doxygen was wanted for. Experimental.h identified as a deliberate feature-flag mechanism and kept",
+  "resolvedInVersion": "1.11.15"
 }

@@ -9,5 +9,6 @@
   "deadline": "2025-11-29",
   "dateResolved": "2025-06-04 01:37",
   "resolvedAuthor": "JG",
-  "releaseNotes": "added graphics.InvertTriangles and ConsistentTriangleList"
+  "releaseNotes": "added graphics.InvertTriangles and ConsistentTriangleList",
+  "resolvedInVersion": "1.9.170"
 }

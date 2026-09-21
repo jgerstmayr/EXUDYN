@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "docs/dev/CODING_STYLE.md",
   "line": "211",
-  "releaseNotes": "Written as docs/dev/CODING_STYLE.md section 10 (revision2026 step R6.3.9): which helper, which of the nine types, when to write no type at all, the two traps (catch order; a class not registered in PybindModule.cpp compiles and arrives as RuntimeError), deprecation via PyDeprecated, how to write the message, and tools/errorTriage.py. CONTRIBUTING.md, docs/dev/README.md and CLAUDE.md point at that one place; the section is marked as NOT a transcription of introduction.tex."
+  "releaseNotes": "Written as docs/dev/CODING_STYLE.md section 10 (revision2026 step R6.3.9): which helper, which of the nine types, when to write no type at all, the two traps (catch order; a class not registered in PybindModule.cpp compiles and arrives as RuntimeError), deprecation via PyDeprecated, how to write the message, and tools/errorTriage.py. CONTRIBUTING.md, docs/dev/README.md and CLAUDE.md point at that one place; the section is marked as NOT a transcription of introduction.tex.",
+  "resolvedInVersion": "1.11.187"
 }

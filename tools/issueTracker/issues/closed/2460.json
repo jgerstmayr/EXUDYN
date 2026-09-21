@@ -9,5 +9,6 @@
   "deadline": "2027-03-15",
   "dateResolved": "2026-09-16 17:51",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "revision2026 step R5.15: testRunnerTools.AddTiming records solver.timer.total; the result and a run name per simulation in exudynTestGlobals.timings; runPerformanceTests.py prints and judges the 13 single runs; perfLargeMassSpringChain is a rigid body chain over 1000/5000/20000 bodies (explicit and implicit; computeMassMatrixInversePerBody on); generalContactSpheresTest runs with 1/4/8 threads in the performance path only; new reference values for the reworked models and for perf3DRigidBodies and perfSpringDamperExplicit."
+  "releaseNotes": "revision2026 step R5.15: testRunnerTools.AddTiming records solver.timer.total; the result and a run name per simulation in exudynTestGlobals.timings; runPerformanceTests.py prints and judges the 13 single runs; perfLargeMassSpringChain is a rigid body chain over 1000/5000/20000 bodies (explicit and implicit; computeMassMatrixInversePerBody on); generalContactSpheresTest runs with 1/4/8 threads in the performance path only; new reference values for the reworked models and for perf3DRigidBodies and perfSpringDamperExplicit.",
+  "resolvedInVersion": "1.11.98"
 }

@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/checkPython.py",
   "line": "133",
-  "releaseNotes": "stubtest no longer judges unused allowlist entries; the generated backlog is compared against a --generate-allowlist run instead - a new entry fails the gate, a stale one is reported. revision2026 step R5.5.7."
+  "releaseNotes": "stubtest no longer judges unused allowlist entries; the generated backlog is compared against a --generate-allowlist run instead - a new entry fails the gate, a stale one is reported. revision2026 step R5.5.7.",
+  "resolvedInVersion": "1.11.176"
 }

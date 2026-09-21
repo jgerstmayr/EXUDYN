@@ -11,5 +11,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/pythonGenerator/pythonAutoGenerateObjects.py",
   "line": "1801",
-  "releaseNotes": "revision2026 step R4.12: constrained types stated as must be > 0 / >= 0 in generated header member comments; no typedefs because PReal is the AVX macro"
+  "releaseNotes": "revision2026 step R4.12: constrained types stated as must be > 0 / >= 0 in generated header member comments; no typedefs because PReal is the AVX macro",
+  "resolvedInVersion": "1.11.75"
 }

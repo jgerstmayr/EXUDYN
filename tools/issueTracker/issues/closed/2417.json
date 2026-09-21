@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 20:15",
   "resolvedAuthor": "Claude-JG",
   "file": "definitions/definitionTypes.py",
-  "releaseNotes": "revision2026 step R4.13: CFOptional removed; every dictionary write guarded; must-be-given parameters raise when left out; omit probe in parameterConversionTest"
+  "releaseNotes": "revision2026 step R4.13: CFOptional removed; every dictionary write guarded; must-be-given parameters raise when left out; omit probe in parameterConversionTest",
+  "resolvedInVersion": "1.11.77"
 }

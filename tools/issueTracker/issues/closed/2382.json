@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "main/obj/cppsrc.vcxproj",
   "line": "432",
-  "releaseNotes": "corrected to src\\Tests\\UnitTestBase for both the ClCompile and the ClInclude entry. tools/gen_sources.py --check now fails on any case mismatch; so this cannot silently return"
+  "releaseNotes": "corrected to src\\Tests\\UnitTestBase for both the ClCompile and the ClInclude entry. tools/gen_sources.py --check now fails on any case mismatch; so this cannot silently return",
+  "resolvedInVersion": "1.11.26"
 }

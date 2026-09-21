@@ -45,7 +45,7 @@ issueFields = [
     'number',           #int, the issue number and the file name
     'title',            #one line
     'author',           #who raised it
-    'status',           #RAISED, RESOLVED, ABANDONED
+    'status',           #RAISED, RESOLVED, CLOSED
     'type',             #see issueTypes in issueTracker.py
     'priority',         #LOW, NORMAL, HIGH or absent
     'effort',           #LOW, MEDIUM, HIGH, HUGE or absent (revision2026 step R8.5.3)
@@ -68,7 +68,10 @@ issueFields = [
 #an issue without these is not an issue
 requiredFields = ['number', 'title', 'status', 'type', 'dateRaised']
 
-closedStatuses = ['RESOLVED', 'ABANDONED']
+closedStatuses = ['RESOLVED', 'CLOSED']
+
+#every status an issue may have; issueTracker.issueStatuses says what each of them means
+knownStatuses = ['RAISED'] + closedStatuses
 
 #where the three directories are, relative to this file; issueTracker.py may point them elsewhere
 #(the tests do) by setting storeDirectory
@@ -81,7 +84,7 @@ def OpenDirectory():
 
 
 def ClosedDirectory():
-    """closed, not 'resolved': an ABANDONED issue is closed as well, and counts for the version"""
+    """closed, not 'resolved': a CLOSED issue was not done and counts for the version"""
     return os.path.join(storeDirectory, 'closed')
 
 
@@ -271,6 +274,11 @@ def CheckStore():
             if name not in issueFields:
                 messages.append('issue ' + str(number) + ' (' + where + '): unknown field "'
                                 + name + '"')
+        #the status decides the directory an issue lies in and whether it counts for the micro
+        #version, so an unknown one is not a cosmetic problem (revision2026 step R8.3.4)
+        if issue.get('status') not in knownStatuses:
+            messages.append('issue ' + str(number) + ' (' + where + '): unknown status "'
+                            + str(issue.get('status')) + '"')
         if fileName is not None and fileName != IssueFileName(number):
             messages.append('issue ' + str(number) + ': file is called ' + fileName)
 

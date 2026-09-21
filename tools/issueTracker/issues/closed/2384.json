@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 19:52",
   "resolvedAuthor": "Claude-JG",
   "file": "main/setup.py",
-  "releaseNotes": "no longer reproduces: it was setup.py reaching for ../LICENSE.txt and dropping the copy inside main/, and the flatten removed that level. setup.py now contains no LICENSE handling at all; MANIFEST.in includes the one file at the repository root, which is where it belongs and where the sdist picks it up. Confirmed after three sdist builds in this session: exactly one LICENSE.txt exists in the working tree, tracked, unmodified since e44aca1, and no untracked copy appears anywhere"
+  "releaseNotes": "no longer reproduces: it was setup.py reaching for ../LICENSE.txt and dropping the copy inside main/, and the flatten removed that level. setup.py now contains no LICENSE handling at all; MANIFEST.in includes the one file at the repository root, which is where it belongs and where the sdist picks it up. Confirmed after three sdist builds in this session: exactly one LICENSE.txt exists in the working tree, tracked, unmodified since e44aca1, and no untracked copy appears anywhere",
+  "resolvedInVersion": "1.11.46"
 }

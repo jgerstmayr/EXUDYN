@@ -1386,7 +1386,8 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `TESTING` leave the status list and `ABANDONED` joins it.
 
 <a id="r8-3-4"></a>
-**R8.3.4** *(sub-step of R8.3.1; maintainer decision 2026-09-21)* **`ABANDONED` becomes `CLOSED`.**
+**R8.3.4** **DONE 2026-09-21** (#2572) — [log](exudynRevisionLog2026.md#r8-3-4) — *(sub-step of
+    R8.3.1; maintainer decision 2026-09-21)* **`ABANDONED` becomes `CLOSED`.**
     One status for every issue that is closed and was not resolved, with the kind of closing in
     its mandatory reason: obsolete, won't fix, duplicate of #n, superseded, not reproducible,
     abandoned. See D13 and the discussion in R8.3.1.
@@ -1424,8 +1425,15 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     only protected, by storing the version it produced (D14).
 
 <a id="r8-4"></a>
-**R8.4** *(phase R8; extended by the maintainer 2026-09-21)* **Fold minor-version bumps into the
-    tracker, and make the version numbering verifiable instead of brittle.**
+**R8.4** **DONE 2026-09-21** (#2573) — [log](exudynRevisionLog2026.md#r8-4) — *(phase R8;
+    extended by the maintainer 2026-09-21)* **Fold version bumps into the tracker, and make the
+    version numbering verifiable instead of brittle.**
+
+    **Done**, with one addition the maintainer asked for after the text below was written: the
+    bump does **MAJOR as well as minor** (1.11 -> 1.12 *and* 1.11 -> 2.0), because the way to
+    v2.0 runs through it. That was not a small addition: the major number was written as the
+    constant `1` inside `GetMajorMinorMicroVersion`, and the minor was the *length* of the
+    baseline list, so 2.0 could not be expressed at all.
 
     **(a) The minor bump.** A 1.11 → 1.12 bump currently means hand-editing the `versionResolved`
     list and the `versionNames` dict inside `issueTracker.py`. Make it a command that records the

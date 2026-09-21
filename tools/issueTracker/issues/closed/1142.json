@@ -9,5 +9,6 @@
   "deadline": "2022-08-11",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Partially resolved and the remainder is #2498: the parameters of every item are now probed systematically by parameterConversionTest.py (revision2026 step R4.4.3.1) and the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4); what is still untested per item type is its member FUNCTIONS. See the successor issue."
+  "releaseNotes": "Partially resolved and the remainder is #2498: the parameters of every item are now probed systematically by parameterConversionTest.py (revision2026 step R4.4.3.1) and the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4); what is still untested per item type is its member FUNCTIONS. See the successor issue.",
+  "resolvedInVersion": "1.11.145"
 }

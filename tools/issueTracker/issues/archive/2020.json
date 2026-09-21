@@ -14,7 +14,8 @@
       "deadline": "2019-07-01",
       "dateResolved": "2020-01-06",
       "resolvedAuthor": "JG",
-      "releaseNotes": "outdated - is this still a problem?"
+      "releaseNotes": "outdated - is this still a problem?",
+      "resolvedInVersion": "0.1.260"
     },
     {
       "number": 125,
@@ -26,7 +27,8 @@
       "dateRaised": "2019-05-13",
       "deadline": "2019-07-12",
       "dateResolved": "2020-05-16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.329"
     },
     {
       "number": 141,
@@ -38,7 +40,8 @@
       "dateRaised": "2019-05-21",
       "deadline": "2019-07-20",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.294"
     },
     {
       "number": 146,
@@ -50,7 +53,8 @@
       "dateRaised": "2019-05-25",
       "deadline": "2019-07-24",
       "dateResolved": "2020-01-31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.273"
     },
     {
       "number": 190,
@@ -62,20 +66,22 @@
       "dateRaised": "2019-06-16",
       "deadline": "2019-08-15",
       "dateResolved": "2020-01-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.261"
     },
     {
       "number": 191,
       "title": "Newton lambda",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "CHECK",
       "description": "Check whether Newton can be implemented as lambda-function",
       "dateRaised": "2019-06-17",
       "deadline": "2019-08-16",
       "dateResolved": "2020-11-21",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not needed for now"
+      "releaseNotes": "not needed for now",
+      "resolvedInVersion": "1.0.21"
     },
     {
       "number": 192,
@@ -87,7 +93,8 @@
       "dateRaised": "2019-06-19",
       "deadline": "2019-08-18",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.295"
     },
     {
       "number": 216,
@@ -99,20 +106,22 @@
       "dateRaised": "2019-06-29",
       "deadline": "2019-08-28",
       "dateResolved": "2020-01-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.268"
     },
     {
       "number": 225,
       "title": "SlidingJointRigid",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "EXTENSION",
       "description": "Add functionality for rigid sliding joint or add a flag for sliding joint to do both options",
       "dateRaised": "2019-07-10",
       "deadline": "2019-09-08",
       "dateResolved": "2020-04-10",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not needed for now"
+      "releaseNotes": "not needed for now",
+      "resolvedInVersion": "0.1.305"
     },
     {
       "number": 227,
@@ -124,7 +133,8 @@
       "dateRaised": "2019-07-13",
       "deadline": "2019-09-11",
       "dateResolved": "2020-01-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.269"
     },
     {
       "number": 255,
@@ -136,7 +146,8 @@
       "dateRaised": "2019-08-28",
       "deadline": "2019-10-27",
       "dateResolved": "2020-01-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.270"
     },
     {
       "number": 259,
@@ -148,7 +159,8 @@
       "dateRaised": "2019-08-30",
       "deadline": "2019-10-29",
       "dateResolved": "2020-06-24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.361"
     },
     {
       "number": 268,
@@ -160,7 +172,8 @@
       "dateRaised": "2019-10-10",
       "deadline": "2019-12-09",
       "dateResolved": "2020-01-08",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.263"
     },
     {
       "number": 269,
@@ -172,7 +185,8 @@
       "dateRaised": "2019-10-10",
       "deadline": "2019-12-09",
       "dateResolved": "2020-01-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.262"
     },
     {
       "number": 276,
@@ -184,7 +198,8 @@
       "dateRaised": "2019-12-01",
       "deadline": "2020-01-30",
       "dateResolved": "2020-01-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.259"
     },
     {
       "number": 281,
@@ -196,7 +211,8 @@
       "dateRaised": "2019-12-05",
       "deadline": "2020-02-03",
       "dateResolved": "2020-06-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.355"
     },
     {
       "number": 284,
@@ -208,7 +224,8 @@
       "dateRaised": "2019-12-07",
       "deadline": "2020-02-05",
       "dateResolved": "2020-06-24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.362"
     },
     {
       "number": 287,
@@ -220,7 +237,8 @@
       "dateRaised": "2019-12-09",
       "deadline": "2020-02-07",
       "dateResolved": "2020-02-23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.290"
     },
     {
       "number": 288,
@@ -233,7 +251,8 @@
       "deadline": "2020-02-08",
       "dateResolved": "2020-09-08",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already removed from python interface earlier"
+      "releaseNotes": "already removed from python interface earlier",
+      "resolvedInVersion": "1.0.10"
     },
     {
       "number": 289,
@@ -245,7 +264,8 @@
       "dateRaised": "2019-12-13",
       "deadline": "2020-02-11",
       "dateResolved": "2020-01-04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.257"
     },
     {
       "number": 290,
@@ -257,7 +277,8 @@
       "dateRaised": "2019-12-13",
       "deadline": "2020-02-11",
       "dateResolved": "2020-01-04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.258"
     },
     {
       "number": 297,
@@ -270,7 +291,8 @@
       "deadline": "2020-02-14",
       "dateResolved": "2020-04-10",
       "resolvedAuthor": "JG",
-      "releaseNotes": "terms are correct, but lead to instability at high velocities"
+      "releaseNotes": "terms are correct, but lead to instability at high velocities",
+      "resolvedInVersion": "0.1.306"
     },
     {
       "number": 301,
@@ -282,7 +304,8 @@
       "dateRaised": "2019-12-26",
       "deadline": "2020-02-24",
       "dateResolved": "2020-02-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.283"
     },
     {
       "number": 302,
@@ -294,7 +317,8 @@
       "dateRaised": "2019-12-26",
       "deadline": "2020-02-24",
       "dateResolved": "2020-03-08",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.303"
     },
     {
       "number": 304,
@@ -306,7 +330,8 @@
       "dateRaised": "2019-12-28",
       "deadline": "2020-02-26",
       "dateResolved": "2020-02-12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.278"
     },
     {
       "number": 305,
@@ -319,7 +344,8 @@
       "deadline": "2020-02-26",
       "dateResolved": "2020-01-25",
       "resolvedAuthor": "JG",
-      "releaseNotes": "but errors which occur directly in python cannot be catched"
+      "releaseNotes": "but errors which occur directly in python cannot be catched",
+      "resolvedInVersion": "0.1.271"
     },
     {
       "number": 309,
@@ -331,7 +357,8 @@
       "dateRaised": "2020-01-10",
       "deadline": "2020-03-10",
       "dateResolved": "2020-02-23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.291"
     },
     {
       "number": 310,
@@ -343,7 +370,8 @@
       "dateRaised": "2020-01-10",
       "deadline": "2020-03-10",
       "dateResolved": "2020-02-12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.279"
     },
     {
       "number": 311,
@@ -355,7 +383,8 @@
       "dateRaised": "2020-01-10",
       "deadline": "2020-03-10",
       "dateResolved": "2020-02-12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.280"
     },
     {
       "number": 316,
@@ -367,7 +396,8 @@
       "dateRaised": "2020-01-10",
       "deadline": "2020-03-10",
       "dateResolved": "2020-01-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.265"
     },
     {
       "number": 317,
@@ -379,7 +409,8 @@
       "dateRaised": "2020-01-15",
       "deadline": "2020-03-15",
       "dateResolved": "2020-02-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.276"
     },
     {
       "number": 318,
@@ -391,7 +422,8 @@
       "dateRaised": "2020-01-15",
       "deadline": "2020-03-15",
       "dateResolved": "2020-01-21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.264"
     },
     {
       "number": 319,
@@ -404,7 +436,8 @@
       "deadline": "2020-03-16",
       "dateResolved": "2020-02-12",
       "resolvedAuthor": "JG",
-      "releaseNotes": "did not show up again"
+      "releaseNotes": "did not show up again",
+      "resolvedInVersion": "0.1.281"
     },
     {
       "number": 320,
@@ -416,7 +449,8 @@
       "dateRaised": "2020-01-16",
       "deadline": "2020-03-16",
       "dateResolved": "2020-01-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.266"
     },
     {
       "number": 321,
@@ -429,7 +463,8 @@
       "deadline": "2020-03-22",
       "dateResolved": "2020-01-22",
       "resolvedAuthor": "JG",
-      "releaseNotes": "solved: change sypder preferences, see FAQ"
+      "releaseNotes": "solved: change sypder preferences, see FAQ",
+      "resolvedInVersion": "0.1.267"
     },
     {
       "number": 322,
@@ -442,7 +477,8 @@
       "deadline": "2020-03-22",
       "dateResolved": "2020-01-25",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added reference to starting index in global coordinate vector"
+      "releaseNotes": "added reference to starting index in global coordinate vector",
+      "resolvedInVersion": "0.1.272"
     },
     {
       "number": 324,
@@ -454,7 +490,8 @@
       "dateRaised": "2020-01-25",
       "deadline": "2020-03-25",
       "dateResolved": "2020-02-18",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.284"
     },
     {
       "number": 325,
@@ -466,7 +503,8 @@
       "dateRaised": "2020-01-26",
       "deadline": "2020-03-26",
       "dateResolved": "2020-12-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.43"
     },
     {
       "number": 326,
@@ -478,7 +516,8 @@
       "dateRaised": "2020-01-27",
       "deadline": "2020-03-27",
       "dateResolved": "2020-01-31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.274"
     },
     {
       "number": 327,
@@ -490,7 +529,8 @@
       "dateRaised": "2020-01-27",
       "deadline": "2020-03-27",
       "dateResolved": "2020-01-31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.275"
     },
     {
       "number": 328,
@@ -502,7 +542,8 @@
       "dateRaised": "2020-02-02",
       "deadline": "2020-04-02",
       "dateResolved": "2020-03-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.301"
     },
     {
       "number": 329,
@@ -514,7 +555,8 @@
       "dateRaised": "2020-02-02",
       "deadline": "2020-04-02",
       "dateResolved": "2020-05-28",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.344"
     },
     {
       "number": 330,
@@ -527,7 +569,8 @@
       "deadline": "2020-04-03",
       "dateResolved": "2020-09-10",
       "resolvedAuthor": "JG",
-      "releaseNotes": "changed object computation function from RHS to LHS, as it always computed the LHS (the system.cpp function ComputeODE2RHS then puts it to RHS)"
+      "releaseNotes": "changed object computation function from RHS to LHS, as it always computed the LHS (the system.cpp function ComputeODE2RHS then puts it to RHS)",
+      "resolvedInVersion": "1.0.13"
     },
     {
       "number": 331,
@@ -539,7 +582,8 @@
       "dateRaised": "2020-02-03",
       "deadline": "2020-04-03",
       "dateResolved": "2020-02-03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.277"
     },
     {
       "number": 334,
@@ -551,7 +595,8 @@
       "dateRaised": "2020-02-12",
       "deadline": "2020-04-12",
       "dateResolved": "2020-02-12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.282"
     },
     {
       "number": 335,
@@ -563,7 +608,8 @@
       "dateRaised": "2020-02-16",
       "deadline": "2020-04-16",
       "dateResolved": "2020-02-23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.292"
     },
     {
       "number": 336,
@@ -575,7 +621,8 @@
       "dateRaised": "2020-02-17",
       "deadline": "2020-04-17",
       "dateResolved": "2020-04-24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.320"
     },
     {
       "number": 338,
@@ -587,7 +634,8 @@
       "dateRaised": "2020-02-18",
       "deadline": "2020-04-18",
       "dateResolved": "2020-05-28",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.345"
     },
     {
       "number": 339,
@@ -599,7 +647,8 @@
       "dateRaised": "2020-02-18",
       "deadline": "2020-04-18",
       "dateResolved": "2020-04-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.317"
     },
     {
       "number": 340,
@@ -612,7 +661,8 @@
       "deadline": "2020-04-19",
       "dateResolved": "2020-02-19",
       "resolvedAuthor": "JG",
-      "releaseNotes": "moved bodyFixed property to loads; see issue #341"
+      "releaseNotes": "moved bodyFixed property to loads; see issue #341",
+      "resolvedInVersion": "0.1.285"
     },
     {
       "number": 341,
@@ -624,7 +674,8 @@
       "dateRaised": "2020-02-19",
       "deadline": "2020-04-19",
       "dateResolved": "2020-02-19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.286"
     },
     {
       "number": 342,
@@ -636,7 +687,8 @@
       "dateRaised": "2020-02-19",
       "deadline": "2020-04-19",
       "dateResolved": "2020-02-19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.287"
     },
     {
       "number": 343,
@@ -649,7 +701,8 @@
       "deadline": "2020-04-20",
       "dateResolved": "2020-02-22",
       "resolvedAuthor": "JG",
-      "releaseNotes": "NOT COMPLETED: do this extension instead in a separate user coordinate constraint as it requires also the jacobians to be computed"
+      "releaseNotes": "NOT COMPLETED: do this extension instead in a separate user coordinate constraint as it requires also the jacobians to be computed",
+      "resolvedInVersion": "0.1.289"
     },
     {
       "number": 344,
@@ -661,7 +714,8 @@
       "dateRaised": "2020-02-21",
       "deadline": "2020-04-21",
       "dateResolved": "2020-02-21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.288"
     },
     {
       "number": 345,
@@ -673,7 +727,8 @@
       "dateRaised": "2020-02-22",
       "deadline": "2020-04-22",
       "dateResolved": "2020-02-23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.293"
     },
     {
       "number": 346,
@@ -685,7 +740,8 @@
       "dateRaised": "2020-02-23",
       "deadline": "2020-04-23",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.296"
     },
     {
       "number": 348,
@@ -697,7 +753,8 @@
       "dateRaised": "2020-02-24",
       "deadline": "2020-04-24",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.297"
     },
     {
       "number": 350,
@@ -709,7 +766,8 @@
       "dateRaised": "2020-03-02",
       "deadline": "2020-05-01",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.298"
     },
     {
       "number": 351,
@@ -721,7 +779,8 @@
       "dateRaised": "2020-03-03",
       "deadline": "2020-05-02",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.299"
     },
     {
       "number": 352,
@@ -733,7 +792,8 @@
       "dateRaised": "2020-03-03",
       "deadline": "2020-05-02",
       "dateResolved": "2020-03-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.302"
     },
     {
       "number": 353,
@@ -745,7 +805,8 @@
       "dateRaised": "2020-03-04",
       "deadline": "2020-05-03",
       "dateResolved": "2020-03-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.300"
     },
     {
       "number": 356,
@@ -757,7 +818,8 @@
       "dateRaised": "2020-03-08",
       "deadline": "2020-05-07",
       "dateResolved": "2020-03-13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.304"
     },
     {
       "number": 357,
@@ -770,7 +832,8 @@
       "deadline": "2020-05-10",
       "dateResolved": "2020-12-09",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added into new python interface of solver"
+      "releaseNotes": "added into new python interface of solver",
+      "resolvedInVersion": "1.0.50"
     },
     {
       "number": 358,
@@ -782,7 +845,8 @@
       "dateRaised": "2020-03-20",
       "deadline": "2020-05-19",
       "dateResolved": "2020-04-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.307"
     },
     {
       "number": 359,
@@ -794,7 +858,8 @@
       "dateRaised": "2020-03-20",
       "deadline": "2020-05-19",
       "dateResolved": "2020-04-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.308"
     },
     {
       "number": 360,
@@ -806,7 +871,8 @@
       "dateRaised": "2020-03-20",
       "deadline": "2020-05-19",
       "dateResolved": "2020-04-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.314"
     },
     {
       "number": 361,
@@ -818,7 +884,8 @@
       "dateRaised": "2020-04-09",
       "deadline": "2020-06-08",
       "dateResolved": "2020-04-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.318"
     },
     {
       "number": 362,
@@ -830,7 +897,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-04-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.309"
     },
     {
       "number": 363,
@@ -842,7 +910,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-04-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.310"
     },
     {
       "number": 364,
@@ -854,7 +923,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-04-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.311"
     },
     {
       "number": 365,
@@ -866,7 +936,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-04-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.312"
     },
     {
       "number": 366,
@@ -878,7 +949,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-04-11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.313"
     },
     {
       "number": 367,
@@ -891,7 +963,8 @@
       "deadline": "2020-06-09",
       "dateResolved": "2020-05-06",
       "resolvedAuthor": "JG",
-      "releaseNotes": "internal folder only"
+      "releaseNotes": "internal folder only",
+      "resolvedInVersion": "0.1.324"
     },
     {
       "number": 368,
@@ -903,7 +976,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-05-15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.326"
     },
     {
       "number": 370,
@@ -915,7 +989,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-04-20",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.316"
     },
     {
       "number": 371,
@@ -927,7 +1002,8 @@
       "dateRaised": "2020-04-10",
       "deadline": "2020-06-09",
       "dateResolved": "2020-06-24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.363"
     },
     {
       "number": 373,
@@ -940,7 +1016,8 @@
       "deadline": "2020-06-13",
       "dateResolved": "2020-04-24",
       "resolvedAuthor": "JG",
-      "releaseNotes": "changed std::function return type from StdVector3D(=std::array) to StdVector(=std::vector), which works automatically with numpy arrays"
+      "releaseNotes": "changed std::function return type from StdVector3D(=std::array) to StdVector(=std::vector), which works automatically with numpy arrays",
+      "resolvedInVersion": "0.1.321"
     },
     {
       "number": 374,
@@ -952,7 +1029,8 @@
       "dateRaised": "2020-04-14",
       "deadline": "2020-06-13",
       "dateResolved": "2020-04-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.315"
     },
     {
       "number": 375,
@@ -964,7 +1042,8 @@
       "dateRaised": "2020-04-22",
       "deadline": "2020-06-21",
       "dateResolved": "2020-04-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.319"
     },
     {
       "number": 376,
@@ -976,7 +1055,8 @@
       "dateRaised": "2020-04-24",
       "deadline": "2020-06-23",
       "dateResolved": "2020-04-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.322"
     },
     {
       "number": 377,
@@ -988,7 +1068,8 @@
       "dateRaised": "2020-05-04",
       "deadline": "2020-07-03",
       "dateResolved": "2020-05-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.323"
     },
     {
       "number": 378,
@@ -1000,7 +1081,8 @@
       "dateRaised": "2020-05-04",
       "deadline": "2020-07-03",
       "dateResolved": "2020-08-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.4"
     },
     {
       "number": 379,
@@ -1012,7 +1094,8 @@
       "dateRaised": "2020-05-05",
       "deadline": "2020-07-04",
       "dateResolved": "2020-05-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.325"
     },
     {
       "number": 381,
@@ -1024,7 +1107,8 @@
       "dateRaised": "2020-05-06",
       "deadline": "2020-07-05",
       "dateResolved": "2020-08-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.5"
     },
     {
       "number": 382,
@@ -1036,20 +1120,22 @@
       "dateRaised": "2020-05-06",
       "deadline": "2020-07-05",
       "dateResolved": "2020-05-15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.327"
     },
     {
       "number": 383,
       "title": "pybind11 submodule",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "EXTENSION",
       "description": "used for advanced functions, not necessarily included in exudyn or make other module",
       "dateRaised": "2020-05-06",
       "deadline": "2020-07-05",
       "dateResolved": "2020-11-21",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not needed for now"
+      "releaseNotes": "not needed for now",
+      "resolvedInVersion": "1.0.22"
     },
     {
       "number": 386,
@@ -1061,7 +1147,8 @@
       "dateRaised": "2020-05-07",
       "deadline": "2020-07-06",
       "dateResolved": "2020-05-15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.328"
     },
     {
       "number": 387,
@@ -1073,7 +1160,8 @@
       "dateRaised": "2020-05-08",
       "deadline": "2020-07-07",
       "dateResolved": "2020-05-26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.339"
     },
     {
       "number": 388,
@@ -1085,7 +1173,8 @@
       "dateRaised": "2020-05-08",
       "deadline": "2020-07-07",
       "dateResolved": "2020-05-26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.340"
     },
     {
       "number": 389,
@@ -1097,7 +1186,8 @@
       "dateRaised": "2020-05-13",
       "deadline": "2020-07-12",
       "dateResolved": "2020-12-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.51"
     },
     {
       "number": 391,
@@ -1109,7 +1199,8 @@
       "dateRaised": "2020-05-16",
       "deadline": "2020-07-15",
       "dateResolved": "2020-05-16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.330"
     },
     {
       "number": 392,
@@ -1121,7 +1212,8 @@
       "dateRaised": "2020-05-16",
       "deadline": "2020-07-15",
       "dateResolved": "2020-05-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.331"
     },
     {
       "number": 393,
@@ -1133,7 +1225,8 @@
       "dateRaised": "2020-05-16",
       "deadline": "2020-07-15",
       "dateResolved": "2020-05-21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.334"
     },
     {
       "number": 395,
@@ -1145,7 +1238,8 @@
       "dateRaised": "2020-05-16",
       "deadline": "2020-07-15",
       "dateResolved": "2020-06-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.347"
     },
     {
       "number": 397,
@@ -1157,7 +1251,8 @@
       "dateRaised": "2020-05-16",
       "deadline": "2020-07-15",
       "dateResolved": "2020-05-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.332"
     },
     {
       "number": 398,
@@ -1169,7 +1264,8 @@
       "dateRaised": "2020-05-16",
       "deadline": "2020-07-15",
       "dateResolved": "2020-05-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.333"
     },
     {
       "number": 399,
@@ -1181,7 +1277,8 @@
       "dateRaised": "2020-05-20",
       "deadline": "2020-07-19",
       "dateResolved": "2020-05-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.335"
     },
     {
       "number": 402,
@@ -1193,7 +1290,8 @@
       "dateRaised": "2020-05-21",
       "deadline": "2020-07-20",
       "dateResolved": "2020-05-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.336"
     },
     {
       "number": 404,
@@ -1205,7 +1303,8 @@
       "dateRaised": "2020-05-21",
       "deadline": "2020-07-20",
       "dateResolved": "2020-06-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.348"
     },
     {
       "number": 405,
@@ -1217,7 +1316,8 @@
       "dateRaised": "2020-05-21",
       "deadline": "2020-07-20",
       "dateResolved": "2020-06-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.356"
     },
     {
       "number": 407,
@@ -1230,7 +1330,8 @@
       "deadline": "2020-07-21",
       "dateResolved": "2020-05-26",
       "resolvedAuthor": "JG",
-      "releaseNotes": "only possible as ConnectorCoordinateVector constraint externally"
+      "releaseNotes": "only possible as ConnectorCoordinateVector constraint externally",
+      "resolvedInVersion": "0.1.341"
     },
     {
       "number": 408,
@@ -1242,7 +1343,8 @@
       "dateRaised": "2020-05-22",
       "deadline": "2020-07-21",
       "dateResolved": "2020-06-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.349"
     },
     {
       "number": 409,
@@ -1254,7 +1356,8 @@
       "dateRaised": "2020-05-24",
       "deadline": "2020-07-23",
       "dateResolved": "2020-05-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.337"
     },
     {
       "number": 411,
@@ -1266,7 +1369,8 @@
       "dateRaised": "2020-05-25",
       "deadline": "2020-07-24",
       "dateResolved": "2020-06-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.350"
     },
     {
       "number": 412,
@@ -1278,7 +1382,8 @@
       "dateRaised": "2020-05-25",
       "deadline": "2020-07-24",
       "dateResolved": "2020-05-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.338"
     },
     {
       "number": 414,
@@ -1290,7 +1395,8 @@
       "dateRaised": "2020-05-26",
       "deadline": "2020-07-25",
       "dateResolved": "2020-05-29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.346"
     },
     {
       "number": 415,
@@ -1302,20 +1408,22 @@
       "dateRaised": "2020-05-26",
       "deadline": "2020-07-25",
       "dateResolved": "2020-05-26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.342"
     },
     {
       "number": 416,
       "title": "check Markers",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "EXTENSION",
       "description": "add check (WARNING) if joint is applied to two markers directing to identical nodes or bodies",
       "dateRaised": "2020-05-27",
       "deadline": "2020-07-26",
       "dateResolved": "2020-05-27",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not possible for FFRF and generic objects"
+      "releaseNotes": "not possible for FFRF and generic objects",
+      "resolvedInVersion": "0.1.343"
     },
     {
       "number": 417,
@@ -1327,7 +1435,8 @@
       "dateRaised": "2020-05-27",
       "deadline": "2020-07-26",
       "dateResolved": "2020-06-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.351"
     },
     {
       "number": 418,
@@ -1339,7 +1448,8 @@
       "dateRaised": "2020-05-28",
       "deadline": "2020-07-27",
       "dateResolved": "2020-06-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.352"
     },
     {
       "number": 419,
@@ -1351,7 +1461,8 @@
       "dateRaised": "2020-05-29",
       "deadline": "2020-07-28",
       "dateResolved": "2020-06-26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.364"
     },
     {
       "number": 420,
@@ -1363,7 +1474,8 @@
       "dateRaised": "2020-06-03",
       "deadline": "2020-08-02",
       "dateResolved": "2020-06-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.357"
     },
     {
       "number": 421,
@@ -1375,7 +1487,8 @@
       "dateRaised": "2020-06-07",
       "deadline": "2020-08-06",
       "dateResolved": "2020-06-07",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.353"
     },
     {
       "number": 422,
@@ -1387,7 +1500,8 @@
       "dateRaised": "2020-06-07",
       "deadline": "2020-08-06",
       "dateResolved": "2020-06-07",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.354"
     },
     {
       "number": 425,
@@ -1399,7 +1513,8 @@
       "dateRaised": "2020-06-19",
       "deadline": "2020-08-18",
       "dateResolved": "2020-06-19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.358"
     },
     {
       "number": 426,
@@ -1411,7 +1526,8 @@
       "dateRaised": "2020-06-19",
       "deadline": "2020-08-18",
       "dateResolved": "2020-06-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.359"
     },
     {
       "number": 427,
@@ -1423,7 +1539,8 @@
       "dateRaised": "2020-06-19",
       "deadline": "2020-08-18",
       "dateResolved": "2020-06-22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.360"
     },
     {
       "number": 428,
@@ -1435,7 +1552,8 @@
       "dateRaised": "2020-06-26",
       "deadline": "2020-08-25",
       "dateResolved": "2020-12-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.32"
     },
     {
       "number": 429,
@@ -1447,7 +1565,8 @@
       "dateRaised": "2020-07-01",
       "deadline": "2020-08-30",
       "dateResolved": "2020-07-01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.365"
     },
     {
       "number": 431,
@@ -1459,7 +1578,8 @@
       "dateRaised": "2020-07-01",
       "deadline": "2020-08-30",
       "dateResolved": "2020-08-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.7"
     },
     {
       "number": 432,
@@ -1471,7 +1591,8 @@
       "dateRaised": "2020-07-02",
       "deadline": "2020-08-31",
       "dateResolved": "2020-07-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.366"
     },
     {
       "number": 433,
@@ -1483,7 +1604,8 @@
       "dateRaised": "2020-07-20",
       "deadline": "2020-09-18",
       "dateResolved": "2020-07-20",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "0.1.367"
     },
     {
       "number": 434,
@@ -1495,7 +1617,8 @@
       "dateRaised": "2020-07-20",
       "deadline": "2020-09-18",
       "dateResolved": "2020-07-20",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.0"
     },
     {
       "number": 435,
@@ -1507,7 +1630,8 @@
       "dateRaised": "2020-07-21",
       "deadline": "2020-09-19",
       "dateResolved": "2020-09-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.12"
     },
     {
       "number": 438,
@@ -1519,7 +1643,8 @@
       "dateRaised": "2020-08-13",
       "deadline": "2020-10-12",
       "dateResolved": "2020-08-13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.1"
     },
     {
       "number": 439,
@@ -1531,7 +1656,8 @@
       "dateRaised": "2020-08-13",
       "deadline": "2020-10-12",
       "dateResolved": "2020-08-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.6"
     },
     {
       "number": 440,
@@ -1543,7 +1669,8 @@
       "dateRaised": "2020-08-13",
       "deadline": "2020-10-12",
       "dateResolved": "2020-08-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.2"
     },
     {
       "number": 441,
@@ -1555,7 +1682,8 @@
       "dateRaised": "2020-08-14",
       "deadline": "2020-10-13",
       "dateResolved": "2020-08-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.3"
     },
     {
       "number": 442,
@@ -1568,7 +1696,8 @@
       "deadline": "2020-10-23",
       "dateResolved": "2020-08-25",
       "resolvedAuthor": "JG",
-      "releaseNotes": "problem with VS2019 compilation of Eigen; resolved by removing VS2019 installation"
+      "releaseNotes": "problem with VS2019 compilation of Eigen; resolved by removing VS2019 installation",
+      "resolvedInVersion": "1.0.8"
     },
     {
       "number": 443,
@@ -1581,7 +1710,8 @@
       "deadline": "2020-11-02",
       "dateResolved": "2020-09-04",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added test for SensorObject if attached to body"
+      "releaseNotes": "added test for SensorObject if attached to body",
+      "resolvedInVersion": "1.0.9"
     },
     {
       "number": 445,
@@ -1593,20 +1723,22 @@
       "dateRaised": "2020-09-08",
       "deadline": "2020-11-07",
       "dateResolved": "2020-09-08",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.11"
     },
     {
       "number": 446,
       "title": "NodeIndex in arrays",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "CHECK",
       "description": "use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers",
       "dateRaised": "2020-09-09",
       "deadline": "2020-11-08",
       "dateResolved": "2020-11-21",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not needed for now"
+      "releaseNotes": "not needed for now",
+      "resolvedInVersion": "1.0.23"
     },
     {
       "number": 449,
@@ -1619,7 +1751,8 @@
       "deadline": "2020-11-14",
       "dateResolved": "2020-09-16",
       "resolvedAuthor": "JG",
-      "releaseNotes": "first tests made"
+      "releaseNotes": "first tests made",
+      "resolvedInVersion": "1.0.14"
     },
     {
       "number": 453,
@@ -1631,7 +1764,8 @@
       "dateRaised": "2020-10-08",
       "deadline": "2020-12-07",
       "dateResolved": "2020-10-08",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.15"
     },
     {
       "number": 454,
@@ -1643,7 +1777,8 @@
       "dateRaised": "2020-10-08",
       "deadline": "2020-12-07",
       "dateResolved": "2020-10-08",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.16"
     },
     {
       "number": 457,
@@ -1655,7 +1790,8 @@
       "dateRaised": "2020-11-07",
       "deadline": "2021-01-06",
       "dateResolved": "2020-11-29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.27"
     },
     {
       "number": 458,
@@ -1667,7 +1803,8 @@
       "dateRaised": "2020-11-10",
       "deadline": "2021-01-09",
       "dateResolved": "2020-12-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.33"
     },
     {
       "number": 459,
@@ -1679,7 +1816,8 @@
       "dateRaised": "2020-11-11",
       "deadline": "2021-01-10",
       "dateResolved": "2020-11-11",
-      "resolvedAuthor": "S. Holzinger"
+      "resolvedAuthor": "S. Holzinger",
+      "resolvedInVersion": "1.0.17"
     },
     {
       "number": 460,
@@ -1691,7 +1829,8 @@
       "dateRaised": "2020-11-12",
       "deadline": "2021-01-11",
       "dateResolved": "2020-12-04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.42"
     },
     {
       "number": 462,
@@ -1703,7 +1842,8 @@
       "dateRaised": "2020-11-16",
       "deadline": "2021-01-15",
       "dateResolved": "2020-11-18",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.18"
     },
     {
       "number": 463,
@@ -1715,7 +1855,8 @@
       "dateRaised": "2020-11-18",
       "deadline": "2021-01-17",
       "dateResolved": "2020-12-03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.38"
     },
     {
       "number": 464,
@@ -1727,7 +1868,8 @@
       "dateRaised": "2020-11-18",
       "deadline": "2021-01-17",
       "dateResolved": "2020-11-18",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.19"
     },
     {
       "number": 465,
@@ -1739,7 +1881,8 @@
       "dateRaised": "2020-11-18",
       "deadline": "2021-01-17",
       "dateResolved": "2020-11-21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.24"
     },
     {
       "number": 466,
@@ -1751,7 +1894,8 @@
       "dateRaised": "2020-11-19",
       "deadline": "2021-01-18",
       "dateResolved": "2020-11-19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.20"
     },
     {
       "number": 467,
@@ -1763,7 +1907,8 @@
       "dateRaised": "2020-11-19",
       "deadline": "2021-01-18",
       "dateResolved": "2020-12-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.44"
     },
     {
       "number": 468,
@@ -1776,7 +1921,8 @@
       "deadline": "2021-01-18",
       "dateResolved": "2020-11-21",
       "resolvedAuthor": "JG",
-      "releaseNotes": "WSL2 now used to automatically create linux wheels"
+      "releaseNotes": "WSL2 now used to automatically create linux wheels",
+      "resolvedInVersion": "1.0.25"
     },
     {
       "number": 469,
@@ -1788,7 +1934,8 @@
       "dateRaised": "2020-11-20",
       "deadline": "2021-01-19",
       "dateResolved": "2020-12-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.34"
     },
     {
       "number": 472,
@@ -1800,7 +1947,8 @@
       "dateRaised": "2020-11-25",
       "deadline": "2021-01-24",
       "dateResolved": "2020-11-25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.26"
     },
     {
       "number": 473,
@@ -1812,7 +1960,8 @@
       "dateRaised": "2020-11-25",
       "deadline": "2021-01-24",
       "dateResolved": "2020-11-29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.28"
     },
     {
       "number": 474,
@@ -1825,7 +1974,8 @@
       "deadline": "2021-01-24",
       "dateResolved": "2020-11-29",
       "resolvedAuthor": "JG",
-      "releaseNotes": "linux wheels can not be built with admin rights"
+      "releaseNotes": "linux wheels can not be built with admin rights",
+      "resolvedInVersion": "1.0.29"
     },
     {
       "number": 475,
@@ -1838,7 +1988,8 @@
       "deadline": "2021-01-25",
       "dateResolved": "2020-11-29",
       "resolvedAuthor": "JG",
-      "releaseNotes": "needs to be tested further"
+      "releaseNotes": "needs to be tested further",
+      "resolvedInVersion": "1.0.30"
     },
     {
       "number": 476,
@@ -1850,7 +2001,8 @@
       "dateRaised": "2020-11-30",
       "deadline": "2021-01-29",
       "dateResolved": "2020-11-30",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.31"
     },
     {
       "number": 477,
@@ -1862,7 +2014,8 @@
       "dateRaised": "2020-12-02",
       "deadline": "2021-01-31",
       "dateResolved": "2020-12-03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.39"
     },
     {
       "number": 478,
@@ -1874,7 +2027,8 @@
       "dateRaised": "2020-12-02",
       "deadline": "2021-01-31",
       "dateResolved": "2020-12-03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.40"
     },
     {
       "number": 479,
@@ -1887,7 +2041,8 @@
       "deadline": "2021-01-31",
       "dateResolved": "2020-12-02",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added python interfaces and kept old cpp solvers"
+      "releaseNotes": "added python interfaces and kept old cpp solvers",
+      "resolvedInVersion": "1.0.35"
     },
     {
       "number": 480,
@@ -1899,7 +2054,8 @@
       "dateRaised": "2020-12-02",
       "deadline": "2021-01-31",
       "dateResolved": "2020-12-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.36"
     },
     {
       "number": 481,
@@ -1911,7 +2067,8 @@
       "dateRaised": "2020-12-02",
       "deadline": "2021-01-31",
       "dateResolved": "2020-12-02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.37"
     },
     {
       "number": 482,
@@ -1923,7 +2080,8 @@
       "dateRaised": "2020-12-03",
       "deadline": "2021-02-01",
       "dateResolved": "2020-12-03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.41"
     },
     {
       "number": 484,
@@ -1936,7 +2094,8 @@
       "deadline": "2021-02-02",
       "dateResolved": "2020-12-10",
       "resolvedAuthor": "JG",
-      "releaseNotes": "too many parameters and too involved to simply include"
+      "releaseNotes": "too many parameters and too involved to simply include",
+      "resolvedInVersion": "1.0.54"
     },
     {
       "number": 485,
@@ -1948,7 +2107,8 @@
       "dateRaised": "2020-12-05",
       "deadline": "2021-02-03",
       "dateResolved": "2020-12-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.45"
     },
     {
       "number": 486,
@@ -1960,7 +2120,8 @@
       "dateRaised": "2020-12-05",
       "deadline": "2021-02-03",
       "dateResolved": "2020-12-05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.46"
     },
     {
       "number": 487,
@@ -1972,7 +2133,8 @@
       "dateRaised": "2020-12-06",
       "deadline": "2021-02-04",
       "dateResolved": "2020-12-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.47"
     },
     {
       "number": 488,
@@ -1984,7 +2146,8 @@
       "dateRaised": "2020-12-06",
       "deadline": "2021-02-04",
       "dateResolved": "2020-12-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.48"
     },
     {
       "number": 489,
@@ -1996,7 +2159,8 @@
       "dateRaised": "2020-12-06",
       "deadline": "2021-02-04",
       "dateResolved": "2020-12-06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.49"
     },
     {
       "number": 490,
@@ -2008,7 +2172,8 @@
       "dateRaised": "2020-12-07",
       "deadline": "2021-02-05",
       "dateResolved": "2020-12-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.52"
     },
     {
       "number": 491,
@@ -2020,7 +2185,8 @@
       "dateRaised": "2020-12-08",
       "deadline": "2021-02-06",
       "dateResolved": "2020-12-11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.57"
     },
     {
       "number": 492,
@@ -2032,7 +2198,8 @@
       "dateRaised": "2020-12-08",
       "deadline": "2021-02-06",
       "dateResolved": "2020-12-11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.58"
     },
     {
       "number": 493,
@@ -2044,7 +2211,8 @@
       "dateRaised": "2020-12-09",
       "deadline": "2021-02-07",
       "dateResolved": "2020-12-09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.53"
     },
     {
       "number": 497,
@@ -2056,7 +2224,8 @@
       "dateRaised": "2020-12-10",
       "deadline": "2021-02-08",
       "dateResolved": "2020-12-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.60"
     },
     {
       "number": 498,
@@ -2068,7 +2237,8 @@
       "dateRaised": "2020-12-10",
       "deadline": "2021-02-08",
       "dateResolved": "2020-12-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.55"
     },
     {
       "number": 499,
@@ -2080,7 +2250,8 @@
       "dateRaised": "2020-12-10",
       "deadline": "2021-02-08",
       "dateResolved": "2020-12-10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.56"
     },
     {
       "number": 500,
@@ -2092,7 +2263,8 @@
       "dateRaised": "2020-12-10",
       "deadline": "2021-02-08",
       "dateResolved": "2020-12-11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.59"
     },
     {
       "number": 501,
@@ -2104,7 +2276,8 @@
       "dateRaised": "2020-12-14",
       "deadline": "2021-02-12",
       "dateResolved": "2020-12-14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.61"
     },
     {
       "number": 502,
@@ -2116,7 +2289,8 @@
       "dateRaised": "2020-12-14",
       "deadline": "2021-02-12",
       "dateResolved": "2020-12-19 23:28",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.65"
     },
     {
       "number": 505,
@@ -2128,7 +2302,8 @@
       "dateRaised": "2020-12-16",
       "deadline": "2021-02-14",
       "dateResolved": "2020-12-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.62"
     },
     {
       "number": 507,
@@ -2140,7 +2315,8 @@
       "dateRaised": "2020-12-16",
       "deadline": "2021-02-14",
       "dateResolved": "2020-12-17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.63"
     },
     {
       "number": 510,
@@ -2152,7 +2328,8 @@
       "dateRaised": "2020-12-19",
       "deadline": "2021-02-17",
       "dateResolved": "2020-12-19 23:31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.66"
     },
     {
       "number": 511,
@@ -2164,7 +2341,8 @@
       "dateRaised": "2020-12-19",
       "deadline": "2021-02-17",
       "dateResolved": "2020-12-19 23:31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.67"
     },
     {
       "number": 512,
@@ -2177,7 +2355,8 @@
       "deadline": "2021-02-17",
       "dateResolved": "2020-12-19 00:44",
       "resolvedAuthor": "JG",
-      "releaseNotes": "refer now to installed module"
+      "releaseNotes": "refer now to installed module",
+      "resolvedInVersion": "1.0.64"
     },
     {
       "number": 516,
@@ -2189,7 +2368,8 @@
       "dateRaised": "2020-12-21",
       "deadline": "2021-02-19",
       "dateResolved": "2020-12-27 01:23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.70"
     },
     {
       "number": 518,
@@ -2202,7 +2382,8 @@
       "deadline": "2021-02-22",
       "dateResolved": "2020-12-24 00:22",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added flag in visualizationSettings: general.useWindowsDisplayScaleFactor"
+      "releaseNotes": "added flag in visualizationSettings: general.useWindowsDisplayScaleFactor",
+      "resolvedInVersion": "1.0.68"
     },
     {
       "number": 519,
@@ -2214,7 +2395,8 @@
       "dateRaised": "2020-12-24",
       "deadline": "2021-02-22",
       "dateResolved": "2020-12-24 01:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.69"
     },
     {
       "number": 520,
@@ -2226,7 +2408,8 @@
       "dateRaised": "2020-12-27",
       "deadline": "2021-02-25",
       "dateResolved": "2020-12-27 01:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.71"
     },
     {
       "number": 521,
@@ -2238,7 +2421,8 @@
       "dateRaised": "2020-12-27",
       "deadline": "2021-02-25",
       "dateResolved": "2020-12-27 01:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.72"
     },
     {
       "number": 522,
@@ -2251,7 +2435,8 @@
       "deadline": "2021-02-25",
       "dateResolved": "2020-12-27 01:31",
       "resolvedAuthor": "JG",
-      "releaseNotes": "now using pixel coordinates for info texts and different font sizes"
+      "releaseNotes": "now using pixel coordinates for info texts and different font sizes",
+      "resolvedInVersion": "1.0.73"
     },
     {
       "number": 523,
@@ -2263,7 +2448,8 @@
       "dateRaised": "2020-12-27",
       "deadline": "2021-02-25",
       "dateResolved": "2020-12-27 01:33",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.74"
     },
     {
       "number": 525,
@@ -2275,7 +2461,8 @@
       "dateRaised": "2020-12-29",
       "deadline": "2021-02-27",
       "dateResolved": "2020-12-29 21:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.0.75"
     }
   ]
 }

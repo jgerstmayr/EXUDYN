@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/checkExtras.py",
   "line": "198",
-  "releaseNotes": "LocalModuleNames() also counts the tracked .py of python/testing/ as local names for every scanned directory; because every runner puts that directory on sys.path before it executes a model (testRunnerTools.WorkInModelsDirectory). Verified: checkExtras --check green again; the four UNCOVERED IMPORTS were modelUnitTests and testRunnerTools; imported by name from TestModels/; PerformanceModels/ and MiniExamples/."
+  "releaseNotes": "LocalModuleNames() also counts the tracked .py of python/testing/ as local names for every scanned directory; because every runner puts that directory on sys.path before it executes a model (testRunnerTools.WorkInModelsDirectory). Verified: checkExtras --check green again; the four UNCOVERED IMPORTS were modelUnitTests and testRunnerTools; imported by name from TestModels/; PerformanceModels/ and MiniExamples/.",
+  "resolvedInVersion": "1.11.174"
 }

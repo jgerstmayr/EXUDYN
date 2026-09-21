@@ -9,5 +9,6 @@
   "deadline": "2024-05-17",
   "dateResolved": "2025-06-18 10:00",
   "resolvedAuthor": "JG",
-  "releaseNotes": "in C++ ExuThreading being now the only mode; optionally use exu.special.solver.multiThreadingLoadBalancing to switch load balancing on/off"
+  "releaseNotes": "in C++ ExuThreading being now the only mode; optionally use exu.special.solver.multiThreadingLoadBalancing to switch load balancing on/off",
+  "resolvedInVersion": "1.9.199"
 }

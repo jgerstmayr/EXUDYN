@@ -9,5 +9,6 @@
   "deadline": "2019-07-12",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by revision2026 step R5.4.1: src/Tests/AllMatrixVariantsUnitTests.h tests ConstSizeMatrix and ResizableMatrix - the two classes this issue named - including the SparseTripletMatrix constructor fixed in step R5.4.6 (#2476)."
+  "releaseNotes": "Resolved by revision2026 step R5.4.1: src/Tests/AllMatrixVariantsUnitTests.h tests ConstSizeMatrix and ResizableMatrix - the two classes this issue named - including the SparseTripletMatrix constructor fixed in step R5.4.6 (#2476).",
+  "resolvedInVersion": "1.11.138"
 }

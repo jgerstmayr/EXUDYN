@@ -9,5 +9,6 @@
   "deadline": "2026-05-26",
   "dateResolved": "2025-11-27 10:08",
   "resolvedAuthor": "JG",
-  "releaseNotes": "switching to FEM fileVersion 4"
+  "releaseNotes": "switching to FEM fileVersion 4",
+  "resolvedInVersion": "1.10.17"
 }

@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-10 22:31",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pythonDev/TestModels/testRunnerTools.py",
-  "releaseNotes": "testRunnerTools.CheckTestCoverage() added; runs at suite start-up; uncovered file or stale key fails under --exit-code. Verified by fault injection."
+  "releaseNotes": "testRunnerTools.CheckTestCoverage() added; runs at suite start-up; uncovered file or stale key fails under --exit-code. Verified by fault injection.",
+  "resolvedInVersion": "1.11.17"
 }

@@ -9,5 +9,6 @@
   "deadline": "2026-07-15",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by revision2026 steps R2.14 and R2.10: the build switches live in [tool.exudyn] of pyproject.toml - useAVX2 and useAVX512 among them - read by setup.py with an environment and a command-line override. setupPyConfig.json; which this issue named; no longer exists: it was tracked AND mutable; so a CI build rewrote it with sed and a failed build left the tree dirty."
+  "releaseNotes": "Resolved by revision2026 steps R2.14 and R2.10: the build switches live in [tool.exudyn] of pyproject.toml - useAVX2 and useAVX512 among them - read by setup.py with an environment and a command-line override. setupPyConfig.json; which this issue named; no longer exists: it was tracked AND mutable; so a CI build rewrote it with sed and a failed build left the tree dirty.",
+  "resolvedInVersion": "1.11.149"
 }

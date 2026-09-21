@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "pythonAutoGenerateSystemStructures.py",
   "line": "1332",
-  "releaseNotes": "All 12 write sites and 6 paired read sites now pass encoding=utf8; pybind_manual_classes.h routed through WriteTextIfDifferent; trailing spaces removed. Verified by two identical consecutive regenerations and a UTF-8 validity scan."
+  "releaseNotes": "All 12 write sites and 6 paired read sites now pass encoding=utf8; pybind_manual_classes.h routed through WriteTextIfDifferent; trailing spaces removed. Verified by two identical consecutive regenerations and a UTF-8 validity scan.",
+  "resolvedInVersion": "1.11.2"
 }

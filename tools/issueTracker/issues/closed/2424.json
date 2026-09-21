@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 00:35",
   "resolvedAuthor": "Claude-JG",
   "file": "src/Pymodules/PybindUtilities.h",
-  "releaseNotes": "bool - Real - float and Index item parameters raise for None on every write path (message names item and parameter); index arrays raise instead of becoming empty. Vector3DList - Matrix3DList and PyMatrixContainer still accept None as empty because None is their default in itemInterface.py. parameterConversionTest: 672 intended changes (537 bool - 135 index list). Structures follow in 34c5."
+  "releaseNotes": "bool - Real - float and Index item parameters raise for None on every write path (message names item and parameter); index arrays raise instead of becoming empty. Vector3DList - Matrix3DList and PyMatrixContainer still accept None as empty because None is their default in itemInterface.py. parameterConversionTest: 672 intended changes (537 bool - 135 index list). Structures follow in 34c5.",
+  "resolvedInVersion": "1.11.55"
 }

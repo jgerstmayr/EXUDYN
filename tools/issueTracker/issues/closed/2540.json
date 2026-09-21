@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/__init__.py",
   "line": "92",
-  "releaseNotes": "_ImportCompiledModule(useExudynFast) returns (name, module, attempts) and raises one ImportError listing every candidate and why it was skipped or failed; EXUDYN_IMPORT_VERBOSE=1 prints the log; a fast module that was asked for and not loaded says so unconditionally, with the reason. The star import became globals().update(...) because the module name is a variable. The lexicographic numpy version compare the issue named no longer exists - it went with the AVX2 rewrite of R2.10 - so no packaging dependency was added for it. New python/testing/test_import.py covers the log and the failure message."
+  "releaseNotes": "_ImportCompiledModule(useExudynFast) returns (name, module, attempts) and raises one ImportError listing every candidate and why it was skipped or failed; EXUDYN_IMPORT_VERBOSE=1 prints the log; a fast module that was asked for and not loaded says so unconditionally, with the reason. The star import became globals().update(...) because the module name is a variable. The lexicographic numpy version compare the issue named no longer exists - it went with the AVX2 rewrite of R2.10 - so no packaging dependency was added for it. New python/testing/test_import.py covers the log and the failure message.",
+  "resolvedInVersion": "1.11.199"
 }

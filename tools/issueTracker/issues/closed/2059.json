@@ -9,5 +9,6 @@
   "deadline": "2025-11-24",
   "dateResolved": "2025-06-04 10:58",
   "resolvedAuthor": "JG",
-  "releaseNotes": "example available in Examples/newtonsCradle.py"
+  "releaseNotes": "example available in Examples/newtonsCradle.py",
+  "resolvedInVersion": "1.9.171"
 }

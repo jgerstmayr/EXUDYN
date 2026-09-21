@@ -9,5 +9,6 @@
   "deadline": "2024-01-16",
   "dateResolved": "2025-07-11 15:59",
   "resolvedAuthor": "JG",
-  "releaseNotes": "works at least with Exudyn 1.10.0;  Rosetta will be abandoned in future, if compilation does not work any more"
+  "releaseNotes": "works at least with Exudyn 1.10.0;  Rosetta will be abandoned in future, if compilation does not work any more",
+  "resolvedInVersion": "1.10.5"
 }

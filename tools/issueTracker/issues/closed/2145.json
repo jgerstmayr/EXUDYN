@@ -9,5 +9,6 @@
   "deadline": "2026-03-22",
   "dateResolved": "2025-09-30 15:17",
   "resolvedAuthor": "JG",
-  "releaseNotes": "smoothing done at low resolution shadow map, using number of shadowSmoothingSteps"
+  "releaseNotes": "smoothing done at low resolution shadow map, using number of shadowSmoothingSteps",
+  "resolvedInVersion": "1.10.9"
 }

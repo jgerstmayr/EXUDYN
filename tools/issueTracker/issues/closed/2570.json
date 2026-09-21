@@ -10,5 +10,6 @@
   "deadline": "2027-03-20",
   "dateResolved": "2026-09-21 14:32",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "ChangeIssue refuses a CLOSED issue unless force=True (--force on the command line): such an issue stands in the release notes of a released version. status, number, dateRaised and dateResolved are refused always - the tracker writes them, and status decides the micro version. Replacing a non-empty text field prints the previous text and says that extend and remark append where modify overwrites. The web page of R8.5.1 shows the editors for a closed issue as well and asks with a confirm dialog before it sends force."
+  "releaseNotes": "ChangeIssue refuses a CLOSED issue unless force=True (--force on the command line): such an issue stands in the release notes of a released version. status, number, dateRaised and dateResolved are refused always - the tracker writes them, and status decides the micro version. Replacing a non-empty text field prints the previous text and says that extend and remark append where modify overwrites. The web page of R8.5.1 shows the editors for a closed issue as well and asks with a confirm dialog before it sends force.",
+  "resolvedInVersion": "1.11.229"
 }

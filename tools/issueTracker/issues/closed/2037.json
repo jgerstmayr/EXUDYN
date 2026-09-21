@@ -9,5 +9,6 @@
   "deadline": "2025-11-17",
   "dateResolved": "2025-06-01 02:35",
   "resolvedAuthor": "JG",
-  "releaseNotes": "merged into SC.renderer.DoIdleTasks(); NOTE that this change affects your existing models a lot!"
+  "releaseNotes": "merged into SC.renderer.DoIdleTasks(); NOTE that this change affects your existing models a lot!",
+  "resolvedInVersion": "1.9.158"
 }

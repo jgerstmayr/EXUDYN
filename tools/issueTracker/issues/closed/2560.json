@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/exudev/commands.py",
   "line": "225",
-  "releaseNotes": "exudev build removes build/lib.<platform>/exudyn before every build, not only with --clean: that tree is what setuptools copies the package from, so a module deleted from python/exudyn survived there and went into the wheel. Only the .py copies are removed; the C++ objects in build/temp.* stay, so the one-minute wheel is unaffected. A second step compares the wheel exudyn/*.py against python/exudyn and fails on a difference - tested by planting a ghost module in build/lib.*/exudyn and building a wheel the way pip wheel builds it: the step reported it and returned 1."
+  "releaseNotes": "exudev build removes build/lib.<platform>/exudyn before every build, not only with --clean: that tree is what setuptools copies the package from, so a module deleted from python/exudyn survived there and went into the wheel. Only the .py copies are removed; the C++ objects in build/temp.* stay, so the one-minute wheel is unaffected. A second step compares the wheel exudyn/*.py against python/exudyn and fails on a difference - tested by planting a ghost module in build/lib.*/exudyn and building a wheel the way pip wheel builds it: the step reported it and returned 1.",
+  "resolvedInVersion": "1.11.215"
 }

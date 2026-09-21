@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 22:01",
   "resolvedAuthor": "Claude-JG",
   "file": "definitions/definitionTypes.py",
-  "releaseNotes": "revision2026 step R4.10.1: ItemRequestedTypes in 70 definitions; generated bodies; 12 headers change in spelling"
+  "releaseNotes": "revision2026 step R4.10.1: ItemRequestedTypes in 70 definitions; generated bodies; 12 headers change in spelling",
+  "resolvedInVersion": "1.11.83"
 }

@@ -9,5 +9,6 @@
   "deadline": "2027-03-08",
   "dateResolved": "2026-09-09 18:33",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "CLAUDE.md + docs/dev + condaEnvironments.md + root .gitignore; main/dist and cppsrc.vcxproj.user untracked"
+  "releaseNotes": "CLAUDE.md + docs/dev + condaEnvironments.md + root .gitignore; main/dist and cppsrc.vcxproj.user untracked",
+  "resolvedInVersion": "1.11.1"
 }

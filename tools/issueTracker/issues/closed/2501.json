@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/TestModels/symbolicModuleTest.py",
   "line": "411",
-  "releaseNotes": "Fixed in revision2026 step R5.9.1: the vector/matrix comparison in symbolicModuleTest.py is now RELATIVE to the magnitude being compared - scale = max(norm(sym); norm(py); 1.) and a tolerance of 1e-14*scale - instead of an absolute 1e-15 on a value of magnitude 9.7476; where one ulp is 1.8e-15. Verified: the model returns exactly the committed reference 0.9484129575069745 in both venvP313 (numpy 2.2.4) and venvExuP313 (numpy 2.4.6); and a mutation making one symbolic result wrong by 1e-12 relative is still caught twice; so the test is not weakened in any way that matters."
+  "releaseNotes": "Fixed in revision2026 step R5.9.1: the vector/matrix comparison in symbolicModuleTest.py is now RELATIVE to the magnitude being compared - scale = max(norm(sym); norm(py); 1.) and a tolerance of 1e-14*scale - instead of an absolute 1e-15 on a value of magnitude 9.7476; where one ulp is 1.8e-15. Verified: the model returns exactly the committed reference 0.9484129575069745 in both venvP313 (numpy 2.2.4) and venvExuP313 (numpy 2.4.6); and a mutation making one symbolic result wrong by 1e-12 relative is still caught twice; so the test is not weakened in any way that matters.",
+  "resolvedInVersion": "1.11.163"
 }

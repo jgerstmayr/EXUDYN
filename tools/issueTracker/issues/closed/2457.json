@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-16 15:04",
   "resolvedAuthor": "Claude-JG",
   "file": "main/python/TestModels/test_testModels.py",
-  "releaseNotes": "revision2026 step R5.1: test_testModels.py, 137 cases, shared reference values and tolerances (testRunnerTools.BaseTolerance); found and fixed a masked defect in plotSensorTest.py"
+  "releaseNotes": "revision2026 step R5.1: test_testModels.py, 137 cases, shared reference values and tolerances (testRunnerTools.BaseTolerance); found and fixed a masked defect in plotSensorTest.py",
+  "resolvedInVersion": "1.11.96"
 }

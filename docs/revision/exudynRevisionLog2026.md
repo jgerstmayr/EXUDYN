@@ -11485,3 +11485,85 @@ because the command line refuses the same edit.
 
 This protects; it does not verify. What verifies is D14 and step R8.4(b): the version a closed
 issue produced, stored in the issue and compared against recomputation.
+
+<a id="r8-3-4"></a>
+### R8.3.4 — the status is CLOSED (2026-09-21, #2572)
+
+R8.3.1 proposed `CLOSED`, R8.7 built `ABANDONED`, and both have stood in the documents since.
+They are not the same thing: *abandoned* is one **reason** among several, while the **status**
+says only that the issue is closed and was not resolved. So the status is `CLOSED` and covers
+all of them — obsolete, won't fix, duplicate of #n, superseded, no longer applies, not
+reproducible, abandoned — with the kind named in the mandatory reason. Naming the kinds as
+statuses stays rejected for R8.3.1's original reason: the distinction is prose, and every
+extra status is another branch in every converter.
+
+`AbandonIssue` is a one-line alias of `CloseIssue`, `exudev issue close` is the verb and
+`abandon` its alias (it was the other way round), and `issueStore.knownStatuses` is now
+checked by `CheckStore()`: a status decides which directory an issue lies in and whether it
+counts for the version, so an unknown one is not a cosmetic problem.
+
+**The 15 issues were rewritten inside their archive files**, not through `Save()`: an
+archived issue written that way would land in `closed/` while remaining in its archive — two
+files with one number, counted twice in the micro version. The count before and after:
+**2,302 and 2,302**.
+
+<a id="r8-4"></a>
+### R8.4 — the releases become data, and history stops moving (2026-09-21, #2573)
+
+Three things were true of the version numbering and none of them was safe:
+
+1. the twelve baselines stood as **module constants** in `issueTracker.py` and the release
+   names in a dict beside them, so a bump was a hand edit of source code;
+2. the major number was the literal `1` inside `GetMajorMinorMicroVersion` and the minor was
+   the **length of the baseline list** — so **2.0 could not be expressed at all**;
+3. every version number in the release notes was **recomputed on each run**, by sorting the
+   closed issues by `dateResolved` and counting down. One corrected date, one status changed
+   by hand or one lost file renumbers versions that have already been published, and nothing
+   in the tree would report it: both sides of any comparison came from the same derivation.
+
+**(a) and (c): `tools/issueTracker/releases.json`.** Thirteen releases, each with the count of
+closed issues it began at and its name, plus the planned names of the next minor ones. The
+baselines were *written from the constants*, so nothing moved: `1.11.229.dev1` before and
+after. `exudev issue bump --minor | --major | --to 2.0 [--name ...]` appends one entry and
+rewrites the version files; a major release has to be named, because `releases.json` plans
+only the next minor names (the jazz legends, alphabetically).
+
+**(b) Every closed issue now carries the version it produced** (`resolvedInVersion`, D14),
+written by `ResolveIssue` and `CloseIssue` at the moment of closing. **2,302 issues were
+backfilled**, and the backfill proved itself against the record that was written before any
+of this existed: the archived `docs/RST/trackerlog.rst` of 1.11.0 states the version of
+**2,066** issues, and the recomputation reproduces **all 2,066** — 0 disagreements. Then
+`docs/generated/trackerlog.md`, rendered from the stored numbers instead of the derivation,
+came out **byte-identical**: 119,359 words, 8,836 lines.
+
+**What is now a check** (`tools/checkIssues.py`, in the commit gate): the stored version
+against the recomputed one for every closed issue, no two closed issues sharing a version, no
+open issue carrying one, no gap in the issue numbers (that check came with R8.5), and
+strictly rising baselines. *A number written once and recomputed later is a check; the same
+derivation run twice is not* — that sentence is the whole step. The test that matters puts a
+wrong version into one closed issue and asserts that the gate says **"a PUBLISHED version
+number moved"**.
+
+**The transient -1.** A release begins at the count of the issue that will carry micro 0, so
+between a bump and the first issue closed in the new release the difference is -1 — which
+the old code would have printed. It is clamped: a release that has closed nothing is `X.Y.0`,
+and so is its first closed issue. That is what the history shows (1.11.0 is #2348, the 2,073rd
+closed issue).
+
+<a id="r8-5-1-note"></a>
+### Note to R8.5.1 — the page stayed empty (2026-09-21, #2571)
+
+The maintainer started `exudev issue serve` and got the page with **no issues in it**, and no
+error anywhere. The server was a plain `http.server.HTTPServer`, which is **single-threaded**:
+a browser opens speculative connections that carry no request, `serve_forever` accepts one and
+blocks in `readline()` until the browser closes it, and every `fetch` queues behind it. The
+page itself had already been answered, so the frame rendered and the data never came.
+
+It serves on `ThreadingHTTPServer` now, with HTTP/1.1, a 30-second socket timeout and one lock
+around the request layer, so that the store still sees one change at a time. The test opens
+exactly such an idle socket and then asks a question; against the old configuration it fails
+with a timeout, which is what a regression test for this has to do.
+
+And the page no longer fails silently: a fetch that throws, an answer that is not JSON and any
+error in the page itself become a red banner, and an empty result says *no issue matches these
+filters*. Silence was the one unacceptable outcome.

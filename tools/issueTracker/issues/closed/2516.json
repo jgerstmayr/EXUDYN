@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/Utilities/ReleaseAssert.h",
   "line": "30",
-  "releaseNotes": "nine exception classes registered on the exudyn module, each derives from ExudynError and from the built-in that fits (tuple base). One call site converted to prove that a C++ throw keeps its type - which found a third instance of the flattening trap of #2432, pass-through added in all six places. Tested by python/testing/test_exceptions.py. revision2026 step R6.3.1."
+  "releaseNotes": "nine exception classes registered on the exudyn module, each derives from ExudynError and from the built-in that fits (tuple base). One call site converted to prove that a C++ throw keeps its type - which found a third instance of the flattening trap of #2432, pass-through added in all six places. Tested by python/testing/test_exceptions.py. revision2026 step R6.3.1.",
+  "resolvedInVersion": "1.11.177"
 }

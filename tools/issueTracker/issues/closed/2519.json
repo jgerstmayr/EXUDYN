@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/issueTracker/issueTracker.py",
   "line": "9",
-  "releaseNotes": "issueTypes and issueStatuses in issueTracker.py are now the only list, the trackerlog.txt header is written from them and RaiseIssue rejects an unknown type. 39 spellings became 10 types (IMPROVEMENT is new, NEW FEATURE merged into EXTENSION, DISCUSSION into IDEA), 277 type changes. WORK and TESTING left the status list (never used once), ABANDONED joined it with AbandonIssue() and a mandatory reason, 15 issues migrated. Both the version counter and the release-note version index count CLOSED issues\\, so version.txt stayed at 1.11.178 and no historical version line changed. revision2026 step R8.7."
+  "releaseNotes": "issueTypes and issueStatuses in issueTracker.py are now the only list, the trackerlog.txt header is written from them and RaiseIssue rejects an unknown type. 39 spellings became 10 types (IMPROVEMENT is new, NEW FEATURE merged into EXTENSION, DISCUSSION into IDEA), 277 type changes. WORK and TESTING left the status list (never used once), ABANDONED joined it with AbandonIssue() and a mandatory reason, 15 issues migrated. Both the version counter and the release-note version index count CLOSED issues\\, so version.txt stayed at 1.11.178 and no historical version line changed. revision2026 step R8.7.",
+  "resolvedInVersion": "1.11.179"
 }

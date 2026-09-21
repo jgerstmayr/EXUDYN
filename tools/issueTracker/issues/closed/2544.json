@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/issueTracker/issueTracker.py",
   "line": "676",
-  "releaseNotes": "ToLatex() in issueTracker.py escapes every LaTeX special character now - backslash first, then braces, underscore, hash, ampersand, dollar, percent, caret, tilde. Escaping is total by the maintainer decision of 2026-09-19: the few issues from 2016-2020 that contain deliberate markup render as the characters they are, and in exchange the documentation build cannot be broken by what someone types into the tracker. Found because the issue describing the OTHER PDF causes mentioned a backslash command, which LaTeX then executed 629 pages into the build."
+  "releaseNotes": "ToLatex() in issueTracker.py escapes every LaTeX special character now - backslash first, then braces, underscore, hash, ampersand, dollar, percent, caret, tilde. Escaping is total by the maintainer decision of 2026-09-19: the few issues from 2016-2020 that contain deliberate markup render as the characters they are, and in exchange the documentation build cannot be broken by what someone types into the tracker. Found because the issue describing the OTHER PDF causes mentioned a backslash command, which LaTeX then executed 629 pages into the build.",
+  "resolvedInVersion": "1.11.204"
 }

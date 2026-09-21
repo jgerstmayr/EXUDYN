@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-16 10:16",
   "resolvedAuthor": "Claude-JG",
   "file": "python/TestModels/runTestSuite.py",
-  "releaseNotes": "revision2026 step R5.13: exudyn.config.outputDirectory plus one output directory per model in runTestSuite.py; compareFullModifiedNewton is the designated writing test"
+  "releaseNotes": "revision2026 step R5.13: exudyn.config.outputDirectory plus one output directory per model in runTestSuite.py; compareFullModifiedNewton is the designated writing test",
+  "resolvedInVersion": "1.11.93"
 }

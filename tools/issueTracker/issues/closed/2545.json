@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/utilityDocsModel.py",
   "line": "168",
-  "releaseNotes": "Resolved by deleting the LaTeX writers, which is where the 74 escaping errors lived: the emitters write Markdown since revision2026 step R7.1.6 and no generated .tex file is left but abbreviations and buildDate. The requirement moved with the code rather than disappearing: issueTracker.ToMarkdown escapes the backslash first and then ` * _ [ ] < > # | in every free-text field, the same total escaping as ToLatex, and python/testing/test_issueTracker.py proves it - one test per special character, three shapes that actually occur in the tracker, the backslash-first rule, and that ordinary sentences arrive untouched."
+  "releaseNotes": "Resolved by deleting the LaTeX writers, which is where the 74 escaping errors lived: the emitters write Markdown since revision2026 step R7.1.6 and no generated .tex file is left but abbreviations and buildDate. The requirement moved with the code rather than disappearing: issueTracker.ToMarkdown escapes the backslash first and then ` * _ [ ] < > # | in every free-text field, the same total escaping as ToLatex, and python/testing/test_issueTracker.py proves it - one test per special character, three shapes that actually occur in the tracker, the backslash-first rule, and that ordinary sentences arrive untouched.",
+  "resolvedInVersion": "1.11.222"
 }

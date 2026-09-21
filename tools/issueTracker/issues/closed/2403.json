@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-12 16:54",
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudynPython.pyproj",
-  "releaseNotes": "project renamed to python/exudynPython.pyproj with Name and RootNamespace exudynPython, SearchPath corrected to ., the dangling requirements.txt Content item removed - the dependency lists are the extras in pyproject.toml and a second source would only go stale. The template/local pattern now covers both scratch files: exudynTemplate.sln and python/pytestTemplate.py are committed, exudyn.sln and python/pytest.py are in .gitignore, and tools/setupLocalWorkspace.py creates the local copies from the templates without ever overwriting an existing file. An experiment therefore cannot be committed by accident. Documented in docs/dev/WORKFLOW.md section 0a and in docs/dev/README.md"
+  "releaseNotes": "project renamed to python/exudynPython.pyproj with Name and RootNamespace exudynPython, SearchPath corrected to ., the dangling requirements.txt Content item removed - the dependency lists are the extras in pyproject.toml and a second source would only go stale. The template/local pattern now covers both scratch files: exudynTemplate.sln and python/pytestTemplate.py are committed, exudyn.sln and python/pytest.py are in .gitignore, and tools/setupLocalWorkspace.py creates the local copies from the templates without ever overwriting an existing file. An experiment therefore cannot be committed by accident. Documented in docs/dev/WORKFLOW.md section 0a and in docs/dev/README.md",
+  "resolvedInVersion": "1.11.38"
 }

@@ -9,5 +9,6 @@
   "deadline": "2026-10-14",
   "dateResolved": "2026-09-17 22:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py walks the definitions database and writes a fixed set of probe values into every parameter of every item and of the simulation and visualization settings; through each access path; recording the exception type or the type; shape and value that reads back. That is the independent check this issue asked for; it currently pins 89 rejected-input outcomes."
+  "releaseNotes": "Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py walks the definitions database and writes a fixed set of probe values into every parameter of every item and of the simulation and visualization settings; through each access path; recording the exception type or the type; shape and value that reads back. That is the independent check this issue asked for; it currently pins 89 rejected-input outcomes.",
+  "resolvedInVersion": "1.11.156"
 }

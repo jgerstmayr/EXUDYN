@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 11:15",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "LinkedDataMatrixBase(const MatrixBase<T>&) now uses the public accessors NumberOfRows/NumberOfColumns/GetDataPointer instead of the protected members of another object (C2248). The row-range constructor next to it gets its first caller: the R5.4.1 test no longer does the row-major pointer arithmetic by hand. All C++ unit tests pass. revision2026 step R5.4.4."
+  "releaseNotes": "LinkedDataMatrixBase(const MatrixBase<T>&) now uses the public accessors NumberOfRows/NumberOfColumns/GetDataPointer instead of the protected members of another object (C2248). The row-range constructor next to it gets its first caller: the R5.4.1 test no longer does the row-major pointer arithmetic by hand. All C++ unit tests pass. revision2026 step R5.4.4.",
+  "resolvedInVersion": "1.11.111"
 }

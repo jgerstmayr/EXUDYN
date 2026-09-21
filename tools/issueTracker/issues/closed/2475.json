@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 11:04",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "All five examples now write through solution/ and read through OutputFilePath: beltDriveALE and beltDriveReevingSystem (solutionDelete/ and solution_nosync/ are gone), rigidBodyIMUtest (solution/IMU<mode>/), and the two sliderCrank3DwithANCFbeltDrive examples (bare names and plots/ -> solution/ and solution/plots/). Verified by running all five from python/Examples with no output directory set: one solution/ directory appears and nothing else. revision2026 step R5.13.2."
+  "releaseNotes": "All five examples now write through solution/ and read through OutputFilePath: beltDriveALE and beltDriveReevingSystem (solutionDelete/ and solution_nosync/ are gone), rigidBodyIMUtest (solution/IMU<mode>/), and the two sliderCrank3DwithANCFbeltDrive examples (bare names and plots/ -> solution/ and solution/plots/). Verified by running all five from python/Examples with no output directory set: one solution/ directory appears and nothing else. revision2026 step R5.13.2.",
+  "resolvedInVersion": "1.11.110"
 }

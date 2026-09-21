@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/solver.py",
   "line": "312",
-  "releaseNotes": "The explicit branch of SolveDynamic now prints SolverErrorMessage and raises like the implicit one, instead of returning False in silence. Also raise ValueError(solver type not implemented) became exudyn.NotImplementedFeatureError."
+  "releaseNotes": "The explicit branch of SolveDynamic now prints SolverErrorMessage and raises like the implicit one, instead of returning False in silence. Also raise ValueError(solver type not implemented) became exudyn.NotImplementedFeatureError.",
+  "resolvedInVersion": "1.11.194"
 }

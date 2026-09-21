@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/misc/resultsMonitor.py",
   "line": "1",
-  "releaseNotes": "Written in a parallel session and integrated here: exudyn/misc/resultsMonitor.py with MonitorResults(...), an argparse CLI, file selection by dialog or --last, a tkinter control panel, a settings file in ~/.exudyn/, incremental reading and --once - which is what makes python/TestModels/resultsMonitorTest.py possible (1.2 s; four file types, the incremental reader including a torn last line, the buffer reset after an overwrite, eight command-line return codes). The integration meant the reference-solution entry, the excludeModules list of allExudynModulesTest.py, two processing.py docstrings and one example header. The ruff E402 entry and the allExudynModulesTest exclusion are gone."
+  "releaseNotes": "Written in a parallel session and integrated here: exudyn/misc/resultsMonitor.py with MonitorResults(...), an argparse CLI, file selection by dialog or --last, a tkinter control panel, a settings file in ~/.exudyn/, incremental reading and --once - which is what makes python/TestModels/resultsMonitorTest.py possible (1.2 s; four file types, the incremental reader including a torn last line, the buffer reset after an overwrite, eight command-line return codes). The integration meant the reference-solution entry, the excludeModules list of allExudynModulesTest.py, two processing.py docstrings and one example header. The ruff E402 entry and the allExudynModulesTest exclusion are gone.",
+  "resolvedInVersion": "1.11.210"
 }

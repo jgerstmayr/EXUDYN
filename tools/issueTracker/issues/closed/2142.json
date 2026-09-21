@@ -8,5 +8,6 @@
   "dateRaised": "2025-08-07",
   "deadline": "2026-02-03",
   "dateResolved": "2025-08-07 13:40",
-  "resolvedAuthor": "S. Holzinger"
+  "resolvedAuthor": "S. Holzinger",
+  "resolvedInVersion": "1.10.6"
 }

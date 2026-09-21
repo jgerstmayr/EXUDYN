@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-11 18:24",
   "resolvedAuthor": "Claude-JG",
   "file": "main/setup.py",
-  "releaseNotes": "verified by diffing PKG-INFO from setup.py egg_info before and after: only the PEP 621 spellings changed (Author/Home-page -> Author-email/Project-URL) and the Dynamic: block shrank from ten entries to one. A full wheel built in 54 s with the .pyd and both .pyi stubs present"
+  "releaseNotes": "verified by diffing PKG-INFO from setup.py egg_info before and after: only the PEP 621 spellings changed (Author/Home-page -> Author-email/Project-URL) and the Dynamic: block shrank from ten entries to one. A full wheel built in 54 s with the .pyd and both .pyi stubs present",
+  "resolvedInVersion": "1.11.20"
 }

@@ -8,5 +8,6 @@
   "dateRaised": "2025-12-31",
   "deadline": "2026-06-29",
   "dateResolved": "2025-12-31 16:31",
-  "resolvedAuthor": "Z. Zhang"
+  "resolvedAuthor": "Z. Zhang",
+  "resolvedInVersion": "1.10.33"
 }

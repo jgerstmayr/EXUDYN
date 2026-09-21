@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-10 22:31",
   "resolvedAuthor": "Claude-JG",
   "file": "main/pythonDev/TestModels/runTestSuiteRefSol.py",
-  "releaseNotes": "Overlay hoisted into Python36NonAVXOverrides() so its keys can be validated; spelling fixed; CheckTestCoverage reports any future dead override."
+  "releaseNotes": "Overlay hoisted into Python36NonAVXOverrides() so its keys can be validated; spelling fixed; CheckTestCoverage reports any future dead override.",
+  "resolvedInVersion": "1.11.16"
 }

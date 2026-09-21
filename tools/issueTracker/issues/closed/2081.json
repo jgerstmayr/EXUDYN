@@ -9,5 +9,6 @@
   "deadline": "2025-12-05",
   "dateResolved": "2025-06-08 15:44",
   "resolvedAuthor": "JG",
-  "releaseNotes": "added option openGL.lightPositionsInCameraFrame to switch behavior; in raytracer, this setting is always True"
+  "releaseNotes": "added option openGL.lightPositionsInCameraFrame to switch behavior; in raytracer, this setting is always True",
+  "resolvedInVersion": "1.9.175"
 }

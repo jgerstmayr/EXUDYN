@@ -9,5 +9,6 @@
   "deadline": "2026-07-05",
   "dateResolved": "2026-01-06 16:59",
   "resolvedAuthor": "JG",
-  "releaseNotes": "see also section 'Storing the model view' in the docu"
+  "releaseNotes": "see also section 'Storing the model view' in the docu",
+  "resolvedInVersion": "1.10.53"
 }

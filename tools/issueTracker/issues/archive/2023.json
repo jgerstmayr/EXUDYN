@@ -7,7 +7,7 @@
       "number": 97,
       "title": "Solver",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "IDEA",
       "priority": "LOW",
       "description": "add MainSystem* mainSystem to solver --> enables to use all data, but allow case mainSystem = nullptr ==> no debug",
@@ -15,7 +15,8 @@
       "deadline": "2019-07-01",
       "dateResolved": "2023-03-27 00:47",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not needed any more"
+      "releaseNotes": "not needed any more",
+      "resolvedInVersion": "1.6.24"
     },
     {
       "number": 261,
@@ -28,7 +29,8 @@
       "deadline": "2019-11-10",
       "dateResolved": "2023-01-02 00:56",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not suitable anymore"
+      "releaseNotes": "not suitable anymore",
+      "resolvedInVersion": "1.5.23"
     },
     {
       "number": 312,
@@ -41,7 +43,8 @@
       "deadline": "2020-03-10",
       "dateResolved": "2023-03-27 00:45",
       "resolvedAuthor": "JG",
-      "releaseNotes": "important types already added; further types currently not planned"
+      "releaseNotes": "important types already added; further types currently not planned",
+      "resolvedInVersion": "1.6.23"
     },
     {
       "number": 315,
@@ -54,7 +57,8 @@
       "deadline": "2020-03-10",
       "dateResolved": "2023-01-02 00:57",
       "resolvedAuthor": "JG",
-      "releaseNotes": "done with GenericODE2 and CoordinateVectorConstraint"
+      "releaseNotes": "done with GenericODE2 and CoordinateVectorConstraint",
+      "resolvedInVersion": "1.5.24"
     },
     {
       "number": 437,
@@ -67,20 +71,22 @@
       "deadline": "2020-09-19",
       "dateResolved": "2023-01-02 00:59",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already done much earlier"
+      "releaseNotes": "already done much earlier",
+      "resolvedInVersion": "1.5.25"
     },
     {
       "number": 483,
       "title": "URDF file",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "EXTENSION",
       "description": "check importing an URDF file for robots, urdf_parser_py",
       "dateRaised": "2020-12-04",
       "deadline": "2021-02-02",
       "dateResolved": "2023-04-29 20:20",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not done: should be done instead by Corke robotics-toolbox"
+      "releaseNotes": "not done: should be done instead by Corke robotics-toolbox",
+      "resolvedInVersion": "1.6.83"
     },
     {
       "number": 743,
@@ -93,7 +99,8 @@
       "deadline": "2021-10-19",
       "dateResolved": "2023-06-07 23:09",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already done earlier"
+      "releaseNotes": "already done earlier",
+      "resolvedInVersion": "1.6.135"
     },
     {
       "number": 746,
@@ -106,7 +113,8 @@
       "deadline": "2021-11-02",
       "dateResolved": "2023-06-07 23:52",
       "resolvedAuthor": "M. Pieber, JG",
-      "releaseNotes": "algebraic constraints now considered automatically; algebraic constraints now considered automatically"
+      "releaseNotes": "algebraic constraints now considered automatically; algebraic constraints now considered automatically",
+      "resolvedInVersion": "1.6.136"
     },
     {
       "number": 791,
@@ -119,7 +127,8 @@
       "deadline": "2022-01-01",
       "dateResolved": "2023-01-02 01:01",
       "resolvedAuthor": "JG",
-      "releaseNotes": "tested earlier; does not work in most cases"
+      "releaseNotes": "tested earlier; does not work in most cases",
+      "resolvedInVersion": "1.5.26"
     },
     {
       "number": 828,
@@ -132,7 +141,8 @@
       "deadline": "2022-02-07",
       "dateResolved": "2023-01-02 01:02",
       "resolvedAuthor": "JG",
-      "releaseNotes": "redundant with #839"
+      "releaseNotes": "redundant with #839",
+      "resolvedInVersion": "1.5.27"
     },
     {
       "number": 839,
@@ -145,7 +155,8 @@
       "deadline": "2022-02-17",
       "dateResolved": "2023-01-02 01:04",
       "resolvedAuthor": "JG",
-      "releaseNotes": "mass matrix resolved; other is redundant with #1203"
+      "releaseNotes": "mass matrix resolved; other is redundant with #1203",
+      "resolvedInVersion": "1.5.28"
     },
     {
       "number": 843,
@@ -158,7 +169,8 @@
       "deadline": "2022-02-21",
       "dateResolved": "2023-03-27 00:42",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already resolved earlier"
+      "releaseNotes": "already resolved earlier",
+      "resolvedInVersion": "1.6.21"
     },
     {
       "number": 848,
@@ -171,7 +183,8 @@
       "deadline": "2022-02-24",
       "dateResolved": "2023-03-27 00:42",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already resolved earlier: added videos to youtube"
+      "releaseNotes": "already resolved earlier: added videos to youtube",
+      "resolvedInVersion": "1.6.22"
     },
     {
       "number": 851,
@@ -184,7 +197,8 @@
       "deadline": "2022-03-09",
       "dateResolved": "2023-03-27 00:40",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already resolved earlier with precomputed lists"
+      "releaseNotes": "already resolved earlier with precomputed lists",
+      "resolvedInVersion": "1.6.20"
     },
     {
       "number": 935,
@@ -197,7 +211,8 @@
       "deadline": "2022-04-11",
       "dateResolved": "2023-04-23 20:13",
       "resolvedAuthor": "JG",
-      "releaseNotes": "function GetActiveContacts added to GeneralContact, which returns all active global contact indices for selected contact type"
+      "releaseNotes": "function GetActiveContacts added to GeneralContact, which returns all active global contact indices for selected contact type",
+      "resolvedInVersion": "1.6.70"
     },
     {
       "number": 1075,
@@ -209,7 +224,8 @@
       "dateRaised": "2022-05-06",
       "deadline": "2022-07-05",
       "dateResolved": "2023-10-15 14:45",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.11"
     },
     {
       "number": 1088,
@@ -221,7 +237,8 @@
       "dateRaised": "2022-05-16",
       "deadline": "2022-07-15",
       "dateResolved": "2023-04-04 20:59",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.35"
     },
     {
       "number": 1136,
@@ -233,7 +250,8 @@
       "dateRaised": "2022-06-10",
       "deadline": "2022-08-09",
       "dateResolved": "2023-01-21 21:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.80"
     },
     {
       "number": 1141,
@@ -246,7 +264,8 @@
       "deadline": "2022-08-11",
       "dateResolved": "2023-04-10 21:48",
       "resolvedAuthor": "JG",
-      "releaseNotes": "no changes; string comparison has no effect on performance as compared to new and pybind11 overheads for call to  AddObject, etc."
+      "releaseNotes": "no changes; string comparison has no effect on performance as compared to new and pybind11 overheads for call to  AddObject, etc.",
+      "resolvedInVersion": "1.6.51"
     },
     {
       "number": 1156,
@@ -259,7 +278,8 @@
       "deadline": "2022-08-20",
       "dateResolved": "2023-04-05 14:14",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added section Render State in section Graphics and Visualization (GUI)"
+      "releaseNotes": "added section Render State in section Graphics and Visualization (GUI)",
+      "resolvedInVersion": "1.6.38"
     },
     {
       "number": 1266,
@@ -272,7 +292,8 @@
       "deadline": "2023-03-20",
       "dateResolved": "2023-06-12 00:17",
       "resolvedAuthor": "JG",
-      "releaseNotes": "also added new LinearSolverType.EigenDense which allows to chose FullPivLU by settings ignoreSingularJacobian=True"
+      "releaseNotes": "also added new LinearSolverType.EigenDense which allows to chose FullPivLU by settings ignoreSingularJacobian=True",
+      "resolvedInVersion": "1.6.159"
     },
     {
       "number": 1267,
@@ -285,7 +306,8 @@
       "deadline": "2023-03-20",
       "dateResolved": "2023-06-12 13:24",
       "resolvedAuthor": "JG",
-      "releaseNotes": "only available for EigenDense with ignoreSingularJacobian and EXUdense linear solvers"
+      "releaseNotes": "only available for EigenDense with ignoreSingularJacobian and EXUdense linear solvers",
+      "resolvedInVersion": "1.6.164"
     },
     {
       "number": 1269,
@@ -298,7 +320,8 @@
       "deadline": "2023-03-20",
       "dateResolved": "2023-04-15 15:33",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added function AddLidar(...) into exudyn.robotics.utilities; see laserScannerTest.py"
+      "releaseNotes": "added function AddLidar(...) into exudyn.robotics.utilities; see laserScannerTest.py",
+      "resolvedInVersion": "1.6.57"
     },
     {
       "number": 1270,
@@ -311,7 +334,8 @@
       "deadline": "2023-03-20",
       "dateResolved": "2023-04-15 15:32",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added DistanceSensorSetupGeometry in exudyn.utilities to set up contact geometry easily; see laserScannerTest.py"
+      "releaseNotes": "added DistanceSensorSetupGeometry in exudyn.utilities to set up contact geometry easily; see laserScannerTest.py",
+      "resolvedInVersion": "1.6.56"
     },
     {
       "number": 1272,
@@ -324,7 +348,8 @@
       "deadline": "2023-03-23",
       "dateResolved": "2023-04-06 18:28",
       "resolvedAuthor": "JG",
-      "releaseNotes": "fixed bug of GeometricallyExactBeam having wrong jacobian"
+      "releaseNotes": "fixed bug of GeometricallyExactBeam having wrong jacobian",
+      "resolvedInVersion": "1.6.41"
     },
     {
       "number": 1308,
@@ -337,7 +362,8 @@
       "deadline": "2023-06-06",
       "dateResolved": "2023-01-11 16:28",
       "resolvedAuthor": "JG",
-      "releaseNotes": "now having possibility to draw item texts in front or transparent"
+      "releaseNotes": "now having possibility to draw item texts in front or transparent",
+      "resolvedInVersion": "1.5.48"
     },
     {
       "number": 1314,
@@ -350,7 +376,8 @@
       "deadline": "2023-06-12",
       "dateResolved": "2023-01-19 01:04",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already done earlier; works well and allows compilation with Python3.11; added some switches in setup.py as not all Pybind11 versions work everywhere"
+      "releaseNotes": "already done earlier; works well and allows compilation with Python3.11; added some switches in setup.py as not all Pybind11 versions work everywhere",
+      "resolvedInVersion": "1.5.75"
     },
     {
       "number": 1323,
@@ -363,7 +390,8 @@
       "deadline": "2023-06-15",
       "dateResolved": "2023-01-02 00:50",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already done when resolving #1330"
+      "releaseNotes": "already done when resolving #1330",
+      "resolvedInVersion": "1.5.21"
     },
     {
       "number": 1325,
@@ -375,7 +403,8 @@
       "dateRaised": "2022-12-19",
       "deadline": "2023-06-17",
       "dateResolved": "2023-03-27 00:21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.19"
     },
     {
       "number": 1326,
@@ -387,20 +416,22 @@
       "dateRaised": "2022-12-20",
       "deadline": "2023-06-18",
       "dateResolved": "2023-01-19 01:02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.73"
     },
     {
       "number": 1331,
       "title": "exudyn cpp",
       "author": "JG",
-      "status": "ABANDONED",
+      "status": "CLOSED",
       "type": "EXTENSION",
       "description": "add __repr__ and help which writes some information on workflow (github, theDoc, Examples, ...)",
       "dateRaised": "2022-12-21",
       "deadline": "2023-06-19",
       "dateResolved": "2023-01-02 00:51",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not possible"
+      "releaseNotes": "not possible",
+      "resolvedInVersion": "1.5.22"
     },
     {
       "number": 1335,
@@ -412,7 +443,8 @@
       "dateRaised": "2022-12-25",
       "deadline": "2023-06-23",
       "dateResolved": "2023-01-02 19:07",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.30"
     },
     {
       "number": 1353,
@@ -424,7 +456,8 @@
       "dateRaised": "2022-12-31",
       "deadline": "2023-06-29",
       "dateResolved": "2023-01-02 00:48",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.19"
     },
     {
       "number": 1354,
@@ -436,7 +469,8 @@
       "dateRaised": "2022-12-31",
       "deadline": "2023-06-29",
       "dateResolved": "2023-01-01 23:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.16"
     },
     {
       "number": 1355,
@@ -449,7 +483,8 @@
       "deadline": "2023-06-29",
       "dateResolved": "2023-01-02 00:48",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not feasible now, as it requires to modify time integration loop"
+      "releaseNotes": "not feasible now, as it requires to modify time integration loop",
+      "resolvedInVersion": "1.5.20"
     },
     {
       "number": 1356,
@@ -462,7 +497,8 @@
       "deadline": "2023-06-30",
       "dateResolved": "2023-06-03 16:00",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added message in render window to click twice on exit window icon (X) after 15 minutes; key Q and escape get tkinter message box"
+      "releaseNotes": "added message in render window to click twice on exit window icon (X) after 15 minutes; key Q and escape get tkinter message box",
+      "resolvedInVersion": "1.6.129"
     },
     {
       "number": 1357,
@@ -474,7 +510,8 @@
       "dateRaised": "2023-01-01",
       "deadline": "2023-06-30",
       "dateResolved": "2023-01-01 23:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.17"
     },
     {
       "number": 1358,
@@ -487,7 +524,8 @@
       "deadline": "2023-07-01",
       "dateResolved": "2023-01-02 00:47",
       "resolvedAuthor": "JG",
-      "releaseNotes": "also fixed matrix conversion in visualizationSettings"
+      "releaseNotes": "also fixed matrix conversion in visualizationSettings",
+      "resolvedInVersion": "1.5.18"
     },
     {
       "number": 1359,
@@ -499,7 +537,8 @@
       "dateRaised": "2023-01-02",
       "deadline": "2023-07-01",
       "dateResolved": "2023-01-02 11:49",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.29"
     },
     {
       "number": 1360,
@@ -511,7 +550,8 @@
       "dateRaised": "2023-01-03",
       "deadline": "2023-07-02",
       "dateResolved": "2023-01-03 14:37",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.31"
     },
     {
       "number": 1361,
@@ -524,7 +564,8 @@
       "deadline": "2023-07-02",
       "dateResolved": "2023-01-03 18:48",
       "resolvedAuthor": "JG",
-      "releaseNotes": "problems to get conda with Python3.11 running, especially on ubuntu"
+      "releaseNotes": "problems to get conda with Python3.11 running, especially on ubuntu",
+      "resolvedInVersion": "1.5.32"
     },
     {
       "number": 1362,
@@ -536,7 +577,8 @@
       "dateRaised": "2023-01-03",
       "deadline": "2023-07-02",
       "dateResolved": "2023-01-03 23:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.33"
     },
     {
       "number": 1363,
@@ -548,7 +590,8 @@
       "dateRaised": "2023-01-03",
       "deadline": "2023-07-02",
       "dateResolved": "2023-01-16 23:11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.69"
     },
     {
       "number": 1364,
@@ -561,7 +604,8 @@
       "deadline": "2023-07-02",
       "dateResolved": "2023-01-17 09:32",
       "resolvedAuthor": "EXTENSION",
-      "releaseNotes": "basic functionality added; enable compilation with openVR by setting '-D__EXUDYN_USE_OPENVR' in cpp compiler flags of setup.py"
+      "releaseNotes": "basic functionality added; enable compilation with openVR by setting '-D__EXUDYN_USE_OPENVR' in cpp compiler flags of setup.py",
+      "resolvedInVersion": "1.5.71"
     },
     {
       "number": 1365,
@@ -573,7 +617,8 @@
       "dateRaised": "2023-01-03",
       "deadline": "2023-07-02",
       "dateResolved": "2023-01-19 01:02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.74"
     },
     {
       "number": 1366,
@@ -585,7 +630,8 @@
       "dateRaised": "2023-01-05",
       "deadline": "2023-07-04",
       "dateResolved": "2023-01-05 18:15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.34"
     },
     {
       "number": 1367,
@@ -597,7 +643,8 @@
       "dateRaised": "2023-01-05",
       "deadline": "2023-07-04",
       "dateResolved": "2023-01-05 23:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.35"
     },
     {
       "number": 1368,
@@ -609,7 +656,8 @@
       "dateRaised": "2023-01-05",
       "deadline": "2023-07-04",
       "dateResolved": "2023-01-05 23:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.36"
     },
     {
       "number": 1369,
@@ -621,7 +669,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-06 11:47",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.37"
     },
     {
       "number": 1370,
@@ -633,7 +682,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-07 01:57",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.44"
     },
     {
       "number": 1371,
@@ -645,7 +695,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-06 17:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.38"
     },
     {
       "number": 1372,
@@ -657,7 +708,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-06 19:19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.39"
     },
     {
       "number": 1373,
@@ -669,7 +721,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-06 19:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.40"
     },
     {
       "number": 1374,
@@ -681,7 +734,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-06 21:21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.41"
     },
     {
       "number": 1375,
@@ -693,7 +747,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-07 01:56",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.43"
     },
     {
       "number": 1376,
@@ -705,7 +760,8 @@
       "dateRaised": "2023-01-06",
       "deadline": "2023-07-05",
       "dateResolved": "2023-01-06 22:54",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.42"
     },
     {
       "number": 1377,
@@ -717,7 +773,8 @@
       "dateRaised": "2023-01-09",
       "deadline": "2023-07-08",
       "dateResolved": "2023-01-09 21:11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.45"
     },
     {
       "number": 1378,
@@ -729,7 +786,8 @@
       "dateRaised": "2023-01-11",
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 09:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.46"
     },
     {
       "number": 1379,
@@ -741,7 +799,8 @@
       "dateRaised": "2023-01-11",
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 16:28",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.49"
     },
     {
       "number": 1380,
@@ -754,7 +813,8 @@
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 14:43",
       "resolvedAuthor": "JG",
-      "releaseNotes": "made Force consistent with Torque and LoadMassProportional"
+      "releaseNotes": "made Force consistent with Torque and LoadMassProportional",
+      "resolvedInVersion": "1.5.47"
     },
     {
       "number": 1381,
@@ -767,7 +827,8 @@
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 16:34",
       "resolvedAuthor": "JG",
-      "releaseNotes": "dialogs.openTreeView=True can be used to switch to original behavior"
+      "releaseNotes": "dialogs.openTreeView=True can be used to switch to original behavior",
+      "resolvedInVersion": "1.5.50"
     },
     {
       "number": 1382,
@@ -779,7 +840,8 @@
       "dateRaised": "2023-01-11",
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 16:57",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.51"
     },
     {
       "number": 1383,
@@ -791,7 +853,8 @@
       "dateRaised": "2023-01-11",
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 17:41",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.52"
     },
     {
       "number": 1384,
@@ -804,7 +867,8 @@
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 20:42",
       "resolvedAuthor": "JG",
-      "releaseNotes": "also adjusted some text appearance settings"
+      "releaseNotes": "also adjusted some text appearance settings",
+      "resolvedInVersion": "1.5.53"
     },
     {
       "number": 1385,
@@ -816,7 +880,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 18:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.60"
     },
     {
       "number": 1386,
@@ -829,7 +894,8 @@
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 14:15",
       "resolvedAuthor": "JG",
-      "releaseNotes": "add check and raise error"
+      "releaseNotes": "add check and raise error",
+      "resolvedInVersion": "1.5.54"
     },
     {
       "number": 1387,
@@ -842,7 +908,8 @@
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 22:14",
       "resolvedAuthor": "JG",
-      "releaseNotes": "nodes, bodies and markers allow reference configuration; sensors also allow it for GetSensorValues"
+      "releaseNotes": "nodes, bodies and markers allow reference configuration; sensors also allow it for GetSensorValues",
+      "resolvedInVersion": "1.5.64"
     },
     {
       "number": 1388,
@@ -854,7 +921,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 22:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.62"
     },
     {
       "number": 1389,
@@ -866,7 +934,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 22:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.63"
     },
     {
       "number": 1390,
@@ -878,7 +947,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 17:53",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.59"
     },
     {
       "number": 1391,
@@ -890,7 +960,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 17:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.55"
     },
     {
       "number": 1392,
@@ -902,7 +973,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 17:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.56"
     },
     {
       "number": 1393,
@@ -914,7 +986,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 17:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.57"
     },
     {
       "number": 1394,
@@ -926,7 +999,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 17:44",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.58"
     },
     {
       "number": 1396,
@@ -938,7 +1012,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 18:51",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.61"
     },
     {
       "number": 1397,
@@ -950,7 +1025,8 @@
       "dateRaised": "2023-01-12",
       "deadline": "2023-07-11",
       "dateResolved": "2023-01-12 22:32",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.65"
     },
     {
       "number": 1398,
@@ -962,7 +1038,8 @@
       "dateRaised": "2023-01-16",
       "deadline": "2023-07-15",
       "dateResolved": "2023-01-16 20:09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.66"
     },
     {
       "number": 1399,
@@ -974,7 +1051,8 @@
       "dateRaised": "2023-01-16",
       "deadline": "2023-07-15",
       "dateResolved": "2023-01-16 21:10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.67"
     },
     {
       "number": 1400,
@@ -986,7 +1064,8 @@
       "dateRaised": "2023-01-16",
       "deadline": "2023-07-15",
       "dateResolved": "2023-01-16 21:11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.68"
     },
     {
       "number": 1401,
@@ -998,7 +1077,8 @@
       "dateRaised": "2023-01-17",
       "deadline": "2023-07-16",
       "dateResolved": "2023-01-17 09:20",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.70"
     },
     {
       "number": 1402,
@@ -1010,7 +1090,8 @@
       "dateRaised": "2023-01-17",
       "deadline": "2023-07-16",
       "dateResolved": "2023-01-18 22:57",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.72"
     },
     {
       "number": 1403,
@@ -1024,7 +1105,8 @@
       "deadline": "2023-07-17",
       "dateResolved": "2023-10-15 11:57",
       "resolvedAuthor": "JG",
-      "releaseNotes": "right now added comments in C++ files, not completely removed"
+      "releaseNotes": "right now added comments in C++ files, not completely removed",
+      "resolvedInVersion": "1.7.9"
     },
     {
       "number": 1404,
@@ -1036,7 +1118,8 @@
       "dateRaised": "2023-01-18",
       "deadline": "2023-07-17",
       "dateResolved": "2023-02-08 12:17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.93"
     },
     {
       "number": 1405,
@@ -1049,7 +1132,8 @@
       "deadline": "2023-07-18",
       "dateResolved": "2023-01-23 10:05",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added option to draw displaced laser beam; rotation added, if rigid marker used"
+      "releaseNotes": "added option to draw displaced laser beam; rotation added, if rigid marker used",
+      "resolvedInVersion": "1.5.86"
     },
     {
       "number": 1406,
@@ -1062,7 +1146,8 @@
       "deadline": "2023-07-18",
       "dateResolved": "2023-01-19 18:47",
       "resolvedAuthor": "JG",
-      "releaseNotes": "now versions can be found easier in github and they match the version numbers in pypi with pip installer"
+      "releaseNotes": "now versions can be found easier in github and they match the version numbers in pypi with pip installer",
+      "resolvedInVersion": "1.5.76"
     },
     {
       "number": 1407,
@@ -1074,7 +1159,8 @@
       "dateRaised": "2023-01-21",
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-21 21:28",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.79"
     },
     {
       "number": 1408,
@@ -1086,7 +1172,8 @@
       "dateRaised": "2023-01-21",
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-21 13:51",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.77"
     },
     {
       "number": 1409,
@@ -1099,7 +1186,8 @@
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-21 17:53",
       "resolvedAuthor": "JG",
-      "releaseNotes": "see CoordinateSpringDamper in theDoc.pdf how to convert old models using friction parameters to new ones; note user function interfaces have been changed!"
+      "releaseNotes": "see CoordinateSpringDamper in theDoc.pdf how to convert old models using friction parameters to new ones; note user function interfaces have been changed!",
+      "resolvedInVersion": "1.5.78"
     },
     {
       "number": 1410,
@@ -1111,7 +1199,8 @@
       "dateRaised": "2023-01-21",
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-21 22:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.81"
     },
     {
       "number": 1411,
@@ -1123,7 +1212,8 @@
       "dateRaised": "2023-01-21",
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-22 23:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.82"
     },
     {
       "number": 1412,
@@ -1135,7 +1225,8 @@
       "dateRaised": "2023-01-21",
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-22 23:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.83"
     },
     {
       "number": 1413,
@@ -1147,7 +1238,8 @@
       "dateRaised": "2023-01-21",
       "deadline": "2023-07-20",
       "dateResolved": "2023-01-22 23:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.84"
     },
     {
       "number": 1416,
@@ -1159,7 +1251,8 @@
       "dateRaised": "2023-01-23",
       "deadline": "2023-07-22",
       "dateResolved": "2023-01-23 09:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.85"
     },
     {
       "number": 1417,
@@ -1171,7 +1264,8 @@
       "dateRaised": "2023-01-25",
       "deadline": "2023-07-24",
       "dateResolved": "2023-01-25 20:09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.87"
     },
     {
       "number": 1418,
@@ -1183,7 +1277,8 @@
       "dateRaised": "2023-02-01",
       "deadline": "2023-07-31",
       "dateResolved": "2023-02-01 10:30",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.88"
     },
     {
       "number": 1419,
@@ -1196,7 +1291,8 @@
       "deadline": "2023-08-01",
       "dateResolved": "2023-02-02 10:31",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated"
+      "releaseNotes": "added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated; added flag window.limitWindowToScreenSize ; by default this is deactivated",
+      "resolvedInVersion": "1.5.89"
     },
     {
       "number": 1420,
@@ -1208,7 +1304,8 @@
       "dateRaised": "2023-02-02",
       "deadline": "2023-08-01",
       "dateResolved": "2023-02-02 18:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.90"
     },
     {
       "number": 1421,
@@ -1220,7 +1317,8 @@
       "dateRaised": "2023-02-07",
       "deadline": "2023-08-06",
       "dateResolved": "2023-02-07 12:07",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.91"
     },
     {
       "number": 1422,
@@ -1232,7 +1330,8 @@
       "dateRaised": "2023-02-07",
       "deadline": "2023-08-06",
       "dateResolved": "2023-02-08 00:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.92"
     },
     {
       "number": 1423,
@@ -1244,7 +1343,8 @@
       "dateRaised": "2023-02-08",
       "deadline": "2023-08-07",
       "dateResolved": "2023-02-08 12:17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.94"
     },
     {
       "number": 1425,
@@ -1256,7 +1356,8 @@
       "dateRaised": "2023-02-11",
       "deadline": "2023-08-10",
       "dateResolved": "2023-02-11 16:41",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.95"
     },
     {
       "number": 1426,
@@ -1269,7 +1370,8 @@
       "deadline": "2023-08-10",
       "dateResolved": "2023-03-08 16:58",
       "resolvedAuthor": "JG",
-      "releaseNotes": "removed outdated files"
+      "releaseNotes": "removed outdated files",
+      "resolvedInVersion": "1.6.0"
     },
     {
       "number": 1427,
@@ -1281,7 +1383,8 @@
       "dateRaised": "2023-02-13",
       "deadline": "2023-08-12",
       "dateResolved": "2023-02-13 17:17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.96"
     },
     {
       "number": 1428,
@@ -1293,7 +1396,8 @@
       "dateRaised": "2023-02-13",
       "deadline": "2023-08-12",
       "dateResolved": "2023-02-13 17:18",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.97"
     },
     {
       "number": 1429,
@@ -1305,7 +1409,8 @@
       "dateRaised": "2023-02-15",
       "deadline": "2023-08-14",
       "dateResolved": "2023-02-16 00:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.98"
     },
     {
       "number": 1430,
@@ -1317,7 +1422,8 @@
       "dateRaised": "2023-02-15",
       "deadline": "2023-08-14",
       "dateResolved": "2023-02-16 00:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.99"
     },
     {
       "number": 1431,
@@ -1330,7 +1436,8 @@
       "deadline": "2023-08-15",
       "dateResolved": "2023-02-16 00:01",
       "resolvedAuthor": "JG",
-      "releaseNotes": "due to automatic conversion, there are many small errors (typos) remaining; for safety, check theDoc.pdf in any case"
+      "releaseNotes": "due to automatic conversion, there are many small errors (typos) remaining; for safety, check theDoc.pdf in any case",
+      "resolvedInVersion": "1.5.100"
     },
     {
       "number": 1432,
@@ -1342,7 +1449,8 @@
       "dateRaised": "2023-02-16",
       "deadline": "2023-08-15",
       "dateResolved": "2023-02-16 15:58",
-      "resolvedAuthor": "P. Manzl"
+      "resolvedAuthor": "P. Manzl",
+      "resolvedInVersion": "1.5.101"
     },
     {
       "number": 1433,
@@ -1354,7 +1462,8 @@
       "dateRaised": "2023-02-16",
       "deadline": "2023-08-15",
       "dateResolved": "2023-02-16 16:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.102"
     },
     {
       "number": 1435,
@@ -1368,7 +1477,8 @@
       "deadline": "2023-08-15",
       "dateResolved": "2023-06-08 23:35",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already done earlier in #1546"
+      "releaseNotes": "already done earlier in #1546",
+      "resolvedInVersion": "1.6.147"
     },
     {
       "number": 1436,
@@ -1380,7 +1490,8 @@
       "dateRaised": "2023-02-18",
       "deadline": "2023-08-17",
       "dateResolved": "2023-02-18 00:56",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.103"
     },
     {
       "number": 1437,
@@ -1392,7 +1503,8 @@
       "dateRaised": "2023-02-19",
       "deadline": "2023-08-18",
       "dateResolved": "2023-02-19 21:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.104"
     },
     {
       "number": 1438,
@@ -1404,7 +1516,8 @@
       "dateRaised": "2023-02-19",
       "deadline": "2023-08-18",
       "dateResolved": "2023-02-21 10:14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.105"
     },
     {
       "number": 1439,
@@ -1416,7 +1529,8 @@
       "dateRaised": "2023-02-21",
       "deadline": "2023-08-20",
       "dateResolved": "2023-02-21 18:11",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.106"
     },
     {
       "number": 1440,
@@ -1429,7 +1543,8 @@
       "deadline": "2023-08-21",
       "dateResolved": "2023-02-22 13:46",
       "resolvedAuthor": "S. Holzinger",
-      "releaseNotes": "integers are kept if either tuple(start, end, numberOfValues) with start/end and numberOfValues are all integer or list contains only integers"
+      "releaseNotes": "integers are kept if either tuple(start, end, numberOfValues) with start/end and numberOfValues are all integer or list contains only integers",
+      "resolvedInVersion": "1.5.107"
     },
     {
       "number": 1441,
@@ -1441,7 +1556,8 @@
       "dateRaised": "2023-02-22",
       "deadline": "2023-08-21",
       "dateResolved": "2023-02-22 23:57",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.108"
     },
     {
       "number": 1442,
@@ -1453,7 +1569,8 @@
       "dateRaised": "2023-02-22",
       "deadline": "2023-08-21",
       "dateResolved": "2023-02-22 23:59",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.109"
     },
     {
       "number": 1443,
@@ -1465,7 +1582,8 @@
       "dateRaised": "2023-02-22",
       "deadline": "2023-08-21",
       "dateResolved": "2023-03-12 23:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.3"
     },
     {
       "number": 1444,
@@ -1477,7 +1595,8 @@
       "dateRaised": "2023-02-22",
       "deadline": "2023-08-21",
       "dateResolved": "2023-02-24 13:50",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.110"
     },
     {
       "number": 1445,
@@ -1489,7 +1608,8 @@
       "dateRaised": "2023-02-22",
       "deadline": "2023-08-21",
       "dateResolved": "2023-03-12 23:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.4"
     },
     {
       "number": 1446,
@@ -1501,7 +1621,8 @@
       "dateRaised": "2023-02-23",
       "deadline": "2023-08-22",
       "dateResolved": "2023-02-24 15:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.113"
     },
     {
       "number": 1447,
@@ -1514,7 +1635,8 @@
       "deadline": "2023-08-22",
       "dateResolved": "2023-02-24 15:46",
       "resolvedAuthor": "JG",
-      "releaseNotes": "Coordinates also added as output variable"
+      "releaseNotes": "Coordinates also added as output variable",
+      "resolvedInVersion": "1.5.114"
     },
     {
       "number": 1448,
@@ -1527,7 +1649,8 @@
       "deadline": "2023-08-23",
       "dateResolved": "2023-02-24 13:52",
       "resolvedAuthor": "JG",
-      "releaseNotes": "thanks for P. Manzl for raising this problem"
+      "releaseNotes": "thanks for P. Manzl for raising this problem",
+      "resolvedInVersion": "1.5.111"
     },
     {
       "number": 1449,
@@ -1539,7 +1662,8 @@
       "dateRaised": "2023-02-24",
       "deadline": "2023-08-23",
       "dateResolved": "2023-02-24 15:45",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.112"
     },
     {
       "number": 1451,
@@ -1552,7 +1676,8 @@
       "deadline": "2023-08-24",
       "dateResolved": "2023-02-26 00:12",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added now write functionality for solvers; use with care and only if you know what you do..."
+      "releaseNotes": "added now write functionality for solvers; use with care and only if you know what you do...",
+      "resolvedInVersion": "1.5.115"
     },
     {
       "number": 1452,
@@ -1564,7 +1689,8 @@
       "dateRaised": "2023-02-26",
       "deadline": "2023-08-25",
       "dateResolved": "2023-02-26 00:40",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.116"
     },
     {
       "number": 1453,
@@ -1577,7 +1703,8 @@
       "deadline": "2023-08-27",
       "dateResolved": "2023-02-28 15:18",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added NOGLFW version to automatic build and testsuite"
+      "releaseNotes": "added NOGLFW version to automatic build and testsuite",
+      "resolvedInVersion": "1.5.117"
     },
     {
       "number": 1454,
@@ -1589,7 +1716,8 @@
       "dateRaised": "2023-03-05",
       "deadline": "2023-09-01",
       "dateResolved": "2023-03-05 16:40",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.5.118"
     },
     {
       "number": 1456,
@@ -1601,7 +1729,8 @@
       "dateRaised": "2023-03-09",
       "deadline": "2023-09-05",
       "dateResolved": "2023-03-12 23:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.5"
     },
     {
       "number": 1457,
@@ -1613,7 +1742,8 @@
       "dateRaised": "2023-03-09",
       "deadline": "2023-09-05",
       "dateResolved": "2023-03-12 23:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.6"
     },
     {
       "number": 1458,
@@ -1626,7 +1756,8 @@
       "deadline": "2023-09-06",
       "dateResolved": "2023-03-10 15:59",
       "resolvedAuthor": "P. Manzl",
-      "releaseNotes": "failed steps may lead to nan values when evaluating the TestModel in the artificialIntelligence module. When this is detected the flagNan is set and evaluation is stopped. Check for flagNan in the Evaluation should be implemented."
+      "releaseNotes": "failed steps may lead to nan values when evaluating the TestModel in the artificialIntelligence module. When this is detected the flagNan is set and evaluation is stopped. Check for flagNan in the Evaluation should be implemented.",
+      "resolvedInVersion": "1.6.1"
     },
     {
       "number": 1459,
@@ -1638,7 +1769,8 @@
       "dateRaised": "2023-03-10",
       "deadline": "2023-09-06",
       "dateResolved": "2023-03-26 15:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.16"
     },
     {
       "number": 1460,
@@ -1650,7 +1782,8 @@
       "dateRaised": "2023-03-12",
       "deadline": "2023-09-08",
       "dateResolved": "2023-03-12 16:20",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.2"
     },
     {
       "number": 1461,
@@ -1663,7 +1796,8 @@
       "deadline": "2023-09-10",
       "dateResolved": "2023-03-14 12:50",
       "resolvedAuthor": "P. Manzl",
-      "releaseNotes": "added isIntType arrays"
+      "releaseNotes": "added isIntType arrays",
+      "resolvedInVersion": "1.6.7"
     },
     {
       "number": 1462,
@@ -1675,7 +1809,8 @@
       "dateRaised": "2023-03-14",
       "deadline": "2023-09-10",
       "dateResolved": "2023-03-14 17:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.8"
     },
     {
       "number": 1463,
@@ -1688,7 +1823,8 @@
       "deadline": "2023-09-14",
       "dateResolved": "2023-03-18 22:59",
       "resolvedAuthor": "JG",
-      "releaseNotes": "tests on supercomputer successful"
+      "releaseNotes": "tests on supercomputer successful",
+      "resolvedInVersion": "1.6.9"
     },
     {
       "number": 1464,
@@ -1700,7 +1836,8 @@
       "dateRaised": "2023-03-20",
       "deadline": "2023-09-16",
       "dateResolved": "2023-03-20 12:54",
-      "resolvedAuthor": "P. Manzl"
+      "resolvedAuthor": "P. Manzl",
+      "resolvedInVersion": "1.6.10"
     },
     {
       "number": 1465,
@@ -1712,7 +1849,8 @@
       "dateRaised": "2023-03-22",
       "deadline": "2023-09-18",
       "dateResolved": "2023-03-22 10:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.11"
     },
     {
       "number": 1466,
@@ -1724,7 +1862,8 @@
       "dateRaised": "2023-03-22",
       "deadline": "2023-09-18",
       "dateResolved": "2023-03-22 11:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.12"
     },
     {
       "number": 1467,
@@ -1736,7 +1875,8 @@
       "dateRaised": "2023-03-22",
       "deadline": "2023-09-18",
       "dateResolved": "2023-03-22 12:06",
-      "resolvedAuthor": "P. Manzl"
+      "resolvedAuthor": "P. Manzl",
+      "resolvedInVersion": "1.6.13"
     },
     {
       "number": 1468,
@@ -1749,7 +1889,8 @@
       "deadline": "2023-09-18",
       "dateResolved": "2023-04-05 14:08",
       "resolvedAuthor": "JG",
-      "releaseNotes": "already done earlier"
+      "releaseNotes": "already done earlier",
+      "resolvedInVersion": "1.6.37"
     },
     {
       "number": 1469,
@@ -1763,7 +1904,8 @@
       "deadline": "2023-09-18",
       "dateResolved": "2023-03-28 14:46",
       "resolvedAuthor": "JG",
-      "releaseNotes": "resolved both in Python and C++; some simulation results may change, especially in output of Rotations in sensors"
+      "releaseNotes": "resolved both in Python and C++; some simulation results may change, especially in output of Rotations in sensors",
+      "resolvedInVersion": "1.6.27"
     },
     {
       "number": 1470,
@@ -1776,7 +1918,8 @@
       "deadline": "2023-09-20",
       "dateResolved": "2023-03-24 10:04",
       "resolvedAuthor": "JG",
-      "releaseNotes": "function called GraphicsDataFrame for Homogeneous transformation"
+      "releaseNotes": "function called GraphicsDataFrame for Homogeneous transformation",
+      "resolvedInVersion": "1.6.14"
     },
     {
       "number": 1471,
@@ -1788,7 +1931,8 @@
       "dateRaised": "2023-03-24",
       "deadline": "2023-09-20",
       "dateResolved": "2023-03-24 20:40",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.15"
     },
     {
       "number": 1472,
@@ -1801,7 +1945,8 @@
       "deadline": "2023-09-22",
       "dateResolved": "2023-03-27 00:10",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added to sphere, cylinder, SolidOfRevolution, SolidOfExtrusion"
+      "releaseNotes": "added to sphere, cylinder, SolidOfRevolution, SolidOfExtrusion",
+      "resolvedInVersion": "1.6.18"
     },
     {
       "number": 1473,
@@ -1813,7 +1958,8 @@
       "dateRaised": "2023-03-26",
       "deadline": "2023-09-22",
       "dateResolved": "2023-03-27 00:09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.17"
     },
     {
       "number": 1476,
@@ -1825,7 +1971,8 @@
       "dateRaised": "2023-03-27",
       "deadline": "2023-09-23",
       "dateResolved": "2023-03-27 19:58",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.25"
     },
     {
       "number": 1477,
@@ -1837,7 +1984,8 @@
       "dateRaised": "2023-03-27",
       "deadline": "2023-09-23",
       "dateResolved": "2023-03-27 20:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.26"
     },
     {
       "number": 1478,
@@ -1849,7 +1997,8 @@
       "dateRaised": "2023-03-27",
       "deadline": "2023-09-23",
       "dateResolved": "2023-03-28 15:09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.28"
     },
     {
       "number": 1480,
@@ -1861,7 +2010,8 @@
       "dateRaised": "2023-03-28",
       "deadline": "2023-09-24",
       "dateResolved": "2023-03-28 15:10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.29"
     },
     {
       "number": 1481,
@@ -1873,7 +2023,8 @@
       "dateRaised": "2023-03-28",
       "deadline": "2023-09-24",
       "dateResolved": "2023-03-28 16:30",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.30"
     },
     {
       "number": 1482,
@@ -1885,7 +2036,8 @@
       "dateRaised": "2023-03-28",
       "deadline": "2023-09-24",
       "dateResolved": "2023-03-28 18:47",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.31"
     },
     {
       "number": 1486,
@@ -1897,7 +2049,8 @@
       "dateRaised": "2023-04-01",
       "deadline": "2023-09-28",
       "dateResolved": "2023-11-30 20:51",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.37"
     },
     {
       "number": 1487,
@@ -1909,7 +2062,8 @@
       "dateRaised": "2023-04-04",
       "deadline": "2023-10-01",
       "dateResolved": "2023-04-04 13:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.32"
     },
     {
       "number": 1488,
@@ -1921,7 +2075,8 @@
       "dateRaised": "2023-04-04",
       "deadline": "2023-10-01",
       "dateResolved": "2023-04-04 13:31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.33"
     },
     {
       "number": 1489,
@@ -1933,7 +2088,8 @@
       "dateRaised": "2023-04-04",
       "deadline": "2023-10-01",
       "dateResolved": "2023-04-04 20:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.34"
     },
     {
       "number": 1490,
@@ -1945,7 +2101,8 @@
       "dateRaised": "2023-04-05",
       "deadline": "2023-10-02",
       "dateResolved": "2023-04-05 13:59",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.36"
     },
     {
       "number": 1491,
@@ -1957,7 +2114,8 @@
       "dateRaised": "2023-04-06",
       "deadline": "2023-10-03",
       "dateResolved": "2023-04-06 14:35",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.39"
     },
     {
       "number": 1492,
@@ -1969,7 +2127,8 @@
       "dateRaised": "2023-04-06",
       "deadline": "2023-10-03",
       "dateResolved": "2023-04-06 14:55",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.40"
     },
     {
       "number": 1495,
@@ -1981,7 +2140,8 @@
       "dateRaised": "2023-04-07",
       "deadline": "2023-10-04",
       "dateResolved": "2023-04-07 13:32",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.42"
     },
     {
       "number": 1496,
@@ -1994,7 +2154,8 @@
       "deadline": "2023-10-04",
       "dateResolved": "2023-04-08 17:36",
       "resolvedAuthor": "JG",
-      "releaseNotes": "tests show small performance improvements (<10 percent) for creation of items"
+      "releaseNotes": "tests show small performance improvements (<10 percent) for creation of items",
+      "resolvedInVersion": "1.6.45"
     },
     {
       "number": 1497,
@@ -2006,7 +2167,8 @@
       "dateRaised": "2023-04-07",
       "deadline": "2023-10-04",
       "dateResolved": "2023-04-07 19:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.43"
     },
     {
       "number": 1498,
@@ -2020,7 +2182,8 @@
       "deadline": "2023-10-05",
       "dateResolved": "2023-04-08 17:30",
       "resolvedAuthor": "JG",
-      "releaseNotes": "removed Marker::Orientation from MarkerNodeRotationCoordinate as it is not provided"
+      "releaseNotes": "removed Marker::Orientation from MarkerNodeRotationCoordinate as it is not provided",
+      "resolvedInVersion": "1.6.44"
     },
     {
       "number": 1501,
@@ -2034,7 +2197,8 @@
       "deadline": "2023-10-05",
       "dateResolved": "2023-05-01 19:26",
       "resolvedAuthor": "JG",
-      "releaseNotes": "poor performance for large deformations caused by missing load jacobian"
+      "releaseNotes": "poor performance for large deformations caused by missing load jacobian",
+      "resolvedInVersion": "1.6.89"
     },
     {
       "number": 1502,
@@ -2048,7 +2212,8 @@
       "deadline": "2023-10-05",
       "dateResolved": "2023-05-01 19:26",
       "resolvedAuthor": "JG",
-      "releaseNotes": "poor performance for large deformations caused by missing load jacobian"
+      "releaseNotes": "poor performance for large deformations caused by missing load jacobian",
+      "resolvedInVersion": "1.6.90"
     },
     {
       "number": 1503,
@@ -2060,7 +2225,8 @@
       "dateRaised": "2023-04-08",
       "deadline": "2023-10-05",
       "dateResolved": "2023-04-08 19:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.46"
     },
     {
       "number": 1506,
@@ -2073,7 +2239,8 @@
       "deadline": "2023-10-05",
       "dateResolved": "2023-04-10 21:42",
       "resolvedAuthor": "JG",
-      "releaseNotes": "kept the argument ConfigurationType; usually, all configuration types have same sizes but the call must be related to a speficic configuration"
+      "releaseNotes": "kept the argument ConfigurationType; usually, all configuration types have same sizes but the call must be related to a speficic configuration",
+      "resolvedInVersion": "1.6.50"
     },
     {
       "number": 1507,
@@ -2085,7 +2252,8 @@
       "dateRaised": "2023-04-10",
       "deadline": "2023-10-07",
       "dateResolved": "2023-04-10 21:36",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.47"
     },
     {
       "number": 1508,
@@ -2097,7 +2265,8 @@
       "dateRaised": "2023-04-10",
       "deadline": "2023-10-07",
       "dateResolved": "2023-04-10 21:37",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.48"
     },
     {
       "number": 1509,
@@ -2109,7 +2278,8 @@
       "dateRaised": "2023-04-10",
       "deadline": "2023-10-07",
       "dateResolved": "2023-04-10 21:37",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.49"
     },
     {
       "number": 1510,
@@ -2121,7 +2291,8 @@
       "dateRaised": "2023-04-13",
       "deadline": "2023-10-10",
       "dateResolved": "2023-04-13 10:28",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.52"
     },
     {
       "number": 1511,
@@ -2133,7 +2304,8 @@
       "dateRaised": "2023-04-13",
       "deadline": "2023-10-10",
       "dateResolved": "2023-04-13 17:45",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.53"
     },
     {
       "number": 1513,
@@ -2145,7 +2317,8 @@
       "dateRaised": "2023-04-14",
       "deadline": "2023-10-11",
       "dateResolved": "2023-04-14 14:36",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.54"
     },
     {
       "number": 1514,
@@ -2158,7 +2331,8 @@
       "deadline": "2023-10-11",
       "dateResolved": "2023-04-15 14:34",
       "resolvedAuthor": "JG",
-      "releaseNotes": "changed order of args: dataArrayIndex and timeArrayIndex"
+      "releaseNotes": "changed order of args: dataArrayIndex and timeArrayIndex",
+      "resolvedInVersion": "1.6.55"
     },
     {
       "number": 1515,
@@ -2170,7 +2344,8 @@
       "dateRaised": "2023-04-16",
       "deadline": "2023-10-13",
       "dateResolved": "2023-04-16 13:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.58"
     },
     {
       "number": 1516,
@@ -2183,7 +2358,8 @@
       "deadline": "2023-10-16",
       "dateResolved": "2023-04-23 18:43",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added function SolverSuccess() to exudyn.solver; returns success and error string as created by solver internal function GetErrorString(...)"
+      "releaseNotes": "added function SolverSuccess() to exudyn.solver; returns success and error string as created by solver internal function GetErrorString(...)",
+      "resolvedInVersion": "1.6.69"
     },
     {
       "number": 1517,
@@ -2195,7 +2371,8 @@
       "dateRaised": "2023-04-19",
       "deadline": "2023-10-16",
       "dateResolved": "2023-04-19 18:14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.59"
     },
     {
       "number": 1518,
@@ -2208,7 +2385,8 @@
       "deadline": "2023-10-16",
       "dateResolved": "2023-04-19 19:08",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added as arguments in RoundMatrix"
+      "releaseNotes": "added as arguments in RoundMatrix",
+      "resolvedInVersion": "1.6.60"
     },
     {
       "number": 1519,
@@ -2221,7 +2399,8 @@
       "deadline": "2023-10-16",
       "dateResolved": "2023-04-20 20:59",
       "resolvedAuthor": "JG",
-      "releaseNotes": "warning is printed if old file is loaded"
+      "releaseNotes": "warning is printed if old file is loaded",
+      "resolvedInVersion": "1.6.64"
     },
     {
       "number": 1520,
@@ -2234,7 +2413,8 @@
       "deadline": "2023-10-17",
       "dateResolved": "2023-04-20 15:44",
       "resolvedAuthor": "JG",
-      "releaseNotes": "by default, only surface triangles are created!"
+      "releaseNotes": "by default, only surface triangles are created!",
+      "resolvedInVersion": "1.6.61"
     },
     {
       "number": 1521,
@@ -2247,7 +2427,8 @@
       "deadline": "2023-10-17",
       "dateResolved": "2023-04-20 21:06",
       "resolvedAuthor": "JG",
-      "releaseNotes": "this function should be used to store CMS data if FEM is too large to load/store; CMS data still stores all node positions, triangle list (for visualization) and modeBasis for computation tasks; may be still large e.g. for many nodes and large number of modes"
+      "releaseNotes": "this function should be used to store CMS data if FEM is too large to load/store; CMS data still stores all node positions, triangle list (for visualization) and modeBasis for computation tasks; may be still large e.g. for many nodes and large number of modes",
+      "resolvedInVersion": "1.6.65"
     },
     {
       "number": 1522,
@@ -2259,7 +2440,8 @@
       "dateRaised": "2023-04-20",
       "deadline": "2023-10-17",
       "dateResolved": "2023-04-20 16:34",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.62"
     },
     {
       "number": 1523,
@@ -2271,7 +2453,8 @@
       "dateRaised": "2023-04-20",
       "deadline": "2023-10-17",
       "dateResolved": "2023-04-20 18:34",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.63"
     },
     {
       "number": 1524,
@@ -2283,7 +2466,8 @@
       "dateRaised": "2023-04-21",
       "deadline": "2023-10-18",
       "dateResolved": "2023-04-21 17:51",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.66"
     },
     {
       "number": 1525,
@@ -2295,7 +2479,8 @@
       "dateRaised": "2023-04-23",
       "deadline": "2023-10-20",
       "dateResolved": "2023-04-23 11:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.67"
     },
     {
       "number": 1526,
@@ -2307,7 +2492,8 @@
       "dateRaised": "2023-04-23",
       "deadline": "2023-10-20",
       "dateResolved": "2023-04-23 11:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.68"
     },
     {
       "number": 1527,
@@ -2319,7 +2505,8 @@
       "dateRaised": "2023-04-23",
       "deadline": "2023-10-20",
       "dateResolved": "2023-04-23 20:15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.71"
     },
     {
       "number": 1528,
@@ -2331,7 +2518,8 @@
       "dateRaised": "2023-04-26",
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-26 09:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.72"
     },
     {
       "number": 1530,
@@ -2343,7 +2531,8 @@
       "dateRaised": "2023-04-26",
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-26 11:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.73"
     },
     {
       "number": 1531,
@@ -2355,7 +2544,8 @@
       "dateRaised": "2023-04-26",
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-26 16:49",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.74"
     },
     {
       "number": 1532,
@@ -2367,7 +2557,8 @@
       "dateRaised": "2023-04-26",
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-26 19:24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.76"
     },
     {
       "number": 1533,
@@ -2379,7 +2570,8 @@
       "dateRaised": "2023-04-26",
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-26 19:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.77"
     },
     {
       "number": 1534,
@@ -2392,7 +2584,8 @@
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-26 18:33",
       "resolvedAuthor": "JG",
-      "releaseNotes": "improves numerical behavior and convergence of GeometricallyExactBeam"
+      "releaseNotes": "improves numerical behavior and convergence of GeometricallyExactBeam",
+      "resolvedInVersion": "1.6.75"
     },
     {
       "number": 1535,
@@ -2404,7 +2597,8 @@
       "dateRaised": "2023-04-26",
       "deadline": "2023-10-23",
       "dateResolved": "2023-04-27 11:34",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.78"
     },
     {
       "number": 1536,
@@ -2417,7 +2611,8 @@
       "deadline": "2023-10-24",
       "dateResolved": "2023-06-11 00:24",
       "resolvedAuthor": "JG",
-      "releaseNotes": "checked all default list and dict args"
+      "releaseNotes": "checked all default list and dict args",
+      "resolvedInVersion": "1.6.155"
     },
     {
       "number": 1537,
@@ -2429,7 +2624,8 @@
       "dateRaised": "2023-04-27",
       "deadline": "2023-10-24",
       "dateResolved": "2023-04-27 15:35",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.79"
     },
     {
       "number": 1538,
@@ -2441,7 +2637,8 @@
       "dateRaised": "2023-04-27",
       "deadline": "2023-10-24",
       "dateResolved": "2023-04-27 15:35",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.80"
     },
     {
       "number": 1539,
@@ -2454,7 +2651,8 @@
       "deadline": "2023-10-25",
       "dateResolved": "2023-05-05 23:32",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not changed: std::string has practically no effect on memory footprint of items; check memory footprint separately (LTG lists, etc.)!"
+      "releaseNotes": "not changed: std::string has practically no effect on memory footprint of items; check memory footprint separately (LTG lists, etc.)!",
+      "resolvedInVersion": "1.6.94"
     },
     {
       "number": 1540,
@@ -2467,7 +2665,8 @@
       "deadline": "2023-10-25",
       "dateResolved": "2023-06-20 22:13",
       "resolvedAuthor": "JG",
-      "releaseNotes": "simple vectors, matrices and lists are copied with np.array(...) while complex matrix and list of array types are now initialized with None"
+      "releaseNotes": "simple vectors, matrices and lists are copied with np.array(...) while complex matrix and list of array types are now initialized with None",
+      "resolvedInVersion": "1.6.169"
     },
     {
       "number": 1541,
@@ -2479,7 +2678,8 @@
       "dateRaised": "2023-04-28",
       "deadline": "2023-10-25",
       "dateResolved": "2023-04-29 01:10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.81"
     },
     {
       "number": 1542,
@@ -2492,7 +2692,8 @@
       "deadline": "2023-10-26",
       "dateResolved": "2023-04-29 01:11",
       "resolvedAuthor": "JG",
-      "releaseNotes": "thanks to Qasim Khadim for provigind the model"
+      "releaseNotes": "thanks to Qasim Khadim for provigind the model",
+      "resolvedInVersion": "1.6.82"
     },
     {
       "number": 1543,
@@ -2504,7 +2705,8 @@
       "dateRaised": "2023-04-29",
       "deadline": "2023-10-26",
       "dateResolved": "2023-04-29 22:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.84"
     },
     {
       "number": 1544,
@@ -2516,7 +2718,8 @@
       "dateRaised": "2023-04-29",
       "deadline": "2023-10-26",
       "dateResolved": "2023-04-29 22:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.85"
     },
     {
       "number": 1545,
@@ -2528,7 +2731,8 @@
       "dateRaised": "2023-05-01",
       "deadline": "2023-10-28",
       "dateResolved": "2023-05-01 19:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.87"
     },
     {
       "number": 1546,
@@ -2540,7 +2744,8 @@
       "dateRaised": "2023-05-01",
       "deadline": "2023-10-28",
       "dateResolved": "2023-05-01 19:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.88"
     },
     {
       "number": 1547,
@@ -2552,7 +2757,8 @@
       "dateRaised": "2023-05-01",
       "deadline": "2023-10-28",
       "dateResolved": "2023-05-01 16:17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.86"
     },
     {
       "number": 1551,
@@ -2564,7 +2770,8 @@
       "dateRaised": "2023-05-02",
       "deadline": "2023-10-29",
       "dateResolved": "2023-05-02 15:02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.91"
     },
     {
       "number": 1552,
@@ -2576,7 +2783,8 @@
       "dateRaised": "2023-05-02",
       "deadline": "2023-10-29",
       "dateResolved": "2023-05-02 16:51",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.92"
     },
     {
       "number": 1553,
@@ -2588,7 +2796,8 @@
       "dateRaised": "2023-05-02",
       "deadline": "2023-10-29",
       "dateResolved": "2023-05-02 17:41",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.93"
     },
     {
       "number": 1554,
@@ -2600,7 +2809,8 @@
       "dateRaised": "2023-05-07",
       "deadline": "2023-11-03",
       "dateResolved": "2023-05-07 16:31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.95"
     },
     {
       "number": 1555,
@@ -2612,7 +2822,8 @@
       "dateRaised": "2023-05-07",
       "deadline": "2023-11-03",
       "dateResolved": "2023-05-07 18:12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.96"
     },
     {
       "number": 1556,
@@ -2624,7 +2835,8 @@
       "dateRaised": "2023-05-07",
       "deadline": "2023-11-03",
       "dateResolved": "2023-05-07 20:33",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.97"
     },
     {
       "number": 1557,
@@ -2637,7 +2849,8 @@
       "deadline": "2023-11-03",
       "dateResolved": "2023-05-10 08:39",
       "resolvedAuthor": "JG",
-      "releaseNotes": "tested with Spyder 5.1.5 and Visual Studio Code 1.78"
+      "releaseNotes": "tested with Spyder 5.1.5 and Visual Studio Code 1.78",
+      "resolvedInVersion": "1.6.99"
     },
     {
       "number": 1558,
@@ -2650,7 +2863,8 @@
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-09 18:30",
       "resolvedAuthor": "JG",
-      "releaseNotes": "if you by occasion used e.g. exu.DisplacementLocal instead of exu.OutputVariableType.DisplacementLocal you need to adapt your code!"
+      "releaseNotes": "if you by occasion used e.g. exu.DisplacementLocal instead of exu.OutputVariableType.DisplacementLocal you need to adapt your code!",
+      "resolvedInVersion": "1.6.98"
     },
     {
       "number": 1559,
@@ -2662,7 +2876,8 @@
       "dateRaised": "2023-05-09",
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-10 08:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.100"
     },
     {
       "number": 1560,
@@ -2674,7 +2889,8 @@
       "dateRaised": "2023-05-09",
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-10 23:19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.102"
     },
     {
       "number": 1561,
@@ -2686,7 +2902,8 @@
       "dateRaised": "2023-05-09",
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-10 23:30",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.103"
     },
     {
       "number": 1562,
@@ -2698,7 +2915,8 @@
       "dateRaised": "2023-05-09",
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-10 20:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.101"
     },
     {
       "number": 1563,
@@ -2711,7 +2929,8 @@
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-15 01:17",
       "resolvedAuthor": "JG",
-      "releaseNotes": "see \\refSection{sec:mainsystem:pythonExtensions} for extended functionality"
+      "releaseNotes": "see \\refSection{sec:mainsystem:pythonExtensions} for extended functionality",
+      "resolvedInVersion": "1.6.105"
     },
     {
       "number": 1564,
@@ -2723,7 +2942,8 @@
       "dateRaised": "2023-05-11",
       "deadline": "2023-11-07",
       "dateResolved": "2023-05-11 11:30",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.104"
     },
     {
       "number": 1566,
@@ -2735,7 +2955,8 @@
       "dateRaised": "2023-05-15",
       "deadline": "2023-11-11",
       "dateResolved": "2023-05-15 11:34",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.106"
     },
     {
       "number": 1567,
@@ -2747,7 +2968,8 @@
       "dateRaised": "2023-05-15",
       "deadline": "2023-11-11",
       "dateResolved": "2023-05-15 17:18",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.107"
     },
     {
       "number": 1568,
@@ -2759,7 +2981,8 @@
       "dateRaised": "2023-05-15",
       "deadline": "2023-11-11",
       "dateResolved": "2023-05-15 18:13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.108"
     },
     {
       "number": 1569,
@@ -2772,7 +2995,8 @@
       "deadline": "2023-11-11",
       "dateResolved": "2023-05-20 21:05",
       "resolvedAuthor": "JG",
-      "releaseNotes": "collected miniexamples in mainSystemExtensionsTests.py;"
+      "releaseNotes": "collected miniexamples in mainSystemExtensionsTests.py;",
+      "resolvedInVersion": "1.6.116"
     },
     {
       "number": 1570,
@@ -2784,7 +3008,8 @@
       "dateRaised": "2023-05-15",
       "deadline": "2023-11-11",
       "dateResolved": "2023-05-18 23:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.114"
     },
     {
       "number": 1571,
@@ -2796,7 +3021,8 @@
       "dateRaised": "2023-05-15",
       "deadline": "2023-11-11",
       "dateResolved": "2023-05-18 23:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.115"
     },
     {
       "number": 1572,
@@ -2808,7 +3034,8 @@
       "dateRaised": "2023-05-16",
       "deadline": "2023-11-12",
       "dateResolved": "2023-05-16 11:54",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.109"
     },
     {
       "number": 1573,
@@ -2820,7 +3047,8 @@
       "dateRaised": "2023-05-16",
       "deadline": "2023-11-12",
       "dateResolved": "2023-05-18 12:19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.111"
     },
     {
       "number": 1574,
@@ -2832,7 +3060,8 @@
       "dateRaised": "2023-05-16",
       "deadline": "2023-11-12",
       "dateResolved": "2023-05-17 20:21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.110"
     },
     {
       "number": 1575,
@@ -2844,7 +3073,8 @@
       "dateRaised": "2023-05-18",
       "deadline": "2023-11-14",
       "dateResolved": "2023-05-18 13:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.112"
     },
     {
       "number": 1576,
@@ -2856,7 +3086,8 @@
       "dateRaised": "2023-05-18",
       "deadline": "2023-11-14",
       "dateResolved": "2023-05-18 23:13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.113"
     },
     {
       "number": 1577,
@@ -2868,7 +3099,8 @@
       "dateRaised": "2023-05-20",
       "deadline": "2023-11-16",
       "dateResolved": "2023-05-20 22:23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.118"
     },
     {
       "number": 1578,
@@ -2880,7 +3112,8 @@
       "dateRaised": "2023-05-20",
       "deadline": "2023-11-16",
       "dateResolved": "2023-05-20 21:13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.117"
     },
     {
       "number": 1579,
@@ -2892,7 +3125,8 @@
       "dateRaised": "2023-05-21",
       "deadline": "2023-11-17",
       "dateResolved": "2023-06-03 19:26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.131"
     },
     {
       "number": 1580,
@@ -2904,7 +3138,8 @@
       "dateRaised": "2023-05-21",
       "deadline": "2023-11-17",
       "dateResolved": "2023-06-10 20:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.152"
     },
     {
       "number": 1582,
@@ -2916,7 +3151,8 @@
       "dateRaised": "2023-05-22",
       "deadline": "2023-11-18",
       "dateResolved": "2023-05-22 10:54",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.119"
     },
     {
       "number": 1583,
@@ -2929,7 +3165,8 @@
       "deadline": "2023-11-19",
       "dateResolved": "2023-05-23 18:31",
       "resolvedAuthor": "JG",
-      "releaseNotes": "fixed writing of output files which had mixed order due to parameter cross-over"
+      "releaseNotes": "fixed writing of output files which had mixed order due to parameter cross-over",
+      "resolvedInVersion": "1.6.120"
     },
     {
       "number": 1584,
@@ -2941,7 +3178,8 @@
       "dateRaised": "2023-05-25",
       "deadline": "2023-11-21",
       "dateResolved": "2023-05-25 14:32",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.121"
     },
     {
       "number": 1585,
@@ -2953,7 +3191,8 @@
       "dateRaised": "2023-05-25",
       "deadline": "2023-11-21",
       "dateResolved": "2023-05-25 15:19",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.122"
     },
     {
       "number": 1586,
@@ -2965,7 +3204,8 @@
       "dateRaised": "2023-05-26",
       "deadline": "2023-11-22",
       "dateResolved": "2023-05-26 19:52",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.123"
     },
     {
       "number": 1587,
@@ -2977,7 +3217,8 @@
       "dateRaised": "2023-05-30",
       "deadline": "2023-11-26",
       "dateResolved": "2023-05-30 23:52",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.124"
     },
     {
       "number": 1588,
@@ -2989,7 +3230,8 @@
       "dateRaised": "2023-05-31",
       "deadline": "2023-11-27",
       "dateResolved": "2023-06-03 19:26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.132"
     },
     {
       "number": 1589,
@@ -3001,7 +3243,8 @@
       "dateRaised": "2023-05-31",
       "deadline": "2023-11-27",
       "dateResolved": "2023-05-31 12:42",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.125"
     },
     {
       "number": 1590,
@@ -3013,7 +3256,8 @@
       "dateRaised": "2023-05-31",
       "deadline": "2023-11-27",
       "dateResolved": "2023-05-31 13:07",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.126"
     },
     {
       "number": 1591,
@@ -3025,7 +3269,8 @@
       "dateRaised": "2023-06-01",
       "deadline": "2023-11-28",
       "dateResolved": "2023-06-01 11:12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.127"
     },
     {
       "number": 1592,
@@ -3037,7 +3282,8 @@
       "dateRaised": "2023-06-03",
       "deadline": "2023-11-30",
       "dateResolved": "2023-06-03 14:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.128"
     },
     {
       "number": 1593,
@@ -3049,7 +3295,8 @@
       "dateRaised": "2023-06-03",
       "deadline": "2023-11-30",
       "dateResolved": "2023-06-08 18:50",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.145"
     },
     {
       "number": 1594,
@@ -3061,7 +3308,8 @@
       "dateRaised": "2023-06-03",
       "deadline": "2023-11-30",
       "dateResolved": "2023-06-03 17:01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.130"
     },
     {
       "number": 1595,
@@ -3074,7 +3322,8 @@
       "deadline": "2023-11-30",
       "dateResolved": "2023-06-04 19:40",
       "resolvedAuthor": "JG",
-      "releaseNotes": "Behavior is now DIFFERENT, as variables are not printed automatically; write e.g. print(mbs) to see mbs representation; see section Execute Command and Help"
+      "releaseNotes": "Behavior is now DIFFERENT, as variables are not printed automatically; write e.g. print(mbs) to see mbs representation; see section Execute Command and Help",
+      "resolvedInVersion": "1.6.134"
     },
     {
       "number": 1596,
@@ -3086,7 +3335,8 @@
       "dateRaised": "2023-06-04",
       "deadline": "2023-12-01",
       "dateResolved": "2023-06-04 00:13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.133"
     },
     {
       "number": 1597,
@@ -3098,7 +3348,8 @@
       "dateRaised": "2023-06-05",
       "deadline": "2023-12-02",
       "dateResolved": "2023-06-08 21:56",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.146"
     },
     {
       "number": 1598,
@@ -3111,7 +3362,8 @@
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 18:45",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added computeODE2AEeigenvaluesTest.py"
+      "releaseNotes": "added computeODE2AEeigenvaluesTest.py",
+      "resolvedInVersion": "1.6.142"
     },
     {
       "number": 1599,
@@ -3123,7 +3375,8 @@
       "dateRaised": "2023-06-08",
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 18:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.144"
     },
     {
       "number": 1600,
@@ -3135,7 +3388,8 @@
       "dateRaised": "2023-06-08",
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 17:17",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.138"
     },
     {
       "number": 1601,
@@ -3147,7 +3401,8 @@
       "dateRaised": "2023-06-08",
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 16:37",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.137"
     },
     {
       "number": 1602,
@@ -3160,7 +3415,8 @@
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 17:42",
       "resolvedAuthor": "JG",
-      "releaseNotes": "also rotation parameters in initialVelocities were wrong for initialRotationMatrix!=np.eye(3); fixed, but more testing needed"
+      "releaseNotes": "also rotation parameters in initialVelocities were wrong for initialRotationMatrix!=np.eye(3); fixed, but more testing needed",
+      "resolvedInVersion": "1.6.139"
     },
     {
       "number": 1603,
@@ -3173,7 +3429,8 @@
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 18:45",
       "resolvedAuthor": "JG",
-      "releaseNotes": "was already in system checks, which however were not called, see issue 1604"
+      "releaseNotes": "was already in system checks, which however were not called, see issue 1604",
+      "resolvedInVersion": "1.6.143"
     },
     {
       "number": 1604,
@@ -3185,7 +3442,8 @@
       "dateRaised": "2023-06-08",
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 18:24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.140"
     },
     {
       "number": 1605,
@@ -3197,7 +3455,8 @@
       "dateRaised": "2023-06-08",
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-08 18:35",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.141"
     },
     {
       "number": 1606,
@@ -3210,7 +3469,8 @@
       "deadline": "2023-12-05",
       "dateResolved": "2023-06-10 19:11",
       "resolvedAuthor": "JG",
-      "releaseNotes": "needs further testing!"
+      "releaseNotes": "needs further testing!",
+      "resolvedInVersion": "1.6.151"
     },
     {
       "number": 1607,
@@ -3222,7 +3482,8 @@
       "dateRaised": "2023-06-09",
       "deadline": "2023-12-06",
       "dateResolved": "2023-06-12 11:02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.162"
     },
     {
       "number": 1608,
@@ -3235,7 +3496,8 @@
       "deadline": "2023-12-07",
       "dateResolved": "2023-06-10 11:44",
       "resolvedAuthor": "JG",
-      "releaseNotes": "shall be resolved just by calling StartRenderer before first call to any solver functionality"
+      "releaseNotes": "shall be resolved just by calling StartRenderer before first call to any solver functionality",
+      "resolvedInVersion": "1.6.148"
     },
     {
       "number": 1609,
@@ -3247,7 +3509,8 @@
       "dateRaised": "2023-06-10",
       "deadline": "2023-12-07",
       "dateResolved": "2023-06-10 20:25",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.153"
     },
     {
       "number": 1610,
@@ -3259,7 +3522,8 @@
       "dateRaised": "2023-06-10",
       "deadline": "2023-12-07",
       "dateResolved": "2023-06-10 17:47",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.149"
     },
     {
       "number": 1611,
@@ -3271,7 +3535,8 @@
       "dateRaised": "2023-06-10",
       "deadline": "2023-12-07",
       "dateResolved": "2023-06-10 17:48",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.150"
     },
     {
       "number": 1612,
@@ -3284,7 +3549,8 @@
       "deadline": "2023-12-07",
       "dateResolved": "2023-06-10 21:34",
       "resolvedAuthor": "JG",
-      "releaseNotes": "see also issue 1536"
+      "releaseNotes": "see also issue 1536",
+      "resolvedInVersion": "1.6.154"
     },
     {
       "number": 1613,
@@ -3296,7 +3562,8 @@
       "dateRaised": "2023-06-11",
       "deadline": "2023-12-08",
       "dateResolved": "2023-06-11 19:56",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.156"
     },
     {
       "number": 1615,
@@ -3308,7 +3575,8 @@
       "dateRaised": "2023-06-11",
       "deadline": "2023-12-08",
       "dateResolved": "2023-06-12 01:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.160"
     },
     {
       "number": 1616,
@@ -3321,7 +3589,8 @@
       "deadline": "2023-12-08",
       "dateResolved": "2023-06-12 13:22",
       "resolvedAuthor": "JG",
-      "releaseNotes": "Eigen::PartialPivLU 2.5 times faster for 65 DOF test in factorization, factor 3 faster for backsubst"
+      "releaseNotes": "Eigen::PartialPivLU 2.5 times faster for 65 DOF test in factorization, factor 3 faster for backsubst",
+      "resolvedInVersion": "1.6.163"
     },
     {
       "number": 1617,
@@ -3333,7 +3602,8 @@
       "dateRaised": "2023-06-11",
       "deadline": "2023-12-08",
       "dateResolved": "2023-06-12 01:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.161"
     },
     {
       "number": 1618,
@@ -3345,7 +3615,8 @@
       "dateRaised": "2023-06-11",
       "deadline": "2023-12-08",
       "dateResolved": "2023-06-11 23:46",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.157"
     },
     {
       "number": 1619,
@@ -3357,7 +3628,8 @@
       "dateRaised": "2023-06-11",
       "deadline": "2023-12-08",
       "dateResolved": "2023-06-11 23:52",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.158"
     },
     {
       "number": 1620,
@@ -3369,7 +3641,8 @@
       "dateRaised": "2023-06-13",
       "deadline": "2023-12-10",
       "dateResolved": "2023-06-19 22:14",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.168"
     },
     {
       "number": 1621,
@@ -3381,7 +3654,8 @@
       "dateRaised": "2023-06-19",
       "deadline": "2023-12-16",
       "dateResolved": "2023-06-19 20:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.166"
     },
     {
       "number": 1622,
@@ -3394,7 +3668,8 @@
       "deadline": "2023-12-16",
       "dateResolved": "2023-06-19 22:11",
       "resolvedAuthor": "JG",
-      "releaseNotes": "occurs on WSL with WSLg; using 'export LIBGL_ALWAYS_SOFTWARE=1' will resolve the problem; put this line into your .bashrc"
+      "releaseNotes": "occurs on WSL with WSLg; using 'export LIBGL_ALWAYS_SOFTWARE=1' will resolve the problem; put this line into your .bashrc",
+      "resolvedInVersion": "1.6.167"
     },
     {
       "number": 1623,
@@ -3406,7 +3681,8 @@
       "dateRaised": "2023-06-19",
       "deadline": "2023-12-16",
       "dateResolved": "2023-06-19 19:56",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.165"
     },
     {
       "number": 1624,
@@ -3418,7 +3694,8 @@
       "dateRaised": "2023-06-20",
       "deadline": "2023-12-17",
       "dateResolved": "2023-06-20 23:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.170"
     },
     {
       "number": 1625,
@@ -3430,7 +3707,8 @@
       "dateRaised": "2023-06-20",
       "deadline": "2023-12-17",
       "dateResolved": "2023-06-21 00:26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.171"
     },
     {
       "number": 1626,
@@ -3442,7 +3720,8 @@
       "dateRaised": "2023-06-21",
       "deadline": "2023-12-18",
       "dateResolved": "2023-06-21 10:40",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.173"
     },
     {
       "number": 1627,
@@ -3454,7 +3733,8 @@
       "dateRaised": "2023-06-21",
       "deadline": "2023-12-18",
       "dateResolved": "2023-06-21 10:15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.172"
     },
     {
       "number": 1632,
@@ -3466,7 +3746,8 @@
       "dateRaised": "2023-06-27",
       "deadline": "2023-12-24",
       "dateResolved": "2023-06-27 14:15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.174"
     },
     {
       "number": 1633,
@@ -3478,7 +3759,8 @@
       "dateRaised": "2023-06-28",
       "deadline": "2023-12-25",
       "dateResolved": "2023-06-28 21:15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.175"
     },
     {
       "number": 1634,
@@ -3490,7 +3772,8 @@
       "dateRaised": "2023-06-29",
       "deadline": "2023-12-26",
       "dateResolved": "2023-06-29 10:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.176"
     },
     {
       "number": 1635,
@@ -3502,7 +3785,8 @@
       "dateRaised": "2023-06-30",
       "deadline": "2023-12-27",
       "dateResolved": "2023-06-30 09:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.177"
     },
     {
       "number": 1636,
@@ -3514,7 +3798,8 @@
       "dateRaised": "2023-06-30",
       "deadline": "2023-12-27",
       "dateResolved": "2023-06-30 14:09",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.178"
     },
     {
       "number": 1637,
@@ -3526,7 +3811,8 @@
       "dateRaised": "2023-06-30",
       "deadline": "2023-12-27",
       "dateResolved": "2023-06-30 15:01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.179"
     },
     {
       "number": 1638,
@@ -3538,7 +3824,8 @@
       "dateRaised": "2023-07-09",
       "deadline": "2024-01-05",
       "dateResolved": "2023-07-09 09:15",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.180"
     },
     {
       "number": 1640,
@@ -3550,7 +3837,8 @@
       "dateRaised": "2023-07-11",
       "deadline": "2024-01-07",
       "dateResolved": "2023-07-14 11:20",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.187"
     },
     {
       "number": 1641,
@@ -3562,7 +3850,8 @@
       "dateRaised": "2023-07-11",
       "deadline": "2024-01-07",
       "dateResolved": "2023-07-11 17:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.181"
     },
     {
       "number": 1642,
@@ -3574,7 +3863,8 @@
       "dateRaised": "2023-07-11",
       "deadline": "2024-01-07",
       "dateResolved": "2023-07-11 17:58",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.182"
     },
     {
       "number": 1643,
@@ -3586,7 +3876,8 @@
       "dateRaised": "2023-07-12",
       "deadline": "2024-01-08",
       "dateResolved": "2023-07-12 09:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.183"
     },
     {
       "number": 1644,
@@ -3598,7 +3889,8 @@
       "dateRaised": "2023-07-12",
       "deadline": "2024-01-08",
       "dateResolved": "2023-07-12 09:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.184"
     },
     {
       "number": 1645,
@@ -3611,7 +3903,8 @@
       "deadline": "2024-01-08",
       "dateResolved": "2023-07-12 16:05",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added parameter regularizationForce with tanh regularization for avoidance of compressive spring force"
+      "releaseNotes": "added parameter regularizationForce with tanh regularization for avoidance of compressive spring force",
+      "resolvedInVersion": "1.6.185"
     },
     {
       "number": 1646,
@@ -3623,7 +3916,8 @@
       "dateRaised": "2023-07-13",
       "deadline": "2024-01-09",
       "dateResolved": "2023-07-13 16:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.186"
     },
     {
       "number": 1647,
@@ -3636,7 +3930,8 @@
       "deadline": "2024-01-10",
       "dateResolved": "2023-07-14 18:34",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added triads and vectors, showing traces of motion at sensor points"
+      "releaseNotes": "added triads and vectors, showing traces of motion at sensor points",
+      "resolvedInVersion": "1.6.188"
     },
     {
       "number": 1648,
@@ -3648,7 +3943,8 @@
       "dateRaised": "2023-07-17",
       "deadline": "2024-01-13",
       "dateResolved": "2023-07-17 12:10",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.6.189"
     },
     {
       "number": 1649,
@@ -3660,7 +3956,8 @@
       "dateRaised": "2023-07-19",
       "deadline": "2024-01-15",
       "dateResolved": "2023-07-19 16:07",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.0"
     },
     {
       "number": 1652,
@@ -3672,7 +3969,8 @@
       "dateRaised": "2023-08-08",
       "deadline": "2024-02-04",
       "dateResolved": "2023-08-08 17:53",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.1"
     },
     {
       "number": 1654,
@@ -3684,7 +3982,8 @@
       "dateRaised": "2023-09-03",
       "deadline": "2024-03-01",
       "dateResolved": "2023-09-03 16:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.2"
     },
     {
       "number": 1655,
@@ -3696,7 +3995,8 @@
       "dateRaised": "2023-09-07",
       "deadline": "2024-03-05",
       "dateResolved": "2023-09-07 21:13",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.3"
     },
     {
       "number": 1656,
@@ -3708,7 +4008,8 @@
       "dateRaised": "2023-09-15",
       "deadline": "2024-03-13",
       "dateResolved": "2023-09-15 15:50",
-      "resolvedAuthor": "Martin Sereinig"
+      "resolvedAuthor": "Martin Sereinig",
+      "resolvedInVersion": "1.7.4"
     },
     {
       "number": 1657,
@@ -3720,7 +4021,8 @@
       "dateRaised": "2023-10-09",
       "deadline": "2024-04-06",
       "dateResolved": "2023-10-09 20:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.5"
     },
     {
       "number": 1658,
@@ -3733,7 +4035,8 @@
       "deadline": "2024-04-09",
       "dateResolved": "2023-10-12 17:04",
       "resolvedAuthor": "JG",
-      "releaseNotes": "compilation successful and TestSuite runs through"
+      "releaseNotes": "compilation successful and TestSuite runs through",
+      "resolvedInVersion": "1.7.7"
     },
     {
       "number": 1659,
@@ -3745,7 +4048,8 @@
       "dateRaised": "2023-10-12",
       "deadline": "2024-04-09",
       "dateResolved": "2023-10-12 17:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.8"
     },
     {
       "number": 1660,
@@ -3757,7 +4061,8 @@
       "dateRaised": "2023-10-12",
       "deadline": "2024-04-09",
       "dateResolved": "2023-10-12 13:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.6"
     },
     {
       "number": 1661,
@@ -3769,7 +4074,8 @@
       "dateRaised": "2023-10-15",
       "deadline": "2024-04-12",
       "dateResolved": "2023-10-15 14:21",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.10"
     },
     {
       "number": 1663,
@@ -3781,7 +4087,8 @@
       "dateRaised": "2023-10-15",
       "deadline": "2024-04-12",
       "dateResolved": "2023-10-16 07:45",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.15"
     },
     {
       "number": 1664,
@@ -3793,7 +4100,8 @@
       "dateRaised": "2023-10-15",
       "deadline": "2024-04-12",
       "dateResolved": "2023-10-15 22:23",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.12"
     },
     {
       "number": 1665,
@@ -3805,7 +4113,8 @@
       "dateRaised": "2023-10-15",
       "deadline": "2024-04-12",
       "dateResolved": "2023-10-15 22:24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.13"
     },
     {
       "number": 1666,
@@ -3817,7 +4126,8 @@
       "dateRaised": "2023-10-15",
       "deadline": "2024-04-12",
       "dateResolved": "2023-10-15 22:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.14"
     },
     {
       "number": 1667,
@@ -3829,7 +4139,8 @@
       "dateRaised": "2023-10-16",
       "deadline": "2024-04-13",
       "dateResolved": "2023-11-19 19:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.23"
     },
     {
       "number": 1669,
@@ -3841,7 +4152,8 @@
       "dateRaised": "2023-10-16",
       "deadline": "2024-04-13",
       "dateResolved": "2023-10-16 08:02",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.16"
     },
     {
       "number": 1670,
@@ -3853,7 +4165,8 @@
       "dateRaised": "2023-10-16",
       "deadline": "2024-04-13",
       "dateResolved": "2023-10-16 08:31",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.17"
     },
     {
       "number": 1671,
@@ -3865,7 +4178,8 @@
       "dateRaised": "2023-10-16",
       "deadline": "2024-04-13",
       "dateResolved": "2023-10-16 08:32",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.18"
     },
     {
       "number": 1672,
@@ -3877,7 +4191,8 @@
       "dateRaised": "2023-10-16",
       "deadline": "2024-04-13",
       "dateResolved": "2023-10-16 10:00",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.19"
     },
     {
       "number": 1673,
@@ -3889,7 +4204,8 @@
       "dateRaised": "2023-10-25",
       "deadline": "2024-04-22",
       "dateResolved": "2023-10-25 09:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.20"
     },
     {
       "number": 1678,
@@ -3901,7 +4217,8 @@
       "dateRaised": "2023-10-29",
       "deadline": "2024-04-26",
       "dateResolved": "2023-11-19 22:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.27"
     },
     {
       "number": 1679,
@@ -3913,7 +4230,8 @@
       "dateRaised": "2023-10-29",
       "deadline": "2024-04-26",
       "dateResolved": "2023-11-19 22:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.28"
     },
     {
       "number": 1680,
@@ -3925,7 +4243,8 @@
       "dateRaised": "2023-10-29",
       "deadline": "2024-04-26",
       "dateResolved": "2023-12-14 00:01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.59"
     },
     {
       "number": 1685,
@@ -3938,7 +4257,8 @@
       "deadline": "2024-05-05",
       "dateResolved": "2023-11-07 14:04",
       "resolvedAuthor": "JG",
-      "releaseNotes": "ANCFrotatingCable2D.py"
+      "releaseNotes": "ANCFrotatingCable2D.py",
+      "resolvedInVersion": "1.7.21"
     },
     {
       "number": 1686,
@@ -3951,7 +4271,8 @@
       "deadline": "2024-05-17",
       "dateResolved": "2023-11-19 19:11",
       "resolvedAuthor": "JG",
-      "releaseNotes": "added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; also allow referenceLength=0"
+      "releaseNotes": "added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; also allow referenceLength=0",
+      "resolvedInVersion": "1.7.22"
     },
     {
       "number": 1687,
@@ -3963,7 +4284,8 @@
       "dateRaised": "2023-11-19",
       "deadline": "2024-05-17",
       "dateResolved": "2023-11-19 21:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.24"
     },
     {
       "number": 1688,
@@ -3975,7 +4297,8 @@
       "dateRaised": "2023-11-19",
       "deadline": "2024-05-17",
       "dateResolved": "2023-11-19 21:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.25"
     },
     {
       "number": 1689,
@@ -3987,7 +4310,8 @@
       "dateRaised": "2023-11-19",
       "deadline": "2024-05-17",
       "dateResolved": "2023-11-19 21:04",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.26"
     },
     {
       "number": 1690,
@@ -3999,7 +4323,8 @@
       "dateRaised": "2023-11-19",
       "deadline": "2024-05-17",
       "dateResolved": "2023-11-19 23:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.29"
     },
     {
       "number": 1693,
@@ -4011,7 +4336,8 @@
       "dateRaised": "2023-11-19",
       "deadline": "2024-05-17",
       "dateResolved": "2023-12-13 23:40",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.58"
     },
     {
       "number": 1694,
@@ -4023,7 +4349,8 @@
       "dateRaised": "2023-11-19",
       "deadline": "2024-05-17",
       "dateResolved": "2023-11-19 23:05",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.30"
     },
     {
       "number": 1696,
@@ -4036,7 +4363,8 @@
       "deadline": "2024-05-19",
       "dateResolved": "2023-11-28 09:08",
       "resolvedAuthor": "EXTENSION",
-      "releaseNotes": "basic symbolic functionality added; tested with SpringDamper user function, leading to speedup of 10 against regular Python function"
+      "releaseNotes": "basic symbolic functionality added; tested with SpringDamper user function, leading to speedup of 10 against regular Python function",
+      "resolvedInVersion": "1.7.36"
     },
     {
       "number": 1697,
@@ -4049,7 +4377,8 @@
       "deadline": "2024-05-19",
       "dateResolved": "2023-11-21 21:18",
       "resolvedAuthor": "JG",
-      "releaseNotes": "see also issue 1613"
+      "releaseNotes": "see also issue 1613",
+      "resolvedInVersion": "1.7.31"
     },
     {
       "number": 1698,
@@ -4061,7 +4390,8 @@
       "dateRaised": "2023-11-21",
       "deadline": "2024-05-19",
       "dateResolved": "2023-12-08 18:41",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.48"
     },
     {
       "number": 1699,
@@ -4073,7 +4403,8 @@
       "dateRaised": "2023-11-22",
       "deadline": "2024-05-20",
       "dateResolved": "2023-12-08 18:41",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.49"
     },
     {
       "number": 1700,
@@ -4085,7 +4416,8 @@
       "dateRaised": "2023-11-22",
       "deadline": "2024-05-20",
       "dateResolved": "2023-12-07 23:03",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.46"
     },
     {
       "number": 1701,
@@ -4097,7 +4429,8 @@
       "dateRaised": "2023-11-22",
       "deadline": "2024-05-20",
       "dateResolved": "2023-11-22 00:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.32"
     },
     {
       "number": 1702,
@@ -4110,7 +4443,8 @@
       "deadline": "2024-05-20",
       "dateResolved": "2023-11-22 02:03",
       "resolvedAuthor": "JG",
-      "releaseNotes": "still does not work in Spyder"
+      "releaseNotes": "still does not work in Spyder",
+      "resolvedInVersion": "1.7.33"
     },
     {
       "number": 1703,
@@ -4123,7 +4457,8 @@
       "deadline": "2024-05-20",
       "dateResolved": "2023-11-22 08:24",
       "resolvedAuthor": "JG",
-      "releaseNotes": "created 2 new pybind module files; no major compilation speedup visible on laptop"
+      "releaseNotes": "created 2 new pybind module files; no major compilation speedup visible on laptop",
+      "resolvedInVersion": "1.7.34"
     },
     {
       "number": 1704,
@@ -4135,7 +4470,8 @@
       "dateRaised": "2023-11-22",
       "deadline": "2024-05-20",
       "dateResolved": "2023-11-22 09:43",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.35"
     },
     {
       "number": 1705,
@@ -4148,7 +4484,8 @@
       "deadline": "2024-05-26",
       "dateResolved": "2023-12-03 14:58",
       "resolvedAuthor": "JG",
-      "releaseNotes": "this is enabled by adding user function after Assemble, thus objects are not registered to have Python user functions"
+      "releaseNotes": "this is enabled by adding user function after Assemble, thus objects are not registered to have Python user functions",
+      "resolvedInVersion": "1.7.40"
     },
     {
       "number": 1706,
@@ -4160,7 +4497,8 @@
       "dateRaised": "2023-11-30",
       "deadline": "2024-05-28",
       "dateResolved": "2023-11-30 23:56",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.39"
     },
     {
       "number": 1707,
@@ -4172,7 +4510,8 @@
       "dateRaised": "2023-11-30",
       "deadline": "2024-05-28",
       "dateResolved": "2023-11-30 23:39",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.38"
     },
     {
       "number": 1708,
@@ -4185,7 +4524,8 @@
       "deadline": "2024-05-31",
       "dateResolved": "2023-12-09 16:29",
       "resolvedAuthor": "JG",
-      "releaseNotes": "not yet put into mbs and using no integer handles, but std::unordered_map, which has highly efficient hash table included"
+      "releaseNotes": "not yet put into mbs and using no integer handles, but std::unordered_map, which has highly efficient hash table included",
+      "resolvedInVersion": "1.7.50"
     },
     {
       "number": 1709,
@@ -4197,7 +4537,8 @@
       "dateRaised": "2023-12-03",
       "deadline": "2024-05-31",
       "dateResolved": "2023-12-03 15:01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.41"
     },
     {
       "number": 1710,
@@ -4209,7 +4550,8 @@
       "dateRaised": "2023-12-03",
       "deadline": "2024-05-31",
       "dateResolved": "2023-12-08 07:22",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.47"
     },
     {
       "number": 1711,
@@ -4221,7 +4563,8 @@
       "dateRaised": "2023-12-03",
       "deadline": "2024-05-31",
       "dateResolved": "2023-12-05 00:06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.42"
     },
     {
       "number": 1712,
@@ -4233,7 +4576,8 @@
       "dateRaised": "2023-12-03",
       "deadline": "2024-05-31",
       "dateResolved": "2023-12-05 00:06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.43"
     },
     {
       "number": 1713,
@@ -4245,7 +4589,8 @@
       "dateRaised": "2023-12-07",
       "deadline": "2024-06-04",
       "dateResolved": "2023-12-07 19:53",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.44"
     },
     {
       "number": 1714,
@@ -4257,7 +4602,8 @@
       "dateRaised": "2023-12-07",
       "deadline": "2024-06-04",
       "dateResolved": "2023-12-07 19:55",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.45"
     },
     {
       "number": 1715,
@@ -4269,7 +4615,8 @@
       "dateRaised": "2023-12-08",
       "deadline": "2024-06-05",
       "dateResolved": "2023-12-09 16:29",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.51"
     },
     {
       "number": 1716,
@@ -4281,7 +4628,8 @@
       "dateRaised": "2023-12-08",
       "deadline": "2024-06-05",
       "dateResolved": "2023-12-10 21:57",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.53"
     },
     {
       "number": 1724,
@@ -4293,7 +4641,8 @@
       "dateRaised": "2023-12-09",
       "deadline": "2024-06-06",
       "dateResolved": "2023-12-09 19:26",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.52"
     },
     {
       "number": 1725,
@@ -4305,7 +4654,8 @@
       "dateRaised": "2023-12-10",
       "deadline": "2024-06-07",
       "dateResolved": "2023-12-12 14:16",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.54"
     },
     {
       "number": 1726,
@@ -4318,7 +4668,8 @@
       "deadline": "2024-06-09",
       "dateResolved": "2023-12-13 14:02",
       "resolvedAuthor": "JG",
-      "releaseNotes": "note: currently implemented less efficient with memory allocations"
+      "releaseNotes": "note: currently implemented less efficient with memory allocations",
+      "resolvedInVersion": "1.7.57"
     },
     {
       "number": 1727,
@@ -4330,7 +4681,8 @@
       "dateRaised": "2023-12-12",
       "deadline": "2024-06-09",
       "dateResolved": "2023-12-18 08:24",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.67"
     },
     {
       "number": 1728,
@@ -4342,7 +4694,8 @@
       "dateRaised": "2023-12-12",
       "deadline": "2024-06-09",
       "dateResolved": "2023-12-15 13:52",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.63"
     },
     {
       "number": 1729,
@@ -4354,7 +4707,8 @@
       "dateRaised": "2023-12-12",
       "deadline": "2024-06-09",
       "dateResolved": "2023-12-15 13:52",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.64"
     },
     {
       "number": 1730,
@@ -4366,7 +4720,8 @@
       "dateRaised": "2023-12-13",
       "deadline": "2024-06-10",
       "dateResolved": "2023-12-13 13:27",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.55"
     },
     {
       "number": 1731,
@@ -4378,7 +4733,8 @@
       "dateRaised": "2023-12-13",
       "deadline": "2024-06-10",
       "dateResolved": "2023-12-13 13:47",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.56"
     },
     {
       "number": 1732,
@@ -4390,7 +4746,8 @@
       "dateRaised": "2023-12-15",
       "deadline": "2024-06-12",
       "dateResolved": "2023-12-15 11:12",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.60"
     },
     {
       "number": 1733,
@@ -4402,7 +4759,8 @@
       "dateRaised": "2023-12-15",
       "deadline": "2024-06-12",
       "dateResolved": "2023-12-15 13:06",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.62"
     },
     {
       "number": 1734,
@@ -4414,7 +4772,8 @@
       "dateRaised": "2023-12-15",
       "deadline": "2024-06-12",
       "dateResolved": "2023-12-15 11:51",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.61"
     },
     {
       "number": 1735,
@@ -4426,7 +4785,8 @@
       "dateRaised": "2023-12-15",
       "deadline": "2024-06-12",
       "dateResolved": "2023-12-15 18:01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.65"
     },
     {
       "number": 1736,
@@ -4438,7 +4798,8 @@
       "dateRaised": "2023-12-15",
       "deadline": "2024-06-12",
       "dateResolved": "2023-12-15 18:01",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.66"
     },
     {
       "number": 1737,
@@ -4450,7 +4811,8 @@
       "dateRaised": "2023-12-18",
       "deadline": "2024-06-15",
       "dateResolved": "2023-12-18 19:48",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.69"
     },
     {
       "number": 1738,
@@ -4462,7 +4824,8 @@
       "dateRaised": "2023-12-18",
       "deadline": "2024-06-15",
       "dateResolved": "2023-12-18 19:47",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.68"
     },
     {
       "number": 1739,
@@ -4474,7 +4837,8 @@
       "dateRaised": "2023-12-19",
       "deadline": "2024-06-16",
       "dateResolved": "2023-12-19 08:30",
-      "resolvedAuthor": "JG"
+      "resolvedAuthor": "JG",
+      "resolvedInVersion": "1.7.70"
     }
   ]
 }

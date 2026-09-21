@@ -12,5 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/ci/buildManylinux.sh",
   "line": "106",
-  "releaseNotes": "the pin now carries a PEP 508 marker: scipy==1.15.2 for python_version < 3.14 and an unpinned scipy at or above it. The pin exists for speed and 3.14 had no result at all; so an unmeasured scipy there is strictly better than no build. Re-pin once a fast-enough 3.14 wheel exists"
+  "releaseNotes": "the pin now carries a PEP 508 marker: scipy==1.15.2 for python_version < 3.14 and an unpinned scipy at or above it. The pin exists for speed and 3.14 had no result at all; so an unmeasured scipy there is strictly better than no build. Re-pin once a fast-enough 3.14 wheel exists",
+  "resolvedInVersion": "1.11.40"
 }

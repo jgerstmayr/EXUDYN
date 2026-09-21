@@ -9,5 +9,6 @@
   "deadline": "2026-03-22",
   "dateResolved": "2025-09-30 15:14",
   "resolvedAuthor": "JG",
-  "releaseNotes": "added raytracer options shadowScalingFactor and shadowSmoothingSteps; default values work well with lightRadiusVariations=31"
+  "releaseNotes": "added raytracer options shadowScalingFactor and shadowSmoothingSteps; default values work well with lightRadiusVariations=31",
+  "resolvedInVersion": "1.10.8"
 }

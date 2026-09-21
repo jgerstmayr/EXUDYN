@@ -9,5 +9,6 @@
   "deadline": "2025-08-30",
   "dateResolved": "2025-03-05 21:11",
   "resolvedAuthor": "JG",
-  "releaseNotes": "in case of no static triangles, static searchtree is only created once and no additional operations are performed"
+  "releaseNotes": "in case of no static triangles, static searchtree is only created once and no additional operations are performed",
+  "resolvedInVersion": "1.9.71"
 }

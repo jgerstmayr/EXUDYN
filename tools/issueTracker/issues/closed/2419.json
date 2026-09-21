@@ -9,5 +9,6 @@
   "deadline": "2027-03-13",
   "dateResolved": "2026-09-14 14:29",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "definitionValidator checks the pybind declarations; argTypes completed for DeleteNode / DeleteSensor / SetWithDenseMatrix; duplicate symbolic.max and unused Print argTypes removed"
+  "releaseNotes": "definitionValidator checks the pybind declarations; argTypes completed for DeleteNode / DeleteSensor / SetWithDenseMatrix; duplicate symbolic.max and unused Print argTypes removed",
+  "resolvedInVersion": "1.11.51"
 }

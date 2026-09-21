@@ -9,5 +9,6 @@
   "deadline": "2025-12-12",
   "dateResolved": "2025-06-15 09:37",
   "resolvedAuthor": "JG",
-  "releaseNotes": "now leads to improved convergence"
+  "releaseNotes": "now leads to improved convergence",
+  "resolvedInVersion": "1.9.192"
 }

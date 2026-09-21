@@ -10,5 +10,6 @@
   "dateResolved": "2026-09-15 00:00",
   "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/special",
-  "releaseNotes": "exudyn.special.exceptions.parameterRangeChecks (default True) switches off the range checks of item parameters (all write paths; revision2026 step R4.4.3.4b) and of simulation/visualization settings (EXUstd::GetSafely...); the Python checks in itemInterface.py are gone"
+  "releaseNotes": "exudyn.special.exceptions.parameterRangeChecks (default True) switches off the range checks of item parameters (all write paths; revision2026 step R4.4.3.4b) and of simulation/visualization settings (EXUstd::GetSafely...); the Python checks in itemInterface.py are gone",
+  "resolvedInVersion": "1.11.54"
 }

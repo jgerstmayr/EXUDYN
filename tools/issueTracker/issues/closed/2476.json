@@ -9,5 +9,6 @@
   "deadline": "2027-03-16",
   "dateResolved": "2026-09-17 16:43",
   "resolvedAuthor": "Claude-JG",
-  "releaseNotes": "The three-argument constructor now assigns numberOfRowsInit and numberOfColumnsInit; fixed and kept rather than deleted, on the maintainer decision. It also gets its first caller: a case in AllMatrixVariantsUnitTests.h builds a 2x3 matrix through it and asks a MatrixContainer for a matrix-vector product, which since #2474 sizes its result from exactly those fields. Mutation check: putting the zeros back produces 1 failure. revision2026 step R5.4.6."
+  "releaseNotes": "The three-argument constructor now assigns numberOfRowsInit and numberOfColumnsInit; fixed and kept rather than deleted, on the maintainer decision. It also gets its first caller: a case in AllMatrixVariantsUnitTests.h builds a 2x3 matrix through it and asks a MatrixContainer for a matrix-vector product, which since #2474 sizes its result from exactly those fields. Mutation check: putting the zeros back produces 1 failure. revision2026 step R5.4.6.",
+  "resolvedInVersion": "1.11.117"
 }

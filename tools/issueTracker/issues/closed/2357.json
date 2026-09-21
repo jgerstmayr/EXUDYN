@@ -11,5 +11,6 @@
   "dateResolved": "2026-09-09 19:00",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/regenerate.py",
-  "releaseNotes": "Verified by fault injection: perturbed generator input gives exit 1 with correct tier classification; hand edit to an already-dirty tier file gives exit 1; date-only difference gives exit 0"
+  "releaseNotes": "Verified by fault injection: perturbed generator input gives exit 1 with correct tier classification; hand edit to an already-dirty tier file gives exit 1; date-only difference gives exit 0",
+  "resolvedInVersion": "1.11.7"
 }
