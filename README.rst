@@ -43,7 +43,7 @@ Exudyn
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written since revision2026 step R7.1.7 (decision D11)
 
-+  Exudyn version = 1.11.233.dev1 (McLaughlin)
++  Exudyn version = 1.11.234.dev1 (McLaughlin)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg

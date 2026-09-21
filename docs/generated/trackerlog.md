@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.233.dev1
+- Exudyn version = 1.11.234.dev1
 - last change = 2026-09-21
-- Number of issues = 2575
-- Number of resolved issues = 2306 (233 in current version)
+- Number of issues = 2576
+- Number of resolved issues = 2307 (234 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.234: resolved Issue 2575: opening an issue in the web page threw appendChild(null) (fix)
+  - issue author: Claude-JG
+  - description: Clicking an issue in exudev issue serve showed a red banner - TypeError: Failed to execute appendChild on Node: parameter 1 is not of type Node - and half a detail pane. TextBlock() returns null for a field that is not filled, and almost every issue has empty workingRemarks, so the pane threw on nearly every issue. Fixed with one Append(parent, node) helper that ignores a missing block, used by all 15 append sites; the fragment of the URL now also carries an issue (\#author=JG&issue=2548), which makes a link to one issue possible and lets the headless browser test render the detail pane without a click. That test fails when the unguarded append is put back.
+  - **notes:** One Append(parent, node) helper ignores a block that is not there, so a field left empty no longer throws in the detail pane; all 15 append sites use it. The URL fragment now carries an issue as well as an author (\#author=JG&issue=2548): a link opens that issue, and the headless browser test renders the detail pane for an open and a closed issue and asserts that the page reports no problem. docs/dev/WORKFLOW.md gains a table of exactly which files a tracker write touches and which of them are in git.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 16:39**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.233: resolved Issue 2574: the issue page did not parse: Python ate a backslash in the JavaScript (fix)
   - issue author: Claude-JG
   - description: exudev issue serve showed its frame and no issues at all, with no error message - the second time this page failed in silence. The cause this time: pageHtml is a Python triple-quoted string, and revision2026 step R8.3.5 put a newline escape into a confirm() text. Python turned it into a REAL newline inside a JavaScript string literal, which is a syntax error, which kills the whole script - including the error handlers added in \#2571 to report exactly this kind of failure. The page text is a raw string now, so a backslash in it belongs to the browser; and pytest renders the page in headless Edge or Chrome and asserts that issues appear and that the console reports nothing, which is the only check that sees a page the way a maintainer does.

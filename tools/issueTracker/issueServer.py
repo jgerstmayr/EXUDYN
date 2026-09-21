@@ -502,6 +502,13 @@ function EnumField(issue, field, values, closed) {
     return select;
 }
 
+//appendChild(null) is a TypeError, and TextBlock() returns null for a field that is empty -
+//which almost every issue is in workingRemarks. So nothing is appended directly any more (#2575).
+function Append(parent, node) {
+    if (node) parent.appendChild(node);
+    return parent;
+}
+
 function TextBlock(label, text) {
     if (!text || !text.trim()) return null;
     return El('div', {class: 'field'}, [El('div', {class: 'label', text: label}),
@@ -523,14 +530,14 @@ async function Show(number) {
     const closed = issue.status !== 'RAISED';
     const pane = document.getElementById('detailPane');
     pane.textContent = '';
-    pane.appendChild(El('h2', {text: '#' + issue.number + '  ' + issue.title}));
-    pane.appendChild(El('div', {class: 'label', text:
+    Append(pane, El('h2', {text: '#' + issue.number + '  ' + issue.title}));
+    Append(pane, El('div', {class: 'label', text:
         issue.status + ', ' + issue.type + ', raised ' + issue.dateRaised + ' by '
         + (issue.author || '?')
         + (closed ? ', closed ' + issue.dateResolved + ' by ' + issue.resolvedAuthor : '')
         + (issue.file ? ', ' + issue.file + (issue.line ? ':' + issue.line : '') : '')}));
 
-    pane.appendChild(El('div', {class: closed ? 'row danger' : 'row'}, [
+    Append(pane, El('div', {class: closed ? 'row danger' : 'row'}, [
         El('span', {class: 'label', text: closed ? 'CLOSED AND PUBLISHED - effort' : 'effort'}),
         EnumField(issue, 'effort', meta.efforts, closed),
         El('span', {class: 'label', text: 'priority'}),
@@ -538,31 +545,31 @@ async function Show(number) {
         El('span', {class: 'label', text: 'type'}),
         EnumField(issue, 'type', meta.types, closed)]));
 
-    pane.appendChild(TextBlock('description', issue.description));
-    pane.appendChild(TextBlock('working remarks (cleared when it closes)', issue.workingRemarks));
-    pane.appendChild(TextBlock('release notes (published)', issue.releaseNotes));
+    Append(pane, TextBlock('description', issue.description));
+    Append(pane, TextBlock('working remarks (cleared when it closes)', issue.workingRemarks));
+    Append(pane, TextBlock('release notes (published)', issue.releaseNotes));
 
     if (closed) return;
 
-    pane.appendChild(WriteBox('extend the description', 'extend',
+    Append(pane, WriteBox('extend the description', 'extend',
         text => Post('/api/extend', {number: issue.number, text: text})
                     .then(data => data && Show(issue.number))));
 
     const replace = El('input', {type: 'checkbox', id: 'replaceRemarks'});
-    pane.appendChild(WriteBox('working remarks', 'remark',
+    Append(pane, WriteBox('working remarks', 'remark',
         text => Post('/api/remark', {number: issue.number, text: text,
                                      replace: replace.checked})
                     .then(data => data && Show(issue.number)),
         El('label', {}, [replace, document.createTextNode(' replace')])));
 
-    pane.appendChild(WriteBox('release note - resolving BUMPS THE VERSION', 'resolve',
+    Append(pane, WriteBox('release note - resolving BUMPS THE VERSION', 'resolve',
         text => confirm('resolve #' + issue.number + '? This bumps the micro version.')
             && Post('/api/resolve', {number: issue.number, notes: text})
                    .then(data => data && Show(issue.number))));
 
     //CLOSED covers everything except RESOLVED - obsolete, won't fix, duplicate, superseded,
     //not reproducible, abandoned - and the reason says which (D13)
-    pane.appendChild(WriteBox('reason - closing without resolving also counts for the version',
+    Append(pane, WriteBox('reason - closing without resolving also counts for the version',
         'close',
         text => confirm('close #' + issue.number + ' without resolving it?')
             && Post('/api/close', {number: issue.number, reason: text})
@@ -573,7 +580,7 @@ function NewIssue() {
     current = null;
     const pane = document.getElementById('detailPane');
     pane.textContent = '';
-    pane.appendChild(El('h2', {text: 'a new issue'}));
+    Append(pane, El('h2', {text: 'a new issue'}));
 
     const title = El('input', {type: 'text', size: '70', placeholder: 'the issue in one line'});
     const description = El('textarea', {placeholder: 'what it is about, in prose'});
@@ -591,12 +598,12 @@ function NewIssue() {
     const file = El('input', {type: 'text', size: '40', placeholder: 'file (optional)'});
     const line = El('input', {type: 'text', size: '6', placeholder: 'line'});
 
-    pane.appendChild(El('div', {class: 'field'}, [El('div', {class: 'label', text: 'title'}),
+    Append(pane, El('div', {class: 'field'}, [El('div', {class: 'label', text: 'title'}),
                                                   title]));
-    pane.appendChild(El('div', {class: 'row'}, [type, effort, priority, file, line]));
-    pane.appendChild(El('div', {class: 'field'}, [El('div', {class: 'label',
+    Append(pane, El('div', {class: 'row'}, [type, effort, priority, file, line]));
+    Append(pane, El('div', {class: 'field'}, [El('div', {class: 'label',
                                                              text: 'description'}), description]));
-    pane.appendChild(El('div', {class: 'row'}, [El('button', {text: 'raise', onclick: async () => {
+    Append(pane, El('div', {class: 'row'}, [El('button', {text: 'raise', onclick: async () => {
         const data = await Post('/api/raise', {title: title.value, description: description.value,
             type: type.value, effort: effort.value, priority: priority.value,
             file: file.value, line: line.value});
@@ -612,10 +619,21 @@ window.addEventListener('unhandledrejection',
 document.getElementById('newIssue').addEventListener('click', NewIssue);
 document.getElementById('search').addEventListener('input', LoadList);
 document.getElementById('status').addEventListener('change', LoadList);
-if (location.hash.startsWith('#author='))
-    document.getElementById('author').value = decodeURIComponent(location.hash.slice(8));
+//the fragment of the URL: "#author=JG&issue=2548" - so that a link opens one issue, and so that
+//a test can render the detail pane without clicking (#2575)
+function Hash() {
+    const values = {};
+    for (const part of location.hash.replace('#', '').split('&')) {
+        const cut = part.indexOf('=');
+        if (cut > 0) values[part.slice(0, cut)] = decodeURIComponent(part.slice(cut + 1));
+    }
+    return values;
+}
 
-LoadMeta().then(LoadList);
+const start = Hash();
+if (start.author) document.getElementById('author').value = start.author;
+
+LoadMeta().then(LoadList).then(() => { if (start.issue) Show(parseInt(start.issue, 10)); });
 </script>
 </body>
 </html>

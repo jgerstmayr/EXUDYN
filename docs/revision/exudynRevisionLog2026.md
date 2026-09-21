@@ -11595,3 +11595,24 @@ Two fixes, one for the instance and one for the class:
 --dump-dom` against a local server reproduced the empty page in one run and named the line. A
 browser is a JavaScript engine that every Windows machine already has — and nothing else in
 this repository could have answered the question.
+
+<a id="r8-5-1-note3"></a>
+### Note to R8.5.1 — and the detail pane threw (2026-09-21, #2575)
+
+With the page parsing again, the maintainer could raise an issue through it — and opening one
+showed a red banner: *TypeError: Failed to execute 'appendChild' on 'Node': parameter 1 is not
+of type 'Node'*. `TextBlock()` returns `null` for a field that is empty, and almost every issue
+has empty `workingRemarks`, so the pane threw on nearly every issue. The banner is the one good
+part of the story: the handlers of #2571 did their job, and this failure announced itself.
+
+One `Append(parent, node)` that ignores a missing block, used by all 15 append sites. The URL
+fragment now carries an issue as well as an author — `#author=JG&issue=2548` — which gives a
+link to a single issue and lets the headless test render the **detail pane** without a click;
+it does that for one open and one closed issue and fails when the unguarded append is restored.
+
+**And the question the maintainer asked while the page was open** (what does a tracker write
+actually touch?) is now a table in `docs/dev/WORKFLOW.md`: the issue file, `meta.json`,
+`trackerlog.html` (not in git) and `docs/generated/trackerlog.md` on every write; `version.txt`,
+`versionCpp.cpp`, `versionName.txt` and the version line of `README.rst` only when an issue
+**closes**; `releases.json` only on a bump. `exudev docs` writes none of them — it renders
+`docs/` to HTML and only reads what the tracker wrote.

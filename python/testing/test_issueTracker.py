@@ -766,24 +766,20 @@ def Browser():
     return None
 
 
-def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):
-    """the page is JavaScript, so the only honest check runs JavaScript. It would have caught
-    both silent failures: the blocked server (#2571) and the script that did not parse (#2574)."""
-    browser = Browser()
-    if browser is None:
-        pytest.skip('no Edge or Chrome on this machine')
-
+def Render(server, browser, tmp_path, fragment=''):
+    """the page as a browser builds it: the DOM after the scripts have run, and what the console
+    said while they ran"""
     import subprocess
     import threading
 
     httpd = server.MakeServer(0)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
-    address = 'http://127.0.0.1:' + str(httpd.server_address[1]) + '/'
+    address = 'http://127.0.0.1:' + str(httpd.server_address[1]) + '/' + fragment
     try:
         result = subprocess.run(
             [browser, '--headless=new', '--disable-gpu', '--no-first-run',
-             '--user-data-dir=' + str(tmp_path / 'browser'),
+             '--user-data-dir=' + str(tmp_path / ('browser' + str(abs(hash(fragment))))),
              '--enable-logging=stderr', '--log-level=0',
              '--virtual-time-budget=8000', '--dump-dom', address],
             capture_output=True, text=True, timeout=180)
@@ -792,13 +788,45 @@ def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):
         httpd.server_close()
         thread.join(timeout=5)
 
-    page = result.stdout
+    return (result.stdout, result.stderr)
+
+
+def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):
+    """the page is JavaScript, so the only honest check runs JavaScript. It would have caught
+    both silent failures: the blocked server (#2571) and the script that did not parse (#2574)."""
+    browser = Browser()
+    if browser is None:
+        pytest.skip('no Edge or Chrome on this machine')
+
+    (page, console) = Render(server, browser, tmp_path)
+    class Result:
+        pass
+    result = Result()
+    result.stderr = console
     #the script ran at all: these three are written by JavaScript, not by the server
     assert 'version ' in page and 'closed of' in page, 'the version line stayed empty'
     assert '<option value="BUG">' in page, 'the filters were not filled'
     assert page.count('class="issue') > 10, 'no issues were listed'
     #and it ran without complaint - a SyntaxError kills the whole script, error handlers included
     assert 'Uncaught' not in result.stderr, result.stderr[-2000:]
+
+
+def testTheBrowserOpensOneIssue(server, tracker, tmp_path):
+    """the detail pane, which every issue with an empty field crashed in: TextBlock() returns
+    null for a field that is not filled, and appendChild(null) is a TypeError - so opening an
+    issue showed a red banner and half a pane (#2575). "#issue=<n>" renders it without a click."""
+    browser = Browser()
+    if browser is None:
+        pytest.skip('no Edge or Chrome on this machine')
+
+    #one OPEN and one CLOSED issue: they take different halves of Show()
+    for number in [OpenIssueNumber(tracker), ClosedIssueNumber(tracker)]:
+        (page, console) = Render(server, browser, tmp_path, '#issue=' + str(number))
+        assert '<h2>#' + str(number) in page, 'issue ' + str(number) + ' did not open'
+        assert 'description' in page
+        #the banner of #2571 is hidden when nothing went wrong
+        assert 'id="message" style="display: none;"' in page, 'the page reported a problem'
+        assert 'Uncaught' not in console, console[-2000:]
 
 
 def testThePageTextIsARawString():
