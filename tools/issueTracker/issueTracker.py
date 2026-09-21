@@ -749,17 +749,39 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
 #%%******************************************************************************************************
 #modify an existing issue
 #use this to overwrite ONE field of an issue
-def ChangeIssue(issueNumber, key, value): #raise a new issue into list (append to end of list)
+def ChangeIssue(issueNumber, key, value, force=False): #raise a new issue into list (append to end of list)
+    """Overwrite ONE field of an issue.
+
+    Raising, resolving and closing an issue are ordinary work; changing a field of an issue that
+    is already CLOSED is not (maintainer, 2026-09-21). Such an issue has been published - its
+    text stands in the release notes of a released version - and two of its fields decide the
+    version number itself. So a closed issue is refused here unless the caller says force=True,
+    and the fields the tracker owns are refused outright."""
 
     if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
         print('ChangeIssue: invalid number! Nothing done')
         return
-    
+
     d = GetIssue(issueNumber)
 
     if key not in d:
         print('ChangeIssue: key "' + key + '" not available!')
         return
+
+    #THE FIELDS THE TRACKER OWNS. 'status' moves an issue between open/ and closed/ and with it
+    #the micro version; 'number' is the file name; the two dates are written where they happen.
+    #They are set by RaiseIssue, ResolveIssue and AbandonIssue on the issue itself, never here.
+    if key in ['number', 'status', 'dateRaised', 'dateResolved']:
+        raise ValueError('ChangeIssue: "' + key + '" is written by the tracker (RaiseIssue, '
+                         'ResolveIssue, AbandonIssue), not by a field edit')
+
+    if d['status'] in closedStatuses and not force:
+        raise ValueError(
+            'ChangeIssue: issue ' + str(issueNumber) + ' is ' + d['status'] + ' since '
+            + str(d['dateResolved']).strip() + ' - changing a field of a CLOSED issue changes '
+            'what has already been published in the release notes of a released version.\n'
+            '  If that is what you want, say so: force=True, or "--force" on the command line.\n'
+            '  To record something new about it, raise a new issue instead.')
 
     #this function writes any field, which is why the enums have to be checked here as well as in
     #RaiseIssueDict - otherwise the one list of values is a comment again (revision2026 R8.5.3)
@@ -775,10 +797,17 @@ def ChangeIssue(issueNumber, key, value): #raise a new issue into list (append t
         raise ValueError('ChangeIssue: releaseNotes belongs to a CLOSED issue; while it is open, '
                          'write workingRemarks (RemarkIssue)')
 
+    #a text field is REPLACED here, and the text somebody else wrote is gone; the two verbs that
+    #add instead of overwrite are worth naming at the moment it happens
+    if key in ['description', 'workingRemarks', 'releaseNotes'] and d[key].strip() != '':
+        print('WARNING: the ' + key + ' of #' + str(issueNumber) + ' is REPLACED, not extended'
+              + ('; ExtendIssue() and RemarkIssue() append' if key != 'releaseNotes' else ''))
+        print('  previous value: ' + d[key].strip()[:300])
+
     d[key] = value
 
     ModifyDictIssue(d)
-    
+
     print('new issue:')
     print(d)
     

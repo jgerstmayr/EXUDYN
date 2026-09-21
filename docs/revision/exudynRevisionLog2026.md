@@ -11465,3 +11465,23 @@ that resolves to 127.0.0.1. A request from anywhere else gets 403.
 returns `(status, contentType, body)` and knows nothing about `http.server`; the handler class
 is 30 lines around it. That is why the 12 tests need no port, no thread and no browser — they
 call the same function the socket calls, against a copy of the store.
+
+<a id="r8-3-5"></a>
+### R8.3.5 — a closed issue is not edited by accident (2026-09-21, #2570)
+
+The maintainer asked, before testing it, whether changing a field of a resolved issue warns or
+asks. It did not: `ChangeIssue` wrote any field of any issue silently, `exudev issue modify`
+passed straight through to it, and the web page of R8.5.1 was narrower only by accident — it
+renders the field editors for open issues, but its `/api/modify` endpoint would have taken a
+closed one.
+
+Now: a closed issue is **refused** unless the caller passes `force=True` / `--force`; `status`,
+`number`, `dateRaised` and `dateResolved` are **refused always**, because the tracker writes
+them and `status` decides the micro version; replacing a non-empty text field prints the
+previous text so that it can be pasted back, with the reminder that `extend` and `remark`
+append where `modify` overwrites. The page shows the editors for a closed issue as well and
+asks first — a page that sent `force` silently would be worse than no protection at all,
+because the command line refuses the same edit.
+
+This protects; it does not verify. What verifies is D14 and step R8.4(b): the version a closed
+issue produced, stored in the issue and compared against recomputation.

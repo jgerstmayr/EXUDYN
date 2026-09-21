@@ -1257,12 +1257,13 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     |---|---|---|
     | 1 | **R8.3** (+R8.3.1 remainder, **R8.3.3**) | the CLI is what every later step is driven from; it also removes the cwd and Windows-path dependency that blocks scripting and CI |
     | 2 | **R8.5** (+**R8.5.2**, then R8.5.1) | the file format. Everything that writes or reads an issue is cheaper to write once against JSON than twice |
-    | 3 | **R8.4** | the minor-version bump belongs in the tracker, and its baseline should land in the new format, not in a Python list |
-    | 4 | **R7.4** | `CHANGELOG.md` is a rendering of the JSON; the step already says it waits for R8.5 |
-    | 5 | **R8.1** | templates and `CONTRIBUTING.md`; independent of all of the above, can be pulled forward whenever it suits |
-    | 6 | **R8.2** | `tools/release.py` drives the tracker CLI (1), the minor bump (3) and the JSON (2). Written before them it is written twice — which is the maintainer's point |
-    | 7 | **R7.2** | carry the revision into the documentation, with the R8 changes included (maintainer, 2026-09-21) |
-    | 8 | **R8.6** | the user-script checker needs the complete API-changes table, so it stays last |
+    | 3 | **R8.3.4** | `ABANDONED` — `CLOSED` (D13): a rename that every later step would otherwise carry twice |
+    | 4 | **R8.4** | the minor-version bump belongs in the tracker, and its baseline should land in the new format, not in a Python list; **and (b)**, the stored version of a closed issue with its check (D14), which the maintainer asked for on 2026-09-21 |
+    | 5 | **R7.4** | `CHANGELOG.md` is a rendering of the JSON; the step already says it waits for R8.5 |
+    | 6 | **R8.1** | templates and `CONTRIBUTING.md`; independent of all of the above, can be pulled forward whenever it suits |
+    | 7 | **R8.2** | `tools/release.py` drives the tracker CLI (1), the minor bump (3) and the JSON (2). Written before them it is written twice — which is the maintainer's point |
+    | 8 | **R7.2** | carry the revision into the documentation, with the R8 changes included (maintainer, 2026-09-21) |
+    | 9 | **R8.6** | the user-script checker needs the complete API-changes table, so it stays last |
 
     R9 to R11 follow the documentation pass (maintainer, 2026-09-21).
 
@@ -1314,16 +1315,44 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
     **The status itself was built in R8.7** (2026-09-18) — as `ABANDONED`, with `AbandonIssue()`
     and a mandatory reason; the **`close` verb landed with the CLI of R8.3** (2026-09-21, as
-    `exudev issue abandon`, alias `close`). What remains here is the JSON schema of R8.5.
+    `exudev issue abandon`, alias `close`). The JSON schema of R8.5 carries it since 2026-09-21.
+
+    **The name is wrong and is corrected to `CLOSED` (maintainer, 2026-09-21).** This step first
+    suggested `CLOSED`, R8.7 built `ABANDONED`, and the two have stood side by side since — which
+    is the whole problem, because they do not mean the same thing. *Abandoned* is one **reason**
+    among several; the **status** is that the issue is closed and was not resolved. Obsolete,
+    won't fix, duplicate, superseded, not reproducible and abandoned are all that same status.
+
+    So: **`RAISED`, `RESOLVED`, `CLOSED`** — and `CLOSED` means *everything except RESOLVED*,
+    with the kind named in the mandatory reason, which is what the release notes and a reader see.
+    Naming the kinds as statuses was rejected in this step for a reason that still holds: the
+    distinction is prose, and every extra status is another branch in every converter.
+
+    **Still to do** (sub-step R8.3.4): `ABANDONED` -> `CLOSED` in `issueStatuses`,
+    `closedStatuses`, the 15 issue files that carry it, the converters and the tests;
+    `AbandonIssue` -> `CloseIssue` with `AbandonIssue` kept as a one-line alias; `exudev issue
+    close` as the primary verb and `abandon` as its alias (it is the other way round today); and
+    the description of the status in `issueTracker.py` listing the kinds it covers, so that the
+    next reader does not invent a second status for one of them.
 
     **And the constraint stated above does not hold; the opposite does.** "A closed-not-fixed issue
     must not count as resolved" sounds right and is unimplementable: the micro version is a running
     count, so if abandoning did not count, then abandoning an issue that is already RESOLVED - which
     is exactly what a migration of the 2019-2022 backlog does - moves `version.txt` **backwards**,
     and a released version number stops being reproducible from the file. The rule is therefore
-    that the version counts **closed** issues, resolved and abandoned alike, and the distinction
-    lives where it is actually read: the release notes list an abandoned issue neither as resolved
-    nor as open. Measured: 15 issues moved to `ABANDONED` and `version.txt` stayed at 1.11.178.
+    that the version counts **closed** issues, resolved and closed-not-resolved alike, and the
+    distinction lives where it is actually read: the release notes list such an issue neither as
+    resolved nor as open. Measured: 15 issues moved to that status and `version.txt` stayed at
+    1.11.178.
+
+    **Confirmed by the maintainer on 2026-09-21 and verified against the released history**, which
+    is the part that was open: a closed issue **must** count for the micro version, or correcting
+    an old issue renumbers versions that are already published. It does count, and nothing moved
+    — the archived `trackerlog.rst` of 1.11.0 and the current `trackerlog.md` agree on the version
+    of **all 2,054 issues both of them name**, 0 differences (fact 31). The 12 issues that were
+    RESOLVED in the released history and are closed-not-resolved today still count; they only
+    left the printed *resolved* list, which is why 1.9 ends at a printed 1.9.234 while its last
+    micro was 1.9.235 (#1959).
 
 <a id="r8-3-3"></a>
 **R8.3.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.3; maintainer request 2026-09-21)* **An issue can be extended.** The
@@ -1356,11 +1385,78 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     enforces them** (#2519). 39 spellings became 10 types; `IMPROVEMENT` is new; `WORK` and
     `TESTING` leave the status list and `ABANDONED` joins it.
 
+<a id="r8-3-4"></a>
+**R8.3.4** *(sub-step of R8.3.1; maintainer decision 2026-09-21)* **`ABANDONED` becomes `CLOSED`.**
+    One status for every issue that is closed and was not resolved, with the kind of closing in
+    its mandatory reason: obsolete, won't fix, duplicate of #n, superseded, not reproducible,
+    abandoned. See D13 and the discussion in R8.3.1.
+
+    Touches: `issueStatuses` and `closedStatuses` in `issueTracker.py` and the description that
+    lists what the status covers; the **15 issue files** that carry `ABANDONED` today;
+    `AbandonIssue` — renamed `CloseIssue`, with `AbandonIssue` kept as a one-line alias for
+    scripts; `exudev issue close` as the primary verb (`abandon` becomes the alias, it is the
+    other way round today); the converters, `checkIssues.py`, the tests, `docs/dev/WORKFLOW.md`
+    and CLAUDE.md rule 3.
+
+    **The version must not move**: the count of closed issues is unchanged by a rename, and the
+    check of R8.4(b) is what says so afterwards.
+
+<a id="r8-3-5"></a>
+**R8.3.5** **DONE 2026-09-21** (#2570) — *(sub-step of R8.3.1; maintainer question
+    2026-09-21: "I assume that an according WARNING appears and something like 'Are you sure'?")*
+    **Changing a field of a CLOSED issue is not silent any more.** It was: `ChangeIssue` wrote
+    any field of any issue without a word, and so did `exudev issue modify`. Raising, resolving
+    and closing are ordinary work; editing an issue whose text stands in the release notes of a
+    **released version** is not, and two of its fields decide the version number itself.
+
+    - a **CLOSED issue is refused** unless the caller says so: `force=True`, `--force`. The
+      message says what it would change and offers the alternative (raise a new issue).
+    - **`status`, `number`, `dateRaised` and `dateResolved` are refused always**, force or not:
+      the tracker writes them in `RaiseIssue`, `ResolveIssue` and `AbandonIssue`, and `status`
+      is what moves an issue between `open/` and `closed/` and with it the micro version.
+    - replacing a **text field that is not empty** prints a warning and the previous text, so
+      that it can be pasted back: `modify` overwrites, `extend` and `remark` append.
+    - the page of R8.5.1 now shows the editors for a closed issue too — and asks with a
+      confirm dialog before it sends `force`. A page that sent it silently would be worse than
+      no protection, because the command line refuses the same edit.
+
+    Not done here, because it belongs to R8.4(b): making a closed issue verifiable rather than
+    only protected, by storing the version it produced (D14).
+
 <a id="r8-4"></a>
-**R8.4** *(phase R8)* **Fold minor-version bumps into the tracker.** A 1.11 → 1.12 bump currently means
-    hand-editing the `versionResolved` list and `versionNames` dict inside `issueTracker.py`. Make
-    it a command that records the baseline automatically. Keep it an explicit maintainer action,
-    never automatic.
+**R8.4** *(phase R8; extended by the maintainer 2026-09-21)* **Fold minor-version bumps into the
+    tracker, and make the version numbering verifiable instead of brittle.**
+
+    **(a) The minor bump.** A 1.11 → 1.12 bump currently means hand-editing the `versionResolved`
+    list and the `versionNames` dict inside `issueTracker.py`. Make it a command that records the
+    baseline automatically. Keep it an explicit maintainer action, never automatic.
+
+    **(b) The version of a closed issue is STORED, not recomputed** (maintainer, 2026-09-21; D14).
+    Today every version number in the release notes is derived on each run by sorting the closed
+    issues by `dateResolved` and counting down from the current count against the `versionResolved`
+    baselines. That means **one corrected date, one status change or one missing file renumbers
+    versions that have been published** — which must never happen and which nothing would report.
+
+    The field is already in the schema and unused: `resolvedInVersion`. Write it when an issue
+    closes, and then:
+
+    - **backfill it for the history** from the archived `docs/RST/trackerlog.rst` of 1.11.0
+      (`tmp/trackerlog.rst`), which states the version of 2,066 resolved issues, and by
+      recomputation for the rest — one-shot, like the migration of R8.5;
+    - **check it in `tools/checkIssues.py`**: the recomputed version of every closed issue must
+      equal the stored one, and the highest stored micro of each minor must equal what the
+      baselines say. Two numbers that are derived the same way twice are not a check; a number
+      written once and recomputed later is one.
+    - **check that no issue number is missing.** Numbers are consecutive and never reused, so a
+      gap means a file was lost, and with it one count of the micro version. A missing *open*
+      issue at the end of the sequence is harmless and may be erased; a gap is not.
+    - a closed issue is then **immutable in the two fields the version depends on** (`status`,
+      `resolvedInVersion`): changing one has to change the other, deliberately, which is the
+      point of storing it.
+
+    **(c) `versionResolved` stops being a hand-maintained list of magic numbers**: with (b) each
+    baseline is derivable from the issues themselves (the count at which the minor changed), so
+    the list becomes data the bump command writes and the check verifies.
 
 <a id="r8-5"></a>
 **R8.5** **DONE 2026-09-21** (#2568) → [log](exudynRevisionLog2026.md#r8-5) — *(phase R8, after

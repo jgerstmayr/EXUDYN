@@ -174,9 +174,10 @@ def HandlePost(path, payload):
         field = payload.get('field', '')
         if field not in issueStore.issueFields:
             raise ValueError('there is no field "' + str(field) + '" in an issue')
-        if field in ['number', 'status', 'dateResolved']:
-            raise ValueError('"' + field + '" is written by the tracker, not by hand')
-        issueTracker.ChangeIssue(number, field, payload.get('value', ''))
+        #the tracker refuses the fields it owns, and refuses a CLOSED issue unless force is
+        #passed; the page asks the person before it sends force, and shows the refusal otherwise
+        issueTracker.ChangeIssue(number, field, payload.get('value', ''),
+                                 force=bool(payload.get('force')))
     else:
         return ErrorResponse('unknown path "' + path + '"', 404)
 
@@ -430,10 +431,18 @@ async function LoadList() {
         + (data.matching > data.issues.length ? ', ' + data.issues.length + ' shown' : '');
 }
 
-function EnumField(issue, field, values) {
+function EnumField(issue, field, values, closed) {
     const select = El('select', {onchange: async event => {
+        //a closed issue has been published - its text stands in the release notes of a released
+        //version - so changing one is a deliberate act and is asked for (maintainer 2026-09-21)
+        if (closed && !confirm('#' + issue.number + ' is ' + issue.status + ' since '
+                + issue.dateResolved + ' and is PUBLISHED in the release notes.\n\n'
+                + 'Change its ' + field + ' to "' + event.target.value + '" anyway?')) {
+            Show(issue.number);
+            return;
+        }
         const data = await Post('/api/modify', {number: issue.number, field: field,
-                                                value: event.target.value});
+                                                value: event.target.value, force: closed});
         if (data) Show(issue.number);
     }});
     select.appendChild(El('option', {value: '', text: '(none)'}));
@@ -473,15 +482,13 @@ async function Show(number) {
         + (closed ? ', closed ' + issue.dateResolved + ' by ' + issue.resolvedAuthor : '')
         + (issue.file ? ', ' + issue.file + (issue.line ? ':' + issue.line : '') : '')}));
 
-    if (!closed) {
-        pane.appendChild(El('div', {class: 'row'}, [
-            El('span', {class: 'label', text: 'effort'}),
-            EnumField(issue, 'effort', meta.efforts),
-            El('span', {class: 'label', text: 'priority'}),
-            EnumField(issue, 'priority', meta.priorities),
-            El('span', {class: 'label', text: 'type'}),
-            EnumField(issue, 'type', meta.types)]));
-    }
+    pane.appendChild(El('div', {class: closed ? 'row danger' : 'row'}, [
+        El('span', {class: 'label', text: closed ? 'CLOSED AND PUBLISHED - effort' : 'effort'}),
+        EnumField(issue, 'effort', meta.efforts, closed),
+        El('span', {class: 'label', text: 'priority'}),
+        EnumField(issue, 'priority', meta.priorities, closed),
+        El('span', {class: 'label', text: 'type'}),
+        EnumField(issue, 'type', meta.types, closed)]));
 
     pane.appendChild(TextBlock('description', issue.description));
     pane.appendChild(TextBlock('working remarks (cleared when it closes)', issue.workingRemarks));

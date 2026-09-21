@@ -519,6 +519,21 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
     custom class deriving from any built-in, which is how `exudyn.SolverError(RuntimeError)`
     becomes catchable without breaking an existing `except RuntimeError`.
 
+31. **The published version numbers did not move when 15 issues became closed-not-resolved**
+    (measured 2026-09-21, after the maintainer raised the risk). The archived
+    `docs/RST/trackerlog.rst` of 1.11.0 names the version of 2,066 resolved issues; the
+    current `docs/generated/trackerlog.md`, recomputed from the JSON store, names 2,281.
+    **Of the 2,054 issues both of them name, 0 have a different version**, and the last micro
+    of every minor agrees: 0.1.367, 1.0.295, 1.1.177, 1.2.146, 1.3.105, 1.4.65, 1.5.118,
+    1.6.189, 1.7.123, 1.8.81, 1.10.160. The one apparent exception confirms the rule: 1.9
+    ends at a printed **1.9.234** instead of 1.9.235 because #1959 (SphereSphereContact) is
+    closed-not-resolved today and therefore no longer *printed* in the resolved list — it is
+    still counted, which is why every later version is unchanged. Twelve issues are in that
+    situation: #101, #191, #225, #313, #383, #416, #446, #483, #642, #865, #1331, #1959.
+
+    The measurement says the coupling holds **today**; it does not make it safe, which is what
+    D14 and step R8.4(b) are for. Nothing in the tree would have reported a difference.
+
 ## 4. The frozen generated set (phase R0)
 
 The committed generated files at `e44aca1` are the reference snapshot, after a rebuild
@@ -667,6 +682,9 @@ Moved to [`exudynRevisionPlan2026.md`](exudynRevisionPlan2026.md) on 2026-09-15.
 
 | D11 | **`README.rst` stays RST and becomes hand-written** (maintainer, 2026-09-19); `issueTracker.py` stamps its version line, and the file is a document of the documentation as well as the GitHub and PyPI landing page. | It was generated from `gettingStarted.tex`, whose conversion to Markdown removes the generator. RST is what PyPI renders, so the format cannot follow the rest. Making it a document rather than an include keeps its image paths relative to the repository root, which is what GitHub and PyPI need - and keeps one copy for all three places. |
 | D12 | **The emitter output stays in git** (maintainer, 2026-09-21): the 450 Markdown files of `docs/generated/` are committed, not built in CI. | The two other halves of step R7.3 are void — `theDoc.pdf` is deleted with D8 and `docs/RST/` with R7.1.7 — so only this one was left to decide. Committed output keeps the reference manual readable on GitHub for anyone without the toolchain, keeps `regenerate.py`'s tier-2 drift check meaningful (it compares the generators against the commit), and keeps the documentation build free of a generator step that Read the Docs would have to run — whose skip rule keys on `docs/` and would stop rebuilding when only `definitions/` changes. The churn it costs is collapsed by `linguist-generated` in `.gitattributes`. |
+
+| D13 | **The status of an issue that was not resolved is `CLOSED`**, not `ABANDONED` (maintainer, 2026-09-21). `CLOSED` means *everything except RESOLVED* — obsolete, won't fix, duplicate, superseded, not reproducible, abandoned — and the kind is named in the mandatory reason, not in a status. | The two names have stood side by side since R8.7 and do not mean the same thing: *abandoned* is one reason among several, while the status says only that the issue is closed and was not resolved. Naming the kinds as statuses was rejected in R8.3.1 and stays rejected: the distinction is prose, and every extra status is another branch in every converter. Step R8.3.4. |
+| D14 | **The version a closed issue produced is stored in the issue** (`resolvedInVersion`) and checked against recomputation, instead of being derived on every run from a sort by `dateResolved` (maintainer, 2026-09-21). | The micro version is a running count of closed issues, so with pure recomputation one corrected date or one lost file silently renumbers versions that are already published, and nothing reports it. A number written once and recomputed later is a check; the same derivation run twice is not. It also makes R7.4's `CHANGELOG.md` a rendering job. Step R8.4(b). |
 
 ### Open
 

@@ -1,0 +1,14 @@
+{
+  "number": 2570,
+  "title": "changing a field of a closed issue must not be silent",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Raising, resolving and closing an issue are ordinary work. Changing a field of an issue that is already CLOSED is not: its text stands in the release notes of a released version, and two of its fields decide the version number. ChangeIssue did it silently, and so did exudev issue modify; the web page of R8.5.1 happened to be narrower only because it did not render the editors for a closed issue. ChangeIssue now refuses a closed issue unless force=True (--force on the command line), refuses status, number, dateRaised and dateResolved always because the tracker writes those, and prints the previous text when a text field is REPLACED rather than extended. The page shows the editors for a closed issue as well, but asks with a confirm dialog before it sends force. Maintainer question 2026-09-21; revision2026 step R8.3.5.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 14:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ChangeIssue refuses a CLOSED issue unless force=True (--force on the command line): such an issue stands in the release notes of a released version. status, number, dateRaised and dateResolved are refused always - the tracker writes them, and status decides the micro version. Replacing a non-empty text field prints the previous text and says that extend and remark append where modify overwrites. The web page of R8.5.1 shows the editors for a closed issue as well and asks with a confirm dialog before it sends force."
+}

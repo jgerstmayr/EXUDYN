@@ -512,3 +512,61 @@ def testServeIsAStepWithAnActionLikeEveryOtherVerb():
                                         author='JG'))
     assert len(steps) == 1 and steps[0].action is not None and steps[0].argv is None
     assert '8099' in steps[0].note
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#changing a CLOSED issue (maintainer 2026-09-21): raising, resolving and closing are ordinary
+#work; editing a field of an issue that has been published in the release notes is not
+
+def testAClosedIssueIsNotChangedByAccident(tracker):
+    number = ClosedIssueNumber(tracker)
+    before = tracker.GetIssue(number)['effort']
+
+    with pytest.raises(ValueError) as error:
+        tracker.ChangeIssue(number, 'effort', 'HUGE')
+    assert 'published' in str(error.value) and '--force' in str(error.value)
+    assert tracker.GetIssue(number)['effort'] == before
+
+    #...but it IS possible, deliberately: a closed issue is not read-only, it is protected
+    tracker.ChangeIssue(number, 'effort', 'HUGE', force=True)
+    assert tracker.GetIssue(number)['effort'] == 'HUGE'
+
+
+def testTheFieldsTheTrackerOwnsAreRefusedEvenWithForce(tracker):
+    """the status decides which directory an issue lies in and with it the micro version; the
+    dates say when something happened. None of them is a field edit."""
+    number = OpenIssueNumber(tracker)
+    for field in ['status', 'number', 'dateRaised', 'dateResolved']:
+        with pytest.raises(ValueError):
+            tracker.ChangeIssue(number, field, 'RESOLVED', force=True)
+    assert tracker.GetIssue(number)['status'] == 'RAISED'
+
+
+def testReplacingATextFieldSaysSo(tracker, capsys):
+    """modify overwrites, extend and remark append - and the text somebody else wrote is gone"""
+    number = OpenIssueNumber(tracker)
+    previous = tracker.GetIssue(number)['description']
+    tracker.ChangeIssue(number, 'description', 'something else entirely')
+
+    printed = capsys.readouterr().out
+    assert 'REPLACED' in printed and 'ExtendIssue' in printed
+    assert previous.strip()[:40] in printed          #so that it can be pasted back
+
+
+def testTheServerRefusesAClosedIssueTooAndCanForceIt(server, tracker):
+    number = ClosedIssueNumber(tracker)
+    (status, data) = Call(server, 'POST', '/api/modify',
+                          {'number': number, 'field': 'effort', 'value': 'HUGE'})
+    assert status == 400 and 'published' in data['error']
+
+    (status, data) = Call(server, 'POST', '/api/modify',
+                          {'number': number, 'field': 'effort', 'value': 'HUGE', 'force': True})
+    assert status == 200 and data['issue']['effort'] == 'HUGE'
+
+
+def testThePageAsksBeforeItForces(server):
+    """the confirm() is what the maintainer sees; a page that sent force silently would be worse
+    than no protection, because the command line refuses the same edit"""
+    (status, page) = Call(server, 'GET', '/')
+    assert 'confirm(' in page and 'PUBLISHED in the release notes' in page
+    assert 'force: closed' in page

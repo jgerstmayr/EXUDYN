@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.228.dev1
+- Exudyn version = 1.11.229.dev1
 - last change = 2026-09-21
-- Number of issues = 2570
-- Number of resolved issues = 2301 (228 in current version)
+- Number of issues = 2571
+- Number of resolved issues = 2302 (229 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.229: resolved Issue 2570: changing a field of a closed issue must not be silent (fix)
+  - issue author: Claude-JG
+  - description: Raising, resolving and closing an issue are ordinary work. Changing a field of an issue that is already CLOSED is not: its text stands in the release notes of a released version, and two of its fields decide the version number. ChangeIssue did it silently, and so did exudev issue modify; the web page of R8.5.1 happened to be narrower only because it did not render the editors for a closed issue. ChangeIssue now refuses a closed issue unless force=True (--force on the command line), refuses status, number, dateRaised and dateResolved always because the tracker writes those, and prints the previous text when a text field is REPLACED rather than extended. The page shows the editors for a closed issue as well, but asks with a confirm dialog before it sends force. Maintainer question 2026-09-21; revision2026 step R8.3.5.
+  - **notes:** ChangeIssue refuses a CLOSED issue unless force=True (--force on the command line): such an issue stands in the release notes of a released version. status, number, dateRaised and dateResolved are refused always - the tracker writes them, and status decides the micro version. Replacing a non-empty text field prints the previous text and says that extend and remark append where modify overwrites. The web page of R8.5.1 shows the editors for a closed issue as well and asks with a confirm dialog before it sends force.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 14:32**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.228: resolved Issue 2569: a local web page over the issues, for a backlog pass (extension)
   - issue author: Claude-JG
   - description: The tracker can be read and written from the command line since revision2026 step R8.3, which is right for one issue at a time and wrong for a pass over 270: looking, deciding, writing and looking again is what a page does. exudev issue serve starts a local server (stdlib http.server, one HTML page, no new dependency, loopback interface only) that lists, searches and filters the issues and writes through the same tracker functions as the verbs - so it cannot store a value the command line would refuse. Deleting an issue stays a file operation with a commit behind it. Revision2026 step R8.5.1.

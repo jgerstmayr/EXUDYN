@@ -197,10 +197,15 @@ def IssueParser(subParsers, globalParser):
 
     modify = verbs.add_parser('modify', parents=[globalParser],
         help='set one field of an issue',
-        description='The enum fields are checked here as well as when an issue is raised.')
+        description='The enum fields are checked here as well as when an issue is raised. '
+                    'A CLOSED issue is refused without --force, and status, number and the two '
+                    'dates are refused always: the tracker writes those.')
     modify.add_argument('number', type=int)
     modify.add_argument('field')
     modify.add_argument('value')
+    modify.add_argument('--force', action='store_true',
+                        help='also change a CLOSED issue - it has been published, and its text '
+                             'stands in the release notes of a released version')
 
     verbs.add_parser('triage', parents=[globalParser],
         help='the open issues by type and effort',

@@ -970,10 +970,13 @@ def Issue(options):
 
     elif verb == 'modify':
         note = ('set "' + options.field + '" of issue ' + str(options.number) + ' to "'
-                + options.value + '"')
+                + options.value + '"'
+                + (' - FORCED, although the issue may be closed and published'
+                   if getattr(options, 'force', False) else ''))
 
         def Action():
-            tracker.ChangeIssue(IssueNumber(tracker, options.number), options.field, options.value)
+            tracker.ChangeIssue(IssueNumber(tracker, options.number), options.field,
+                                options.value, force=getattr(options, 'force', False))
             return 0
 
     elif verb == 'triage':
