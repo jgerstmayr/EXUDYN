@@ -1,0 +1,12 @@
+{
+  "number": 2079,
+  "title": "LoadDictFromHDF5",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "does not correctly convert np.array inside list",
+  "dateRaised": "2025-06-07",
+  "deadline": "2025-12-04",
+  "dateResolved": "2025-06-08 18:11",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,10 @@
+{
+  "number": 2350,
+  "title": "MacOS",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "fix problem in raytracerNOGLFWtest.py on MacOS",
+  "dateRaised": "2026-08-05",
+  "deadline": "2027-02-01"
+}

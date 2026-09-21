@@ -1,0 +1,10 @@
+{
+  "number": 123,
+  "title": "Linalg Override",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "Add override statement to all derived classes in linalg for safety",
+  "dateRaised": "2019-05-13",
+  "deadline": "2019-07-12"
+}

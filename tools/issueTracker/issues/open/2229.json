@@ -1,0 +1,10 @@
+{
+  "number": 2229,
+  "title": "ANCFThinPlate",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "description": "add cylindrical test problem; compare to ANCFCable2D",
+  "dateRaised": "2026-01-18",
+  "deadline": "2026-07-17"
+}

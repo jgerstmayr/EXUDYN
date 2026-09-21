@@ -1,0 +1,16 @@
+{
+  "number": 2522,
+  "title": "deprecation notices are printed lines and not Python warnings",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "The 199 deprecation notices go through PyWarning; which prints to the console. A user cannot filter them; cannot promote them to errors; and sees the same line on every single call - a deprecated setting read in a loop prints thousands of times. Python has a mechanism for exactly this: DeprecationWarning through PyErr_WarnEx; which is filterable; promotable with -W error::DeprecationWarning and reported once per source location. revision2026 step R6.3.4.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 18:05",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/Stdoutput.cpp",
+  "line": "396",
+  "releaseNotes": "PyDeprecated raises a real DeprecationWarning through PyErr_WarnEx: filterable, promotable with -W error::DeprecationWarning, reported once per source location and pointing at the users own file and line. 184 generated sites changed in structureHeaderEmitter.py and 15 hand-written ones converted. It does not call PyGetCurrentFileInformation at all\\, so 199 sites also stop paying for the inspect.getframeinfo scan of #2423. exudyn.config.suppressWarnings is still honoured. revision2026 step R6.3.4."
+}

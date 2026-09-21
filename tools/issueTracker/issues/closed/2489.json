@@ -1,0 +1,16 @@
+{
+  "number": 2489,
+  "title": "robotics/future.py uses an undefined name graphics",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "LOW",
+  "description": "MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 19:52",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/future.py",
+  "line": "473",
+  "releaseNotes": "future.py now imports exudyn.graphics as graphics in its __main__ block; none of the four star imports there provides it (verified). Running the block afterwards showed the same pattern as #2488 one function further: MakeCorkeRobot caught the ImportError of roboticstoolbox; printed and continued; and then returned an undefined robotCorke - it now raises ImportError naming the package to install. revision2026 step R5.5.6"
+}

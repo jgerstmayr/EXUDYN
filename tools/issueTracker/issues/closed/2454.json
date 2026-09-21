@@ -1,0 +1,15 @@
+{
+  "number": 2454,
+  "title": "exudyn.config.outputDirectory: global output directory for solver written files",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "revision2026 step R5.13: solver written files (coordinates solution; solver information; sensor files; exported images) are prefixed with exudyn.config.outputDirectory when it is set. An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. The setting is global and lives as long as the module is loaded; it is meant for test runners and batch scripts; users should put the folder into the file names. Needed so that the test suite can give every model its own output directory (#2418) - the prerequisite for running the suite in parallel",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 10:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/src/Main/Config.h",
+  "releaseNotes": "revision2026 step R5.13: ResolveOutputFileName() in Stdoutput.cpp, applied to solution, solver information, sensor and image files; absolute names raise on open"
+}

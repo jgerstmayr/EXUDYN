@@ -1,0 +1,12 @@
+{
+  "number": 2026,
+  "title": "graphics Tube",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add function graphics.Tube which generates graphicsData for a tube along a line of points with axis vectors",
+  "dateRaised": "2025-05-17",
+  "deadline": "2025-11-13",
+  "dateResolved": "2025-05-17 21:48",
+  "resolvedAuthor": "JG"
+}

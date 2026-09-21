@@ -1,0 +1,12 @@
+{
+  "number": 2100,
+  "title": "Command window",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "does not show edit dialog",
+  "dateRaised": "2025-06-16",
+  "deadline": "2025-12-13",
+  "dateResolved": "2025-06-16 14:52",
+  "resolvedAuthor": "JG"
+}

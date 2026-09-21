@@ -1,0 +1,15 @@
+{
+  "number": 2459,
+  "title": "no way to run a fast subset of the test models",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "LOW",
+  "description": "revision2026 step R5.2: every runner was all-or-nothing, so a pull-request run had to include the models that take longest and those needing optional packages (ngsolve, stable-baselines3). Added SlowTests() and OptionalPackageTests() as data in runTestSuiteRefSol.py, runTestSuite.py --fast and pytest markers slow/optionalPackage/sensitive/unresolvedOnLinux reading the same data",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 17:09",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/python/TestModels/runTestSuiteRefSol.py",
+  "releaseNotes": "revision2026 step R5.2: SlowTests/OptionalPackageTests as data; runTestSuite.py --fast (12 s) and pytest markers; nightly unchanged"
+}

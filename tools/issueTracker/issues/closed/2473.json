@@ -1,0 +1,13 @@
+{
+  "number": 2473,
+  "title": "LinkedDataMatrix: the two constructors taking a matrix do not compile",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "LinkedDataMatrixBase(const MatrixBase<T>&) and LinkedDataMatrixBase(const MatrixBase<T>&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 11:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "LinkedDataMatrixBase(const MatrixBase<T>&) now uses the public accessors NumberOfRows/NumberOfColumns/GetDataPointer instead of the protected members of another object (C2248). The row-range constructor next to it gets its first caller: the R5.4.1 test no longer does the row-major pointer arithmetic by hand. All C++ unit tests pass. revision2026 step R5.4.4."
+}

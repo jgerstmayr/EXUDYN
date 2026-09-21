@@ -1,0 +1,12 @@
+{
+  "number": 2266,
+  "title": "docstrings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add docstrings for itemInterface items (__init__ function with all parameters)",
+  "dateRaised": "2026-02-03",
+  "deadline": "2026-08-02",
+  "dateResolved": "2026-02-05 23:19",
+  "resolvedAuthor": "JG"
+}

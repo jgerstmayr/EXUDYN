@@ -1,0 +1,10 @@
+{
+  "number": 1896,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add option to completely freeze searchTree bins if all velocities are below a certain threshold; mark these contact objects as inactive by checking activity from time to time; reactivate bins only if item at boundary exceeds velocity limit at active boundary",
+  "dateRaised": "2024-10-16",
+  "deadline": "2025-04-14"
+}

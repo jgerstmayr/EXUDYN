@@ -1,0 +1,16 @@
+{
+  "number": 2391,
+  "title": "continue-on-error made failing wheel builds report success",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "build_wheels carried continue-on-error: true; so a job that failed to build or whose test suite failed did not fail the workflow. fail-fast: false is what actually keeps the sibling jobs running; continue-on-error only hid the result. revision2026 step R2.7",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 10:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": ".github/workflows/wheels.yml",
+  "line": "18",
+  "releaseNotes": "continue-on-error removed. fail-fast: false is kept; so one failing wheel still does not cancel the others - but the workflow now reports the failure"
+}

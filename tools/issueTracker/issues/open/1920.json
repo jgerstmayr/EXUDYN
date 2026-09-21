@@ -1,0 +1,10 @@
+{
+  "number": 1920,
+  "title": "ContactSphereSphere",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add autodiff Jacobian",
+  "dateRaised": "2024-11-02",
+  "deadline": "2025-05-01"
+}

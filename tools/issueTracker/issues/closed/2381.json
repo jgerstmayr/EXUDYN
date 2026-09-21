@@ -1,0 +1,15 @@
+{
+  "number": 2381,
+  "title": "derive the compile list from the vcxproj instead of duplicating it in setup.py",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "setup.py carried a hand-maintained list of 133 .cpp paths in two literal Python lists; a second copy of the ClCompile entries of main/obj/cppsrc.vcxproj with nothing keeping the two in agreement. revision2026 step R2.4",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 22:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/setup.py",
+  "releaseNotes": "tools/gen_sources.py derives main/sources.json from the ClCompile entries of cppsrc.vcxproj; reading only ItemGroup blocks so every PropertyGroup setting stays hand-maintained. setup.py reads the JSON and no longer contains a source list; no XML is parsed at build time and the JSON ships in the sdist via MANIFEST.in. --check compares vcxproj; JSON and the files on disk and is run in CI as check_sources; the comparison is case-exact; because a wrong-case entry resolves on Windows and fails on Linux. The minimal subset cannot be expressed in the vcxproj; so it is carried in the JSON and validated as a subset. Verified: wheel builds in 57.3 s with 133 files and the full test suite passes; the checker was fault injected with a stale JSON entry and a nonexistent vcxproj entry; and it caught a real wrong-case entry on its first run (issue #2382)"
+}

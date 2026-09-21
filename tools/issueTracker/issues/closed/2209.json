@@ -1,0 +1,12 @@
+{
+  "number": 2209,
+  "title": "GeometricallyExactBeam2D",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add reference curvature and correct reference rotation for curved case",
+  "dateRaised": "2026-01-08",
+  "deadline": "2026-07-07",
+  "dateResolved": "2026-01-08 23:10",
+  "resolvedAuthor": "JG"
+}

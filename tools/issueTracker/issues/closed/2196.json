@@ -1,0 +1,12 @@
+{
+  "number": 2196,
+  "title": "ZoomAll",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add parameters zoomAllUseBoundingBox, boundingBoxZoomAllOffset and boundingBoxZoomAllFactor to adjust to exact bounding box of scene in rotated coordinates",
+  "dateRaised": "2026-01-06",
+  "deadline": "2026-07-05",
+  "dateResolved": "2026-01-06 18:30",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 1196,
+  "title": "ObjectFFRFreducedOrder sparse",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add sparse option for ObjectFFRFreducedOrder, filling in flexible-flexible mass terms into sparse mass matrix",
+  "dateRaised": "2022-07-11",
+  "deadline": "2022-09-09",
+  "dateResolved": "2026-01-04 11:35",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "partially resolved and moved to newer issues"
+}

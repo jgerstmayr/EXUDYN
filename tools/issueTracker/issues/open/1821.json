@@ -1,0 +1,10 @@
+{
+  "number": 1821,
+  "title": "kinematics solver",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "consider functionality of a kinematic solver; this could be based on a quasi-static solver which utilizes the velocity constraint level and computes unknown velocities for a given configuration; first attempt could be based on finite differences for prescribed incremental motion and resulting incremental coordinates; only possible for systems with DOF=0; alternatively, we could compute velocity coordinates only from the constrained system, which however would only work if all coordinates are constrained",
+  "dateRaised": "2024-04-19",
+  "deadline": "2024-10-16"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2088,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add internal function to get node numbers of NGsolve boundary condition: GetNodesOfNGsolveBoundary",
+  "dateRaised": "2025-06-13",
+  "deadline": "2025-12-10",
+  "dateResolved": "2025-06-14 10:31",
+  "resolvedAuthor": "JG"
+}

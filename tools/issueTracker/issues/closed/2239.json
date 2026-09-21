@@ -1,0 +1,13 @@
+{
+  "number": 2239,
+  "title": "systemStructures.py",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "transfor into more suitable Python native format",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Resolved by revision2026 step R4.3: src/pythonGenerator/systemStructures.py is gone; the structures are defined in definitions/structureDefs*.py as plain Python data and the emitters in tools/generators/ produce the C++; the stubs and the documentation from them."
+}

@@ -1,0 +1,13 @@
+{
+  "number": 2548,
+  "title": "generated and hand-written documentation share directories and nothing says which is which",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "description": "Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "file": "docs/theDoc",
+  "line": "1"
+}

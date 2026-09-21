@@ -1,0 +1,12 @@
+{
+  "number": 2121,
+  "title": "Involute gear",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add function to generate graphics for toothed rack",
+  "dateRaised": "2025-07-02",
+  "deadline": "2025-12-29",
+  "dateResolved": "2025-07-03 18:33",
+  "resolvedAuthor": "JG"
+}

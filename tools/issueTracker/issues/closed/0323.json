@@ -1,0 +1,13 @@
+{
+  "number": 323,
+  "title": "invalid index test",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "description": "add test which checks that invalidIndex in python (-1) converts to invalidIndex in exudyn (use simple object with node number and check node number after setting object",
+  "dateRaised": "2020-01-24",
+  "deadline": "2020-03-24",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py writes a fixed set of probe values - which includes -1 - into every parameter of every item through each access path and compares type; shape and value that read back against a committed reference; index parameters included. The InvalidIndex cases are called out explicitly in that file (#2426)."
+}

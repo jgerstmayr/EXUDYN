@@ -1,0 +1,13 @@
+{
+  "number": 2080,
+  "title": "HDF5",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "Add test with all data types",
+  "dateRaised": "2025-06-08",
+  "deadline": "2025-12-05",
+  "dateResolved": "2025-06-08 18:11",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "added example testHDF5loadSave.py"
+}

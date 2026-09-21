@@ -1,0 +1,12 @@
+{
+  "number": 2083,
+  "title": "SolidOfRevolution",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add check to graphics.SolidOfRevolution that order of list is correct (leads to correct inside-outside relations)",
+  "dateRaised": "2025-06-09",
+  "deadline": "2025-12-06",
+  "dateResolved": "2025-06-10 01:02",
+  "resolvedAuthor": "JG"
+}

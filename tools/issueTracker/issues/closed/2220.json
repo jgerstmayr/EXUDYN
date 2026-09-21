@@ -1,0 +1,12 @@
+{
+  "number": 2220,
+  "title": "AVX2 linux",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "enable AVX2 on linux and activate performance flags (O3)",
+  "dateRaised": "2026-01-14",
+  "deadline": "2026-07-13",
+  "dateResolved": "2026-01-14 01:46",
+  "resolvedAuthor": "JG"
+}

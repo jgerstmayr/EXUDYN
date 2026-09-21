@@ -1,0 +1,12 @@
+{
+  "number": 2345,
+  "title": "Create functions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "several parameters like CreateTorsionalSpringDamper offset, velocityOffset and torque require UReal but only Real needed",
+  "dateRaised": "2026-04-19",
+  "deadline": "2026-10-16",
+  "dateResolved": "2026-04-19 14:39",
+  "resolvedAuthor": "JG"
+}

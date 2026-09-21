@@ -1,0 +1,12 @@
+{
+  "number": 2018,
+  "title": "docu",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "when searching for keywords in examples, exclude matches (like MassMatrix) where the character before or after the keyword is a letter (a-zA-Z) to avoid wrong matches!",
+  "dateRaised": "2025-05-15",
+  "deadline": "2025-11-11",
+  "dateResolved": "2025-06-18 22:22",
+  "resolvedAuthor": "JG"
+}

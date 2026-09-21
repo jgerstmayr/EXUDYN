@@ -1,0 +1,12 @@
+{
+  "number": 2053,
+  "title": "FEM",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "ComputePostProcessingModes raises error for larger problems due to print command",
+  "dateRaised": "2025-05-27",
+  "deadline": "2025-11-23",
+  "dateResolved": "2025-05-27 22:16",
+  "resolvedAuthor": "JG"
+}

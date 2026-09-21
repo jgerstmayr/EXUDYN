@@ -1,0 +1,12 @@
+{
+  "number": 1978,
+  "title": "SetWriteToFile",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add flushAlways (default:False) option for immediate writing to file",
+  "dateRaised": "2025-03-31",
+  "deadline": "2025-09-27",
+  "dateResolved": "2025-03-31 21:48",
+  "resolvedAuthor": "JG"
+}

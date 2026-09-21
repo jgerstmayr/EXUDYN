@@ -1,0 +1,10 @@
+{
+  "number": 926,
+  "title": "RollingDiscPenalty",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation",
+  "dateRaised": "2022-02-03",
+  "deadline": "2022-04-04"
+}

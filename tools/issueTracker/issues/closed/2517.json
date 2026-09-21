@@ -1,0 +1,16 @@
+{
+  "number": 2517,
+  "title": "the gate environment can hold a stale exudyn wheel",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-19 09:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "line": "1",
+  "releaseNotes": "Both halves. exudev build --env <environment> builds and installs into the generator environment (added 2026-09-18), which removes the cause in the normal workflow; and tools/checkPython.py --stubs now REFUSES to run when the installed exudyn version differs from version.txt, naming both versions and the command that fixes it. The refusal is in the tool and not in the exudev driver, because checkPython.py --stubs --check is a command a person or a CI job runs directly. Verified by faking the mismatch: it exits 1 with that message. The other five checks are static and are deliberately not guarded - blocking them between ResolveIssue and the next build would make the gate fight the workflow. The test suite is not guarded either; its log file carries the version, and exudev test legitimately targets other environments."
+}

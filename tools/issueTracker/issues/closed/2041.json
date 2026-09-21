@@ -1,0 +1,12 @@
+{
+  "number": 2041,
+  "title": "exudyn.Solve",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "remove exudyn.SolveStatic exudyn.SolveDynamic and exudyn.ComputeODE2Eigenvalues from exudyn, being only available in MainSystem as mbs.SolveDynamic, etc.",
+  "dateRaised": "2025-05-22",
+  "deadline": "2025-11-18",
+  "dateResolved": "2025-05-22 08:35",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 1996,
+  "title": "MainSystemExtensions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "expose MainSystem as MainSystemBase into python; derive Python class MainSystem from MainSystemBase in MainSystemExtensions; this should increase visibility of Python code!",
+  "dateRaised": "2025-05-06",
+  "deadline": "2025-11-02",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Resolved differently and the goal is met: instead of exposing MainSystemBase and deriving a Python MainSystem from it; a function is marked where it is defined with @extends(exudyn.MainSystem) and exudyn.extensionRegistry.install() attaches it to the C++ class (revision2026 phase R4). Python-side MainSystem code is therefore visible in the class; in the stub file and in the documentation; without a second class in the hierarchy."
+}

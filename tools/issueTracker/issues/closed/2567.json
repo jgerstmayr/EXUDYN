@@ -1,0 +1,14 @@
+{
+  "number": 2567,
+  "title": "the issue tracker gets a command line, in exudev",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The tracker was driven by importing the module from its own directory and calling functions - every issue of this revision was raised with a four-line python -c - because trackerlog.txt was opened relative to the current directory and the version files were written as '..\\..\\version.txt' with Windows separators. It now derives its two directories from __file__ and works from anywhere, and the command line lives in exudev (maintainer 2026-09-21): exudev issue raise/extend/remark/resolve/abandon/show/list/modify/mode. Every writing verb is a Step with an action, so exudev -n issue resolve prints what it would do and writes nothing. mode --release/--dev rewrites the one versionDev line of fact 26. See revision2026 step R8.3.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 11:13",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "issueTracker.py derives trackerDirectory and repositoryRoot from __file__ and works from any directory; the ~20 relative paths and the Windows-separator literals are gone. The command line is exudev issue <verb>: raise, extend, remark, resolve, abandon (alias close), show, list with the filters a triage pass needs, modify, and mode --release/--dev for fact 26, which rewrites the one versionDev line and reruns the update. Every writing verb is a Step with an action, so exudev -n issue resolve prints the note and writes nothing. Eight new tests cover the version arithmetic - the only definition of what version.txt says and untested until now - and the CLI. Two items of the step were void when it ran: the NORMAL-vs-med priority mismatch was settled in R8.5.3, and execWithPythonVersion.bat exists only in the untracked tmp/oldScripts/ since exudev replaced the batch files in R5.18."
+}

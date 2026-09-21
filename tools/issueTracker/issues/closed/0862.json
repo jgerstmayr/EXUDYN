@@ -1,0 +1,13 @@
+{
+  "number": 862,
+  "title": "Vector alignment",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add 32 or 64 byte memory + length alignment to allocation of vectors in order to be able to always use AVX and/or loop unrolling for copying or manipulating vectors; use _mm_malloc / _mm_free and separate flags to turn on/off memory and length alignment, memory alignment turned off in case that AVX is not available",
+  "dateRaised": "2022-01-13",
+  "deadline": "2022-03-14",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Resolved: src/Linalg/Vector.h allocates through _aligned_malloc on Windows and posix_memalign elsewhere; so vector data is aligned for the AVX paths; and AlignedFree in src/Utilities/BasicDefinitions.h frees it. Revision2026 step R2.10 settled which module carries the vector extensions (only exudynCPPfast) and step R2.10.3 recorded what they change."
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2547,
+  "title": "five howTo files are .txt renamed to .md",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "buildFromSource.md, gccVsMsvcTraps.md, matplotlibExamples.md, sphinxDocs.md and visualStudio2022.md were renamed from .txt in step R3.6 and never converted: they have no fenced code blocks, and every line beginning with a hash - a shell comment - renders as a heading. buildFromSource.md is the canonical build reference and the worst affected. They are excluded from the documentation until they are converted, and linked to GitHub from the developer index so that nothing points at a page that does not exist. convertVideosFfmpeg.md was converted as an example of what they need.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-20 18:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/howTo/buildFromSource.md",
+  "line": "1",
+  "releaseNotes": "buildFromSource, gccVsMsvcTraps, matplotlibExamples, sphinxDocs and visualStudio2022 are real Markdown and are in the documentation: out of exclude_patterns, into the toctree, and the developer index links them locally again - all eight docs/howTo pages are documents now. Converting them meant rewriting them, because formatting alone would have produced correct Markdown with wrong instructions: buildFromSource described Anaconda with Python 3.6, a main/ directory that no longer exists and setup.py bdist_wininst; it is written for the repository as it is now and keeps what is nowhere else (the Linux OpenGL/X11 packages, the WSL permission trap, choosing a GCC version, gdb). sphinxDocs names the docs dependency group and the -W gate instead of a pip list, visualStudio2022 the three components that matter. gccVsMsvcTraps and matplotlibExamples are knowledge rather than instructions and needed mainly structure and code fences."
+}

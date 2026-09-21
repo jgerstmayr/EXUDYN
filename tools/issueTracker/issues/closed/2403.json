@@ -1,0 +1,15 @@
+{
+  "number": 2403,
+  "title": "stale project naming and no way to keep an experimental pytest.py out of commits",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "after the flatten the Python project was still called pythonDev (python/pythonDev.pyproj, Name and RootNamespace pythonDev) although the directory is python/, its SearchPath pointed at ..\\pythonDev which no longer exists, and it listed a Content item requirements.txt that has never existed in that directory (Visual Studio shows it with an exclamation mark). Separately: pytest.py is the scratch file used to try out features in MSVC with mixed debugging, the old practice was to overwrite the experimental version with the default one before committing, which is easy to forget and invisible in review. The solution file was likewise committed under the name main_sln_Template.sln while being the file actually opened. Maintainer request; found during revision2026 step R3.1",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 16:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudynPython.pyproj",
+  "releaseNotes": "project renamed to python/exudynPython.pyproj with Name and RootNamespace exudynPython, SearchPath corrected to ., the dangling requirements.txt Content item removed - the dependency lists are the extras in pyproject.toml and a second source would only go stale. The template/local pattern now covers both scratch files: exudynTemplate.sln and python/pytestTemplate.py are committed, exudyn.sln and python/pytest.py are in .gitignore, and tools/setupLocalWorkspace.py creates the local copies from the templates without ever overwriting an existing file. An experiment therefore cannot be committed by accident. Documented in docs/dev/WORKFLOW.md section 0a and in docs/dev/README.md"
+}

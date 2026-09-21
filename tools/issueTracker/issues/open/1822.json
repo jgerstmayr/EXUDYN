@@ -1,0 +1,10 @@
+{
+  "number": 1822,
+  "title": "inverse dynamics",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure",
+  "dateRaised": "2024-04-19",
+  "deadline": "2024-10-16"
+}

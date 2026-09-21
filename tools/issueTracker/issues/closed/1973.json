@@ -1,0 +1,12 @@
+{
+  "number": 1973,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "remove frictionVelocityPenalty as it is not used; also remove macro ANCFuseFrictionPenalty",
+  "dateRaised": "2025-03-07",
+  "deadline": "2025-09-03",
+  "dateResolved": "2025-03-07 17:00",
+  "resolvedAuthor": "JG"
+}

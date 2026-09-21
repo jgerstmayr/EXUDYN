@@ -1,0 +1,13 @@
+{
+  "number": 1581,
+  "title": "mainSystemExtensions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add LinearSpringDamper and TorsionalSpringDamper",
+  "dateRaised": "2023-05-21",
+  "deadline": "2023-11-17",
+  "dateResolved": "2025-02-05 08:44",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "transferred to issues 1948 and 1953"
+}

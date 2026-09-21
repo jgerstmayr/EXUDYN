@@ -1,0 +1,12 @@
+{
+  "number": 1965,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "ODE2RHS timer removed and replaced with CSystem Contact:Overall timer (which includes PostNewtonStep)",
+  "dateRaised": "2025-03-02",
+  "deadline": "2025-08-29",
+  "dateResolved": "2025-03-02 11:46",
+  "resolvedAuthor": "JG"
+}

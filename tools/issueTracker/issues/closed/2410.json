@@ -1,0 +1,15 @@
+{
+  "number": 2410,
+  "title": "NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "referenceCoordinates, initialCoordinates and initialVelocities of NodeRigidBodyRotVecLG are declared with type Vector6D but size 3, so the generated reference tables publish \"type = Vector6D, size = 3\". Everything else says 6: the class description (\"3 displacement coordinates and three rotation coordinates\"), GetNumberOfODE2Coordinates returns 6, the default value has six entries, and the LaTeX symbol lists six components. The size column is simply wrong in the published documentation. Note that size is currently used for documentation only and is validated nowhere - see the generator note \"future: also add size check ...\" at pythonAutoGenerateObjects.py:904 - which is why this could go unnoticed. Found during revision2026 step R4.1.2, where shape becomes part of the type and the two can no longer disagree.",
+  "dateRaised": "2026-09-13",
+  "deadline": "2027-03-12",
+  "dateResolved": "2026-09-13 16:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/pythonGenerator/objectDefinition.py",
+  "line": "397",
+  "releaseNotes": "corrected at the source: objectDefinition.py lines 397-399 declared size 3 for three Vector6D members of NodeRigidBodyRotVecLG; the sibling NodeRigidBodyEP block correctly says 6. Regenerated; only the documentation tables changed (tier 1 API surface byte-identical)."
+}

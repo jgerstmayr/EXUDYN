@@ -1,0 +1,16 @@
+{
+  "number": 2494,
+  "title": "CompositionRuleForRotationVectors returns 2pi instead of 0 for opposite half-turns",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "Composing the rotation vector pi*n with itself gives a vector of norm 2*pi instead of the zero vector. Both describe the identity rotation - ExpSO3 of the result IS the identity - but 2*pi is outside the principal range and is exactly where the tangent operator is singular: TExpSO3Inv at that vector returns entries of order 1e15. A time integration that composes into that point therefore continues with a meaningless T matrix. Found by TEST 2 of TestModels/LieGroupIntegrationUnitTests.py; which compares against Matlab results that give 0; the other nine tests of that file pass. revision2026 step R5.12.1",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-18 07:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/lieGroupBasics.py",
+  "line": "649",
+  "releaseNotes": "Settled in revision2026 step R5.12.1 by the maintainer's decision: the composition rule does NOT map into the principal range; the result may have a norm up to 2*pi; and that is accepted rather than changed. It always describes the correct rotation - ExpSO3 of it is the intended matrix - so the formulas take such noise and pass it on instead of snapping to a boundary; which keeps every existing result unchanged; and a caller needing the principal range maps it (for w > pi use 2*pi - w about the negated axis). The C++ EXUlie::CompositionRotationVector was checked as asked and is the SAME formula returning the same 2*pi; so this was never a port that drifted. Both the Python docstring and the C++ comment now state it and name each other. One real defect was found and fixed on the way: the Python lacked the fabs() guard the C++ has; so it RAISED ValueError: math domain error for exactly this case. LieGroupIntegrationUnitTests.py now passes 10 of 10; TEST 2 checks that the composition is the identity rotation instead of comparing against the Matlab principal-range value."
+}

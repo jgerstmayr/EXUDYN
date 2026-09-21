@@ -1,0 +1,13 @@
+{
+  "number": 2482,
+  "title": "the sparse FactorizeNew does not return the causing row it promises",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 17:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "GeneralMatrixEigenSparse::FactorizeNew() now returns NumberOfRows() on failure - the value the caller already treats as \"causing row unknown\" - instead of solver.info()-1, which was an Eigen ComputationInfo and therefore always 0. The comment that described SuperLU info semantics is replaced by what Eigen actually returns. Measured on a redundantly constrained system with EigenSparse: before, the solver printed \"causing system equation number (coordinate number) = 0\" and \"The causing system equation 0 belongs to a ODE2 coordinate\"; after, the singularity is reported with no row claimed. The symmetric branch always behaved this way. The R5.4.3 unit test asserts the exact return value. revision2026 step R5.4.9."
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2132,
+  "title": "nodes",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "letter N for basis only shown in case that nodes.showNumbers=True",
+  "dateRaised": "2025-07-05",
+  "deadline": "2026-01-01",
+  "dateResolved": "2025-07-05 10:46",
+  "resolvedAuthor": "JG"
+}

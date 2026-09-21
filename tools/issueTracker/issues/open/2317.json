@@ -1,0 +1,10 @@
+{
+  "number": 2317,
+  "title": "Add ObjectJointSliding",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "Add implementation and tests for SlidingJoint with thick ANCF beam",
+  "dateRaised": "2026-03-02",
+  "deadline": "2026-08-29"
+}

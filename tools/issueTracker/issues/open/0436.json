@@ -1,0 +1,10 @@
+{
+  "number": 436,
+  "title": "virtual functions",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes",
+  "dateRaised": "2020-07-21",
+  "deadline": "2020-09-19"
+}

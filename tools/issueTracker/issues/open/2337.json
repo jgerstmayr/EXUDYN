@@ -1,0 +1,10 @@
+{
+  "number": 2337,
+  "title": "CreateCoordinateConstraint",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained",
+  "dateRaised": "2026-04-06",
+  "deadline": "2026-10-03"
+}

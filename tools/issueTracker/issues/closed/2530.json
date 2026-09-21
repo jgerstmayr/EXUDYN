@@ -1,0 +1,16 @@
+{
+  "number": 2530,
+  "title": "the error block is printed to the console although the exception already says it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "Since revision2026 step R6.3.5 the exception carries the message and the location; the 5-line ==== block printed by PyError and SysError repeats it on the console. Worse: a caught exception still prints the block, so a GUI or a parameter variation that handles errors floods the terminal with SYSTEM ERROR text for something it handled. Print the block to the pout LOG FILE only (never to the console) - on a long unattended run the file is the only record, and the console has the traceback. Requires a file-only write on OutputBuffer, because pout cannot separate the two channels. Also make the ofstream overloads write the identical block: they currently append Exudyn: parsing of Python file terminated ... which is the fixed sentence that R6.3.5 already removed from the exception.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 20:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/Stdoutput.cpp",
+  "line": "399",
+  "releaseNotes": "The ==== block is written to the pout log file only (new OutputBuffer::WriteToFileOnly) and never to the console: the exception carries the same message and location since #2527, and a caught exception used to print it anyway. Both file channels now write the identical text from the new ErrorMessageBlock(); the file-only sentence Exudyn: parsing of Python file terminated ... is gone. PyWarning is unchanged - a warning throws nothing, so the console is its only channel."
+}

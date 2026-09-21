@@ -1,0 +1,12 @@
+{
+  "number": 2087,
+  "title": "GetOtherMarker",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "return MarkerBodyRigid as body anyway must provide position and orientation",
+  "dateRaised": "2025-06-13",
+  "deadline": "2025-12-10",
+  "dateResolved": "2025-06-13 22:13",
+  "resolvedAuthor": "JG"
+}

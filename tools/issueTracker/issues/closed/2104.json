@@ -1,0 +1,12 @@
+{
+  "number": 2104,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "add try except to automatic nodeSet creation in case that there are no boundaries computable",
+  "dateRaised": "2025-06-18",
+  "deadline": "2025-12-15",
+  "dateResolved": "2025-06-18 18:17",
+  "resolvedAuthor": "JG"
+}

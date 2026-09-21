@@ -1,0 +1,10 @@
+{
+  "number": 1682,
+  "title": "ItemIndices",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add previous CallFunction functionalities to NodeIndex, etc.; IsNodeGroup(group), IsNodeType(type), SizeODE2(), ...,",
+  "dateRaised": "2023-10-29",
+  "deadline": "2024-04-26"
+}

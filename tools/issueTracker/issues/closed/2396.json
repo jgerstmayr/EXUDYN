@@ -1,0 +1,15 @@
+{
+  "number": 2396,
+  "title": "enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "description": "measured 2026-09-12 once the alignment defect was fixed: a manylinux cp313 build with -mavx2 -mfma runs the whole suite; but four tests that pass without AVX2 then fail against the 3e-11 tolerance - ANCFcontactCircleTest (-2.185e-08); ANCFslidingAndALEjointTest (2.236e-06); connectorGravityTest (-1.956e-07) and raytracerNOGLFWtest (-1.368e-06). All are rounding scale: a fused multiply-add rounds once where a separate multiply and add round twice. The same build WITHOUT -mavx2 reproduces the previous results bit for bit; so this is a property of AVX2; not of the alignment fix. Relevant to revision2026 step R2.10 (two shipped variants) and to the tolerance discussion in fact 24: either the reference values are variant dependent; or the tolerance has to admit FMA level differences",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-16 08:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/runTestSuiteRefSol.py",
+  "releaseNotes": "revision2026 step R2.16: caused by FMA contraction; -ffp-contract=off removes it; AVX2 stays off for the default Linux wheel; a fast variant must use the flag"
+}

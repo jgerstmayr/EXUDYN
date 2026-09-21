@@ -1,0 +1,12 @@
+{
+  "number": 2057,
+  "title": "PrintDelayed",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "printing from visualiuation thread: buffer is never emptied; use idle tasks to do so",
+  "dateRaised": "2025-05-28",
+  "deadline": "2025-11-24",
+  "dateResolved": "2025-05-28 01:12",
+  "resolvedAuthor": "JG"
+}

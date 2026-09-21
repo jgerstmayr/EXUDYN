@@ -1,0 +1,14 @@
+{
+  "number": 2412,
+  "title": "Google style docstrings are mandatory project wide",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "The convention is nowhere stated; the revision plan even said NumPy style. Decision: Google style docstrings MUST be used throughout for consistency. The rule has to be written into docs/dev/CODING_STYLE.md; CONTRIBUTING.md and CLAUDE.md; and mentioned early in the user documentation so contributors meet it before writing code. griffe and pydoclint both parse Google style; so the planned docstring toolchain (revision2026 steps R4.6-R4.9) is unaffected apart from a parser argument.",
+  "dateRaised": "2026-09-13",
+  "deadline": "2027-03-12",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/CODING_STYLE.md",
+  "releaseNotes": "Resolved by revision2026 step R4.6: docs/dev/CODING_STYLE.md states Google style as the convention for python/exudyn - summary; then Args:; Returns:; Note:; Example: - and pydoclint checks it in CI against tools/ci/pydoclintBaseline.txt. The #** doc-comment convention it replaced is marked as removed in the same table."
+}

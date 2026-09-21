@@ -1,0 +1,16 @@
+{
+  "number": 2404,
+  "title": "the Python 3.14 CI job never compiles exudyn: the scipy pin has no 3.14 wheel",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "buildManylinux.sh pins scipy==1.15.2 because newer releases have a much slower sparse eigenvalue solver (revision2026 fact 19). There is no cp314 wheel of 1.15.2; so pip built it from source and meson aborted with Dependency OpenBLAS not found. The job therefore failed in the dependency install step - exudyn itself was never compiled and no 3.14 result exists at all. Seen in the nightly GitLab run of 2026-09-12 for 1.11.31",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 17:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/ci/buildManylinux.sh",
+  "line": "106",
+  "releaseNotes": "the pin now carries a PEP 508 marker: scipy==1.15.2 for python_version < 3.14 and an unpinned scipy at or above it. The pin exists for speed and 3.14 had no result at all; so an unmeasured scipy there is strictly better than no build. Re-pin once a fast-enough 3.14 wheel exists"
+}

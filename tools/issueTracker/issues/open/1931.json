@@ -1,0 +1,10 @@
+{
+  "number": 1931,
+  "title": "URDF import",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "GetURDFrobotData: check for import of other scene information than mesh; check for import of collision",
+  "dateRaised": "2024-11-10",
+  "deadline": "2025-05-09"
+}

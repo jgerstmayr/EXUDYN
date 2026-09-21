@@ -1,0 +1,15 @@
+{
+  "number": 2385,
+  "title": "remove the three dead CMakeLists files",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "none of the three could configure; let alone build. main/CMakeLists.txt was a fourth complete copy of the 133 file source list and called add_subdirectory(pybind11) on a directory that does not exist; its own header said \"CMakeLists for Exudyn are not complete\". main/src/CMakeLists.txt and main/obj/autoCMakeLists.txt listed 63 of 133 files; missed 74; referenced sources deleted years ago (StaticSolver.cpp; CNodeRigidBody.cpp; solver/TimeIntegrationSolver.cpp) and used add_executable although exudyn is a Python module. Decision D3 keeps the .sln and .vcxproj and drops CMake. revision2026 step R2.5",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 23:52",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/CMakeLists.txt",
+  "releaseNotes": "all three deleted (405 lines). main/include/Eigen/CMakeLists.txt is vendored third-party and was left untouched. No generator recreates them. The only reference in the documentation was one passing mention in docs/theDoc/gettingStarted.tex; which now names scikit-build-core alone rather than pointing at files that no longer exist. This also removes the last duplicate of the source list that revision2026 step R2.4 consolidated into main/sources.json"
+}

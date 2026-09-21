@@ -1,0 +1,10 @@
+{
+  "number": 908,
+  "title": "MarkerData",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add configuration to markerdata computation; allows configuration in sensors and startOfStep configuration in Contact",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03"
+}

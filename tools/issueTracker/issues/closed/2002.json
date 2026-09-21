@@ -1,0 +1,12 @@
+{
+  "number": 2002,
+  "title": "BasicTraits.h",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "remove and add new AdvancedStuff.h and put there sort, atomics operations, iterators, etc. which are not needed everywhere",
+  "dateRaised": "2025-05-08",
+  "deadline": "2025-11-04",
+  "dateResolved": "2025-05-08 20:39",
+  "resolvedAuthor": "JG"
+}

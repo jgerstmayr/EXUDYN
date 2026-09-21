@@ -1,0 +1,12 @@
+{
+  "number": 2159,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "nodeSets receive additional \"type\" information, e.g. used to indicate boundary node sets in CreateNGsolveBoundaryNodeSets",
+  "dateRaised": "2025-11-27",
+  "deadline": "2026-05-26",
+  "dateResolved": "2025-11-27 10:09",
+  "resolvedAuthor": "JG"
+}

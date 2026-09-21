@@ -1,0 +1,10 @@
+{
+  "number": 1290,
+  "title": "ContactFrictionCircleCable2D",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "shows tangential forces in case of all friction stiffness and damping values are zero; may be caused by specific projection",
+  "dateRaised": "2022-11-05",
+  "deadline": "2023-05-04"
+}

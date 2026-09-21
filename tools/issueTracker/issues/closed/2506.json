@@ -1,0 +1,16 @@
+{
+  "number": 2506,
+  "title": "RaytracingSettings::maxNThreads has no definition",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "src/Graphics/Raytracing.h:136 declares \"static const Index maxNThreads = 256;\" with an in-class initializer but no out-of-class definition. Raytracing.cpp:913 passes it to EXUstd::Clamp(const T& x; const T& lower; const T& upper); binding a reference to it - which is an odr-use; so a definition IS required. At -O3 the compiler folds the constant and nothing is referenced; so every release build links and loads. At -O1 it does not fold; the symbol stays undefined and importing the module fails outright with \"undefined symbol: _ZN18RaytracingSettings11maxNThreadsE\". Found 2026-09-18 on the FIRST build of revision2026 step R5.6 (sanitizers; which use -O1); before a single sanitizer check had run. The neighbouring materialOffset is already \"static constexpr\"; which in C++17 is implicitly inline and needs no definition; RTcolorDepth on the next line has the same latent pattern. Fix: make them constexpr.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 02:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/Raytracing.h",
+  "line": "136",
+  "releaseNotes": "Fixed in revision2026 step R5.6: src/Graphics/Raytracing.h:136 - maxNThreads and its neighbour RTcolorDepth are now \"static constexpr\"; which in C++17 is implicitly inline and therefore needs no out-of-class definition; matching materialOffset two lines above. Verified: before the change the -O1 sanitizer build produced a module that failed to import with \"undefined symbol: _ZN18RaytracingSettings11maxNThreadsE\"; after it the same build imports and the whole test suite runs. The MSVC release build was rebuilt and the test suite passed in venvExuP313 with unchanged values; so nothing about the behaviour moved - at -O3 the constant was folded all along; which is why no Windows or manylinux release ever showed this."
+}

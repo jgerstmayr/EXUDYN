@@ -1,0 +1,15 @@
+{
+  "number": 2372,
+  "title": "project.license TOML table deprecated",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "priority": "LOW",
+  "description": "setuptools deprecates license = { text = ... } with deadline 2027-Feb-18; the replacement is an SPDX expression. There is no honest one: LICENSE.txt is the custom EXUDYN General License; not an OSI-approved BSD - which is also why the License :: OSI Approved :: BSD License classifier was dropped. Needs a decision on what the licence identifier should be",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-02-18",
+  "dateResolved": "2026-09-16 01:00",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pyproject.toml",
+  "releaseNotes": "revision2026 step R2.15: license = LicenseRef-EXUDYN-General-License with license-files; setuptools>=77"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2382,
+  "title": "cppsrc.vcxproj listed src/tests/UnitTestBase with the wrong case",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "the vcxproj had ClCompile ..\\src\\tests\\UnitTestBase.cpp and ClInclude for the header; while the tracked directory is src/Tests. Windows resolves both to the same file so it was invisible there; Linux does not. It did not break the manylinux build only because setup.py had its own list with the correct case. Found by tools/gen_sources.py; revision2026 step R2.4",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 22:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/obj/cppsrc.vcxproj",
+  "line": "432",
+  "releaseNotes": "corrected to src\\Tests\\UnitTestBase for both the ClCompile and the ClInclude entry. tools/gen_sources.py --check now fails on any case mismatch; so this cannot silently return"
+}

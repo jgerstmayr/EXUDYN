@@ -1,0 +1,11 @@
+{
+  "number": 1061,
+  "title": "Reference and copy",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "description": "add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?",
+  "dateRaised": "2022-04-30",
+  "deadline": "2022-06-29"
+}

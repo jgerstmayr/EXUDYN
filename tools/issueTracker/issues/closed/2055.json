@@ -1,0 +1,12 @@
+{
+  "number": 2055,
+  "title": "exudyn.Print",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "replace print commands in exudyn modules by exudyn.Print(...) in order to have common handling of file writing, etc.",
+  "dateRaised": "2025-05-28",
+  "deadline": "2025-11-24",
+  "dateResolved": "2025-05-28 00:08",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 2246,
+  "title": "GLFWClient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "model translation currently only uses x and y components: glTranslatef(translationMV[0], translationMV[1], 0.f); => fix in order to avoid large offsets in large scenes",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-01-31 22:12",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "check graphics functionality in examples..."
+}

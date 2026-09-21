@@ -1,0 +1,10 @@
+{
+  "number": 1863,
+  "title": "MatrixContainer",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets",
+  "dateRaised": "2024-10-02",
+  "deadline": "2025-03-31"
+}

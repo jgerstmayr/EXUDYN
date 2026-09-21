@@ -1,0 +1,12 @@
+{
+  "number": 2004,
+  "title": "GetJointArgs",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add a utility function, which takes an existing marker and rotationMarker and another body to compute a new marker and rotationMarker for the other body; can be directly used as joint arguments like in revolute, prismatic or generic joints",
+  "dateRaised": "2025-05-09",
+  "deadline": "2025-11-05",
+  "dateResolved": "2025-05-09 23:59",
+  "resolvedAuthor": "JG"
+}

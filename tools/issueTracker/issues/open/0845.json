@@ -1,0 +1,10 @@
+{
+  "number": 845,
+  "title": "Jacobian documentation",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "description": "add documentation to object and connector jacobians",
+  "dateRaised": "2021-12-23",
+  "deadline": "2022-02-21"
+}

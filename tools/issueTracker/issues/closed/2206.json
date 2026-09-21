@@ -1,0 +1,12 @@
+{
+  "number": 2206,
+  "title": "Manylinux wheels",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "switch to docker, add compile manylinux wheels locally",
+  "dateRaised": "2026-01-08",
+  "deadline": "2026-07-07",
+  "dateResolved": "2026-01-08 13:32",
+  "resolvedAuthor": "JG"
+}

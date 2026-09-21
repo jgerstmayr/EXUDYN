@@ -1,0 +1,16 @@
+{
+  "number": 2561,
+  "title": "test_exceptions.py relied on another test file importing the MainSystem extensions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "description": "The solver-file tests of step R6.8 call mbs.SolveDynamic, which exists only once exudyn.utilities (or exudyn.misc.mainSystemExtensions) has been imported - and test_exceptions.py imported neither. Under pytest -n 8 it passed as long as the worker that ran it had already run a test that does import them; adding one test model changed the distribution and three tests failed with FileNotFoundError, because the AttributeError was swallowed by the except BaseException of the helper. Fixed by importing exudyn.utilities in the test file. The wider question stays open: a test file that depends on an import made elsewhere is a test that passes by luck, and the helper that catches BaseException hides which error it was.",
+  "dateRaised": "2026-09-20",
+  "deadline": "2027-03-19",
+  "dateResolved": "2026-09-20 09:40",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/test_exceptions.py",
+  "line": "30",
+  "releaseNotes": "test_exceptions.py imports exudyn.utilities now, so the MainSystem extensions it uses are installed by the file that uses them rather than by whichever test file ran before it in the same pytest worker. The three failures appeared when adding resultsMonitorTest.py changed the distribution of pytest -n 8. The wider point is recorded in revision2026 step R6.8.1: a test that depends on an import made elsewhere passes by luck, and the helper that catches BaseException hid which error it was."
+}

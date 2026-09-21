@@ -1,0 +1,12 @@
+{
+  "number": 2299,
+  "title": "light positions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "Fix light positions for lights in camera frame - sync with lights initialization and with Raytracer",
+  "dateRaised": "2026-02-14",
+  "deadline": "2026-08-13",
+  "dateResolved": "2026-02-16 22:45",
+  "resolvedAuthor": "JG"
+}

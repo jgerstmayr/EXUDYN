@@ -1,0 +1,12 @@
+{
+  "number": 2051,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "resolve parallelization issue by removing global hit count",
+  "dateRaised": "2025-05-26",
+  "deadline": "2025-11-22",
+  "dateResolved": "2025-05-26 18:58",
+  "resolvedAuthor": "JG"
+}

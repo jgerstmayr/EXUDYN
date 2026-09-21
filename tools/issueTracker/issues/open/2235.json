@@ -1,0 +1,10 @@
+{
+  "number": 2235,
+  "title": "computeInitialAccelerations",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "description": "add test for initial accelerations and velocities",
+  "dateRaised": "2026-01-23",
+  "deadline": "2026-07-22"
+}

@@ -1,0 +1,10 @@
+{
+  "number": 916,
+  "title": "mbs.ComputeObjectAccessFunction",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add computation functions for access functions, e.g., TranlationalVelocity_qt, AngVel_qt, ...",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03"
+}

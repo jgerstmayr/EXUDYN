@@ -1,0 +1,15 @@
+{
+  "number": 2380,
+  "title": "quietCompile does not actually quieten the compiler on Linux",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "priority": "LOW",
+  "description": "the quiet path redirects sys.stdout; but on Linux _compile spawns the compiler as a subprocess that writes to file descriptor 1 directly; so the compiler output bypasses the redirection and setuppy.output.txt stays empty (measured: 0 bytes after a full 133 file build). Suppressing it would need the subprocess stdout to be captured; not sys.stdout rebinding. Pre-existing; found while fixing the thread-safety defects of revision2026 step R2.3",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-16 01:00",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/setup.py",
+  "releaseNotes": "revision2026 step R2.15: file descriptors 1 and 2 redirected around the compile pool; verified in WSL"
+}

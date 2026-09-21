@@ -1,0 +1,13 @@
+{
+  "number": 2480,
+  "title": "SymbolicVector.h and SymbolicMatrix.h do not include what they use",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Both headers use py::list, py::array_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 16:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Symbolic.h now includes BasicLinalg.h, <unordered_map> and <typeinfo>; SymbolicVector.h includes Symbolic.h and PybindUtilities.h; SymbolicMatrix.h includes those plus SymbolicVector.h. PybindUtilities.h brings the pybind headers, the py alias and EPyUtils in one line and includes nothing symbolic, so there is no cycle. The proof is a deletion: the four-line include workaround in SymbolicUnitTests.h is gone and the tests compile with the headers in any order. revision2026 step R5.4.7."
+}

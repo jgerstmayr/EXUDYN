@@ -1,0 +1,12 @@
+{
+  "number": 2003,
+  "title": "GetOtherMarker",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add a utility function, which the computes a new marker from the reference position of an existing marker and another body; for easier setup of markers",
+  "dateRaised": "2025-05-09",
+  "deadline": "2025-11-05",
+  "dateResolved": "2025-05-09 15:34",
+  "resolvedAuthor": "JG"
+}

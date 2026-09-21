@@ -1,0 +1,16 @@
+{
+  "number": 2523,
+  "title": "no model shows what an Exudyn error looks like from Python",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "description": "Nothing in the test suite provokes the errors a user actually meets, so there is no record of which exception class and which message reach Python\\, and no way to look at an Exudyn error the way Spyder or VS Code shows it. Maintainer request 2026-09-18. revision2026 step R6.3.7.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 18:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/exceptionTypesTest.py",
+  "line": "1",
+  "releaseNotes": "python/TestModels/exceptionTypesTest.py provokes ten user errors - bad item number, wrong parameter type and value, wrong size, a feature an item does not have, a missing marker, a system the static solver cannot solve, and a division by zero inside a load user function - catches each and reports the class and the message. Six of ten carry the same sentence about parsing terminated\\, which is the evidence for step R6.3.5. catchErrors=False with singleCase=N lets one case fly so an IDE shows it. Classes and messages are printed and never asserted\\, so later steps need not edit the model, testResult is the number of cases that raised nothing. revision2026 step R6.3.7."
+}

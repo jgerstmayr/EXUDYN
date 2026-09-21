@@ -1,0 +1,14 @@
+{
+  "number": 2432,
+  "title": "parameter conversion errors raise inconsistent exception types",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "Recorded by parameterConversionTest.py: a wrong value for an item or structure parameter raises RuntimeError (PyError after a C++ check or a pybind11 cast_error) - TypeError (pybind11 signature mismatch) or ValueError (Python checks) depending on the path; 34c4/34c5 moved most paths to RuntimeError. Maintainer decision 2026-09-15: exception types shall be corrected throughout the revision at an appropriate step - e.g. TypeError for a wrong type (str - list - None - item index into a scalar) and ValueError for a range violation or a wrong size - raised from PyConversion.h and PyError variants; reference update of parameterConversionTest.py. revision2026 step R6.7.",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-18 12:50",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Pymodules/PyConversion.h",
+  "releaseNotes": "A parameter error now raises TypeError when the object cannot be that parameter at all (None; a string for a number; a list for a scalar; an item index of the wrong kind) and ValueError when the kind is right and the value is not (out of range; wrong size; a must-be-given placeholder). Three mechanisms had to change: PyError takes a PyErrorType and throws py::type_error or py::value_error (default unchanged; so the other 577 call sites are untouched); all 20 PyError sites in PyConversion.h name their type (12/8); and the casts that see user input go through Conversion::CastOrRaise; which turns a pybind11 cast_error - the third path this issue names - into a TypeError naming the parameter. Two layers flattened the type back to RuntimeError and had to be found: EXUexception is a define for std::runtime_error (ReleaseAssert.h:30) and py::builtin_exception derives from it; so catch(EXUexception) in the five AddX wrappers and in GenericExceptionHandling caught the new types first - a pass-through now comes before it. Two defects surfaced: three messages built their text with py::cast<std::string>(value); which throws for exactly the values that reach that line; and a 0-d numpy array (what an itemInterface class makes of a scalar in a vector parameter) fails the cast as a Python error; not a cast_error - which is why the class and dict paths disagreed. Recorded in parameterConversionTestReference.txt: of 966 rows every changed outcome is RuntimeError to TypeError (6898) or to ValueError (785); nothing moved the other way and no successful conversion changed. The MESSAGE is deliberately unchanged and belongs to revision2026 step R6.3."
+}

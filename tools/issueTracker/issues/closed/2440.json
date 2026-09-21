@@ -1,0 +1,13 @@
+{
+  "number": 2440,
+  "title": "itemInterface.py: generated docstrings do not match the signatures",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "pydoclint reports 387 findings in the generated itemInterface.py: the visualization argument is not documented and the arguments carry type hints in the docstring; fix in itemInterfaceEmitter.py and then include the file in the pydoclint check (revision2026 step R4.23)",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 19:08",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "revision2026 step R4.23: itemInterfaceEmitter docstrings without arg types; visualization documented; read-only members omitted; pydoclint exclude removed"
+}

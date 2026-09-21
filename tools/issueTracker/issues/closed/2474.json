@@ -1,0 +1,13 @@
+{
+  "number": 2474,
+  "title": "MatrixContainer::MultMatrixVector has two preconditions depending on its mode",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 11:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SparseTripletMatrix::MultMatrixVector sizes the result to NumberOfRows() before zeroing it, as the dense path has always done, and both sparse products now check their sizes. The R5.4.1 container test passes UNSIZED result vectors to both modes; commenting the new SetNumberOfItems out produces exactly one failure. Found on the way: #2476 (step R5.4.6). revision2026 step R5.4.5."
+}

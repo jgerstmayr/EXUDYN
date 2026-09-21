@@ -1,0 +1,13 @@
+{
+  "number": 2158,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add metaData dictionary for optional information and source of mesh/model",
+  "dateRaised": "2025-11-27",
+  "deadline": "2026-05-26",
+  "dateResolved": "2025-11-27 10:08",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "switching to FEM fileVersion 4"
+}

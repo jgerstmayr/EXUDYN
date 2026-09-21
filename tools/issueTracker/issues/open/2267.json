@@ -1,0 +1,10 @@
+{
+  "number": 2267,
+  "title": "GetURDFrobotData",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "description": "add detailed description to function, in particular to returned dict",
+  "dateRaised": "2026-02-04",
+  "deadline": "2026-08-03"
+}

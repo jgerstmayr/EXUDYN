@@ -1,0 +1,10 @@
+{
+  "number": 873,
+  "title": "GenericJoint",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "description": "improve computation of jacobian, using crossproduct",
+  "dateRaised": "2022-01-18",
+  "deadline": "2022-03-19"
+}

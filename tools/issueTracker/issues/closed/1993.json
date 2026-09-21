@@ -1,0 +1,12 @@
+{
+  "number": 1993,
+  "title": "MSVC",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "compilation/execution of Exudyn in MSVC and python differ considerably",
+  "dateRaised": "2025-05-06",
+  "deadline": "2025-11-02",
+  "dateResolved": "2025-05-06 16:00",
+  "resolvedAuthor": "JG"
+}

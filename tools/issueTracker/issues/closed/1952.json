@@ -1,0 +1,13 @@
+{
+  "number": 1952,
+  "title": "CreateTorsionalSpringDamper",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "add test example",
+  "dateRaised": "2025-02-05",
+  "deadline": "2025-08-04",
+  "dateResolved": "2025-05-10 23:23",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "included in createFunctionsTest"
+}

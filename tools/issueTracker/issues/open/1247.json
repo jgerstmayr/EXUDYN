@@ -1,0 +1,10 @@
+{
+  "number": 1247,
+  "title": "UserFunctions",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "check whether optimization of user functions with numba/JIT removes C->Python->C roundtrip overhead using pybind11 f.target approach from tests/test_callbacks.cpp; this would enable to retrieve the original c-function pointer",
+  "dateRaised": "2022-09-02",
+  "deadline": "2022-11-01"
+}

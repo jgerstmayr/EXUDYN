@@ -1,0 +1,12 @@
+{
+  "number": 2245,
+  "title": "GLFWClient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add camera position and orentation as alternative to current modelview; centerPoint adds up to it and modelRotation rotates the camera",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-02-19 13:54",
+  "resolvedAuthor": "JG"
+}

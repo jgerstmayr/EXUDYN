@@ -1,0 +1,16 @@
+{
+  "number": 2545,
+  "title": "the documentation emitters do not escape LaTeX either",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "After the tracker was fixed, theDoc.pdf builds with 74 non-fatal LaTeX errors. They are the same class one layer down: an issue number in a docstring writes a bare hash, a table writes a bare caret, and underscores survive in itemDefinition.tex and pythonUtilitiesDescription.tex where the emitter path differs from the one fixed in step R7.1.3. Passages are garbled; the build completes. The honest fix is ONE escaping function applied at every LaTeX text boundary in the docs emitters, rather than chasing call sites. Note before starting it: step R7.1 deletes the LaTeX path entirely, so this is worth doing only if the PDF survives the Markdown migration.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-20 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/utilityDocsModel.py",
+  "line": "168",
+  "releaseNotes": "Resolved by deleting the LaTeX writers, which is where the 74 escaping errors lived: the emitters write Markdown since revision2026 step R7.1.6 and no generated .tex file is left but abbreviations and buildDate. The requirement moved with the code rather than disappearing: issueTracker.ToMarkdown escapes the backslash first and then ` * _ [ ] < > # | in every free-text field, the same total escaping as ToLatex, and python/testing/test_issueTracker.py proves it - one test per special character, three shapes that actually occur in the tracker, the backslash-first rule, and that ordinary sentences arrive untouched."
+}

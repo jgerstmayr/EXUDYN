@@ -1,0 +1,15 @@
+{
+  "number": 2362,
+  "title": "Test runners truncate committed release logs at startup",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "runTestSuite.py, runTestExamples.py and runPerformanceTests.py each call SetWriteToFile with flagAppend=False on a release-named file in a tracked directory at script start, before any test runs, with no existence check. An interrupted run leaves the committed release log half-written. 55 tracked log files are exposed. Filenames encode version, platform and Python but nothing machine-specific, so a second machine with the same configuration silently overwrites the first. revision2026 step R5.10.",
+  "dateRaised": "2026-09-10",
+  "deadline": "2027-03-09",
+  "dateResolved": "2026-09-10 09:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "runTestSuite.py",
+  "releaseNotes": "testRunnerTools.ResolveLogFile diverts to logsTmp when the target exists; --overwrite-log replaces deliberately. Also added package versions and CPU to the header, a per-test overview with runtimes at the end, and EXUDYN_MACHINE_ID for performance logs. Verified: divert leaves the tracked log byte-identical, override replaces it, absent target writes normally"
+}

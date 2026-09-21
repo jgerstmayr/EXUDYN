@@ -1,0 +1,12 @@
+{
+  "number": 1950,
+  "title": "RigidBody2D",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add parameter physicsCenterOfMass, similar to RigidBody",
+  "dateRaised": "2025-02-05",
+  "deadline": "2025-08-04",
+  "dateResolved": "2025-02-05 14:53",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,11 @@
+{
+  "number": 1140,
+  "title": "c++ user elements",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "add auto registration for C++ user items",
+  "dateRaised": "2022-06-12",
+  "deadline": "2022-08-11"
+}

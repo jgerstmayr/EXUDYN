@@ -1,0 +1,10 @@
+{
+  "number": 2309,
+  "title": "ZoomAll",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible",
+  "dateRaised": "2026-02-19",
+  "deadline": "2026-08-18"
+}

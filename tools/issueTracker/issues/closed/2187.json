@@ -1,0 +1,12 @@
+{
+  "number": 2187,
+  "title": "MainSystemExtensions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "JointPreCheckCalcBodyMarkers requires position even if not used",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-01-04 12:44",
+  "resolvedAuthor": "JG"
+}

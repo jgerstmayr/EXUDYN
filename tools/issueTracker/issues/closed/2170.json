@@ -1,0 +1,12 @@
+{
+  "number": 2170,
+  "title": "GLFWclient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "Test new USE_GLFW_GRAPHICS settings in compilation with -noglfw",
+  "dateRaised": "2025-12-25",
+  "deadline": "2026-06-23",
+  "dateResolved": "2026-01-06 11:46",
+  "resolvedAuthor": "JG"
+}

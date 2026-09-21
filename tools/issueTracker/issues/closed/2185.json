@@ -1,0 +1,12 @@
+{
+  "number": 2185,
+  "title": "Create functions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Add mbs.CreateFFRFReducedOrderObject",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-01-04 11:42",
+  "resolvedAuthor": "S. Weyrer"
+}

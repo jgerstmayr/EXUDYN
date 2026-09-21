@@ -1,0 +1,12 @@
+{
+  "number": 2258,
+  "title": "showMouseCoordinates",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "make not available for perspective!=0 as it gives wrong values; disable zoom and mouse move as well",
+  "dateRaised": "2026-02-02",
+  "deadline": "2026-08-01",
+  "dateResolved": "2026-02-05 23:20",
+  "resolvedAuthor": "JG"
+}

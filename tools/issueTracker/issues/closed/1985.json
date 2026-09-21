@@ -1,0 +1,13 @@
+{
+  "number": 1985,
+  "title": "CreateFunctions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "check pyi files and workflows to enable code completion and navigation in Spyder with Create functions",
+  "dateRaised": "2025-04-02",
+  "deadline": "2025-09-29",
+  "dateResolved": "2025-05-06 22:20",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "shall be resolved with issue 1996, as it natively derives from C++ class"
+}

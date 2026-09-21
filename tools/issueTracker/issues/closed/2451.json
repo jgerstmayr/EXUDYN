@@ -1,0 +1,14 @@
+{
+  "number": 2451,
+  "title": "Marker::Type is not in the enum registrator",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "Marker::Type is hand-written in src/Main/OutputVariable.h with a comment to keep it synchronized with AccessFunctionType; NodeType and the others are generated from definitions/enumTypes.py (revision2026 step R4.3). ItemRequestedTypes (revision2026 step R4.10.1) can therefore validate node type names but not marker type names; and revision2026 step R4.10.2 needs the marker type names in Python.",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 22:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/OutputVariable.h",
+  "releaseNotes": "revision2026 step R4.10.2: Marker::Type and AccessFunctionType generated from enumTypes.py and bound to Python"
+}

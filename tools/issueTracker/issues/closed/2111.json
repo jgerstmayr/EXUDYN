@@ -1,0 +1,12 @@
+{
+  "number": 2111,
+  "title": "MarkerRelativeTranslation",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Consider marker MarkerBodiesRelativeTranslationCoordinate which measures scalar relative translation, in particular relative displacement between two bodies; action is realized as forces on two bodies, using body-fixed coordinates of body0",
+  "dateRaised": "2025-06-25",
+  "deadline": "2025-12-22",
+  "dateResolved": "2025-06-29 23:16",
+  "resolvedAuthor": "JG"
+}

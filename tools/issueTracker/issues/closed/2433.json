@@ -1,0 +1,14 @@
+{
+  "number": 2433,
+  "title": "generated item headers carry wrong and stray comments",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "Reported by the maintainer 2026-09-15: MainLoadCoordinate.h and all other Main headers write /* AUTO: read out dictionary and cast to C++ type*/ inside SetParameter and label every SetParameter line get parameter; GetParameter of user functions ends with ;; ; the visualization pointer is commented as computational object; CNodeGeneric{AE-ODE1-ODE2} return ...;; from their definitions; lines carry trailing whitespace. revision2026 step R4.21.",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 11:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemHeaderEmitter.py",
+  "releaseNotes": "itemHeaderEmitter.py: write statements carry no comment (SetWithDictionary lines plain - SetParameter lines end with //! AUTO: set parameter); no ;; in GetParameter; BodyGraphicsData and SetInternal statements without /*! */ comments; else {PyError without double space; visualization pointer comment corrected; trailing whitespace removed from C/Main/Visu headers (the 7 header lines kept by the file comparison are unchanged); ;; removed from the three CNodeGeneric definitions. 291 generated headers changed; parameterConversionTest 0 differences; suite passed."
+}

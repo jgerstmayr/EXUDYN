@@ -1,0 +1,13 @@
+{
+  "number": 2240,
+  "title": "systemStructures.py",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "add functions for type conversions C++ - Python (Vector3D, etc.)",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Resolved by revision2026 step R4.3: the type conversions asked for here are tools/generators/typeModel.py; which renders one type declaration into its C++; stub; documentation and Python forms from a single definition; instead of each emitter spelling out Vector3D and friends for itself."
+}

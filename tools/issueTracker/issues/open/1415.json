@@ -1,0 +1,10 @@
+{
+  "number": 1415,
+  "title": "CoordinateSpringDamperExt",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and >0 is a directly recommended step size",
+  "dateRaised": "2023-01-22",
+  "deadline": "2023-07-21"
+}

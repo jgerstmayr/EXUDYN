@@ -1,0 +1,14 @@
+{
+  "number": 2366,
+  "title": "Python 3.6 non-AVX reference override never applied",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "replaceRefSol in runTestSuiteRefSol.py spelled revoluteJointprismaticJointTest.py with a lowercase p while the file and the base dictionary use revoluteJointPrismaticJointTest.py. The overlay is applied by iterating the base keys; a key matching nothing is silently ignored; so this correction never applied on Python 3.6 without AVX.",
+  "dateRaised": "2026-09-10",
+  "deadline": "2027-03-09",
+  "dateResolved": "2026-09-10 22:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/runTestSuiteRefSol.py",
+  "releaseNotes": "Overlay hoisted into Python36NonAVXOverrides() so its keys can be validated; spelling fixed; CheckTestCoverage reports any future dead override."
+}

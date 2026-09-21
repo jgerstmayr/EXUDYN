@@ -1,0 +1,12 @@
+{
+  "number": 2115,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "make raytracer compatible with facesTransparent, showFaces, showFaceEdges",
+  "dateRaised": "2025-07-01",
+  "deadline": "2025-12-28",
+  "dateResolved": "2025-07-01 14:22",
+  "resolvedAuthor": "JG"
+}

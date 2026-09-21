@@ -1,0 +1,13 @@
+{
+  "number": 2469,
+  "title": "NGsolveCMStest reference value follows an untracked mesh cache",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-17 08:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "NGsolveCMStest.py decided on an EXCEPTION: it saved the mesh whenever LoadFromFile failed, and a load fails for reasons unrelated to the file being absent - under a second C++ module it raises 'type \"Real\" is already registered', a new ngsolve version would do the same. The tracked testData/netgenTestMesh.pkl was then overwritten and the result moved by 2.4e-8, far outside the 5e-14 tolerance, leaving the working tree dirty. It now decides on os.path.isfile: the file is written only when it does not exist, and a file that exists but cannot be loaded raises with the reason and the advice to delete it deliberately. Verified in three states - present (loads, byte-identical afterwards), corrupt (raises, not rewritten), missing (recreated, and the new mesh gives the other value, which is why it must not happen by accident). revision2026 step R2.10.2. ALSO: the tracked mesh was converted from .pkl to .npz (maintainer, 2026-09-17), keeping the mesh and the reference value; .gitignore narrowed so the tracked mesh is not matched. The .npz still cannot be read by a second module - one stored field is a C++ enum - which is #2471."
+}

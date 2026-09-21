@@ -1,0 +1,10 @@
+{
+  "number": 867,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu",
+  "dateRaised": "2022-01-17",
+  "deadline": "2022-03-18"
+}

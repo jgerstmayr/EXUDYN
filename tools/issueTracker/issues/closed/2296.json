@@ -1,0 +1,12 @@
+{
+  "number": 2296,
+  "title": "openGL settings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option showBoundingBox, which shows the bounding box of the current scene (as available in renderState)",
+  "dateRaised": "2026-02-14",
+  "deadline": "2026-08-13",
+  "dateResolved": "2026-02-16 22:45",
+  "resolvedAuthor": "JG"
+}

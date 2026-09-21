@@ -1,0 +1,12 @@
+{
+  "number": 2293,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "functoin InvertTriangles: change arg invertVertexNormals to invertNormals for consistency reason with other functions",
+  "dateRaised": "2026-02-13",
+  "deadline": "2026-08-12",
+  "dateResolved": "2026-02-13 15:02",
+  "resolvedAuthor": "JG"
+}

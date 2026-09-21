@@ -1,0 +1,12 @@
+{
+  "number": 2152,
+  "title": "renderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add function RedrawAndGetImage to directly obtain numpy array with RGB image data to be used with matplotlib imshow",
+  "dateRaised": "2025-10-17",
+  "deadline": "2026-04-15",
+  "dateResolved": "2025-10-17 18:38",
+  "resolvedAuthor": "JG"
+}

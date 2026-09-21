@@ -116,7 +116,6 @@ desktop.ini
 # Regenerated on every issueTracker write; the same content is tracked as
 # docs/RST/trackerlog.rst and docs/theDoc/trackerlog.tex
 tools/issueTracker/trackerlog.html
-tools/issueTracker/trackerlog_backup.txt
 
 # diverted test/performance logs: written when the release-named target already exists,
 # so a run never truncates a committed log (see testRunnerTools.ResolveLogFile).

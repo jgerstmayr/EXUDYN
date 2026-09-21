@@ -1,0 +1,12 @@
+{
+  "number": 2160,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add function Get BoundaryNodeSetsAsLists to retrieve boundary node sets as two lists containing nodes list and weights list",
+  "dateRaised": "2025-11-27",
+  "deadline": "2026-05-26",
+  "dateResolved": "2025-11-27 10:11",
+  "resolvedAuthor": "S. Weyrer"
+}

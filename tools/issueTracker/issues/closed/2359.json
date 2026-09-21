@@ -1,0 +1,15 @@
+{
+  "number": 2359,
+  "title": "Add pre-push hook guarding the public repository",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "description": "Nothing mechanically prevented pushing v2-dev to public GitHub; only memory. Add tools/hooks/pre-push refusing any ref but master, release/* and tags when the target is GitHub, matched on both remote name and github.com URL. Activated per clone with git config core.hooksPath tools/hooks. Also verified that pushing from this shallow clone requires receive.shallowUpdate=true on the receiving repository. revision2026 steps R1.5 and R1.1.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 20:57",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/hooks/pre-push",
+  "releaseNotes": "Verified with four cases against local throwaway repositories: v2-dev to github refused, master to github allowed, v2-dev to internal allowed, bare github.com URL refused before network access"
+}

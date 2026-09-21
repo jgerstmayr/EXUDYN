@@ -1,0 +1,16 @@
+{
+  "number": 2458,
+  "title": "runTestSuite.py checks hasattr(exu.solver, RunCppUnitTests) instead of exu.special",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "found 2026-09-16 while preparing revision2026 step R5.3: the C++ unit tests are gated on hasattr(exu.solver, \"RunCppUnitTests\"), but the function is bound on exu.special (Pybind_manual_classes.cpp, inside #ifdef PERFORM_UNIT_TESTS); exu.solver is the Python module exudyn.solver and never has that attribute, so the check is always False and the tests are reported as skipped even in a build that contains them. Belongs to revision2026 step R5.3",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 19:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/python/TestModels/runTestSuite.py",
+  "line": "413",
+  "releaseNotes": "revision2026 step R5.3: runTestSuite.py checked hasattr(exu.solver; RunCppUnitTests) while the binding is on exu.special - the C++ unit tests were reported as skipped even in a build that has them; and the summary called len() on the returned count."
+}

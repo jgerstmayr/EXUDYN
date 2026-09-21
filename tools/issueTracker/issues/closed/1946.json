@@ -1,0 +1,12 @@
+{
+  "number": 1946,
+  "title": "SphereSphereContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "error in PostNewtonStep: always uses data variables",
+  "dateRaised": "2025-02-03",
+  "deadline": "2025-08-02",
+  "dateResolved": "2025-02-03 15:40",
+  "resolvedAuthor": "JG"
+}

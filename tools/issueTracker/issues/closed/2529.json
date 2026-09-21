@@ -1,0 +1,16 @@
+{
+  "number": 2529,
+  "title": "the rules for reporting an error from C++ have no home a human can find",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "The nine exception classes, the seven helpers and the rules for choosing between them exist only in code comments (ReleaseAssert.h, Stdoutput.h) and in the revision log, which is a record and not a reference. Someone about to write a new check has nowhere to look. Write the rules once, in docs/dev/CODING_STYLE.md, and point CONTRIBUTING.md, docs/dev/README.md and CLAUDE.md at that one place.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 20:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/CODING_STYLE.md",
+  "line": "211",
+  "releaseNotes": "Written as docs/dev/CODING_STYLE.md section 10 (revision2026 step R6.3.9): which helper, which of the nine types, when to write no type at all, the two traps (catch order; a class not registered in PybindModule.cpp compiles and arrives as RuntimeError), deprecation via PyDeprecated, how to write the message, and tools/errorTriage.py. CONTRIBUTING.md, docs/dev/README.md and CLAUDE.md point at that one place; the section is marked as NOT a transcription of introduction.tex."
+}

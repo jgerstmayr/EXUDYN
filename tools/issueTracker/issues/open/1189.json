@@ -1,0 +1,10 @@
+{
+  "number": 1189,
+  "title": "ContactFrictionCircleCable2D",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add velocity offset to MarkerCable2DShape",
+  "dateRaised": "2022-07-08",
+  "deadline": "2022-09-06"
+}

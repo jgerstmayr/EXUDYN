@@ -1,0 +1,12 @@
+{
+  "number": 2085,
+  "title": "SolidOfRevolution",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "switch triangle order in SolidOfRevolution to have consistent normals and triangles",
+  "dateRaised": "2025-06-09",
+  "deadline": "2025-12-06",
+  "dateResolved": "2025-06-09 01:06",
+  "resolvedAuthor": "JG"
+}

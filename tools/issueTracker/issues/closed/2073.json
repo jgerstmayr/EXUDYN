@@ -1,0 +1,12 @@
+{
+  "number": 2073,
+  "title": "font bitmaps",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Add smoothing at pixel level for base text fonts (at grey scale) to obtain smoother fonts",
+  "dateRaised": "2025-06-01",
+  "deadline": "2025-11-28",
+  "dateResolved": "2025-06-01 22:53",
+  "resolvedAuthor": "JG"
+}

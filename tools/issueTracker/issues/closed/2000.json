@@ -1,0 +1,12 @@
+{
+  "number": 2000,
+  "title": "delete",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "consistently delete loads and sensors",
+  "dateRaised": "2025-05-08",
+  "deadline": "2025-11-04",
+  "dateResolved": "2025-05-08 20:57",
+  "resolvedAuthor": "JG"
+}

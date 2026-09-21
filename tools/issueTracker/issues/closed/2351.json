@@ -1,0 +1,13 @@
+{
+  "number": 2351,
+  "title": "Working setup for Claude sessions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Add CLAUDE.md working contract, docs/dev (CODING_STYLE, WORKFLOW, README), docs/howTo/condaEnvironments.md and root .gitignore; untrack main/dist and cppsrc.vcxproj.user. Revision plan revision2026 step R0.1.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 18:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CLAUDE.md + docs/dev + condaEnvironments.md + root .gitignore; main/dist and cppsrc.vcxproj.user untracked"
+}

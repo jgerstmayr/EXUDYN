@@ -1,0 +1,13 @@
+{
+  "number": 1026,
+  "title": "Save as PNG",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "check MacOS implementation if glfw works with saving PNG files",
+  "dateRaised": "2022-04-02",
+  "deadline": "2022-06-01",
+  "dateResolved": "2025-07-11 15:58",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "resolved earlier; works with Exudyn 1.10.0"
+}

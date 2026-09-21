@@ -1,0 +1,13 @@
+{
+  "number": 2465,
+  "title": "the two AVX vector classes have no unit tests",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "ResizableVectorParallel and LinkedDataVectorParallel are covered by no lest case; #2394 (a misaligned __m256d load on a LinkedDataVector sub-range) lived there and was found by a sanitizer on a whole test model. A defect in these classes is invisible in the TestModels on Windows and can change results silently. revision2026 step R5.4.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 20:40",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "revision2026 step R5.4: new src/Tests/AVXVectorUnitTests.h with 7 cases; each over 19 lengths around the AVX packet boundary built from AVXRealSize; LinkedDataVectorParallel at every offset from 0 to AVXRealSize into a padded buffer; results compared against a scalar loop; one length above the multithreading limit. Verified by mutation: a remainder loop started one item late gives 2 failed tests."
+}

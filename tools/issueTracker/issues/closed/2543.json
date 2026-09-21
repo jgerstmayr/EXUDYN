@@ -1,0 +1,16 @@
+{
+  "number": 2543,
+  "title": "theDoc.pdf cannot be built any more",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "pdflatex on docs/theDoc/theDoc.tex fails, and the plan recorded only that it does. Measured 2026-09-19. (1) fatal: the title page reads version.txt beside itself, and version.txt moved to the repository root in step R3.4. (2) fatal: 19 references to the tree main-pythonDev in five hand-written .tex files, which steps R3.1 and R3.8 dissolved; one of them is a listing input, which aborts the run. (3) non-fatal: theDoc.tex line 334 had one closing brace too many on the version line. (4) THE BIG ONE, found while fixing the others: trackerlog.tex is generated from issue text that is not escaped for LaTeX at all, so a caret, an underscore, a hash or a backslash command in any issue description is executed or aborts the build. This blocks step R7.3, which wants the PDF built in CI instead of committed.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-19 17:24",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/theDoc/theDoc.tex",
+  "line": "334",
+  "releaseNotes": "Four causes, all restructuring fallout. Fixed: the title page reads ../../version.txt (root since R3.4); 19 main-pythonDev references in five hand-written .tex files rewritten to python/...; the extra closing brace on theDoc.tex line 334; and, the big one, issue text is escaped for LaTeX now (#2544). A complete 8.4 MB PDF is produced where none was before, and the error count went from 158 fatal to 74 non-fatal. The remainder is the same escaping bug in the other documentation emitters, raised separately. This unblocks R7.3."
+}

@@ -1,0 +1,10 @@
+{
+  "number": 948,
+  "title": "update mecanumWheelRollingDiscTest",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "update w.r.t. Trajectory class and TorsionalSpringDamper",
+  "dateRaised": "2022-02-21",
+  "deadline": "2022-04-22"
+}

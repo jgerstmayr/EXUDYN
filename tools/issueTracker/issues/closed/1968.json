@@ -1,0 +1,13 @@
+{
+  "number": 1968,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to only use dynamic search tree with no duplicated search bins",
+  "dateRaised": "2025-03-03",
+  "deadline": "2025-08-30",
+  "dateResolved": "2025-03-05 21:11",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "in case of no static triangles, static searchtree is only created once and no additional operations are performed"
+}

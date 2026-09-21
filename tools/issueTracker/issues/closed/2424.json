@@ -1,0 +1,14 @@
+{
+  "number": 2424,
+  "title": "None is silently converted when written into item and structure parameters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Recorded by parameterConversionTest.py (revision2026 step R4.4.3.1): every bool parameter accepts None and reads back False; index arrays - Vector3DList - Matrix3DList and PyMatrixContainer parameters accept None and read back empty. Maintainer decision 2026-09-14: None shall raise instead of converting unexpectedly; the test suite shows whether any model relies on it. Applied with the unified conversion (34c4/34c5) as its own reference change. revision2026 step R4.15.",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-15 00:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Pymodules/PybindUtilities.h",
+  "releaseNotes": "bool - Real - float and Index item parameters raise for None on every write path (message names item and parameter); index arrays raise instead of becoming empty. Vector3DList - Matrix3DList and PyMatrixContainer still accept None as empty because None is their default in itemInterface.py. parameterConversionTest: 672 intended changes (537 bool - 135 index list). Structures follow in 34c5."
+}

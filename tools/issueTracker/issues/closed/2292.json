@@ -1,0 +1,12 @@
+{
+  "number": 2292,
+  "title": "graphics.Move",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "remove explanation to scale, as it also scales normals; add function MoveAndScale, which does both and Move calls MoveAndScale",
+  "dateRaised": "2026-02-13",
+  "deadline": "2026-08-12",
+  "dateResolved": "2026-02-14 17:30",
+  "resolvedAuthor": "JG"
+}

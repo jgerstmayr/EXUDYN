@@ -1,0 +1,14 @@
+{
+  "number": 2414,
+  "title": "AngularVelocityLocal output variable description says velocity not angular velocity",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Four items describe the AngularVelocityLocal output variable as \"local (body-fixed) 3D velocity vector of node\"; which describes a translational velocity. The word angular is missing. Found while converting outputVariables into data (revision2026 step R4.1.4). Fixing it moves published reference tables; so it is a separate documentation fix rather than part of that step. Worth checking the neighbouring AngularVelocity descriptions at the same time.",
+  "dateRaised": "2026-09-13",
+  "deadline": "2027-03-12",
+  "dateResolved": "2026-09-15 19:14",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/pythonGenerator/objectDefinition.py",
+  "releaseNotes": "revision2026 step R4.11: angular velocity output variable texts fixed (body local; ANCFBeam VelocityLocal)"
+}

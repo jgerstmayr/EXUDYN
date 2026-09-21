@@ -1,0 +1,16 @@
+{
+  "number": 2395,
+  "title": "the comment claiming -mavx2 does not compile on Linux is stale",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "LOW",
+  "description": "setup.py:146 says \"-mavx2 (does not compile)\" and suspects memory alignment. Measured 2026-09-12: the full extension builds cleanly in manylinux_2_28 with -mavx2 -mfma on g++ 14; 567 vfmadd instructions are present in the resulting .so. What actually fails is at runtime and is a genuine alignment defect; see the LinkedDataVector issue. The comment should be corrected so the next reader does not conclude the toolchain is at fault",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 12:48",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/setup.py",
+  "line": "146",
+  "releaseNotes": "comment at setup.py:146 corrected: -mavx2 does compile; the failure was at runtime and was the alignment defect of issue 2394. The comment now says so and points at revision2026 step R2.10 for the decision to enable AVX2 on Linux; and at the FMA rounding issue"
+}

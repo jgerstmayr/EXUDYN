@@ -1,0 +1,13 @@
+{
+  "number": 2025,
+  "title": "Torus",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add graphics function for torus",
+  "dateRaised": "2025-05-17",
+  "deadline": "2025-11-13",
+  "dateResolved": "2025-05-17 21:48",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "using graphics.Tube function"
+}

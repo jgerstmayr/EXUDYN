@@ -1,0 +1,12 @@
+{
+  "number": 2054,
+  "title": "GeneticOptimization",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "computationIndex and parameterFunctionData do not work except for first generation",
+  "dateRaised": "2025-05-27",
+  "deadline": "2025-11-23",
+  "dateResolved": "2025-05-27 23:39",
+  "resolvedAuthor": "JG"
+}

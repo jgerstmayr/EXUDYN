@@ -1,0 +1,12 @@
+{
+  "number": 2310,
+  "title": "FEM",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "ComputeHurtyCraigBamptonModes: for pure eigenmodes with no boundary lists, computation only works in sparse mode - extend to sparse mode and include optional exclusion of rigid body modes",
+  "dateRaised": "2026-02-24",
+  "deadline": "2026-08-23",
+  "dateResolved": "2026-02-24 15:09",
+  "resolvedAuthor": "JG"
+}

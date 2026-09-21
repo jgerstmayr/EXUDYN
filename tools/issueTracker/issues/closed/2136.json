@@ -1,0 +1,12 @@
+{
+  "number": 2136,
+  "title": "trackerlog",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change to utf-8 format; this may cause problems when loading old (backup) files, which shall be manually changed to utf-8",
+  "dateRaised": "2025-07-05",
+  "deadline": "2026-01-01",
+  "dateResolved": "2025-07-05 14:54",
+  "resolvedAuthor": "JG"
+}

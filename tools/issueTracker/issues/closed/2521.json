@@ -1,0 +1,16 @@
+{
+  "number": 2521,
+  "title": "the error helpers cannot name an exception class",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "description": "CHECKandTHROW\\, CHECKandTHROWstring and SysError can only throw EXUexception\\, so a check cannot say what kind of error it states - and the measurement of #2520 shows no helper is one kind (CHECKandTHROW is 27 percent user-facing\\, SysError has 10 user sites). The type has to be choosable at the CALL SITE. revision2026 step R6.3.3.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 17:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/ReleaseAssert.h",
+  "line": "100",
+  "releaseNotes": "CHECKandTHROW and CHECKandTHROWstring take an optional last argument naming the exception class, PyErrorType carries nine kinds and ThrowPyErrorType is the one place that turns one into a throw, SysError defaults to internalError. The MSVC traditional preprocessor needs the selection AND the call expanded together. Six SysError sites in PyMatrixVector.h whose message says check your Python code opt out - they were six of the ten user-facing SysError sites the triage of #2520 had named. revision2026 step R6.3.3."
+}

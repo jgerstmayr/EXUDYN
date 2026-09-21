@@ -1,0 +1,12 @@
+{
+  "number": 2012,
+  "title": "CObjectContactCurveCircles",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "complete CheckPreAssembleConsistency",
+  "dateRaised": "2025-05-11",
+  "deadline": "2025-11-07",
+  "dateResolved": "2025-05-15 08:50",
+  "resolvedAuthor": "JG"
+}

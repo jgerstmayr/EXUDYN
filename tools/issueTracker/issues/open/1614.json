@@ -1,0 +1,10 @@
+{
+  "number": 1614,
+  "title": "static members",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization",
+  "dateRaised": "2023-06-11",
+  "deadline": "2023-12-08"
+}

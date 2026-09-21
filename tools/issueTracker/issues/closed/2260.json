@@ -1,0 +1,12 @@
+{
+  "number": 2260,
+  "title": "solvers",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change default value exu.SimulationSettings() to None, but keep default behavior internally; this improves in-editor help",
+  "dateRaised": "2026-02-02",
+  "deadline": "2026-08-01",
+  "dateResolved": "2026-02-02 22:48",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 2483,
+  "title": "document that EigenDense does not detect a singular matrix",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "CORRECTED 2026-09-17 after maintainer feedback: the behaviour is NOT a defect. The FullPivLU path is entered only with linearSolverSettings.ignoreSingularJacobian=True, which is documented as handling over- and underdetermined systems and resolving redundant constraints (with a warning that it may lead to erroneous results), and the code says so as well: \"in this case, we could report errors, but we do not want to\". It also honours pivotThreshold via setThreshold. The PartialPivLU path cannot report invertibility at all - \"according to Eigen homepage, there is no possibility to check for invertability\" - so it is a property of the library, not a decision of Exudyn. What remains is a documentation gap: LinearSolverType.EigenDense describes partial pivoting as \"faster than EXUdense\" and mentions full pivot only under ignoreSingularJacobian, but nowhere states that in the DEFAULT EigenDense mode a singular Jacobian is not detected and the solver continues with an undefined result, while EXUdense and EigenSparse do report it. Add one sentence to the enum description. revision2026 step R5.4.10.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 17:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Documentation only, as corrected by the maintainer: the behaviour is deliberate (FullPivLU is the ignoreSingularJacobian least-squares path; PartialPivLU has no invertibility check in Eigen). The LinearSolverType.EigenDense description in definitions/enumTypes.py now states that in the default partial pivoting mode a singular matrix is NOT detected and the solver continues with an undefined result, and points at EXUdense/EigenSparse if that must be reported or at full pivot if the singular system should be resolved by least squares on purpose. The sentence propagates to EnumTypes.h, the stubs and the documentation. The judging comment in LinearSolverUnitTests.h was corrected as well. revision2026 step R5.4.10."
+}

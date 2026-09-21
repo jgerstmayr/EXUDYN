@@ -1,0 +1,13 @@
+{
+  "number": 643,
+  "title": "ObjectFFRFreducedOrder / CMS",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "create tutorial with two bodies (crank, connecting rod, rigid piston)",
+  "dateRaised": "2021-04-30",
+  "deadline": "2021-06-29",
+  "dateResolved": "2026-01-04 11:22",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "already resolved earlier with FFRF tutorial"
+}

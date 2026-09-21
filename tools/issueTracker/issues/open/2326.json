@@ -1,0 +1,10 @@
+{
+  "number": 2326,
+  "title": "SliderCrank Benchmark",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model",
+  "dateRaised": "2026-03-23",
+  "deadline": "2026-09-19"
+}

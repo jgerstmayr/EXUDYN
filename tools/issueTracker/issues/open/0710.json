@@ -1,0 +1,10 @@
+{
+  "number": 710,
+  "title": "CollectCurrentNodeData",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "implement CollectCurrentNodeData for NodeRigidBody2D, optimize CollectCurrentNodeData for all rigid body nodes",
+  "dateRaised": "2021-07-08",
+  "deadline": "2021-09-06"
+}

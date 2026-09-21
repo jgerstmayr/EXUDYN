@@ -1,0 +1,13 @@
+{
+  "number": 2095,
+  "title": "CreateKinematicTree",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "add test model",
+  "dateRaised": "2025-06-15",
+  "deadline": "2025-12-12",
+  "dateResolved": "2025-06-15 19:55",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "add test model createKinematicTreeTest.py"
+}

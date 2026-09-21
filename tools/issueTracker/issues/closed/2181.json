@@ -1,0 +1,12 @@
+{
+  "number": 2181,
+  "title": "renderState",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "update visualizationSettings.window.renderWindowSize when renderState.currentWindowSize is prescribed in call to renderer.SetState(...)",
+  "dateRaised": "2026-01-03",
+  "deadline": "2026-07-02",
+  "dateResolved": "2026-01-03 01:11",
+  "resolvedAuthor": "JG"
+}

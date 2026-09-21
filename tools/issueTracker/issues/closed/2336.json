@@ -1,0 +1,12 @@
+{
+  "number": 2336,
+  "title": "beams",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add new beams generate function GenerateBeamElementsAlongLine which is similar to GenerateStraightBeam, but has more readable args and a dict as return value",
+  "dateRaised": "2026-04-06",
+  "deadline": "2026-10-03",
+  "dateResolved": "2026-04-06 15:53",
+  "resolvedAuthor": "JG"
+}

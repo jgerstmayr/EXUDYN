@@ -1,0 +1,13 @@
+{
+  "number": 2475,
+  "title": "five examples write sensor output next to themselves, it clutters the working tree",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "Five examples name their sensor files without the solution/ prefix that every other model and example uses: beltDriveALE and beltDriveReevingSystem write into solutionDelete/, beltDriveReevingSystem also writes its coordinates solution into solution_nosync/, rigidBodyIMUtest into solutionIMU<mode>/, sliderCrank3DwithANCFbeltDrive and sliderCrank3DwithANCFbeltDrive2 into the current directory (Preload_overallS.txt, Pos_Disk0_overallS.txt, Angular_velocity_overallS.txt, angular_velocity_disk0/1.txt, torque.txt, crank_pos.txt) plus a plots/ directory. Only solution/ is in .gitignore, so a direct run of one of these examples leaves untracked and unignored files and directories behind - and the reads (np.loadtxt) do not go through OutputFilePath either, so they ignore exudyn.config.outputDirectory. revision2026 step R5.13.2.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 11:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "All five examples now write through solution/ and read through OutputFilePath: beltDriveALE and beltDriveReevingSystem (solutionDelete/ and solution_nosync/ are gone), rigidBodyIMUtest (solution/IMU<mode>/), and the two sliderCrank3DwithANCFbeltDrive examples (bare names and plots/ -> solution/ and solution/plots/). Verified by running all five from python/Examples with no output directory set: one solution/ directory appears and nothing else. revision2026 step R5.13.2."
+}

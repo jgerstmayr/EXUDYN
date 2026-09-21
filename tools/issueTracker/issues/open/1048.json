@@ -1,0 +1,10 @@
+{
+  "number": 1048,
+  "title": "sse2neon.h",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "description": "on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases",
+  "dateRaised": "2022-04-25",
+  "deadline": "2022-06-24"
+}

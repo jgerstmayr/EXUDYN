@@ -1,0 +1,12 @@
+{
+  "number": 2020,
+  "title": "version files",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "remove different version files and use only a single file for .tex and .cpp",
+  "dateRaised": "2025-05-15",
+  "deadline": "2025-11-11",
+  "dateResolved": "2025-05-15 21:25",
+  "resolvedAuthor": "JG"
+}

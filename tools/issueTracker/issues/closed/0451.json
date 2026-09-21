@@ -1,0 +1,13 @@
+{
+  "number": 451,
+  "title": "AVX integration",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "test AVX in vector.cpp and dense solver",
+  "dateRaised": "2020-09-16",
+  "deadline": "2020-11-15",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Resolved by src/Tests/AVXVectorUnitTests.h (7 cases covering the AVX paths of the vector classes) together with the measurements of revision2026 steps R2.16 and R2.10.3: the effect of the vector extensions on results is now recorded model by model in AVX2ReferenceSolutionUpdate(); and tools/benchmarks/avx2Benchmark.py measures the solver-level effect."
+}

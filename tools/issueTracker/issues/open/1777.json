@@ -1,0 +1,10 @@
+{
+  "number": 1777,
+  "title": "GraphicsData Sphere",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add spheres to graphicsData interface; user AddSphere method; only use in case that full sphere is shown; add option to fall back to regular triangular representation",
+  "dateRaised": "2024-02-07",
+  "deadline": "2024-08-05"
+}

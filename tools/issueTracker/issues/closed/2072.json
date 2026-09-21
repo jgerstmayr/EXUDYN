@@ -1,0 +1,13 @@
+{
+  "number": 2072,
+  "title": "renderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "exu.StartRenderer() and exu.StopRenderer() are changed into SC.renderer.Start() and SC.renderer.Stop(), having a SystemContainer SC",
+  "dateRaised": "2025-06-01",
+  "deadline": "2025-11-28",
+  "dateResolved": "2025-06-01 19:13",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "NOTE that this affects your existing models a lot!"
+}

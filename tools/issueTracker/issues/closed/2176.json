@@ -1,0 +1,12 @@
+{
+  "number": 2176,
+  "title": "processing",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "useMPI is not used in GeneticOptimization and in ComputeSensitivities; add flag and pass through to ProcessParameterList",
+  "dateRaised": "2025-12-31",
+  "deadline": "2026-06-29",
+  "dateResolved": "2025-12-31 16:31",
+  "resolvedAuthor": "Z. Zhang"
+}

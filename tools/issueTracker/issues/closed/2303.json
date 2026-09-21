@@ -1,0 +1,12 @@
+{
+  "number": 2303,
+  "title": "boundingBox",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "bounding box calculation resets in case that nan is included in points; check for nan in points in graphicsData when reading!",
+  "dateRaised": "2026-02-15",
+  "deadline": "2026-08-14",
+  "dateResolved": "2026-02-15 22:38",
+  "resolvedAuthor": "JG"
+}

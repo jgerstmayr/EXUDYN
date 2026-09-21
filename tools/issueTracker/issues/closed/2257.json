@@ -1,0 +1,12 @@
+{
+  "number": 2257,
+  "title": "VisualizationSettings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "check for all changed parameter names in .py and .tex files",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-02-20 00:16",
+  "resolvedAuthor": "JG"
+}

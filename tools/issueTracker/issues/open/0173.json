@@ -1,0 +1,10 @@
+{
+  "number": 173,
+  "title": "LinkedDataVector",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "Check that the Vector is declared as const LinkedDataVectors if it is returned by a function; otherwise unforeseeable problems might occur",
+  "dateRaised": "2019-06-07",
+  "deadline": "2019-08-06"
+}

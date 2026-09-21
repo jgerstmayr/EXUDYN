@@ -1,0 +1,10 @@
+{
+  "number": 2110,
+  "title": "solver",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add flag for local frame implicit solver, computing jacobians in local frame and using specific step updates",
+  "dateRaised": "2025-06-24",
+  "deadline": "2025-12-21"
+}

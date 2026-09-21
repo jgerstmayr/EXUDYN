@@ -1,0 +1,12 @@
+{
+  "number": 2242,
+  "title": "GLFWClient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option for autorotation of scene, using a angular velocity vector; standard=[0,0,pi/2]; factor related to start time when timer is started",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-02-01 12:13",
+  "resolvedAuthor": "JG"
+}

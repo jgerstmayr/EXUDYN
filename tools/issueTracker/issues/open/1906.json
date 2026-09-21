@@ -1,0 +1,10 @@
+{
+  "number": 1906,
+  "title": "particles",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add improved functions to create more densly packed particles using advanced geometrical considerations for randomized radius spherical particles",
+  "dateRaised": "2024-10-19",
+  "deadline": "2025-04-17"
+}

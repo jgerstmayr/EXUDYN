@@ -1,0 +1,12 @@
+{
+  "number": 2213,
+  "title": "GeometricallyExactBeam2D",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "correct drawing with cross section and drawVertical",
+  "dateRaised": "2026-01-09",
+  "deadline": "2026-07-08",
+  "dateResolved": "2026-01-09 20:43",
+  "resolvedAuthor": "JG"
+}

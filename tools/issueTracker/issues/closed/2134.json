@@ -1,0 +1,12 @@
+{
+  "number": 2134,
+  "title": "ContactSphereTriangle",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "add test example using CreateSphereQuadContact with two contacting bodies to check momentum conservation",
+  "dateRaised": "2025-07-05",
+  "deadline": "2026-01-01",
+  "dateResolved": "2025-07-05 12:10",
+  "resolvedAuthor": "JG"
+}

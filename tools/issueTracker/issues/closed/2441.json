@@ -1,0 +1,12 @@
+{
+  "number": 2441,
+  "title": "development environments: dependency groups instead of hand-written package lists",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revision2026 step R4.24: [dependency-groups] docs/lint/build/ide/dev in pyproject.toml; docs/requirements.txt removed; CI and readthedocs install groups; condaEnvironments.md recipe uses pip install --group dev",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 17:14",
+  "resolvedAuthor": "Claude-JG"
+}

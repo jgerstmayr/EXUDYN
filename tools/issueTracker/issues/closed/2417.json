@@ -1,0 +1,14 @@
+{
+  "number": 2417,
+  "title": "remove the CFOptional flag once phase 3 is done",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "CFOptional marks 448 of 985 item parameters and generates if (EPyUtils::DictItemExists(d; \"x\")) around the dictionary read; so a parameter that is absent keeps its C++ default. It still catches today - the test suite creates items from raw dicts; e.g. modelUnitTests.py:184 calls mbs.AddObject with objectType Ground and referencePosition only; and ObjectGround has four optional parameters that the call omits. Maintainer decision 2026-09-13: remove it after phase 3 anyway. The reasoning: there are practically no tests for this behaviour; so the flag is worthless as a guarantee; and the dict path works if every parameter is optional. Where a parameter really cannot be omitted; the failing default value is the right place to say so - a construction that cannot produce a usable object should fail on its default; not on a hand-written flag that nothing checks. Do this AFTER phase 3; and add tests for the raw-dict creation path at the same time; since that is what the flag silently protects today.",
+  "dateRaised": "2026-09-13",
+  "deadline": "2027-03-12",
+  "dateResolved": "2026-09-15 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/definitionTypes.py",
+  "releaseNotes": "revision2026 step R4.13: CFOptional removed; every dictionary write guarded; must-be-given parameters raise when left out; omit probe in parameterConversionTest"
+}

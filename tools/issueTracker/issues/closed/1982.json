@@ -1,0 +1,12 @@
+{
+  "number": 1982,
+  "title": "SolutionViewer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option Make mp4 to create videos with python ffmpeg lib",
+  "dateRaised": "2025-04-01",
+  "deadline": "2025-09-28",
+  "dateResolved": "2025-04-01 08:51",
+  "resolvedAuthor": "JG"
+}

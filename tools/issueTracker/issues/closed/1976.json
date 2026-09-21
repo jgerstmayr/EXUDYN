@@ -1,0 +1,12 @@
+{
+  "number": 1976,
+  "title": "mbs.Assemble()",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "check if assembled in SolveStatic and SolveDynamic and automatically call mbs.Assemble() prior to solver; only raise warning",
+  "dateRaised": "2025-03-30",
+  "deadline": "2025-09-26",
+  "dateResolved": "2025-03-31 22:15",
+  "resolvedAuthor": "JG"
+}

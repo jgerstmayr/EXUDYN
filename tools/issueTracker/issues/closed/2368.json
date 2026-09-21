@@ -1,0 +1,14 @@
+{
+  "number": 2368,
+  "title": "ANCFbeltDrive result contradicts its own recorded reference",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision2026 step R5.9. Not added to the test suite: adding the measured value would enshrine whatever changed.",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-17 21:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/ANCFbeltDrive.py",
+  "releaseNotes": "The maintainer retuned the model on 2026-09-17 (16 elements per section; faster drive; tEnd=0.1 instead of 10) and took the result from the sensor instead of an ODE2 coordinate; measuring a new value in the model file. Finalized here: the model ran with parallel.numberOfThreads=4 and was therefore NOT reproducible - three headless runs spread over 5.4e-14; past the 5e-14 suite tolerance - so it now runs single-threaded; which is bit-identical across runs and at this size also faster (0.36s vs 0.69s). The reference was re-measured single-threaded in the model file and in runTestSuiteRefSol.py; the model left DeliberatelyNotRun and runs in the suite with error 0.0 in 0.35s (it was 28s)."
+}

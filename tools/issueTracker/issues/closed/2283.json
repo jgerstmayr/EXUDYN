@@ -1,0 +1,12 @@
+{
+  "number": 2283,
+  "title": "raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "enable rendering of views with OpenGL or raytracer independently using flag view.camera.useRaytracer",
+  "dateRaised": "2026-02-11",
+  "deadline": "2026-08-10",
+  "dateResolved": "2026-02-12 21:49",
+  "resolvedAuthor": "JG"
+}

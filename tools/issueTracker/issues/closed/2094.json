@@ -1,0 +1,13 @@
+{
+  "number": 2094,
+  "title": "ContactSphereSphere",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "ContactSphereSphere and ContactSphereTorus set frictionRegularizedRegion wrong in case of computeFromData",
+  "dateRaised": "2025-06-15",
+  "deadline": "2025-12-12",
+  "dateResolved": "2025-06-15 09:37",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "now leads to improved convergence"
+}

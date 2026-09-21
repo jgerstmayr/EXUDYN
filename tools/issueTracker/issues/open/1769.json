@@ -1,0 +1,10 @@
+{
+  "number": 1769,
+  "title": "C++ user functions",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "Add cpp user functions fully to PythonUserFunctionBase capabilities",
+  "dateRaised": "2024-02-02",
+  "deadline": "2024-07-31"
+}

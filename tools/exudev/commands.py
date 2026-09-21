@@ -196,6 +196,7 @@ def Generate(options):
                   (['python', 'tools/checkExtras.py', '--check'],             'checkExtras'),
                   (['python', 'tools/checkEncoding.py', '--check'],          'checkEncoding'),
                   (['python', 'tools/checkMathMacros.py', '--check'],       'checkMathMacros'),
+                  (['python', 'tools/checkIssues.py', '--check'],           'checkIssues'),
                   (['python', 'tools/checkPython.py', '--check'],             'checkPython (ruff)'),
                   (['python', 'tools/checkPython.py', '--stubs', '--check'],  'checkPython (stubs)'),
                   (['python', 'tools/gen_sources.py', '--check'],             'gen_sources'),
@@ -782,19 +783,20 @@ def IssueNumber(tracker, number):
 
 def IssueOneLine(issue, width=60):
     """one issue as one line of the list: the fields a decision is made on"""
-    title = ' '.join(issue['issue'].split())
+    title = ' '.join(issue['title'].split())
     if len(title) > width:
         title = title[:width - 1] + '~'
-    return ('  #' + issue['number'] + '  ' + issue['status'].ljust(9)
+    return ('  #' + str(issue['number']).rjust(4, '0') + '  ' + issue['status'].ljust(9)
             + issue['type'].ljust(12) + issue['effort'].ljust(7)
             + issue['priority'].ljust(7) + title)
 
 
 def ShowIssue(issue):
-    for name in ['number', 'issue', 'status', 'type', 'effort', 'priority', 'author',
-                 'date raised', 'deadline', 'date resolved', 'resolved author', 'file', 'line']:
-        if issue[name].strip() != '':
-            print(name.ljust(16) + issue[name].strip())
+    for name in ['number', 'title', 'status', 'type', 'effort', 'priority', 'author',
+                 'dateRaised', 'deadline', 'dateResolved', 'resolvedAuthor', 'file', 'line',
+                 'planStep', 'component', 'duplicateOf', 'resolvedInVersion', 'resolvedCommit']:
+        if str(issue[name]).strip() != '':
+            print(name.ljust(16) + str(issue[name]).strip())
     for name in ['description', 'workingRemarks', 'releaseNotes']:
         if issue[name].strip() != '':
             print('')

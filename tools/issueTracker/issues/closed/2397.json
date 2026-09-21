@@ -1,0 +1,15 @@
+{
+  "number": 2397,
+  "title": "the only benchmark that resolves AVX2 is commented out inside exu.Test()",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "description": "measured 2026-09-12: runPerformanceTests.py gives 20.118 s without AVX2 and 20.137 s with -mavx2 -mfma in the same container - 0.1 percent; with per test differences in both directions. Four of the six performance tests are tiny systems run for about 1e6 steps; so the vectors are 3 to 20 elements long and per step overhead dominates; AVX2 only pays on long vectors. A sweep that does resolve it exists in PyTest() in src/Pymodules/pythonTests.cpp (exposed as exu.Test()); with recorded results in comments (speedup 3.1 for n=502; 3.5 for n=1002; plus an AVX/multithreaded/serial table for sizes 16 to 200002) - but it is entirely inside comment blocks and if (0); so exu.Test() runs none of it and the numbers cannot be reproduced. revision2026 step R2.10 cannot judge whether the fast variant earns its place in the wheel until there is a maintained benchmark over vector length",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-16 08:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/src/Pymodules/pythonTests.cpp",
+  "releaseNotes": "revision2026 step R2.16: tools/benchmarks/avx2Benchmark.py with solver sub timers replaces the dead sweep in PyTest(); an in-Exudyn micro-benchmark is step R11.2"
+}

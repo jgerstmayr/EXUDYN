@@ -1,0 +1,12 @@
+{
+  "number": 2300,
+  "title": "rotationCenterPoint",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "fix correct calculation of mouse coordinates, bounding box, etc. when changing rotationCenterPoint",
+  "dateRaised": "2026-02-14",
+  "deadline": "2026-08-13",
+  "dateResolved": "2026-02-19 22:29",
+  "resolvedAuthor": "JG"
+}

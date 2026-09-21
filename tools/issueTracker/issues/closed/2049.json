@@ -1,0 +1,13 @@
+{
+  "number": 2049,
+  "title": "SetRenderState",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "seems to ignore autoFitScene = False and therefore does not reload zoom factor",
+  "dateRaised": "2025-05-26",
+  "deadline": "2025-11-22",
+  "dateResolved": "2025-05-29 16:22",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "SetRenderState is extended by a flag which by default waits until the renderer is fully started or redrawn; this can impede performance, which is why this should be set to False in such cases"
+}

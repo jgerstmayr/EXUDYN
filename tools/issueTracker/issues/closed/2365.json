@@ -1,0 +1,13 @@
+{
+  "number": 2365,
+  "title": "Clean up docs/howTo and remove the doxygen configuration",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "docs/howTo held 26 loose .txt files, most describing VS2017/VS2019, 32-bit builds, Python 3.6/3.7 or the pre-WSLg X-server era, plus two exact duplicates. docs/doxygen held a 111 KB Doxyfile for a tool that broke on project size, whose PDF path never worked and whose graph generation had already been switched off. Also: no experimental folder remains in the tracked tree, so revision2026 step R1.4 has nothing to move. revision2026 steps R1.4, 30, 79.",
+  "dateRaised": "2026-09-10",
+  "deadline": "2027-03-09",
+  "dateResolved": "2026-09-10 18:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "howTo cut 26 files to 8 all in .md, with the hard-won specifics salvaged into buildQuirks.md; doxygen removed; new docs/dev/ARCHITECTURE.md replaces what doxygen was wanted for. Experimental.h identified as a deliberate feature-flag mechanism and kept"
+}

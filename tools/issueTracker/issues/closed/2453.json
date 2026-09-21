@@ -1,0 +1,14 @@
+{
+  "number": 2453,
+  "title": "Restructure and renumber the 2026 revision documents",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Maintainer request 2026-09-15: the plan mixed general sections with the steps and numbered steps in discovery order; the log followed neither. Now three documents (exudynRevisionInfo2026.md with rules/facts/decisions/material for the user documentation/transition table; the plan by phases R0-R11; the log in plan order with closing commit and time); permanent numbers R<phase>.<step> (sub-steps R4.10.3); all references in tracked files renumbered including this tracker; code comments shall cite issues instead of plan steps.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 00:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/revision/exudynRevisionInfo2026.md",
+  "releaseNotes": "three revision documents; R numbering; transition table in exudynRevisionInfo2026.md section 15"
+}

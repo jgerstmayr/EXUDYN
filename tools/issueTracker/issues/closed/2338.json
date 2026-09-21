@@ -1,0 +1,12 @@
+{
+  "number": 2338,
+  "title": "CreateContactSphereSphere",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "allow mass points with MarkerBodyPosition or MarkerNodePosition in friction-less case",
+  "dateRaised": "2026-04-06",
+  "deadline": "2026-10-03",
+  "dateResolved": "2026-04-06 19:42",
+  "resolvedAuthor": "JG"
+}

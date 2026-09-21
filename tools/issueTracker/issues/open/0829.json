@@ -1,0 +1,10 @@
+{
+  "number": 829,
+  "title": "velocityOffset",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions",
+  "dateRaised": "2021-12-15",
+  "deadline": "2022-02-13"
+}

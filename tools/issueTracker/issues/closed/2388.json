@@ -1,0 +1,15 @@
+{
+  "number": 2388,
+  "title": "the installation documentation is years out of date",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "docs/theDoc/gettingStarted.tex still instructs users with Python 3.6 and 3.7; 32 bit Anaconda; Spyder 4.1.3 and wheel names like exudyn-1.0.20-cp36-cp36m-win32.whl; and it discusses choosing between 32 and 64 bit installations. None of that has been built for years and after revision2026 step R2.6 the 32 bit build configurations no longer exist at all. The install section needs rewriting against the versions that are actually shipped (cp310-cp314; 64 bit only). Found during revision2026 step R2.6",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-19 19:09",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/theDoc/gettingStarted.tex",
+  "releaseNotes": "The requirements section is written against what CI publishes - wheels for Python 3.10 to 3.14 on Windows, Linux and MacOS, 64-bit only, with one sentence saying that advice about matching 32-bit and 64-bit installations is out of date. The wheel section explains the naming rule (cp313 means CPython 3.13) and shows one line per operating system instead of three file names from 2020 for Python 3.6 and 3.7. Visual Studio 2022 replaces the VS2017 recommendation. Also removed: a deprecated AVX workaround pointing at the Python 3.6 build, an example traceback with a main-pythonDev path, and two paths dated to Python 3.6. The dated per-machine notes in the platform build sections stay - they read as history and belong to step R7.2."
+}

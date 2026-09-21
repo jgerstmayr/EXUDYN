@@ -1,0 +1,12 @@
+{
+  "number": 2034,
+  "title": "Sensors.traces",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add trace time span for past and future traces, to limit length of traces",
+  "dateRaised": "2025-05-20",
+  "deadline": "2025-11-16",
+  "dateResolved": "2025-05-20 08:19",
+  "resolvedAuthor": "JG"
+}

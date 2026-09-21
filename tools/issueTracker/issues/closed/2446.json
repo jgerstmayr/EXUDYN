@@ -1,0 +1,14 @@
+{
+  "number": 2446,
+  "title": "Remove CFOptional: every item parameter may be left out of a dict",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "CFOptional wrapped 448 of the dictionary writes in DictItemExists; the others raised KeyError when left out. revision2026 step R4.13 (#2417 is the original); this issue records the implementation choice: all parameters optional; must-be-given (CFMustBeGiven) ones left out raise if their value is still the placeholder.",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemHeaderEmitter.py",
+  "releaseNotes": "duplicate of #2417 (raised by mistake for revision2026 step R4.13)"
+}

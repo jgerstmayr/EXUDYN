@@ -1,0 +1,10 @@
+{
+  "number": 2183,
+  "title": "SparseTripletMatrix",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03"
+}

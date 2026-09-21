@@ -1,0 +1,10 @@
+{
+  "number": 614,
+  "title": "sensor dependencies",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add functionality to compute sensor-dependencies (for LTG computation), used in controller connectors? alternatively add dependentNodes to existing connectors",
+  "dateRaised": "2021-03-21",
+  "deadline": "2021-05-20"
+}

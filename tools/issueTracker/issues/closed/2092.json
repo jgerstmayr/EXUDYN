@@ -1,0 +1,12 @@
+{
+  "number": 2092,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "ComputePostProcessingModesNGsolve: extend for multi-material coefficient function, using materials dict;",
+  "dateRaised": "2025-06-13",
+  "deadline": "2025-12-10",
+  "dateResolved": "2025-06-14 10:40",
+  "resolvedAuthor": "JG"
+}

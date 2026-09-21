@@ -1,0 +1,13 @@
+{
+  "number": 1979,
+  "title": "ComputeSystemDegreeOfFreedom",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change print to exudyn.Print for workflow consistency",
+  "dateRaised": "2025-03-31",
+  "deadline": "2025-09-27",
+  "dateResolved": "2025-03-31 21:52",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "also fixed other print commands in solver.py"
+}

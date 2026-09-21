@@ -1,0 +1,10 @@
+{
+  "number": 707,
+  "title": "LinkedDataVector,ResizableVector",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "description": "consider removing ResizableVector(integrate into Vector), implement LinkedDataVector as templated spezialization of Vector, no virtual calls in Vector",
+  "dateRaised": "2021-07-06",
+  "deadline": "2021-09-04"
+}

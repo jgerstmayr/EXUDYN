@@ -1,0 +1,10 @@
+{
+  "number": 209,
+  "title": "contact iteration",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "make simple example for contact to check changing jacobian matrices from ContactCoordinate",
+  "dateRaised": "2019-06-28",
+  "deadline": "2019-08-27"
+}

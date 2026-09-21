@@ -1,0 +1,13 @@
+{
+  "number": 2076,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option for spherical lights with radius and random sampling",
+  "dateRaised": "2025-06-04",
+  "deadline": "2025-12-01",
+  "dateResolved": "2025-06-04 17:52",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "added lightRadius"
+}

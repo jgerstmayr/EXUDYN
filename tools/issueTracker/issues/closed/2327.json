@@ -1,0 +1,12 @@
+{
+  "number": 2327,
+  "title": "ANCFBeam",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "add implementation for damping similar to ANCFCable elements",
+  "dateRaised": "2026-03-24",
+  "deadline": "2026-09-20",
+  "dateResolved": "2026-03-24 17:00",
+  "resolvedAuthor": "JG"
+}

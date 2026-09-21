@@ -1,0 +1,16 @@
+{
+  "number": 2509,
+  "title": "symbolicModuleTest compares scalars with exact equality",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "description": "Successor of #2501; which fixed the VECTOR/matrix comparison. The SCALAR loop a few hundred lines above still used \"if res[0] != res[1]\" - exact equality between two independent implementations of a transcendental function; the symbolic module's and Python's. That holds only by luck; and the luck ran out with numpy 2.5.3: acosh(2) comes out 1 ulp apart (1.3169578969248166 against ...68); counted twice; so the model returned 2.948 against a reference of 0.948 and the suite failed with error 2.0 - exactly the symptom of #2501 in a different branch of the same file. Found 2026-09-18 by a Linux run in WSL under numpy 2.5.3; which is also what the GitLab manylinux job uses. Fixed in revision2026 step R5.9.3 with the same relative tolerance.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 08:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/symbolicModuleTest.py",
+  "line": "217",
+  "releaseNotes": "Fixed in revision2026 step R5.9.3: the SCALAR comparison of symbolicModuleTest.py now uses the same relative tolerance as the vector one; instead of exact equality between two independent implementations of a transcendental function. Found by running the suite on Linux in WSL before restarting the GitLab pipeline - numpy 2.5.3 is what the manylinux job uses; and acosh(2) differs by one ulp there. Verified under numpy 2.2.4; 2.4.6 and 2.5.3: all three return the committed reference 0.9484129575069745 exactly; and a mutation of 1e-12 relative still flags 498 of the about 796 comparisons."
+}

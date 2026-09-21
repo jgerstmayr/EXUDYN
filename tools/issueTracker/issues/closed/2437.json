@@ -1,0 +1,12 @@
+{
+  "number": 2437,
+  "title": "utility modules: docstring text becomes Markdown",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revision2026 step R4.6.4: LaTeX macros in docstrings and @docmeta replaced by Markdown (backquoted code; [Key] citations; [text](#label) references and abbreviations; bold/italics; umlauts); utilityDocsModel.Markdown2Latex feeds the existing emitters",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 16:40",
+  "resolvedAuthor": "Claude-JG"
+}

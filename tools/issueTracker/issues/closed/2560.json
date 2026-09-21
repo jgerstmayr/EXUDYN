@@ -1,0 +1,16 @@
+{
+  "number": 2560,
+  "title": "a module deleted from the package is still shipped in the wheel",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "description": "After exudyn/resultsMonitor.py moved to exudyn/misc/ the old file was still in the installed package. The cause is not pip: setuptools copies the package from build/lib.<platform>/exudyn/, and all five modules that moved were still in that tree, so the built wheel shipped exudyn/resultsMonitor.py - a file that no longer exists in the source. A release built without cleaning ships deleted modules to users. It also masked a real bug: exudyn/__init__.py still did \"from .mainSystemExtensions import ...\" and only worked because of the stale copy; deleting the build trees made it fail at once. exudev build should clear the package tree under build/lib.* before building, and the release step should verify that the wheel module set matches the source. See revision2026 step R5.18.8.",
+  "dateRaised": "2026-09-20",
+  "deadline": "2027-03-19",
+  "dateResolved": "2026-09-20 14:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "line": "225",
+  "releaseNotes": "exudev build removes build/lib.<platform>/exudyn before every build, not only with --clean: that tree is what setuptools copies the package from, so a module deleted from python/exudyn survived there and went into the wheel. Only the .py copies are removed; the C++ objects in build/temp.* stay, so the one-minute wheel is unaffected. A second step compares the wheel exudyn/*.py against python/exudyn and fails on a difference - tested by planting a ghost module in build/lib.*/exudyn and building a wheel the way pip wheel builds it: the step reported it and returned 1."
+}

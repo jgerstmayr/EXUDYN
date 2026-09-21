@@ -1,0 +1,12 @@
+{
+  "number": 2216,
+  "title": "graphics.Sphere",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to draw only part of sphere using min and max axis length given by angles; add option to draw hollow sphere with innerRadius",
+  "dateRaised": "2026-01-12",
+  "deadline": "2026-07-11",
+  "dateResolved": "2026-01-12 22:37",
+  "resolvedAuthor": "JG"
+}

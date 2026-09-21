@@ -1,0 +1,10 @@
+{
+  "number": 2281,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries",
+  "dateRaised": "2026-02-11",
+  "deadline": "2026-08-10"
+}

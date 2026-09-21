@@ -1,0 +1,12 @@
+{
+  "number": 2169,
+  "title": "GLFWclient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "decouple graphics settings from USE_GLFW_GRAPHICS if they do not require OpenGL and GLFW",
+  "dateRaised": "2025-12-25",
+  "deadline": "2026-06-23",
+  "dateResolved": "2026-01-03 23:38",
+  "resolvedAuthor": "JG"
+}

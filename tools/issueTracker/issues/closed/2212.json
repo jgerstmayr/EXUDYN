@@ -1,0 +1,12 @@
+{
+  "number": 2212,
+  "title": "__init__.py, AVX2",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "error in __init__.py causes exudyn to always choose non-AVX2 version",
+  "dateRaised": "2026-01-09",
+  "deadline": "2026-07-08",
+  "dateResolved": "2026-01-09 10:48",
+  "resolvedAuthor": "JG"
+}

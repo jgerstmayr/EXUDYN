@@ -1,0 +1,13 @@
+{
+  "number": 1949,
+  "title": "RollingDiscPenalty",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add create function to MainSystem",
+  "dateRaised": "2025-02-04",
+  "deadline": "2025-08-03",
+  "dateResolved": "2025-03-03 20:41",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "already done with issue 1957"
+}

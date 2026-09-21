@@ -1,0 +1,12 @@
+{
+  "number": 2290,
+  "title": "light position",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change default values for openGL.light0position to [2,2,10,0] leading to less spot lights in flat scenes in x-y plane; similar for light1position",
+  "dateRaised": "2026-02-12",
+  "deadline": "2026-08-11",
+  "dateResolved": "2026-02-12 16:31",
+  "resolvedAuthor": "JG"
+}

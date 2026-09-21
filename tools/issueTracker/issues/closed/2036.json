@@ -1,0 +1,12 @@
+{
+  "number": 2036,
+  "title": "renderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "put renderer-related functions into SystemContainer; preserve compatibility; consider substructure renderer in SC to collect rendering-related functionality",
+  "dateRaised": "2025-05-21",
+  "deadline": "2025-11-17",
+  "dateResolved": "2025-06-01 02:36",
+  "resolvedAuthor": "JG"
+}

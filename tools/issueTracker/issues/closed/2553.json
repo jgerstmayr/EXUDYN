@@ -1,0 +1,16 @@
+{
+  "number": 2553,
+  "title": "the comment \"only import if it does not conflict\" reads as advice not to import",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "458 tracked files carry \"import exudyn.graphics as graphics #only import if it does not conflict\". The comment was meant to warn that the name graphics can collide with another package or a local variable, but it reads as a condition on the import itself, and it has been copied into every example and test model. Remove the comment; the import stays. The copies under docs/RST/Examples and docs/RST/TestModels are generated from the .py files and follow by regeneration. See revision2026 step R11.4.2.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-19 23:20",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples",
+  "line": "1",
+  "releaseNotes": "Removed from 240 tracked files (253 occurrences): the examples, the test models, the utility modules, the performance models and the converted manual; the copies under docs/RST followed by regeneration. The import itself is unchanged. Two occurrences were written with a space after the hash, so the removal was a regular expression rather than a literal search. The warning behind the comment is real - the name graphics can be shadowed - and belongs in the documentation of exudyn.graphics once, not in every model."
+}

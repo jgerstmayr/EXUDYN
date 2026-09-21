@@ -1,0 +1,16 @@
+{
+  "number": 2532,
+  "title": "eight user-facing not-implemented messages call themselves SYSTEM ERROR",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "GetOutputVariableConnector and GetAccessFunctionBody of several objects report \"not implemented\" with SysError - which prints a SYSTEM ERROR block and means \"please report this\" - although the user reaches them directly with mbs.GetObjectOutput(...) or by attaching a marker to an object that does not support that access type. Step R6.3.6 gave them PyErrorType::notImplementedError which is the honest Python type; the helper is still the wrong one. Change the eight calls to PyError and keep the explicit type (PyError defaults to runtimeError).",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 21:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Objects/CObjectContactCircleCable2D.cpp",
+  "line": "157",
+  "releaseNotes": "The eight calls are PyError now, keeping the PyErrorType::notImplementedError that step R6.3.6 gave them (PyError defaults to runtimeError, so the type has to stay written out). The printed block says User ERROR instead of SYSTEM ERROR; the Python type was already right."
+}

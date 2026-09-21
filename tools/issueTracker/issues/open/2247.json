@@ -1,0 +1,10 @@
+{
+  "number": 2247,
+  "title": "camera",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "add documentation for model-centric and camera-centric views",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30"
+}

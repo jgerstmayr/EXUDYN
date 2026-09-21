@@ -1,0 +1,12 @@
+{
+  "number": 2269,
+  "title": "Renderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "allow finer zoom  stepsstep with CTRL+mouse wheel",
+  "dateRaised": "2026-02-04",
+  "deadline": "2026-08-03",
+  "dateResolved": "2026-02-04 20:27",
+  "resolvedAuthor": "JG"
+}

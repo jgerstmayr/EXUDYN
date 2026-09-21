@@ -1,0 +1,15 @@
+{
+  "number": 2507,
+  "title": "three examples FAIL for a missing optional package instead of being skipped",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "description": "ExampleSkipReason() in testRunnerTools.py skips an example that cannot run - it already does so for stable-baselines3; rospy and a MATLAB TCPIP peer. Three examples are not covered and are reported as FAILURES instead: humanRobotInteraction.py and stlFileImport.py need numpy-stl (\"No module named ,stl,\") and pymeshlabFileImport.py needs pymeshlab. Measured 2026-09-18; they are 3 of the 5 entries now in KnownExampleFailures() (revision2026 step R5.18.1). The decision this needs is not obvious and is why it is an issue rather than three lines: a machine that HAS the package should run them - so the right fix is probably to TRY the import rather than to list file names; and then numpy-stl and pymeshlab belong in the [all] extra of pyproject.toml so that a developer environment has them. The other two entries of the list are unrelated: NGsolveGeometry.py fails inside the geometry construction under exec(...) and rendererNOGLFWexample.py expects the renderer to be absent in a way the runner does not produce.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 08:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/testRunnerTools.py",
+  "releaseNotes": "Fixed in revision2026 step R5.18.2 as the maintainer asked: testRunnerTools probes the optional packages once with importlib.util.find_spec - which does not execute them - and reads each example's imports from its SYNTAX TREE; so an example is skipped where a package it needs is missing and RUNS where it is installed; instead of being decided by a list of file names. Deciding by availability corrected the diagnoses: pymeshlabFileImport.py was not a pymeshlab failure but a missing data file (objImportTest.obj; supplied by the maintainer the same day); it now runs and passes where pymeshlab exists - through indirectPackageNeeds; because exudyn imports pymeshlab lazily inside graphics.FromPyMeshlabFile() and the example never names it. humanRobotInteraction.py reads STL files from an absolute path on the author machine and says itself they come from GrabCAD; stlFileImport.py reads a file it only writes when its if-False branch is switched on. KnownExampleFailures() is down from five entries to two. Measured with a current venvP312: 171 examples; 27 skipped; 2 known failures; exit code 0."
+}

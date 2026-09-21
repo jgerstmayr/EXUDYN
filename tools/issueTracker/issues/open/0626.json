@@ -1,0 +1,10 @@
+{
+  "number": 626,
+  "title": "GenericJoint",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "description": "add more description on constraint configurations, coordinate transformations and figures for GenericJoint",
+  "dateRaised": "2021-04-21",
+  "deadline": "2021-06-20"
+}

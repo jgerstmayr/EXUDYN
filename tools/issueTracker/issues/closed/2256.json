@@ -1,0 +1,12 @@
+{
+  "number": 2256,
+  "title": "stub files (.pyi)",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add docstrings for better help, as .pyi information is prioritized in Spyder",
+  "dateRaised": "2026-02-01",
+  "deadline": "2026-07-31",
+  "dateResolved": "2026-02-03 16:20",
+  "resolvedAuthor": "JG"
+}

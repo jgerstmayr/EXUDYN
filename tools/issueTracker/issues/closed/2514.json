@@ -1,0 +1,16 @@
+{
+  "number": 2514,
+  "title": "checkExtras does not know python/testing",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "After revision2026 step R3.9 the runners live in python/testing/ and are no longer siblings of the models. checkExtras.LocalModuleNames() only knows the shipped packages and the siblings of the scanned directory; so modelUnitTests and testRunnerTools were reported as UNCOVERED IMPORTS needed by [tests] - although they are project files and not packages at all. revision2026 step R3.9.1.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 12:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkExtras.py",
+  "line": "198",
+  "releaseNotes": "LocalModuleNames() also counts the tracked .py of python/testing/ as local names for every scanned directory; because every runner puts that directory on sys.path before it executes a model (testRunnerTools.WorkInModelsDirectory). Verified: checkExtras --check green again; the four UNCOVERED IMPORTS were modelUnitTests and testRunnerTools; imported by name from TestModels/; PerformanceModels/ and MiniExamples/."
+}

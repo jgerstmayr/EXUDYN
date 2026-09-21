@@ -1,0 +1,12 @@
+{
+  "number": 2151,
+  "title": "general.showHelpOnStartup",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "only allows values >0 but 0 required to turn of message",
+  "dateRaised": "2025-10-17",
+  "deadline": "2026-04-15",
+  "dateResolved": "2025-10-17 18:37",
+  "resolvedAuthor": "JG"
+}

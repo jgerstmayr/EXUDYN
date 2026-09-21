@@ -1,0 +1,12 @@
+{
+  "number": 2192,
+  "title": "coordinateSystem",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "add option to draw coordinate system with arrows; change general.drawCoordinateSystem to integer where 2 and 3 represent drawing with arrows",
+  "dateRaised": "2026-01-06",
+  "deadline": "2026-07-05",
+  "dateResolved": "2026-01-06 02:09",
+  "resolvedAuthor": "JG"
+}

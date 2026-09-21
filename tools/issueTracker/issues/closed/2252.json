@@ -1,0 +1,12 @@
+{
+  "number": 2252,
+  "title": "VisualizationSettings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add advanced subfolders to avoid large settings folders: general.advanced, contour.advanced, openGL.advanced, raytracer.advanced, interactive.advanced",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-02-12 21:45",
+  "resolvedAuthor": "JG"
+}

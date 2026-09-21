@@ -1,0 +1,13 @@
+{
+  "number": 2166,
+  "title": "raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add shortkey to switch to raytracing",
+  "dateRaised": "2025-12-16",
+  "deadline": "2026-06-14",
+  "dateResolved": "2025-12-27 22:01",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "CTRL-R used for switching"
+}

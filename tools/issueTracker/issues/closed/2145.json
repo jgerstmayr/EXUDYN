@@ -1,0 +1,13 @@
+{
+  "number": 2145,
+  "title": "raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add smoothing filter for shadows, only applied in case that values in kernel are not containing 0 and 1 (which could be real edges)",
+  "dateRaised": "2025-09-23",
+  "deadline": "2026-03-22",
+  "dateResolved": "2025-09-30 15:17",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "smoothing done at low resolution shadow map, using number of shadowSmoothingSteps"
+}

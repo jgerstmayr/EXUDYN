@@ -1,0 +1,16 @@
+{
+  "number": 2555,
+  "title": "all UpdateGraphics functions live in a file named after the first item that had one",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "src/Objects/VisuNodePoint.cpp holds ~79 UpdateGraphics implementations - every node, object, marker, load and sensor - in 4171 lines, under a name that only made sense when VisualizationNodePoint was the first item to have one. Split it the same way as checkPreAssembleConsistencies, into Visu<ItemType>.cpp. To be measured first: whether each UpdateGraphics can instead go into its own CItem*.cpp, which would be the natural place; the question is compilation time, because pybind11 is not included in most of those files today. See revision2026 step R11.4.4.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-20 14:41",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Objects/VisuNodePoint.cpp",
+  "line": "1",
+  "releaseNotes": "VisuNodePoint.cpp is gone: its 79 UpdateGraphics implementations sit in the file of their own item - 68 existing C<Item>.cpp, the three loads in System/CLoad.cpp, the six sensors in System/CSensor.cpp, and a new CObjectSuperElement.cpp for the item that had no implementation file. The maintainer chose this over five Visu<ItemType>.cpp files. The file-local helpers (the drawNodesMarkersLoadsWithFaces constant and the two templates for the ANCF cables and the 3D beams) are in the new src/Graphics/VisualizationItemHelpers.h. The four EXUDYN_MINIMAL_COMPILATION regions disappear: a minimal build now compiles fewer files instead of excluding four fifths of one file. Verified textually - all 79 bodies are identical to the ones in the deleted file - because no test calls UpdateGraphics at all, which is now its own issue."
+}

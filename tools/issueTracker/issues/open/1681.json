@@ -1,0 +1,10 @@
+{
+  "number": 1681,
+  "title": "ItemIndices",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add option to add force/torque directly; add gravity to bodies",
+  "dateRaised": "2023-10-29",
+  "deadline": "2024-04-26"
+}

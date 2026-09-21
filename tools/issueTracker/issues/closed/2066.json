@@ -1,0 +1,12 @@
+{
+  "number": 2066,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option for special shape of graphics.Brick with rounded edges, offering a transition to an ellipsoid",
+  "dateRaised": "2025-05-29",
+  "deadline": "2025-11-25",
+  "dateResolved": "2025-05-30 00:59",
+  "resolvedAuthor": "JG"
+}

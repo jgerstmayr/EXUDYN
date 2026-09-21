@@ -1,0 +1,10 @@
+{
+  "number": 1977,
+  "title": "solver",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic",
+  "dateRaised": "2025-03-30",
+  "deadline": "2025-09-26"
+}

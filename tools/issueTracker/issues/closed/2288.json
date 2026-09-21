@@ -1,0 +1,12 @@
+{
+  "number": 2288,
+  "title": "nodes",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "drawNodesAsPoint together with showBasis: showBasis shall be drawn with lines if drawNodesAsPoint=True and with 3D faces otherwise",
+  "dateRaised": "2026-02-12",
+  "deadline": "2026-08-11",
+  "dateResolved": "2026-02-12 15:41",
+  "resolvedAuthor": "JG"
+}

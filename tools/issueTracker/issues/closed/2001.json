@@ -1,0 +1,12 @@
+{
+  "number": 2001,
+  "title": "Create functions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add automatism to create geometry from inertia objects by default (cylinder, sphere, brick, ...); using default colors",
+  "dateRaised": "2025-05-08",
+  "deadline": "2025-11-04",
+  "dateResolved": "2025-05-10 23:07",
+  "resolvedAuthor": "JG"
+}

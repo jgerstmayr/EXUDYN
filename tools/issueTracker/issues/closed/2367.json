@@ -1,0 +1,14 @@
+{
+  "number": 2367,
+  "title": "test suite does not notice models that are in no reference list",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "runTestSuite.py builds its run list from the keys of TestExamplesReferenceSolution() and never lists the directory; a model on disk but in no list is therefore silently never executed. 19 models were in that state.",
+  "dateRaised": "2026-09-10",
+  "deadline": "2027-03-09",
+  "dateResolved": "2026-09-10 22:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/testRunnerTools.py",
+  "releaseNotes": "testRunnerTools.CheckTestCoverage() added; runs at suite start-up; uncovered file or stale key fails under --exit-code. Verified by fault injection."
+}

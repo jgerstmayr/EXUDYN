@@ -1,0 +1,15 @@
+{
+  "number": 2371,
+  "title": "PEP 621 metadata",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "move static package metadata from setup(...) into a [project] table in main/pyproject.toml; setup.py keeps only version; classifiers; packages; package_data; ext_modules and cmdclass. build-system.requires floor raised to setuptools>=61; below that a [project] table is silently ignored. revision2026 step R2.1",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 18:24",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/setup.py",
+  "releaseNotes": "verified by diffing PKG-INFO from setup.py egg_info before and after: only the PEP 621 spellings changed (Author/Home-page -> Author-email/Project-URL) and the Dynamic: block shrank from ten entries to one. A full wheel built in 54 s with the .pyd and both .pyi stubs present"
+}

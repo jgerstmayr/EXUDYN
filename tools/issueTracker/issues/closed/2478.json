@@ -1,0 +1,13 @@
+{
+  "number": 2478,
+  "title": "a model run locally still opens plot windows",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "Step R5.17 gave exudyn the suppressPlots flag and it reaches every plot the PACKAGE draws (PlotSensor, PlotFFT, ParameterVariationPlot, the Campbell diagram). It cannot reach a script that imports matplotlib itself and calls plt.show(): 36 models and examples do exactly that, so running one of them locally - to check a change or reproduce a bug - still opens a window on the maintainer screen and waits. The runners are not affected, they set the Agg backend in their bootstrap. Needed: a one-line guard in those 36 scripts that switches to the non-interactive backend when exudyn.special.userInterface.suppressPlots is set, plus a rule in CLAUDE.md that a local run of an existing model sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. revision2026 step R5.17.1.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 15:28",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The 36 models and examples that import matplotlib themselves and call plt.show() now carry a two-line guard right after their exudyn import: it switches to the non-interactive Agg backend when exudyn.special.userInterface.suppressPlots is set. Measured both ways - with EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1 the backend is Agg and plt.show() returns at once; without it the backend stays tkagg. CLAUDE.md gained hard rule 11: a local run of a model or example sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. 171 examples with the same 5 pre-existing failures; suite PASSED; pytest 136 passed. revision2026 step R5.17.1."
+}

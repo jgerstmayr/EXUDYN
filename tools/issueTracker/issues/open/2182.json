@@ -1,0 +1,10 @@
+{
+  "number": 2182,
+  "title": "ObjectFFRFreducedOrder",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "improve efficiency by using internal sparse triplets for mass matrix in C++ code",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03"
+}

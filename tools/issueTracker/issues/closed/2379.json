@@ -1,0 +1,15 @@
+{
+  "number": 2379,
+  "title": "two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "generalContactImplicit1.py (error -5.310e-08) and sliderCrank3Dbenchmark.py (-5.037e-10) fail under manylinux_2_28 cp313 while the 8 other Linux differences are marked UnresolvedOnLinux and excluded. So the Linux build exits non-zero. Confirmed PRE-EXISTING and unrelated to revision2026 step R2.3: a build at the previous commit produced bit-identical values. Either the two belong on the UnresolvedOnLinux list with a reason; or the underlying difference needs investigation",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-12 17:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/generalContactImplicit1.py",
+  "releaseNotes": "both tests are now on the UnresolvedOnLinux list with their measured relative differences (sliderCrank3Dbenchmark 2.0e-10; generalContactImplicit1 6.8e-08); so the Linux job reports FAILEDL and exits zero while Windows still enforces them. This records the difference - it does not explain it; the underlying Windows/Linux divergence stays scheduled for revision2026 phase R10, and the list is meant to shrink"
+}

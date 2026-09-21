@@ -1,0 +1,12 @@
+{
+  "number": 2311,
+  "title": "DrawSystemGraph",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "extend to add more information in graph, like type and name; add option to only retrieve graph but not to show; optionally add all item information",
+  "dateRaised": "2026-02-25",
+  "deadline": "2026-08-24",
+  "dateResolved": "2026-02-25 10:34",
+  "resolvedAuthor": "JG"
+}

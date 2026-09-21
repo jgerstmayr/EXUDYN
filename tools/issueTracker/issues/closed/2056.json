@@ -1,0 +1,13 @@
+{
+  "number": 2056,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "Renderer raises warning that some objects contain inconsistencies between computed triangle normals and vertex normals",
+  "dateRaised": "2025-05-28",
+  "deadline": "2025-11-24",
+  "dateResolved": "2025-06-09 01:14",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "mainly due to SolidOfRevolution"
+}

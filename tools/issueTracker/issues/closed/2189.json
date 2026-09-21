@@ -1,0 +1,12 @@
+{
+  "number": 2189,
+  "title": "polygonOffset",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "increase openGL polygonOffset due to change in OpenGL projection method (zMaxSceneFactor changed from 100 to 2)",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-01-04 20:34",
+  "resolvedAuthor": "JG"
+}

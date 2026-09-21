@@ -1,0 +1,10 @@
+{
+  "number": 1192,
+  "title": "ExplicitSolver",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "Newton / startOfStep: check if dataCoords should also be copied",
+  "dateRaised": "2022-07-10",
+  "deadline": "2022-09-08"
+}

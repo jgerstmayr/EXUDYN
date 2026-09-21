@@ -1,0 +1,12 @@
+{
+  "number": 1980,
+  "title": "PlotSensor",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change to matplotlib.get_backend().lower() when comparing with matplotlib agg render mode; this shall avoid warnings in case of plots with agg in background",
+  "dateRaised": "2025-03-31",
+  "deadline": "2025-09-27",
+  "dateResolved": "2025-03-31 23:03",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 2355,
+  "title": "Regeneration must run after ResolveIssue",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "ResolveIssue rewrites docs/theDoc/version.txt, but README.rst and docs/RST/Exudyn.rst embed the version string and are refreshed only by doc2rst.py. Regenerating before resolving leaves those two files one version behind, so the next drift check reports an unrelated change. Documented the required order in docs/dev/WORKFLOW.md and as a constraint on revision2026 step R0.2.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 18:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Gate order is now: resolve issue, then regenerate, then commit"
+}

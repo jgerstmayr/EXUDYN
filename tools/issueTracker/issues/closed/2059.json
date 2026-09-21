@@ -1,0 +1,13 @@
+{
+  "number": 2059,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "add short docu part",
+  "dateRaised": "2025-05-28",
+  "deadline": "2025-11-24",
+  "dateResolved": "2025-06-04 10:58",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "example available in Examples/newtonsCradle.py"
+}

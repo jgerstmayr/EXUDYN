@@ -1,0 +1,12 @@
+{
+  "number": 2157,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "ComputeHurtyCraigBamptonModesNGsolve: change dtype=np.int into dtype=int to comply with numpy",
+  "dateRaised": "2025-11-27",
+  "deadline": "2026-05-26",
+  "dateResolved": "2025-11-27 10:06",
+  "resolvedAuthor": "S. Weyrer"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2518,
+  "title": "exudev build refuses --env",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "exudev build --env NAME exits with an error because the wheel to install is selected by its cp3xx tag and the environment NAME does not say which Python it has. The environment itself does say: ask its interpreter. Maintainer request 2026-09-18: venvExuP313 should be usable for building. revision2026 step R5.18.6.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 15:27",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "line": "183",
+  "releaseNotes": "runner.PythonTagOfEnvironment asks the environment interpreter for sys.version_info and caches it, build accepts --env. Under --dry-run the question is not asked either\\, so the tag is resolved at run time. revision2026 step R5.18.6."
+}

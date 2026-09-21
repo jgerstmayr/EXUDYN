@@ -1,0 +1,14 @@
+{
+  "number": 2370,
+  "title": "generated documentation depends on the filesystem listing order",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "ExtractExamplesWithKeyword in autoGenerateHelper.py and the Examples listing in doc2rst.py used os.listdir() without sorting. NTFS returns alphabetical order and ext4 returns hash order; the Relevant-Examples lists are truncated to the first few entries; so the generated docs and two Tier 1 files under main/src/pythonGenerator/generated differed between Windows and Linux. Found by the first CI run of tools/regenerate.py on Linux (revision2026 step R0.2 and fact 18).",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 11:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/src/pythonGenerator/autoGenerateHelper.py",
+  "releaseNotes": "Both listings now use sorted(..., key=str.lower). Case-insensitive reproduces the NTFS order the committed output was generated in, so Tier 1 is unchanged on Windows. Verified in a python:3.13 container: Linux and Windows now produce identical generated files."
+}

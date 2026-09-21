@@ -1,0 +1,16 @@
+{
+  "number": 2546,
+  "title": "the developer documentation is written as Markdown and published nowhere",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "docs/dev/ARCHITECTURE.md, CODING_STYLE.md, WORKFLOW.md and README.md, the howTo notes and the README files of definitions/ and the generators are written as documentation and are visible only to someone with a clone. Sphinx reads only RST today. Add myst-parser, give them toctree entries, and they are on readthedocs with everything else - which is also the cheapest possible test of the MyST path that step R7.1 rests on, on real files rather than on a sample.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-19 19:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "conf.py",
+  "line": "101",
+  "releaseNotes": "myst-parser is in the docs dependency group and in conf.py, with myst_heading_anchors = 3 so that anchor links between Markdown files work, and eleven Markdown documents are in the toctree: the four docs/dev files, CONTRIBUTING.md, the READMEs of definitions/, the generators and exudev, and the three docs/howTo notes that are really Markdown. The strict build found eleven broken cross-references that were invisible while the files were clone-only, and #2547 - five how-to files that are .txt renamed to .md. convertVideosFfmpeg.md was converted as the example of what those need. The premise of R7.1 holds: the two formats coexist, which is what makes a chapter-by-chapter conversion possible."
+}

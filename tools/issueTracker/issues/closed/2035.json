@@ -1,0 +1,12 @@
+{
+  "number": 2035,
+  "title": "exudyn.config",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "collect specific settings into config structure, see also issue 1630",
+  "dateRaised": "2025-05-21",
+  "deadline": "2025-11-17",
+  "dateResolved": "2025-05-22 07:19",
+  "resolvedAuthor": "JG"
+}

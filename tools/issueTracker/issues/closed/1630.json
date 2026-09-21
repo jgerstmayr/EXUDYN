@@ -1,0 +1,12 @@
+{
+  "number": 1630,
+  "title": "exudyn module",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "consider settings instead of putting all variables globally into module",
+  "dateRaised": "2023-06-23",
+  "deadline": "2023-12-20",
+  "dateResolved": "2025-05-22 07:20",
+  "resolvedAuthor": "JG"
+}

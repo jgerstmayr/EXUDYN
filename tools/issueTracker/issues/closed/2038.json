@@ -1,0 +1,12 @@
+{
+  "number": 2038,
+  "title": "exudyn.SetOutputPrecision",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "moved to exudyn.config.outputPrecision",
+  "dateRaised": "2025-05-22",
+  "deadline": "2025-11-18",
+  "dateResolved": "2025-05-22 07:21",
+  "resolvedAuthor": "JG"
+}

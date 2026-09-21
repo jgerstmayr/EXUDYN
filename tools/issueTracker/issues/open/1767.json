@@ -1,0 +1,10 @@
+{
+  "number": 1767,
+  "title": "C++ user functions",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add file for cpp user functions, registration mechanism like timers",
+  "dateRaised": "2024-02-02",
+  "deadline": "2024-07-31"
+}

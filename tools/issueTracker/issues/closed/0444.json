@@ -1,0 +1,12 @@
+{
+  "number": 444,
+  "title": "docstrings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "change function comments in .py files to PEP standardized docstrings",
+  "dateRaised": "2020-09-06",
+  "deadline": "2020-11-05",
+  "dateResolved": "2026-02-06 15:21",
+  "resolvedAuthor": "JG"
+}

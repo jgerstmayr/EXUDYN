@@ -1,0 +1,12 @@
+{
+  "number": 2048,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add Raytracer as option; map options from openGL to Raytracer (lights, material, multiSampling, shadow, perspective, etc.)",
+  "dateRaised": "2025-05-26",
+  "deadline": "2025-11-22",
+  "dateResolved": "2025-05-26 10:51",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2557,
+  "title": "resultsMonitor rewrite",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "python/exudyn/resultsMonitor.py was a 2021 script inside the package: it read sys.argv and called plt.ion() at import time, its __all__ listed 34 script locals, it was excluded from allExudynModulesTest.py and carried a ruff E402 and a stubtest baseline entry. It becomes exudyn/misc/resultsMonitor.py: the library function MonitorResults(...), an argparse CLI behind it, file selection by dialog or --last, a tkinter control panel (stdlib only), a settings file in ~/.exudyn/, incremental reading instead of re-parsing the whole file on every tick, and --once so that a run without windows draws once and cannot hang - which is what makes resultsMonitorTest.py possible. See revision2026 step R6.9.",
+  "dateRaised": "2026-09-20",
+  "deadline": "2027-03-19",
+  "dateResolved": "2026-09-20 09:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/resultsMonitor.py",
+  "line": "1",
+  "releaseNotes": "Written in a parallel session and integrated here: exudyn/misc/resultsMonitor.py with MonitorResults(...), an argparse CLI, file selection by dialog or --last, a tkinter control panel, a settings file in ~/.exudyn/, incremental reading and --once - which is what makes python/TestModels/resultsMonitorTest.py possible (1.2 s; four file types, the incremental reader including a torn last line, the buffer reset after an overwrite, eight command-line return codes). The integration meant the reference-solution entry, the excludeModules list of allExudynModulesTest.py, two processing.py docstrings and one example header. The ruff E402 entry and the allExudynModulesTest exclusion are gone."
+}

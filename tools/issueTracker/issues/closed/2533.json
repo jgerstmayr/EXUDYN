@@ -1,0 +1,16 @@
+{
+  "number": 2533,
+  "title": "thirteen tracked text files are not UTF-8",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "Eleven C++ sources and one example are cp1252 (a degree sign, a micro sign, an en dash, German umlauts), and docs/theDoc/trackerlog.tex is written by issueTracker.py through an open() with no encoding argument - so it takes the Windows code page. Step R0.6 made the GENERATORS explicit about utf-8; the sources themselves were never converted. A tool that assumes UTF-8 either crashes on them or rewrites them wholesale. Convert them, fix the writer, and add a check so it cannot come back. Note the coupling: docs/theDoc/theDoc.tex declares the latin1 option of inputenc while four other .tex files already contain UTF-8 bytes - that declaration is already wrong for them.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 21:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issueTracker.py",
+  "line": "678",
+  "releaseNotes": "Thirteen files converted to UTF-8, LICENSE.txt among them - it credits Camilla Loewy of GLFW and every UTF-8 reader showed that name as mojibake. issueTracker.py:678 (and three version writers) got encoding=utf-8, which was what produced the only non-UTF-8 generated file. docs/theDoc/theDoc.tex now declares the utf8 option of inputenc instead of latin1 - four other .tex files in that directory already held UTF-8 bytes, so the old declaration was already wrong for them; the PDF was NOT built to verify this. New tool tools/checkEncoding.py runs in exudev generate --all-checks and takes --write to convert; it reads git ls-files and exempts python/TestModels/testData/rotorAnsys.rst by name, an ANSYS result file that happens to end in .rst."
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2558,
+  "title": "command line of the exudyn package",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "python/exudyn/__main__.py so that \"python -m exudyn <command>\" gives the small things one wants from a shell without writing a script: monitor (the results monitor), plot (PlotSensor on files), info (version, paths, module, optional packages - what a bug report needs) and demo. The commands sit in a plain dictionary CommandTable() and each is imported when it is called, so that revision2026 R9.6 can add plugin commands through entry points. Deliberately no console script in pyproject.toml: nothing goes on PATH until the command set has settled. See revision2026 step R8.8.",
+  "dateRaised": "2026-09-20",
+  "deadline": "2027-03-19",
+  "dateResolved": "2026-09-20 09:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/__main__.py",
+  "line": "1",
+  "releaseNotes": "python/exudyn/__main__.py: python -m exudyn monitor|plot|info|demo, commands in a plain CommandTable() dictionary, each imported when it is called, so R9.6 can add plugin commands through entry points. No console script in pyproject.toml for now. Note for the test suite: importing a __main__ RUNS it, so __main__.py had to enter the excludeModules list of allExudynModulesTest.py."
+}

@@ -1,0 +1,15 @@
+{
+  "number": 2361,
+  "title": "CI during the GitHub freeze",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "description": "GitHub Actions only fire on pushes to master and pull requests, so no wheels or tests run while master is frozen at 1.11.0 (decision D6). Add GitLab CI for Linux x86_64 across cp310-cp314 on the shared Docker runners, plus a docs build. Also fix that CI could not fail at all: wheels.yml sets continue-on-error and runTestSuite.py always exited 0. revision2026 step R1.7.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 23:22",
+  "resolvedAuthor": "Claude-JG",
+  "file": ".gitlab-ci.yml",
+  "releaseNotes": "runTestSuite.py gains --exit-code and loses the -F<NN> log suffix; reproducible vs sensitive tests separated in runTestSuiteRefSol.py; manylinuxBuild.sh deduplicated into tools/ci/buildManylinux.sh. Verified by fault injection. First pipeline run and the weekly schedule are still pending"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2536,
+  "title": "the explicit dynamic solver returns False instead of raising",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "In SolveDynamic the implicit branch prints SolverErrorMessage and raises when the solver fails; the explicit branch (ExplicitEuler, RK44, DOPRI5, VelocityVerlet, ...) has no try and no check at all and simply returns False. The same call therefore aborts loudly or continues silently depending on solverType, and a user who does not test the return value keeps computing with the state of a failed run - exactly the case the maintainer named for parameter variations. Make the explicit branch behave like the implicit one.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 22:32",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/solver.py",
+  "line": "312",
+  "releaseNotes": "The explicit branch of SolveDynamic now prints SolverErrorMessage and raises like the implicit one, instead of returning False in silence. Also raise ValueError(solver type not implemented) became exudyn.NotImplementedFeatureError."
+}

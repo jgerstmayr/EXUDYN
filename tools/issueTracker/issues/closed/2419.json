@@ -1,0 +1,13 @@
+{
+  "number": 2419,
+  "title": "pybind declarations: argTypes shorter than argList and a duplicated symbolic.max",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "definitionValidator (revision2026 step R4.3 part 2d) finds: MainSystem.DeleteNode / DeleteSensor and MatrixContainer.SetWithDenseMatrix list fewer argTypes than arguments - so their stubs lose all type hints; symbolic.max is declared twice (twice in symbolic.pyi and the docs); exu.Print has argTypes without argList (unused)",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-14 14:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "definitionValidator checks the pybind declarations; argTypes completed for DeleteNode / DeleteSensor / SetWithDenseMatrix; duplicate symbolic.max and unused Print argTypes removed"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2231,
+  "title": "CreateSphereSphereContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "if objects are mass points (2D, 3D), only add MarkerBodyPosition if dynamicFriction=0 (otherwise error); enable markers in bodyNumbers field",
+  "dateRaised": "2026-01-19",
+  "deadline": "2026-07-18",
+  "dateResolved": "2026-04-07 20:13",
+  "resolvedAuthor": "JG"
+}

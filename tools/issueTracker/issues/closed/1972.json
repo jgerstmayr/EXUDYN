@@ -1,0 +1,13 @@
+{
+  "number": 1972,
+  "title": "artificialIntelligence",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "PreInitializeSolver always uses Generalized alpha solver, but should go in line with SetSolver",
+  "dateRaised": "2025-03-06",
+  "deadline": "2025-09-02",
+  "dateResolved": "2025-03-31 22:42",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "this issue was erratic and is ignored; PreInitializeSolver shall be replaced by derived class calling SetSolver with the desired solverType; added remarks in artificialIntelligence.py"
+}

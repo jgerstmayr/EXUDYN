@@ -1,0 +1,12 @@
+{
+  "number": 2221,
+  "title": "CreateForce, CreateTorque",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "allow marker indices in bodyNumber",
+  "dateRaised": "2026-01-14",
+  "deadline": "2026-07-13",
+  "dateResolved": "2026-01-14 13:57",
+  "resolvedAuthor": "JG"
+}

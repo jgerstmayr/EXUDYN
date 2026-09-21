@@ -1,0 +1,13 @@
+{
+  "number": 1983,
+  "title": "FEM",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "adjust Load/Save functions to by-default support hdf5 or pkl as npy does not work with numpy 2.0",
+  "dateRaised": "2025-04-01",
+  "deadline": "2025-09-28",
+  "dateResolved": "2025-04-01 16:44",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "changed ObjectFFRFreducedOrderInterface and FEM class to by default use numpy NPZ format"
+}

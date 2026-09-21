@@ -1,0 +1,12 @@
+{
+  "number": 1998,
+  "title": "delete",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to delete dependent markers in connectors/joints when deleting objects",
+  "dateRaised": "2025-05-07",
+  "deadline": "2025-11-03",
+  "dateResolved": "2025-05-09 08:08",
+  "resolvedAuthor": "JG"
+}

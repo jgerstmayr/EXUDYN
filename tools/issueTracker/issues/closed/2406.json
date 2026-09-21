@@ -1,0 +1,15 @@
+{
+  "number": 2406,
+  "title": "version.txt moved from docs/theDoc to the repository root",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "the single version source sat inside the documentation tree; a build input buried among LaTeX chapters and - before the flatten - above the packaging root. It is now version.txt at the repository root; exudynVersion.py is the only code that resolves it and doc2rst.py keeps parsing it as a documentation input. revision2026 step R3.4",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 19:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "version.txt",
+  "releaseNotes": "moved with git mv. exudynVersion.py resolves it by walking up for a directory holding both pyproject.toml and version.txt; issueTracker.py writes it there; doc2rst.py special-cases it in the parsed-file loop because every other entry in that list is a LaTeX chapter under docs/theDoc/. regenerate.py excludedPaths, MANIFEST.in and the seven untracked build scripts follow. versionName.txt deliberately stays in docs/theDoc/: nothing builds from it"
+}

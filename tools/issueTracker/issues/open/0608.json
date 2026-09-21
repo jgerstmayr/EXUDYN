@@ -1,0 +1,10 @@
+{
+  "number": 608,
+  "title": "recommendedStepSize",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add recommendedStepSize to ContactCoordinate element",
+  "dateRaised": "2021-03-20",
+  "deadline": "2021-05-19"
+}

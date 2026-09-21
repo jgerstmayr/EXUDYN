@@ -1,0 +1,16 @@
+{
+  "number": 2377,
+  "title": "three imports refer to modules that exist nowhere",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "LOW",
+  "description": "found by tools/checkExtras.py (revision2026 step R2.12). Examples/FurtherExamples/spotReinforcementLearning.py does \"import RL_Spot\" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does \"from timeIntegrationOfRotationVectorFormulas import *\" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-17 21:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/Examples/FurtherExamples/spotReinforcementLearning.py",
+  "line": "40",
+  "releaseNotes": "rosInterface: ROSMassPoint.py and ROSTurtle.py imported it by bare name; both now import exudyn.robotics.rosInterface as their sibling ROSMobileManipulator.py already did. timeIntegrationOfRotationVectorFormulas: the module was never committed; but both functions it provided exist in the package today - ComposeRotationVectors is now CompositionRuleForRotationVectors; plus Skew; TSO3Inv (TExpSO3Inv) and the two RK step functions; LieGroupIntegrationUnitTests.py imports them and 9 of its 10 tests pass (TEST 2 fails on the separate #2494). Both entries are gone from knownMissingLocalModules in tools/checkExtras.py; which now exits 0. RL_Spot remains: the module was never committed and the decision - delete the example or add the module - is the maintainers. revision2026 step R5.12"
+}

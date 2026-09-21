@@ -1,0 +1,11 @@
+{
+  "number": 1202,
+  "title": "parallel / multithreaded",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "description": "C++: add multithreading for JacobianAE",
+  "dateRaised": "2022-07-12",
+  "deadline": "2022-09-10"
+}

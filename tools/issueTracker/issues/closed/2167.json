@@ -1,0 +1,12 @@
+{
+  "number": 2167,
+  "title": "perspective",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revise perspective model and synchronize raytracer with openGL implementation",
+  "dateRaised": "2025-12-16",
+  "deadline": "2026-06-14",
+  "dateResolved": "2026-01-04 22:19",
+  "resolvedAuthor": "JG"
+}

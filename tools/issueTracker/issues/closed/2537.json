@@ -1,0 +1,16 @@
+{
+  "number": 2537,
+  "title": "an Exudyn exception stringifies the error that caused it instead of chaining it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "A user function that raises ZeroDivisionError reaches Python as a ModelError whose MESSAGE contains the words ZeroDivisionError: float division by zero. The original object is gone: e.__cause__ is None and the traceback that pointed into the user function survives only as printed text. py::raise_from (pytypes.h:818) sets __cause__ and __context__ and keeps the traceback - it needs the registered Python class as a PyObject* and the original exception as an object. Carry the original from the handler that caught it to the pybind boundary and chain it in one exception translator. Split off from step R6.3.5 on 2026-09-18 and confirmed by the maintainer after reading the model in Spyder.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 23:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/ExceptionsTemplates.h",
+  "line": "48",
+  "releaseNotes": "The three handlers that catch error_already_set now store the original with SetPendingExceptionCause(ex.value().ptr()) - a thread_local PyObject* with explicit incref, not a py::object whose destructor would need the GIL at thread exit - and ONE exception translator in PybindModule.cpp, registered after the eight register_exception calls so that it is tried first, restores it as the current error with its traceback and calls py::raise_from. Control flow is unchanged: the same C++ types are thrown as before, which is why this was not done by calling raise_from in the handler - that would throw py::error_already_set and every intermediate catch(EXUexception) would stop matching. A user function that divides by zero now arrives as ModelError with __cause__ = the ZeroDivisionError and its traceback pointing at the users own line; an error with no Python behind it keeps __cause__ is None; parameterConversionTestReference.txt did not move."
+}

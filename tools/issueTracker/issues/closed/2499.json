@@ -1,0 +1,16 @@
+{
+  "number": 2499,
+  "title": "the platform string does not name the architecture",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "exudyn.config.Version(addDetails=True) reported -Windows-; -MacOS- or -MacOS(ARM)-; so an Intel Mac and an Apple silicon Mac were indistinguishable and 32 vs 64 bit was visible on Windows only; as -(32bit)-. The string is written into the header of every solution file; sensor file; parameter variation and optimization results file; so it is what a user sends with a bug report. It now names the architecture the way the wheel tags and the compilers do: Windows x86_64; MacOS arm64; MacOS x86_64; Linux x86_64; Linux arm64 - and x86 or arm for the 32 bit cases. Also documents why macOS builds no fast module. revision2026 step R2.10.5",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 23:28",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/BasicDefinitions.h",
+  "line": "246",
+  "releaseNotes": "GetPlatformString() now appends the architecture as the wheel tags and the compilers name it: Windows x86_64; MacOS arm64; MacOS x86_64; Linux x86_64; Linux arm64; and x86 or arm for the 32 bit cases - which also replaces the Windows-only (32bit) marker; since x86_64 and arm64 already say 64 bit. An architecture matching none of them stays unnamed rather than mislabelled. Decided per compile; so each slice of a macOS universal2 binary reports its own. Verified without building Exudyn: the branch selection with the real preprocessor for seven architectures; and the function itself extracted; compiled and run. The change takes effect at the next C++ build. The header text of solution; sensor; parameter variation and optimization files changes with it; the two documented sample headers were updated. Nothing parses the string except the AVX2 and [FAST] checks of the test runner. revision2026 step R2.10.5"
+}

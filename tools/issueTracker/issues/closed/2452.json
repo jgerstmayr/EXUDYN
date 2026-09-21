@@ -1,0 +1,14 @@
+{
+  "number": 2452,
+  "title": "Declared item types and access function types",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revision2026 step R4.10.3: GetType of nodes and markers and GetAccessFunctionTypes of objects (bodies in 19 cpp files) become declared lists with generated bodies; basis of the Python type information and compatibility queries (83d).",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 22:50",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/definitionTypes.py",
+  "releaseNotes": "revision2026 step R4.10.3: ItemTypes in 34 nodes/markers; ItemAccessFunctionTypes in 19 objects; cpp bodies removed"
+}

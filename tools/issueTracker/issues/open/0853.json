@@ -1,0 +1,10 @@
+{
+  "number": 853,
+  "title": "ComputeObjectJacobian...",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add mbs computation functions for jacobians, for ODE1, ODE2 and AE",
+  "dateRaised": "2022-01-08",
+  "deadline": "2022-03-09"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2564,
+  "title": "the tikz flow charts and their hand-made PNG twins",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "introduction.tex, solver.tex and theory.tex carried 13 tikzpicture environments, and each had a hand-made PNG of the same diagram next to it in an onlyRST branch: the HTML documentation never rendered tikz, it showed the picture, and the two were kept in step by hand. Convert the flow charts to mermaid - text, so they diff and review like code, and rendered by sphinxcontrib-mermaid - and delete the PNG twins. Genuinely geometric figures keep a pre-rendered image. See revision2026 step R7.1.9, maintainer decision D9.",
+  "dateRaised": "2026-09-20",
+  "deadline": "2027-03-19",
+  "dateResolved": "2026-09-20 18:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/solver.md",
+  "line": "15",
+  "releaseNotes": "Twelve flow charts are mermaid in docs/manual/ - seven in solver.md, four in introduction.md and the contact coupling in theoryContact.md, which existed only as tikz and therefore never reached the HTML at all - and the eleven hand-made PNG twins are deleted. theoryRotations.md keeps its images: the homogeneous transformation is geometry, which is the exception D9 makes. The captions go into the :caption: option of the mermaid directive rather than into an italic line, because a {ref} needs a titled target and four cross references broke without it. sphinxcontrib-mermaid is in the docs dependency group and in conf.py; it renders in the browser from a CDN, so a locally opened page without internet shows the diagram source."
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2031,
+  "title": "BallBearing",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "put function into machines module; function shalll take two markers (for outer and inner ring), which represent the interface to other bodies; add simple test model",
+  "dateRaised": "2025-05-18",
+  "deadline": "2025-11-14",
+  "dateResolved": "2025-07-03 09:20",
+  "resolvedAuthor": "JG"
+}

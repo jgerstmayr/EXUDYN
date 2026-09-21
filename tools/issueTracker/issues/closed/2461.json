@@ -1,0 +1,13 @@
+{
+  "number": 2461,
+  "title": "the examples run serially and take six minutes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "runTestExamples.py execs 171 examples one after the other into a single interpreter; 360 seconds on Windows. The examples are an API check - an example has done its job once it has built its model and reached the solver. revision2026 step R5.16: run them in separate interpreters in parallel; give every example its own output directory; and count a timeout as a pass once the solver was reached.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 18:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "revision2026 step R5.16: testRunnerTools.RunExampleInProcess/RunExamplesInParallel run every example in its own interpreter and its own output directory; a timeout after the solver was reached counts as a pass; PrepareExampleSource and ExampleSkipReason moved into testRunnerTools; 43 examples wrap a read of their own output in OutputFilePath; chainDriveExample imports sin/cos/arcsin; minimizeExample and dispyParameterVariationExample are skipped as not self-contained. 360 s -> 49 s."
+}

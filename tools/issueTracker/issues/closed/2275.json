@@ -1,0 +1,12 @@
+{
+  "number": 2275,
+  "title": "GLFWClient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add new substructure RenderView which collects GLFWwindow and RenderState, allowing to open several windows; window0=main window as before",
+  "dateRaised": "2026-02-08",
+  "deadline": "2026-08-07",
+  "dateResolved": "2026-02-08 00:15",
+  "resolvedAuthor": "JG"
+}

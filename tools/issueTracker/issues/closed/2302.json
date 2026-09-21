@@ -1,0 +1,12 @@
+{
+  "number": 2302,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "BallBearingRings leads to nan (not a number) for impossible geometries, thus grooves not being calculated; add error message",
+  "dateRaised": "2026-02-15",
+  "deadline": "2026-08-14",
+  "dateResolved": "2026-02-15 22:37",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2542,
+  "title": "the exception types are decided but not documented for users",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "Step R6.3 built nine exception classes and decided what each one means; nothing tells a USER about them. The only places that describe the taxonomy are docs/dev/CODING_STYLE.md section 10, which is written for someone adding a check in C++, and the revision log, which is a record. A user needs the other direction: which type to catch, what it says about whose mistake it was, and what to do about it - including the one case with a concrete action behind it, catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-19 07:51",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/theDoc/introduction.tex",
+  "line": "930",
+  "releaseNotes": "Written as a subsection of Exudyn Basics in docs/theDoc/introduction.tex, before \"Removing convergence problems and solver failures\": the nine types with the built-in each also derives from and what each says about whose mistake it was; catching a solver failure to retry with smaller steps or to score a failed run in a parameter variation; an error inside a user function arriving as ModelError with the original as __cause__; where the message is written (console once, every open log file); deprecation warnings and the switches. In LaTeX because that is the user documentation today - R7.1 will convert it with the rest. exudev docs (sphinx-build -W) passes."
+}

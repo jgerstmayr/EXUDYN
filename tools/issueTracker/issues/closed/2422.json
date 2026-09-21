@@ -1,0 +1,14 @@
+{
+  "number": 2422,
+  "title": "switch to disable parameter range checks at runtime",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Range checks on item and structure parameters (UReal - PReal - UInt - PInt) raise in both the normal and the fast build. A release can carry a wrong range limit that is hard to test for; a flag in exudyn.special could let a user switch the checks off manually. Needs the checks in one place first (revision2026 step R4.4.3). revision2026 step R6.5.",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-15 00:00",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/special",
+  "releaseNotes": "exudyn.special.exceptions.parameterRangeChecks (default True) switches off the range checks of item parameters (all write paths; revision2026 step R4.4.3.4b) and of simulation/visualization settings (EXUstd::GetSafely...); the Python checks in itemInterface.py are gone"
+}

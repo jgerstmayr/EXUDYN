@@ -1,0 +1,14 @@
+{
+  "number": 2429,
+  "title": "unify the item/structure type exceptions of typeModel.py",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "tools/generators/typeModel.py holds 36 spellings the rules do not produce (revision2026 step R4.4.3.3) - the same definition type is spelled differently for items and structures: Int is int for items and Index for structures; Float3/Float4 are exchanged as std::vector<float> for items and std::array<float n> for structures; NumpyVector/NumpyMatrix are stored as Vector/Matrix in items and py::array_t<Real> in structures; Vector2DList vs Vector3DList wrappers; Matrix2D reads Matrix2D in docs while the other fixed matrices read array_like; stub and dictType special names. Unify as far as possible - one spelling per type and destination - keeping each unification only if the full test suite and parameterConversionTest.py (apart from intended reference changes) do not fail; what must remain gets a comment with the reason. revision2026 step R4.19.",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 10:20",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/typeModel.py",
+  "releaseNotes": "typeModel.py exceptions reduced from 36 to 4: spellings that are the same for items and structures moved to a context-free names table (Int->Index; Py wrapper lists; dict type and stub vocabularies); KeyPressUserFunction joined definitionTypes.userFunctionSignatures; cppExchange has one rule for both contexts (variable sizes std::vector - fixed sizes std::array); item Float3/Float4 - ArrayIndex and Vector parameters convert through the same FromPython overloads as structure members (tuples accepted as before). Remaining: NumpyVector/NumpyMatrix storage (items store Vector/Matrix - structures only return py::array_t from solver functions). parameterConversionTest 0 differences; suite passed."
+}

@@ -1,0 +1,15 @@
+{
+  "number": 2566,
+  "title": "the tracker can extend an issue, and open notes are triage",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "Maintainer request 2026-09-21. (1) EXTEND: the tracker can raise and close an issue and ChangeIssue can overwrite one field, but the thing that actually happens - the first analysis turns up more than the issue says - has nowhere to go except a second issue or a rewritten description. ExtendIssue(number, text, author) appends a dated paragraph and touches nothing else; the CLI verb extend comes with the CLI of R8.3, and in the JSON of R8.5 it becomes one entry of an updates list. (2) TRIAGE NOTES: measured 2026-09-21, 0 of the 270 open issues use the notes field while 614 resolved ones do, so notes is the place to record the way to go while an issue is open - duplicate of #xxxx, marked for deprecation, check whether this is still a problem. For that to work ResolveIssue and AbandonIssue must REPLACE those notes rather than prepend them, because the resolution note is published in the release notes. (3) The effort field that makes the 270 open issues sortable is R8.5.2, with the new format. See revision2026 steps R8.3.3 and R8.5.2.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 11:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issueTracker.py",
+  "releaseNotes": "ExtendIssue appends a dated paragraph to the description of an open issue and refuses a closed one; RemarkIssue writes the workingRemarks of an open issue. The field question behind the second half was settled in R8.5.3: notes became releaseNotes (written when the issue closes and published) and workingRemarks (what the work knows meanwhile and cleared when it closes), with effort beside them. The CLI verbs extend and remark came with R8.3."
+}

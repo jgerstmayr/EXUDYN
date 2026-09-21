@@ -1,0 +1,16 @@
+{
+  "number": 2544,
+  "title": "issue text is written into trackerlog.tex without escaping",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "issueTracker.py writes every issue name, description and resolution note straight into docs/theDoc/trackerlog.tex, which is LaTeX. A caret, an underscore, a hash, an ampersand or a backslash command in an issue is therefore executed or aborts pdflatex. Both already happen: issue 2398 says O(N^2) per step and produces \"Missing $ inserted\", and an issue that mentioned a backslash-input command made the build stop with \"File not found\" 629 pages in. The RST writer has the same question with different characters. Escape at the writer, where the format is known, rather than asking every issue author to think about LaTeX.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-19 17:24",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issueTracker.py",
+  "line": "676",
+  "releaseNotes": "ToLatex() in issueTracker.py escapes every LaTeX special character now - backslash first, then braces, underscore, hash, ampersand, dollar, percent, caret, tilde. Escaping is total by the maintainer decision of 2026-09-19: the few issues from 2016-2020 that contain deliberate markup render as the characters they are, and in exchange the documentation build cannot be broken by what someone types into the tracker. Found because the issue describing the OTHER PDF causes mentioned a backslash command, which LaTeX then executed 629 pages into the build."
+}

@@ -1,0 +1,13 @@
+{
+  "number": 452,
+  "title": "AVX objects",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "test AVX objects",
+  "dateRaised": "2020-09-16",
+  "deadline": "2020-11-15",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Same coverage as #451: the AVX code paths are tested by src/Tests/AVXVectorUnitTests.h and their numerical effect is pinned by the second reference set of revision2026 step R2.10.3. A micro-benchmark of the real linear algebra operations is planned as revision2026 step R11.2."
+}

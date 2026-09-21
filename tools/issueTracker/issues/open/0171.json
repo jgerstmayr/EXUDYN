@@ -1,0 +1,10 @@
+{
+  "number": 171,
+  "title": "Matrix delete",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "Consider not to set data=NULL in order to detect memory which is deleted twice",
+  "dateRaised": "2019-06-07",
+  "deadline": "2019-08-06"
+}

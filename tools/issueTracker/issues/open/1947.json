@@ -1,0 +1,10 @@
+{
+  "number": 1947,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact",
+  "dateRaised": "2025-02-03",
+  "deadline": "2025-08-02"
+}

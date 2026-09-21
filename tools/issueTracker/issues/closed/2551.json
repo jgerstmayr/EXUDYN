@@ -1,0 +1,16 @@
+{
+  "number": 2551,
+  "title": "the stub check is intermittent: resultsMonitor._ControlPanel.tk fails about one run in three",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "checkPython.py --stubs --check reports \"exudyn.misc.resultsMonitor._ControlPanel.tk is not present at runtime\" on some runs and passes on others - measured 2026-09-19: one failure in three consecutive runs with no change in between. _ControlPanel derives from a tkinter widget and the tk attribute exists only once a Tk instance has been created; whether stubtest sees it seems to depend on import order or on a display being available. A gate that fails randomly is worse than no gate: it trains everyone to rerun until green. Either make the probe deterministic or put this name in the curated noise list with the reason. Found while working on revision2026 step R7.1.5; not caused by it.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-20 14:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/resultsMonitor.py",
+  "line": "1",
+  "releaseNotes": "exudyn.misc.resultsMonitor._ControlPanel.* is in tools/ci/stubtestNoise.txt, the curated list, with the reason next to it: a tkinter widget carries the attributes of the Tk instance it belongs to and tk exists only once a root has been created, so whether stubtest sees it depends on import order and on a display. Not in the generated backlog, which is meant to shrink. Five consecutive runs of the gate, all green."
+}

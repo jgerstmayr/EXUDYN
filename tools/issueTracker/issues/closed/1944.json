@@ -1,0 +1,12 @@
+{
+  "number": 1944,
+  "title": "solver",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "always writes 'Solver terminated unsuccessfully' independently of success.",
+  "dateRaised": "2025-01-05",
+  "deadline": "2025-07-04",
+  "dateResolved": "2025-01-05 18:00",
+  "resolvedAuthor": "JG"
+}

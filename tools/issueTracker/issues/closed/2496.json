@@ -1,0 +1,15 @@
+{
+  "number": 2496,
+  "title": "--fast-module would reject a fast module built without AVX2",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "The guard and the log marker added for revision2026 step R5.11 asked ModuleUsesAVX2(); but that is a different question from -is this the fast module-. setup.py always compiles exudynCPPfast with __FAST_EXUDYN_LINALG and adds the vector extensions only when useAVX2 is set AND the platform is not macOS - so on macOS; and in any --no-avx2 build; the fast module is perfectly good and reports no AVX2. The run would then abort with the message that the wrong module was loaded; and its log would have no _fast marker. Both now ask ModuleIsRegular(); the AVX2 reference set keeps asking ModuleUsesAVX2(); which is right because that drift comes from the vector extensions and not from the missing range checks. revision2026 step R5.11.2",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 22:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/testRunnerTools.py",
+  "releaseNotes": "The guard and the log marker now ask ModuleIsRegular() - is this the fast module - instead of ModuleUsesAVX2() - does it have vector extensions. setup.py always compiles exudynCPPfast with __FAST_EXUDYN_LINALG but adds the vector extensions only when useAVX2 is set AND the platform is not macOS; so on macOS and in any --no-avx2 build the fast module reports no AVX2 and the run would have aborted; with its log written under the regular name. Verified by simulating that build: with ModuleUsesAVX2 forced False the guard accepts the fast module. The AVX2 reference set keeps asking ModuleUsesAVX2(); which is the right question there. revision2026 step R5.11.2"
+}

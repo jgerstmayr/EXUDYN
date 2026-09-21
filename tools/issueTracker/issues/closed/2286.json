@@ -1,0 +1,12 @@
+{
+  "number": 2286,
+  "title": "ambientAndDiffuse",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "In OpenGL materialAmbientAndDiffuse is not used for colored materials, so remove the value (deprecated structure redirects now to materialSpecular but must not be used anymore)",
+  "dateRaised": "2026-02-12",
+  "deadline": "2026-08-11",
+  "dateResolved": "2026-02-12 14:02",
+  "resolvedAuthor": "JG"
+}

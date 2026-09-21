@@ -1,0 +1,10 @@
+{
+  "number": 1848,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "Test and improve implicit SPHERE-TRIG contact",
+  "dateRaised": "2024-06-02",
+  "deadline": "2024-11-29"
+}

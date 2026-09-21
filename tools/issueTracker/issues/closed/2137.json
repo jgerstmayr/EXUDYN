@@ -1,0 +1,12 @@
+{
+  "number": 2137,
+  "title": "general open source",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "add some warnings at beginning of docu regarding open source and potential errors",
+  "dateRaised": "2025-07-05",
+  "deadline": "2026-01-01",
+  "dateResolved": "2025-07-09 18:07",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,10 @@
+{
+  "number": 2106,
+  "title": "Chain drive",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add function to create chain gears as well as geometry from chain drive; calculate length similar to reeving system, but with two chains (and kinck) to compensate length",
+  "dateRaised": "2025-06-21",
+  "deadline": "2025-12-18"
+}

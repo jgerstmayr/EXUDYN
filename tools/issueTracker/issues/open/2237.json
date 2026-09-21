@@ -1,0 +1,10 @@
+{
+  "number": 2237,
+  "title": "MacOS",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "Check Spyder-issues and crashes with PlotSensor on MacOS systems",
+  "dateRaised": "2026-01-26",
+  "deadline": "2026-07-25"
+}

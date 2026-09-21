@@ -1,0 +1,10 @@
+{
+  "number": 565,
+  "title": "Drift inspector",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add functionality to check whether drift gets too large",
+  "dateRaised": "2021-01-29",
+  "deadline": "2021-03-30"
+}

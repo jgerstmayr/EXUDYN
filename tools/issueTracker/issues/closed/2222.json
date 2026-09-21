@@ -1,0 +1,12 @@
+{
+  "number": 2222,
+  "title": "Jacobian description",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "jacobians are computed e.g. as J = partial p/partial q and generalized forces are computed as J^T * f; fix this in item descriptions, in ObjectMassPoint2D and ObjectMassPoint where J * f is used; check",
+  "dateRaised": "2026-01-15",
+  "deadline": "2026-07-14",
+  "dateResolved": "2026-01-15 11:04",
+  "resolvedAuthor": "JG"
+}

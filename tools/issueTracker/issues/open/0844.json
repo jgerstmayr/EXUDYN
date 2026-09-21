@@ -1,0 +1,10 @@
+{
+  "number": 844,
+  "title": "connector jacobian RigidBodySpringDamper",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add analytic jacobian for RigidBodySpringDamper connector",
+  "dateRaised": "2021-12-23",
+  "deadline": "2022-02-21"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2019,
+  "title": "Numpy2.0",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "Since Numpy2.0 __cpu_features__ are not available any more, therefore we need to find another way to automatically detect AVX2 features",
+  "dateRaised": "2025-05-15",
+  "deadline": "2025-11-11",
+  "dateResolved": "2025-05-15 20:20",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,10 @@
+{
+  "number": 1772,
+  "title": "item.GetDictionary",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "description": "item.GetDictionary not working for new user function interface with symbolic user function",
+  "dateRaised": "2024-02-04",
+  "deadline": "2024-08-02"
+}

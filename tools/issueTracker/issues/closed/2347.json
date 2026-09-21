@@ -1,0 +1,12 @@
+{
+  "number": 2347,
+  "title": "solver.output",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add distinguished flags for stopping simulation: simulationTimeout, simulationStoppedByUser and simulationStoppedByUserFunction to determine causes for stopped simulations (all giving finishedSuccessfully=True)",
+  "dateRaised": "2026-04-20",
+  "deadline": "2026-10-17",
+  "dateResolved": "2026-04-20 22:38",
+  "resolvedAuthor": "JG"
+}

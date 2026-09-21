@@ -1,0 +1,12 @@
+{
+  "number": 1961,
+  "title": "CreateSphereQuadContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add create function, which uses 2 CreateSphereTriangleContact elements; should be practical for simple robots, etc.",
+  "dateRaised": "2025-02-24",
+  "deadline": "2025-08-23",
+  "dateResolved": "2025-06-29 12:01",
+  "resolvedAuthor": "JG"
+}

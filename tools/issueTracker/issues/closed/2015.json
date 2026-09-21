@@ -1,0 +1,12 @@
+{
+  "number": 2015,
+  "title": "ContactSphereSphere",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "radius unused in visualization",
+  "dateRaised": "2025-05-11",
+  "deadline": "2025-11-07",
+  "dateResolved": "2025-05-11 21:44",
+  "resolvedAuthor": "JG"
+}

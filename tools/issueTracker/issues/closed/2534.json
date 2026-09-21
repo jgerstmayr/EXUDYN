@@ -1,0 +1,16 @@
+{
+  "number": 2534,
+  "title": "SolveStatic and SolveDynamic throw the real exception away",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "description": "solver.py has \"try: success = solver.SolveSystem(...) / except: pass / finally: if not success: ... raise ValueError(...)\". The except swallows the exception that actually explains the failure - since step R6.3.6 that is an ExudynModelError, an ExudynSolverError for a singular matrix, or the user own ZeroDivisionError from a user function - and replaces it with a fixed sentence and a lost traceback. Re-raise it instead. Only the other failure mode needs a manufactured exception: SolveSystem returning False without throwing (no Newton convergence, step size below minimum), and there exudyn.SolverError is the honest answer. NOTE the raise must move out of the finally block at the same time: a raise in finally REPLACES an exception that is still propagating, so removing the except alone would lose the original error by a different route.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 22:32",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/solver.py",
+  "line": "192",
+  "releaseNotes": "except: pass is gone from SolveStatic and SolveDynamic (both branches). A solve that threw now re-raises the original exception with its traceback after printing SolverErrorMessage; a solve that returned False without throwing raises exudyn.SolverError. Model exceptionTypesTest.py case 9 now reads SolverError: CSolverBase::Newton: System Jacobian seems to be singular instead of ValueError: SolveStatic terminated due to errors; case 10 reads ModelError with the user function that divided by zero. except ValueError around a solve still catches the common case because ModelError and ExudynValueError derive from ValueError."
+}

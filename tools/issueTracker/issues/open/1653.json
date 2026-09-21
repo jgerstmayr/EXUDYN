@@ -1,0 +1,10 @@
+{
+  "number": 1653,
+  "title": "ANCFBeam",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D",
+  "dateRaised": "2023-08-16",
+  "deadline": "2024-02-12"
+}

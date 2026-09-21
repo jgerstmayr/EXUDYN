@@ -1,0 +1,13 @@
+{
+  "number": 1861,
+  "title": "exceptions and ValueError",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "check all ValueError exceptions and change to appropriate error handling, like importerror, runtime error or value error!",
+  "dateRaised": "2024-09-19",
+  "deadline": "2025-03-18",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Superseded by #2432; which records the same problem with measurements: parameterConversionTest.py shows that a wrong parameter raises RuntimeError; TypeError or ValueError depending on which path rejected it. The taxonomy itself is revision2026 steps R6.3; R6.4 and R6.7. Individual cases found on the way were fixed with the right type - for instance ValueError for an unknown solver in lieGroupIntegration.py and ImportError for a missing roboticstoolbox (#2488; #2489)."
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2540,
+  "title": "the binary selection in __init__.py is a nest of try/except blocks",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "Four nested try/except blocks choose between exudynCPPfast and exudynCPP and between the installed-package and the Visual Studio layout. Nothing records which one was taken, the decisions are printed unconditionally or not at all, and a total failure raises one sentence about 32/64 bit versions that names neither the candidates nor the reason each failed - and 32-bit builds were dropped long ago. Make it one function that returns its log, print the log under an env var, and raise a single ImportError listing every attempt. Hard prerequisite for phase R9, where a plugin is bound to the module it was built against and which one was loaded has to be answerable.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-19 07:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/__init__.py",
+  "line": "92",
+  "releaseNotes": "_ImportCompiledModule(useExudynFast) returns (name, module, attempts) and raises one ImportError listing every candidate and why it was skipped or failed; EXUDYN_IMPORT_VERBOSE=1 prints the log; a fast module that was asked for and not loaded says so unconditionally, with the reason. The star import became globals().update(...) because the module name is a variable. The lexicographic numpy version compare the issue named no longer exists - it went with the AVX2 rewrite of R2.10 - so no packaging dependency was added for it. New python/testing/test_import.py covers the log and the failure message."
+}

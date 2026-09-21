@@ -1,0 +1,10 @@
+{
+  "number": 1485,
+  "title": "Spring-Damper connector description",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "description": "add general description for connectors based on spring-dampers (penalty)",
+  "dateRaised": "2023-04-01",
+  "deadline": "2023-09-28"
+}

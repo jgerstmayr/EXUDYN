@@ -1,0 +1,12 @@
+{
+  "number": 2175,
+  "title": "GlfwRenderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change the way how interactive.lockModelView is realized, ignoring keys and mouse actions on model view",
+  "dateRaised": "2025-12-29",
+  "deadline": "2026-06-27",
+  "dateResolved": "2025-12-29 23:57",
+  "resolvedAuthor": "JG"
+}

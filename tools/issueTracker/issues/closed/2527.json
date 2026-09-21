@@ -1,0 +1,16 @@
+{
+  "number": 2527,
+  "title": "str(exception) carries no information",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "HIGH",
+  "description": "PyError prints the explanation and then throws the fixed sentence Exudyn: parsing of Python file terminated due to Python (user) error - identical for a bad item number\\, a string written into a number and a missing marker. The model of revision2026 step R6.3.7 shows six of ten user errors arriving that way. An except block that logs the message logs nothing\\, and the detail is gone. SysError does the same. revision2026 step R6.3.5.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 18:39",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/Stdoutput.cpp",
+  "line": "333",
+  "releaseNotes": "PyError and SysError throw the actual message plus the Python location instead of a fixed sentence, six of the ten cases of the model of #2523 now say what went wrong. PyGetCurrentFileInformation walks out of the exudyn package\\, so the location is the users own frame and not exudyn/solver.py. revision2026 step R6.3.5."
+}

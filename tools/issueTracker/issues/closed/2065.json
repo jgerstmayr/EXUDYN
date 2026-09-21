@@ -1,0 +1,12 @@
+{
+  "number": 2065,
+  "title": "SimulationSettings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "timeIntegration.numberOfSteps: change type to Real in order to accept steps as Python float; add warning in solver if numberOfSteps deviates significantely from integer number",
+  "dateRaised": "2025-05-29",
+  "deadline": "2025-11-25",
+  "dateResolved": "2025-05-29 15:33",
+  "resolvedAuthor": "JG"
+}

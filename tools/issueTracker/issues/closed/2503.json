@@ -1,0 +1,15 @@
+{
+  "number": 2503,
+  "title": "the build and test scripts are 18 batch files without help",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "tools/buildAndGenerate/ holds 18 files; 5 of which exist only to find conda and to loop over the Python versions. A .bat file cannot print a --help; cannot validate an option and cannot pass an unknown option on: every new runner option has to be threaded through by hand - which is how --fast-module stayed unreachable from runTestSuite.bat until #2500. The scripts are also the place where the maintainer looks up HOW the build works; so they carry a documentation duty that comment headers serve badly. Replace them with one Python driver with subcommands; a --help per subcommand and a --dry-run that prints the commands instead of running them; keeping only the scripts that must stay shell (manylinuxBuild.sh runs inside the docker image). revision2026 step R5.18",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 01:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/buildAndGenerate/",
+  "releaseNotes": "Resolved by revision2026 step R5.18: tools/exudev/ - a dependency-free Python driver run as \"python tools/exudev\" or \"exudev\" from the repository root - replaces the 16 batch files of tools/buildAndGenerate/; which is retired (manylinuxBuild.sh moved to tools/ci/ next to the buildManylinux.sh it calls; the rest moved to the gitignored tmp/oldScripts/). Ten commands with a --help each; quiet by default with -v/--verbose; -n/--dry-run prints the real command lines and is faithful by construction because commands.py only builds Step objects and runner.RunSteps is the only executor. Environment dispatch through \"conda run -n <env> --no-capture-output\". --fast is opt-in and the driver therefore switches the pyproject default off; it warns about the two gates in setup.py that would silently drop the fast module. Successor for the two runners without an exit code: #2504."
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2060,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "adjust minZ and line offset to scene dimension",
+  "dateRaised": "2025-05-28",
+  "deadline": "2025-11-24",
+  "dateResolved": "2025-06-02 17:45",
+  "resolvedAuthor": "JG"
+}

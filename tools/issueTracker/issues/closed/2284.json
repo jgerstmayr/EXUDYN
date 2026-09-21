@@ -1,0 +1,12 @@
+{
+  "number": 2284,
+  "title": "raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add separate multiSampling flag: raytracers.advanced.multiSampling which is independent from OpenGL multiSampling",
+  "dateRaised": "2026-02-11",
+  "deadline": "2026-08-10",
+  "dateResolved": "2026-02-12 21:42",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,10 @@
+{
+  "number": 1087,
+  "title": "ANCFBeam3D",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "complete implementation of all functions (rigid marker, etc.)",
+  "dateRaised": "2022-05-16",
+  "deadline": "2022-07-15"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2444,
+  "title": "python modules: __all__ in every module; star imports no longer export helper imports",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revision2026 step R4.22.3: __all__ in 35 modules (itemInterface by its emitter) from the rule in tools/generators/publicApi.py; tools/checkAll.py --check/--write and GitLab job check_all; utilities.py composes the lists; Examples/TestModels that used np sin cos sqrt copy exudyn from star imports import them explicitly (50 files)",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 18:58",
+  "resolvedAuthor": "Claude-JG"
+}

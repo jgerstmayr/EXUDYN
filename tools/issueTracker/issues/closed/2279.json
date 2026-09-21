@@ -1,0 +1,13 @@
+{
+  "number": 2279,
+  "title": "openGL.light0ambient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "openGL.light0ambient and openGL.light1ambient are removed as they are redundant with openGL.lightModelAmbient which shall be used in future",
+  "dateRaised": "2026-02-10",
+  "deadline": "2026-08-09",
+  "dateResolved": "2026-02-10 22:34",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "for that reason, the default value of openGL.lightModelAmbient has been changed to [0.3,0.3,0.3,1] to stay consistent!"
+}

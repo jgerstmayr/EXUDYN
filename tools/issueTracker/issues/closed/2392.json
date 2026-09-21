@@ -1,0 +1,15 @@
+{
+  "number": 2392,
+  "title": "issueTracker does not report the number it assigned",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "RaiseIssue and ResolveIssue printed no issue number; so the number had to be reconstructed by hand for the commit message and the documentation. That produced five wrong numbers in the revision plan; the log and two commit messages on 2026-09-12 (the ClInclude defect was written as 2388 but is 2387; and four following issues were likewise one too high). Maintainer request",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 11:56",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issueTracker.py",
+  "releaseNotes": "RaiseIssue now returns the assigned number and RaiseIssueDict prints \"issue raised: #NNNN title\"; ResolveIssue prints \"issue resolved: #NNNN title\" before the dict and returns the number. So the number never has to be guessed again"
+}

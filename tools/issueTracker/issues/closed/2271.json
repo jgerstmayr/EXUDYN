@@ -1,0 +1,12 @@
+{
+  "number": 2271,
+  "title": "ZoomAll",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "allow call to ZoomAll with inactive renderer; add flag render=True; put current ZoomAll functionality from GLFWClient to accessible location",
+  "dateRaised": "2026-02-06",
+  "deadline": "2026-08-05",
+  "dateResolved": "2026-02-06 23:53",
+  "resolvedAuthor": "JG"
+}

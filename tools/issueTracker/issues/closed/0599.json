@@ -1,0 +1,13 @@
+{
+  "number": 599,
+  "title": "ObjectFFRFreducedOrder",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "description": "compare Tait-Bryan and RotationVector cases with Euler parameters",
+  "dateRaised": "2021-03-18",
+  "deadline": "2021-05-17",
+  "dateResolved": "2026-01-04 11:23",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "already resolved earlier"
+}

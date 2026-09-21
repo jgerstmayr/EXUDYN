@@ -1,0 +1,10 @@
+{
+  "number": 2277,
+  "title": "linux GLFW",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux",
+  "dateRaised": "2026-02-09",
+  "deadline": "2026-08-08"
+}

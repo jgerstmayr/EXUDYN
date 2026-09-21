@@ -1,0 +1,14 @@
+{
+  "number": 2568,
+  "title": "the issues are one JSON file each",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "trackerlog.txt was one 723 KB file of comma-separated lines in which a text field could not contain a comma (the tracker escaped it to backslash-semicolon), every change rewrote the whole file, and two people editing two issues produced one merge conflict. The 2,568 issues are now one JSON file per open or recently closed issue in tools/issueTracker/issues/ and one file per year for the older ones, with meta.json holding the date of the last change. Decided with the maintainer on 2026-09-21: the files live beside the tool rather than in docs/dev/, and the field names are camelCase. The micro version is the count of closed issues, so each archive file states its own closedCount and tools/checkIssues.py - new in exudev generate --all-checks - compares the count with the files, the version with the count and version.txt with the version. See revision2026 step R8.5.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 12:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The 2,568 issues are one JSON file each in tools/issueTracker/issues/ - open/, closed/ since the cutoff of 1 January of the previous year, and one file per year for the rest, written directly by the migration so that the old ones never existed as single files. issueStore.py owns the files, issueTracker.py the rules, and tools/checkIssues.py - new in exudev generate --all-checks - guards the count the micro version is derived from. The migration proved itself three ways: every field of every issue compared before and after, the flat file regenerated from the store and compared column by column, and docs/generated/trackerlog.md regenerating word for word and line for line. trackerlog.txt is deleted with the escaping trap it carried."
+}

@@ -1,0 +1,10 @@
+{
+  "number": 2259,
+  "title": "SystemContainer",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics",
+  "dateRaised": "2026-02-02",
+  "deadline": "2026-08-01"
+}

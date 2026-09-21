@@ -1,0 +1,12 @@
+{
+  "number": 2314,
+  "title": "Add ObjectJointSliding",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Add 3D SlidingJoint basic functionality",
+  "dateRaised": "2026-03-02",
+  "deadline": "2026-08-29",
+  "dateResolved": "2026-03-02 09:48",
+  "resolvedAuthor": "JG"
+}

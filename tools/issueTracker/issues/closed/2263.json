@@ -1,0 +1,12 @@
+{
+  "number": 2263,
+  "title": "docstrings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "similar to issue 0444, auto-convert comments to docstrings when creating wheels",
+  "dateRaised": "2026-02-03",
+  "deadline": "2026-08-02",
+  "dateResolved": "2026-02-06 15:22",
+  "resolvedAuthor": "JG"
+}

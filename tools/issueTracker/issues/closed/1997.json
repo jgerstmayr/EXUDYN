@@ -1,0 +1,12 @@
+{
+  "number": 1997,
+  "title": "delete",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "consistently delete nodes and markers in MainSystem",
+  "dateRaised": "2025-05-06",
+  "deadline": "2025-11-02",
+  "dateResolved": "2025-05-08 13:35",
+  "resolvedAuthor": "JG"
+}

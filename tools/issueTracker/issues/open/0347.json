@@ -1,0 +1,10 @@
+{
+  "number": 347,
+  "title": "initialCoordinates_t",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "instead of initialVelocities",
+  "dateRaised": "2020-02-24",
+  "deadline": "2020-04-24"
+}

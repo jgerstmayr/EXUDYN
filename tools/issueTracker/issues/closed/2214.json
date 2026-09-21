@@ -1,0 +1,12 @@
+{
+  "number": 2214,
+  "title": "shells.py",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add shells module for plate and shell elements; add generator function for planar meshes",
+  "dateRaised": "2026-01-11",
+  "deadline": "2026-07-10",
+  "dateResolved": "2026-01-13 22:25",
+  "resolvedAuthor": "JG"
+}

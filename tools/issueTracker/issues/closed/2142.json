@@ -1,0 +1,12 @@
+{
+  "number": 2142,
+  "title": "Lie group sigma",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "improve accuracy of implicit Lie group integrator; to activate set timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations = False; see paper Holzinger, Arnold, Gerstmayr. Sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)",
+  "dateRaised": "2025-08-07",
+  "deadline": "2026-02-03",
+  "dateResolved": "2025-08-07 13:40",
+  "resolvedAuthor": "S. Holzinger"
+}

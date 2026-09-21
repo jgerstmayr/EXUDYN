@@ -1,0 +1,12 @@
+{
+  "number": 1999,
+  "title": "delete",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to delete dependent markers when deleting loads",
+  "dateRaised": "2025-05-08",
+  "deadline": "2025-11-04",
+  "dateResolved": "2025-05-09 08:08",
+  "resolvedAuthor": "JG"
+}

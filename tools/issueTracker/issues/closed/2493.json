@@ -1,0 +1,15 @@
+{
+  "number": 2493,
+  "title": "every Exudyn writer should create its output directory itself",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "LOW",
+  "description": "SaveDictToHDF5 fails with FileNotFoundError if the directory does not exist; while FEMinterface.SaveToFile; PlotSensor; PlotImage and the parameter variation results file each carry their own copy of the same try/except os.makedirs block - five copies of four lines. One function CreateDirectoryForFile in basicUtilities replaces them; and SaveDictToHDF5 gets the behaviour it was missing. revision2026 step R5.13.4",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 20:42",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/advancedUtilities.py",
+  "releaseNotes": "basicUtilities.CreateDirectoryForFile(fileName) creates the directory of a file that is about to be written and returns the name unchanged; failure is ignored on purpose - creating a directory can fail for reasons that do not stop the write; and the write reports the real problem better. SaveDictToHDF5 now calls it - the behaviour it was missing - and the five hand-written copies in FEM.py (2); plot.py (2) and processing.py now call it instead. Verified: testHDF5loadSave.py writes into a solution/ directory that does not exist yet; without any makedirs in the example. The two examples that needed an os.makedirs line one commit ago no longer do. revision2026 step R5.13.4"
+}

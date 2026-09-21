@@ -1,0 +1,12 @@
+{
+  "number": 2023,
+  "title": "graphics.Cylinder",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to draw hollow cylinder",
+  "dateRaised": "2025-05-17",
+  "deadline": "2025-11-13",
+  "dateResolved": "2025-05-17 00:05",
+  "resolvedAuthor": "JG"
+}

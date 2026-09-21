@@ -1,0 +1,13 @@
+{
+  "number": 2356,
+  "title": "Golden file snapshot from a verified-current generated set",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "The archived golden files were taken at e44aca1, where the committed generated set was already stale and where generator output was still cp1252-corrupted. Re-cut the reference with git archive from the current commit so it is provably identical to committed content. revision2026 step R0.3.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 18:50",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "goldenFiles_V1.11.5_910e2b5.zip, 871 files; full regeneration on that commit produces no drift, so the commit itself is the reference"
+}

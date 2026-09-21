@@ -1,0 +1,14 @@
+{
+  "number": 2427,
+  "title": "the wheel build reuses stale object files after a header-only change",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in revision2026 step R4.4.3.2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. revision2026 step R2.17.",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-15 20:37",
+  "resolvedAuthor": "Claude-JG",
+  "file": "setup.py",
+  "releaseNotes": "revision2026 step R2.17: setup.py passes all src headers as depends= to the extensions"
+}

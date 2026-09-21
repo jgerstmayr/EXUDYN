@@ -1,0 +1,12 @@
+{
+  "number": 1662,
+  "title": "ANCFThinPlate",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add ANCF plate element based on 2 inplane slope vectors Slope12, based on Dufva/Shabana",
+  "dateRaised": "2023-10-15",
+  "deadline": "2024-04-12",
+  "dateResolved": "2026-01-07 19:00",
+  "resolvedAuthor": "JG"
+}

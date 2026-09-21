@@ -1,0 +1,13 @@
+{
+  "number": 2050,
+  "title": "parallel",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "check global counters in parallelized computations which cause huge cache issues",
+  "dateRaised": "2025-05-26",
+  "deadline": "2025-11-22",
+  "dateResolved": "2025-06-24 23:32",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "current issues seem to be related to fetch_add (use task stealing?) and cache-polution between different PARALLEL_FOR loops"
+}

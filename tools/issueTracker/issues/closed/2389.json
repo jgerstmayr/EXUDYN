@@ -1,0 +1,15 @@
+{
+  "number": 2389,
+  "title": "remove 32 bit support: libs/libs32 and the bitness branch in setup.py",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "follow up to issue 2386; whose resolution note still says setup.py keeps its is32bits branch - that is no longer true. On the maintainer instruction the 32 bit support is removed outright: main/libs/libs32 (glfw.pdb; glfw3.lib; glfw3_d.lib; openvr_api.dll; openvr_api.lib) and the is32bits/is64bits branch in setup.py; whose only remaining effect was to choose that directory. revision2026 step R2.6",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 00:08",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/setup.py",
+  "releaseNotes": "the five libs32 files deleted and the bitness branch replaced by an explicit failure: a 32 bit interpreter now raises immediately with the reason; instead of falling through to the 64 bit import libraries and producing \"DLL load failed: %1 is not a valid Win32 application\" at import time - a symptom gettingStarted.tex documents in its troubleshooting section; far from its cause. The openVR path also loses its dead 32 bit half; which copied the 64 bit DLL while warning that 32 bit openVR was untested. Verified by a full wheel build (133 files) and the complete test suite. The installation guide still describes choosing between 32 and 64 bit and was deliberately not touched; that is issue 2389"
+}

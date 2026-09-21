@@ -1,0 +1,13 @@
+{
+  "number": 2462,
+  "title": "dev tool dependencies are not declared",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "pytest and pytest-xdist (revision2026 step R5.1) are installed by hand and appear nowhere in the project metadata; the build dependency group does not match build-system.requires (setuptools>=77; tomli) and does not carry the cibuildwheel version the wheels workflow pins. revision2026 step R5.14.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 19:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "revision2026 step R5.14: new test dependency group (pytest; pytest-xdist); build group matched to build-system.requires (setuptools>=77; tomli) and to the pinned cibuildwheel version; condaEnvironments.md group table updated."
+}

@@ -1,0 +1,10 @@
+{
+  "number": 1631,
+  "title": "velocityOffset",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add to CartesianSpringDamper, RigidBodySpringDamper",
+  "dateRaised": "2023-06-26",
+  "deadline": "2023-12-23"
+}

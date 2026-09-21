@@ -1,0 +1,13 @@
+{
+  "number": 2037,
+  "title": "renderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "homogenize WaitForUserToContinue, DoRendererIdleTasks, DoIdleOperations and WaitForRenderEngineStopFlag as they are widely identical; homogenize functionality; note that DoRendererIdleTasks() with default args has to be replaced by renderer.DoIdleTasks(0)",
+  "dateRaised": "2025-05-21",
+  "deadline": "2025-11-17",
+  "dateResolved": "2025-06-01 02:35",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "merged into SC.renderer.DoIdleTasks(); NOTE that this change affects your existing models a lot!"
+}

@@ -1,0 +1,14 @@
+{
+  "number": 2421,
+  "title": "one Python/C++ conversion layer for item and structure parameters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "The generated Main headers convert every item parameter twice (SetWithDictionary and SetParameter) through about 40 differently named PybindUtilities helpers (Get<Kind>IndexSafely - Set<Type>Safely - dict and value overloads); the generators pick the helper name from hand-written typeCasts/convertToDict tables. Item range checks exist only in itemInterface.py (165 CheckForValid calls) - so mbs.SetObjectParameter and mbs.AddObject with a raw dict bypass them - while structures check in C++ (EXUstd::GetSafelyUReal). revision2026 step R4.4.3: behaviour test first; new header src/Pymodules/PyConversion.h (FromPython/ToPython) kept separate from PybindUtilities.h; one destination-based type model in the generators; items and structures switch to it; range checks move to C++ with current behaviour kept (also in the fast build); return shapes kept (Real vectors numpy - Float4 and index arrays lists).",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-15 10:52",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Pymodules/PybindUtilities.h",
+  "releaseNotes": "revision2026 steps R4.4.3.1-R4.4.3.6: parameterConversionTest.py records the behaviour; src/Pymodules/PyConversion.h (FromPython/ToPython/ItemIndexFromPython/ItemIndexToPython/MemberGetter/MemberSetter) is the one conversion layer for generated item headers - structure members and the hand-written callers (MainSystem.cpp - MainSystemContainer.cpp - PyGeneralContact.h - solvers - symbolic); range checks in C++ with exudyn.special.exceptions.parameterRangeChecks; typeModel.py renders all type spellings; PybindUtilities.h 1104 -> 344 lines (forwarding block and 30 unused helpers deleted; kept: dict and type tests - GetSTDfunction - SetMatrixSafely - SetListOfArraysSafely - SetSlimArraySafely - reference numpy views)."
+}

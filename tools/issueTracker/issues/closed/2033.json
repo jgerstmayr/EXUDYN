@@ -1,0 +1,12 @@
+{
+  "number": 2033,
+  "title": "InertiaSphere",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "use density and radius to initialize as alternative option",
+  "dateRaised": "2025-05-20",
+  "deadline": "2025-11-16",
+  "dateResolved": "2025-05-22 10:32",
+  "resolvedAuthor": "JG"
+}

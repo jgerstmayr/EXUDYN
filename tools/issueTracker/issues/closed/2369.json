@@ -1,0 +1,14 @@
+{
+  "number": 2369,
+  "title": "relativeRotationTranslationMechanism now ends at rest at the origin",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "norm(GetODE2Coordinates()) at the end of the run is 2.087948914872922e-12 while the reference recorded in the file is 4.172189649307425 (2023-06-12). The mechanism produces essentially zero motion. Found while triaging the unlisted TestModels for revision2026 step R5.9. Not added to the test suite.",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 11:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/relativeRotationTranslationMechanism.py",
+  "releaseNotes": "Fixed by the maintainer: endTime reduced from 2s to 0.2s. At 2s the mechanism was back in its initial configuration with no displacements, so the norm was ~0. Added to the test suite with reference 1.509631854432179."
+}

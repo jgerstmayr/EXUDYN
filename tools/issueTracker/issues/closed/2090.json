@@ -1,0 +1,12 @@
+{
+  "number": 2090,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "extend ImportMeshFromNGsolve to include several materials given as dict of materials",
+  "dateRaised": "2025-06-13",
+  "deadline": "2025-12-10",
+  "dateResolved": "2025-06-14 10:31",
+  "resolvedAuthor": "JG"
+}

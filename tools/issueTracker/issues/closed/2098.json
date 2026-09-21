@@ -1,0 +1,12 @@
+{
+  "number": 2098,
+  "title": "graphics.CheckerBoard",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add arg materialIndex for graphics material of both colors",
+  "dateRaised": "2025-06-16",
+  "deadline": "2025-12-13",
+  "dateResolved": "2025-06-16 11:03",
+  "resolvedAuthor": "JG"
+}

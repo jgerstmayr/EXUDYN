@@ -1,0 +1,12 @@
+{
+  "number": 1986,
+  "title": "ObjectMassPoint",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add outputvariables rotation matrix and angular velocity (also to NodePoint) in order to allow spherical joint to be attached.",
+  "dateRaised": "2025-04-08",
+  "deadline": "2025-10-05",
+  "dateResolved": "2025-05-06 22:12",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,16 @@
+{
+  "number": 2565,
+  "title": "the documentation emitters write LaTeX and RST",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "description": "itemDocsEmitter, structureDocsEmitter, utilityDocsEmitter, mainSystemExtensionDocsEmitter and the issue tracker write 8 .tex files (~43000 lines) and the .rst pages beside them, through the PyLatexRST helper that builds both formats in one walk over the model. The PDF does not survive 2.0 (decision D8) and the RST pipeline goes in step R7.1.7, so the emitters emit Markdown into docs/generated/ instead - one emitter at a time, each with its old outputs deleted in the same commit. This is where #2545 (the LaTeX escaping of the emitters) and #2550 (the dropped citations) end. See revision2026 step R7.1.6.",
+  "dateRaised": "2026-09-20",
+  "deadline": "2027-03-19",
+  "dateResolved": "2026-09-20 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/structureDocsEmitter.py",
+  "line": "1",
+  "releaseNotes": "All five documentation emitters write Markdown into docs/generated/ and their .tex and .rst outputs are deleted: structures (7 pages), pythonUtilities (31), cInterface (10), items (109) and the issue tracker (trackerlog.md). Gone with them: interfaces.tex, pythonUtilitiesDescription.tex, manual_interfaces.tex, MainSystemExt.tex, MainSystemCreateExt.tex, itemDefinition.tex, trackerlog.tex and about 640 generated .rst files. Each conversion was checked by comparing the words of the deleted RST against the new Markdown, which is the only thing that can see content that silently disappears; it found four real losses - the example references and the class tags of the utility pages, and for the items the figures of the onlyRST branches and 126 example links whose Create* keyword the Markdown writer did not know. The differences that remain are the macro expansion the RST did, RST markup, and the \"see theDoc.pdf\" note that goes with the PDF (decision D8). PyLatexRST grew a Markdown branch beside its LaTeX and RST ones; those go in revision2026 step R7.1.7. See revision2026 step R7.1.6."
+}

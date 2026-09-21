@@ -1,0 +1,12 @@
+{
+  "number": 2340,
+  "title": "CreateSphereTriangleContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "CreateSphereTriangleContact and CreateSphereQuadContact shall accept list of quadPoints or trianglePoints instead of Vector3DList",
+  "dateRaised": "2026-04-07",
+  "deadline": "2026-10-04",
+  "dateResolved": "2026-04-07 20:01",
+  "resolvedAuthor": "JG"
+}

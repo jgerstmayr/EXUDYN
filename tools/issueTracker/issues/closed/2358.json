@@ -1,0 +1,14 @@
+{
+  "number": 2358,
+  "title": "Add .gitattributes for line endings and binary files",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "The repository had no .gitattributes, so line endings depended on each contributor core.autocrlf setting and generation under a different shell could produce whole-file diffs. All generation and building so far has been on Windows; CI will run on Linux. Normalise text to LF in the repository with native checkout, and mark binary types explicitly. revision2026 step R0.5.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 20:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": ".gitattributes",
+  "releaseNotes": "Index was already fully LF-normalised so no renormalisation was introduced (git add --renormalize stages zero files). Two extension traps found: testData/rotorAnsys.rst is an ANSYS result file not reStructuredText, and *.eps/*.stl have ASCII variants so they are left to text=auto"
+}

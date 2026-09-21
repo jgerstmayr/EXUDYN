@@ -1,0 +1,12 @@
+{
+  "number": 2438,
+  "title": "utility modules: star imports export helper names",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "from exudyn.utilities import * also exports imported helpers (extends; docmeta; module imports); define __all__ or restructure so only the public API is exported; check what examples and test models rely on first (revision2026 step R4.22)",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 18:58",
+  "resolvedAuthor": "Claude-JG"
+}

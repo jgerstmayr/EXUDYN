@@ -1,0 +1,13 @@
+{
+  "number": 2364,
+  "title": "Verify the GitLab CI pipeline on the shared runners",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "The GitLab CI configuration was written and tested locally under docker, but two environment questions could only be answered on the real runners: whether they may pull the manylinux image from quay.io, and whether EPEL is reachable for the GLFW and X11 packages. revision2026 step R1.7.",
+  "dateRaised": "2026-09-10",
+  "deadline": "2027-03-09",
+  "dateResolved": "2026-09-10 14:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "First run 2026-09-10: all six jobs passed - wheels_linux cp310 to cp314 plus docs. quay.io reachable, EPEL reachable, and sphinx-build -W passes on Linux for the first time. Remaining: enable the weekly schedule and confirm failure mail"
+}

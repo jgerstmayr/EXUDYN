@@ -1,0 +1,14 @@
+{
+  "number": 2445,
+  "title": "Structure members: SFPybind on almost every member; invert to SFNoPybind",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "SFPybind (P) is set on 845 of 883 structure members; the 38 without it are solver internals (matrix links; temporary data; file streams; cSolver links and their accessors). Maintainer request 2026-09-15: invert the flag so only the exceptions are marked. Measured first by forcing P on all members: 9 generated files change (pybind; stubs; dictionaries; public/protected in CSolverStructures.h; docs); so the flag has an effect for both parameters and functions and must stay as the inverted flag.",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 19:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/definitionTypes.py",
+  "releaseNotes": "revision2026 step R4.25: SFNoPybind on 38 members replaces SFPybind on 845; effective flags identical; regeneration no-op"
+}

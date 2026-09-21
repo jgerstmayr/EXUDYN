@@ -1,0 +1,12 @@
+{
+  "number": 2179,
+  "title": "raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "check why raytracer does not render triangles at first run",
+  "dateRaised": "2026-01-03",
+  "deadline": "2026-07-02",
+  "dateResolved": "2026-01-03 00:50",
+  "resolvedAuthor": "JG"
+}

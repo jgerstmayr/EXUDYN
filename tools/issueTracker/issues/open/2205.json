@@ -1,0 +1,10 @@
+{
+  "number": 2205,
+  "title": "perspective",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "test moving along a scene when changing the centerPoint",
+  "dateRaised": "2026-01-08",
+  "deadline": "2026-07-07"
+}

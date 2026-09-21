@@ -1,0 +1,12 @@
+{
+  "number": 2270,
+  "title": "Renderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "in mode showMouseCoordinates, enable logging of mouse coordinates in current axis-aligned plane; behavior switched with logMouseCoordinates; only in case that perspective=0",
+  "dateRaised": "2026-02-04",
+  "deadline": "2026-08-03",
+  "dateResolved": "2026-02-05 23:20",
+  "resolvedAuthor": "JG"
+}

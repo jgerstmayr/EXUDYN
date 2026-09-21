@@ -1,0 +1,13 @@
+{
+  "number": 2467,
+  "title": "exudynCPPfast crashes in the test suite (segmentation fault)",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Running runTestSuite.py against exudynCPPfast segfaults reproducibly: with AVX2 after TestModel 74 (objectFFRFTest.py), without AVX2 after 75 (objectFFRFTest2.py). Both models pass standalone under the same module, so this is accumulated corruption, and the shifting crash point shows it is __FAST_EXUDYN_LINALG (no range checks), not the vector extensions. Found in revision2026 step R2.10; the fast module was built for one Python version only and the suite had apparently never been run against it.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-17 00:11",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Root cause: MainObjectANCFThinPlate::SetWithDictionary calls ParametersHaveChanged() with whatever the user wrote into the dictionary, BEFORE the object factory validates the item, and CObjectANCFThinPlate::ParametersHaveChanged computes the slope scaling from the nodes - reading cSystemData->GetCNodes()[-1] for a default/invalid node number. In exudynCPP the range check of the array turns that into a Python exception, so it was invisible; in exudynCPPfast the checks are compiled out and the process died. Found with AddressSanitizer (access-violation at 0xffffffffffffffff in CObject::GetCNode). ThinPlate is the only object that dereferences nodes in ParametersHaveChanged. Fixed by computing the scaling only when the node numbers address existing nodes; the factory reports the invalid number right afterwards. The full suite now completes under exudynCPPfast. revision2026 step R2.10.1."
+}

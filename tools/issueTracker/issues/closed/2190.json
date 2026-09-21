@@ -1,0 +1,13 @@
+{
+  "number": 2190,
+  "title": "perspective",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "find causes for raytracer artifacts in case of larger perspective values",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-01-06 22:34",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "adapted centerPoint; artifacts may still appear for very out of center models"
+}

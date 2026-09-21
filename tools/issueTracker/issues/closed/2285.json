@@ -1,0 +1,12 @@
+{
+  "number": 2285,
+  "title": "visualizationSettings",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "adapt Examples and TestModels to new visualizationSettings introduced in Exudyn 1.10.103",
+  "dateRaised": "2026-02-12",
+  "deadline": "2026-08-11",
+  "dateResolved": "2026-02-20 00:15",
+  "resolvedAuthor": "JG"
+}

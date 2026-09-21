@@ -1,0 +1,12 @@
+{
+  "number": 2436,
+  "title": "utility modules: Google-style docstrings and @docmeta instead of #** comments",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revision2026 step R4.6.2/R4.6.3 and R4.7: all utility modules converted; utilityDocsModel reads docstrings and decorators with ast; the #** parser is deleted; generated docs unchanged apart from listed whitespace and recovered text",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 13:46",
+  "resolvedAuthor": "Claude-JG"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2052,
+  "title": "exudyn.Print",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "function shall accept kwargs end, flush and sep in order to be more compatible with original Python print",
+  "dateRaised": "2025-05-27",
+  "deadline": "2025-11-23",
+  "dateResolved": "2025-05-27 22:39",
+  "resolvedAuthor": "JG"
+}

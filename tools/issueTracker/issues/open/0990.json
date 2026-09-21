@@ -1,0 +1,11 @@
+{
+  "number": 990,
+  "title": "MarkerNodeCoordinate",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "description": "add option addReferenceCoordinates=False to include reference value in coordinate",
+  "dateRaised": "2022-03-16",
+  "deadline": "2022-05-15"
+}

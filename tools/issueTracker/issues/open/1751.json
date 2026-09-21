@@ -1,0 +1,10 @@
+{
+  "number": 1751,
+  "title": "C++ user functions",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "check injection of user functions with special item-function method, and separate cpp file holding prototypes of those functions, which may be injected accordingly; use mechanism to record user functions in exudyn.functions.userCpp.SpringDamper",
+  "dateRaised": "2024-01-29",
+  "deadline": "2024-07-27"
+}

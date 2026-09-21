@@ -1,0 +1,12 @@
+{
+  "number": 2295,
+  "title": "AddEdgesAndSmoothenNormals",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "remove arg pointTolerance as it is unused (roundDigits was introduced earlier)",
+  "dateRaised": "2026-02-13",
+  "deadline": "2026-08-12",
+  "dateResolved": "2026-02-13 15:53",
+  "resolvedAuthor": "JG"
+}

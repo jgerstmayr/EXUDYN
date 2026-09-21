@@ -1,0 +1,10 @@
+{
+  "number": 1167,
+  "title": "user functions",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "description": "check https://pybind11.readthedocs.io/en/stable/advanced/cast/functional.html regarding stateless functions and test performance with C++ functions for simple spring-damper",
+  "dateRaised": "2022-06-29",
+  "deadline": "2022-08-28"
+}

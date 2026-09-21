@@ -1,0 +1,10 @@
+{
+  "number": 910,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "implement recommended step size (with error bound and separate min stepsize to avoid too small steps",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 1967,
+  "title": "Create functions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change return values of all mbs.Create functions with joints (CreateRevoluteJoint, CreateSphericalJoint, CreatePrismaticJoint, CreateGenericJoint, CreateDistanceConstraints, ...) to the object index instead of lists",
+  "dateRaised": "2025-03-03",
+  "deadline": "2025-08-30",
+  "dateResolved": "2025-03-03 22:04",
+  "resolvedAuthor": "JG"
+}

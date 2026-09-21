@@ -1,0 +1,12 @@
+{
+  "number": 2084,
+  "title": "drawFaceNormals",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "openGL.drawFaceNormals shall draw the computed normal from the triangle points, thus showing the correct orientation of triangles",
+  "dateRaised": "2025-06-09",
+  "deadline": "2025-12-06",
+  "dateResolved": "2025-06-09 00:48",
+  "resolvedAuthor": "JG"
+}

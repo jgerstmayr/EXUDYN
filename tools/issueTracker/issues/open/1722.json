@@ -1,0 +1,10 @@
+{
+  "number": 1722,
+  "title": "Parameter type",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)",
+  "dateRaised": "2023-12-09",
+  "deadline": "2024-06-06"
+}

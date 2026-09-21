@@ -1,0 +1,16 @@
+{
+  "number": 2520,
+  "title": "no way to tell a user error from an Exudyn bug in the C++ sources",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "The five error helpers all end in RuntimeError and the helper a check is written with says nothing about what the check means - the same macro states a user index mistake in one place and an Exudyn invariant in the next. Before any type can be assigned the 2064 call sites have to be sorted by WHO the message is for. revision2026 step R6.3.2.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 15:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/errorTriage.py",
+  "line": "1",
+  "releaseNotes": "tools/errorTriage.py sorts the 2064 live call sites by audience (1082 user, 793 internal, 189 to be read) and by kind. Three findings: the inventory of fact 30 counted 188 commented-out lines, not implemented is 94 sites and earns its own class, and src/Objects is 43 percent user-facing\\, which the step had assumed internal. No helper is one thing - CHECKandTHROW is 27 percent user-facing and SysError has 10 user sites - so the type belongs at the call site\\, not on the helper. revision2026 step R6.3.2."
+}

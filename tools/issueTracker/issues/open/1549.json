@@ -1,0 +1,10 @@
+{
+  "number": 1549,
+  "title": "KinematicTree",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?",
+  "dateRaised": "2023-05-02",
+  "deadline": "2023-10-29"
+}

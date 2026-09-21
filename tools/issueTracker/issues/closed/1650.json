@@ -1,0 +1,13 @@
+{
+  "number": 1650,
+  "title": "MacOS Rosetta",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "importing numpy gives Intel MKL Warning: Support of Intel Streaming SIMD Extensions 4.2 ... has been deprecated. Intel oneAPI Math Kernel Library 2025.0 will require AVX instructions",
+  "dateRaised": "2023-07-20",
+  "deadline": "2024-01-16",
+  "dateResolved": "2025-07-11 15:59",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "works at least with Exudyn 1.10.0;  Rosetta will be abandoned in future, if compilation does not work any more"
+}

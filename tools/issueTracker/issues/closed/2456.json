@@ -1,0 +1,15 @@
+{
+  "number": 2456,
+  "title": "runTestSuite.py runs the models serially",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "LOW",
+  "description": "revision2026 step R5.8: the 114 test models ran one after the other in a single interpreter (about 22 seconds); with each model writing into its own output directory since step R5.13 they can run in separate processes. Added --parallel[=N]; the models are reported in the order of the reference list; serial stays the default for the commit gate because multithreaded solvers and ARPACK shift the last digits under load",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 14:24",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/python/TestModels/runTestSuite.py",
+  "releaseNotes": "revision2026 step R5.8: --parallel[=N] runs each model in its own interpreter (22 s -> 11 s with 8 workers); results reported in reference-list order; serial remains the default"
+}

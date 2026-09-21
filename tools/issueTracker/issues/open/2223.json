@@ -1,0 +1,10 @@
+{
+  "number": 2223,
+  "title": "symbolic",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add vector and matrix functionality for Diff()",
+  "dateRaised": "2026-01-16",
+  "deadline": "2026-07-15"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 2409,
+  "title": "the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "PReal, UReal, PInt and UInt exist so that a bad parameter fails where the item is created - in itemInterface, through the generated CheckForValid* guards - instead of surfacing later as a division by zero or a bad size deep in the solver. But typeConversion in pythonAutoGenerateObjects.py:1801 maps all of them onto plain Real resp. Index, so in the C++ core the intent is gone and a reader of the header cannot tell a positive-only quantity from any other Real. Proposal: add typedefs (PReal -> Real, UReal -> Real, PInt -> Index, UInt -> Index) and emit the constrained name into the generated C++, so the documentation value survives into the core. Purely additive; no behaviour change. Raised on maintainer request during revision2026 step R4.1.2.",
+  "dateRaised": "2026-09-13",
+  "deadline": "2027-03-12",
+  "dateResolved": "2026-09-15 19:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/pythonGenerator/pythonAutoGenerateObjects.py",
+  "line": "1801",
+  "releaseNotes": "revision2026 step R4.12: constrained types stated as must be > 0 / >= 0 in generated header member comments; no typedefs because PReal is the AVX macro"
+}

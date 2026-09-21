@@ -1,0 +1,13 @@
+{
+  "number": 2485,
+  "title": "the C++ usage demo of the symbolic types is a dead function of if(false) blocks",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "PyTest_unused() at the end of Symbolic.cpp was six if(false)/if(true) blocks in one function, never called, not compiled into anything meaningful and never run. It is the only documentation of how Symbolic::SReal, SymbolicRealVector and SymbolicRealMatrix are used from C++, which is worth keeping (maintainer, 2026-09-17), but not in that shape - and it demonstrates a stack ExpressionNamedReal, which is exactly the heap corruption trap found in step R5.4.2. Reshape into a header that says what it is, with one named function per topic. revision2026 step R5.4.12.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 17:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "PyTest_unused() is removed from Symbolic.cpp and reshaped into src/Linalg/symbolicCppDemo.h: one named function per topic (plain values, named variable, vectors, matrices, Diff, the scalar functions, timing, reference counting) plus SymbolicDemoAll(). The header states in its first lines that it is worked examples to be read, that it is not a test (those are in SymbolicUnitTests.h), and that nothing calls it. It IS included by Symbolic.cpp so that it keeps compiling - inline and unused, so it costs nothing. Two corrections while reshaping: the demo no longer teaches the stack ExpressionNamedReal that causes heap corruption, and it was actually run through a temporary binding - every section produces sensible output, the new/delete counts balance, and the timing section now documents 12 ns per evaluation of a recorded tree against 267 ns when rebuilding it and 2.4 ns without recording. revision2026 step R5.4.12."
+}

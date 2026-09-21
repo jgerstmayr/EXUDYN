@@ -1,0 +1,14 @@
+{
+  "number": 1085,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests",
+  "dateRaised": "2022-05-11",
+  "deadline": "2022-07-10",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Superseded by the measurement and the machinery of revision2026 steps R2.10.3 and R5.9: the Windows/Linux differences of the contact and friction models are now recorded per model in UnresolvedOnLinux() and SensitiveTests() in runTestSuiteRefSol.py rather than being an open suspicion; and a failure there no longer sets the exit code at random. The remaining question - WHY these models differ - is revision2026 step R10.1; which is the open work."
+}

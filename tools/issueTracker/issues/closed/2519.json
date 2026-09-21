@@ -1,0 +1,16 @@
+{
+  "number": 2519,
+  "title": "issue types and statuses are three lists that disagree",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "trackerlog.txt and issueTracker.py each carry a comment listing the issue types and statuses, neither matches the other and neither matches what is in the file: 39 distinct type spellings in 2519 issues\\, 20 of them typos or singletons\\, NEW FEATURE and EXTENSION for the same thing\\, NEW TEST written as TESTING. The statuses WORK and TESTING were never used once, ABANDONED is missing. Nothing validates the value on RaiseIssue. revision2026 step R8.7.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 15:40",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issueTracker.py",
+  "line": "9",
+  "releaseNotes": "issueTypes and issueStatuses in issueTracker.py are now the only list, the trackerlog.txt header is written from them and RaiseIssue rejects an unknown type. 39 spellings became 10 types (IMPROVEMENT is new, NEW FEATURE merged into EXTENSION, DISCUSSION into IDEA), 277 type changes. WORK and TESTING left the status list (never used once), ABANDONED joined it with AbandonIssue() and a mandatory reason, 15 issues migrated. Both the version counter and the release-note version index count CLOSED issues\\, so version.txt stayed at 1.11.178 and no historical version line changed. revision2026 step R8.7."
+}

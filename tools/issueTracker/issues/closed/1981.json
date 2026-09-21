@@ -1,0 +1,12 @@
+{
+  "number": 1981,
+  "title": "Images2Video",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add function ConvertImages2Video and dialog InteractiveImages2Video to convert images to videos directly in Python",
+  "dateRaised": "2025-04-01",
+  "deadline": "2025-09-28",
+  "dateResolved": "2025-04-01 02:20",
+  "resolvedAuthor": "JG"
+}

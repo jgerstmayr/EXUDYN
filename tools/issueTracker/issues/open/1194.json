@@ -1,0 +1,10 @@
+{
+  "number": 1194,
+  "title": "generalizedAlpha scaling",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "turn on/off scaling in interface to test symmetric solver speedup",
+  "dateRaised": "2022-07-11",
+  "deadline": "2022-09-09"
+}

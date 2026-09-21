@@ -1,0 +1,12 @@
+{
+  "number": 2188,
+  "title": "zMaxSceneFactor",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "add factor that previously was fixed to 100.; now defaulting to smaller default value, thus requiring adjustment in certain cases!",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-01-04 14:17",
+  "resolvedAuthor": "JG"
+}

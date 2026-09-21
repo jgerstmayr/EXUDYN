@@ -11330,3 +11330,55 @@ R5.18.
 **Dogfooding**: #2567 was raised with `exudev issue raise`, and both it and #2566 were closed
 with `exudev issue resolve`. The version moved 1.11.223 → 1.11.225, which is the only way it
 is supposed to move.
+
+<a id="r8-5"></a>
+### R8.5 — one JSON file per issue (2026-09-21)
+
+`trackerlog.txt` was one 723 KB file of comma-separated lines in which **a text field could
+not contain a comma** — the tracker escaped it to `\;` — where every change rewrote the
+whole file and two people editing two issues produced one merge conflict. The 2,568 issues
+are now:
+
+```
+tools/issueTracker/issues/open/2567.json      one file per OPEN issue          270
+tools/issueTracker/issues/closed/2473.json    ... per issue closed since 2025  569
+tools/issueTracker/issues/archive/2019.json   ... per YEAR, written once     1,729 in 6 files
+tools/issueTracker/issues/meta.json           the date of the last change and the version
+```
+
+**Two decisions with the maintainer** (2026-09-21). The files live beside the tool rather than
+in `docs/dev/issues/` as the plan said: the tracker has a command line now and its data
+belongs with it, while `docs/` is documentation (D10). And the field names became camelCase
+(`dateRaised`, `resolvedAuthor`, and `title` instead of `issue` inside an issue), so that the
+fields the plan adds later read like the ones that were already there.
+
+**Why the archive is sharded by year.** 2,298 of the issues are closed and will never change
+again. As single files they would be 2,298 objects in git for nothing; as one file they would
+be rewritten on every archiving run. A file per year is written once. The cutoff is 1 January
+of the previous year, so what closed in 2025 or later is still a file of its own.
+
+**The hard coupling, and what guards it.** The micro version of Exudyn is the **count of
+closed issues**, and with files that count depends on which files are present — a partial
+checkout would silently lower the version. Each archive file states its own `closedCount`,
+`ClosedCount()` adds those to the closed files it can see, and the new
+**`tools/checkIssues.py`** — in `exudev generate --all-checks`, now nine checks — compares the
+count with the files, the version with the count, and `version.txt` with the version. It also
+reports a number that exists twice, a file whose name and content disagree, a missing required
+field, and an issue lying in the wrong directory.
+
+**The migration proved itself three ways.** `migrateToJson.py` wrote the archives **directly**
+(the 1,729 old issues never existed as single files, or the repository would carry them in its
+history forever), then read the store back and compared **every field of every issue** with
+the flat file, then **regenerated the flat file from the store** and compared it column by
+column — which is where it found that some descriptions carry trailing blanks from seven
+years of editing, so the comparison is per column and not per character. And the published
+documentation says the same: `docs/generated/trackerlog.md` regenerates from the JSON **word
+for word and line for line** — 58,385 words, 8,543 lines, unchanged.
+
+**What went with the flat file**: the `\;` escaping, the column padding, the whole-file
+rewrite on every change, `IssueTrackerBackup()` (a copy of the file before every write, which
+git has done better for seven years), the column-index constants, and `ConvertToHTML`'s loop
+over lines with those indices — 154 lines that became 60 over the issues themselves.
+
+`trackerlog.txt` and `migrateSchema.py`, the migrator of R8.5.3 whose input no longer exists,
+are deleted: the old path is not kept in parallel, or its escaping trap survives.

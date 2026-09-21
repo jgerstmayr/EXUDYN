@@ -1,0 +1,12 @@
+{
+  "number": 2273,
+  "title": "RenderState",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "Initialize RenderState provisionally with default visualizationSettings at SystemContainer creation, then initialize with current SC.visualizationSettings at first call to any renderer function",
+  "dateRaised": "2026-02-06",
+  "deadline": "2026-08-05",
+  "dateResolved": "2026-02-06 21:24",
+  "resolvedAuthor": "JG"
+}

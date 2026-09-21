@@ -1,0 +1,12 @@
+{
+  "number": 2005,
+  "title": "realtime",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "measure realtime reserve in special timers",
+  "dateRaised": "2025-05-10",
+  "deadline": "2025-11-06",
+  "dateResolved": "2025-05-10 23:18",
+  "resolvedAuthor": "JG"
+}

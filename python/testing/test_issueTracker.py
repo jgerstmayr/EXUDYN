@@ -88,12 +88,15 @@ def tracker(tmp_path, monkeypatch):
     (the version files, the HTML and the Markdown page) live outside it"""
     import shutil
     module = IssueTracker()
-    shutil.copy(os.path.join(trackerDirectory, 'trackerlog.txt'),
-                os.path.join(str(tmp_path), 'trackerlog.txt'))
-    #the tracker reads its directory from a module global since revision2026 step R8.3, so the
-    #tests point it at the copy instead of changing the working directory
+    #the issues are a directory of JSON files since revision2026 step R8.5; the tests work on a
+    #copy of it and point both modules at the copy, so that a test run can never write into the
+    #real tracker (it also owns version.txt)
+    shutil.copytree(os.path.join(trackerDirectory, 'issues'),
+                    os.path.join(str(tmp_path), 'issues'))
     monkeypatch.setattr(module, 'trackerDirectory', str(tmp_path))
     monkeypatch.setattr(module, 'repositoryRoot', str(tmp_path))
+    monkeypatch.setattr(module.issueStore, 'storeDirectory',
+                        os.path.join(str(tmp_path), 'issues'))
     monkeypatch.setattr(module, 'UpdateDateAndVersion', lambda *args, **kwargs: None)
     monkeypatch.setattr(module, 'ConvertToHTML', lambda *args, **kwargs: None)
     monkeypatch.setattr(module, 'ConvertToMarkdown', lambda *args, **kwargs: None)
@@ -121,7 +124,7 @@ def testExtendAppendsAndChangesNothingElse(tracker):
     assert after['description'].endswith('the parser also fails on an empty file')
     assert 'Claude-JG' in after['description']
     #everything else is untouched - above all the status, which is what the version counts
-    for field in ['issue', 'status', 'type', 'date raised', 'releaseNotes', 'workingRemarks']:
+    for field in ['title', 'status', 'type', 'dateRaised', 'releaseNotes', 'workingRemarks']:
         assert after[field] == before[field], field
     assert tracker.NumberOfIssues() == count
 
@@ -205,17 +208,22 @@ def testEffortIsKeptAndNormalized(tracker):
     assert tracker.GetIssue(number)['effort'] == 'MEDIUM'
 
 
-def testTheSchemaIsTheOneOfTheFile(tracker):
-    """the 16 columns of trackerlog.txt and the names the module reads them under are one list;
-    they went out of step once already (the status column is padded to 8 characters, #2519)"""
-    with open(os.path.join(trackerDirectory, 'trackerlog.txt'), encoding='utf-8') as file:
-        header = [next(file) for _ in range(tracker.nHeaderLines)]
-    formatLine = [line for line in header if line.startswith('# line format:')]
-    assert len(formatLine) == 1
-    for name in ['releaseNotes', 'workingRemarks', 'effort']:
-        assert name in formatLine[0], name
-    assert header[-1].strip() == '# end of comment (' + str(tracker.nHeaderLines) + ' lines)'
-    assert len(tracker.trackerItems) == tracker.numberOfItems == 16
+def testTheStoreIsConsistent(tracker):
+    """the check that runs in the commit gate, against the real store: no number twice, no file
+    whose name and content disagree, no issue in the wrong directory, and the closed count the
+    version is derived from"""
+    assert tracker.issueStore.CheckStore() == []
+
+
+def testEveryFieldOfAnIssueIsKnown(tracker):
+    """a field that is written but not in issueFields would be dropped by the next Save; the store
+    refuses it instead"""
+    for name in ['title', 'releaseNotes', 'workingRemarks', 'effort', 'planStep', 'duplicateOf',
+                 'resolvedInVersion', 'component', 'resolvedCommit']:
+        assert name in tracker.issueStore.issueFields, name
+
+    with pytest.raises(ValueError):
+        tracker.issueStore.CleanIssue({'number': 1, 'notes': 'the field of the old format'})
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -343,7 +351,7 @@ def testShowPrintsTheFieldsThatAreFilled(tracker, capsys):
     commands.ShowIssue(issue)
 
     printed = capsys.readouterr().out
-    assert issue['issue'].strip() in printed
+    assert issue['title'].strip() in printed
     assert 'description:' in printed
     #an empty field is not printed at all - a screen full of empty labels helps nobody
     assert 'date resolved' not in printed

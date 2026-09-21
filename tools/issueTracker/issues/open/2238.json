@@ -1,0 +1,10 @@
+{
+  "number": 2238,
+  "title": "explicit solver",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)",
+  "dateRaised": "2026-01-27",
+  "deadline": "2026-07-26"
+}

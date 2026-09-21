@@ -1363,7 +1363,16 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     never automatic.
 
 <a id="r8-5"></a>
-**R8.5** *(phase R8, after R8.3)* **Migrate `trackerlog.txt` to one file per issue, in JSON.**
+**R8.5** **DONE 2026-09-21** (#2568) → [log](exudynRevisionLog2026.md#r8-5) — *(phase R8, after
+    R8.3)* **Migrate `trackerlog.txt` to one file per issue, in JSON.**
+
+    **Done**, with two deviations from the text below, both decided with the maintainer on
+    2026-09-21: the files live in **`tools/issueTracker/issues/`** and not in `docs/dev/issues/`
+    — the tracker is a tool with a command line and its data belongs beside it, while `docs/`
+    is documentation (D10) — and the second directory is called **`closed/`** rather than
+    `resolved/`, because an ABANDONED issue is closed as well and counts for the version. The
+    field names became camelCase in the same move (`dateRaised`, `resolvedAuthor`, `title`), so
+    that the new fields and the old ones read alike.
     This is the intended end state: reviewable diffs, no comma-escaping trap (`\;`), no single-file
     merge conflicts. **JSON, not Markdown**, so that the format cannot drift and import/export stay
     trivial.
@@ -1406,10 +1415,10 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     parallel - otherwise the escaping trap survives.
 
     **Generated artifacts are not committed** (the HTML overview, any generated index), with **one
-    deliberate exception**: the rendered list the documentation shows. `docs/RST/trackerlog.rst`
-    stays committed and stays generated, because that is what ReadTheDocs renders (maintainer,
-    2026-09-17). `docs/theDoc/trackerlog.tex` needs no decision here - it disappears with the
-    LaTeX documentation.
+    deliberate exception**: the rendered list the documentation shows. That is
+    `docs/generated/trackerlog.md` since R7.1.6; it stays committed and stays generated, because
+    that is what ReadTheDocs renders (maintainer, 2026-09-17). The LaTeX and RST twins disappeared
+    with the LaTeX documentation in R7.1.6 and R7.1.7.
 
 <a id="r8-5-3"></a>
 **R8.5.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.5; maintainer request 2026-09-21)*

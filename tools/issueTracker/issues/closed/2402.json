@@ -1,0 +1,15 @@
+{
+  "number": 2402,
+  "title": "flatten the repository: remove the main/ level",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "everything lived under main/ - src; include; libs; obj; pythonDev and the packaging files - so every path in every tool carried a main/ prefix; the packaging root was one level below the repository root (which is why the sdist cannot find version.txt; issue 2383) and the generators addressed the root as ../../../. revision2026 steps R3.1 and R3.2",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 16:06",
+  "resolvedAuthor": "Claude-JG",
+  "file": "setup.py",
+  "releaseNotes": "1477 tracked files moved with git mv; recorded as 1475 pure renames: main/src->src; main/include->include; main/libs->libs; main/obj->msvc; main/pythonDev->python and the packaging files to the root. The vcxproj needed NO change - all 541 of its ClCompile/ClInclude entries are ..\\src\\... and msvc/ and src/ remain siblings; so only the two project references in the .sln moved. Repaired: 26 relative paths in the generators (the root went from ../../../ to ../../); doc2rst destDir; the autoGenerateHelper import path in issueTracker.py; regenerate.py; gen_sources.py; checkExtras.py; setup.py; MANIFEST.in; pyproject.toml; conf.py; .gitlab-ci.yml; wheels.yml and buildManylinux.sh. MANIFEST.in include *.md became include README.md; because at the root the wildcard would have swept CLAUDE.md into the sdist. VERIFIED: wheel builds in 58.9 s with 133 sources and the correct package layout, full test suite passes, gen_sources --check and checkExtras --check pass, sphinx builds the documentation. NOTE regenerate.py --check cannot be meaningful until the move is in HEAD; because it compares each file against HEAD:<path> and every path is new - the regenerated content was confirmed byte identical to HEAD at the old paths instead"
+}

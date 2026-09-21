@@ -1,0 +1,15 @@
+{
+  "number": 2490,
+  "title": "the stubs miss the deprecated module functions and GetDictionary/SetDictionary",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "addDocu=False suppressed the .pyi entry as well as the documentation; so all 14 deliberately undocumented module-level functions (StartRenderer; StopRenderer; InfoStat; GetVersionString; SolveStatic; SolveDynamic; ...) were missing from python/exudyn/__init__.pyi. GetDictionary and SetDictionary were missing from all 43 settings classes; because structureHeaderEmitter adds them to the pybind class but structureStubEmitter did not mirror them. Both matter as soon as the package ships a PEP 561 py.typed marker: a type checker then reports correct user code as an error. revision2026 steps R5.5.2 and R5.5.4",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 19:52",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/autoGenerateHelper.py",
+  "releaseNotes": "The stub emission no longer depends on addDocu: a function that is deliberately left out of the documentation still exists in the module and is now described in the .pyi (13 functions); StopRenderer was the only declaration without a returnType and got returnType=None (14). structureStubEmitter now mirrors GetDictionary/SetDictionary under the same condition structureHeaderEmitter uses to add them to the pybind class (43 classes). Measured with mypy on a user script that calls StartRenderer; GetDictionary; SetDictionary; SolveDynamic; SetOutputPrecision and StopRenderer: 9 errors with the old stub; none with the new one. py.typed is shipped from now on. revision2026 steps R5.5.2 and R5.5.4"
+}

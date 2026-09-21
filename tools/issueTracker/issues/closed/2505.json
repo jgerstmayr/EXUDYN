@@ -1,0 +1,15 @@
+{
+  "number": 2505,
+  "title": "a test model page is in no toctree",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "LOW",
+  "description": "The sphinx build prints \"docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree\". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 09:13",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/RST/TestModels/sphereTriangleTest.rst",
+  "releaseNotes": "Fixed in revision2026 step R7.1.2: docs/RST/TestModels/sphereTriangleTest.rst was a STALE generated file; not a missing index entry. TestModelsIndex.rst is generated from the keys of TestExamplesReferenceSolution(); and sphereTriangleTest.py moved into DeliberatelyNotRun() (unstable explicit integrator; phase R10); so the generator stopped listing it and stopped writing its page - the old page stayed behind. Verified by deleting it and re-running the generators: it is not recreated. sphinx-build -W --keep-going now succeeds; and exudev docs is strict by default so the local build applies the same gate as the GitLab docs job."
+}

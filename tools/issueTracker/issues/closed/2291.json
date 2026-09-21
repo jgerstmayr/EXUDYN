@@ -1,0 +1,12 @@
+{
+  "number": 2291,
+  "title": "FromPyMeshlabFile",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to check and normalize normals",
+  "dateRaised": "2026-02-13",
+  "deadline": "2026-08-12",
+  "dateResolved": "2026-02-14 17:31",
+  "resolvedAuthor": "JG"
+}

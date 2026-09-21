@@ -1,0 +1,11 @@
+{
+  "number": 1494,
+  "title": "GeometricallyExactBeam",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "description": "add reference configuration to residual and jacobian",
+  "dateRaised": "2023-04-06",
+  "deadline": "2023-10-03"
+}

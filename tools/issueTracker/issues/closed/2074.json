@@ -1,0 +1,13 @@
+{
+  "number": 2074,
+  "title": "invert triangles",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Add function to invert triangles and normals of graphicsData, e.g., for inverted sphere or brick",
+  "dateRaised": "2025-06-02",
+  "deadline": "2025-11-29",
+  "dateResolved": "2025-06-04 01:37",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "added graphics.InvertTriangles and ConsistentTriangleList"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2030,
+  "title": "SolidOfRevolution",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add smoothingAngle for contour below which smoothing is applied",
+  "dateRaised": "2025-05-18",
+  "deadline": "2025-11-14",
+  "dateResolved": "2025-05-18 15:35",
+  "resolvedAuthor": "JG"
+}

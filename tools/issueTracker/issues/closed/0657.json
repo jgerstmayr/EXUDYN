@@ -1,0 +1,13 @@
+{
+  "number": 657,
+  "title": "Delete item",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add functionality to delete items, adding specific features to re-index nodes in objects/markers, etc. if a node, object or marker is deleted; add MaxItemNumber() function to systemData which returns unique name for items even after deletion",
+  "dateRaised": "2021-05-01",
+  "deadline": "2021-06-30",
+  "dateResolved": "2025-05-10 01:31",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "resolved by reordering dependent items; no maxItem used"
+}

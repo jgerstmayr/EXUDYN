@@ -1,0 +1,12 @@
+{
+  "number": 2339,
+  "title": "ContactSphereTriangle",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "in case of frictionless contact, torques on triangle are neglected",
+  "dateRaised": "2026-04-06",
+  "deadline": "2026-10-03",
+  "dateResolved": "2026-04-06 19:46",
+  "resolvedAuthor": "JG"
+}

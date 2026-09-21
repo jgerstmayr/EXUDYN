@@ -1,0 +1,13 @@
+{
+  "number": 2070,
+  "title": "Renderer timeout",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "description": "check whether calling glfwWaitEventsTimeout, glfwPollEvents or glfwSwapBuffers fixes problems with redraw timeouts with Raytracing",
+  "dateRaised": "2025-05-31",
+  "deadline": "2025-11-27",
+  "dateResolved": "2025-06-02 17:44",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "can be done with option raytracer.keepWindowActive"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2042,
+  "title": "exudyn",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "move exudyn.SetLinalgOutputFormatPython(), exudyn.SetOutputPrecision(), exudyn.SetPrintDelayMilliSeconds(), exudyn.SuppressWarnings(), exudyn.InfoStat(), exudyn.GetVersionString() to according variables and functions in exudyn.config, see current docu",
+  "dateRaised": "2025-05-22",
+  "deadline": "2025-11-18",
+  "dateResolved": "2025-05-22 09:30",
+  "resolvedAuthor": "JG"
+}

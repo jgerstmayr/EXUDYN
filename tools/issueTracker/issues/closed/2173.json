@@ -1,0 +1,12 @@
+{
+  "number": 2173,
+  "title": "GraphicsData",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add fontSize and offset to graphicsData text structure as well as to graphics.Text(...) function",
+  "dateRaised": "2025-12-29",
+  "deadline": "2026-06-27",
+  "dateResolved": "2025-12-29 21:40",
+  "resolvedAuthor": "JG"
+}

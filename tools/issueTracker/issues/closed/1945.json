@@ -1,0 +1,12 @@
+{
+  "number": 1945,
+  "title": "lieGroupSimplifiedKinematicRelations",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "lieGroupSimplifiedKinematicRelations used to test more accurate Lie group solver; for now, default value set to false in order to have test suite running",
+  "dateRaised": "2025-01-28",
+  "deadline": "2025-07-27",
+  "dateResolved": "2025-01-28 11:53",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2341,
+  "title": "CreateSphereTriangleContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "CreateSphereTriangleContact, CreateSphereQuadContact and CreateSphereSphereContact: adapt to make it work with mass points in case that there is no friction, similar to issue 2231",
+  "dateRaised": "2026-04-07",
+  "deadline": "2026-10-04",
+  "dateResolved": "2026-04-07 20:15",
+  "resolvedAuthor": "JG"
+}

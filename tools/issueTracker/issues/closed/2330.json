@@ -1,0 +1,12 @@
+{
+  "number": 2330,
+  "title": "AddSystem",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "add py::keep_alive<0, 1>() to functions like AddSystem which return an object which depends on another object (SystemContainer); avoids severe problems when SystemContainer is destroyed",
+  "dateRaised": "2026-03-31",
+  "deadline": "2026-09-27",
+  "dateResolved": "2026-03-31 19:03",
+  "resolvedAuthor": "JG"
+}

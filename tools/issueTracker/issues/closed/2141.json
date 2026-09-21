@@ -1,0 +1,12 @@
+{
+  "number": 2141,
+  "title": "CreateDistanceSensor",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "args storeInternal and fileName not used",
+  "dateRaised": "2025-07-10",
+  "deadline": "2026-01-06",
+  "dateResolved": "2025-07-10 16:53",
+  "resolvedAuthor": "P. Manzl"
+}

@@ -1,0 +1,14 @@
+{
+  "number": 2360,
+  "title": "Set up internal GitLab remote and sync v2-dev",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "HIGH",
+  "description": "All v2.0 work needed an internal sync point so that GitHub master stays frozen at 1.11.0 (decision D6). Configure origin as the UIBK GitLab and github as the public remote; seed the server with full history and push v2-dev. revision2026 steps R1.1 and R1.3.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 22:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "GitLab rejects shallow pushes and caps packs at 1.17 GiB; seeded master from an existing full clone in 50-commit chunks, then v2-dev pushed from the shallow clone in 373 KB. Verified 30 refs matching by SHA. Local .git stays at 65 MB"
+}

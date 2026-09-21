@@ -1,0 +1,15 @@
+{
+  "number": 2405,
+  "title": "exudynVersion.py guessed four relative paths and fell back to the version string unknown",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "it tried ../../../, ../../, ../ and ./ in sequence for docs/theDoc/version.txt and set version = unknown when all four missed. unknown is not a version: setuptools rejects it much later with an InvalidVersion naming neither this file nor version.txt, and a generator run would stamp it into generated sources instead of failing. revision2026 step R3.4",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 19:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/pythonGenerator/exudynVersion.py",
+  "releaseNotes": "replaced by one resolver anchored on the repository root: it walks upwards from __file__ (and from the working directory; setup.py and conf.py exec() this file, so __file__ is the executing script there) for a directory holding both pyproject.toml and docs/theDoc/version.txt. Missing or empty is now a RuntimeError naming the file and everything searched. Verified from the repository root, from src/pythonGenerator, and from a directory outside the repository where it now raises instead of returning unknown"
+}

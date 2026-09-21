@@ -1,0 +1,15 @@
+{
+  "number": 2373,
+  "title": "pybind11 into build-system.requires",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "setup_requires is deprecated and was the only thing fetching the pybind11 headers (into main/.eggs). The documented include path include/pybind11 does not exist and the vendored copy at include/pybind11local is inert; so an undeclared download was load-bearing. revision2026 step R2.2",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 20:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/setup.py",
+  "releaseNotes": "pybind11<3.0 moved to build-system.requires; setup_requires removed; the dead include/pybind11 path deleted; and get_pybind_include now raises an actionable ImportError naming the install command. Verified by moving main/.eggs away: the build failed with the new message; after pip install pybind11 the wheel built in 55 s and .eggs was NOT recreated. condaEnvironments.md now installs pybind11 explicitly; because build-system.requires is honoured only under build isolation and setup.py bdist_wheel has none"
+}

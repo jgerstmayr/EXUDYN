@@ -1,0 +1,13 @@
+{
+  "number": 2149,
+  "title": "UTF-8 encoding",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "unify internal character representation, add full greek letters and sub/super indices for numbers",
+  "dateRaised": "2025-10-16",
+  "deadline": "2026-04-14",
+  "dateResolved": "2025-10-16 23:02",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "some special characters may now appear differently!"
+}

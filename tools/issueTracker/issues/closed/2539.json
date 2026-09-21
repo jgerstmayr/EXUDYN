@@ -1,0 +1,16 @@
+{
+  "number": 2539,
+  "title": "a bare except in the shipped package swallows Ctrl-C",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "description": "52 bare except: remain in python/exudyn/ across 16 files. A bare except catches KeyboardInterrupt and SystemExit as well - so Ctrl-C is swallowed wherever one wraps something long: the inverse-kinematics SolveSystem in robotics/roboticsCore.py, the ffmpeg run in interactive.py, the multiprocessing pool in FEM.py. The larger group - 23 of them - guards an optional import and therefore reports a broken installation of scipy or roboticstoolbox as \"the package is missing\". Name what is caught: ImportError for a dependency probe, the specific error for a feature probe, and except Exception for something that must survive an external tool or a users own code - which still lets KeyboardInterrupt through. The 16 E722 entries of tools/ci/ruffBaseline.txt are the inventory and must disappear with the step.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 23:51",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/processing.py",
+  "line": "200",
+  "releaseNotes": "All 52 named, plus one inside a docstring example. Four rules did it: 23 ImportError for a dependency probe, 16 specific errors for a feature probe (AttributeError, IndexError, KeyError, tk.TclError, np.linalg.LinAlgError, exudyn.ExudynError), 13 except Exception where catching everything is genuinely meant - which still lets KeyboardInterrupt through. The ruff baseline lost its 16 E722 entries and went from 205 tolerated findings to 151, so a new bare except in the package now fails the gate; no pytest was added, because that gate already is the regression test. Correction to the issue as first written: the seven handlers in processing.py are not around the parameter-variation loop - parameterFunction(...) is not wrapped at all and a user model that raises has always propagated."
+}

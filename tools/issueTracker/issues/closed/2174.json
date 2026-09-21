@@ -1,0 +1,12 @@
+{
+  "number": 2174,
+  "title": "GlfwRenderer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change selectBufferSize during mouse select from 10000 to 1000 to reduce stack size problems",
+  "dateRaised": "2025-12-29",
+  "deadline": "2026-06-27",
+  "dateResolved": "2025-12-29 23:57",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2114,
+  "title": "FEM",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add function GetRigidBodyInertia to return RigidBodyInertia of nodal position-based FEM models",
+  "dateRaised": "2025-06-30",
+  "deadline": "2025-12-27",
+  "dateResolved": "2025-06-30 14:30",
+  "resolvedAuthor": "S. Weyrer"
+}

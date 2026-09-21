@@ -1,0 +1,15 @@
+{
+  "number": 2386,
+  "title": "drop the ReleaseP37 and Win32/x86 build configurations",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "description": "the solution and cppsrc.vcxproj carried six configurations: Debug; Release and ReleaseP37 times Win32 and x64. ReleaseP37 is the last artefact of Python 3.7 support and no 32 bit wheel has been built for years; so four of the six were dead weight that every vcxproj edit had to be repeated in. revision2026 step R2.6",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 00:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/obj/cppsrc.vcxproj",
+  "releaseNotes": "six configurations reduced to two; Debug|x64 and Release|x64. Removed from cppsrc.vcxproj the four ProjectConfiguration declarations and every PropertyGroup; ImportGroup and ItemDefinitionGroup conditioned on them (853 -> 660 lines); rewrote both GlobalSections of main_sln_Template.sln; and dropped the ReleaseP37 PropertyGroup from pythonDev.pyproj. Verified: all three files still parse as XML; the 133 ClCompile entries are untouched and still match sources.json; and MSBuild evaluates both surviving configurations without error - Release|x64 resolving to ConfigurationType DynamicLibrary; TargetExt .pyd; PlatformToolset v143 and OutDir bin/x64/Release. requires-python also moved from >=3.6 to >=3.10; which revision2026 step R2.11 had deferred to here: CI builds cp310-cp314 and no 3.6 wheel has existed for years. setup.py keeps its is32bits branch; it reacts to the running interpreter rather than to a VS configuration; and removing 32 bit support outright is not part of this step"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 2390,
+  "title": "move the cibuildwheel configuration into [tool.cibuildwheel]",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "the wheel matrix was configured through eleven CIBW_ environment variables in .github/workflows/wheels.yml; where nothing validates them: a lost newline had swallowed CIBW_BUILD_VERBOSITY: 1 into the trailing comment of the CIBW_TEST_SKIP line; so build verbosity was silently never set. revision2026 step R2.7",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 10:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": ".github/workflows/wheels.yml",
+  "releaseNotes": "the ten static settings moved to [tool.cibuildwheel] in main/pyproject.toml; with linux; macos and windows subtables for the per platform test-command; before-all and environment. Only CIBW_BUILD stays in the workflow; because it is built from the matrix entry. build-verbosity = 1 now actually applies. Verified with the pinned cibuildwheel 3.4.1: --print-build-identifiers returns the same set for all three platforms as the old environment variables did (cp313-manylinux_x86_64, cp313-macosx_universal2, cp313-win_amd64), the resolved options show build-verbosity 1, the test requirements, the dnf before-all on linux only and the cd /d form of the test command on windows, and a deliberately misspelled key is rejected with \"Option build-verbosityy not supported in a config file\" instead of being ignored"
+}

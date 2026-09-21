@@ -1,0 +1,10 @@
+{
+  "number": 1894,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add n*max(velocity)*stepSize safety for bounding box, in order to update some objects less frequently (when max dist is reached)",
+  "dateRaised": "2024-10-16",
+  "deadline": "2025-04-14"
+}

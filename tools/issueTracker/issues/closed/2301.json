@@ -1,0 +1,12 @@
+{
+  "number": 2301,
+  "title": "ConstSizeMatrix",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "Fix wrong GetDataPointer function, which points to data instead of &data[0]",
+  "dateRaised": "2026-02-15",
+  "deadline": "2026-08-14",
+  "dateResolved": "2026-02-15 01:24",
+  "resolvedAuthor": "JG"
+}

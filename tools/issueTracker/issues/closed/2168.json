@@ -1,0 +1,12 @@
+{
+  "number": 2168,
+  "title": "GLFWclient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "decouple GlfwClientBitmapText.h from USE_GLFW_GRAPHICS as it does not require OpenGL and GLFW",
+  "dateRaised": "2025-12-25",
+  "deadline": "2026-06-23",
+  "dateResolved": "2025-12-25 22:47",
+  "resolvedAuthor": "JG"
+}

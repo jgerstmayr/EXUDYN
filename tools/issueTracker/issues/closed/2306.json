@@ -1,0 +1,12 @@
+{
+  "number": 2306,
+  "title": "trackMarker",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "include trackMarker in light position and further transformations during OpenGL rendering and raytracing",
+  "dateRaised": "2026-02-16",
+  "deadline": "2026-08-15",
+  "dateResolved": "2026-02-16 23:06",
+  "resolvedAuthor": "JG"
+}

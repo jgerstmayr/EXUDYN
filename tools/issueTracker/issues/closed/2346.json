@@ -1,0 +1,12 @@
+{
+  "number": 2346,
+  "title": "special.solver.timeout",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "change start time for this timer to output.cpuSolverStartTime to more accurately handle timeouts and simulationInRealtime",
+  "dateRaised": "2026-04-20",
+  "deadline": "2026-10-17",
+  "dateResolved": "2026-04-20 22:39",
+  "resolvedAuthor": "JG"
+}

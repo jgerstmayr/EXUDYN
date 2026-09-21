@@ -1,0 +1,16 @@
+{
+  "number": 2488,
+  "title": "four undefined names raise NameError when their code path is reached",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "ruff F821 found four names that do not exist where they are used: lieGroupIntegration.py calls exudyn.Print(...) three times although the module imports exudyn as exu; and robotics/roboticsCore.py line 1392 calls SC.renderer.Start() although the class member is self.SC - so InverseKinematicsNumerical with useRenderer=True raises NameError instead of showing the renderer. All four are in error or option paths that no test reaches. revision2026 step R5.5.5",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 18:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/robotics/roboticsCore.py",
+  "line": "1392",
+  "releaseNotes": "lieGroupIntegration.py used exudyn.Print three times although the module imports exudyn as exu; and roboticsCore.py called SC.renderer.Start() where the member is self.SC - so InverseKinematicsNumerical(useRenderer=True) raised NameError instead of showing the renderer. Both fixed. Running the first path afterwards showed a second defect at the same place: after printing the message the function continued and raised UnboundLocalError on ComputeStep; the unknown-solver case now raises ValueError naming the accepted values. revision2026 step R5.5.5"
+}

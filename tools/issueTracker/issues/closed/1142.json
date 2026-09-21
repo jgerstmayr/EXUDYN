@@ -1,0 +1,13 @@
+{
+  "number": 1142,
+  "title": "item functions checker",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add automatic tests for all necessary functions in items, such as nodes, objects, etc.; run tests similar to LEST test suite",
+  "dateRaised": "2022-06-12",
+  "deadline": "2022-08-11",
+  "dateResolved": "2026-09-17 22:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Partially resolved and the remainder is #2498: the parameters of every item are now probed systematically by parameterConversionTest.py (revision2026 step R4.4.3.1) and the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4); what is still untested per item type is its member FUNCTIONS. See the successor issue."
+}

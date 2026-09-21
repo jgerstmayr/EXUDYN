@@ -1,0 +1,15 @@
+{
+  "number": 2491,
+  "title": "examples write generated FEM data into the tracked testData/ input directory",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "Twelve examples save meshes and FEM data under testData/ - the directory that holds the tracked INPUT files - so every run of runTestExamples.py leaves untracked netgenBrick.npz; netgenHinge.npz; netgenFFRF2.npz; FMBStest1.npz; modalAnalysisFEM.npz and test.hdf5 in the working tree; where they are easily committed by accident. Output belongs under solution/; which is ignored; through OutputFilePath as the test models already do. revision2026 step R5.13.1",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 20:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/NGsolveCraigBampton.py",
+  "releaseNotes": "Twelve examples now write their generated FEM data through OutputFilePath into solution/ instead of testData/: ten FEMinterface caches; and the two SaveDictToHDF5 sites which also create the directory themselves because SaveDictToHDF5 - unlike FEMinterface.SaveToFile - does not. Verified by running all 171 examples with the artifacts removed first: the same 5 pre-existing failures; no file left in any testData directory; the meshes land in the per-example output directory. A direct user run without an output directory writes into Examples/solution/; which is ignored. revision2026 step R5.13.3"
+}

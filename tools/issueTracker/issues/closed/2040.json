@@ -1,0 +1,12 @@
+{
+  "number": 2040,
+  "title": "exudyn.Demo1()",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "and exudyn.Demo2() only available as exudyn.demos.Demo1() or .Demo2()",
+  "dateRaised": "2025-05-22",
+  "deadline": "2025-11-18",
+  "dateResolved": "2025-05-22 07:56",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 2399,
+  "title": "performance suite reports only a single total and had no large system test",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "the suite printed CPU TIME per test scattered through the output and one total at the end; so it was impossible to see which kind of work a change had affected. All six tests were also overhead dominated or mid sized; four of them are a handful of coordinates run for about 1e6 steps. revision2026 step R2.10; maintainer request",
+  "dateRaised": "2026-09-12",
+  "deadline": "2027-03-11",
+  "dateResolved": "2026-09-12 14:29",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pythonDev/TestModels/runPerformanceTests.py",
+  "releaseNotes": "tests are now grouped as small (few coordinates; ~1e6 steps; measures per step overhead) and large (many coordinates; few steps; measures the work per step where long vectors and AVX2 are visible); and the suite prints a table of every test with its group; its time and its share of the total; plus a subtotal per group. A new large test perfLargeMassSpringChain.py was added: 2000 point masses; 6000 ODE2 coordinates; explicit Euler; deterministic (repeated runs bit identical) and about 4.8 s on Windows. All 7 performance tests pass"
+}

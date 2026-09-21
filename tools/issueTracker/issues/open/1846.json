@@ -1,0 +1,10 @@
+{
+  "number": 1846,
+  "title": "ComputePostProcessingModes",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "numberOfThreads> 1 not working: no modes computed",
+  "dateRaised": "2024-05-29",
+  "deadline": "2024-11-25"
+}

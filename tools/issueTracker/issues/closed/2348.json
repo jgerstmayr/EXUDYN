@@ -1,0 +1,12 @@
+{
+  "number": 2348,
+  "title": "StableBaselines",
+  "author": "P. Manzl",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Importing exudyn.artificialIntelligence raises an error at to the old gym legacy flag with the latest stable-baselines3 versions due to non-numeric version numbers",
+  "dateRaised": "2026-06-01",
+  "deadline": "2026-11-28",
+  "dateResolved": "2026-06-01 14:43",
+  "resolvedAuthor": "JG"
+}

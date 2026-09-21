@@ -1,0 +1,12 @@
+{
+  "number": 2178,
+  "title": "RendererInActiveError",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "add error handling if a renderer function is called which requires the renderer to be active but it is not",
+  "dateRaised": "2026-01-01",
+  "deadline": "2026-06-30",
+  "dateResolved": "2026-01-01 23:09",
+  "resolvedAuthor": "JG"
+}

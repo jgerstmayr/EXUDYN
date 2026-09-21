@@ -1,0 +1,12 @@
+{
+  "number": 1966,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "SearchTree: add option to perform more accurate test for triangles: add simple check to see if bin is fully on one side of the triangle",
+  "dateRaised": "2025-03-02",
+  "deadline": "2025-08-29",
+  "dateResolved": "2025-03-02 18:50",
+  "resolvedAuthor": "JG"
+}

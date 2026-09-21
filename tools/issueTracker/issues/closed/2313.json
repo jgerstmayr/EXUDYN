@@ -1,0 +1,12 @@
+{
+  "number": 2313,
+  "title": "Add MarkerBodyBeamShape",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "marker to be attached to beams for sliding joint and contact with beams",
+  "dateRaised": "2026-03-02",
+  "deadline": "2026-08-29",
+  "dateResolved": "2026-03-02 09:46",
+  "resolvedAuthor": "JG"
+}

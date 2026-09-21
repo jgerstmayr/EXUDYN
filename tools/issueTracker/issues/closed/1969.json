@@ -1,0 +1,12 @@
+{
+  "number": 1969,
+  "title": "CreateRollingDisc",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add create function to MainSystem",
+  "dateRaised": "2025-03-05",
+  "deadline": "2025-09-01",
+  "dateResolved": "2025-03-05 22:17",
+  "resolvedAuthor": "JG"
+}

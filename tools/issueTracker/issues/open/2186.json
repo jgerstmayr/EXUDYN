@@ -1,0 +1,10 @@
+{
+  "number": 2186,
+  "title": "RedrawAndSaveImage",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add raytracer flag and make working offline",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03"
+}

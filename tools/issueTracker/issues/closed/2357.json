@@ -1,0 +1,15 @@
+{
+  "number": 2357,
+  "title": "Add tools/regenerate.py drift gate",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "description": "No automated check existed for whether the committed generated files still match what the generators produce, so generator drift was silent. Add tools/regenerate.py: runs the six generators from their required cwd and classifies differences against HEAD, Tier 1 hard fail and Tier 2 warning. Must compare with IsEqualIgnoringDateStrings rather than raw git status, because the last-modified line otherwise produces permanent phantom drift. revision2026 step R0.2; CI wiring still open.",
+  "dateRaised": "2026-09-09",
+  "deadline": "2027-03-08",
+  "dateResolved": "2026-09-09 19:00",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/regenerate.py",
+  "releaseNotes": "Verified by fault injection: perturbed generator input gives exit 1 with correct tier classification; hand edit to an already-dirty tier file gives exit 1; date-only difference gives exit 0"
+}

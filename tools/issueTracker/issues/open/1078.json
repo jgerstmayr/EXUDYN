@@ -1,0 +1,10 @@
+{
+  "number": 1078,
+  "title": "BeamSectionGeometry",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add BeamSectionGeometry to 2D beam elements",
+  "dateRaised": "2022-05-09",
+  "deadline": "2022-07-08"
+}

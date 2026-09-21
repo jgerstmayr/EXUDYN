@@ -1,0 +1,12 @@
+{
+  "number": 2297,
+  "title": "tkinter font",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "Exudyn Command dialog raises error due to AttributeError for tkinter.font",
+  "dateRaised": "2026-02-14",
+  "deadline": "2026-08-13",
+  "dateResolved": "2026-02-14 22:52",
+  "resolvedAuthor": "JG"
+}

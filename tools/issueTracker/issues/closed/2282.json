@@ -1,0 +1,12 @@
+{
+  "number": 2282,
+  "title": "light0 position",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "changed from [0.2,0.2,10,0] to [2,2,10,0] to avoid specular effects of objects in x-y plane in initial configuration",
+  "dateRaised": "2026-02-11",
+  "deadline": "2026-08-10",
+  "dateResolved": "2026-02-11 14:00",
+  "resolvedAuthor": "JG"
+}

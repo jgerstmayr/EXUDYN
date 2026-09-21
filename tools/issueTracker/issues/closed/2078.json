@@ -1,0 +1,12 @@
+{
+  "number": 2078,
+  "title": "netgen",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add option to convert netgen / ngsolve mesh into points, triangles and normals including smooth geometries",
+  "dateRaised": "2025-06-07",
+  "deadline": "2025-12-04",
+  "dateResolved": "2025-06-07 19:12",
+  "resolvedAuthor": "JG"
+}

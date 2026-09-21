@@ -1,0 +1,12 @@
+{
+  "number": 2129,
+  "title": "MarkerBodiesRelativeRotationCoordinate",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "does not work without nodeNumber provided",
+  "dateRaised": "2025-07-03",
+  "deadline": "2025-12-30",
+  "dateResolved": "2025-07-03 22:21",
+  "resolvedAuthor": "JG"
+}

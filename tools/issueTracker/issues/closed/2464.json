@@ -1,0 +1,13 @@
+{
+  "number": 2464,
+  "title": "the lest C++ unit tests are compiled nowhere",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "src/Tests/ is gated on PERFORM_UNIT_TESTS; setup.py added that define for Python 3.7 only, and 3.7 stopped being built long ago (requires-python >=3.10), so the unit tests run in no wheel; no CI job and no local build. The VS Debug configuration does not define it either. revision2026 step R5.3.",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 19:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "revision2026 step R5.3: new build switch performUnitTests (command line --unittests; EXUDYN_PERFORM_UNIT_TESTS; [tool.exudyn]); off by default; -DPERFORM_UNIT_TESTS also for unix; PERFORM_UNIT_TESTS in the VS Debug configuration. Verified: the tests compile and all pass."
+}

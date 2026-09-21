@@ -1,0 +1,16 @@
+{
+  "number": 2501,
+  "title": "symbolicModuleTest counts 2 wrong results with numpy 2.2",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "description": "The vector/matrix section compares the symbolic result against the numpy result with an ABSOLUTE tolerance: np.linalg.norm(res[0]-res[1]) > 1e-15. One of the compared values has magnitude 9.7476; where 1 ulp is 1.8e-15; so the tolerance is below the representable resolution. Measured 2026-09-18 on one machine with the SAME exudyn binary (md5 identical in both environments) and the same source: numpy 2.4.6 gives 9.7476 on both sides and the test passes; numpy 2.2.4 gives 9.747600000000002 on the numpy side; a difference of 1.78e-15; counted once per recording mode. cntWrong is added to the test result since #2479; so the model reports 2.948412957506974 against a reference of 0.9484129575069745 and the suite FAILS with error 2.0. The comparison needs a relative tolerance.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 07:10",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/symbolicModuleTest.py",
+  "line": "411",
+  "releaseNotes": "Fixed in revision2026 step R5.9.1: the vector/matrix comparison in symbolicModuleTest.py is now RELATIVE to the magnitude being compared - scale = max(norm(sym); norm(py); 1.) and a tolerance of 1e-14*scale - instead of an absolute 1e-15 on a value of magnitude 9.7476; where one ulp is 1.8e-15. Verified: the model returns exactly the committed reference 0.9484129575069745 in both venvP313 (numpy 2.2.4) and venvExuP313 (numpy 2.4.6); and a mutation making one symbolic result wrong by 1e-12 relative is still caught twice; so the test is not weakened in any way that matters."
+}

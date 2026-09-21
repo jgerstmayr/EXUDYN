@@ -1,0 +1,12 @@
+{
+  "number": 2165,
+  "title": "perspective",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "improve perspective for raytracer, accepting values > 1",
+  "dateRaised": "2025-12-16",
+  "deadline": "2026-06-14",
+  "dateResolved": "2025-12-16 14:30",
+  "resolvedAuthor": "JG"
+}

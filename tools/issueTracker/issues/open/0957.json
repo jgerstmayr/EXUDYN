@@ -1,0 +1,10 @@
+{
+  "number": 957,
+  "title": "JointRevolute2D",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add OutputVariables in C++ and in DOCU; check other objects with missing OutputVariables",
+  "dateRaised": "2022-02-28",
+  "deadline": "2022-04-29"
+}

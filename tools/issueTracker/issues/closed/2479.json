@@ -1,0 +1,13 @@
+{
+  "number": 2479,
+  "title": "Symbolic and LinearSolver have no C++ unit tests",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "src/Tests/ covers the vectors, the arrays, the matrix classes and the geometry group, but neither the symbolic expression system (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h; ~4000 lines) nor LinearSolver.h (the dense and the sparse system matrix behind one GeneralMatrix interface). symbolicModuleTest.py compares the NUMBERS from Python, so the C++ tests aim at the expression TREE - Diff, the value accessors, the non-recording path, the reference counting - and the solver tests solve one system with all four variants and pin down where the variants deliberately differ. revision2026 steps R5.4.2 and R5.4.3.",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 16:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Two new headers, 21 cases. SymbolicUnitTests.h (11) goes at the expression TREE, which symbolicModuleTest.py cannot reach: Diff by pointer identity, the chain rule, what Diff throws for and what it answers with NaN, exact ToString output, the non-recording branch as a second implementation, the value-accessor contracts, SetSRealVector and EvaluateComponent (both unbound in Python), and the reference counting - each case under a guard that restores recordExpressions and the new/delete counters, because symbolicModuleTest.py measures those. LinearSolverUnitTests.h (10) solves one 4x4 system with all four variants and pins down where they differ: only EXUdense reports the causing row, the Eigen dense paths report success for a singular matrix, EXUdense overwrites its matrix with the inverse while factorizing, and SetMatrix does not size the sparse matrix. symbolicModuleTest.py was extended (Diff, VariableSet, recording off, __str__, error paths) with its reference value unchanged at 0.9484129575069745. Mutation-checked: a dropped term in the product rule gives 2 failures, a dense factorization that always claims success gives 1. Found on the way: #2480, #2481, #2482, #2483. revision2026 steps R5.4.2 and R5.4.3."
+}

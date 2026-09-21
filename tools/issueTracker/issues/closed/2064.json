@@ -1,0 +1,12 @@
+{
+  "number": 2064,
+  "title": "exudyn.config",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "move further options to config: SetWriteToConsole, flush always, etc.",
+  "dateRaised": "2025-05-29",
+  "deadline": "2025-11-25",
+  "dateResolved": "2025-05-29 14:47",
+  "resolvedAuthor": "JG"
+}

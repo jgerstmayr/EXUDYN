@@ -1,0 +1,15 @@
+{
+  "number": 2457,
+  "title": "test models are not available as pytest cases",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "description": "revision2026 step R5.1: runTestSuite.py was the only way to run the test models, so there was no selection by name, no IDE or CI reporting and no standard parallel runner; added python/TestModels/test_testModels.py with one parametrized case per model and mini example, sharing reference values and tolerances with the suite",
+  "dateRaised": "2026-09-16",
+  "deadline": "2027-03-15",
+  "dateResolved": "2026-09-16 15:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/python/TestModels/test_testModels.py",
+  "releaseNotes": "revision2026 step R5.1: test_testModels.py, 137 cases, shared reference values and tolerances (testRunnerTools.BaseTolerance); found and fixed a masked defect in plotSensorTest.py"
+}

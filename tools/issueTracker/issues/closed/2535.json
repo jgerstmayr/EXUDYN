@@ -1,0 +1,16 @@
+{
+  "number": 2535,
+  "title": "a failed SolveDynamic leaves simulationSettings overridden",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "description": "SolveDynamic with DynamicSolverType.TrapezoidalIndex2 overrides timeIntegration.generalizedAlpha.useNewmark and useIndex2Constraints and restores them at the end of the finally block. The \"raise ValueError(SolveDynamic terminated)\" sits in the same finally block ABOVE those lines, so on failure the restore never runs: the user simulationSettings keep useNewmark=True and useIndex2Constraints=True and the NEXT solve in the same script silently uses a different integrator. Wrong results without any message. Found while reading the raise sites for the exception work.",
+  "dateRaised": "2026-09-18",
+  "deadline": "2027-03-17",
+  "dateResolved": "2026-09-18 22:32",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/solver.py",
+  "line": "290",
+  "releaseNotes": "The restore of useNewmark and useIndex2Constraints moved into its own finally block, which runs on every path. It used to sit below the raise in the same finally block, so a failed TrapezoidalIndex2 solve left the users simulationSettings overridden and the next solve in the same script silently used a different integrator."
+}

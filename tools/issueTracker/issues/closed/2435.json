@@ -1,0 +1,12 @@
+{
+  "number": 2435,
+  "title": "utility modules: malformed #** tags silently dropped from the documentation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "revision2026 step R4.6.1: #**note (9) #**nodes (3) #**examples #**compute #**outputinput and two #** continuation lines were not recognised; five #**function lacked the colon; HT2T66Inverse had input and output swapped",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 13:25",
+  "resolvedAuthor": "Claude-JG"
+}

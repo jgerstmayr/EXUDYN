@@ -1,0 +1,12 @@
+{
+  "number": 2265,
+  "title": "stub files (.pyi)",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add details (input, output, example) for functions created in autoGeneratePyBindings, using a common GoogleStyle generator",
+  "dateRaised": "2026-02-03",
+  "deadline": "2026-08-02",
+  "dateResolved": "2026-02-05 23:19",
+  "resolvedAuthor": "JG"
+}

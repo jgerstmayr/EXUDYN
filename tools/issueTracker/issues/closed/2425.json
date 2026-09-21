@@ -1,0 +1,14 @@
+{
+  "number": 2425,
+  "title": "item indices are accepted by float and bool parameters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Recorded by parameterConversionTest.py (revision2026 step R4.4.3.1): float parameters (e.g. LoadCoordinate.load - SimulationSettings.solutionSettings.sensorsWritePeriod) accept a NodeIndex or ObjectIndex and store its number; bool parameters accept them as well. Maintainer decision 2026-09-14: reject them where this is simple. Applied with the unified conversion (34c4/34c5) as its own reference change. revision2026 step R4.16.",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-15 00:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Pymodules/PybindUtilities.h",
+  "releaseNotes": "Real - float and bool item parameters reject NodeIndex/ObjectIndex/MarkerIndex/LoadIndex/SensorIndex with a message naming item and parameter; Index parameters keep accepting them. parameterConversionTest: 618 intended changes (bool already rejected them). Structures follow in 34c5."
+}

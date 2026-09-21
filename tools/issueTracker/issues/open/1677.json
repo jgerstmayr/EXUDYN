@@ -1,0 +1,10 @@
+{
+  "number": 1677,
+  "title": "systemData",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add GetDict(), Set(systemDict=[Dict]) functions which returns the whole dictionary for the system; containing list of nodes, objects, ...; each item is represented by its dictionary; could be used for set/get in future",
+  "dateRaised": "2023-10-29",
+  "deadline": "2024-04-26"
+}

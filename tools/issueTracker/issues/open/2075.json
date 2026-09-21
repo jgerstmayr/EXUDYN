@@ -1,0 +1,10 @@
+{
+  "number": 2075,
+  "title": "GetDictionary",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add read/write dict access for new structures SC.renderer and exudyn.config",
+  "dateRaised": "2025-06-02",
+  "deadline": "2025-11-29"
+}

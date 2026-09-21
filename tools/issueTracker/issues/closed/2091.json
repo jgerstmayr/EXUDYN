@@ -1,0 +1,12 @@
+{
+  "number": 2091,
+  "title": "FEMinterface",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "remove deprecated arg computeEigenmodes from ImportMeshFromNGsolve",
+  "dateRaised": "2025-06-13",
+  "deadline": "2025-12-10",
+  "dateResolved": "2025-06-13 22:16",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 2486,
+  "title": "generated __init__.pyi is not valid Python",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "description": "The stub file python/exudyn/__init__.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1",
+  "dateRaised": "2026-09-17",
+  "deadline": "2027-03-16",
+  "dateResolved": "2026-09-17 18:28",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/createStubFiles.py",
+  "releaseNotes": "Fixed at the emitter: DocStringGoogleFromPlainText wrote the summary part of a docstring without indentation; a summary ends at the first period-space and therefore may contain line breaks - here the OutputVariableType description. Its continued lines now get the docstring indentation. In addition createStubFiles.py parses both stub files with ast.parse before writing them and refuses to write an invalid stub - verified by mutation: with the emitter fix reverted the generator fails with the file and line. revision2026 step R5.5.1"
+}

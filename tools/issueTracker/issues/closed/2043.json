@@ -1,0 +1,13 @@
+{
+  "number": 2043,
+  "title": "stub files (.pyi)",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "revise section for exudyn stubs in order to enable completion of exudyn.config and other exudyn functions",
+  "dateRaised": "2025-05-22",
+  "deadline": "2025-11-18",
+  "dateResolved": "2025-05-22 11:00",
+  "resolvedAuthor": "JG",
+  "releaseNotes": "seems that removing erroneous info like \"special.\" was sufficient to work"
+}

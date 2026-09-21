@@ -1,0 +1,10 @@
+{
+  "number": 2109,
+  "title": "DOPRI5",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "description": "DOPRI5 automatic step size not working well with discontinuities (ContactSphereSphere, etc.)",
+  "dateRaised": "2025-06-22",
+  "deadline": "2025-12-19"
+}

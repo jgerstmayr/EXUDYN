@@ -1,0 +1,12 @@
+{
+  "number": 2101,
+  "title": "parallel",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add simulationSettings.parallel.useLoadBalancing to switch two multithreading modes",
+  "dateRaised": "2025-06-18",
+  "deadline": "2025-12-15",
+  "dateResolved": "2025-06-18 12:00",
+  "resolvedAuthor": "JG"
+}

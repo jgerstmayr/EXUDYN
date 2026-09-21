@@ -1,0 +1,14 @@
+{
+  "number": 2418,
+  "title": "test suite models write output files into TestModels instead of solution/",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "models write solution and sensor files next to themselves (coordinatesSolution.txt and others) so TestModels/ fills with output and runs collide on the same file names - which blocks running the suite in parallel (revision2026 step R5.8). In the test suite all output goes to solution/ with unique per-model names; file writes are avoided widely (sensors storeInternal and writeSolutionToFile False) and done only sparsely so writing stays tested - those tests re-read the written files and check them. TestExamples stay serial: they only check that examples still run against the current API. revision2026 step R5.13.",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-16 10:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/runTestSuite.py",
+  "releaseNotes": "revision2026 step R5.13: exudyn.config.outputDirectory plus one output directory per model in runTestSuite.py; compareFullModifiedNewton is the designated writing test"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2163,
+  "title": "Create functions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "extend Create functions in MainSystemExtensions to accept marker indices in bodyNumbers in connector and joint functions when useful for flexible bodies - CreateSpringDamper, CreateRevoluteJoint, etc.",
+  "dateRaised": "2025-12-13",
+  "deadline": "2026-06-11",
+  "dateResolved": "2025-12-13 01:11",
+  "resolvedAuthor": "JG"
+}

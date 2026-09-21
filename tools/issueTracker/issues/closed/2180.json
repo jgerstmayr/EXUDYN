@@ -1,0 +1,12 @@
+{
+  "number": 2180,
+  "title": "renderer.SetModelView",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add renderer function renderer.SetModelView(zoom, rotationVector, centerPoint) which adjusts the view to zoom, rotation and center point; in particular for raytracing",
+  "dateRaised": "2026-01-03",
+  "deadline": "2026-07-02",
+  "dateResolved": "2026-01-03 01:51",
+  "resolvedAuthor": "JG"
+}

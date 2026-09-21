@@ -1,0 +1,12 @@
+{
+  "number": 2253,
+  "title": "GLFWClient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "homogenize functions that operate on modelRotation and modelTranslation",
+  "dateRaised": "2026-02-01",
+  "deadline": "2026-07-31",
+  "dateResolved": "2026-02-12 21:45",
+  "resolvedAuthor": "JG"
+}

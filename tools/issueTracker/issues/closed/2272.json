@@ -1,0 +1,12 @@
+{
+  "number": 2272,
+  "title": "general.autoFitScene",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "description": "already called at initialization of SystemContainer; needs to be overwritten at start of renderer or at first call to renderer/raytracer function - otherwise ZoomAll always called",
+  "dateRaised": "2026-02-06",
+  "deadline": "2026-08-05",
+  "dateResolved": "2026-02-06 21:20",
+  "resolvedAuthor": "JG"
+}

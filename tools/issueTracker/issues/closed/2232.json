@@ -1,0 +1,12 @@
+{
+  "number": 2232,
+  "title": "storeInitialAlgebraicCoordinates",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "in case of computation of initial  accelerations, also store initial Lagrange multipliers in initial coordinates",
+  "dateRaised": "2026-01-21",
+  "deadline": "2026-07-20",
+  "dateResolved": "2026-01-21 23:01",
+  "resolvedAuthor": "JG"
+}

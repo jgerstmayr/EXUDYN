@@ -1,0 +1,14 @@
+{
+  "number": 2426,
+  "title": "item classes reject their own default values",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "Recorded by parameterConversionTest.py (revision2026 step R4.4.3.1): 17 itemInterface classes raise ValueError when created with their defaults - e.g. MarkerNodeCoordinate(): coordinate=InvalidIndex() fails CheckForValidUInt; ObjectANCFThinPlate cannot be created with defaults in C++ either. The defaults carry two meanings: an index set later (closing a loop; valid only at CheckPreAssembleConsistency) and a value that must be given at creation (MarkerNodeCoordinate.coordinate; a default 0 would be dangerous). Suggestion: constructors never range-check an InvalidIndex() default; a new member flag in definitions/ marks must-be-given parameters and Add<Kind> raises for them in C++ naming item and parameter (same statement as the user line); set-later indices stay with CheckPreAssembleConsistency. revision2026 step R4.17.",
+  "dateRaised": "2026-09-14",
+  "deadline": "2027-03-13",
+  "dateResolved": "2026-09-15 00:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/definitionTypes.py",
+  "releaseNotes": "item classes construct with their defaults (since 34c4 b). New item flag CFMustBeGiven (Q) on the 25 parameters whose default lies outside their range form; definitionValidator rule 6 requires the flag exactly there. Add/SetWithDictionary raises: parameter MarkerNodeCoordinate.coordinate must be given; the default -1 is only a placeholder. The same switch as range checks turns it off. Docs mark these parameters. Set-later item indices are not range checked and stay with CheckPreAssembleConsistency."
+}

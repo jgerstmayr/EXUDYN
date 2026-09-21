@@ -1,0 +1,10 @@
+{
+  "number": 915,
+  "title": "mbs.ComputeObject...",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add mbs.ComputeObjectMassMatrix(...)",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03"
+}

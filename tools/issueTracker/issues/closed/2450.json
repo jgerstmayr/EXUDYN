@@ -1,0 +1,14 @@
+{
+  "number": 2450,
+  "title": "Declared requested node and marker types",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "revision2026 step R4.10.1: GetRequestedNodeType / GetRequestedMarkerType are written as C++ inside 70 item definitions. Replace them by ItemRequestedTypes(kind; types; conditional) with a generated body; survey: the only conditional is Orientation if dynamicFriction != 0 (ObjectContactSphereSphere; ObjectContactSphereTriangle).",
+  "dateRaised": "2026-09-15",
+  "deadline": "2027-03-14",
+  "dateResolved": "2026-09-15 22:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/definitionTypes.py",
+  "releaseNotes": "revision2026 step R4.10.1: ItemRequestedTypes in 70 definitions; generated bodies; 12 headers change in spelling"
+}

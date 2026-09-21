@@ -1,0 +1,12 @@
+{
+  "number": 2254,
+  "title": "RedrawAndGetImage",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add optional viewID=0 to enable offline rendering of window; use renderer.EnableView(viewID=...) before rendering to enable virtual camera and adjust settings with renderer.SetState(viewID=...) (without opening window)",
+  "dateRaised": "2026-02-01",
+  "deadline": "2026-07-31",
+  "dateResolved": "2026-02-12 21:48",
+  "resolvedAuthor": "JG"
+}

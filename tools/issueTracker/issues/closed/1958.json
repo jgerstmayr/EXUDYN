@@ -1,0 +1,12 @@
+{
+  "number": 1958,
+  "title": "CreateSphereSphereContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add Create function, including data node; similar to spring-damper; add checks that in case of friction, a rigid body marker is required",
+  "dateRaised": "2025-02-24",
+  "deadline": "2025-08-23",
+  "dateResolved": "2025-06-29 11:06",
+  "resolvedAuthor": "JG"
+}

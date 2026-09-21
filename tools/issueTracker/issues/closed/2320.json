@@ -1,0 +1,12 @@
+{
+  "number": 2320,
+  "title": "clippingPlane",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "add automatic normalization of clippingPlaneNormal in OpenGL renderer if norm is not 1 (except for 0 length)",
+  "dateRaised": "2026-03-03",
+  "deadline": "2026-08-30",
+  "dateResolved": "2026-03-03 16:29",
+  "resolvedAuthor": "JG"
+}

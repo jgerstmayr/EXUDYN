@@ -1,0 +1,12 @@
+{
+  "number": 1974,
+  "title": "CreateSphericalJoint",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "description": "Make it work for bodies that do not offer a rotation matrix (mass points)",
+  "dateRaised": "2025-03-12",
+  "deadline": "2025-09-08",
+  "dateResolved": "2025-03-12 14:35",
+  "resolvedAuthor": "JG"
+}

@@ -1,0 +1,10 @@
+{
+  "number": 303,
+  "title": "constraints derivatives",
+  "author": "JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!",
+  "dateRaised": "2019-12-26",
+  "deadline": "2020-02-24"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2058,
+  "title": "Raytracer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "add separate visualization options; keep lights",
+  "dateRaised": "2025-05-28",
+  "deadline": "2025-11-24",
+  "dateResolved": "2025-06-02 17:45",
+  "resolvedAuthor": "JG"
+}

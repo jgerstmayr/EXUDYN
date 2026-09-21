@@ -1,0 +1,15 @@
+{
+  "number": 2374,
+  "title": "package metadata drift: classifiers and MANIFEST.in",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "description": "classifiers claimed Python 3.9-3.13 while CI builds cp310-cp314; and MANIFEST.in contained include ../LICENSE.txt which points outside the sdist root and is a silent no-op; so the licence has not been in the sdist. revision2026 step R2.11",
+  "dateRaised": "2026-09-11",
+  "deadline": "2027-03-10",
+  "dateResolved": "2026-09-11 20:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "main/pyproject.toml",
+  "releaseNotes": "classifiers now 3.10-3.14; matching the wheels CI actually builds. requires-python deliberately left at >=3.6 for revision2026 step R2.6. The unreachable MANIFEST.in include was replaced by a comment stating why the licence is absent and that revision2026 step R3.1 is what makes the include possible"
+}
