@@ -4,7 +4,7 @@
 #
 # Details:  Refuses a commit whose staged content contains a university account ID, a personal
 #           Windows user path, or something shaped like a credential. Everything committed here
-#           becomes public at the v2.0 release, and once published it cannot be withdrawn -
+#           becomes public at the 1.13 release, and once published it cannot be withdrawn -
 #           rewriting history does not help, because clones, forks and crawlers already have it.
 #
 #           Group account IDs all begin 'c8501', which is what makes this checkable at all.
@@ -25,7 +25,7 @@ Report() {
     if [ "$found" -eq 0 ]; then
         echo "" >&2
         echo "pre-commit: REFUSED - the staged changes contain something that should not be" >&2
-        echo "            published. Everything here becomes public at the v2.0 release." >&2
+        echo "            published. Everything here becomes public at the 1.13 release." >&2
         echo "" >&2
     fi
     found=1

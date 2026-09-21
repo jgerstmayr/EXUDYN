@@ -253,6 +253,7 @@ def testEveryFieldOfAnIssueIsKnown(tracker):
 
 def testTheMicroVersionIsTheCountOfClosedIssues(tracker):
     """what GetMajorMinorMicroVersion returns has to be what the file contains"""
+    IntoTheRelease(tracker)     #at a baseline the micro is clamped to 0, its own test below
     closed = len([issue for issue in tracker.GetIssues()
                   if issue['status'].strip() in tracker.closedStatuses])
     [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
@@ -265,6 +266,7 @@ def testTheMicroVersionIsTheCountOfClosedIssues(tracker):
 def testResolvingMovesTheVersionByOne(tracker):
     """the one property the whole scheme rests on; it is also why a closed-not-resolved issue
     still counts (see the note on closedStatuses)"""
+    IntoTheRelease(tracker)
     before = tracker.GetMajorMinorMicroVersion()
     tracker.ResolveIssue(OpenIssueNumber(tracker), notes='done', author='Claude-JG')
     after = tracker.GetMajorMinorMicroVersion()
@@ -273,11 +275,36 @@ def testResolvingMovesTheVersionByOne(tracker):
 
 
 def testClosingCountsLikeResolving(tracker):
+    IntoTheRelease(tracker)                     #not at a baseline, where the micro is clamped
     before = tracker.GetMajorMinorMicroVersion()
     tracker.CloseIssue(OpenIssueNumber(tracker), reason='decided against', author='Claude-JG')
     after = tracker.GetMajorMinorMicroVersion()
 
     assert after[2] == before[2] + 1
+
+
+def testTheFirstIssueOfAReleaseCarriesMicroZero(tracker):
+    """the boundary itself: a release begins at the issue that will carry micro 0, so between the
+    bump and that issue the difference is -1 and the version reads X.Y.0 either way"""
+    IntoTheRelease(tracker)
+    tracker.BumpRelease(kind='minor', name='Boundary')
+    [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
+    assert micro == 0                           #nothing has closed in it yet
+
+    number = OpenIssueNumber(tracker)
+    tracker.ResolveIssue(number, notes='the first one', author='Claude-JG')
+    assert tracker.GetIssue(number)['resolvedInVersion'] == str(major) + '.' + str(minor) + '.0'
+    assert tracker.GetMajorMinorMicroVersion()[2] == 0
+
+
+def testAReleaseThatClosedNothingIsNotLeftBehind(tracker):
+    """two bumps in a row would give two releases the same baseline, and one issue would belong
+    to both; tools/checkIssues.py reports that, so BumpRelease refuses it"""
+    IntoTheRelease(tracker)
+    tracker.BumpRelease(kind='minor', name='First')
+    with pytest.raises(ValueError) as error:
+        tracker.BumpRelease(kind='minor', name='Second')
+    assert 'nothing has closed' in str(error.value)
 
 
 def testResolvedIssues2VersionOnAndBetweenTheBaselines(tracker):
@@ -652,6 +679,18 @@ def CheckIssuesModule(tracker):
     return module
 
 
+def IntoTheRelease(tracker):
+    """close one issue if the current release has closed none yet, and return the count.
+
+    Right after a bump the store sits AT the baseline: the micro version is clamped to 0, the
+    changelog has no section for the release, and a second bump would give two releases the same
+    baseline. A test that wants the MIDDLE of a release asks for it."""
+    if tracker.issueStore.ClosedCount() < tracker.CurrentRelease()['baseline']:
+        tracker.ResolveIssue(OpenIssueNumber(tracker), notes='the first one of this release',
+                             author='Claude-JG')
+    return tracker.issueStore.ClosedCount()
+
+
 def testResolvingStoresTheVersionItProduced(tracker):
     number = OpenIssueNumber(tracker)
     tracker.ResolveIssue(number, notes='done', author='Claude-JG')
@@ -695,6 +734,7 @@ def testAnOpenIssueMayNotCarryAVersion(tracker):
 
 
 def testBumpingTheMinorReleaseRestartsTheMicroVersion(tracker):
+    IntoTheRelease(tracker)
     before = tracker.CurrentRelease()
     tracker.BumpRelease(kind='minor')
 
@@ -713,6 +753,7 @@ def testBumpingTheMinorReleaseRestartsTheMicroVersion(tracker):
 def testBumpingTheMajorReleaseGoesToTwoZero(tracker):
     """what could not be expressed before revision2026 step R8.4: the major number was written as
     1 in GetMajorMinorMicroVersion and the minor was the length of a list"""
+    IntoTheRelease(tracker)
     tracker.BumpRelease(kind='major', name='Newborn')
 
     assert tracker.GetMajorMinorMicroVersion()[:2] == [2, 0]
@@ -722,12 +763,14 @@ def testBumpingTheMajorReleaseGoesToTwoZero(tracker):
 
 def testAMajorReleaseNeedsAName(tracker):
     """releases.json plans the next MINOR names; 2.0 is a decision and has to be named"""
+    IntoTheRelease(tracker)
     with pytest.raises(ValueError) as error:
         tracker.BumpRelease(kind='major')
     assert '--name' in str(error.value)
 
 
 def testARleaseCannotGoBackwardsOrRepeat(tracker):
+    IntoTheRelease(tracker)
     current = tracker.CurrentRelease()['version']
     for version in [current, '1.0', '0.9']:
         with pytest.raises(ValueError):
@@ -736,6 +779,7 @@ def testARleaseCannotGoBackwardsOrRepeat(tracker):
 
 def testTheOldIssuesKeepTheirVersionAcrossABump(tracker):
     """a bump must not renumber what has been published - the failure this step exists for"""
+    IntoTheRelease(tracker)
     before = {issue['number']: issue['resolvedInVersion'] for issue in tracker.GetIssues()
               if issue['status'] in tracker.closedStatuses}
 
@@ -873,6 +917,7 @@ def testTheChangelogLeavesOutWhatChangedNothing(tracker):
 
 
 def testTheChangelogIsOrderedNewestFirstAndGroupedByRelease(tracker):
+    IntoTheRelease(tracker)     #a release with no closed issue has no section, and rightly so
     text = tracker.ChangelogText()
     current = tracker.CurrentRelease()
     #the current release comes first and says so

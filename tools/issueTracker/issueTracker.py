@@ -1124,7 +1124,18 @@ def BumpRelease(kind=None, version=None, name=None):
                          'plans none for it. The names are jazz legends, alphabetically (' +
                          current['version'] + ' is ' + current['name'] + '); pass --name.')
 
-    baseline = issueStore.ClosedCount() + 1
+    #A release that has closed nothing must not be left behind: its baseline and the new one would
+    #be the same number, two releases would claim the same issue, and tools/checkIssues.py reports
+    #it as "the baselines are not strictly increasing" (found by the tests of revision2026b, at
+    #the boundary right after the 1.12 bump).
+    closed = issueStore.ClosedCount()
+    if closed < current['baseline']:
+        raise ValueError('BumpRelease: nothing has closed in release ' + current['version']
+                         + ' yet - it begins at closed issue ' + str(current['baseline'])
+                         + ' and the store holds ' + str(closed) + '. Two releases would then '
+                         'share a baseline. Resolve or close something first.')
+
+    baseline = closed + 1
     data['releases'].append({'version': version, 'baseline': baseline, 'name': str(name).strip()})
     data.get('plannedNames', {}).pop(version, None)
     WriteReleases(data)

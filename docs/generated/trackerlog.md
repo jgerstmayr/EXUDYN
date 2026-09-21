@@ -8,14 +8,17 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.240.dev1
+- Exudyn version = 1.12.0.dev1
 - last change = 2026-09-22
 - Number of issues = 2582
-- Number of resolved issues = 2313 (240 in current version)
+- Number of resolved issues = 2313 (0 in current version)
 
 ## Resolved issues and resolved bugs
 
 The following list contains the issues which have been **RESOLVED** in the according version:
+
+### Version 1.12
+
 
 ### Version 1.11
 
