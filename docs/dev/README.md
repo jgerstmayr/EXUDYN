@@ -34,8 +34,9 @@ python/MiniExamples/                      24 generated mini examples
 python/Examples/                          177 examples
 python/testing/                           the runners: runTestSuite.py and the rest
 python/logs/                              testmodels/ examples/ performance/ tmp/
-docs/theDoc/                              LaTeX documentation, version.txt
-docs/RST/                                 Sphinx sources (largely generated)
+docs/manual/                              the user manual, hand-written Markdown
+docs/generated/                           the generated documentation (emitters, issue tracker)
+docs/figures/                             the images of the documentation
 docs/howTo/                               loose how-to notes, see below
 tools/issueTracker/                       issue tracker and version source of truth
 tools/exudev/                             the dev driver: build, test, docs, release
@@ -79,7 +80,8 @@ archived internal repository and on GitHub.
 | [convertVideosFfmpeg.md](../howTo/convertVideosFfmpeg.md) | producing the demo animations |
 | [matplotlibExamples.md](../howTo/matplotlibExamples.md) | plotting recipes used in examples |
 
-macOS setup is covered in `docs/theDoc/introduction.tex`, not here.
+macOS setup is covered in [docs/manual/gettingStarted.md](../manual/gettingStarted.md),
+not here.
 
 ## Invariants
 

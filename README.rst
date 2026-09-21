@@ -40,16 +40,19 @@ Exudyn
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
 
+.. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
+.. file is hand-written since revision2026 step R7.1.7 (decision D11)
+
 +  Exudyn version = 1.11.223.dev1 (McLaughlin)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
-.. |pic7| image:: docs/theDoc/figures/ExudynLOGO1.9.jpg
+.. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg
    :width: 300
 
 **Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices.
 
 +  **Exudyn** is *free, open source* and with plenty of *documentation*, *examples*, and *test models*
-+  **pre-built** for Python 3.10 - 3.14 under **Windows** , **Linux** and **MacOS** available ( older versions available for Python >= 3.6); build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.10 - 3.14 under **Windows** , **Linux** and **MacOS** available ( older versions available for Python >= 3.6); to build wheels yourself, see `docs/howTo/buildFromSource.md <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildFromSource.md>`_
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
@@ -67,7 +70,7 @@ Exudyn
 .. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
    :width: 190
 
-.. |pic6| image:: docs/theDoc/figures/DrawSystemGraphExample.png
+.. |pic6| image:: docs/figures/DrawSystemGraphExample.png
    :width: 240
    
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
@@ -76,7 +79,7 @@ How to cite:
 
 + Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, Vol. 60, pp. 533-561, 2024. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 
-Due to limitations for complex formulas, images and references in .rst files, some (small) details are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
+The full documentation is the HTML documentation on `Read the Docs <https://exudyn.readthedocs.io/>`_ : the user manual, the reference manual of all items, the Python utility functions and the Python-C++ command interface.
 
 For license, see LICENSE.txt in the root github folder on github!
 
@@ -92,7 +95,7 @@ Tutorial videos can be found in the `YouTube channel of Exudyn <https://www.yout
 **NOTE**: **NumPy** switched to version 2.x which causes problems with packages that are not adapted to NumPy 2.x. 
 The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) may cause problems, therefore you could still use Numpy 1.26 (not available for Python >= 3.13).
 
-**NOTE**: We finally like to emphasize that this is an open source library; we receive no specific money and most developements are done during free (=night) time; some models are simplifications that work for our needs, but may not be appropriate in your case; some models are under development (usually stated in theDoc) or may have bugs, therefore do not fully rely on all elements of the library!
+**NOTE**: We finally like to emphasize that this is an open source library; we receive no specific money and most developements are done during free (=night) time; some models are simplifications that work for our needs, but may not be appropriate in your case; some models are under development (usually stated in the documentation) or may have bugs, therefore do not fully rely on all elements of the library!
 
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
 
@@ -103,5 +106,5 @@ Enjoy the Python library for multibody dynamics modeling, simulation, creating l
 
 Changes can be tracked in the Issue tracker, see Github pages and Read the Docs.
 
-\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_\ , `Read the Docs <https://exudyn.readthedocs.io/>`_ and for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!
+\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_\  and `Read the Docs <https://exudyn.readthedocs.io/>`_ !!!
 

@@ -154,7 +154,7 @@ The appearance of visualization settings dialogs may be adjusted by directly mod
 ```
 
 (fig-visualizationsettings)=
-```{figure} /docs/theDoc/figures/visualizationSettings.png
+```{figure} /docs/figures/visualizationSettings.png
 :width: 700
 
 View of visualization settings
@@ -258,7 +258,7 @@ This allows to include shadows and transparency correctly, with additional suppo
 In the future, textures may be added as well.
 
 (fig-raytracerdemo)=
-```{figure} /docs/theDoc/figures/raytracerDemo.jpg
+```{figure} /docs/figures/raytracerDemo.jpg
 :width: 400
 
 Example image of raytraced renderer view.
@@ -436,7 +436,7 @@ For this, you can use
 shown exemplary in {ref}`fig-solutionviewer`.
 
 (fig-solutionviewer)=
-```{figure} /docs/theDoc/figures/solutionViewer.png
+```{figure} /docs/figures/solutionViewer.png
 :width: 800
 
 View of `SolutionViewer` (as of Exudyn 1.5.42.dev1)
@@ -527,7 +527,8 @@ By default, a consecutive numbering is generated for the image, e.g., 'frame0000
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button 'Make mp4'), which requires prior installation using `pip install ffmpeg-python` .
 Note that you may also need to install ffmpeg itself, depending on your platform.
-$\ra$ see theDoc.pdf !
+See the {ref}`GUI chapter <sec-graphicsvisualization>` for the visualization settings that
+control image export.
 
 (sec-overview-basics-examplestestsuite)=
 ## Examples, test models and test suite

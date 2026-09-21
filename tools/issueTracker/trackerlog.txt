@@ -1,6 +1,6 @@
 # this is the issue tracker for EXUDYN
 # Johannes Gerstmayr
-# date = 2026-09-20
+# date = 2026-09-21
 # release = 1.11
 # version = 223
 # line format: number, issue name, issue author, status, description, type, priority, date raised, deadline, date resolved, resolved author, file(name), line(number), notes

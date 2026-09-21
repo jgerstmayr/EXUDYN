@@ -34,11 +34,11 @@ listItemNames=[]
 listFunctionNames=[]
 listPyFunctionNames=[]
 
-file='docs/RST/confHelper.py'
+file='tools/generators/generated/confHelper.py'
 exec(open(file).read(), globals())
-file='docs/RST/confHelperItems.py'
+file='tools/generators/generated/confHelperItems.py'
 exec(open(file).read(), globals())
-file='docs/RST/confHelperPyUtilities.py'
+file='tools/generators/generated/confHelperPyUtilities.py'
 exec(open(file).read(), globals())
 
 import pygments
@@ -89,6 +89,7 @@ exclude_patterns = ['rotorAnsys.rst',
                     'tools/generators/generated/*',   #generated RST fragments, not documents
                     '_build/*','build/*','dist/*','tmp/*','.pytest_cache/*',
                     'README.md',                      #the GitHub landing page, like README.rst
+                    'docs/generated/README.md',       #what the directory is, for humans in git
                     #Markdown that is NOT documentation (revision2026 step R7.1.4). Sphinx reads .md
                     #since myst_parser was added, and everything it can read must either be in a
                     #toctree or excluded - a page in neither fails the strict build (step R7.1.2).

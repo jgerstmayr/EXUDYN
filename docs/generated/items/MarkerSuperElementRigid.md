@@ -64,7 +64,7 @@ However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraint
 For more information on the various quantities and their coordinate systems, see table above and {ref}`fig-markersuperelementrigid-sketch`.
 
 (fig-markersuperelementrigid-sketch)=
-```{figure} /docs/theDoc/figures/MarkerSuperElementRigid.png
+```{figure} /docs/figures/MarkerSuperElementRigid.png
 :width: 400
 
 Sketch of marker nodes, exemplary node $i$, reference coordinates and marker coordinate system; note the difference of the center of the marker 'surface' (rectangle) marked with the red cross, and the averaged of the averaged local reference position.

@@ -59,7 +59,7 @@ versionDev = '.dev1' #(development version, get with pip install exudyn --pre)
 
 #subversions use names of jazz legends ... #https://www.britannica.com/topic/list-of-jazz-musicians-2030466
 # +++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++ also sync with doc2rst.py ++++++++++
+# ++++++++ the release names; doc2rst.py held the second copy and is gone (R7.1.7) ++++++++++
 versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis', '1.4':'Ellington', '1.5':'Fitzgerald', 
                 '1.6':'Gillespie', '1.7':'Hall', '1.8':'Jones', #Jim Hall, Elvin Jones; leave out 'I' as there are not many => two 'M'
                 '1.9':'Krall', '1.10': 'Lagrene', '1.11':'McLaughlin', '1.12':'Metheney', #Bireli Lagrene
@@ -444,7 +444,9 @@ def UpdateDateAndVersion(updateVersion = True):
     #versionFile = directoryString + 'version.h' #not used anymore
     cppVersionFile = directoryString + 'versionCpp.cpp'
     texVersionFile = '..\\..\\version.txt'   #at the repository ROOT since revision2026 step R3.4; versionName.txt stays in docs/theDoc/
-    texVersionNameFile = '..\\..\\docs\\theDoc\\versionName.txt'
+    #versionName.txt sits next to this tool since revision2026 step R7.1.7, when
+    #docs/theDoc/ was deleted with the LaTeX build (decision D8)
+    texVersionNameFile = 'versionName.txt'
     readmeFile = '..\\..\\README.rst'   #hand-written since revision2026 step R7.1.5, except for its version line
 
     #pyVersionFile = '..\\..\\src\\pythonGenerator\\exudynVersion.py'

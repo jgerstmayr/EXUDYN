@@ -60,7 +60,7 @@ may be changed by adding or subtracting rope length at the end points. All geome
 simple reeving systems in 3D.
 
 (fig-reevingsystemsprings-tangents)=
-```{figure} /docs/theDoc/figures/CommonTangents3D.png
+```{figure} /docs/figures/CommonTangents3D.png
 :width: 500
 
 Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.

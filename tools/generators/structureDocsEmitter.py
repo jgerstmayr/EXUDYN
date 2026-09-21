@@ -25,7 +25,7 @@ import io                                                               # noqa: 
 
 from structureModel import *                                            # noqa: E402,F403
 from autoGenerateHelper import LatexText2Markdown                      # noqa: E402
-from tex2md import NormalizeHeadings                                    # noqa: E402
+from latexToMarkdown import NormalizeHeadings                                    # noqa: E402
 
 
 #************************************************

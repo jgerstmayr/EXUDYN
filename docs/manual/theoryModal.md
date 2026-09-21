@@ -61,7 +61,7 @@ are required.
 Finally, `elements` need to be included for visualization, and a surface needs to be reconstructed from the element connectivity, which is available for tetrahedral and hexahedral elements for most import functions.
 
 (fig-hingepartmesh)=
-```{figure} /docs/theDoc/figures/modesHinge/HCBhingeMesh.png
+```{figure} /docs/figures/modesHinge/HCBhingeMesh.png
 :width: 400
 
 Test model and mesh for hinge created with Netgen (linear tetrahedral elements).
@@ -110,7 +110,7 @@ As an output, we obtain the smallest `nModes` eigenvectors (=eigenmodes) (Eigenv
 Here, we will also use synonymously the terms 'eigenmodes' and 'normal modes', which result from an eigenvalue/eigenvector computation using certain (or even no) boundary conditions.
 
 (fig-hingepartfreefreemodes)=
-```{figure} /docs/theDoc/figures/freeFreeModesStress.png
+```{figure} /docs/figures/freeFreeModesStress.png
 :width: 800
 
 Lowest 8 free-free modes for hinge finite element model, contour plot for $xx$-stress component.
@@ -307,21 +307,21 @@ $$
   f_{0..7} = [1277.35, 1469.86, 3336.91, 3584.28, ...]
 $$
 (fig-hingepartstaticmodesa)=
-```{figure} /docs/theDoc/figures/HCBmodesHingeStaticA.png
+```{figure} /docs/figures/HCBmodesHingeStaticA.png
 :width: 800
 
 Static modes for bolt rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.
 ```
 
 (fig-hingepartstaticmodesb)=
-```{figure} /docs/theDoc/figures/HCBmodesHingeStaticB.png
+```{figure} /docs/figures/HCBmodesHingeStaticB.png
 :width: 800
 
 Static modes for bushing rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.
 ```
 
 (fig-hingepartfixedfixedmodes)=
-```{figure} /docs/theDoc/figures/HCBmodesHingeEigenmode.png
+```{figure} /docs/figures/HCBmodesHingeEigenmode.png
 :width: 800
 
 Eigenmodes for fixed-fixed case, resulting from Hurty-Craig-Bampton method; contour color represents norm of displacements.

@@ -245,7 +245,8 @@ $$ (eq-expl-rk-stages)
 
 After all vectors $\gv_i$ have been consecutively evaluated, the step is updated by {eq}`s-stage-quadrature`.
 
-For some exemplary tableaus of explicit and impliciti Runge-Kutta methods, see theDoc.pdf!
+For exemplary tableaus of explicit and implicit Runge-Kutta methods, see the references of the
+method in `exudyn.utilities` and the standard literature on Runge-Kutta schemes.
 
 ### Automatic step size control
 
@@ -401,7 +402,7 @@ $$
   \beta = \frac{1}{4}(1- \alpha_m + \alpha_f)^2
 $$
 (fig-spectralradius)=
-```{figure} /docs/theDoc/figures/spectralRadiusZeta0.png
+```{figure} /docs/figures/spectralRadiusZeta0.png
 :width: 400
 
 Spectral radius for generalized-$\alpha$ method depending on dimensionless step size $\bar h=h/T$, in which $T$ is the period of an equivalent single DOF mass-spring-damper system.

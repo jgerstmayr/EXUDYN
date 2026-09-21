@@ -1928,13 +1928,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     } %ignoreRST
     \onlyRST{
 
-    .. figure:: docs/theDoc/figures/kinematicTreeRNEA.png
+    .. figure:: docs/figures/kinematicTreeRNEA.png
        :width: 750
 
        Recursive Newton-Euler algorithm
 
       
-    .. figure:: docs/theDoc/figures/kinematicTreeCRBmass.png
+    .. figure:: docs/figures/kinematicTreeCRBmass.png
        :width: 750
        
        Composite-rigid-body algorithm
@@ -2855,7 +2855,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     }
     \onlyRST{
     .. _fig-objectffrfreducedorder-mesh:
-    .. figure:: docs/theDoc/figures/ObjectFFRFsketch.png
+    .. figure:: docs/figures/ObjectFFRFsketch.png
        :width: 400
 
        Floating frame of reference with exemplary position of a mesh node *i* 
@@ -7219,7 +7219,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-reevingsystemsprings-tangents:
-    .. figure:: docs/theDoc/figures/CommonTangents3D.png
+    .. figure:: docs/figures/CommonTangents3D.png
        :width: 500
 
        Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.
@@ -8085,7 +8085,7 @@ definitions.append(ItemDefinition(
     \end{center}
     }
     \onlyRST{
-    .. image:: docs/theDoc/figures/ObjectJointRollingDiscSketch.png
+    .. image:: docs/figures/ObjectJointRollingDiscSketch.png
        :width: 600
 
     }
@@ -8410,7 +8410,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     }
     \onlyRST{
     .. _fig-objectcontactconvexroll-sketch:
-    .. figure:: docs/theDoc/figures/ConvexRolling.png
+    .. figure:: docs/figures/ConvexRolling.png
        :width: 600
 
        Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.
@@ -8872,7 +8872,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectcontactfrictioncirclecable2d-sketch:
-    .. figure:: docs/theDoc/figures/ContactFrictionCircleCable2D.png
+    .. figure:: docs/figures/ContactFrictionCircleCable2D.png
        :width: 600
 
        Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
@@ -8979,7 +8979,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectcontactfrictioncirclecable2d-stickingpos:
-    .. figure:: docs/theDoc/figures/ContactFrictionCircleCable2DstickingPos.png
+    .. figure:: docs/figures/ContactFrictionCircleCable2DstickingPos.png
        :width: 600
 
        Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.
@@ -9165,7 +9165,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectcontactfrictioncirclecable2d-normals:
-    .. figure:: docs/theDoc/figures/ContactFrictionCircleCable2Dnormals.png
+    .. figure:: docs/figures/ContactFrictionCircleCable2Dnormals.png
        :width: 700
 
        Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.
@@ -9397,7 +9397,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectspherespherecontact:
-    .. figure:: docs/theDoc/figures/SphereSphereContact.png
+    .. figure:: docs/figures/SphereSphereContact.png
         :width: 400
         
         Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
@@ -9439,7 +9439,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectspherehollowspherecontact:
-    .. figure:: docs/theDoc/figures/SphereHollowsphereContact.png
+    .. figure:: docs/figures/SphereHollowsphereContact.png
         :width: 400
         
         One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.

@@ -1,10 +1,10 @@
 # Exudyn coding style and conventions
 
-> **Source of truth.** This file is a Markdown transcription of
-> `docs/theDoc/introduction.tex`, sections *Code style and conventions*, *Notation conventions*
-> and *No-abbreviations-rule*, plus the abbreviation table from `docs/theDoc/abbreviations.tex`.
-> Those LaTeX files still ship in `theDoc.pdf`. If you change a rule, change it in **both** places
-> until revision2026 step R7.1 makes RST/Sphinx primary and this duplication goes away.
+> **Source of truth.** This file. It began as a transcription of the *Code style and conventions*
+> sections of the LaTeX introduction, which was converted to
+> [docs/manual/introduction.md](../manual/introduction.md) in revision2026 step R7.1.5 and no
+> longer carries them; the abbreviation table is generated into
+> `docs/generated/abbreviations.md`. There is one place for a rule again.
 
 ## 1. General rules
 

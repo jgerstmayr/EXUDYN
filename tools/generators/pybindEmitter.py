@@ -39,7 +39,7 @@ import enumEmitter                                                              
 import outputVariableEmitter                                                            # noqa: E402
 from autoGenerateHelper import PyLatexRST, GetDateStr, WriteTextIfDifferent             # noqa: E402
 from autoGenerateHelper import MarkdownLabel                                            # noqa: E402
-from tex2md import NormalizeHeadings                                                    # noqa: E402
+from latexToMarkdown import NormalizeHeadings                                                    # noqa: E402
 from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames  # noqa: E402
 from pybindTypes import declarationCalls                                                # noqa: E402
 
@@ -252,7 +252,6 @@ def main():
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write function, class, ... names for conf.py
-    exuDir = paths.rstDir
 
     sConfHelper = ''
     sConfHelper += '#this is a helper file to define additional keywords for examples\n'
@@ -279,7 +278,7 @@ def main():
     sConfHelper += ']\n\n'
 
 
-    with open(exuDir+'confHelper.py', 'w', encoding='utf8') as f:
+    with open(paths.generatedDir+'confHelper.py', 'w', encoding='utf8') as f:
         f.write(sConfHelper)
 
 

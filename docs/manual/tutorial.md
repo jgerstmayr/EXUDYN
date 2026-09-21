@@ -275,7 +275,7 @@ In order to get a nice plot within Spyder, the following options can be used (no
 The matplotlib output should look as shown in {ref}`fig-tutorial-springdamper`.
 
 (fig-tutorial-springdamper)=
-```{figure} /docs/theDoc/figures/plotSpringDamper.png
+```{figure} /docs/figures/plotSpringDamper.png
 :width: 400
 
 Output of spring-damper tutorial.

@@ -83,7 +83,7 @@ which advances the vector $\LU{i0}{\hat \rv}$ in time.
 Note that an efficient implementation would only include $\Rm$ and $\pv$, without necessarily computing $4 \times 4$ matrices.
 
 (fig-theory-ht-changeofframe)=
-```{figure} /docs/theDoc/figures/theoryRotationsHTchangeOfFrame.png
+```{figure} /docs/figures/theoryRotationsHTchangeOfFrame.png
 :width: 320
 
 Homogeneous transformation from $\mathcal{F}_i$ to $\mathcal{F}_j$ using the relation $\LU{j}{\hat{\mathbf{r}} } = \LU{ji}{\Tm} \LU{i}{\hat{\mathbf{r}} }$
@@ -192,7 +192,7 @@ $$
   \LU{1}{\rv} = \LU{12}{\Rot} \LU{2}{\rv}
 $$
 (fig-theory-rotations-elementaryx)=
-```{figure} /docs/theDoc/figures/elementaryRotationX.png
+```{figure} /docs/figures/elementaryRotationX.png
 :width: 320
 
 Elementary rotation around axis $\mathbf{ x}_1$.
@@ -206,7 +206,7 @@ $$
   \mr{c \varphi_2}{0}{s \varphi_2}{0}{1}{0}{-s \varphi_2}{0}{c \varphi_2}\, .
 $$
 (fig-theory-rotations-elementaryy)=
-```{figure} /docs/theDoc/figures/elementaryRotationY.png
+```{figure} /docs/figures/elementaryRotationY.png
 :width: 320
 
 Elementary rotation around axis $\mathbf{ y}_2$.
@@ -278,7 +278,7 @@ $$
 As an example, we consider in Figure {ref}`fig-theory-rotations-successive` the different order of rotations of a block.
 
 (fig-theory-rotations-successive)=
-```{figure} /docs/theDoc/figures/RotationsSequences.png
+```{figure} /docs/figures/RotationsSequences.png
 :width: 500
 
 Successive rotations are not commutative.
@@ -313,7 +313,7 @@ $$
   \rv(t)=\Rot(t) \, \rv_0 \qquad \text{with} \qquad \Rot(t)=\Rot(\uv(t),\varphi(t))
 $$
 (fig-theory-rotations-angleaxis)=
-```{figure} /docs/theDoc/figures/RotationAxisAngle.png
+```{figure} /docs/figures/RotationAxisAngle.png
 :width: 260
 
 Rotation of a vector $\mathbf{ r}_0$ by means of the angle-axis tuple $(\mathbf{ u}(t), \, \varphi(t))$.
@@ -322,7 +322,7 @@ Rotation of a vector $\mathbf{ r}_0$ by means of the angle-axis tuple $(\mathbf{
 Using {ref}`fig-theory-rotations-angleaxis`, we may now consider relations of the two frames $(\ev_{x0},\,\ev_{y0},\,\ev_{z0})$ and $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$, solely defined by the angle-axis $(\uv(t), \, \varphi(t))$ relation.
 
 (fig-theory-rotations-axisanglederivation)=
-```{figure} /docs/theDoc/figures/RotationAxisAngleDerivation.png
+```{figure} /docs/figures/RotationAxisAngleDerivation.png
 :width: 320
 
 Relations for derivation of rotation tensor and Rodrigues' formula.
@@ -403,7 +403,7 @@ Note that there are many other representations of Euler angles, however, they ar
 The output variable `Rotation` gives Tait-Bryan angles, which is why it is important to define their properties.
 
 (fig-theory-rotations-taitbryanangles)=
-```{figure} /docs/theDoc/figures/theoryRotationsTaitBryanAngles.png
+```{figure} /docs/figures/theoryRotationsTaitBryanAngles.png
 :width: 240
 
 Definition of Tait-Bryan angles.

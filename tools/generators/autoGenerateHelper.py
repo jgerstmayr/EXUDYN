@@ -926,13 +926,9 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the LaTeX of definitions/ and of the docstrings becomes Markdown with the same converter the
-#chapters used (revision2026 step R7.1.6); tools/tex2md.py goes away in R7.1.7, together with the
-#LaTeX and RST halves of the class below
-import sys
-_toolsDirectory = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-if _toolsDirectory not in sys.path:
-    sys.path.insert(0, _toolsDirectory)
-from tex2md import ConvertText as LatexText2Markdown                    # noqa: E402
+#chapters were converted with; it moved here from tools/tex2md.py in revision2026 step R7.1.7,
+#because it stopped being the one-shot tool it was written as and became part of the emitters
+from latexToMarkdown import ConvertText as LatexText2Markdown                    # noqa: E402
 
 
 def MarkdownLabel(latexLabel):

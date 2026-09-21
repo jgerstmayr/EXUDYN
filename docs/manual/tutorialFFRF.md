@@ -5,7 +5,7 @@ including Netgen and NGsolve for mesh and finite element data generation and use
 The tutorial will set up a body with Hurty-Craig-Bampton modes, giving a simple flexible pendulum meshed hinged with a revolute joint.
 
 (fig-tutorial-ffrfpendulum)=
-```{figure} /docs/theDoc/figures/TutorialFFRFpendulum.png
+```{figure} /docs/figures/TutorialFFRFpendulum.png
 :width: 400
 
 Screen shot of pendulum modeled with floating frame of reference formulation, using HCB modes, and meshed with Netgen.

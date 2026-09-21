@@ -163,7 +163,7 @@ because simulation may be faster than you can follow:
  The visualization window for the solution drawn at 6.5s is shown in {ref}`fig-tutorial-beams`.
 
 (fig-tutorial-beams)=
-```{figure} /docs/theDoc/figures/TutorialBeams.png
+```{figure} /docs/figures/TutorialBeams.png
 :width: 500
 
 Render window showing the deformed state of the two beams at 6.5s. The lower beam is fixed at the left end, while the upper beam's support is translated and rotated.

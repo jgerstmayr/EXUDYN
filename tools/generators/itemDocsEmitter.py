@@ -31,7 +31,7 @@ from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesW
 
 
 from autoGenerateHelper import KeywordExamplesMarkdown, MarkdownLabel, MarkdownHeading
-from tex2md import NormalizeHeadings, ConvertText as LatexText2Markdown
+from latexToMarkdown import NormalizeHeadings, ConvertText as LatexText2Markdown
 
 import copy
 import os
@@ -445,7 +445,7 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
                 continue
             #the figures of an item live with the LaTeX chapters until R7.1.7 moves them to
             #docs/figures/; a leading slash resolves against the documentation source directory
-            text = text.replace('](docs/theDoc/figures/', '](/docs/theDoc/figures/')
+            text = text.replace('](docs/figures/', '](/docs/figures/')
             Write(className + '.md',
                   NormalizeHeadings(MarkdownBanner(className) + text.strip()) + '\n')
             written += 1
@@ -688,7 +688,6 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write class names for confHelperItems.py
-    exuDir = paths.rstDir
     
     sConfHelper = ''
     sConfHelper += '#this is a helper file to define additional keywords for examples\n'
@@ -700,7 +699,7 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
         sConfHelper += "'" + s + "'" + ', '
     sConfHelper += ']\n\n'
 
-    with open(exuDir+'confHelperItems.py', 'w',encoding='utf8') as f:
+    with open(paths.generatedDir+'confHelperItems.py', 'w',encoding='utf8') as f:
         f.write(sConfHelper)
 
     print('total parameters converted:', parameterCnt)

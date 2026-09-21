@@ -181,13 +181,13 @@ projecting the local inertia into the joint motion space, see the composite-rigi
 Note that $\cdot$ for multiplication of matrices and vectors is added for clarity, especially in case of left and right indices.
 The whole algorithm for forward and inverse dynamics is given in the following figures.
 
-```{figure} /docs/theDoc/figures/kinematicTreeRNEA.png
+```{figure} /docs/figures/kinematicTreeRNEA.png
 :width: 750
 
 Recursive Newton-Euler algorithm
 ```
 
-```{figure} /docs/theDoc/figures/kinematicTreeCRBmass.png
+```{figure} /docs/figures/kinematicTreeCRBmass.png
 :width: 750
 
 Composite-rigid-body algorithm

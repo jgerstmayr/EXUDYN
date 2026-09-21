@@ -2,8 +2,7 @@
 
 The overall idea of the C++ side: what the pieces are, how a Python call reaches computation, and
 where to look when changing something. **Not an API reference** — the per-item reference is
-generated into `theDoc.pdf` and the RST documentation from `definitions/`, and is far better
-at that job.
+generated into `docs/generated/items/` from `definitions/`, and is far better at that job.
 
 Related, deliberately not repeated here: repository layout in [README.md](README.md), build and
 commit workflow in [WORKFLOW.md](WORKFLOW.md), naming and file headers in
@@ -132,8 +131,8 @@ item invalidates the mapping.
 
 ## Solvers
 
-Structure is documented in `docs/theDoc/solver.tex` ("General solver structure"), not in
-`introduction.tex`. The shape is a template method:
+Structure is documented in [docs/manual/solver.md](../manual/solver.md) ("General solver
+structure"), not in the introduction. The shape is a template method:
 
 ```
 SolveSystem()

@@ -1142,10 +1142,24 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     than ported. `docs/theDoc/` loses its generated `.tex` files here, which is half of R7.1.8.
 
 <a id="r7-1-7"></a>
-**R7.1.7** *(sub-step of R7.1, last)* **Delete the converters**: `src/pythonGenerator/doc2rst.py`
-    (680 lines), `latexConverter.py` (836) and the parts of `autoGenerateHelper.py` (1815) that
-    only served them. Check first what has to survive — the abbreviation list at the end of
-    `doc2rst.py` is named in R7.1 as one such thing.
+**R7.1.7** **IN PROGRESS (first commit done 2026-09-21)** — *(sub-step of R7.1, last)*
+    **Delete the converters**: `src/pythonGenerator/doc2rst.py` (733 lines), `latexConverter.py`
+    (836) and the parts of `autoGenerateHelper.py` (1900) that only served them. Check first what
+    has to survive — the abbreviation list at the end of `doc2rst.py` is named in R7.1 as one
+    such thing.
+
+    **Done in the first commit**: `doc2rst.py`, `latexConverter.py`, `makeAllBinariesScripts.py`,
+    `index.rst`, **`docs/RST/` (291 files)** and **`docs/theDoc/`** including `theDoc.pdf` are
+    deleted (approved by the maintainer 2026-09-21, PDF kept in the history); what `doc2rst.py`
+    did besides converting is the new `examplesDocsEmitter.py` (290 pages: the examples, the test
+    models, the abbreviations); `index.md` is hand-written (D10) and `README.rst` stays
+    hand-written with its version line stamped by the tracker (D11); the figures moved to
+    `docs/figures/` with 172 references in 31 files. `tools/tex2md.py` could **not** be deleted
+    — R7.1.6 made it the converter every emitter calls — and became
+    `tools/generators/latexToMarkdown.py`.
+
+    **Open**: the LaTeX and RST branches inside the emitters and inside `PyLatexRST`, which still
+    run and whose output nothing reads. That is the second commit.
 
     **This is also where R7.3 becomes possible**: with no `.tex` → `.rst` conversion, the 498
     committed generated `.rst` files stop being an input to anything and can be built in CI

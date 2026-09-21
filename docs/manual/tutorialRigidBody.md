@@ -16,7 +16,7 @@ can be easily replaced by the newer `graphics. ...` commands shown here. Their i
 This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in {ref}`fig-rigidbodytutorialview`.
 
 (fig-rigidbodytutorialview)=
-```{figure} /docs/theDoc/figures/TutorialRigidBody1desc.png
+```{figure} /docs/figures/TutorialRigidBody1desc.png
 :width: 400
 
 Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.
@@ -323,7 +323,7 @@ Note that obviously, markers are always needed to connect objects (or nodes) as 
 Furthermore, it can be seen that the function `CreateRigidBody` added a body `ObjectRigidBody`, a node `NodeRigidBodyEP`, a `LoadMassProportional` for gravity load with a `MarkerBodyMass`, and the function `CreateRevoluteJoint` created two `MarkerBodyRigid` and a `ObjectJointRevoluteZ` which represents a revolute joint about a Z-axis in the joint coordinate system. For further information, consult the respective pages in the Items reference manual.
 
 (fig-drawsystemgraphexample)=
-```{figure} /docs/theDoc/figures/DrawSystemGraphExample.png
+```{figure} /docs/figures/DrawSystemGraphExample.png
 :width: 600
 
 System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors

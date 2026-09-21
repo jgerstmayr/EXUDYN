@@ -25,7 +25,7 @@ if toolsDirectory not in sys.path:
 from utilityDocsModel import *                                                   # noqa: E402,F403
 from autoGenerateHelper import MarkdownLabel, MarkdownHeading, LatexText2Markdown, \
                                KeywordExamplesMarkdown                          # noqa: E402
-from tex2md import NormalizeHeadings                                            # noqa: E402
+from latexToMarkdown import NormalizeHeadings                                            # noqa: E402
 
 
 def main():
@@ -327,7 +327,7 @@ def main():
         sConfHelper += "'" + s + "'" + ', '
     sConfHelper += ']\n\n'
 
-    with open(rstDir+'confHelperPyUtilities.py', 'w',encoding='utf8') as f:
+    with open(paths.generatedDir+'confHelperPyUtilities.py', 'w',encoding='utf8') as f:
         f.write(sConfHelper)
 
     print('------- utilitiesDocu finished -----------')

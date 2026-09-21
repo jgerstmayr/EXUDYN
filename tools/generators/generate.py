@@ -59,8 +59,8 @@ stages = [
     Stage('tools/generators/miniExampleEmitter.py', ['definitions'], ['python/MiniExamples']),
     Stage('tools/generators/itemDocsEmitter.py', ['definitions'],
           #Markdown since revision2026 step R7.1.6; confHelperItems.py is not documentation but
-          #data for conf.py, which reads it from docs/RST/
-          ['docs/generated/items', 'docs/RST/confHelperItems.py']),
+          #data for conf.py, and lives with the other generator data since R7.1.7
+          ['docs/generated/items', G + 'confHelperItems.py']),
     Stage('tools/generators/structureHeaderEmitter.py', ['definitions'],
           [A + 'SimulationSettings.h', A + 'VisualizationSettings.h', A + 'CSolverStructures.h',
            A + 'MainSolver.h', A + 'PyStructuralElementsDataStructures.h', A + 'BeamSectionGeometry.h',
@@ -75,22 +75,26 @@ stages = [
            G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
           #Markdown since revision2026 step R7.1.6; confHelperPyUtilities.py is not documentation
-          #but data for conf.py, which reads it from docs/RST/
-          ['docs/generated/pythonUtilities', 'docs/RST/confHelperPyUtilities.py']),
+          #but data for conf.py, and lives with the other generator data since R7.1.7
+          ['docs/generated/pythonUtilities', G + 'confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
           ['definitions', G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst',
            G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
            G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
            #Markdown since revision2026 step R7.1.6; confHelper.py is not documentation but data
-           #for conf.py, which reads it from docs/RST/
-           'docs/generated/cInterface', 'docs/RST/confHelper.py']),
+           #for conf.py, and lives with the other generator data since R7.1.7
+           'docs/generated/cInterface', G + 'confHelper.py']),
     Stage('tools/generators/createStubFiles.py',
           ['tools/generators/stubHeader.pyi', G + 'stubEnums.pyi', G + 'stubSystemStructures.pyi',
            G + 'stubAutoBindings.pyi', G + 'stubAutoBindingsExt.pyi', G + 'stubSymbolic.pyi'],
           ['python/exudyn/__init__.pyi', 'python/exudyn/symbolic.pyi']),
-    Stage('src/pythonGenerator/doc2rst.py', ['docs/theDoc', 'version.txt'],
-          ['docs/RST', 'README.rst', 'docs/theDoc/abbreviations.tex']),
+    #the example and test model pages, and the abbreviations: what doc2rst.py did besides
+    #converting LaTeX, which is why it outlived it (revision2026 step R7.1.7)
+    Stage('tools/generators/examplesDocsEmitter.py',
+          ['python/Examples', 'python/TestModels'],
+          ['docs/generated/examples', 'docs/generated/testModels',
+           'docs/generated/abbreviations.md']),
     ]
 
 #deliberately NOT stages:

@@ -93,8 +93,6 @@ localListClassNames = [] #string list for highlighting
 
 writeRST = True
 addExampleReferences = True #costs lot of time
-theDocDir = paths.theDocDir
-rstDir = paths.rstDir
 fileDir = paths.pythonPackageDir
 filesParsed=[
              'advancedUtilities.py',

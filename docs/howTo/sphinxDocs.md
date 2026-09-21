@@ -1,8 +1,9 @@
 # Building the documentation
 
-The documentation is Sphinx, built from the repository root: `conf.py` and `index.rst` are there,
-and the pages live in `docs/manual/` (hand-written Markdown), `docs/RST/` (generated — do not edit)
-and `docs/dev/`.
+The documentation is Sphinx, built from the repository root: `conf.py` and the hand-written
+`index.md` are there, and the pages live in `docs/manual/` (the hand-written user manual),
+`docs/generated/` (written by the emitters and the issue tracker — do not edit), `docs/dev/` and
+`docs/howTo/`.
 
 ## The short way
 

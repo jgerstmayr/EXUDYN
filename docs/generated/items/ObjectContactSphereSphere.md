@@ -82,7 +82,7 @@ This section outlines the computation of the forces acting on the two spheres wh
 - tangential force due to a regularized friction law to model dry friction between the spheres; this type of force creates a torque acting on the spheres and is computed independently of the chosen impact model if $\mu_d\neq0$ is set. Note that in the implemented model, rolling deformations are not considered, i.e. the friction is only a function of the relative tangential velocity between the spheres at the contact point.
 
 (fig-objectspherespherecontact)=
-```{figure} /docs/theDoc/figures/SphereSphereContact.png
+```{figure} /docs/figures/SphereSphereContact.png
 :width: 400
 
 Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
@@ -125,7 +125,7 @@ $$
 $$ (eq-ossctangentialvelocity)
 
 (fig-objectspherehollowspherecontact)=
-```{figure} /docs/theDoc/figures/SphereHollowsphereContact.png
+```{figure} /docs/figures/SphereHollowsphereContact.png
 :width: 400
 
 One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.
