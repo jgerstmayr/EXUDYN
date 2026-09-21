@@ -43,6 +43,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 ```
 
 
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-solutionviewer`
+
 
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video

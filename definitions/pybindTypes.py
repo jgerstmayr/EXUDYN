@@ -23,16 +23,16 @@ declarationCalls = ['AddDocu', 'AddDocuCodeBlock', 'AddDocuList', 'AddEnumValue'
 #the calls which only steer where the output goes
 steeringCalls = {
     'CppCode': 'append C++ binding code written literally',
-    'LatexCode': 'append LaTeX text written literally',
+
     'StubCode': 'append stub text written literally',
-    'ResetRST': 'drop the RST text written so far',
+    'ResetMarkdown': 'drop the documentation text written so far',
     'BeginCppWrittenByHand': 'until EndCppWrittenByHand, the C++ binding exists by hand in C++: document only',
     'EndCppWrittenByHand': '',
     'BeginNoStub': 'until EndNoStub, no stub text is kept (pybind11 provides enough type information)',
     'EndNoStub': '',
     'EndStubSection': 'close the stub text of one class; the sections are written in reverse order',
     'CppFinishClass': 'finish the pybind class definition only, without the documentation side',
-    'ExtensionRST': 'append a generated RST file (MainSystem extensions, written by mainSystemExtensionDocsEmitter.py)',
+    'ExtensionMarkdown': 'append a generated Markdown file (MainSystem extensions, written by mainSystemExtensionDocsEmitter.py)',
     }
 
 

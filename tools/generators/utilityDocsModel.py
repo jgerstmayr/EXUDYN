@@ -27,9 +27,8 @@ if toolsDirectory not in sys.path:
 import copy #for deep copies
 
 import generatorPaths as paths                                                  # noqa: E402
-from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, \
-          RemoveIndentation, RSTheaderString, RSTlabelString, RSTurl, RSTmarkup, RSTcodeBlock, \
-          LatexString2RST, Latex2RSTlabel, DocStringGoogleFromPlainText         # noqa: E402
+from autoGenerateHelper import Str2Latex, RemoveIndentation, Latex2RSTlabel, \
+          DocStringGoogleFromPlainText                                          # noqa: E402
 
 ADD_DOCSTRINGS = True
 
@@ -145,25 +144,6 @@ def SpecialAppend(prevList, name):
         prevList.append(name)
 
     return prevList
-
-def LatexString2RSTspecial(s, replaceMarkups = True): #replace \_ \{ etc. for RST
-
-    s = s.replace('`**kwargs`','`KWARGS`')
-    s = s.replace('`*args**`','`ARGS`')
-    if not replaceMarkups: #don't do twice!
-        s = s.replace('**kwargs','\\*\\*kwargs')
-        s = s.replace('*args','\\*args')
-
-    s = LatexString2RST(s, replaceMarkups=replaceMarkups)
-
-    s = s.replace('`KWARGS`','`**kwargs`')
-    s = s.replace('`ARGS`','`*args`')
-
-    s = s.replace('\\ac{T66}','Plücker transformation')
-
-    return s
-
-
 
 def EscapeUnderscoresOutsideMath(s):
     """Escape the underscores LaTeX would read as a subscript, and ONLY those (#2543).
@@ -448,225 +428,41 @@ def ParsePythonFile(fileName):
 #*****************************************************
 #convert tags of tagList in functionDict to latex and RST
 mycnt = 0
-def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
-    global mycnt
-    sLatex = ''
-    sRST = ''
-    #sIndentRST = '  '
-    sSpaces = '  '*0
-    for tag in tagList:
-        if tag in functionDict:
-            text = tag
-            replaceMarkups = False
-            if tag == 'function':
-                text = 'function description'
-                replaceMarkups = True
-            if tag == 'class':
-                text = 'class description'
-                replaceMarkups = True
-            if tag == 'input' or tag == 'classFunction' or tag == 'notes': replaceMarkups = True
-
-            sLatex += sSpaces+'\\item[--]'+RemoveIndentation(addStr)+'{\\bf ' + text + '}: '
-            sRST  += '- | '+RSTmarkup(text) + ':\n'
-            # if mycnt < 10:
-            #     print(RemoveIndentation(functionDict[tag].strip()), '\n') 
-            #     mycnt += 1
-            strTag = RemoveIndentation(functionDict[tag].strip())
-            #print(strTag)
-            if tag == 'output':
-                (tagType,strTag) = TagString2TypeAndString(tag, strTag)
-                if tagType is not None:
-                    strTag = '(type: '+tagType+')'+strTag
-                    #print(strTag)
-
-            if tag == 'example':
-                strTag = functionDict[tag].strip('\n').replace('\\_','_') #do not remove indentation, nor strip spaces, only blank lines
-                #print("example=", strTag)
-                sLatex += '\\vspace{-12pt}\\ei' #for global itemize list for function
-                sLatex += '\\begin{lstlisting}[language=Python, xleftmargin=36pt]\n'
-                sLatex += RemoveIndentation(strTag, '  ', removeAllSpaces = False, removeIndentation = True)
-                if sLatex[-1] != '\n': sLatex+='\n'
-                sLatex += '\\end{lstlisting}' #' \\vspace{6pt}'
-                sLatex += '\\vspace{-24pt}\\bi\\item[]\\vspace{-24pt}' #for global itemize list for function
-                sRST += '\n'+RSTcodeBlock(RemoveIndentation(strTag, '  ', removeAllSpaces = False, removeIndentation = True)+'\n', 'python')
-            elif strTag.count("\n") > 0 and strTag.strip() != '': #multiple lines are replaced by list
-                    
-                sLatex += '\\vspace{-6pt}\n'+sSpaces+'\\begin{itemize}[leftmargin=1.2cm]\n'
-                sLatex += '\\setlength{\\itemindent}{-0.7cm}\n'
-                if strTag[0] == '\n':
-                    strTag = strTag[1:]
-                if strTag[-1] == '\n':
-                    strTag = strTag[:-1]
-
-                strTagList = strTag.split('\n')
-                #replace words with ':' with italic characters
-                for s in strTagList:
-                    if s.strip() != '':
-                        if s.find(':') != -1 and (' ' not in s[:s.find(':')]): #first occurance = argument; may not have spaces
-                            n=s.find(':')
-                            sr = RSTmarkup(s[:n].replace('\\_','_'),'``') + LatexString2RSTspecial(s[n:], replaceMarkups = replaceMarkups) #in this string, there should be no markup ...
-                            s = '{\\it '+s[:n].replace('_','\\_')+'}'+ EscapeUnderscoresOutsideMath(s[n:])
-                        else:
-                            sr = LatexString2RSTspecial(s, replaceMarkups = replaceMarkups)
-                            s = EscapeUnderscoresOutsideMath(s)
-                        sLatex += sSpaces*2+'\\item[]'+s+'\n'
-                        sRST += '  | '+RemoveIndentation(sr) + '\n'
-                    
-                sLatex += '\\end{itemize}\n'
-                #sRST += '\n'+RemoveIndentation(strTag.strip(), '  | ')
-                #sRST += '\n'
-            else: #
-                #sLatex += strTag.replace('\n','\\\\ \n') + '\n'
-                sLatex += strTag.strip() + '\n' #in this case, we strip all spaces and newlines left, may be empty lines
-                sRST += '  | ' + LatexString2RSTspecial(strTag, replaceMarkups = replaceMarkups).strip() + '\n'
-    return [sLatex, sRST]
-
-#*****************************************************
-#write single function description into latex code
-def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFileName, isClassFunction = False, 
-                                      className='', createPyiFile=False, redirectBelongsTo=False):
-    sLatex = ''
-    sRST = ''
-    sPyi = ''
-    sPy = ''
+def FunctionStub(functionDict):
+    """The .pyi overload of one MainSystem extension function: the stub half of what
+    WriteFunctionDescription2LatexRST built beside the LaTeX and the RST until revision2026 step
+    R7.1.7. The documentation half is FunctionDescription2Markdown below."""
     argList = functionDict['argumentsList']
     argDefault = functionDict['defaultArgumentsList']
-    addStr = ''
-    classLabelStr = ''
-    if isClassFunction:
-        addStr = '\\textcolor{steelblue}'
-        classLabelStr = className+':'
-    
-    #debug:    
-    # print("\n\nfunction name=",functionDict['functionName'])
-    # print("\n\nfunction dict=\n",functionDict)
-    functionName = functionDict['functionName']
-    lineNumberStr = '' #will be e.g: '#L122'
-    if functionDict['lineNumber'] != 0:
-        lineNumberStr = '\\#L'+str(functionDict['lineNumber']+1)
-    #github link:
-    url = paths.githubSourceURL+'exudyn/'+pythonFileName +lineNumberStr
+    functionName = functionDict['functionName'].replace(chr(92) + '_', '_')
 
+    sPyi = ' '*4 + '@overload' + chr(10)
+    sPyi += ' '*4 + 'def ' + functionName + '('
 
-    functionNameClean = functionName.replace('\\_','_')
+    separator = ''
+    for (i, argument) in enumerate(argList):
+        if len(argument.strip()) == 0:
+            continue
+        #mbs and mainSystem become self: the function is added to the class
+        modifiedArgument = argument
+        for (key, value) in argListMBSconvert.items():
+            modifiedArgument = modifiedArgument.replace(key, value)
+        sPyi += separator + modifiedArgument.replace(chr(92) + '_', '_')
+        if len(argDefault[i]) != 0:
+            sPyi += '=' + argDefault[i]
+        separator = ', '
 
-    if True:
-        sLatex += '\\begin{flushleft}\n'
-        sLatex += '\\noindent '+addStr+'{def {\\bf \\exuUrl{'+url
-        sLatex += '}{' + functionName +'}{' '}}}'
-    # else:
-    #     sLatex += '\\noindent '+addStr+'{def '
-    #     sLatex += '}{\\bf ' + functionName +'}{' '}'
-    
-        #relative file link:
-        #sLatex += '\\noindent '+addStr+'{def \\mybold{\exuUrl{file:../../main/pythonDev/exudyn/' + moduleNamePython +'.py'+'}{' + functionName +'}{' '}}}'
-        sLabel = 'sec:'
-        if not createPyiFile:
-            sLabel += moduleNamePython 
-        else:
-            sLabel += 'mainsystemextensions'
-        sLabel += ':' + classLabelStr + functionNameClean
-        
-        if not redirectBelongsTo:
-            sLatex += '\\label{'+sLabel+'}\n'
-            sRST += RSTlabelString(Latex2RSTlabel(sLabel))+'\n'
+    (outputType, dummy) = TagString2TypeAndString('output', functionDict['output'].strip())
+    if outputType is None:
+        print('missing outputType in function ', functionDict['functionName'])
+        outputType = 'Any'
 
-
-    #see also https://github.com/sphinx-doc/sphinx/issues/3921
-    if isClassFunction:
-        title = 'Class function: '+functionNameClean
-        sRST += title + '\n'
-        sRST += '^'*len(title) + '\n'        
-    else:
-        title = 'Function: '+functionNameClean
-        sRST += title + '\n'
-        sRST += '^'*len(title) + '\n'    
-    if True: #not createPyiFile:
-        sRST += RSTurl(functionNameClean, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
-    else:
-        sRST += '\\ **'+functionNameClean+'**\\ ('
-
-    if createPyiFile:
-        sPyi += ' '*4+'@overload\n'
-        sPyi += ' '*4+'def '+functionNameClean+'('
-
-
-    sLatex += '('
-    sep = ''
-    sepPyi = ''
-    for i in range(len(argList)):
-        argStrip = argList[i].strip()
-        if len(argStrip) != 0:
-            if not createPyiFile or (argStrip not in argListMBSconvert):
-                sLatex += sep+'{\\it '+argList[i]+'}'
-                sRST += sep + '\\ ``' + argList[i].replace('\\_','_')
-                if len(argDefault[i]) != 0:
-                    sLatex += '= '+argDefault[i]
-                    sRST += ' = '+argDefault[i] 
-
-                sep = ', '
-                sRST += '``\\ '
-            
-            if createPyiFile:
-                modArg = argList[i]
-                for key, value in argListMBSconvert.items():
-                    modArg = modArg.replace(key,value)
-                sAdd = sepPyi + modArg.replace('\\_','_')
-                if len(argDefault[i]) != 0:
-                    sAdd += '='+argDefault[i]
-                sepPyi = ', '
-                
-                sPyi += sAdd
-                #sPy += sAdd
-                #sPyReturn += sAdd
-
-    if createPyiFile:
-        output = functionDict['output'].strip()
-        (outputType,dummy) = TagString2TypeAndString('output', output)
-        if outputType is None:
-            print('missing outputType in function ',functionDict['functionName'])
-            outputType = 'Any'
-        #outputType = output.split(';')[0].strip() #previous format
-        #print('outputType=',outputType)
-        
-        sPyi += ') -> '+outputType+': '
-        if ADD_DOCSTRINGS:
-            sPyi += '\n' + DocStringGoogleFromPlainText(functionDict['functionDescriptionClean'], addSpaces=' '*8) + ' '*4
-        sPyi += '...\n\n' #for now, we do not know the return type
-        #sPyReturn += ')\n\n' 
-        #sPy += '):\n'+sPyReturn
-    
-        functionDict = copy.deepcopy(functionDict)
-        # if 'example' in functionDict:
-        #     del functionDict['example']
-        
-        if 'input' in functionDict:
-            s = functionDict['input']
-            pEOL = s.find('\n',1) #start at character 1, as first character may be \n
-
-            if not pEOL or ('mbs:' not in s[:pEOL] and 'mainSystem:' not in s[:pEOL]):
-                print('ERROR: invalid input description for pyi extension')
-                print(functionName)
-            else:
-                functionDict['input'] = functionDict['input'][pEOL+1:]
-    sRST += ')\n\n'
-    sLatex += ')\n'
-    sLatex += '\\end{flushleft}\n'
-    
-    if not redirectBelongsTo:
-        sLatex += '\\setlength{\\itemindent}{0.7cm}\n'
-        sLatex += '\\begin{itemize}[leftmargin=0.7cm]\n'
-        [sDictLatex, sDictRST] = DictToItemsText(functionDict, docuTags, addStr)
-    
-        sLatex += sDictLatex
-        
-        sRST += sDictRST
-        sLatex += '\\vspace{12pt}\\end{itemize}\n%\n'
-
-    
-    
-    return [sLatex,sRST,sPyi,sPy]
-
+    sPyi += ') -> ' + outputType + ': '
+    if ADD_DOCSTRINGS:
+        sPyi += chr(10) + DocStringGoogleFromPlainText(
+            functionDict['functionDescriptionClean'], addSpaces=' '*8) + ' '*4
+    sPyi += '...' + chr(10)*2
+    return sPyi
 
 
 def Tags2Markdown(itemDict, tags):

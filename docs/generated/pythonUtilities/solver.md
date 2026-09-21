@@ -53,6 +53,8 @@ Most of the solvers are implemented inside the C++ core.
 ```
 
 
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveStatic(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-solvestatic`
+
 
 (sec-solver-solvedynamic)=
 ## Function: SolveDynamic
@@ -89,6 +91,8 @@ Most of the solvers are implemented inside the C++ core.
         variableType=exu.OutputVariableType.Position))
 ```
 
+
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveDynamic(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-solvedynamic`
 
 
 (sec-solver-solversuccess)=
@@ -156,6 +160,8 @@ Most of the solvers are implemented inside the C++ core.
 ```
 
 
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeLinearizedSystem(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-computelinearizedsystem`
+
 
 (sec-solver-computeode2eigenvalues)=
 ## Function: ComputeODE2Eigenvalues
@@ -204,6 +210,8 @@ Most of the solvers are implemented inside the C++ core.
 ```
 
 
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-computeode2eigenvalues`
+
 
 (sec-solver-computesystemdegreeoffreedom)=
 ## Function: ComputeSystemDegreeOfFreedom
@@ -241,6 +249,8 @@ Most of the solvers are implemented inside the C++ core.
   dof = mbs.ComputeSystemDegreeOfFreedom(verbose=1)['degreeOfFreedom'] #print out details
 ```
 
+
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeSystemDegreeOfFreedom(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-computesystemdegreeoffreedom`
 
 
 (sec-solver-checksolverinfostatistics)=

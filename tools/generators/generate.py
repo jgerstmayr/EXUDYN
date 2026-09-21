@@ -71,15 +71,13 @@ stages = [
     #the *Ext fragments are inputs of pybindEmitter, not documentation of their own; Markdown
     #since revision2026 step R7.1.6
     Stage('tools/generators/mainSystemExtensionDocsEmitter.py', ['python/exudyn/*.py'],
-          [G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst', G + 'MainSystemExt.md',
-           G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
+          [G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
           #Markdown since revision2026 step R7.1.6; confHelperPyUtilities.py is not documentation
           #but data for conf.py, and lives with the other generator data since R7.1.7
           ['docs/generated/pythonUtilities', G + 'confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
-          ['definitions', G + 'MainSystemExt.rst', G + 'MainSystemCreateExt.rst',
-           G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
+          ['definitions', G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
            G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
            #Markdown since revision2026 step R7.1.6; confHelper.py is not documentation but data

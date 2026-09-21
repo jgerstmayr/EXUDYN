@@ -25,9 +25,9 @@ toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
 
-from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
+from autoGenerateHelper import ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
     GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
-    PyLatexRST, LatexString2RST, RSTheaderString, RSTlabelString, FileNameLower, RemoveIndentation, CutLinesFromString
+    PyLatexRST, FileNameLower, RemoveIndentation, CutLinesFromString
 
 
 from autoGenerateHelper import KeywordExamplesMarkdown, MarkdownLabel, MarkdownHeading
@@ -120,8 +120,6 @@ def WriteFile(parseInfo, parameterList):
     #Latex doc:
     plr = PyLatexRST()
 
-    #plr.sLatex = ''
-    sLatexItemList = ''
 
     hasPybindInterface = False
     for parameter in parameterList:
@@ -137,32 +135,21 @@ def WriteFile(parseInfo, parameterList):
             localListItemNames.append(parseInfo['pythonShortName'])
             localListItemNames.append('V'+parseInfo['pythonShortName'])
             
-        sLatexItemList += '  \\item ' + parseInfo['class'] + '\n'
         
         descriptionStr = parseInfo['classDescription']
 
-        plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n'
         plr.AddDocu(text=descriptionStr,
-                    section=parseInfo['class'], 
-                    sectionLevel=2, 
+                    section=parseInfo['class'],
+                    sectionLevel=2,
                     sectionLabel='sec:item:' + parseInfo['class'])
-        plr.sLatex += '\\vspace{12pt}'+'\\\\'+'\n'
 
-        # plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
-        # plr.sLatex += '\\label{sec:item:' + parseInfo['class'] + '}\n'
-        # plr.sLatex += descriptionStr + '\\vspace{12pt}\n \\\\'
 
         cPLR = PyLatexRST()
         vPLR = PyLatexRST()
 
-        cPLR.sLatex += '\\vspace{12pt} \\noindent '
         cPLR.AddDocu('The item \\mybold{' + parseInfo['class'] + "} with type = '"+
                      sTypeName + "' has the following parameters:")
-        cPLR.sLatex += '\\vspace{-0.5cm}\\\\'+'\n' #orig:-1cm
-
-        vPLR.AddDocu('\\noindent The item V' + parseInfo['class'] + 
-                     ' has the following parameters:')
-        cPLR.sLatex += '\\vspace{-0.5cm}\\\\'+'\n'#orig:-1cm
+        vPLR.AddDocu('The item V' + parseInfo['class'] + ' has the following parameters:')
 
         cPLR.DefItemStartTable(classStr=parseInfo['class'])        
         vPLR.DefItemStartTable(classStr=parseInfo['class'])        
@@ -254,13 +241,11 @@ def WriteFile(parseInfo, parameterList):
             pluralAuthors = ''
             if ',' in parseInfo['author']:
                 pluralAuthors ='s'
-            plr.AddDocu('\\noindent Author'+pluralAuthors+': ' + parseInfo['author'] + '\n')
-            plr.sLatex += '\\vspace{12pt}'+'\\\\'+'\n'
+            plr.AddDocu('Author'+pluralAuthors+': ' + parseInfo['author'] + '\n')
 
-        #plr.sLatex += requestedMarkerString
         if len(requestedMarkerString) + len(itemTypeString) + len(parseInfo['pythonShortName']) !=0:
             lstAdd = []
-            plr.AddDocu('\\noindent \\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
+            plr.AddDocu('\\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
             if len(itemTypeString) != 0:
                 lstAdd += ['This \\texttt{' + parseInfo['classType'] + '} has/provides the following types = ' + itemTypeString]
 
@@ -281,33 +266,21 @@ def WriteFile(parseInfo, parameterList):
         plr += vPLR
 
 #        if len(parseInfo['outputVariables']) != 0:
-#            plr.sLatex += '{\\bf Output variables} (chose type, e.g., OutputVariableType.Position): \n\\begin{itemize}\n'
 #            dictOV = eval(parseInfo['outputVariables']) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
 #            for outputVariables in dictOV.items(): 
-#                plr.sLatex += space4+'\\item {\\bf ' + outputVariables[0].replace('_','\_') + '}: ' + outputVariables[1].replace('_','\_') + '\n'
 #            
-#            plr.sLatex += '\\end{itemize}\n'
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #input parameters: only in latex table
         #addLatex = '' 
         plrAdd = PyLatexRST() #only added if non-empty
-        #only in PDF:
-        if len(symbolList) != 0: #automatically generated import parameter symbol list 
-            #plrAdd.sLatex += "\\vspace{6pt}\\\\ \n"
-            plrAdd.sLatex += "\\paragraph{Information on input parameters:} \n"
-            plrAdd.sLatex += "\\startTable{input parameter}{symbol}{description see tables above}\n"
-            plrAdd.sLatex += symbolList
-            plrAdd.sLatex += "\\finishTable\n"
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #process outputVariables, including symbols
         if len(parseInfo['outputVariables']) != 0:
             plrAdd.AddDocu('\\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:')
-            #plrAdd.sLatex += "{\\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: \n"
             plrAdd.DefLatexStartTable3(['output variable','symbol','description'])        
 
-            #plrAdd.sLatex += "\\startTable{output variable}{symbol}{description}\n"
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
@@ -316,82 +289,38 @@ def WriteFile(parseInfo, parameterList):
                 [description, latexSymbol] = ExtractLatexSymbol(description)
                 if len(latexSymbol) != 0: 
                     latexSymbol = latexSymbol
-                #plrAdd.sLatex += "\\rowTable{" + oVariable +"}{" + latexSymbol + "}{" + description + "}\n"  #this is the line for one outputvariable
                 plrAdd.Table3WriteRow(cols=[oVariable, latexSymbol, description])
             
-            #plrAdd.sLatex += "\\finishTable\n" #outputvariables
             plrAdd.DefLatexFinishTable()
 
         #++++++++++++++++++++++++++++++++++++++++++++++
-        #only latex (currently):
+        #the equations; everything before the %%RSTCOMPATIBLE marker is what the web
+        #documentation shows, and the marker is the author's own judgement of where the LaTeX
+        #stops carrying over
         if len(parseInfo['equations']) != 0:
             eqText = parseInfo['equations']
-            plrAdd.sLatex +=' \\noindent\n' + eqText
             if '%%RSTCOMPATIBLE' in eqText:
                 pEnd = eqText.find('%%RSTCOMPATIBLE')
-                #if parseInfo['class'] == 'ObjectANCFCable2D':
-                    # print('******************************')
-                    # print(RemoveIndentation(eqText[:pEnd], removeAllSpaces=False))
-                    # print('******************************')
-                plrAdd.sRST += LatexString2RST(RemoveIndentation2(eqText[:pEnd], removeAllSpaces=False)+'\n' ) #indentation not
                 plrAdd.sMarkdown += LatexText2Markdown(
                     RemoveIndentation2(eqText[:pEnd], removeAllSpaces=False)) + '\n\n'
-                #plrAdd.sRST += LatexString2RST(eqText[:pEnd]+'\n', ) #indentation not 
                 
         if len(parseInfo['miniExample']) != 0:
-            #plrAdd.sLatex +='\\vspace{12pt}\\\\ \n'
-            plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}"
-            #plrAdd.sRST += '\n'+'-'*10 + '\n'
-            #plrAdd.sLatex += '\mysubsubsubsection{MINI EXAMPLE for ' + parseInfo['class'] + '}'
             plrAdd.AddDocu('', section='MINI EXAMPLE for ' + parseInfo['class'], sectionLevel=3, 
                         sectionLabel='miniExample_'+parseInfo['class'], preNewLine = True)
-            #plrAdd.sLatex +='\\label{miniExample_'+parseInfo['class']+'}\n'
             plrAdd.AddDocuCodeBlock(parseInfo['miniExample'])
-            # plrAdd.sLatex +='\\pythonstyle\n'
-            # plrAdd.sLatex +='\\begin{lstlisting}[language=Python, firstnumber=1]\n'
-            # plrAdd.sLatex += parseInfo['miniExample'] + '\n'
-            # plrAdd.sLatex +='\\end{lstlisting}\n\n'
 
-        [sExamples, sExamplesRST] = GenerateLatexStrKeywordExamples(parseInfo['classType'], 
-                                        parseInfo['class'], parseInfo['pythonShortName'],
-                                        useLatex=False)
-        if len(sExamples) != 0:
-            plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
-            plrAdd.sLatex += sExamples
-            plrAdd.sRST += '\n'+sExamplesRST
-            plrAdd.sMarkdown += KeywordExamplesMarkdown(parseInfo['classType'],
-                                                        parseInfo['class'],
-                                                        parseInfo['pythonShortName'])
+        plrAdd.sMarkdown += KeywordExamplesMarkdown(parseInfo['classType'],
+                                                    parseInfo['class'],
+                                                    parseInfo['pythonShortName'])
 
-        if len(plrAdd.sLatex) != 0:
-            #plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
-            plr.sLatex += "\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
-            plr.sLatex += '\\mysubsubsubsection{DESCRIPTION of ' + parseInfo['class'] + ':}\n' #\\vspace{6pt} \\\\ \n'
-            plr.sLatex +='\\label{description_'+parseInfo['class']+'}\n'
-
-            plr.sLatex += plrAdd.sLatex #add this information at the end
-        
-        if len(plrAdd.sRST) != 0:
-            #plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
-            plr.sRST += '-'*10 + '\n'
-            plr.sRST += RSTlabelString('description_'+parseInfo['class'])+'\n'
-            plr.sRST += RSTheaderString('DESCRIPTION of ' + parseInfo['class'], level=3) 
-
-            plr.sRST += plrAdd.sRST #add this information at the end
-
-        #Markdown (revision2026 step R7.1.6); the equations, the output variables, the mini
-        #example and the examples, under the same DESCRIPTION heading as in the other formats
+        #the equations, the output variables, the mini example and the examples, under their own
+        #DESCRIPTION heading (revision2026 step R7.1.6)
         if len(plrAdd.sMarkdown.strip()) != 0:
             plr.sMarkdown += '\n' + MarkdownLabel('description_'+parseInfo['class']) + '\n'
             plr.sMarkdown += MarkdownHeading('DESCRIPTION of ' + parseInfo['class'], 3) + '\n\n'
             plr.sMarkdown += plrAdd.sMarkdown
 
-
-    #the Python interface classes are emitted by tools/generators/itemInterfaceEmitter.py
-    sPythonClass = ''
-
-    return [None, None, None, plr.sLatex, sLatexItemList, classTypeStr, None, plr.sRST,
-            None, plr.sMarkdown]
+    return [classTypeStr, plr.sMarkdown]
 
 
 #%%**********************************************
@@ -580,7 +509,6 @@ def main():
     sRSTfolderDict = {} #dict containing available folders (to create index file)
     sRSTtypeConversion = {} #conversion from singular to plural
     
-    sLatexItemList = '' #Latex string containing list of items
     #++++++++++++++++++++++++++    
     
     multiLineReading = False #for equations and miniExample
@@ -596,8 +524,7 @@ def main():
         #++++++++++++++++++++++++++++++
         #now write C++ header file for defined class
         #print(parseInfo)
-        fileStr = WriteFile(parseInfo, parameterList)
-        sLatexItemList += fileStr[4]
+        (classTypeStr, markdownText) = WriteFile(parseInfo, parameterList)
 
         #+++++++++++++++++++++++++++++++
         className = parseInfo['class']
@@ -614,7 +541,7 @@ def main():
         typeInd = -1
         it = 0
         for item in sPythonGlobalNames: 
-            if item == fileStr[5]: 
+            if item == classTypeStr:
                 typeInd = it
             it+=1
 
@@ -626,21 +553,11 @@ def main():
             if parseInfo['excludeFromTheDoc'] != 'True':
                 sRSTtype = parseInfo['classType']
                 sRSTtype2 = parseInfo['classType']+'s'
-                indexLatexGlobal = latexGlobalFromPython[typeInd]
-                oType=''
                 if parseInfo['classType'] == 'Object':
-                    oType = parseInfo['objectType']
-                    indexLatexGlobal += objectClassDict[parseInfo['objectType']]
                     sRSTtype += ' ('+parseInfo['objectType']+')'
                     sRSTtype2 += ' ('+parseInfo['objectType']+')'
 
-                if len(sLatexGlobal[indexLatexGlobal]) != 0:
-                    sLatexGlobal[indexLatexGlobal] += '\\newpage\n' #add newpage after every subsection!
-
-                sLatexGlobal[indexLatexGlobal] += fileStr[3]
-
-                sRSTItemList += [(sRSTtype, parseInfo['class'], fileStr[7])]
-                sMarkdownItemList += [(sRSTtype, parseInfo['class'], fileStr[9])]
+                sMarkdownItemList += [(sRSTtype, parseInfo['class'], markdownText)]
                 if sRSTtype not in sRSTfolderDict:
                     sRSTfolderDict[sRSTtype] = []
                     sRSTtypeConversion[sRSTtype] = sRSTtype2 #conversion from singular to plural

@@ -17,7 +17,7 @@ from pybindTypes import *
 pb = PybindInterface()
 
 pb.AddDocu('',section='Python-C++ command interface', sectionLevel=0, sectionLabel='sec:PCpp:command:interface')
-pb.ResetRST() #chapter is included in CInterfaceIndex.rst
+pb.ResetMarkdown() #the chapter heading lives in the index page
 
 pb.AddDocu('This chapter lists the basic interface functions which can be used to set up a \\codeName\\ model in Python.')
 

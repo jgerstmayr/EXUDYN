@@ -31,7 +31,7 @@ from latexToMarkdown import NormalizeHeadings                                   
 #************************************************
 #the documentation of one structure
 def StructureDocs(parseInfo, parameterList):
-    """returns [LaTeX text, RST text, parameter changes list]"""
+    """returns [Markdown text, parameter changes list]"""
     plr = PyLatexRST()
     plr.AddDocu(parseInfo['latexText']) #.replace('\\n','\n') #this is the string for latex documentation
     
@@ -47,26 +47,12 @@ def StructureDocs(parseInfo, parameterList):
         if not descriptionStr.endswith('.'): 
             descriptionStr += '. '
         
-        plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n'
         plr.AddDocu(Str2Latex(descriptionStr, replaceCurlyBracket=False)+
                     '\n\n\\noindent '+
                     parseInfo['class'] + ' has the following items:\n', 
                     section=parseInfo['class'], sectionLevel=3, 
                     sectionLabel='sec:' + parseInfo['class'].replace(' ',''))
-        plr.sRST += '\n' #newline for start of list
-
-        # plr.sLatex += '\mysubsubsection{' + parseInfo['class'] + '} \label{sec:' + parseInfo['class'].replace(' ','') + '}\n'
-        # plr.sLatex += Str2Latex(descriptionStr, replaceCurlyBracket=False) + '\\\\ \n'
-        # plr.sLatex += '%\n\\noindent '
-        # plr.sLatex += parseInfo['class'] + ' has the following items:\n'
-        plr.sLatex += '%reference manual TABLE\n'
-        plr.sLatex += '\\begin{center}\n'
-        plr.sLatex += '  \\footnotesize\n'
-        plr.sLatex += '  \\begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}\n'
-        plr.sLatex += '    \\hline\n'
-        plr.sLatex += '    \\bf Name & \\bf type / function return type & \\bf size & \\bf default value / function args & \\bf description \\\\ \\hline\n'
-
-        #the same table in Markdown (revision2026 step R7.1.6)
+        #the table of the structure's items (revision2026 step R7.1.6)
         plr.sMarkdown += ('\n| Name | type / function return type | size | default value / function '
                           'args | description |\n|---|---|---|---|---|\n')
     
@@ -129,53 +115,44 @@ def StructureDocs(parseInfo, parameterList):
                                             Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False), isFunction=True)
 
                 
-        plr.sLatex += '	  \\end{longtable}\n'
-        plr.sLatex += '	\\end{center}\n'
         plr.sMarkdown += '\n'
 
 
 
     parameterChangesList = ParameterChangesList(parseInfo, parameterListSorted, typicalPaths)
-    return [plr.sLatex, plr.sRST, plr.sMarkdown, parameterChangesList]
+    return [plr.sMarkdown, parameterChangesList]
 
 
 def main():
-    rstFileDict={'SimulationSettings':'',
-                 'VisualizationSettings':'',
-                 'CSolverStructures':'',
-                 'MainSolver':'',
-                 'PyStructuralElementsDataStructures':'',
-                 'BeamSectionGeometry':'',
-                 } #contains available file names and text
+    #one page per structure file
+    markdownFileDict = {'SimulationSettings': '',
+                        'VisualizationSettings': '',
+                        'CSolverStructures': '',
+                        'MainSolver': '',
+                        'PyStructuralElementsDataStructures': '',
+                        'BeamSectionGeometry': '',
+                        }
 
-    markdownFileDict = {key: '' for key in rstFileDict}   #revision2026 step R7.1.6
-
-    globalLatexStr = '' #this is the whole string for the latex docu
     globalParameterChangesList = []
 
     for parseInfo, parameterList in LegacyStructures():
-        [latexStr, rstStr, markdownStr, parameterChangesList] = StructureDocs(parseInfo,
-                                                                              parameterList)
-        globalLatexStr += latexStr
+        [markdownStr, parameterChangesList] = StructureDocs(parseInfo, parameterList)
         globalParameterChangesList += parameterChangesList
 
         #the changes of the visualization substructures are listed at VisualizationSettings
         if not HasTopClass(parseInfo['class']) and len(globalParameterChangesList) != 0:
-            (globalLatexStr, rstStr) = ParameterChanges2LatexRST(globalParameterChangesList, globalLatexStr, rstStr)
             markdownStr += ParameterChanges2Markdown(globalParameterChangesList)
             globalParameterChangesList = []
 
         fileName = parseInfo['writeFile'].split('.')[0]
-        if fileName in rstFileDict:
-           rstFileDict[fileName] += rstStr
-           markdownFileDict[fileName] += markdownStr
+        if fileName in markdownFileDict:
+            markdownFileDict[fileName] += markdownStr
 
     latexText = """
-This section includes the reference manual for structures (such as for solvers, helper structures, etc.) 
-and settings which are available in the python interface, e.g., simulation settings, visualization settings. 
+This section includes the reference manual for structures (such as for solvers, helper structures, etc.)
+and settings which are available in the python interface, e.g., simulation settings, visualization settings.
 The data is auto-generated from the according interfaces in order to keep fully up-to-date with changes.
 """
-    globalLatexStr += latexText
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #MARKDOWN, revision2026 step R7.1.6. This emitter wrote docs/theDoc/interfaces.tex and

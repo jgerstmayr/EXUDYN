@@ -481,129 +481,6 @@ def Latex2RSTlabel(s):
     return s.replace(':','-').replace('_','-').lower()
 
 #add specific markup with blind spaces
-def RSTmarkup(name, c='*', blindSpaces=True):
-    return '\\ '*blindSpaces+c+name+c+'\\ '*blindSpaces
-
-
-#add code block; code must already be indented; code must have \n at end
-def RSTcodeBlock(code, typeString='', addLineNumbers=False, indentation=''):
-    s = '.. code-block:: '+typeString + '\n'
-    icode = code
-
-    if indentation != '':
-        icode = RemoveIndentation(code,indentation, False, False) #add 3 spaces
-
-    if addLineNumbers:
-        if indentation == '':
-            s += '   '
-        s += indentation + ':linenos:\n'
-
-    s += '\n' + icode + '\n'
-    return s
-
-#create text for inline URL
-def RSTurl(urlText, link, boldFace=False, blindSpaces=False):
-    bf = ''
-    if boldFace:
-        bf = ':stlink:'
-    return '\\ '*blindSpaces+bf+'`'+urlText+' <'+link+'>`_'+'\\ '*blindSpaces
-
-
-#write latex source inline
-def RSTinlineMath(mathString, convert=True):
-    if convert:
-        mathString = ReplaceWords(mathString, convLatexMath, replaceBraces=False) #keep braces!
-
-    s = '\\ :math:`' + mathString + '`\\ '
-    return s
-
-#equation block:
-def RSTmathEq(mathString, convert=True, isEqArray=False):
-    if convert:
-        mathString = ReplaceWords(mathString, convLatexMath, replaceBraces=False, replaceDoubleBS=False) #keep braces!
-    
-    #single line, line break would indicate separate math line
-    sNew = '.. math::\n'
-
-    #+++++++++++++++++++++++++++++++
-    s = mathString
-    found = ExtractLatexCommand(s, '\\label', False, False)
-
-    label = ''
-    if found != -1:
-        [preString, innerString, innerString2, postString] = found
-        s = preString + postString
-        label = Latex2RSTlabel(innerString)
-        #print('label found:', label)
-
-    #+++++++++++++++++++++++++++++++
-    #we need to remove spaces at beginning/end and remove lines with comments and empty lines
-    slines = s.split('\n')
-    s = ''
-    for line in slines:
-        line = line.strip()
-        if len(line) == 0 or line[0] == '%':
-            continue #empty line omitted
-        s+=line+'\n'
-    if len(s) == 0:
-        raise ValueError('RSTmathEq: empty equation:'+mathString)
-    s = s[:-1]
-    s = RemoveIndentation(s).replace('\n',' ') #must be single line; spaces kept, as they are needed as delimiter
-
-    if isEqArray:
-        s = s.replace('\\\\','\\\\'+'\n')
-    s = RemoveIndentation(s, addSpaces='   ')
-
-    if label != '':
-        sNew += '   :label: '+label+'\n\n'
-    else:
-        sNew += '\n'
-
-    sNew += s + '\n\n'
-    # if isEqArray:
-    #     print('math=\n',sNew)
-    return sNew
-    
-#write latex source in separate equation
-def RSTmath(mathString, label=''):
-    s = '.. math:: '+mathString+'\n'
-    if label!='':
-        s+='   :label: '+label + '\n'
-    s += '\n'
-    return s
-
-#label string directly to be placed e.g. before header
-def RSTlabelString(name):
-    return '\n.. _'+Latex2RSTlabel(name)+':\n'
-
-
-#writer heder with levels from 1 to 4
-def RSTheaderString(header, level):
-    s = ''
-    if level == 0:
-        s += '='*len(header)+'\n'
-        s += header+'\n'
-        s += '='*len(header)+'\n'
-    elif level == 1:
-        s += '*'*len(header)+'\n'
-        s += header+'\n'
-        s += '*'*len(header)+'\n'
-    elif level == 2:
-        #s += '-'*len(header)+'\n'
-        s += header+'\n'
-        s += '='*len(header)+'\n'
-    elif level == 3:
-        s += header+'\n'
-        s += '-'*len(header)+'\n'
-    elif level == 4:
-        s += header+'\n'
-        s += '^'*len(header)+'\n'
-    else:
-        raise ValueError('WriteRSTheader: unknown header level: '+str(level))
-    # print('header=\n',s)
-    return s
-
-#start searching for { and matching } bracket, including sub-brackets
 def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
     cnt = 0
     bStart = -1
@@ -623,311 +500,10 @@ def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
     return [-1,-1]
         
 #convert a text that is mainly designed for latex, but to be output into RST
-def LatexString2RST(s0, replaceCommands=True, replaceMarkups = False, sectionMarkerText=''): #Latex style to RST
-
-    # replace latex math to RST inline
-    sNew = ''
-    endFound = False
-    pos = 0
-
-    s = s0
-    s0 = s0.replace(r'\pythonstyle\begin{lstlisting}',r'\begin{pytlisting}')
-
-    if replaceCommands:
-        s = ReplaceLatexCommands(s0, convLatexCommands, sectionMarkerText=sectionMarkerText)
-
-    while not endFound:
-        startStr = '$'
-        endStr = '$'
-            
-        isInlineEq = True
-        val = s.find(startStr,pos)
-        val2 = s.find('\\be',pos)
-        if val2 != -1 and (val2 < val or val == -1): #cases: val=-1, val2=-1 || val=-1, val2>=0 || val>=0, val2=-1 || val>-1, val2>-1; 
-            isInlineEq = False
-            startStr = '\\be'
-            endStr = '\\ee'
-            val = val2
-
-        isEqArray = False
-        if val == -1:
-            val = len(s)
-            endFound = True
-        else: #do not consider \begin{} or \bea !
-            if not isInlineEq:
-                #print('found be:', s[val:val+30])
-                sep = s[val+len(startStr)] 
-                if sep == 'a': #eqnarray
-                    startStr = '\\bea'
-                    endStr = '\\eea'
-                    sep = s[val+len(startStr)]
-                    isEqArray = True
-                if sep.strip() != '' and sep != '\\':
-                    #print('not')
-                    pos = val+len(startStr)
-                    continue #continue search at pos
-            
-
-        regText = s[pos:val]
-        if replaceMarkups:
-            regText = regText.replace('*','\\*')
-            
-        if replaceCommands:
-            #commands must be replaced already earlier, e.g. rowTable may include $$ inside, this would not work if split up into parts
-            # regText = ReplaceLatexCommands(regText, convLatexCommands)
-            regText = ReplaceWords(regText , convLatexWords, replaceBraces=True, replaceDoubleBS=True)
-
-        sNew += regText
-        if not endFound:
-            val += len(startStr)
-            valEnd = s.find(endStr,val)
-            if valEnd != -1:
-                if isInlineEq:
-                    sMath = s[val:valEnd].strip() #spaces at end make problems
-                    sNew += RSTinlineMath(sMath) #do not replace markups inside this text
-                else:
-                    sNew += '\n' + RSTmathEq(s[val:valEnd],True, isEqArray=isEqArray)
-                    
-                val = valEnd+len(endStr)
-            else:
-                print('WARNING:\nutilities: found no closing '+endStr+' in:\n', s)
-                endFound = True
-                sNew = s
-        pos = val
-
-    #
-
-    if '\\label' in sNew:
-        print('WARNING: label still in s:')
-        sf = sNew.find('\\label')
-        print(sNew[sf:sf+40])
-    # if '\\be' in sNew:
-    #     print('WARNING: \\be still in s:')
-    #     sf = sNew.find('\\be')
-    #     print(sNew[sf:sf+40])
-
-    return sNew
-
-#if key is found, return [preString, innerString, innerString2, postString], otherwise -1; '123\section{abc}456' = ['123','abc','456']
-#if secondBracket>0, it searches two consecutive brackets: \exuURL{...}{...} and stores in innerString2 (will be list for more inner strings)
-def ExtractLatexCommand(s, key, secondBracket, isBeginEnd=False):
-    found = -1
-    if isBeginEnd: #find \begin{...} \end{...}
-        #always find next occurances --> will be erased in next run ...
-        keyEnd = '\\end{'+key+'}'
-        keyStart = '\\begin{'+key+'}'
-        if key == 'pytlisting':
-            keyEnd = '\\end{'+'lstlisting'+'}'
-        if key == '\\be':
-            keyStart = key
-            keyEnd = '\\ee'
-        sStart = s.find(keyStart)
-        sEnd = s.find(keyEnd,sStart)
-        if sStart == -1 or sEnd == -1 or sStart >= sEnd: #if start>end, it is e.g. lstlisting end for pytlisting as start
-            # if sStart >= sEnd:
-            #     print('begin/end: sStart>sEnd: key=',key)
-            return -1
-        else:
-            found = sStart
-            sStart += len(keyStart) - 1
-            if False:
-                print('=====================')
-                print('found:'+s[found:sEnd+len(keyEnd)])
-                print('+++++++++++++++++++++')
-                print('inner:'+s[sStart:sEnd])
-                print('=====================')
-            #sEnd += len('\\end{'+key+'}') - 1
-            preString = s[:found]
-            innerString = s[sStart+1:sEnd]
-            postString = s[sEnd+len(keyEnd):]
-
-            return [preString, innerString, '', postString]
-    else:
-        found = s.find(key)
-        while found != -1 and len(s) > found+len(key) and s[found+len(key)] != '{':
-            found = s.find(key, found+1)
-        
-        if found != -1:
-            [sStart, sEnd] = FindMatchingBracket(s, found+len(key))
-
-            preString = s[:found]
-            if sEnd == -1:
-                print('no matching bracket found: '+key+', "'+s[found:min(found+20,len(s))]+'"')
-                raise ValueError('ERROR')
-    
-            innerString = s[sStart+1:sEnd]
-            postString = s[sEnd+1:]
-    
-            # sStart2 = -1
-            # sEnd2 = -1
-            innerString2 = ''
-            innerStringList = []
-            
-            if secondBracket > 0:
-                for k in range(int(secondBracket)):
-                    #print('find 2nd: '+s[sEnd+1:sEnd+80])
-                    [sStart2, sEnd2] = FindMatchingBracket(s, sEnd+1)
-                    if sEnd2 == -1:
-                        print('no matching second bracket found: '+key+', "'+s[sEnd+1:sEnd+50]+'"')
-                        raise ValueError('ERROR')
-                    innerString2 = s[sStart2+1:sEnd2]
-                    innerStringList += [innerString2]
-                    postString = s[sEnd2+1:]
-                    sEnd = sEnd2
-                if secondBracket > 1: #for more than 2 arguments
-                    innerString2 = [innerString]+innerStringList
-                    #print('innerString2:',innerString2)
-    
-            # print(sStart, sEnd)
-            return [preString, innerString, innerString2, postString]
-        else:
-            return -1
-
-def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace strings provided in conversion dict
-    sectionFilesDepth = 1
-    secOff = 0
-    if sectionMarkerText!='':
-        secOff = 1#for doc2rst the section headers are different
-        
-    #remove comments:
-    slines = s.split('\n')
-    s = ''
-    for line in slines:
-        fc = line.find('%')
-        if fc != -1 and len(line) >= fc and line[fc-1] != '\\': #\% should be kept; line with \% should not have comment ...
-            if len(line[:fc].lstrip()) != 0:
-                line = line[:fc] #remove everything behind that; keep %, to be consistent with following steps
-
-        ls = line.lstrip()
-        if len(ls) != 0 and ls[0] == '%': #emtpy lines are kept, %lines are removed!
-            continue
-        #in rowtable, the new table may not contain any extra spaces at beginning of lines
-        if line.find('\\rowTable') != -1:
-            line = line.lstrip()
-
-        s+=line+'\n'
-    s = s[:-1]
-
-    #remove commands
-    s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
-    s = s.replace('{\\it ','\\myitalics{') #this is then further converted into rst code ...
-    s = s.replace('{\\small ','\\mysmall{') #this is then further converted into rst code ...
-    for (key,value) in conversionDict.items():
-        found = 0
-        while (found != -1):
-            isBeginEnd = False
-            secondBracket = 0
-            if len(value) > 3:
-                secondBracket = len(value)-3
-            # if key == '\\exuUrl' or 'sectionlabel' in key: 
-            #     secondBracket = True
-            if (key == 'figure' 
-                or key == 'lstlisting' 
-                or key == 'pytlisting'
-                or key == '\\be'
-                ):
-                isBeginEnd = True
-            
-            found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
-
-            if found != -1:
-                [preString, innerString, innerString2, postString] = found
-                s = preString
-                if ('\\refSection' in key or '\\refChapter' in key 
-                    or key == '\\label' or key == '\\fig' or key == '\\ref'
-                    or key == '\\eq' or key == '\\eqref' or key == '\\eqs' or key == '\\eqq'):
-                    innerString=Latex2RSTlabel(innerString)
-                elif (value[1] == '_USE' and key != '\\exuUrl' and key != '\\url' 
-                      and ('\\ac' not in key) 
-                      and key != '\\onlyRST' and key != '\\footnote' #final replacement in exterior loop!
-                      and key != 'lstlisting' and key!='pytlisting'):
-                    if 'lstlisting' in innerString:
-                        print('WARNING: lstlisting in inner string:',innerString)
-                    innerString = ReplaceLatexCommands(innerString, convLatexCommands)
-                    innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
-
-                # if ('lstlisting' in key):
-                #     print('==============\n'+preString[-20:]+value[0]+innerString + postString[:40])
-
-                if '\\rowTable' in key or key=='\\startTable':
-                    #nRows = len(value)-2
-                    if key=='\\startTable':
-                        s += value[0] + '\n'
-                    #print('rowTableThree/Four: rows=',nRows)
-                    if type(innerString2) == list:
-                        # if len(innerString2) != nRows:
-                        #     print('innerString2:',innerString2)
-                        text = ''
-                        cstar = '*'
-                        for k, col in enumerate(innerString2):
-                            text += '   '+cstar+' - | '+col
-                            if k < len(innerString2)-1:
-                                text += '\n' #last \n is added due to text itself (postString)
-                            cstar = ' '
-                        s += text
-                        #print('table = \n'+text)
-                    else:
-                        print('PROBLEM with rowTable: ',innerString2)
-                elif '\\LatexRSTfigure' in key:
-                    # print(innerString2)
-                    figureName=innerString2[0]
-                    if (not figureName.lower().endswith('.png') 
-                        and not figureName.lower().endswith('.jpg')):
-                        figureName += '.png'
-                    text =  '\n\n.. _'+Latex2RSTlabel(innerString2[1])+':\n'
-                    text += '.. figure:: docs/theDoc/'+figureName+'\n'
-                    text += '   :width: '+innerString2[3]+'\n'
-                    text += '\n'+'   '+LatexString2RST(innerString2[4]) + '\n\n'
-                    s += text
-                    # print('figure:\n'+text)
-                elif key == '\\mysection' or key == '\\mysectionlabel':
-                    if sectionMarkerText != '':
-                        s += sectionMarkerText+'[0]'+'[' + innerString + ']'+'\n'
-                    if 'label' in key: 
-                        s += RSTlabelString(innerString2)+'\n'
-                    #sectionsList += [('0',innerString)]
-                    s += '\n'+RSTheaderString(innerString, secOff + 0)
-                elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
-                    if sectionFilesDepth > 0 and sectionMarkerText != '':
-                        s += sectionMarkerText+'[1]'+'[' + innerString + ']'+'\n'
-                        #sectionsList += [('1',innerString)]
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, secOff + 1)
-                # elif key == '\\mysection' or key == '\\mysectionlabel':
-                #     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                #     s += '\n'+RSTheaderString(innerString, secOff + 0)
-                # elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
-                #     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                #     s += '\n'+RSTheaderString(innerString, secOff + 1)
-                elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, secOff + 2)
-                elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, secOff + 3)
-                elif key == '\\exuUrl' or key == '\\url':
-                    if key == '\\url': innerString2=innerString
-                    s += value[0]
-                    s += innerString2 + ' <' + innerString + '>'
-                    s += value[2]
-                else:
-                    if '_USE' in value[0]:
-                        s += value[0].replace('_USE', innerString)
-                    else:
-                        s += value[0]
-                    if value[1] == '_USE':
-                        s += innerString
-                    s += value[2]
-                
-                s += postString
-                
-    return s
-
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the LaTeX of definitions/ and of the docstrings becomes Markdown with the same converter the
-#chapters were converted with; it moved here from tools/tex2md.py in revision2026 step R7.1.7,
-#because it stopped being the one-shot tool it was written as and became part of the emitters
+#chapters were converted with; it moved to tools/generators/latexToMarkdown.py in revision2026
+#step R7.1.7, because it stopped being the one-shot tool it was written as
 from latexToMarkdown import ConvertText as LatexText2Markdown                    # noqa: E402
 
 
@@ -947,80 +523,59 @@ def MarkdownCell(text):
     return ' '.join(str(text).split()).replace('|', '\\|')
 
 
-#a class that handles strings of Pybind, Latex, RST and Markdown
+#a class that collects the pybind11 code, the stub text and the documentation of one
+#declaration run. It was PyLatexRST and wrote LaTeX and RST beside the Markdown until revision2026
+#step R7.1.7; the name and the Def... method names stay, because they are the declaration calls
+#that definitions/pybind*.py is written in (pybindTypes.declarationCalls).
 class PyLatexRST:
-    #initialize strings
     def __init__(self, sPy='', sLatex='', sRST='', sPyi='', sMarkdown=''):
-
+        #sLatex and sRST are accepted and ignored: the declarations pass them positionally
         self.sPy = sPy
-        self.sLatex = sLatex
-        self.sRST = sRST
         self.sPyi = sPyi
-        self.sMarkdown = sMarkdown   #revision2026 step R7.1.6; LaTeX and RST go in R7.1.7
-        self.rstFileLists = [] #contains tuples (filename, text)
-        self.markdownFileLists = [] #the same split, in Markdown (revision2026 step R7.1.6)
-        self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
+        self.sMarkdown = sMarkdown
+        self.markdownPages = []      #(pageName, text), filled by CreateNewPage
+        self.currentPageName = ''
 
     def Reset(self):
         self.sPy = ''
-        self.sLatex = ''
-        self.sRST = ''
+        self.sPyi = ''
         self.sMarkdown = ''
-        self.rstFileLists = [] #contains tuples (filename, text)
-        self.markdownFileLists = []
-        self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
+        self.markdownPages = []
+        self.currentPageName = ''
 
     def __add__(self, other):
-        return PyLatexRST(self.sPy+other.sPy, self.sLatex+other.sLatex, self.sRST+other.sRST,
-                          sMarkdown=self.sMarkdown+other.sMarkdown)
+        return PyLatexRST(self.sPy+other.sPy, sMarkdown=self.sMarkdown+other.sMarkdown)
 
-    #x += PyLatexRST('a','b','c')
     def __iadd__(self, other):
         self = self + other
         return self
 
-    def GetStringsList(self):
-        return [self.sPy, self.sLatex, self.sRST]
-
     def PyStr(self): return self.sPy
-    def LatexStr(self): return self.sLatex
-    def RSTStr(self): return self.sRST
 
     def PyAdd(self, s):
         self.sPy += s
-
-    def LatexAdd(self, s):
-        self.sLatex += s
-
-    def RSTAdd(self, s):
-        self.sRST += s
 
     def MarkdownStr(self): return self.sMarkdown
 
     def MarkdownAdd(self, s):
         self.sMarkdown += s
 
-    #start new file in 
-    def CreateNewRSTfile(self, fileName):
-        if self.rstCurrentFileName != '':
-            self.rstFileLists += [(self.rstCurrentFileName, self.sRST)]
-            self.markdownFileLists += [(self.rstCurrentFileName, self.sMarkdown)]
-            self.sRST = '' #start new text
+    #close the current documentation page and start a new one; '' only closes
+    def CreateNewPage(self, pageName):
+        if self.currentPageName != '':
+            self.markdownPages += [(self.currentPageName, self.sMarkdown)]
             self.sMarkdown = ''
-        self.rstCurrentFileName = fileName
-    
+        self.currentPageName = pageName
 
-    #add text for documentation, 0=chapter
-    #labels in latex have ':' as separator, in RST have '-'
-    def AddDocu(self, text, section='', sectionLevel=1, sectionLabel='', preNewLine = True):
-        if preNewLine:
-            self.sLatex += '\n'
-            self.sRST += '\n'
+    #the declarations still call this by its old name
+    def CreateNewRSTfile(self, fileName):
+        self.CreateNewPage(fileName)
+
+    #add text for documentation; labels in LaTeX have ':' as separator, MyST targets have '-'
+    def AddDocu(self, text, section='', sectionLevel=1, sectionLabel='', preNewLine=True):
         if section != '':
-            self.sLatex += '\\my'+'sub'*sectionLevel + 'section{' + section + '}\n'
-
-            #Markdown: a blank line first - a target glued to the paragraph above it is not a
-            #target - then the target, so that a {ref} to it finds a heading with a title
+            #a blank line first - a target glued to the paragraph above it is not a target - then
+            #the target, so that a {ref} to it finds a heading with a title
             if not self.sMarkdown.endswith('\n\n'):
                 self.sMarkdown += ('\n' if self.sMarkdown.endswith('\n')
                                    else '\n\n')
@@ -1028,19 +583,9 @@ class PyLatexRST:
                 self.sMarkdown += MarkdownLabel(sectionLabel) + '\n'
             self.sMarkdown += MarkdownHeading(section, sectionLevel) + '\n\n'
 
-            if not preNewLine:  #always needed for section label and heading
-                self.sRST += '\n'
-            if sectionLabel != '':
-                self.sLatex += '\\label{'+sectionLabel+'}\n'
-                self.sRST += RSTlabelString(sectionLabel)+'\n'
-
-            self.sRST += RSTheaderString(section, sectionLevel)
-            self.sRST += '\n'
         if len(text) != 0 and text.strip(' ')[-1] != '\n':
             text += '\n'
 
-        self.sLatex += text
-        self.sRST += LatexString2RST(text)
         #a paragraph of its own: two AddDocu calls in a row are two paragraphs, not one
         markdownText = LatexText2Markdown(text)
         if markdownText != '':
@@ -1048,8 +593,7 @@ class PyLatexRST:
                 self.sMarkdown += '\n' if self.sMarkdown.endswith('\n') else '\n\n'
             self.sMarkdown += markdownText + '\n'
 
-    #one entry of what LaTeX draws as a table row and RST as a list item: a function, a data
-    #member or an operator of a class, in Markdown (revision2026 step R7.1.6)
+    #one entry of what LaTeX drew as a table row: a function, a data member or an operator
     def MarkdownEntry(self, signature, description, example=''):
         text = '- **`' + signature.strip() + '`**'
         description = LatexText2Markdown(description).replace('\n', ' ').strip()
@@ -1067,221 +611,123 @@ class PyLatexRST:
             text += '  ```\n\n'
         return text
 
-    #add inline reference in latex format, converted to RST: latex labels have ':' as separator, in RST have '-'
     def AddInlineRef(self, ref):
-        self.sLatex += '\\refSection{'+ref+'}'
-        self.sRST += ' :ref:`'+Latex2RSTlabel(ref)+'`\\ '
         self.sMarkdown += ' {ref}`' + Latex2RSTlabel(ref) + '` '
 
-        
-    #add python style code blocks to latex and RST
-    #line numbers in Latex not preferable because copying does not work well; line numbers only if code>3lines
     def AddDocuCodeBlock(self, code, pythonStyle=True, addRSTLineNumbers=True):
-        # print('code0=', ord(code[0]))
         if code.strip(' ')[-1] != '\n':
             code += '\n'
-        self.sLatex +='\\pythonstyle\n'
-        self.sLatex +='\\begin{lstlisting}[language=Python, firstnumber=1]\n'
-        self.sLatex += code
-        self.sLatex +='\\end{lstlisting}\n\n'
-
-        spaces='   '
-        self.sRST += '\n.. code-block:: ' + 'python'*pythonStyle + '\n' #needs empty line in between
-        if addRSTLineNumbers and code.count('\n') > 4:
-            self.sRST += spaces+':linenos:\n'
-        self.sRST += '\n'*(code.strip(' ')[0] != '\n')
-        self.sRST += RemoveIndentation(code, spaces,False)
-        #print(RemoveIndentation(code, '   '))
-        self.sRST += '\n'*(code.strip(' ')[-1] != '\n')
-
         self.sMarkdown += ('\n```' + 'python'*pythonStyle + '\n'
                            + RemoveIndentation(code, '', False).strip('\n') + '\n```\n\n')
-        
 
-    #add python style code blocks to latex and RST
     def AddDocuList(self, itemList, itemText=''):
         if len(itemList) != 0:
-            self.sLatex += '\\bi\n'
-            self.sRST += '\n'
             for item in itemList:
-                sEnd = '\n'*(item.strip(' ')[-1] != '\n') #add separator if not there already
-                self.sLatex +='  \\item'+itemText+' ' + item + sEnd
-                if itemText == '':
-                    rstItem = '*'
-                elif itemText == '[]':
-                    rstItem = ' '
-                else: 
-                    print('WARNING: AddDocuList: illegal itemText:'+itemText)
-                
-                self.sRST += rstItem + RemoveIndentation(LatexString2RST(item), '  | ')[1:] + sEnd
-
                 self.sMarkdown += '- ' + LatexText2Markdown(item).replace('\n', ' ').strip() + '\n'
-
-            self.sRST += '\n'
             self.sMarkdown += '\n'
-            self.sLatex += '\\ei'
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #for autoGEneratePyBindings:
-        
-    #start a new table to describe class bindings in latex;
-    def DefLatexStartTable(self, classStr='', style='| p{8cm} | p{8cm} |',
-                           header = '{\\bf function/structure name} & {\\bf description}'):
-        self.sLatex += '\\begin{center}\n'
-        self.sLatex += '\\footnotesize\n'
-        self.sLatex += '\\begin{longtable}{'+style+'} \n'
-        self.sLatex += '\\hline\n'
-        self.sLatex += header+'\\\\ \\hline\n'
+    #for the pybind interface documentation:
 
-        #self.sRST += '\n\ **Description of functions and structures**:\n\n'
+    #the sentence that introduces the functions and structures of a class
+    def DefLatexStartTable(self, classStr='', style='', header=''):
         addInfo = ''
         if ':' in classStr:
             ni = classStr.find(':')
             addInfo = ' regarding **'+classStr[ni+1:]+'**'
             classStr = classStr[:ni]
-        self.sRST += '\n\\ The class **'+classStr+'** has the following **functions and structures**'+addInfo+':\n\n'
         self.sMarkdown += ('\nThe class **' + classStr + '** has the following **functions and '
-                           + 'structures**' + addInfo.replace('\\ ', ' ') + ':\n\n')
+                           + 'structures**' + addInfo + ':\n\n')
 
-    #start a new table to describe class bindings in latex;
+    #a three column table, e.g. for output variables
     def DefLatexStartTable3(self, headers=[]):
-
-        self.sLatex += '\\begin{center}\n'
-        self.sLatex += '\\footnotesize\n'
-        self.sLatex += '\\begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} \n'
-        self.sLatex += '\\hline\n'
-        self.sLatex += '\\bf '+headers[0]+' & \\bf '+headers[1]+' & \\bf '+headers[2]+' \\\\ \\hline\n'
-
-        self.sRST += '\n'
         self.sMarkdown += ('\n| ' + ' | '.join([MarkdownCell(h) for h in headers[:3]])
                            + ' |\n|---|---|---|\n')
 
-    #start a new table to describe class bindings in latex;
+    #the parameter table of one item
     def DefItemStartTable(self, classStr=''):
-        sTemp   = '%reference manual TABLE\n'
-        sTemp  += '\\begin{center}\n'
-        sTemp  += '  \\footnotesize\n'
-        sTemp  += '  \\begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}\n'
-        sTemp  += ' '*4+'\\hline\n'
-        sTemp  += ' '*4+'\\bf Name & \\bf type & \\bf size & \\bf default value & \\bf description \\\\ \\hline\n'
-        self.sLatex += sTemp
-
-        self.sRST += '\n'
         self.sMarkdown += ('\n| Name | type | size | default value | description |\n'
                            + '|---|---|---|---|---|\n')
 
-    #finish latex table for class bindings 
     def DefLatexFinishTable(self):
-        self.sLatex += '\\end{longtable}\n'
-        self.sLatex += '\\end{center}\n'
-        self.sRST += '\n\n' #empty line closes list block
         self.sMarkdown += '\n'
 
     def DefStartEnumClass(self, className, description, subSection=False, labelName='', cClass=None):
         if cClass==None:
             cClass = className
-            
+
         self.sPy +=	'  py::enum_<' + cClass + '>(m, "' + className + '")\n'
         self.DefLatexStartClass(className, description, subSection=subSection, labelName=labelName)
-        
+
         self.sPyi += '\nclass '+className+'(Enum):\n'
-        self.sPyi += DocStringGoogleFromPlainText(description, addSpaces='    ', multiline=True, 
+        self.sPyi += DocStringGoogleFromPlainText(description, addSpaces='    ', multiline=True,
                                                   splitSummaryDescription=True)
 
-    #add a enum value and definition to pybind interface and to latex documentation
+    #add an enum value to the pybind interface and to the documentation
     def AddEnumValue(self, className, itemName, description):
         descriptionClean = CleanStringForPyiDescription(description)
-        self.sPy += '		.value("' + itemName + '", ' + className + '::' + itemName 
+        self.sPy += '		.value("' + itemName + '", ' + className + '::' + itemName
         self.sPy +=  ', "' + descriptionClean + '"' #if ADD_DOCSTRING could be added
-        self.sPy +=  ')\n' #'    //' + description + '\n'
+        self.sPy +=  ')\n'
 
-        #this function is for enums
         if className not in localListEnumNames:
             localListEnumNames.append(className)
 
-        #self.sLatex += '  ' + Str2Latex(itemName) + ' & ' + Str2Latex(description) + '\\\\ \\hline \n'
-        self.DefLatexDataAccess(itemName, description) #Str2Latex(...) done inside function
+        self.DefLatexDataAccess(itemName, description)
 
         self.sPyi += ' '*4 + itemName + ' = int\n' #is int correct?
         if ADD_DOCSTRINGS: self.sPyi += ' '*4 + '"""' + descriptionClean + '"""\n'
 
     #start a new section
     def DefLatexStartClass(self, sectionName, description, subSection=False, labelName=''):
-    
-        self.sLatex +=  "\n%++++++++++++++++++++\n"
-        if subSection:
-            self.sLatex += "\\mysubsubsection"
-        else:
-            self.sLatex += "\\mysubsection"
-    
-        self.sLatex += "{" + sectionName + "}\n"
-        if labelName != '':
-            self.sLatex += '\\label{' +labelName+ '}\n'
-            self.sRST += RSTlabelString(labelName) + '\n'
-            
-        self.sLatex += description + '\n\n'
-    
-        self.sRST += '\n'+RSTheaderString(LatexString2RST(sectionName), 1+1*subSection) + '\n'
-        self.sRST += RemoveIndentation(LatexString2RST(description)) + '\n' #empty line needed for list
-
         self.sMarkdown += '\n'
         if labelName != '':
             self.sMarkdown += MarkdownLabel(labelName) + '\n'
         self.sMarkdown += MarkdownHeading(LatexText2Markdown(sectionName), 1+1*subSection) + '\n\n'
         self.sMarkdown += LatexText2Markdown(description) + '\n\n'
-    
+
     #start class definition
-    def DefPyStartClass(self, cClass, pyClass, description, subSection = False, labelName='', 
+    def DefPyStartClass(self, cClass, pyClass, description, subSection = False, labelName='',
                         forbidPythonConstructor = False):
         if pyClass != '' and pyClass not in localListClassNames:
             localListClassNames.append(pyClass)
 
         self.sPy += '\n'
         sectionName = pyClass
-        if (cClass == ''): 
-            #print("ERROR::DefPyStartClass: cClass must be a string")
+        if (cClass == ''):
             sectionName = '\\codeName' #for EXUDYN, work around
-        
+
         if (cClass != ''):
             self.sPy += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'
             if not forbidPythonConstructor:
                 self.sPy += '        .def(py::init<>())\n'
             else:
-                # constructorCode = 'CHECKandTHROWstring("'+pyClass+'() may not be called from Python. '+forbidPythonConstructorStr+'");'            
-                # self.sPy += '        .def(py::init([]() { '+constructorCode+' } )) //!< AUTO: forbid constructor call from Python\n'
                 self.sPy += '        .def(py::init(&'+cClass+'::ForbidConstructor))\n'
-    
+
         self.DefLatexStartClass(sectionName, description, subSection=subSection, labelName=labelName)
 
         classInfo = 'exudyn module'
-        if pyClass != '': #in case of basic module, stubs are not needed => information 
+        if pyClass != '': #in case of basic module, stubs are not needed => information
             classInfo = 'class '+pyClass
 
         self.sPyi += '\n#stub information for '+classInfo+' functions\n'
-        if pyClass != '': #in case of basic module, stubs are not needed => information 
+        if pyClass != '': #in case of basic module, stubs are not needed => information
             self.sPyi += 'class ' + pyClass + ':\n'
             if ADD_DOCSTRINGS and len(description.strip()):
                 self.sPyi += DocStringGoogleFromPlainText(description,addSpaces=' '*4,
                                                           multiline=True, splitSummaryDescription=True)
-        
-    
+
     def DefPyFinishClass(self, cClass):
-        
         if (cClass != ''):
             self.sPy += '        ; // end of ' + cClass + ' pybind definitions\n\n'
-    
+
         self.DefLatexFinishTable()
-        self.sRST += '\n'
         self.sMarkdown += '\n'
 
-    #add latex table entry / RST list entry for data variable
-    def DefLatexDataAccess(self, name, description, dataType = '', isTopLevel = False): 
-        self.sLatex += '  ' + Str2Latex(name) + ' & '+Str2Latex(description) + '\\\\ \\hline  \n'
-        self.sRST += '* | ' + '**'+Str2Latex(name)+'**:\n'
-        self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+    #one data member of a class
+    def DefLatexDataAccess(self, name, description, dataType = '', isTopLevel = False):
         self.sMarkdown += self.MarkdownEntry(name, description)
-        
+
         if dataType != '':
             pyiIndent = ''
             if not isTopLevel:
@@ -1289,22 +735,19 @@ class PyLatexRST:
             self.sPyi += pyiIndent + name + ':' + dataType+'\n'
             if ADD_DOCSTRINGS:
                 self.sPyi += pyiIndent + DocStringGoogleFromPlainText(description,addSpaces='',multiline=False)
-            
-    #add latex table entry / RST list entry for data variable
-    def DefLatexOperator(self, name, description, returnType = '', 
-                         argList=[], defaultArgs=[], argTypes=[], 
-                         isTopLevel = False): 
+
+    #one operator of a class
+    def DefLatexOperator(self, name, description, returnType = '',
+                         argList=[], defaultArgs=[], argTypes=[],
+                         isTopLevel = False):
         hasArgs = bool(len(argList))
         if len(defaultArgs):
             argStr = (', '.join([f'{key}={value}' for key, value in zip(argList, defaultArgs)]) )*hasArgs
         else:
             argStr = (', '.join(argList) )*hasArgs
-        
-        self.sLatex += '  operator ' + Str2Latex(name) + '('+argStr+') & '+Str2Latex(description) + '\\\\ \\hline  \n'
-        self.sRST += '* | operator ' + '**'+Str2Latex(name)+'**\\ ('+argStr+'):\n'
-        self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+
         self.sMarkdown += self.MarkdownEntry('operator ' + name + '(' + argStr + ')', description)
-        
+
         if returnType != '':
             pyiIndent = ''
             if not isTopLevel:
@@ -1312,8 +755,7 @@ class PyLatexRST:
             argStr = (', '+', '.join([f'{key}: {value}' for key, value in zip(argList, argTypes)]))*hasArgs
             self.sPyi += pyiIndent+'@overload\n'
             self.sPyi += pyiIndent+'def ' + name + '(self'+argStr+') -> ' + returnType+': ...\n'
-            
-        
+
     #************************************************
     #helper functions to create manual pybinding to access functions in classes
     #pyName = python name, cName=full path of function in C++, description= textual description used in C and in documentation
@@ -1407,34 +849,13 @@ class PyLatexRST:
         self.sPy += '\n'
 
         examplePyi = '' #the stub block below runs whether or not the function is documented
-        exampleSource = example #the LaTeX branch below rewrites 'example' in place
         if addDocu:
-            self.sLatex += sLadd
-            self.sRST += sRadd
-            
-            if addBraces: 
-                self.sLatex += ')'
-                self.sRST += ')'
-        
-    
-            self.sLatex += ' & ' + description.replace('_','\\_')
-            #self.sRST += ': \n' +  RemoveIndentation(description.replace('_','\_'), '  | ') + '\n'
-            self.sRST += ': \n' +  RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
             if example != '':
-                exampleRST = example
-                example = Str2Latex(example)
-                example = example.replace('\\\\','\\tabnewline\n    ').replace('#','\\#')
-    
-                example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
-                self.sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
-                exampleRST = exampleRST.replace('\\\\','\n').replace('\\#','#')
-                examplePyi = exampleRST.replace('\\TAB','  ')
-                self.sRST += '  | *Example*:\n\n'
-                self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding
-            self.sLatex += '\\\\ \\hline \n'
+                #the example goes into the stub docstring as well, with the two-space TAB
+                examplePyi = example.replace('\\\\', '\n').replace('\\#', '#').replace('\\TAB', '  ')
 
             signature = sLadd.strip().replace('\\_', '_') + ')'*addBraces
-            self.sMarkdown += self.MarkdownEntry(signature, description, example=exampleSource)
+            self.sMarkdown += self.MarkdownEntry(signature, description, example=example)
     
         #the stub describes what the module HAS; addDocu only decides whether the function
         #is DOCUMENTED. Every deprecated function carries addDocu=False and was therefore
@@ -1500,27 +921,8 @@ class PyLatexRST:
         
     #one row for definition of system structures
     def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description, typicalPaths = [], isFunction=False):
-        #latex:
-        typeNameLatex = typeName
-        if len(pythonName)>28:  #for space of pythonname over column width
-            typeNameLatex = '\\tabnewline ' + typeName
-
-        latexFuncStr = ''
-        if isFunction:
-            if sDefaultVal == '':
-                latexFuncStr = '()'
-            else:
-                latexFuncStr = '(...)'
-
-        self.sLatex += '    ' + pythonName+latexFuncStr + ' & '
-        self.sLatex += '    ' + typeNameLatex + ' & '
-        self.sLatex += '    ' + sSize + ' & '
-        self.sLatex += '    ' + sDefaultVal + ' & '
-        self.sLatex += '    ' + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
-
-        #Markdown: the same row, in a table whose header the emitter wrote (step R7.1.6). The
-        #name cell carries the FULL access path where there is one - 'SC.visualizationSettings.
-        #general.autoFitScene' is what a user types, and the RST rows carried it for that reason.
+        #the name cell carries the FULL access path where there is one -
+        #'SC.visualizationSettings.general.autoFitScene' is what a user types
         markdownName = pythonName + ('(...)' if isFunction and sDefaultVal != ''
                                      else '()' if isFunction else '')
         nameCell = '`' + MarkdownCell(markdownName) + '`'
@@ -1531,98 +933,21 @@ class PyLatexRST:
                            + ' | ' + MarkdownCell(sSize) + ' | '
                            + (MarkdownCell(sDefaultVal) if sDefaultVal != '' else '')
                            + ' | ' + MarkdownCell(LatexText2Markdown(description)) + ' |\n')
-        
 
-        #RST:
-        argStr = '('*isFunction
-        if sDefaultVal != '' and isFunction:
-            #s += ', default = ' + sDefaultVal
-            argStr += sDefaultVal
-        argStr += ')'*isFunction
-            
-        s = '* | **' + pythonName+argStr + '** [' + 'return '*isFunction + 'type = ' + typeName
-        if sDefaultVal != '' and not isFunction:
-            s += ', default = ' + sDefaultVal
-        if sSize != '':
-            s += ', size = '+sSize
-        s += ']:\n'
-        if typicalPaths != []:
-            s += '  | '
-            sep = ''
-            for p in typicalPaths:
-                pdot = ''
-                if p != '':
-                    pdot = p+ '.'
-                s += sep + RSTmarkup(pdot + pythonName, c='``') 
-                sep = ', '
-            s += '\n'
-            
-        s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
-        self.sRST += s
-        
-    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #for Item Interfaces
-        
-    #one row for definition of items 
+    #one row of the parameter table of an item
     def ItemInterfaceWriteRow(self, pythonName, typeName, sSize='', sDefaultVal='', sSymbol='', description=''):
-        self.sLatex += ' '*4 + Str2Latex(pythonName) + ' & '                
-        self.sLatex += ' '*4 + typeName + ' & '
-        self.sLatex += ' '*4 + sSize + ' & '
-        self.sLatex += ' '*4 + sDefaultVal + ' & '
-        self.sLatex += ' '*4 + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
-
-        #Markdown (revision2026 step R7.1.6): a real table, where LaTeX has a longtable and RST a
-        #list block; \tabnewline is a LaTeX line break for column widths and means nothing here
-        def MarkdownTableCell(content):
+        #\tabnewline is a LaTeX line break for column widths and means nothing here
+        def Cell(content):
             return MarkdownCell(LatexText2Markdown(content.replace('\\tabnewline', ' ')))
 
         nameCell = '**' + pythonName + '**'
         if sSymbol.strip() != '':
             nameCell += ' $' + sSymbol.strip().strip('$') + '$'
-        self.sMarkdown += ('| ' + nameCell + ' | ' + MarkdownTableCell(typeName) + ' | '
-                           + MarkdownTableCell(sSize) + ' | ' + MarkdownTableCell(sDefaultVal)
-                           + ' | ' + MarkdownTableCell(description) + ' |\n')
+        self.sMarkdown += ('| ' + nameCell + ' | ' + Cell(typeName) + ' | ' + Cell(sSize)
+                           + ' | ' + Cell(sDefaultVal) + ' | ' + Cell(description) + ' |\n')
 
-        #RST:
-        s = '* | **' + pythonName + '** ['
-        
-        if sSymbol.strip() != '':
-            s += RSTinlineMath(sSymbol.strip('$')) + ', '
-
-        s += 'type = ' + typeName
-
-        sDefaultVal = LatexString2RST(sDefaultVal) #'\\tabnewline '
-        sSize = LatexString2RST(sSize)
-        if sSize.strip() != '':
-            s += ', size = '+sSize
-        # if sSymbol.strip() != '':
-        #     s += ', symbol = '+RSTinlineMath(sSymbol.strip('$'))
-        if sDefaultVal.strip() != '':
-            s += ', default = ' + sDefaultVal
-        s += ']:\n'
-            
-        s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
-        self.sRST += s
-
-    #one row for table3, e.g. for output variables or any other \startTable from latex
+    #one row for a three column table, e.g. for output variables
     def Table3WriteRow(self, cols=['','',''], typeList=['','',''], nameLiteral=True):
-        self.sLatex += cols[0] + ' & ' + cols[1] + ' & ' + cols[2] + '\\\\ \\hline\n'
-        
-        #RST:
-        name = '**' + cols[0]+ '**'
-        if nameLiteral:
-            name = '``' + cols[0]+ '``'
-        s = '* | '+name+'\\ : '
-        
-        if typeList[1] != '':
-            s+=typeList[1]+', '
-        s+=LatexString2RST(cols[1]) + '\n'
-        
-        #description:
-        s += RemoveIndentation(LatexString2RST(cols[2]), '  | ') + '\n'
-        self.sRST += s
-
         typeCell = cols[1] if typeList[1] == '' else typeList[1] + ', ' + cols[1]
         self.sMarkdown += ('| ' + MarkdownCell(cols[0]) + ' | '
                            + MarkdownCell(LatexText2Markdown(typeCell)) + ' | '
@@ -1861,101 +1186,5 @@ def KeywordExamplesMarkdown(itemType, itemName, itemShortName=''):
         return ''
     return ('\nRelevant Examples (Ex) and TestModels (TM) with weblink to github: '
             + ', '.join(links) + (', ...' if truncated else '') + '\n\n')
-
-
-def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex = True):
-    useLatex2 = True
-    s = ''
-    sRST = '' #if latex = False
-
-    sepItem1 = '\\item '*useLatex2 #for items, put example in separate line, for utility functions, use one liner
-    sepItem2 = '\n' 
-    maxExamples = 12   #only 8 examples for utility functions
-    initString = ''    #smaller font for utility function
-    ufMode = False
-    testModelString = ' (TestModels/)'
-    examplesString = ' (Examples/)'
-
-    keywords = ExampleKeywords(itemType, itemName, itemShortName)
-    if itemType == 'UtilityFunction':
-        testModelString = ' (TM)'
-        examplesString = ' (Ex)'
-        ufMode = True
-        sepItem1 = ', \n'     #utility functions are written as one line
-        sepItem2 = ''
-        maxExamples = 5   #only 5+3 examples for utility functions
-        initString = ' \\item \\footnotesize '*useLatex2 #smaller font
-
-
-    processFolders = ['Examples','TestModels']
-    folderAbrv = [examplesString, testModelString]
-    cnt = 0 #examples counter
-    sep = ''
-    sepRST = ''
-    headerCreated = False
-    for iFolder, folder in enumerate(processFolders):
-    
-        fileListOrig = []
-        for kw in keywords:
-            dirPath = paths.pythonDir+folder
-            fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
-                                                  dirPath = dirPath)
-        
-        fileList = []
-        for f in fileListOrig:
-            if f not in fileList: fileList += [f]
-    
-        if len(fileList) != 0:
-            if not headerCreated:
-                headerCreated = True
-                sComment = '%\n\\noindent For examples on '+itemName+' see '
-                s += sComment*useLatex2
-                
-                if ufMode:
-                    sExTest = 'Relevant Examples (Ex) and TestModels (TM) with weblink to github:\n'
-                else:
-                    sExTest = 'Relevant Examples and TestModels with weblink:\n'
-                s += sExTest
-                sRST += sExTest
-
-                s += '\\bi\n'
-                s += initString
-                sep = ''
-                sRST += '\n    ' #in RST, we could put everything into one list ...
-            
-            if not ufMode:
-                sep = sepItem1
-            for name in fileList:
-                fileURL = paths.githubSourceURL+folder+'/' + name
-                s += sep+'\\exuUrl{'+fileURL+'}'
-                s += '{\\texttt{'+name.replace('_','\\_')+'}}' 
-                sRST += sepRST
-                sepRST = ', '
-                sRST += RSTurl(name, fileURL,False, True)+folderAbrv[iFolder]
-                
-                s += folderAbrv[iFolder]
-                s += sepItem2
-                sep = sepItem1
-    
-                cnt += 1
-                if (cnt % 3 == 0) and ufMode: sep = sep+'\\\\ '*useLatex2 #shorten lines a little
-                if cnt >= maxExamples+3*iFolder: #some functions would appear in all examples... 
-                    s += sepItem1 + ' ...' + sepItem2 + '\n'
-                    break
-
-    if headerCreated:
-        s += '\n\\ei\n'
-        s += '\n%\n'
-        sRST += '\n\n'
-
-    if useLatex:
-        return s
-    else:
-        return [s, sRST]
-
-
-
-
-
 
 

@@ -31,13 +31,9 @@ from latexToMarkdown import NormalizeHeadings                                   
 def main():
     print('*****************************************')
     print('create documentation for exudyn utilities')
-    listRST = [] #creates tuple of modulename and RST content
     listMarkdown = []   #(moduleName, Markdown) - revision2026 step R7.1.6
-    sLatex = ''
 
     for fileName in filesParsed:
-        # print('parse file:',fileName)
-        sRST = ''
         sMarkdown = ''
         [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
         moduleName = fileName[:-3]
@@ -49,61 +45,23 @@ def main():
             baseModule = moduleName.split('/')[0]
         
     
-        strSub = ''
-        sectionLevel = 2
-        if '.' in moduleNameLatex: #don't do it for robotics core 
-            strSub = 'sub'
-            sectionLevel += 1
-            # print('found / in ', moduleName)
-            # print('  =>'+'\\my'+strSub+'subsection{Module: '+moduleNameLatex+'}\n')
-        sLatex += '\\my'+strSub+'subsection{Module: '+moduleNameLatex+'}\n'
-        sLatex += '\\label{sec:module:'+moduleNameLatex+'}\n'
-
-        sRST += RSTlabelString('sec-module-'+moduleNameLatex.replace('.','-'))+'\n'
-        sRST += RSTheaderString('Module: '+moduleNameLatex, sectionLevel)+'\n'
-
         sMarkdown += MarkdownLabel('sec:module:'+moduleNameLatex)+'\n'
         sMarkdown += MarkdownHeading('Module: '+moduleNameLatex, 1)+'\n\n'
     
         if moduleNamePython != 'mainSystemExtensions': #no description for this!
             #*****************************************************
             if 'Details' in header: #write details as intro to section
-                sLatex += header['Details'] #+ '\n'
-                sRST += LatexString2RSTspecial(RemoveIndentation(header['Details']))
                 sMarkdown += LatexText2Markdown(RemoveIndentation(header['Details'])) + '\n\n'
-                #print('header=\n'+sRST)
             if len(header)>1:
-                sLatex += '\\begin{itemize}[leftmargin=1.4cm]\n'
-                sLatex += '\\setlength{\\itemindent}{-1.4cm}\n'
-                sRST += '\n'
                 for tag in headerTags:
                     if tag in header and tag != 'Details' and tag != 'Copyright':
                         sMarkdown += ('- **' + tag + '**: '
                                       + LatexText2Markdown(header[tag]).replace('\n', ' ')
                                       + '\n')
-                        if header[tag].find('\\') == -1:
-                            sLatex += '\\item[]' + tag + ': ' + header[tag] #+ '\n'
-                            sRST += '- '+ tag + ': ' + LatexString2RSTspecial(header[tag].replace('\n',' ')) + '\n'
-                        else:
-                            sRST += '- | ' + tag.strip() + ':'+'\n'
-                            listString = header[tag].split('\\\\')
-                            sLatex += '\\item[]' + tag + ':' + '\n' #+ listString[0] + ' \n'
-                            sLatex += '\\vspace{-22pt}'
-                            sLatex += '\\begin{itemize}[leftmargin=0.5cm]\n'
-                            sLatex += '\\setlength{\\itemindent}{-0.5cm}\n'
-                            for i in range(len(listString)-0):
-                                sTag = listString[i+0]
-                                sLatex += '\\item[]' + sTag.replace('\n',' ') + '\n'
-                                sRST += '  | '+ LatexString2RSTspecial(sTag.replace('\n',' ').strip()) + '\n'
-                            sLatex += '\\ei\n'
-                        
-                sLatex += '\\ei\n'
-            sRST += '\n'
         else:
-            mseText = 'NOTE: This module only contains links for extensions of C++ classes. The description is available in the respective descriptions of the C++ interface.\n'
-            sLatex += mseText
-            sRST += mseText
-            sMarkdown += mseText + '\n' 
+            sMarkdown += ('NOTE: This module only contains links for extensions of C++ classes. '
+                          'The description is available in the respective descriptions of the '
+                          'C++ interface.\n\n')
 
         #*****************************************************
         cnt=0
@@ -126,18 +84,7 @@ def main():
             funcDict['functionDescriptionClean'] = functionDescription
             functionName = funcDict['functionName']
 
-            if not isFirstFunction and moduleNamePython != 'mainSystemExtensions':# and not belongsTo:
-                sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
-                sRST += "\n\n----\n\n" #horizontal ruler
-                #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-            
-            #++++++++++++++++++++++++++++++++++++
-            #add example references for function
-            sExamples = ''
-            sExamplesRST = ''
-            if addExampleReferences:
-                exampleFunctionName = funcDict['functionName'].replace(belongsTo,'')
-                [sExamples,sExamplesRST] = GenerateLatexStrKeywordExamples('UtilityFunction', exampleFunctionName, '', useLatex=False)
+            exampleFunctionName = funcDict['functionName'].replace(belongsTo,'')
         
             if belongsTo != '':
                 #the MainSystem extension part is emitted by mainSystemExtensionDocsEmitter.py
@@ -145,33 +92,22 @@ def main():
 
             #add remaining part to original latex and RST
             if moduleNamePython != 'mainSystemExtensions': #no description for this!
-
-                [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, 
-                                                                                      createPyiFile=False, 
-                                                                                      redirectBelongsTo=(belongsTo != ''))
-
-                sLatex += sFuncLatex
-                sRST += sFuncRST
                 sMarkdown += FunctionDescription2Markdown(funcDict, moduleNamePython, fileName,
                                                          headingLevel=2)
                 if addExampleReferences and not belongsTo:
                     sMarkdown += KeywordExamplesMarkdown('UtilityFunction', exampleFunctionName)
 
                 if belongsTo:
-                    textAdd = 'this function is directly available in MainSystem (mbs); it should be directly called as mbs.'+funcDict['functionName']+'(...).'
-                    textAdd += ' For description of the interface, see the MainSystem Python extensions, '
-                    mseLabel = 'sec:mainsystemextensions' + ':' + funcDict['functionName'] .replace('\\_','_')
-
-
-                    textAddRST = textAdd + ' :ref:`'+Latex2RSTlabel(mseLabel)+'`\\ '+'\n'
-                    textAdd += '\\refSection{'+mseLabel+'}.\n'
-                
-                    sRST += '\n'+'- | **NOTE**\\ : '+textAddRST + '\n'
-                    sLatex += '\\bi\n  \\item \\mybold{NOTE}: ' + textAdd + '\n\\ei\n'
-
-                if addExampleReferences and not belongsTo:
-                    sLatex += sExamples
-                    sRST += '\n'+sExamplesRST
+                    #the function is documented with the class it is added to; this note existed
+                    #only in the LaTeX and RST branches until revision2026 step R7.1.7
+                    mseLabel = ('sec:mainsystemextensions:'
+                                + funcDict['functionName'].replace(chr(92) + '_', '_'))
+                    sMarkdown += ('- **NOTE**: this function is directly available in MainSystem '
+                                  '(mbs); it should be directly called as mbs.'
+                                  + funcDict['functionName'].replace(chr(92) + '_', '_')
+                                  + '(...). For description of the interface, see the MainSystem '
+                                  'Python extensions, {ref}`'
+                                  + Latex2RSTlabel(mseLabel) + '`\n\n')
         
 
             isFirstFunction=False
@@ -186,10 +122,6 @@ def main():
             #print(classDict)
 
         
-            sLatex += '\\my'+strSub+'subsubsection{CLASS '+classDict['className']+' (in module '+moduleNameLatex+')}\n'
-            #sLatex += '\\bi'
-            sLatex += '\\noindent\\textcolor{steelblue}{{\\bf class description}}: ' + classDict['class']
-
             sMarkdown += ('\n' + MarkdownLabel('sec:module:' + moduleNameLatex + ':class:'
                                               + classDict['className']) + '\n'
                           + MarkdownHeading('CLASS ' + classDict['className'] + ' (in module '
@@ -197,63 +129,22 @@ def main():
                           + '**class description**: '
                           + LatexText2Markdown(classDict['class']).replace('\n', ' ') + '\n\n')
 
-            sRST += RSTlabelString('sec-module-'+moduleNameLatex.replace('.','-')+'-class-'+Latex2RSTlabel(classDict['className']))
-            sRST += '\n' + RSTheaderString('CLASS '+classDict['className']+' (in module '+moduleNameLatex+')', level = 4)#sectionLevel)
-            sRST += RSTmarkup('class description','**', False)+': ' + '\n\n' + \
-                RemoveIndentation(LatexString2RSTspecial( classDict['class'] ), '    ') #+ '\n'
-
-
-            #sLatex += '\\ei'
             localTags = docuTags.copy()
             localTags.remove('class')
             sMarkdown += Tags2Markdown(classDict, localTags)
-            [sTags, sTagsRST] = DictToItemsText(classDict, localTags, '')
-            if sTags != '':
-                sLatex += '\\setlength{\\itemindent}{0.7cm}\n'
-                sLatex += '\\begin{itemize}[leftmargin=0.7cm]\n'
-                sLatex += sTags
-                sLatex += '\\vspace{24pt}\\end{itemize}\n%\n'
-                sRST += '\n' + sTagsRST + '\n'
-            else:
-                sLatex += '\\vspace{3pt} \\\\ \n' #add space for new class
-                sRST += '\n'
 
-            isFirstFunction = True
             for funcDict in classDict['functionList']:
                 SpecialAppend(localListFunctionNames, funcDict['functionName'])
-                
-                if not isFirstFunction:
-                    sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
-                    sRST += "\n----\n" #horizontal ruler
-
-                    #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-                [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, 
-                                                                                      moduleNamePython, 
-                                                                                      fileName, 
-                                                                                      isClassFunction=True, 
-                                                                                      className=classDict['className'], 
-                                                                                      createPyiFile=False)
-                sLatex += sFuncLatex
-                sRST += sFuncRST
                 sMarkdown += FunctionDescription2Markdown(funcDict, moduleNamePython, fileName,
                                                          isClassFunction=True,
                                                          className=classDict['className'],
                                                          headingLevel=3)
 
-                isFirstFunction=False
-
             #use split in class, for derived classes like InertiaCylinder(RigidBodyInertia)
             if addExampleReferences:
-                [sExamples,sExamplesRST] = GenerateLatexStrKeywordExamples('UtilityFunction', classDict['className'].split('(')[0], '', useLatex=False)
-                sLatex += sExamples
-                sRST += '\n'+sExamplesRST
                 sMarkdown += KeywordExamplesMarkdown('UtilityFunction',
                                                      classDict['className'].split('(')[0])
 
-
-        sRST = sRST #.replace('**kwargs','\\*\\*kwargs').replace('*args','\\*args') #only needed, if not in literal
-        #listRST += [(moduleNameLatex, LatexString2RSTspecial(sRST, replaceMarkups=False))]
-        listRST += [(moduleNameLatex, sRST)]
         listMarkdown += [(moduleNameLatex, sMarkdown)]
 
 

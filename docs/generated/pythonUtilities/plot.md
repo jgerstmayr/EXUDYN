@@ -82,6 +82,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 ```
 
 
+- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.PlotSensor(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-plotsensor`
+
 
 (sec-plot-plotfft)=
 ## Function: PlotFFT
