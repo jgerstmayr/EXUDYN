@@ -310,7 +310,13 @@ def Serve(port=8099, openBrowser=True, author='JG'):
 #%%******************************************************************************************************
 #THE PAGE. One file, inline, no framework and no request to anything outside this server: it has
 #to work on a machine with no network, and a maintainer has to be able to read it.
-pageHtml = """<!DOCTYPE html>
+#
+#IT IS A RAW STRING, and that is the point, not a detail (#2574): a "\n" in this text belongs to
+#the JavaScript. In an ordinary Python string Python eats it and writes a REAL newline into the
+#middle of a JavaScript string literal, which is a syntax error, which kills the whole script -
+#including the error handlers meant to report such things. The page then renders its frame and
+#stays empty, in silence, which is exactly what the maintainer saw.
+pageHtml = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">

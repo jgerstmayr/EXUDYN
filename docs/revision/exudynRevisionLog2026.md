@@ -11567,3 +11567,31 @@ with a timeout, which is what a regression test for this has to do.
 And the page no longer fails silently: a fetch that throws, an answer that is not JSON and any
 error in the page itself become a red banner, and an empty result says *no issue matches these
 filters*. Silence was the one unacceptable outcome.
+
+<a id="r8-5-1-note2"></a>
+### Note to R8.5.1 — the page still stayed empty (2026-09-21, #2574)
+
+The maintainer started it again after the threading fix and got the same picture: the header, an
+empty backlog, no message. The screenshot said what the words could not — the three filter
+drop-downs were **empty**, and those are filled by JavaScript. So the script was not running at
+all.
+
+It did not parse. `pageHtml` was an ordinary Python triple-quoted string, and step R8.3.5 had put
+`\n\n` into a `confirm()` text: **Python ate the escape** and wrote two real newlines into the
+middle of a JavaScript string literal. `Uncaught SyntaxError: Invalid or unexpected token` —
+and a syntax error kills the whole script, including the error handlers that #2571 had added to
+report exactly this kind of silence.
+
+Two fixes, one for the instance and one for the class:
+
+- `pageHtml` is a **raw string**. A backslash in that text belongs to the browser, and Python
+  has no business reading it.
+- **pytest renders the page in headless Edge or Chrome** and asserts that the version line, the
+  filters and the issue rows are there and that the console says nothing. Asserting that some
+  text stands in the page was no check at all: the page was served complete and correct as
+  *text*, and the browser refused it. The test is skipped where no browser exists.
+
+**How it was found**: the same headless browser. `msedge --headless=new --enable-logging=stderr
+--dump-dom` against a local server reproduced the empty page in one run and named the line. A
+browser is a JavaScript engine that every Windows machine already has — and nothing else in
+this repository could have answered the question.

@@ -744,3 +744,68 @@ def testTheOldIssuesKeepTheirVersionAcrossABump(tracker):
              if issue['status'] in tracker.closedStatuses}
     assert after == before
     assert CheckIssuesModule(tracker).CheckStoredVersions() == []
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the page as a BROWSER sees it (#2574). Asserting that some text stands in the page proved to be
+#no check at all: the page was served complete and correct as text, and the browser refused to
+#parse it, so nothing on it ran - including the error handlers of #2571.
+
+def Browser():
+    """the headless browser of this machine, or None. It renders the page and prints the DOM;
+    no window is opened (CLAUDE.md rule 11)."""
+    candidates = [
+        os.path.join(os.environ.get('PROGRAMFILES(X86)', r'C:\Program Files (x86)'),
+                     'Microsoft', 'Edge', 'Application', 'msedge.exe'),
+        os.path.join(os.environ.get('PROGRAMFILES', r'C:\Program Files'),
+                     'Google', 'Chrome', 'Application', 'chrome.exe'),
+        '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser']
+    for path in candidates:
+        if os.path.isfile(path):
+            return path
+    return None
+
+
+def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):
+    """the page is JavaScript, so the only honest check runs JavaScript. It would have caught
+    both silent failures: the blocked server (#2571) and the script that did not parse (#2574)."""
+    browser = Browser()
+    if browser is None:
+        pytest.skip('no Edge or Chrome on this machine')
+
+    import subprocess
+    import threading
+
+    httpd = server.MakeServer(0)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    address = 'http://127.0.0.1:' + str(httpd.server_address[1]) + '/'
+    try:
+        result = subprocess.run(
+            [browser, '--headless=new', '--disable-gpu', '--no-first-run',
+             '--user-data-dir=' + str(tmp_path / 'browser'),
+             '--enable-logging=stderr', '--log-level=0',
+             '--virtual-time-budget=8000', '--dump-dom', address],
+            capture_output=True, text=True, timeout=180)
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=5)
+
+    page = result.stdout
+    #the script ran at all: these three are written by JavaScript, not by the server
+    assert 'version ' in page and 'closed of' in page, 'the version line stayed empty'
+    assert '<option value="BUG">' in page, 'the filters were not filled'
+    assert page.count('class="issue') > 10, 'no issues were listed'
+    #and it ran without complaint - a SyntaxError kills the whole script, error handlers included
+    assert 'Uncaught' not in result.stderr, result.stderr[-2000:]
+
+
+def testThePageTextIsARawString():
+    """a backslash in the page belongs to the BROWSER. In an ordinary Python string Python eats
+    it: that is how a newline escape in a confirm() text became a real newline inside a
+    JavaScript string literal, and the page stopped parsing (#2574)."""
+    path = os.path.join(trackerDirectory, 'issueServer.py')
+    with open(path, encoding='utf-8') as file:
+        source = file.read()
+    assert 'pageHtml = r"""' in source

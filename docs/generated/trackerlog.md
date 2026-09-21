@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.232.dev1
+- Exudyn version = 1.11.233.dev1
 - last change = 2026-09-21
-- Number of issues = 2574
-- Number of resolved issues = 2305 (232 in current version)
+- Number of issues = 2575
+- Number of resolved issues = 2306 (233 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.233: resolved Issue 2574: the issue page did not parse: Python ate a backslash in the JavaScript (fix)
+  - issue author: Claude-JG
+  - description: exudev issue serve showed its frame and no issues at all, with no error message - the second time this page failed in silence. The cause this time: pageHtml is a Python triple-quoted string, and revision2026 step R8.3.5 put a newline escape into a confirm() text. Python turned it into a REAL newline inside a JavaScript string literal, which is a syntax error, which kills the whole script - including the error handlers added in \#2571 to report exactly this kind of failure. The page text is a raw string now, so a backslash in it belongs to the browser; and pytest renders the page in headless Edge or Chrome and asserts that issues appear and that the console reports nothing, which is the only check that sees a page the way a maintainer does.
+  - **notes:** The page text is a raw Python string, so that a backslash in it reaches the browser: an escaped newline in a confirm() text had become a real newline inside a JavaScript string literal, which is a syntax error, which stopped the whole script - the error handlers of \#2571 included. pytest now renders the page in headless Edge or Chrome and asserts that the version line, the filter options and the issue rows are there and that the console reports nothing; the test is skipped where no browser exists, and it fails on the broken page.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 16:14**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.232: resolved Issue 2573: the version numbering is derived on every run, so history can move (fix)
   - issue author: Claude-JG
   - description: The micro version is a running count of closed issues, and every version number in the release notes was recomputed on each run from a sort by dateResolved. One corrected date, one status changed by hand or one lost file renumbers versions that have already been published, and nothing in the tree would report it - both sides of any comparison came from the same derivation. Revision2026 step R8.4: the releases and their baselines become data (releases.json), every closed issue stores the version its closing produced (resolvedInVersion, D14), tools/checkIssues.py recomputes and compares, and exudev issue bump starts a new release - MINOR and, for the first time, MAJOR: the major number was written as 1 inside GetMajorMinorMicroVersion, so 2.0 could not be expressed at all (maintainer 2026-09-21).

@@ -1,0 +1,16 @@
+{
+  "number": 2574,
+  "title": "the issue page did not parse: Python ate a backslash in the JavaScript",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "exudev issue serve showed its frame and no issues at all, with no error message - the second time this page failed in silence. The cause this time: pageHtml is a Python triple-quoted string, and revision2026 step R8.3.5 put a newline escape into a confirm() text. Python turned it into a REAL newline inside a JavaScript string literal, which is a syntax error, which kills the whole script - including the error handlers added in #2571 to report exactly this kind of failure. The page text is a raw string now, so a backslash in it belongs to the browser; and pytest renders the page in headless Edge or Chrome and asserts that issues appear and that the console reports nothing, which is the only check that sees a page the way a maintainer does.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 16:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The page text is a raw Python string, so that a backslash in it reaches the browser: an escaped newline in a confirm() text had become a real newline inside a JavaScript string literal, which is a syntax error, which stopped the whole script - the error handlers of #2571 included. pytest now renders the page in headless Edge or Chrome and asserts that the version line, the filter options and the issue rows are there and that the console reports nothing; the test is skipped where no browser exists, and it fails on the broken page.",
+  "resolvedInVersion": "1.11.233"
+}
