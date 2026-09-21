@@ -66,8 +66,8 @@ version.txt                               version — an OUTPUT of issueTracker.
    `tools/issueTracker/issues/` (`open/`, `closed/`, `archive/<year>.json`) since revision2026
    step R8.5 and can be read by hand, but the tool checks the enum fields, moves a closed issue
    between the directories and rewrites the version files. Use **`exudev issue <verb>`** (`raise`, `extend`,
-   `remark`, `resolve`, `abandon`, `show`, `list`; `-n` shows what a verb would do) or through the
-   API it calls, and pass **`--author Claude-JG`** / `author='Claude-JG'` to both the raising and
+   `remark`, `resolve`, `abandon`, `show`, `list`, `triage`; `-n` shows what a verb would do) or
+   through the API it calls, and pass **`--author Claude-JG`** / `author='Claude-JG'` to both the raising and
    the closing call — they set two separate fields. The notes of an **open** issue are
    `workingRemarks` and are cleared when it closes; `releaseNotes` is written by `resolve` or
    `abandon` and is published.

@@ -1480,13 +1480,20 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `exudev issue modify <n> effort <value>` corrects one in a second.
 
 <a id="r8-5-1"></a>
-**R8.5.1** *(sub-step of R8.5)* **A tiny local viewer/editor for the issues**, for maintainers:
-    `python tools/issueTracker/serve.py` opens a local web page - **stdlib `http.server` and one
+**R8.5.1** **DONE 2026-09-21** (#2569) — [log](exudynRevisionLog2026.md#r8-5-1) — *(sub-step
+    of R8.5)* **A tiny local viewer/editor for the issues**, for maintainers:
+    **`exudev issue serve`** (not `python tools/issueTracker/serve.py`: the tracker has one
+    command line since R8.3 and this is a verb of it) opens a local web page - **stdlib `http.server` and one
     HTML page, no new dependency** (a Qt6 front-end would cost PySide6, against rule 6, and a web
     page also works over SSH). Features: list by id, search, filter open / resolved / both, and
     **RaiseIssue, EditIssue, ResolveIssue** writing through the same API the scripts use.
-    **Deleting an issue stays manual and file-based** - it should be rare (a wrongly raised issue)
+    **Deleting an issue stays manual and file-based** — it should be rare (a wrongly raised issue)
     and deliberate.
+
+    **Done 2026-09-21** as `tools/issueTracker/issueServer.py`, 12 tests, and with one addition the
+    text above does not name: the server binds **127.0.0.1 only and checks the `Host` header**, so
+    that a page in this browser cannot reach the store through a rebound name. The store is the
+    version of the package and the server has no authentication.
 
 <a id="r8-6"></a>
 **R8.6** *(phase R8, last step of this plan; maintainer request 2026-09-15)* **Checker for user scripts

@@ -16,6 +16,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import importlib.util
+import json
 import os
 import sys
 
@@ -355,3 +356,159 @@ def testShowPrintsTheFieldsThatAreFilled(tracker, capsys):
     assert 'description:' in printed
     #an empty field is not printed at all - a screen full of empty labels helps nobody
     assert 'date resolved' not in printed
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the local viewer: exudev issue serve (revision2026 step R8.5.1). The request layer of
+#issueServer.py takes a method, a path, a query and a payload and returns a response, which is
+#why these tests need no port, no browser and no thread.
+
+@pytest.fixture
+def server(tracker, monkeypatch):
+    """the server module, pointed at the same temporary copy of the store as the tracker fixture.
+    It imports issueTracker itself, and that import gives the REAL module, so the monkeypatching
+    of the fixture is applied to the module the server holds."""
+    specification = importlib.util.spec_from_file_location(
+        'issueServerUnderTest', os.path.join(trackerDirectory, 'issueServer.py'))
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    monkeypatch.setattr(module, 'issueTracker', tracker)
+    monkeypatch.setattr(module, 'issueStore', tracker.issueStore)
+    return module
+
+
+def Call(server, method, path, data=None):
+    """one request; what a GET reads as its query is what a POST sends as its payload, and the
+    body comes back decoded, as JSON where the response says so"""
+    (status, contentType, body) = server.HandleRequest(
+        method, path, query=data if method == 'GET' else None,
+        payload=data if method != 'GET' else None)
+    text = body.decode('utf-8')
+    return (status, json.loads(text) if 'json' in contentType else text)
+
+
+def testThePageIsOneSelfContainedFile(server):
+    """no framework and no request to anything outside this server: it has to work on a machine
+    with no network (and a page that silently loads nothing is worse than no page)"""
+    (status, page) = Call(server, 'GET', '/')
+    assert status == 200
+    assert '<title>Exudyn issues</title>' in page
+    for outside in ['http://', 'https://', 'src=']:
+        assert outside not in page, outside
+
+
+def testTheListFiltersLikeTheCommandLine(server, tracker):
+    """the same question as "exudev issue list --open --type FIX --effort LOW", through the page"""
+    (status, data) = Call(server, 'GET', '/api/issues',
+                          {'status': 'open', 'type': 'FIX', 'effort': 'LOW'})
+    expected = [issue for issue in tracker.GetIssues()
+                if issue['status'] == 'RAISED' and issue['type'] == 'FIX'
+                and issue['effort'] == 'LOW']
+    assert status == 200
+    assert data['matching'] == len(expected)
+    assert set(issue['number'] for issue in data['issues']) == \
+           set(issue['number'] for issue in expected)
+
+
+def testSearchFindsTextAndANumber(server, tracker):
+    number = OpenIssueNumber(tracker)
+    (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all',
+                                                         'search': '#' + str(number)})
+    assert status == 200 and data['matching'] == 1
+    assert data['issues'][0]['number'] == number
+
+    word = tracker.GetIssue(number)['title'].split()[0]
+    (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all', 'search': word})
+    assert number in [issue['number'] for issue in data['issues']]
+
+
+def testTheListDoesNotSendTheDescriptions(server):
+    """2,568 descriptions are 700 KB and the list shows none of them"""
+    (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all'})
+    assert status == 200 and data['issues']
+    assert 'description' not in data['issues'][0]
+    assert len(data['issues']) <= data['limit']
+
+
+def testAMissingIssueIsAMessageAndNotACrash(server):
+    (status, data) = Call(server, 'GET', '/api/issue', {'number': 999999})
+    assert status == 404 and 'no issue' in data['error']
+
+
+def testWritingGoesThroughTheTrackerAndItsChecks(server, tracker):
+    """the point of the whole module: the page calls the functions a script calls, so it cannot
+    write a value the command line would refuse"""
+    number = OpenIssueNumber(tracker)
+    (status, data) = Call(server, 'POST', '/api/modify',
+                          {'number': number, 'field': 'effort', 'value': 'ENORMOUS'})
+    assert status == 400 and 'ENORMOUS' in data['error']
+    assert tracker.GetIssue(number)['effort'] != 'ENORMOUS'
+
+    (status, data) = Call(server, 'POST', '/api/modify',
+                          {'number': number, 'field': 'effort', 'value': 'high'})
+    assert status == 200 and data['issue']['effort'] == 'HIGH'
+
+
+def testTheFieldsTheTrackerOwnsAreNotWritable(server, tracker):
+    """the status moves an issue between open/ and closed/ and decides the version; it is written
+    by resolve and abandon, never by a field editor"""
+    number = OpenIssueNumber(tracker)
+    for field in ['status', 'number', 'dateResolved', 'somethingElse']:
+        (status, data) = Call(server, 'POST', '/api/modify',
+                              {'number': number, 'field': field, 'value': 'RESOLVED'})
+        assert status == 400, field
+    assert tracker.GetIssue(number)['status'] == 'RAISED'
+
+
+def testRaiseExtendRemarkAndResolveThroughTheApi(server, tracker):
+    (status, data) = Call(server, 'POST', '/api/raise',
+                          {'title': 'raised through the page', 'description': 'what it is about',
+                           'type': 'CHECK', 'effort': 'LOW', 'author': 'Claude-JG'})
+    assert status == 200
+    number = data['number']
+    assert data['issue']['author'] == 'Claude-JG' and data['issue']['effort'] == 'LOW'
+
+    Call(server, 'POST', '/api/extend', {'number': number, 'text': 'and this as well'})
+    Call(server, 'POST', '/api/remark', {'number': number, 'text': 'duplicate of #1'})
+    issue = tracker.GetIssue(number)
+    assert 'and this as well' in issue['description'] and 'what it is about' in issue['description']
+    assert issue['workingRemarks'] == 'duplicate of #1'
+
+    (status, data) = Call(server, 'POST', '/api/resolve',
+                          {'number': number, 'notes': 'done', 'author': 'Claude-JG'})
+    assert status == 200 and data['issue']['status'] == 'RESOLVED'
+    #the remarks were useful while it was open and are not published - as everywhere else
+    assert data['issue']['workingRemarks'] == '' and data['issue']['releaseNotes'] == 'done'
+
+
+def testAClosedIssueIsRefusedWithTheTrackersOwnMessage(server, tracker):
+    number = ClosedIssueNumber(tracker)
+    (status, data) = Call(server, 'POST', '/api/extend', {'number': number, 'text': 'too late'})
+    assert status == 400 and 'closed issue is not extended' in data['error']
+
+
+def testOnlyThisMachineIsAnswered(server):
+    """the store is the version of the package and there is no authentication; a name that
+    resolves to 127.0.0.1 must not reach it either"""
+    assert server.AllowedHost('127.0.0.1:8099')
+    assert server.AllowedHost('localhost:8099')
+    assert server.AllowedHost('[::1]:8099')
+    assert not server.AllowedHost('evil.example.com')
+    assert not server.AllowedHost('192.168.0.5:8099')
+
+
+def testAnUnknownPathOrMethodIsAMessage(server):
+    (status, data) = Call(server, 'GET', '/api/nonsense')
+    assert status == 404 and 'unknown path' in data['error']
+    (status, data) = Call(server, 'DELETE', '/api/issue')
+    #deleting an issue stays a file operation with a commit behind it (revision2026 step R8.5.1)
+    assert status == 405
+
+
+def testServeIsAStepWithAnActionLikeEveryOtherVerb():
+    """"exudev -n issue serve" must print what it would do and open no port"""
+    commands = ExudevCommands()
+    steps = commands.Issue(IssueOptions(issueVerb='serve', port=8099, noBrowser=True,
+                                        author='JG'))
+    assert len(steps) == 1 and steps[0].action is not None and steps[0].argv is None
+    assert '8099' in steps[0].note

@@ -773,6 +773,14 @@ def IssueTracker():
     return issueTracker
 
 
+def IssueServer():
+    """the local web page of revision2026 step R8.5.1; imported only when "serve" is called, so
+    that the other verbs never pay for http.server"""
+    IssueTracker()                                     #it puts tools/issueTracker/ on sys.path
+    import issueServer                                                        #noqa: E402
+    return issueServer
+
+
 def IssueNumber(tracker, number):
     """the number as the tracker uses it, with a readable error instead of a printed warning"""
     if number < 0 or number >= tracker.NumberOfIssues():
@@ -893,7 +901,8 @@ def SwitchBuildMode(tracker, release):
 
 
 def Issue(options):
-    """exudev issue <verb>: raise, extend, remark, resolve, abandon, show, list, modify, mode"""
+    """exudev issue <verb>: raise, extend, remark, resolve, abandon, show, list, modify,
+    triage, serve, mode"""
     tracker = IssueTracker()
     verb = options.issueVerb
 
@@ -973,11 +982,13 @@ def Issue(options):
         def Action():
             return TriageReport(tracker)
 
-    elif verb == 'triage':
-        note = 'report the open issues by type and effort'
+    elif verb == 'serve':
+        note = ('serve the issues on http://127.0.0.1:' + str(options.port) + '/ until Ctrl+C; '
+                'the page WRITES through the tracker, so resolving there bumps the version')
 
         def Action():
-            return TriageReport(tracker)
+            return IssueServer().Serve(port=options.port, openBrowser=not options.noBrowser,
+                                       author=options.author)
 
     elif verb == 'mode':
         note = ('switch the build mode to ' + ('release' if options.release else 'development')

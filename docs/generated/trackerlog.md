@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.227.dev1
+- Exudyn version = 1.11.228.dev1
 - last change = 2026-09-21
-- Number of issues = 2569
-- Number of resolved issues = 2300 (227 in current version)
+- Number of issues = 2570
+- Number of resolved issues = 2301 (228 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.228: resolved Issue 2569: a local web page over the issues, for a backlog pass (extension)
+  - issue author: Claude-JG
+  - description: The tracker can be read and written from the command line since revision2026 step R8.3, which is right for one issue at a time and wrong for a pass over 270: looking, deciding, writing and looking again is what a page does. exudev issue serve starts a local server (stdlib http.server, one HTML page, no new dependency, loopback interface only) that lists, searches and filters the issues and writes through the same tracker functions as the verbs - so it cannot store a value the command line would refuse. Deleting an issue stays a file operation with a commit behind it. Revision2026 step R8.5.1.
+  - **notes:** exudev issue serve: a local web page over the issue store (tools/issueTracker/issueServer.py). stdlib http.server and one self-contained HTML page - no new dependency and nothing fetched from outside the server. It lists, searches and filters the backlog and writes through the same tracker functions as the command line, so it cannot store a value the CLI would refuse; status, number and dateResolved are not editable there. It binds 127.0.0.1 and checks the Host header, because the store is the version of the package. Deleting an issue stays a file operation. 12 tests, against the socket-free request layer.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-21 14:11**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.227: resolved Issue 2548: generated and hand-written documentation share directories and nothing says which is which (docu)
   - issue author: Claude-JG
   - description: Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.

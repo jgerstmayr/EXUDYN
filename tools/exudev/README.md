@@ -28,7 +28,8 @@ everywhere else — WSL, linux, macOS — type `python tools/exudev`.
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
 | `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |
 | `exudev env [--py]` | python, exudyn, numpy, scipy and matplotlib per environment |
-| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `abandon`, `show`, `list`, `modify`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files (revision2026 step R8.3) |
+| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `abandon`, `show`, `list`, `modify`, `triage`, `serve`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files (revision2026 step R8.3) |
+| `exudev issue serve` | the same tracker as a local web page, for a backlog pass: list, search, filter, and raise/extend/remark/resolve through the same API (revision2026 step R8.5.1) |
 
 ## The three things worth knowing
 

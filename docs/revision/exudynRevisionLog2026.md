@@ -11430,3 +11430,38 @@ pass over a backlog finds such things; that is half of what it is for.
 **Written through the store directly**, not through `ChangeIssue`: 269 calls would have
 regenerated the HTML and the Markdown 269 times. The pages are written once at the end, and
 `tools/checkIssues.py` confirms the store afterwards.
+
+<a id="r8-5-1"></a>
+### R8.5.1 — the issues in a browser (2026-09-21, #2569)
+
+A command line is right for one issue and wrong for a pass over 270. A pass is: look at a
+list, open one, decide, write, go back to the list — and between each of those steps a
+terminal loses the list. `exudev issue serve` opens `http://127.0.0.1:8099/`: the backlog on
+the left with the filters of `issue list` as select boxes and a search field, one issue on the
+right with its text, its three enum fields as drop-downs, and the boxes for extend, remark,
+resolve and abandon.
+
+**Standard library only**, as the plan required: `http.server` and one HTML file with its CSS
+and its JavaScript inline. A Qt front-end would have cost PySide6, against rule 6, and would
+not work over SSH; a page that loaded a framework from a CDN would not work without a network.
+The page fetches nothing but this server — a test asserts that it contains no `http://` and
+no `src=` at all.
+
+**Every button ends in the function a script calls.** The server does not write JSON files; it
+calls `RaiseIssue`, `ExtendIssue`, `RemarkIssue`, `ResolveIssue`, `AbandonIssue`,
+`ChangeIssue`. So the page cannot store an effort the command line would refuse (it shows the
+tracker's own message instead), resolving in the browser rewrites `version.txt` and the
+tracker pages exactly as resolving in a terminal does, and `status`, `number` and
+`dateResolved` are refused to the field editor because the tracker owns them. **Deleting an
+issue is not on the page**: it should be rare and deliberate, so it stays a file operation
+with a commit behind it.
+
+**It answers on this machine only.** The store is the version of the package and there is no
+authentication, so the server binds `127.0.0.1` and additionally checks the `Host` header —
+without that second check a page in this browser could reach a loopback server through a name
+that resolves to 127.0.0.1. A request from anywhere else gets 403.
+
+**The request layer has no socket in it.** `HandleRequest(method, path, query, payload)`
+returns `(status, contentType, body)` and knows nothing about `http.server`; the handler class
+is 30 lines around it. That is why the 12 tests need no port, no thread and no browser — they
+call the same function the socket calls, against a copy of the store.

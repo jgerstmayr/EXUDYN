@@ -82,8 +82,16 @@ exudev issue extend 2566 "what the analysis turned up"
 exudev issue remark 2566 "duplicate of #2134, check before starting"
 exudev issue resolve 2566 "what was done" --author Claude-JG     #bumps the micro version
 exudev issue abandon 2566 "decided against, because ..."
+exudev issue triage                                #the open issues by type and effort
+exudev issue serve                                 #the same in a browser, read AND write
 exudev issue mode --release | --dev                              #fact 26
 ```
+
+`exudev issue serve` opens a local page (`http://127.0.0.1:8099/`, standard library only) that
+lists, searches and filters the issues and writes through the same functions as the verbs above
+— which is the tool for a backlog pass, where a command line is not. It answers on the loopback
+interface only, and **deleting an issue is not on it**: that stays a file operation with a commit
+behind it.
 
 `exudev -n issue resolve ...` prints what it would do and writes nothing — worth using before
 anything that touches the version.

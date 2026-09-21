@@ -127,7 +127,7 @@ def IssueParser(subParsers, globalParser):
     what it would do and changes nothing - which matters here, because resolving an issue bumps
     the version of the package."""
     issue = subParsers.add_parser('issue', parents=[globalParser],
-        help='the issue tracker: raise, extend, remark, resolve, abandon, show, list',
+        help='the issue tracker: raise, extend, remark, resolve, abandon, show, list, serve',
         description='The issue tracker of tools/issueTracker/. It also owns the version: the micro '
                     'number is the count of closed issues, so "resolve" and "abandon" rewrite '
                     'version.txt, versionCpp.cpp, the version line of README.rst and the tracker '
@@ -206,6 +206,16 @@ def IssueParser(subParsers, globalParser):
         help='the open issues by type and effort',
         description='The table a triage pass works from: how many open issues of each type are '
                     'LOW, MEDIUM, HIGH, HUGE - and how many are not classified yet.')
+
+    serve = verbs.add_parser('serve', parents=[globalParser, author],
+        help='a local web page over the issues (Ctrl+C to stop)',
+        description='What a backlog pass actually is - look, decide, write, look again - which a '
+                    'command line does badly. Standard library only: http.server and one HTML '
+                    'page, on the loopback interface, writing through the same tracker functions '
+                    'as the verbs above.')
+    serve.add_argument('--port', type=int, default=8099, metavar='N', help='default 8099')
+    serve.add_argument('--no-browser', action='store_true', dest='noBrowser',
+                       help='do not open a browser window; print the address only')
 
     mode = verbs.add_parser('mode', parents=[globalParser],
         help='switch between release and development build mode',
