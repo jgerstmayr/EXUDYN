@@ -1,0 +1,15 @@
+{
+  "number": 2576,
+  "title": "the repository has no CHANGELOG",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "A user of a released package looks for CHANGELOG.md in the repository root, and Exudyn had none: the only list of what changed was the issue tracker chapter of the documentation, which is the tracker itself - every resolved issue with its description, dates and author, plus the open issues and the known bugs, 119,000 words. Revision2026 step R7.4 renders CHANGELOG.md from the issue store, which step R8.4 made possible by storing in every closed issue the version it produced: the file only has to group and print. The current release is printed with the release note of each issue and the earlier ones as one line per issue, so that the file stays a changelog instead of a second copy of the tracker. tools/checkIssues.py compares both published pages with what the issues render to, which catches a store edited by hand.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 17:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CHANGELOG.md in the repository root is rendered from the issue store by the tracker, on every write that closes an issue: a table of the releases, then the current release with the release note of each resolved issue and the earlier releases as one line per issue. An issue closed without being resolved, and an IDEA, appear nowhere. tools/checkIssues.py renders both published pages - trackerlog.md and CHANGELOG.md - and compares them with the files, so a store edited by hand no longer leaves the documentation describing issues that do not exist.",
+  "resolvedInVersion": "1.11.235"
+}

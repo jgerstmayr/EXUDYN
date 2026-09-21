@@ -92,3 +92,8 @@ main/pythonDev/TestModels/testData/*.rst    binary
 # statistics. docs/RST/, index.rst and the LaTeX documentation are gone since revision2026 step
 # R7.1.7; README.rst and index.md are hand-written (decisions D10 and D11).
 docs/generated/**  linguist-generated=true
+
+# CHANGELOG.md is generated as well (revision2026 step R7.4): it is a rendering of the issues,
+# written by the tracker whenever an issue closes. It lives in the root because that is where a
+# user of a released package looks for it, not because it is hand-written.
+CHANGELOG.md       linguist-generated=true

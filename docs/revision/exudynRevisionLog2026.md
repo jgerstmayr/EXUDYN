@@ -11616,3 +11616,36 @@ actually touch?) is now a table in `docs/dev/WORKFLOW.md`: the issue file, `meta
 `versionCpp.cpp`, `versionName.txt` and the version line of `README.rst` only when an issue
 **closes**; `releases.json` only on a bump. `exudev docs` writes none of them — it renders
 `docs/` to HTML and only reads what the tracker wrote.
+
+<a id="r7-4"></a>
+### R7.4 — CHANGELOG.md (2026-09-21, #2576)
+
+A user of a released package looks for `CHANGELOG.md` in the repository root, and there was
+none. The only list of what had changed was the issue tracker chapter of the documentation —
+which is the *tracker*: every resolved issue with its description, its dates and its author,
+plus the open issues and the known bugs, **119,000 words**.
+
+`CHANGELOG.md` is now written by the tracker from the same issues, and **deferring this step
+behind R8.5 and R8.4 is what made it small**: since R8.4 every resolved issue carries the
+version its closing produced, so the renderer groups and prints and computes nothing.
+
+**What it contains** (2,575 lines, 234 KB): a table of the 13 releases with their names and
+their counts, then the releases newest first. The **current release** is printed with the
+release note of each issue — that is what somebody upgrading reads — and the earlier ones
+as one line per issue: version, type, title, number. Repeating the descriptions would have
+doubled a megabyte for no new fact (rule 10).
+
+An issue that was **closed without being resolved** appears nowhere, and neither does an
+`IDEA`: neither changed anything for a user. They still consume version numbers, which is why
+a release can span more versions than it has lines, and the page says so.
+
+**And the pages are now checked against the store.** `tools/checkIssues.py` renders both
+`docs/generated/trackerlog.md` and `CHANGELOG.md` into memory and compares them with the
+files. The failure it is for happened this morning: the maintainer raised an issue through
+the web page, deleted the file by hand — which is allowed for the newest open issue — and
+the published page went on listing it. A tenth of a second in the gate; the check fires on a
+hand edit of either page as well.
+
+The refactoring that made it possible is worth naming: `ConvertToMarkdown()` split into
+`MarkdownText()`, which *returns* the page, and a writer — a page that can only be written
+to disk cannot be compared with anything.

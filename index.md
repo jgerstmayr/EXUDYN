@@ -74,6 +74,7 @@ docs/howTo/visualStudio2022
 docs/generated/examples/examplesIndex
 docs/generated/testModels/testModelsIndex
 docs/generated/abbreviations
+CHANGELOG
 docs/generated/trackerlog
 ```
 

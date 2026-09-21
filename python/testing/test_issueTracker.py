@@ -17,6 +17,7 @@
 
 import importlib.util
 import json
+import re
 import os
 import sys
 
@@ -837,3 +838,64 @@ def testThePageTextIsARawString():
     with open(path, encoding='utf-8') as file:
         source = file.read()
     assert 'pageHtml = r"""' in source
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#CHANGELOG.md (revision2026 step R7.4): a rendering of the issues, not a second place where
+#changes are written down
+
+def testTheChangelogListsAResolvedIssueUnderTheVersionItProduced(tracker):
+    number = OpenIssueNumber(tracker)
+    tracker.ResolveIssue(number, notes='what was done', author='Claude-JG')
+    issue = tracker.GetIssue(number)
+
+    text = tracker.ChangelogText()
+    assert '**' + issue['resolvedInVersion'] + '**' in text
+    assert issue['title'].strip() in text
+    assert '(#' + str(number) + ')' in text
+    #the newest release is printed WITH its release notes; that is what a changelog is read for
+    assert 'what was done' in text
+
+
+def testTheChangelogLeavesOutWhatChangedNothing(tracker):
+    """an issue closed without being resolved changed nothing for a user, and an IDEA is not a
+    change either - the tracker page follows the same rule"""
+    closedNumber = OpenIssueNumber(tracker)
+    tracker.CloseIssue(closedNumber, reason='superseded', author='Claude-JG')
+
+    ideaNumber = tracker.RaiseIssue('an idea that goes nowhere', 'what if', issueType='IDEA',
+                                    author='Claude-JG')
+    tracker.ResolveIssue(ideaNumber, notes='became #1', author='Claude-JG')
+
+    text = tracker.ChangelogText()
+    assert '(#' + str(closedNumber) + ')' not in text
+    assert '(#' + str(ideaNumber) + ')' not in text
+
+
+def testTheChangelogIsOrderedNewestFirstAndGroupedByRelease(tracker):
+    text = tracker.ChangelogText()
+    current = tracker.CurrentRelease()
+    #the current release comes first and says so
+    assert text.index('## Version ' + current['version']) < text.index('## Version 1.10')
+    assert '(current)' in text.split('## Version ' + current['version'])[1].split('\n')[0]
+    #1.10.9 must not sort after 1.10.10
+    versions = re.findall(r'\*\*(\d+\.\d+\.\d+)\*\*', text)
+    keys = [[int(part) for part in version.split('.')] for version in versions]
+    assert keys == sorted(keys, reverse=True)
+
+
+def testTheGeneratedPagesAreCheckedAgainstTheStore(tracker, tmp_path):
+    """the failure this check exists for: an issue file added, edited or deleted by hand leaves
+    the published pages describing a store that no longer exists"""
+    checkIssues = CheckIssuesModule(tracker)
+    tracker.ConvertToMarkdown = lambda: None      #the fixture has already neutralised it
+    generated = tmp_path / 'docs' / 'generated'
+    generated.mkdir(parents=True, exist_ok=True)
+    (generated / 'trackerlog.md').write_text(tracker.MarkdownText(), encoding='utf-8')
+    (tmp_path / 'CHANGELOG.md').write_text(tracker.ChangelogText(), encoding='utf-8')
+    assert checkIssues.CheckGeneratedPages() == []
+
+    #now change the store without rewriting the pages, exactly as a hand edit does
+    tracker.RemarkIssue(OpenIssueNumber(tracker), 'a remark that the page does not know about')
+    messages = checkIssues.CheckGeneratedPages()
+    assert any('trackerlog.md' in message for message in messages), messages

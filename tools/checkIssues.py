@@ -26,6 +26,37 @@ import issueStore                                                             # 
 import issueTracker                                                           # noqa: E402
 
 
+def CheckGeneratedPages():
+    """The two pages the tracker publishes are renderings of the issues, so they have to BE the
+    rendering (revision2026 step R7.4): docs/generated/trackerlog.md and CHANGELOG.md.
+
+    They go stale in one ordinary way - an issue file is added, edited or deleted by hand, which
+    the tracker is allowed to permit (a wrongly raised issue is deleted, not tracked forever) but
+    which leaves the pages describing the store as it was. Then the documentation shows an issue
+    that does not exist. Rendering both into memory and comparing costs a tenth of a second."""
+    messages = []
+    pages = [(os.path.join(os.path.dirname(trackerDirectory), '..', 'docs', 'generated',
+                           'trackerlog.md'), issueTracker.MarkdownText),
+             (os.path.join(os.path.dirname(trackerDirectory), '..', 'CHANGELOG.md'),
+              issueTracker.ChangelogText)]
+
+    for (path, Render) in pages:
+        path = os.path.normpath(path)
+        name = os.path.basename(path)
+        if not os.path.isfile(path):
+            messages.append(name + ' is missing; any tracker verb writes it')
+            continue
+        written = io.open(path, encoding='utf-8', newline='').read()
+        current = Render()
+        #line by line, so that a checkout with CRLF endings is not reported as a difference
+        if written.splitlines() != current.splitlines():
+            messages.append(name + ' is not what the issues render to - it is stale or was '
+                            'edited by hand; any tracker verb rewrites it '
+                            '(python tools/issueTracker/issueTracker.py is not needed: '
+                            '"exudev issue remark" on any issue does it)')
+    return messages
+
+
 def CheckStoredVersions():
     """The version every closed issue carries, against the version recomputed from the store
     (revision2026 step R8.4(b), D14).
@@ -87,6 +118,7 @@ def main():
 
     messages = issueStore.CheckStore()
     messages += CheckStoredVersions()
+    messages += CheckGeneratedPages()
 
     #the version has to be what the files say, and version.txt has to be what the version says
     closed = issueStore.ClosedCount()

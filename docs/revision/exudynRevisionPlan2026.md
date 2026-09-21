@@ -1199,8 +1199,13 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `linguist-generated`, which R7.1.8 put into `.gitattributes`.
 
 <a id="r7-4"></a>
-**R7.4** *(phase R7, **after R8.5**; deferred 2026-09-19)* Convert `trackerlog.tex` into
-    `CHANGELOG.md`.
+**R7.4** **DONE 2026-09-21** (#2576) — [log](exudynRevisionLog2026.md#r7-4) — *(phase R7,
+    **after R8.5**; deferred 2026-09-19)* Convert `trackerlog.tex` into `CHANGELOG.md`.
+
+    **Done as a rendering**, which is what deferring it bought: R8.4 put the version each issue
+    produced into the issue itself, so this step only groups and prints. It is **not** a second
+    copy of the tracker page: the current release is printed with the release note of each issue,
+    the earlier ones as one line per issue.
 
     **Moved behind R8.5 deliberately.** R8.5 migrates `trackerlog.txt` to one JSON file per
     issue and adds a `resolvedInVersion` field for exactly this purpose — its own text says it

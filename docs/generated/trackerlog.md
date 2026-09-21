@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.234.dev1
+- Exudyn version = 1.11.235.dev1
 - last change = 2026-09-21
-- Number of issues = 2576
-- Number of resolved issues = 2307 (234 in current version)
+- Number of issues = 2577
+- Number of resolved issues = 2308 (235 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.235: resolved Issue 2576: the repository has no CHANGELOG (docu)
+  - issue author: Claude-JG
+  - description: A user of a released package looks for CHANGELOG.md in the repository root, and Exudyn had none: the only list of what changed was the issue tracker chapter of the documentation, which is the tracker itself - every resolved issue with its description, dates and author, plus the open issues and the known bugs, 119,000 words. Revision2026 step R7.4 renders CHANGELOG.md from the issue store, which step R8.4 made possible by storing in every closed issue the version it produced: the file only has to group and print. The current release is printed with the release note of each issue and the earlier ones as one line per issue, so that the file stays a changelog instead of a second copy of the tracker. tools/checkIssues.py compares both published pages with what the issues render to, which catches a store edited by hand.
+  - **notes:** CHANGELOG.md in the repository root is rendered from the issue store by the tracker, on every write that closes an issue: a table of the releases, then the current release with the release note of each resolved issue and the earlier releases as one line per issue. An issue closed without being resolved, and an IDEA, appear nowhere. tools/checkIssues.py renders both published pages - trackerlog.md and CHANGELOG.md - and compares them with the files, so a store edited by hand no longer leaves the documentation describing issues that do not exist.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 17:24**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.234: resolved Issue 2575: opening an issue in the web page threw appendChild(null) (fix)
   - issue author: Claude-JG
   - description: Clicking an issue in exudev issue serve showed a red banner - TypeError: Failed to execute appendChild on Node: parameter 1 is not of type Node - and half a detail pane. TextBlock() returns null for a field that is not filled, and almost every issue has empty workingRemarks, so the pane threw on nearly every issue. Fixed with one Append(parent, node) helper that ignores a missing block, used by all 15 append sites; the fragment of the URL now also carries an issue (\#author=JG&issue=2548), which makes a link to one issue possible and lets the headless browser test render the detail pane without a click. That test fails when the unguarded append is put back.
