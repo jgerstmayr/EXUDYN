@@ -3,9 +3,9 @@
 # Exudyn pre-push hook
 #
 # Details:  Refuses to push anything to the public GitHub repository except master, release/*
-#           and tags. All v2.0 work happens on v2-dev and is pushed only to the internal remote;
-#           GitHub master stays at 1.11.0 until the v2.0 release (revision plan decision D6,
-#           steps 7 and 9).
+#           and tags. All revision work happens on v2-dev and is pushed only to the internal
+#           remote; GitHub master stays at 1.11.0 until the 1.13 release - 1.12 completes the
+#           2026 revision but is internal (decisions D6 and D16).
 #
 #           Without this, a single "git push" from the wrong branch publishes months of
 #           restructuring, including WIP sync commits in knowingly broken states, into public
@@ -64,8 +64,8 @@ done
 if [ "$refused" -eq 1 ]; then
     echo "" >&2
     echo "Only master, release/* and tags may be pushed to the public GitHub repository." >&2
-    echo "v2.0 work belongs on v2-dev and is pushed to the internal remote only," >&2
-    echo "until the release (revision plan decision D6, steps 7 and 12)." >&2
+    echo "Revision work belongs on v2-dev and is pushed to the internal remote only," >&2
+    echo "until the 1.13 release (revision plan decisions D6 and D16)." >&2
     echo "" >&2
     echo "If you really mean it: git push --no-verify" >&2
     exit 1

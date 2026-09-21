@@ -1,0 +1,16 @@
+{
+  "number": 2580,
+  "title": "the documentation announces the revision as 2.0, and it is 1.12",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "The revision of 2026 was planned as v1.11.0 to v2.0 and the documentation says so in five published pages. The maintainer decided on 2026-09-22 that this is wrong for users: the interface changes it brought - star imports exporting only __all__, eleven removed vector helpers, a few renames - are the kind every minor release carried, and they are easy to find. A major number promises more: compiled user items, the fully generic object, exudyn.Parameter, autodiff, the kinematics and inverse-dynamics solvers, all of which are still open. So the revision completes as 1.12 and 2.0 is reserved for that work. The second half of the decision: 1.12 is INTERNAL - no PyPI wheels, no GitHub release, no promotion - because the colleagues' integration round, the documentation and the macOS wheels still need weeks; the first public release is 1.13, and only then does master move. This issue is the wording pass: the published pages, the landing page, the branch prose, the pre-push hook message, and the rule that a feature is announced by the release that ships it while exact micro versions stay in the changelog and in developer notes.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 00:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The published documentation names 1.12, never 2.0: the revisions chapter (with a note saying that the individual issues carry 1.11.x numbers because the micro version does not restart, that 1.12.0 marks completion, and that 1.13 is the first release that carries it), the landing page, the FAQ and the exception section. docs/dev/WORKFLOW.md gains the rule - a feature is announced by the release that ships it (since 1.12) while exact micro versions (1.11.238) belong in the changelog and in notes between developers - and states that 1.12 is internal, with 1.13 the first public release. The branch keeps its name v2-dev, which is historical, and the pre-push hook now says that nothing reaches GitHub before 1.13.",
+  "resolvedInVersion": "1.11.239"
+}

@@ -7,12 +7,19 @@ written against the previous one. Every single resolved issue is in the
 {ref}`issue tracker <sec-issuetracker>`; this chapter is the short version, and a new section is
 added on top of it at each release.
 
-(sec-revisions-2-0)=
-## Version 2.0
+(sec-revisions-1-12)=
+## Version 1.12
 
 A revision of the whole project rather than a feature release: the layout of the repository, the
 build, the tests, the documentation and the development tools. Most of it is invisible from a
 model script. The parts that are not are first.
+
+```{note}
+The individual issues of this revision carry **1.11.x** version numbers, because the micro
+version counts closed issues continuously and does not restart; **1.12.0** is the point at which
+the revision was declared complete. 1.12 itself was **not published** — **1.13 is the first
+release that carries it**.
+```
 
 ### What can break a script
 

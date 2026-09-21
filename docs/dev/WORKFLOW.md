@@ -250,6 +250,26 @@ tools/issueTracker/versionName.txt         the jazz-musician release name
 
 Never edit any of those seven files by hand.
 
+### How a version is named in prose (maintainer, 2026-09-22)
+
+Two audiences, two forms, and mixing them is what confuses people:
+
+- **for users** — name the **release that ships a feature**: *"since 1.12"*. A micro
+  version such as 1.11.238 is a number they cannot install, and telling them one they cannot
+  get from `pip` is worse than telling them nothing.
+- **for development** — name the **exact version**: *"since 1.11.238"*. That is what the
+  colleagues on the internal GitLab run, it is checkable against `version.txt`, and the
+  changelog carries it for every issue anyway.
+
+So the manual, the landing page and the {ref}`revisions chapter <sec-revisions>` say *1.12*;
+`CHANGELOG.md`, the issue tracker and notes between developers say *1.11.238*. Since the micro
+version only ever grows, a reader comparing the two still gets the order right.
+
+**1.12 is not a public release** (decision D16): it marks the completion of the 2026 revision
+and stays internal — no PyPI wheels, no GitHub release. **1.13** is the first release that
+is published, after the integration round of the colleagues, the documentation review and the
+macOS wheels.
+
 ### Release mode vs development mode
 
 `versionDev` in `tools/issueTracker/issueTracker.py` selects one of two intended
@@ -316,7 +336,7 @@ Full picture in plan §2a. The short version, which is what matters day to day:
 | branch | purpose |
 |---|---|
 | `master` | read-only mirror of public GitHub `master`, frozen at 1.11.0 — **never commit here** |
-| `v2-dev` | all v2.0 work; the working branch |
+| `v2-dev` | the working branch of the 2026 revision; the name is historical (the revision was planned as 1.11 → 2.0 and completes as 1.12) |
 | `release/*` | release preparation |
 
 ```
@@ -330,7 +350,9 @@ and the normal thing to do. The internal repository carries **full history**; th
 
 - Work on `v2-dev`; never commit on `master`.
 - Push `v2-dev` to `origin` freely.
-- **Nothing reaches GitHub before the v2.0 release.** `tools/hooks/pre-push` enforces this, but
+- **Nothing reaches GitHub before the 1.13 release.** 1.12 marks the completion of the 2026
+  revision and stays internal: no PyPI wheels, no GitHub release, no promotion (decision D16).
+  `tools/hooks/pre-push` enforces this, but
   only where `core.hooksPath` is set — see §0a, and tell anyone you add to the server.
 - Claude never pushes to any remote, under any circumstances, and announces network access first.
 

@@ -566,7 +566,7 @@ Every error that Exudyn reports from its C++ core arrives in Python as an except
 before the message is even read.
 
 All of them derive from `exudyn.ExudynError`, and each of them **also** derives from
-the built-in exception that fits, so an `except ValueError` written before Exudyn 2.0
+the built-in exception that fits, so an `except ValueError` written before Exudyn 1.12
 keeps working:
 
 - `exudyn.ExudynTypeError` (also a `TypeError`): the object cannot be that parameter at all -- a list where a number belongs, a string where a function belongs.

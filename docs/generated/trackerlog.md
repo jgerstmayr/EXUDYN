@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.238.dev1
-- last change = 2026-09-21
-- Number of issues = 2580
-- Number of resolved issues = 2311 (238 in current version)
+- Exudyn version = 1.11.239.dev1
+- last change = 2026-09-22
+- Number of issues = 2581
+- Number of resolved issues = 2312 (239 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.239: resolved Issue 2580: the documentation announces the revision as 2.0, and it is 1.12 (docu)
+  - issue author: Claude-JG
+  - description: The revision of 2026 was planned as v1.11.0 to v2.0 and the documentation says so in five published pages. The maintainer decided on 2026-09-22 that this is wrong for users: the interface changes it brought - star imports exporting only \_\_all\_\_, eleven removed vector helpers, a few renames - are the kind every minor release carried, and they are easy to find. A major number promises more: compiled user items, the fully generic object, exudyn.Parameter, autodiff, the kinematics and inverse-dynamics solvers, all of which are still open. So the revision completes as 1.12 and 2.0 is reserved for that work. The second half of the decision: 1.12 is INTERNAL - no PyPI wheels, no GitHub release, no promotion - because the colleagues' integration round, the documentation and the macOS wheels still need weeks; the first public release is 1.13, and only then does master move. This issue is the wording pass: the published pages, the landing page, the branch prose, the pre-push hook message, and the rule that a feature is announced by the release that ships it while exact micro versions stay in the changelog and in developer notes.
+  - **notes:** The published documentation names 1.12, never 2.0: the revisions chapter (with a note saying that the individual issues carry 1.11.x numbers because the micro version does not restart, that 1.12.0 marks completion, and that 1.13 is the first release that carries it), the landing page, the FAQ and the exception section. docs/dev/WORKFLOW.md gains the rule - a feature is announced by the release that ships it (since 1.12) while exact micro versions (1.11.238) belong in the changelog and in notes between developers - and states that 1.12 is internal, with 1.13 the first public release. The branch keeps its name v2-dev, which is historical, and the pre-push hook now says that nothing reaches GitHub before 1.13.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-22 00:43**, date raised: 2026-09-22, resolved by: Claude-JG
 - Version 1.11.238: resolved Issue 2579: the revision is not in the documentation (docu)
   - issue author: Claude-JG
   - description: Three months of changes - the repository layout, the build, the tests, the tools, the API - are recorded in the revision plan and log, which are working records and are not published. A reader of the documentation still found paths from before the main/ level was removed, an installation chapter that recommends python setup.py install (which current setuptools does not have), a sentence pointing at a developer-only trackerlog.html for open issues that have been published for weeks, a paragraph explaining how to bump a version by editing two constants that no longer exist, and eight author names written as Zw{\\"o}lfer. Revision2026 step R7.2 in five parts: close the record, write down what the revision implies for the documentation (docs/revision/documentationImpact2026.md), work that list off in the pages and in the generators, add a revisions chapter for users at the end of the manual, and two lines on the landing page.

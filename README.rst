@@ -43,13 +43,13 @@ Exudyn
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written since revision2026 step R7.1.7 (decision D11)
 
-+  Exudyn version = 1.11.238.dev1 (McLaughlin)
++  Exudyn version = 1.11.239.dev1 (McLaughlin)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg
    :width: 300
 
-**Update on Exudyn V2.0**: a revision of the whole project - star imports now export only what a module defines (add ``import numpy as np`` and friends to older scripts), ``python -m exudyn info`` reports an installation, exceptions say what kind of problem they are, the documentation is Markdown and there is a ``CHANGELOG.md``; the wheels and the documentation are built by GitHub CI. The full list is in the `revisions chapter <https://exudyn.readthedocs.io/en/latest/docs/manual/revisions.html>`_.
+**Update on Exudyn V1.12**: a revision of the whole project - star imports now export only what a module defines (add ``import numpy as np`` and friends to older scripts), ``python -m exudyn info`` reports an installation, exceptions say what kind of problem they are, the documentation is Markdown and there is a ``CHANGELOG.md``; the wheels and the documentation are built by GitHub CI. The full list is in the `revisions chapter <https://exudyn.readthedocs.io/en/latest/docs/manual/revisions.html>`_.
 
 **Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices.
 
