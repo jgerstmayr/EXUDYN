@@ -69,24 +69,47 @@ cd tools/issueTracker
 | `RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineNumber='', deadline='', author='JG', priority='')` | appends a `RAISED` issue; default deadline +180 days |
 
 | `RaiseIssueDict(issueDict)` | same, full control over fields |
-| `ResolveIssue(issueNumber, notes='', author='JG')` | marks `RESOLVED`, stamps date, **bumps the micro version** |
-| `ChangeIssue(issueNumber, key, value)` | change one field |
+| `ResolveIssue(issueNumber, notes='', author='JG')` | marks `RESOLVED`, stamps date, **bumps the micro version**; `notes` becomes `releaseNotes` and the working remarks are cleared |
+| `AbandonIssue(issueNumber, reason, author='JG')` | closes without resolving; the reason is mandatory and becomes `releaseNotes` |
+| `ExtendIssue(issueNumber, text, author='JG')` | appends a dated paragraph to the description of an OPEN issue and changes nothing else (R8.3.3) |
+| `RemarkIssue(issueNumber, text, author='JG', replace=False)` | writes `workingRemarks` of an OPEN issue; appends by default (R8.5.3) |
+| `ChangeIssue(issueNumber, key, value)` | change one field; the enum fields are checked here too |
 | `ModifyDictIssue(issueDict)` | replace a whole issue (needs `number`) |
 | `GetIssue(n)` / `GetIssues()` / `NumberOfIssues()` | read-only |
 | `VersionString()` / `GetMajorMinorMicroVersion()` | current version |
 
 Fields: `number, issue, author, status, description, type, priority, date raised, deadline,
-date resolved, resolved author, file, line, notes`.
+date resolved, resolved author, file, line, releaseNotes, workingRemarks, effort`.
+
+> **Two kinds of note, two fields** (revision2026 step R8.5.3). `releaseNotes` is written when
+> the issue **closes** and is **published** — in `docs/generated/trackerlog.md` and, later, in
+> `CHANGELOG.md`. `workingRemarks` is what the work knows meanwhile: *duplicate of #2134*,
+> *marked for deprecation*, *check whether this still happens*, *part A solved, B open*. It is
+> worthless once the issue closes, so `ResolveIssue` and `AbandonIssue` **clear** it, and
+> `RaiseIssue` refuses a release note: there is nothing to release yet.
+
+> **`effort` sorts the backlog**, in human working hours without AI assistance:
+> `LOW` within 2, `MEDIUM` within 16, `HIGH` within 40, `HUGE` above 40. It is a classification
+> and not an estimate anyone is held to; empty means not classified. `priority` is a separate
+> question and may stay empty, which is what 2,405 of the 2,567 issues say — but its spelling is
+> now one of `LOW`, `NORMAL`, `HIGH`, enforced wherever an issue is written.
+
+> **Extending an issue instead of rewriting it.** When the first analysis turns up more than the
+> issue says, `ExtendIssue` appends it with the date and the author. It refuses a closed issue:
+> that text has already been published, so it is reopened or superseded, never rewritten.
 
 > **Author attribution.** When Claude raises or resolves an issue on the maintainer's behalf, pass
 > `author='Claude-JG'` to **both** `RaiseIssue` and `ResolveIssue` — the two fields are separate
 > (`author` and `resolved author`), so both need it. `JG` alone means Johannes worked it himself.
 > This keeps the tracker honest about who did what without needing a separate audit trail.
 
-- `status`: `RAISED`, `WORK`, `TESTING`, `RESOLVED`
-- `type`: `BUG, FIX, NEW FEATURE, EXTENSION, CHANGE, PERFORMANCE, IDEA, CHECK, CLEANUP, DOCU,
-  TUTORIAL, TESTING, EXAMPLE, DISCUSSION`
-- `priority`: `''`, `LOW`, `MED`, `HIGH`
+The value lists live in `issueTracker.py` (`issueStatuses`, `issueTypes`, `issuePriorities`,
+`issueEfforts`) and nowhere else — this used to be a second list here and the two disagreed:
+
+- `status`: `RAISED`, `RESOLVED`, `ABANDONED`
+- `type`: `BUG, FIX, CHANGE, EXTENSION, IMPROVEMENT, TESTING, DOCU, EXAMPLE, CHECK, IDEA`
+- `priority`: `''` (none), `LOW`, `NORMAL`, `HIGH`
+- `effort`: `''` (not classified), `LOW`, `MEDIUM`, `HIGH`, `HUGE`
 
 #### `BUG` vs `FIX` — the distinction is user-facing
 

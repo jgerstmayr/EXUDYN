@@ -886,11 +886,13 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 ## R7 — Documentation (~3 weeks)  <!-- old Phase 6 -->
 
 <a id="r7-1"></a>
-**R7.1** Sphinx (readthedocs) stays; the sources become **MyST Markdown** (`myst-parser`, dev-only):
-    hand-written chapters are converted from `.tex`, generated reference pages come from the docs
-    emitters as `.md`, remaining `.rst` files are converted as they are touched; new documentation
-    is Markdown from now on (decision 2026-09-15). The PDF is generated via `latexpdf` (front page
-    through `latex_elements`). Deletes `latexConverter.py` and `doc2rst.py`.
+**R7.1** **DONE 2026-09-21** — all nine sub-steps (R7.1.1 to R7.1.9) are closed.
+    Sphinx (readthedocs) stays; the sources became **MyST Markdown** (`myst-parser`, dev-only):
+    hand-written chapters converted from `.tex`, generated reference pages from the docs
+    emitters as `.md`, remaining `.rst` files converted as they were touched; new documentation
+    is Markdown from now on (decision 2026-09-15). ~~The PDF is generated via `latexpdf` (front page
+    through `latex_elements`).~~ — superseded by decision **D8**: there is no PDF in 2.0.
+    `latexConverter.py` and `doc2rst.py` are deleted (R7.1.7).
 
     **Python docstrings become Markdown too, early rather than late** (can run before step R7.1):
     list the LaTeX in `#**`-style comments by searching for `\` (expected: `$` math and
@@ -1142,7 +1144,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     than ported. `docs/theDoc/` loses its generated `.tex` files here, which is half of R7.1.8.
 
 <a id="r7-1-7"></a>
-**R7.1.7** **DONE 2026-09-21** (#2548) — *(sub-step of R7.1, last)*
+**R7.1.7** **DONE 2026-09-21** (#2548) — [log](exudynRevisionLog2026.md#r7-1-7) — *(sub-step of R7.1, last)*
     **Delete the converters**: `src/pythonGenerator/doc2rst.py` (733 lines), `latexConverter.py`
     (836) and the parts of `autoGenerateHelper.py` (1900) that only served them. Check first what
     has to survive — the abbreviation list at the end of `doc2rst.py` is named in R7.1 as one
@@ -1168,14 +1170,33 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     instead of committed.
 
 <a id="r7-2"></a>
-**R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**
+**R7.2** *(after R7.1 — and, by the maintainer's decision of 2026-09-21, **after the tracker
+    changes of R8**, so that they are carried into the documentation in the same pass rather than
+    twice)* **Carry the revision into the documentation.**
     Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and
     switches (e.g. `exudyn.special.exceptions.parameterRangeChecks`), conversion and error behaviour,
     definitions and generators, howto build on each platform (put the simple way also into the main README), tools and workflow - and update the user and developer documentation accordingly. The plan and log are records, not documentation; afterwards the plan is reduced to an archive.
 
 <a id="r7-3"></a>
-**R7.3** Stop committing generated RST and `theDoc.pdf`; build in CI, publish the PDF as a release
+**R7.3** **DONE 2026-09-21 (decision)** — [log](exudynRevisionLog2026.md#r7-3) — *(phase R7)*
+    Stop committing generated RST and `theDoc.pdf`; build in CI, publish the PDF as a release
     asset.
+
+    **Two of the three halves are void when the step is reached.** `theDoc.pdf` is deleted in
+    R7.1.7 and the PDF does not survive 2.0 (D8), so there is nothing to publish as a release
+    asset; `docs/RST/` is deleted in the same step, so there is no generated RST to stop
+    committing. What is left is `docs/generated/`, the 450 Markdown files the emitters and the
+    tracker write.
+
+    **Decided 2026-09-21 (info document D12): they stay committed.** Three reasons, in order of
+    weight: the reference manual stays readable on GitHub for anyone without the toolchain;
+    `regenerate.py`'s tier-2 check compares the generators against the commit and is the only
+    thing that would notice an emitter changing its output by accident — it has no meaning for
+    files that are not committed; and the documentation build stays free of a generator step,
+    where Read the Docs would need one *and* a corrected skip rule, since its `post_checkout`
+    job skips the build unless `docs/` changed and a `definitions/` change would then stop
+    rebuilding the pages it produces. The churn is collapsed in GitHub diffs by
+    `linguist-generated`, which R7.1.8 put into `.gitattributes`.
 
 <a id="r7-4"></a>
 **R7.4** *(phase R7, **after R8.5**; deferred 2026-09-19)* Convert `trackerlog.tex` into
@@ -1228,6 +1249,23 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 ## R8 — Process  <!-- old Phase 7 -->
 
+**The order of this phase** (maintainer question 2026-09-21: *"8.2 would fit better after the
+    revision of the issue tracker file format"* — yes, and the same holds for more than R8.2).
+    Step numbers are permanent; this is the order they are **worked** in:
+
+    | # | step | why here |
+    |---|---|---|
+    | 1 | **R8.3** (+R8.3.1 remainder, **R8.3.3**) | the CLI is what every later step is driven from; it also removes the cwd and Windows-path dependency that blocks scripting and CI |
+    | 2 | **R8.5** (+**R8.5.2**, then R8.5.1) | the file format. Everything that writes or reads an issue is cheaper to write once against JSON than twice |
+    | 3 | **R8.4** | the minor-version bump belongs in the tracker, and its baseline should land in the new format, not in a Python list |
+    | 4 | **R7.4** | `CHANGELOG.md` is a rendering of the JSON; the step already says it waits for R8.5 |
+    | 5 | **R8.1** | templates and `CONTRIBUTING.md`; independent of all of the above, can be pulled forward whenever it suits |
+    | 6 | **R8.2** | `tools/release.py` drives the tracker CLI (1), the minor bump (3) and the JSON (2). Written before them it is written twice — which is the maintainer's point |
+    | 7 | **R7.2** | carry the revision into the documentation, with the R8 changes included (maintainer, 2026-09-21) |
+    | 8 | **R8.6** | the user-script checker needs the complete API-changes table, so it stays last |
+
+    R9 to R11 follow the documentation pass (maintainer, 2026-09-21).
+
 <a id="r8-1"></a>
 **R8.1** Issue and PR templates, and a `CONTRIBUTING.md` stating the actual policy now that a branch
     exists to target.
@@ -1276,6 +1314,24 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     that the version counts **closed** issues, resolved and abandoned alike, and the distinction
     lives where it is actually read: the release notes list an abandoned issue neither as resolved
     nor as open. Measured: 15 issues moved to `ABANDONED` and `version.txt` stayed at 1.11.178.
+
+<a id="r8-3-3"></a>
+**R8.3.3** **API DONE 2026-09-21** (#2566) — *(sub-step of R8.3; maintainer request 2026-09-21)* **An issue can be extended.** The
+    tracker can raise an issue and close it, and `ChangeIssue` can overwrite a single field; what
+    it cannot do is the thing that actually happens: the first analysis of a problem turns up
+    more, and that belongs **with** the issue, not in a second issue and not by rewriting the
+    description someone else wrote.
+
+    `ExtendIssue(issueNumber, text, author=...)` appends a dated paragraph to the description and
+    touches nothing else — not the status, not the type, and above all not the version, which is
+    derived from the count of closed issues. In the flat file it is one field to append to; in the
+    JSON of R8.5 the same call writes one entry of an `updates` list, which is what makes the
+    history readable afterwards.
+
+    **Done**: `ExtendIssue()` with its tests. What was written here first as a rule about `notes`
+    became the two fields of R8.5.3: `ResolveIssue` and `AbandonIssue` write `releaseNotes` and
+    clear `workingRemarks`. **Open**: the CLI verb `extend <n> "text"`, which comes with the CLI
+    of R8.3.
 
 <a id="r8-3-2"></a>
 **R8.3.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r8-3-2) — *(sub-step of R8.3;
@@ -1344,6 +1400,61 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     stays committed and stays generated, because that is what ReadTheDocs renders (maintainer,
     2026-09-17). `docs/theDoc/trackerlog.tex` needs no decision here - it disappears with the
     LaTeX documentation.
+
+<a id="r8-5-3"></a>
+**R8.5.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.5; maintainer request 2026-09-21)*
+    **`notes` was two fields.** For a closed issue it is the **release note**, published in
+    `docs/generated/trackerlog.md` and, with R7.4, in `CHANGELOG.md`. For an open issue what is
+    worth writing down is something else entirely — *duplicate of #2134*, *marked for
+    deprecation*, *check whether this still happens*, *part A solved, B open* — and it is
+    worthless the moment the issue closes.
+
+    The column is therefore `releaseNotes`, a new column `workingRemarks` holds the second kind
+    and is **cleared when the issue closes**, and `effort` is the third new column (R8.5.2). The
+    schema went 14 — 16 columns **before** the CLI of R8.3 and the JSON of R8.5 are written
+    against it, so that both meet the final names; it is done on the flat file because the
+    migration is unambiguous today and will not stay so (maintainer decision 2026-09-21).
+
+    **Measured before touching anything**: of the 2,567 issues, **629 have a note and not one of
+    them is open** — so every existing note is a release note, and the two new columns start
+    empty everywhere. `migrateSchema.py` rewrites the file and proves itself: it reads every
+    issue before and after and compares them field by field, accepting only the two new empty
+    columns and a normalized priority. The version does not move (no issue changes status).
+
+    Also here, because the file was being rewritten anyway: the **nine** priority spellings
+    (`''`, `NO`, `NORMAL`, `high`, `med`, `low`, `HIGH`, `medium`, `LOW`) over 251 issues become
+    `LOW` / `NORMAL` / `HIGH` or empty, enforced from now on in `RaiseIssueDict` **and** in
+    `ChangeIssue`, which wrote any value until now. `nHeaderLines` is read from the header marker
+    rather than assumed, and the literal `nLine > 9` in the HTML writer is gone.
+
+<a id="r8-5-2"></a>
+**R8.5.2** **FIELD DONE 2026-09-21 (R8.5.3); the triage pass is open** — *(sub-step of R8.5;
+    maintainer request 2026-09-21)* **The open backlog becomes sortable: an `effort` field, and a
+    place for what the work knows.** Measured 2026-09-21: **270
+    open issues** — 152 EXTENSION, 33 CHECK, 20 FIX, 19 DOCU, 16 TESTING, 14 CHANGE, 8 BUG, 4
+    EXAMPLE, 3 IMPROVEMENT, 1 IDEA — raised between 2019 and today, and **244 of them carry no
+    priority at all** (the remaining 26 are spelled six different ways: `high`, `HIGH`, `med`,
+    `NORMAL`, `low`, `LOW`). A list in that state cannot be prioritized, only read.
+
+    **`effort`**, one enum, in human working hours without AI assistance:
+
+    | value | hours |
+    |---|---|
+    | `LOW` | within 2 |
+    | `MEDIUM` | within 16 |
+    | `HIGH` | within 40 |
+    | `HUGE` | above 40 |
+
+    It is a *classification*, not an estimate to be held to: what it buys is "show me every open
+    FIX that is LOW" — the list a maintainer can actually work from.
+
+    **Where that kind of information goes** is `workingRemarks`, built in R8.5.3 together with the
+    `effort` column: it holds what the work knows while the issue is open and is cleared when it
+    closes, so it can never reach the published release notes.
+
+    **The triage pass itself** is a maintainer decision per issue; the tracker side of it is the
+    field, the enum check, the `--effort` filter of the CLI list command, and a report that groups
+    the open issues by (type, effort) so that the pass can be done in one sitting rather than 270.
 
 <a id="r8-5-1"></a>
 **R8.5.1** *(sub-step of R8.5)* **A tiny local viewer/editor for the issues**, for maintainers:

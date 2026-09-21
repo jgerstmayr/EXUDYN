@@ -9,8 +9,8 @@ BUG numbers refer to the according issue numbers.
 General information on current version:
 
 - Exudyn version = 1.11.223.dev1
-- last change =  2026-09-20
-- Number of issues = 2566
+- last change =  2026-09-21
+- Number of issues = 2567
 - Number of resolved issues = 2296 (223 in current version)
 
 ## Resolved issues and resolved bugs
@@ -7704,11 +7704,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- <span class="boldblue">open issue 2562:</span> nothing in the test suite ever calls UpdateGraphics
+- <span class="textorange">open issue 2566:</span> the tracker can extend an issue, and open notes are triage
+  - issue author: Claude-JG
+  - description:  Maintainer request 2026-09-21. (1) EXTEND: the tracker can raise and close an issue and ChangeIssue can overwrite one field, but the thing that actually happens - the first analysis turns up more than the issue says - has nowhere to go except a second issue or a rewritten description. ExtendIssue(number, text, author) appends a dated paragraph and touches nothing else; the CLI verb extend comes with the CLI of R8.3, and in the JSON of R8.5 it becomes one entry of an updates list. (2) TRIAGE NOTES: measured 2026-09-21, 0 of the 270 open issues use the notes field while 614 resolved ones do, so notes is the place to record the way to go while an issue is open - duplicate of \#xxxx, marked for deprecation, check whether this is still a problem. For that to work ResolveIssue and AbandonIssue must REPLACE those notes rather than prepend them, because the resolution note is published in the release notes. (3) The effort field that makes the 270 open issues sortable is R8.5.2, with the new format. See revision2026 steps R8.3.3 and R8.5.2.
+  - date raised: 2026-09-21
+- <span class="textorange">open issue 2562:</span> nothing in the test suite ever calls UpdateGraphics
   - issue author: Claude-JG
   - description:  The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9.
   - date raised: 2026-09-20
-- <span class="boldblue">open issue 2550:</span> citations are silently dropped from the HTML documentation
+- <span class="textorange">open issue 2550:</span> citations are silently dropped from the HTML documentation
   - issue author: Claude-JG
   - description:  latexConverter.py removes every cite command without replacement, so the rendered pages contain sentences such as "similar but much more advanced and modular as earlier solvers by the main developer ." with the references simply gone - visible today in LHSRHSNamingConventionsInEXUDYN and in the theory chapter. The Markdown conversion of step R7.1.5 writes the citation keys in brackets instead, which is readable but not linked. The documentation needs a references page fed from docs/theDoc/bibliographyDoc.bib, and the keys need to point at it; sphinxcontrib-bibtex would do it as a dev-only dependency.
   - date raised: 2026-09-19
@@ -7716,7 +7720,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - issue author: Claude-JG
   - description:  Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.
   - date raised: 2026-09-19
-- <span class="boldblue">open issue 2541:</span> exudyn.config and exudyn.special are in no stub file
+- <span class="textorange">open issue 2541:</span> exudyn.config and exudyn.special are in no stub file
   - issue author: Claude-JG
   - description:  exudyn.config is the run-time settings object (outputDirectory, printToConsole, suppressWarnings, precision) and exudyn.special holds the rarely needed corners; neither the objects nor their C++ classes Config and Special appear in python/exudyn/\_\_init\_\_.pyi, so no IDE completes exudyn.config.outputDirectory. The gap is older than this issue - stubtest simply did not check them while they arrived through a star import, and step R6.2 made them plain package attributes, which exposed it. Both are in the stubtest backlog with this number. The fix is generator work: emit Config and Special like the other bound structures.
   - date raised: 2026-09-19
@@ -7748,7 +7752,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - issue author: Claude-JG
   - description:  pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).
   - date raised: 2026-09-13
-- <span class="boldblue">open issue 2400:</span> computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
+- <span class="textorange">open issue 2400:</span> computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
   - issue author: Claude-JG
   - description:  the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

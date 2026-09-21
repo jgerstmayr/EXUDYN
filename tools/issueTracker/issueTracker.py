@@ -5,10 +5,12 @@
 
 # Issue tracker
 
-# line format: number, issue name, issue author, status, description, type, priority, date raised, deadline, date resolved, resolved author, file, line, notes
-# - type and status: see issueTypes and issueStatuses below - that is the ONLY list of them
-#   (revision2026 step R8.7, #2519), and the header of trackerlog.txt is written from it
-# - priority: NO (empty: ''), LOW, NORMAL, HIGH
+# line format: number, issue name, issue author, status, description, type, priority, date raised,
+#   deadline, date resolved, resolved author, file, line, releaseNotes, workingRemarks, effort
+# - type, status, priority and effort: see issueTypes, issueStatuses, issuePriorities and
+#   issueEfforts below - that is the ONLY list of them (revision2026 steps R8.7 and R8.5.3)
+# - releaseNotes is written when the issue is CLOSED and is published in the release notes;
+#   workingRemarks is what the work knows meanwhile and is cleared when the issue closes
 
 # NOTE: in 'trackerlog.txt', the text fields may not use ',', but '\;' is used instead!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -93,7 +95,7 @@ issueTypes = {
 issueStatuses = {
     'RAISED':    'open',
     'RESOLVED':  'done',
-    'ABANDONED': 'closed WITHOUT being done; the reason belongs in the notes',
+    'ABANDONED': 'closed WITHOUT being done; the reason belongs in releaseNotes',
 }
 
 #Both count for the version number. The micro version is the count of CLOSED issues, not of
@@ -108,13 +110,45 @@ closedStatuses = ['RESOLVED', 'ABANDONED']
 typesNotInReleaseNotes = ['IDEA']
 #+++++++++++++++++++++++++++++++++++++++++++++
 
-trackerItems = ['number', 'issue', 'author', 'status', 'description', 
-                'type', 'priority', 'date raised', 'deadline', 'date resolved', 
-                'resolved author', 'file', 'line', 'notes']
-omitItemsHTML=[2,8,11,12] #author, pri, deadline, file, line
+#THE EFFORT, in human working hours without AI assistance (revision2026 step R8.5.3, maintainer
+#2026-09-21). It is a CLASSIFICATION, not an estimate anyone is held to: what it buys is the
+#question "which open FIX is LOW", which 270 open issues cannot answer otherwise. Empty means
+#not classified yet.
+issueEfforts = {
+    'LOW':    'within 2 hours',
+    'MEDIUM': 'within 16 hours',
+    'HIGH':   'within 40 hours',
+    'HUGE':   'above 40 hours',
+}
+
+#THE PRIORITIES. The spellings had drifted to nine over 251 of the 2,567 issues - '', NO, NORMAL,
+#high, med, low, HIGH, medium, LOW - and 180 of them were normalized by migrateSchema.py; they are
+#enforced from here on. Empty is legal and means none, which is what 2,405 issues say: most issues
+#have no priority, and saying so honestly is better than a default nobody chose. The size of the
+#work is the 'effort' field above, which is the one meant for sorting the backlog.
+issuePriorities = {
+    'LOW':    'nice to have',
+    'NORMAL': 'should be done',
+    'HIGH':   'do this first',
+}
+
+trackerItems = ['number', 'issue', 'author', 'status', 'description',
+                'type', 'priority', 'date raised', 'deadline', 'date resolved',
+                'resolved author', 'file', 'line',
+                #revision2026 step R8.5.3: 'notes' was two different things. What a CLOSED issue
+                #says is published in the release notes; what an OPEN issue needs while work goes
+                #on - "duplicate of #2134", "part A solved", "check whether this still happens" -
+                #is worthless afterwards and must not reach them. Hence two fields, and
+                #workingRemarks is cleared when the issue closes.
+                'releaseNotes', 'workingRemarks', 'effort']
+#author, deadline, file, line: not shown in the HTML overview. BY NAME, because the list used to
+#be literal indices and the columns above moved (revision2026 step R8.5.3)
+omitItemsHTML = [trackerItems.index(name) for name in ['author', 'deadline', 'file', 'line']]
 numberOfItems = len(trackerItems)
 
-nHeaderLines = 10 #number of header lines in trackerlog.txt
+#12 since revision2026 step R8.5.3 (the two new fields are explained there); the header's
+#last line states the same number, and the file is read from here on
+nHeaderLines = 12
 
 indexStatus = trackerItems.index('status')      #3
 indexType = trackerItems.index('type')          #5
@@ -594,13 +628,16 @@ def ConvertToHTML(): #convert all issues to a .html file
         fileWrite.write('<th>res. by</th>\n')
         # fileWrite.write('<th>f</th>\n')
         # fileWrite.write('<th>l</th>\n')
-        fileWrite.write('<th>notes</th>\n')
+        #the three columns of revision2026 step R8.5.3; the order is the one of trackerItems
+        fileWrite.write('<th>release notes</th>\n')
+        fileWrite.write('<th>working remarks</th>\n')
+        fileWrite.write('<th>effort</th>\n')
         fileWrite.write('</tr>\n')
     
         #nLine = 0
         for mode in range(2): #mode0: raised items, mode1: resolved items
             for nLine, lineEOL in reversed(list(enumerate(fileLines))):
-                if nLine > 9:
+                if nLine >= nHeaderLines: #was a literal 9 until revision2026 step R8.5.3
                     line = (lineEOL.strip('\n'))
                 
                     nIssue = nLine-nHeaderLines
@@ -611,16 +648,19 @@ def ConvertToHTML(): #convert all issues to a .html file
                         if (items[indexStatus].find('RAISED') != -1) & (mode == 0):
                             #                cnt = 0
                             color = '#EEB066'
-                            priStr = items[indexPriority].strip().lower()
+                            #the spellings are one enum since revision2026 step R8.5.3; empty is
+                            #legal and means no priority, which is what most issues have
+                            priStr = items[indexPriority].strip().upper()
 
-                            if priStr == 'high':
+                            if priStr == 'HIGH':
                                 color = '#FF8080' #red
-                            elif priStr == 'med':
+                            elif priStr == 'NORMAL':
                                 color = '#EEAA99' #dark-orange
-                            elif priStr == 'low':
+                            elif priStr == 'LOW':
                                 color = '#E0E088' #orange-yellow
                             elif priStr != '':
-                                print('WARNING: issue '+str(nIssue) + ': priority undefined')
+                                print('WARNING: issue '+str(nIssue) + ': unknown priority "'
+                                      + priStr + '"')
 
                             if items[indexStatus].find('RAISED') != -1:
                                 deadline = int(items[indexDeadline].replace('-',''))
@@ -752,8 +792,15 @@ def ConvertToMarkdown():
         if issue['author'] != 'JG':
             details += '  - issue author: '+ToMarkdown(issue['author'])+'\n'
         details += '  - description: '+ToMarkdown(issue['description'])+'\n'
-        if len(issue['notes'].strip(' ')) != 0:
-            details += '  - **notes:** '+ToMarkdown(issue['notes'])+'\n'
+        #a CLOSED issue shows what its resolution says, an OPEN one what the work on it knows so
+        #far; the two are different fields since revision2026 step R8.5.3
+        if len(issue['releaseNotes'].strip(' ')) != 0:
+            details += '  - **notes:** '+ToMarkdown(issue['releaseNotes'])+'\n'
+        if len(issue['workingRemarks'].strip(' ')) != 0:
+            details += '  - **remarks:** '+ToMarkdown(issue['workingRemarks'])+'\n'
+        if len(issue['effort'].strip(' ')) != 0:
+            details += ('  - effort: ' + ToMarkdown(issue['effort'].strip())
+                        + ' (' + issueEfforts.get(issue['effort'].strip(), '') + ')\n')
 
         details += '  - '
         if len(issue['date resolved']) != 0:
@@ -777,8 +824,10 @@ def ConvertToMarkdown():
             bugs += '- '+Colour('textred', 'open BUG '+issue['number']+':')+' '+title+'\n'
             bugs += details
         elif issue['status'] == 'RAISED':       #an ABANDONED issue is not an open one
-            cssClass = {'high': 'textred', 'med': 'textorange',
-                        'low': 'textblue'}.get(issue['priority'].lower(), 'boldblue')
+            #one spelling per priority since revision2026 step R8.5.3; no priority is the
+            #normal case and gets the neutral colour
+            cssClass = {'HIGH': 'textred', 'NORMAL': 'textorange',
+                        'LOW': 'textblue'}.get(issue['priority'].strip().upper(), 'boldblue')
             openIssues += ('- '+Colour(cssClass, 'open issue '+issue['number']+':')+' '
                            + title+'\n')
             openIssues += details
@@ -831,6 +880,19 @@ def IssueDictToList(d): #convert dict to sorted issue list; replace ',' with '\;
     
 
 #%%******************************************************************************************************
+def CheckedEnumValue(fieldName, value, allowed):
+    """one spelling per value, or a message that lists the ones there are (revision2026 step
+    R8.5.3). An empty value is legal for every enum field of an issue and means "not classified";
+    saying so is better than a default nobody chose."""
+    value = value.strip().upper()
+    if value != '' and value not in allowed:
+        raise ValueError(fieldName + ': unknown value "' + value + '". Use one of:\n  '
+                         + '\n  '.join(name.ljust(8) + ' ' + allowed[name] for name in allowed)
+                         + '\n  (or leave it empty)')
+    return value
+
+
+#%%******************************************************************************************************
 #use this to completely define a new issue
 def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of list)
     IssueTrackerBackup()
@@ -851,6 +913,19 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
                          + '". Use one of:\n  '
                          + '\n  '.join(name.ljust(12) + ' ' + issueTypes[name]
                                        for name in issueTypes))
+
+    #the effort and the priority are checked at the same place and for the same reason; both may
+    #be empty, which means "not classified" (revision2026 step R8.5.3)
+    issueDict['effort'] = CheckedEnumValue('effort', issueDict.get('effort', ''), issueEfforts)
+    issueDict['priority'] = CheckedEnumValue('priority', issueDict.get('priority', ''),
+                                             issuePriorities)
+
+    #the release note is written when the issue is CLOSED, not when it is raised: it is what the
+    #release notes publish. What is known while the work goes on belongs in workingRemarks.
+    if issueDict.get('releaseNotes', '').strip() != '':
+        raise ValueError('RaiseIssue: releaseNotes is written by ResolveIssue or AbandonIssue; '
+                         'put what you know now into workingRemarks')
+    issueDict['releaseNotes'] = ''
 
     listDest = IssueDictToList(issueDict)
     numStr = str(NumberOfIssues())
@@ -927,7 +1002,7 @@ def ModifyDictIssue(issueDict): #raise a new issue into list (append to end of l
     ConvertToMarkdown() #update html version of issue tracker
 
 #%%******************************************************************************************************
-#use this to resolve an issue
+#use this to overwrite ONE field of an issue
 def ChangeIssue(issueNumber, key, value): #raise a new issue into list (append to end of list)
     IssueTrackerBackup()
 
@@ -940,10 +1015,23 @@ def ChangeIssue(issueNumber, key, value): #raise a new issue into list (append t
     if key not in d:
         print('ChangeIssue: key "' + key + '" not available!')
         return
-    
-    
+
+    #this function writes any field, which is why the enums have to be checked here as well as in
+    #RaiseIssueDict - otherwise the one list of values is a comment again (revision2026 R8.5.3)
+    if key == 'effort':
+        value = CheckedEnumValue('effort', value, issueEfforts)
+    elif key == 'priority':
+        value = CheckedEnumValue('priority', value, issuePriorities)
+    elif key == 'type':
+        value = value.strip().upper()
+        if value not in issueTypes:
+            raise ValueError('ChangeIssue: unknown issue type "' + value + '"')
+    elif key == 'releaseNotes' and d['status'] not in closedStatuses:
+        raise ValueError('ChangeIssue: releaseNotes belongs to a CLOSED issue; while it is open, '
+                         'write workingRemarks (RemarkIssue)')
+
     d[key] = value
-    
+
     ModifyDictIssue(d)
     
     print('new issue:')
@@ -952,6 +1040,89 @@ def ChangeIssue(issueNumber, key, value): #raise a new issue into list (append t
     UpdateDateAndVersion()
     ConvertToHTML() #update html version of issue tracker
     ConvertToMarkdown() #update html version of issue tracker
+
+#%%******************************************************************************************************
+#%%******************************************************************************************************
+#use this when the analysis of an issue turns up more than the issue says
+def ExtendIssue(issueNumber, text, author='JG'):
+    """Append a dated paragraph to the description of an OPEN issue (revision2026 step R8.3.3).
+
+    The first analysis of a problem regularly turns up more than the person who raised it knew,
+    and that belongs with the issue: not in a second issue, and not by overwriting a description
+    somebody else wrote. So this only ever appends.
+
+    It touches nothing else - not the status, not the type, and above all not the version, which
+    is derived from the count of closed issues. A closed issue is not extended: reopen it or raise
+    a new one, because its text has already been published in the release notes."""
+    IssueTrackerBackup()
+
+    if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
+        print('ExtendIssue: invalid number! Nothing done')
+        return None
+
+    if text.strip() == '':
+        raise ValueError('ExtendIssue: nothing to add')
+
+    d = GetIssue(issueNumber)
+    if d['status'] in closedStatuses:
+        raise ValueError('ExtendIssue: issue ' + str(issueNumber) + ' is ' + d['status']
+                         + '; a closed issue is not extended - reopen it or raise a new one')
+
+    #the date says which part of the description is the later analysis; in the JSON format of
+    #revision2026 step R8.5 this becomes one entry of an "updates" list
+    d['description'] = (d['description'].rstrip()
+                        + ' [' + GetDateStr() + ', ' + author + ']: ' + text.strip())
+
+    ModifyDictIssue(d)
+
+    print('issue extended: #' + str(issueNumber) + ' "' + str(d['issue']).strip() + '"')
+
+    UpdateDateAndVersion()
+    ConvertToHTML()
+    ConvertToMarkdown()
+    return issueNumber
+
+
+#%%******************************************************************************************************
+#use this to record what is known while the work on an issue goes on
+def RemarkIssue(issueNumber, text, author='JG', replace=False):
+    """Write the working remarks of an OPEN issue (revision2026 step R8.5.3).
+
+    This is the scratchpad of an issue: "duplicate of #2134", "marked for deprecation", "check
+    whether this still happens", "part A solved, B open". It is worth having while the issue is
+    open and worthless once it is closed, which is exactly what separates it from the release
+    note - so ResolveIssue and AbandonIssue clear it, and it is never published.
+
+    Appends by default, because the previous remark is usually still true; replace=True overwrites
+    it. Passing an empty text with replace=True clears the field."""
+    IssueTrackerBackup()
+
+    if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
+        print('RemarkIssue: invalid number! Nothing done')
+        return None
+
+    d = GetIssue(issueNumber)
+    if d['status'] in closedStatuses:
+        raise ValueError('RemarkIssue: issue ' + str(issueNumber) + ' is ' + d['status']
+                         + '; the working remarks of a closed issue are gone by design')
+
+    if text.strip() == '' and not replace:
+        raise ValueError('RemarkIssue: nothing to add (use replace=True to clear the field)')
+
+    if replace or d['workingRemarks'].strip() == '':
+        d['workingRemarks'] = text.strip()
+    else:
+        d['workingRemarks'] = d['workingRemarks'].rstrip() + '; ' + text.strip()
+
+    ModifyDictIssue(d)
+
+    print('working remarks of #' + str(issueNumber) + ': ' + d['workingRemarks'])
+
+    UpdateDateAndVersion()
+    ConvertToHTML()
+    ConvertToMarkdown()
+    return issueNumber
+
 
 #%%******************************************************************************************************
 #use this to resolve an issue
@@ -963,14 +1134,16 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
         return None
 
     d = GetIssue(issueNumber)
-    
+
+    #what is written here is PUBLISHED - it is the release note of this issue. The remarks that
+    #were useful while the work went on ("duplicate of #2134", "part A solved") are not, so they
+    #are dropped here rather than carried into the release notes (revision2026 step R8.5.3)
     d['status'] = 'RESOLVED'
     d['date resolved'] = GetDateTimeStr()
     d['resolved author'] = author
-    if d['notes'] != '':
-        notes = d['notes'] + '; ' + notes
-    d['notes'] = notes
-    
+    d['releaseNotes'] = notes
+    d['workingRemarks'] = ''
+
     ModifyDictIssue(d)
     
     #state the number first, so it can be copied into the commit message without recomputing it
@@ -1002,12 +1175,13 @@ def AbandonIssue(issueNumber, reason, author='JG'):
 
     d = GetIssue(issueNumber)
 
+    #as in ResolveIssue: the reason is the published record of the decision, the working remarks
+    #are not and are dropped (revision2026 step R8.5.3)
     d['status'] = 'ABANDONED'
     d['date resolved'] = GetDateTimeStr()
     d['resolved author'] = author
-    if d['notes'] != '':
-        reason = d['notes'] + '; ' + reason
-    d['notes'] = reason
+    d['releaseNotes'] = reason
+    d['workingRemarks'] = ''
 
     ModifyDictIssue(d)
 
