@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.237.dev1
+- Exudyn version = 1.11.238.dev1
 - last change = 2026-09-21
-- Number of issues = 2579
-- Number of resolved issues = 2310 (237 in current version)
+- Number of issues = 2580
+- Number of resolved issues = 2311 (238 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.238: resolved Issue 2579: the revision is not in the documentation (docu)
+  - issue author: Claude-JG
+  - description: Three months of changes - the repository layout, the build, the tests, the tools, the API - are recorded in the revision plan and log, which are working records and are not published. A reader of the documentation still found paths from before the main/ level was removed, an installation chapter that recommends python setup.py install (which current setuptools does not have), a sentence pointing at a developer-only trackerlog.html for open issues that have been published for weeks, a paragraph explaining how to bump a version by editing two constants that no longer exist, and eight author names written as Zw{\\"o}lfer. Revision2026 step R7.2 in five parts: close the record, write down what the revision implies for the documentation (docs/revision/documentationImpact2026.md), work that list off in the pages and in the generators, add a revisions chapter for users at the end of the manual, and two lines on the landing page.
+  - **notes:** The revision is in the documentation. R7.2.1 closed the record: 195 of 216 steps are finished and every one of them points at its log entry (11 links added, R8.8 written up, three rows whose state had moved on corrected). R7.2.2 wrote docs/revision/documentationImpact2026.md from three scans over the tree - what a reader runs into, one row per item with file and line. R7.2.3 worked it off: paths from before R3.1 in four documents, the minor-bump paragraph that R8.4 had replaced, four setup.py commands in the installation chapter, the pointer to trackerlog.html, eight LaTeX umlauts and an RST figure directive - and two of the items were generator bugs, so latexToMarkdown.py learned .. image:: and the item definitions carry the character. R7.2.4 added docs/manual/revisions.md, written for somebody upgrading and structured by release so that the next one is a section on top. R7.2.5 put two lines on the landing page. One inventory entry was wrong and the strict Sphinx build caught it: the exception types of R6.3 are documented for users already.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-21 21:22**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.237: resolved Issue 2578: the release path has no guards, no notes and no tag (extension)
   - issue author: Claude-JG
   - description: exudev release ran build --complete over every Python version and then printed a checklist, which leaves the bracket around a release to memory: whether the issue store and the published pages are consistent, whether the working tree is clean - a wheel built from a dirty tree belongs to no commit and can never be rebuilt - whether the release has a name, and whether this version was already released once. Revision2026 step R8.2 makes that one preflight step that reports everything that is wrong rather than the first thing, writes dist/RELEASE\_NOTES.md by cutting the section of CHANGELOG.md that belongs to this release, and creates the annotated tag with --tag. It never bumps the version, which is exudev issue bump and a decision about the product, and it never pushes.

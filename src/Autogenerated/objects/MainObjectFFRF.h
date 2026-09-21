@@ -2,9 +2,9 @@
 * @class        MainObjectFFRFParameters
 * @brief        Parameter class for MainObjectFFRF
 *
-* @author       Gerstmayr Johannes, Zw\"olfer Andreas
+* @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-09-21  21:23:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -41,7 +41,7 @@ public: // AUTO:
 * @class        MainObjectFFRF
 * @brief        This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
 *
-* @author       Gerstmayr Johannes, Zw\"olfer Andreas
+* @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.

@@ -11702,3 +11702,143 @@ message — it is **never pushed** (rule 4), and the printed checklist says so.
 product, not a step of a build, and `exudev issue bump --minor | --major` is one command for
 it (R8.4). The release path refuses a `.dev` version instead, which is the same guard from the
 other side.
+
+<a id="r8-8"></a>
+### R8.8 — the installed package gets a command line (2026-09-19, #2558)
+
+*(Maintainer session; integrated into this branch on 2026-09-20 and recorded here in R7.2.1,
+because a step that only exists in the plan is a step nobody can check.)*
+
+`python -m exudyn <command>`: **`monitor`**, **`plot`**, **`info`**, **`demo`**, in a plain
+dispatch dictionary `CommandTable()`, each imported when it is called so that `python -m
+exudyn info` costs nothing for the three it does not run.
+
+**`info` is the one that changed a workflow.** It prints what a bug report needs: the version,
+`config.Version(True)`, the package path, `EXUDYN_MODULE`, the output directory, Python, the
+platform, and which of numpy, scipy, matplotlib, networkx, ngsolve and pytest are installed.
+The issue form of R8.1 **requires** its output, which is why a report now arrives answerable
+instead of after three rounds of questions.
+
+**Deliberately not a console script**: nothing goes on `PATH` until the command set has
+settled, so `pyproject.toml` is untouched. The dispatch dictionary is the extension point for
+R9.6, which can add plugin commands through `importlib.metadata` entry points.
+
+It is the user-facing counterpart of `tools/exudev`, which stays the maintainer driver and
+keeps its rule of never importing exudyn.
+
+<a id="r7-2-1"></a>
+### R7.2.1 — closing the record (2026-09-21)
+
+R7.2 carries this revision into the documentation, and it reads the plan and the log to know
+what to carry. So the first thing is to make that source complete — *"write everything to
+the revision log and clean the plan as before"* (maintainer).
+
+An audit of the two documents against each other found, of **216 steps**:
+
+- **11 finished steps with no link** to the entry that describes them. A reader of the plan
+  then has the decision but not the work.
+- **one step with no record at all**: R8.8, the `python -m exudyn` command line, which came
+  from a maintainer session and was integrated on 2026-09-20. It has an entry now — and it
+  matters more than it looks, because the issue form of R8.1 requires the output of
+  `python -m exudyn info`.
+- **three rows whose state had moved on**: R3.7 (*revise `tools/buildAndGenerate/`*) was
+  finished by R5.18, which replaced the sixteen batch files with `exudev` rather than revising
+  them; R7.1.1 still said DECIDED although the twelve diagrams became mermaid in R7.1.9; and
+  R8.3.1 was still open although R8.3.4 gave the status its name and R8.3.5 its protection.
+
+**Afterwards: 195 of 216 steps are finished, and every one of them points at its record**,
+except two that have none by design — R3.5, deferred to the maintainer, and R10.4, which was
+verified rather than worked on. What is left open is R7.2 itself, R8.6, the phases R9 to R11,
+and the four steps of R1 that wait for v2.0.
+
+<a id="r7-2-2"></a>
+### R7.2.2 — the inventory (2026-09-21)
+
+`docs/revision/documentationImpact2026.md`: what of this revision a **reader of the
+documentation** runs into. Not the plan again — the plan records decisions, this records
+consequences, one row per item with the file and the line it stands in.
+
+**It was measured, not remembered.** Three scans over the tree: every name this revision
+removed, moved or renamed, searched in the hand-written pages; the same over the emitted
+pages, to tell a wrong *page* from a wrong *source*; and the leftovers of the LaTeX
+conversion of R7.1. The first scan found 40 places in 11 files, of which the scan itself
+could not judge which were wrong — so the file names them: `CHANGELOG.md` and
+`trackerlog.md` are **records of issues**, and an issue from 2023 that speaks of `theDoc.tex`
+is correct as it stands. `docs/dev/WORKFLOW.md` naming the sixteen batch files as history is
+correct too. What remained after that judgement is section A of the file: 11 passages that
+tell a reader something untrue.
+
+Section C asks the other question — what did the revision **add** that nothing describes? —
+and one row of it turned out to be wrong, which is recorded in the file itself (see R7.2.3).
+
+<a id="r7-2-3"></a>
+### R7.2.3 — the integration (2026-09-21)
+
+The inventory worked off, in the documentation and in two generators:
+
+- **paths from before R3.1**: `main/src/...` and `main/pythonDev/...` in
+  `introductionCppCode.md`, `ARCHITECTURE.md`, `docs/dev/README.md` and `WORKFLOW.md`. The
+  `main/` level has not existed since step R3.1; a developer who followed those lines looked
+  for a directory that is not there.
+- **the minor-bump paragraph of `WORKFLOW.md`**, which still explained how to edit two
+  constants in `issueTracker.py`. That is wrong since R8.4: `exudev issue bump --minor` or
+  `--major`, and the baselines are `releases.json`.
+- **the installation chapter**: `python setup.py install` and `python setup.py bdist_wheel`,
+  in four places. `setup.py install` does not exist in current setuptools at all; the
+  instructions are `pip wheel . -v -w dist --no-deps` and `pip install dist/<wheel>`, with a
+  pointer to `exudev build` for maintainers.
+- *"For specific open issues, see `trackerlog.html`, a document only intended for
+  developers"* in the getting-started chapter — the open issues have been published since
+  R7.1.6, and that file is not even in git.
+- **the LaTeX leftovers**: `Zw{\"o}lfer` and `Sch{\"o}berl` in eight places, `\#` inside two
+  links, and an RST `.. figure::` in `introductionAdvanced.md` that rendered as literal text
+  next to the MyST figure it had been half-converted into.
+
+**Two of them were generator bugs, not page bugs**, which is the distinction the second scan
+was for: the author field of two items carried `Zw\"olfer`, and
+`ObjectConnectorRollingDiscPenalty` used `.. image::`, which `latexToMarkdown.py` did not
+know — it converts `.. figure::` only. Both are fixed at the source: the definitions carry
+the character, and the converter has `ConvertRSTImages`.
+
+**And one entry of the inventory was wrong.** It claimed that the exception types of R6.3
+were documented for developers only. Writing the missing section for users made the Sphinx
+build fail with *"Duplicate explicit target name: sec-overview-basics-errors"* — because
+`introductionBasics.md` has had exactly that section since R6.3. The section was deleted
+again and the inventory now records the correction. A strict build is a fact-checker.
+
+<a id="r7-2-4"></a>
+### R7.2.4 and R7.2.5 — the revisions chapter and the landing page (2026-09-21)
+
+`docs/manual/revisions.md`, in the toctree between the abbreviations and the changelog, so
+that it stands where the maintainer asked for it: at the end of the manual, before the issue
+chapters. It is written for **somebody upgrading**, in four parts — what can break a script,
+what is new to use, what is new to read, and what changed behind the scenes — and it is
+structured **by release**, so that 2.1 is a new section on top rather than a rewrite.
+
+What it does NOT contain is this plan. Step numbers are permanent for the record and mean
+nothing to a reader; the chapter names features. The one place a reader learns that a change
+exists at all is the concrete thing they have to do about it — *add `import numpy as np` to
+the top of the script* — and the eleven removed helpers are listed by name.
+
+The landing page (`README.rst`) gets the two lines the maintainer asked for, beside the
+existing update note: the star imports, `python -m exudyn info`, typed exceptions, Markdown
+documentation and `CHANGELOG.md`, the CI-built wheels, and a link to the chapter.
+
+<a id="r7-2"></a>
+### R7.2 — the revision reaches the documentation (2026-09-21, #2579)
+
+The last step of phase R7, and the one that decides whether the rest of the revision is worth
+anything to a user: a change that nothing describes is a change nobody can use.
+
+The maintainer asked for it in five parts, and the order was the point — **close the record,
+then write down what it implies for the documentation, then do it, then publish a short
+chapter, then two lines on the landing page**. Each part produced something the next one used:
+the audit of R7.2.1 found a step with no record at all (R8.8, the `python -m exudyn` command
+line) which the inventory then listed as a feature to document; the inventory found 11
+untrue passages and 5 conversion leftovers which R7.2.3 fixed; and the inventory is also what
+the revisions chapter was written from, which is why the chapter names the eleven removed
+helpers instead of saying *"some functions were removed"*.
+
+**What is left for R8.6**: the checker that reads a user script and reports the names it can
+no longer get from a star import. The chapter tells a user what to do; the checker finds the
+places for them.

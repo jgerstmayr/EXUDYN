@@ -2337,7 +2337,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     addPublicC=r"""    static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
     static constexpr Index rigidBodyNodeNumber  = 0; //number of rigid body node (usually = 0)
 """,
-    author=r'Gerstmayr Johannes, Zw\"olfer Andreas',
+    author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
     classDescription=r"""This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
     classType=ClassTypeObject,
@@ -2381,7 +2381,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{transformation of flexible coordinates}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++
-    The derivations follow Zw{\"o}lfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
+    The derivations follow Zwölfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
     \mysubsubsubsection{Nodal coordinates}
     Consider an object with $n = 1 + n_\mathrm{nf}$ nodes, $n_\mathrm{nf}$ being the number of 'flexible' nodes and one additional node is the rigid body node for the reference frame.
     The list if node numbers is $[n_0,\,\ldots,\,n_{n_\mathrm{nf}}]$ and the according numbers of 
@@ -2783,7 +2783,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     static constexpr Index rigidBodyNodeNumber = 0; //node number of rigid body node (usually = 0)
     static constexpr Index genericNodeNumber = 1;//node number for modal coordinates
 """,
-    author=r'Gerstmayr Johannes, Zw\"olfer Andreas',
+    author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
     classDescription=r"""This object is used to represent modally reduced flexible bodies using the \hac{FFRF} and the \hac{CMS}. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.""",
     classType=ClassTypeObject,
@@ -2840,7 +2840,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \mysubsubsubsection{Modal reduction and reduced inertia matrices}
     The formulation is based on the EOM of \texttt{ObjectFFRF}, {\bf also regarding parts of notation} 
     and some input parameters, \refSection{sec:item:ObjectFFRF}, and 
-    can be found in Zw{\"o}lfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
+    can be found in Zwölfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
     The notation of kinematics quantities follows the floating frame of reference idea with
     quantities given in the tables above and sketched in \fig{fig:ObjectFFRFreducedOrder:mesh}.
     %++++++++++++++++++++++++
@@ -2974,7 +2974,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \Im_\zeta \otimes \LU{b}{\tomega} = \mr{\LU{b}{\tomega}}{}{} {}{\ddots}{} {}{}{\LU{b}{\tomega}} \in \Rcal^{3n_m \times n_m}
     \ee
     
-    %$\ra$ will be completed later, see according literature of Zw{\"o}lfer and Gerstmayr \cite{ZwoelferGerstmayr2021}.
+    %$\ra$ will be completed later, see according literature of Zwölfer and Gerstmayr \cite{ZwoelferGerstmayr2021}.
     
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt \ldots \Mm\indff$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.

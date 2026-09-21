@@ -10,8 +10,9 @@ by the emitters in `tools/generators/` and by the issue tracker; everything unde
 `docs/dev/` and `docs/howTo/` is written by people.
 
 New here? Read {ref}`Getting started <sec-installation-gettingstarted>`, then the
-[Tutorial](docs/manual/tutorial.md). Changes are tracked in the
-{ref}`Issue tracker <sec-issuetracker>`.
+[Tutorial](docs/manual/tutorial.md). What changed between releases is in {ref}`Revisions <sec-revisions>`, every resolved
+issue in the [changelog](CHANGELOG.md), and the issues themselves in the
+{ref}`issue tracker <sec-issuetracker>`.
 
 Searching on Read the Docs: add `*` or `~1` / `~2` to a term to search more generally, for example
 `FEMinter*` for `FEMinterface`, or `objectffrf~3` to find `ObjectFFRF`. The search preview finds
@@ -74,6 +75,7 @@ docs/howTo/visualStudio2022
 docs/generated/examples/examplesIndex
 docs/generated/testModels/testModelsIndex
 docs/generated/abbreviations
+docs/manual/revisions
 CHANGELOG
 docs/generated/trackerlog
 ```

@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.11 | McLaughlin | 237 | 1.11.237 |
+| 1.11 | McLaughlin | 238 | 1.11.238 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
 | 1.8 | Jones | 82 | 1.8.81 |
@@ -26,6 +26,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.11 - McLaughlin (current)
 
+- **1.11.238** `DOCU` the revision is not in the documentation (#2579) - raised by Claude-JG
+  - The revision is in the documentation. R7.2.1 closed the record: 195 of 216 steps are finished and every one of them points at its log entry (11 links added, R8.8 written up, three rows whose state had moved on corrected). R7.2.2 wrote docs/revision/documentationImpact2026.md from three scans over the tree - what a reader runs into, one row per item with file and line. R7.2.3 worked it off: paths from before R3.1 in four documents, the minor-bump paragraph that R8.4 had replaced, four setup.py commands in the installation chapter, the pointer to trackerlog.html, eight LaTeX umlauts and an RST figure directive - and two of the items were generator bugs, so latexToMarkdown.py learned .. image:: and the item definitions carry the character. R7.2.4 added docs/manual/revisions.md, written for somebody upgrading and structured by release so that the next one is a section on top. R7.2.5 put two lines on the landing page. One inventory entry was wrong and the strict Sphinx build caught it: the exception types of R6.3 are documented for users already.
 - **1.11.237** `EXTENSION` the release path has no guards, no notes and no tag (#2578) - raised by Claude-JG
   - exudev release is now the whole path. Before the build, one readiness step reports everything that is wrong at once: the issue store and both published pages consistent, the working tree clean (or --allow-dirty), the release named in releases.json, and the tag v\<version\> still free. After it, dist/RELEASE\_NOTES.md is cut from the section of CHANGELOG.md that belongs to this release - the body of a GitHub release, written nowhere a second time - and --tag creates the annotated tag at HEAD with those notes as its message, without ever pushing. Bumping stays out of the release path: it is a decision about the product and exudev issue bump is one command for it.
 - **1.11.236** `DOCU` no issue templates, and CONTRIBUTING does not state the workflow (#2577) - raised by Claude-JG

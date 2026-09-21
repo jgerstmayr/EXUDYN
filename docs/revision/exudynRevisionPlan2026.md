@@ -50,7 +50,7 @@ proposed to the maintainer before they are written down; sub-steps may be added.
 **R1.6** **DONE 2026-09-10** — one-time secret and PII scan of the tree to be published. → [log](exudynRevisionLog2026.md#r1-6)
 
 <a id="r1-7"></a>
-**R1.7** **PARTLY DONE 2026-09-09 (implementation), 2026-09-10 (first green pipeline).**
+**R1.7** **PARTLY DONE 2026-09-09 (implementation), 2026-09-10 (first green pipeline).** — [log](exudynRevisionLog2026.md#r1-7)
     `.gitlab-ci.yml` builds and tests manylinux wheels cp310-cp314 on the shared runners plus a
     `sphinx-build -W` docs job; all six jobs passed on the first run. Windows, macOS and aarch64
     are deliberately out of scope. → [log](exudynRevisionLog2026.md#r1-7)
@@ -182,7 +182,12 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 **R3.6** **DONE 2026-09-10** — `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. → [log](exudynRevisionLog2026.md#r3-6)
 
 <a id="r3-7"></a>
-**R3.7** *(phase R3, then R2/R8)* **Revise `tools/buildAndGenerate/`.** **Cleanup DONE 2026-09-14 (with step R4.3
+**R3.7** **DONE 2026-09-18** (#2503) — [log](exudynRevisionLog2026.md#r5-18) — *(phase R3, then R2/R8)* **Revise `tools/buildAndGenerate/`.**
+
+    **Finished by R5.18**, which did not revise the sixteen batch files but replaced them
+    with `exudev`; the directory is gone. The cleanup recorded below was the first half
+    and stands as it is written.
+ **Cleanup DONE 2026-09-14 (with step R4.3
     part 2f):** all scripts rewritten portable (`condaActivate.bat`, paths from `%~dp0`), stale
     `main\` paths removed, `makeSphinxDoc.bat` added, `README.md` written, directory committed and
     the `.gitignore` entry removed. *Open:* absorption by step R8.2's `tools/release.py`.
@@ -213,14 +218,14 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     `tools/gen_sources.py` supersedes it.
 
 <a id="r3-8"></a>
-**R3.8** **DONE 2026-09-18** — the four log directories consolidated into `python/logs/`
+**R3.8** **DONE 2026-09-18** — the four log directories consolidated into `python/logs/` — [log](exudynRevisionLog2026.md#r3-8)
     (`testmodels`, `examples`, `performance`, `tmp`). The step originally said a **top-level**
     `logs/`; the maintainer chose `python/` instead, so that the repository root stays the code
     and how to build it, and everything a test run touches is in one subtree (#2512).
     → [log](exudynRevisionLog2026.md#r3-8)
 
 <a id="r3-9"></a>
-**R3.9** **DONE 2026-09-18** — `python/TestModels/` holds 127 test models and nothing else; the
+**R3.9** **DONE 2026-09-18** — `python/TestModels/` holds 127 test models and nothing else; the — [log](exudynRevisionLog2026.md#r3-9)
     runners are in `python/testing/`, the performance models in `python/PerformanceModels/`, the
     generated mini examples in `python/MiniExamples/`. `NotTestModels()` is gone and the
     performance suite has a coverage check of its own. The one dual-use model was split into two
@@ -835,7 +840,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 
 <a id="r6-7"></a>
-**R6.7** **DONE 2026-09-18** — a wrong parameter raises `TypeError` when the object cannot be that
+**R6.7** **DONE 2026-09-18** — a wrong parameter raises `TypeError` when the object cannot be that — [log](exudynRevisionLog2026.md#r6-7)
     parameter at all and `ValueError` when the kind is right and the value is not; `PyError` chooses
     the Python exception, and the three layers that used to flatten it back to `RuntimeError` were
     found and fixed (#2432). → [log](exudynRevisionLog2026.md#r6-7)
@@ -849,7 +854,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
 
 <a id="r6-8-1"></a>
-**R6.8.1** **DONE 2026-09-20** *(sub-step of R6.8)* **A test that passed by luck** (#2561). The
+**R6.8.1** **DONE 2026-09-20** *(sub-step of R6.8)* **A test that passed by luck** (#2561). The — [log](exudynRevisionLog2026.md#r6-8)
     solver-file tests of R6.8 call `mbs.SolveDynamic`, which exists only once
     `exudyn.utilities` (or `exudyn.misc.mainSystemExtensions`) has been imported — and
     `test_exceptions.py` imported neither. Under `pytest -n 8` it passed as long as the worker
@@ -863,7 +868,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     failure hides which error actually happened.
 
 <a id="r6-9"></a>
-**R6.9** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The results monitor
+**R6.9** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The results monitor — [log](exudynRevisionLog2026.md#r6-9)
     becomes `exudyn.misc.resultsMonitor`** (#2557). The 2021 script inside the package — it read
     `sys.argv` and called `plt.ion()` while being *imported* — is a module now:
     `MonitorResults(...)` callable from a script or Spyder, an `argparse` CLI behind it, file
@@ -886,7 +891,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 ## R7 — Documentation (~3 weeks)  <!-- old Phase 6 -->
 
 <a id="r7-1"></a>
-**R7.1** **DONE 2026-09-21** — all nine sub-steps (R7.1.1 to R7.1.9) are closed.
+**R7.1** **DONE 2026-09-21** — all nine sub-steps (R7.1.1 to R7.1.9) are closed. — [log](exudynRevisionLog2026.md#r7-1-2)
     Sphinx (readthedocs) stays; the sources became **MyST Markdown** (`myst-parser`, dev-only):
     hand-written chapters converted from `.tex`, generated reference pages from the docs
     emitters as `.md`, remaining `.rst` files converted as they were touched; new documentation
@@ -935,7 +940,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     most terrible in the project - will not require most of its functions, so cleanup is needed.
 
 <a id="r7-1-1"></a>
-**R7.1.1** **DECIDED 2026-09-19: mermaid** *(sub-step of R7.1; maintainer question 2026-09-17,
+**R7.1.1** **DONE 2026-09-20** (#2564) — [log](exudynRevisionLog2026.md#r7-1-9) — **DECIDED 2026-09-19: mermaid** *(sub-step of R7.1; maintainer question 2026-09-17,
     answered 2026-09-19; info document D9)* **What happens to the tikz figures.** The recommendation
     below was taken: the 13 tikz pictures become mermaid diagrams, and each hand-made PNG twin is
     deleted with the tikz source it duplicated. With D8 there is no PDF, so the pre-rendering to SVG
@@ -1170,12 +1175,49 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     instead of committed.
 
 <a id="r7-2"></a>
-**R7.2** *(after R7.1 — and, by the maintainer's decision of 2026-09-21, **after the tracker
+**R7.2** **DONE 2026-09-21** (#2579) — [log](exudynRevisionLog2026.md#r7-2) — all five sub-steps (R7.2.1 to R7.2.5) are closed. *(after R7.1 — and, by the maintainer's decision of 2026-09-21, **after the tracker
     changes of R8**, so that they are carried into the documentation in the same pass rather than
     twice)* **Carry the revision into the documentation.**
     Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and
     switches (e.g. `exudyn.special.exceptions.parameterRangeChecks`), conversion and error behaviour,
     definitions and generators, howto build on each platform (put the simple way also into the main README), tools and workflow - and update the user and developer documentation accordingly. The plan and log are records, not documentation; afterwards the plan is reduced to an archive.
+
+<a id="r7-2-1"></a>
+**R7.2.1** **DONE 2026-09-21** — [log](exudynRevisionLog2026.md#r7-2-1) — *(sub-step of R7.2)* **Close the record.**
+    Every finished step carries a `DONE` marker and a link to its entry in the log; the steps
+    whose state had moved on say so. This comes first because R7.2.2 reads the plan and the
+    log as its source, and a source with holes produces a documentation with holes.
+
+<a id="r7-2-2"></a>
+**R7.2.2** **DONE 2026-09-21** — [log](exudynRevisionLog2026.md#r7-2-2) — *(sub-step of R7.2)* **The inventory: what of this revision touches the
+    documentation.** A file of its own — `docs/revision/documentationImpact2026.md` — listing,
+    from the plan and the log, everything a reader of the documentation can run into:
+    **file and directory names** that changed, **references and links** that no longer resolve,
+    **commands and workflows** (`exudev`, `python -m exudyn`, the tracker verbs), **flags and
+    switches**, **removed and renamed API**, and what the **emitters** now write. One row per
+    item, with where it is documented today and what has to happen — it is the work list of
+    R7.2.3, and it is written down rather than held in a session, because it outlives the
+    session.
+
+<a id="r7-2-3"></a>
+**R7.2.3** **DONE 2026-09-21** — [log](exudynRevisionLog2026.md#r7-2-3) — *(sub-step of R7.2)* **The integration.** Work the inventory off where each item
+    belongs: the hand-written chapters of `docs/manual/`, the how-to notes, the developer
+    documentation, the docstrings that the emitters turn into the reference manual, and the
+    emitters themselves where the page they write is wrong rather than the source. Nothing is
+    copied from the plan: the plan is a record of decisions, the documentation says what is
+    true now.
+
+<a id="r7-2-4"></a>
+**R7.2.4** **DONE 2026-09-21** — [log](exudynRevisionLog2026.md#r7-2-4) — *(sub-step of R7.2; maintainer 2026-09-21)* **A revisions chapter in the user
+    documentation**, at the end, **immediately before the issue tracker chapter**. Short: what
+    changed for a user between 1.11 and 2.0 and why, in the order a user cares about — not the
+    plan, which is a working record and stays out of the published documentation. It is written
+    to be **extended by later revisions**, so it is structured by release, not by plan phase.
+
+<a id="r7-2-5"></a>
+**R7.2.5** **DONE 2026-09-21** — [log](exudynRevisionLog2026.md#r7-2-4) — *(sub-step of R7.2; maintainer 2026-09-21)* **Two lines on the landing page.**
+    `README.rst` mentions the revision beside what is already announced there (CI, the command
+    line, ...): two lines and a link to the revisions chapter, no more.
 
 <a id="r7-3"></a>
 **R7.3** **DONE 2026-09-21 (decision)** — [log](exudynRevisionLog2026.md#r7-3) — *(phase R7)*
@@ -1317,7 +1359,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     format, because a viewer that edits issues should edit the format that stays.
 
 <a id="r8-3-1"></a>
-**R8.3.1** *(sub-step of R8.3; maintainer request 2026-09-17)* **An issue can also be closed
+**R8.3.1** **DONE 2026-09-21** (#2572) — [log](exudynRevisionLog2026.md#r8-3-4) — *(sub-step of R8.3; maintainer request 2026-09-17)* **An issue can also be closed
     WITHOUT being resolved.** The tracker knows `RAISED`, `WORK` and `RESOLVED`; there is no way to
     record "decided against", "no longer applies" or "superseded", so such issues either stay open
     forever - the 2016-2020 backlog is full of them - or get marked RESOLVED, which is untrue and
@@ -1373,7 +1415,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     micro was 1.9.235 (#1959).
 
 <a id="r8-3-3"></a>
-**R8.3.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.3; maintainer request 2026-09-21)* **An issue can be extended.** The
+**R8.3.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.3; maintainer request 2026-09-21)* **An issue can be extended.** The — [log](exudynRevisionLog2026.md#r8-5-3)
     tracker can raise an issue and close it, and `ChangeIssue` can overwrite a single field; what
     it cannot do is the thing that actually happens: the first analysis of a problem turns up
     more, and that belongs **with** the issue, not in a second issue and not by rewriting the
@@ -1421,7 +1463,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     check of R8.4(b) is what says so afterwards.
 
 <a id="r8-3-5"></a>
-**R8.3.5** **DONE 2026-09-21** (#2570) — *(sub-step of R8.3.1; maintainer question
+**R8.3.5** **DONE 2026-09-21** (#2570) — *(sub-step of R8.3.1; maintainer question — [log](exudynRevisionLog2026.md#r8-3-5)
     2026-09-21: "I assume that an according WARNING appears and something like 'Are you sure'?")*
     **Changing a field of a CLOSED issue is not silent any more.** It was: `ChangeIssue` wrote
     any field of any issue without a word, and so did `exudev issue modify`. Raising, resolving
@@ -1543,7 +1585,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     with the LaTeX documentation in R7.1.6 and R7.1.7.
 
 <a id="r8-5-3"></a>
-**R8.5.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.5; maintainer request 2026-09-21)*
+**R8.5.3** **DONE 2026-09-21** (#2566) — *(sub-step of R8.5; maintainer request 2026-09-21)* — [log](exudynRevisionLog2026.md#r8-5-3)
     **`notes` was two fields.** For a closed issue it is the **release note**, published in
     `docs/generated/trackerlog.md` and, with R7.4, in `CHANGELOG.md`. For an open issue what is
     worth writing down is something else entirely — *duplicate of #2134*, *marked for
@@ -1629,7 +1671,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     package (users run it) or stays in `tools/`. The plan continues in a new document after this step.
 
 <a id="r8-8"></a>
-**R8.8** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The installed package
+**R8.8** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The installed package — [log](exudynRevisionLog2026.md#r8-8)
     gets a command line: `python -m exudyn <command>`** (#2558). `monitor`, `plot`, `info`, `demo`,
     in a plain dispatch dictionary `CommandTable()`, each command imported when it is called.
     `info` prints what a bug report needs: version, `config.Version(True)`, package path,
@@ -1806,7 +1848,7 @@ debt stays visible and each item can be closed on evidence.
     rigid-body kinematics, and the object loop of `ODE2RHS` itself. Steered by the benchmark of
     R11.2; a compile-flag decision alone (step R2.16) cannot achieve this.
 <a id="r11-4"></a>
-**R11.4** **DONE 2026-09-20** (all five sub-steps) *(maintainer, 2026-09-19; before R7 is
+**R11.4** **DONE 2026-09-20** (all five sub-steps) *(maintainer, 2026-09-19; before R7 is — [log](exudynRevisionLog2026.md#r11-4-1)
     finished)* **The layout tasks that the
     documentation depends on.** A deliberate interruption of the documentation phase: *"at least the
     implementation files part will be needed for documentation on how to add new Exudyn items"* —

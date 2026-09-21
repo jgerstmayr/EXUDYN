@@ -92,7 +92,7 @@ A way to install the Python package Exudyn is to use the so-called 'wheels' (fil
 NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!
 
 Wheels can be downloaded directly from
-[https://pypi.org/project/exudyn/\#files](https://pypi.org/project/exudyn/\#files), one per
+[https://pypi.org/project/exudyn/#files](https://pypi.org/project/exudyn/#files), one per
 Python version and platform. The file name says which one it is: `cp313` means CPython 3.13,
 and the last part names the platform.
 
@@ -126,7 +126,7 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 - it is recommended to use conda environments!
 - go to 'main' of your cloned github folder of Exudyn
 - run: (Since version 1.7.116 a PEP518 compatible build is available. This should work with Windows, MacOS and linux. The `setupPyConfig.json` file includes some flags such as the parallel compilation, GLFW, etc.; the `-v` flag adds verbosity.) `pip wheel . -v -w dist --no-deps`
-- Before version 1.7.116: run: (the `--parallel` option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) `python setup.py install --parallel`
+- then install exactly that wheel: `pip install dist/<the wheel that was built>`
 - read the output; if there are errors, try to solve them by installing appropriate modules
 
 You can also create your own wheels, doing the above steps to activate the according Python version and then calling:
@@ -171,11 +171,11 @@ If you would like to compile from source, just use a bash terminal on your Mac, 
 - Since version 1.7.116: `pip wheel . -v -w dist --no-deps`
 - Until version 1.7.116: `python setup.py bdist_wheel --parallel`
 - which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn, run
-- `python setup.py install`
+- then `pip install dist/<the wheel that was built>`; `python setup.py install` does not exist any more in current setuptools
 - $\ra$ this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
 - **NOTE** that conda environments are highly recommended
 
-Then just go to the `pythonDev/Examples` folder and run an example:
+Then just go to the `python/Examples` folder and run an example:
 
 - `python springDamperUserFunctionTest.py`
 
@@ -224,7 +224,7 @@ Install necessary Python libraries and pip3; `matplotlib` and `scipy` are not re
   sudo apt-get install python3-tk
 ```
 
-If graphics is used (`\#define USE_GLFW_GRAPHICS` in `BasicDefinitions.h`), you must install the according GLFW libs:
+If graphics is used (`#define USE_GLFW_GRAPHICS` in `BasicDefinitions.h`), you must install the according GLFW libs:
 
 ```python
   sudo apt-get install libglfw3 libglfw3-dev
@@ -238,10 +238,10 @@ In some cases, it may be required to install OpenGL and some of the following li
   sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
 ```
 
-With all of these libs, you can run the setup.py installer (go to `Exudyn_git/main` folder), which takes some minutes for compilation (the --user option is used to install in local user folder) (the `--parallel` option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x):
+With all of these libs, you can build the wheel (go to the root of `Exudyn_git`; until version 1.11 the sources lay in its `main/` subfolder), which takes some minutes for compilation (the --user option is used to install in local user folder) (the `--parallel` option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x):
 
 ```python
-  sudo python3 setup.py install --user --parallel
+  pip wheel . -v -w dist --no-deps && pip install dist/<the wheel that was built>
 ```
 
 Since version 1.7.116, a PEP518 compatible way to compile sources and install the current repository has been added (the `-v` flag activates a verbose mode):
@@ -252,7 +252,7 @@ Since version 1.7.116, a PEP518 compatible way to compile sources and install th
 
 Congratulation! **Now, run a test example** (will also open an OpenGL window if successful):
 
-- `python3 pythonDev/Examples/rigid3Dexample.py`
+- `python3 python/Examples/rigid3Dexample.py`
 
  You can also create a Ubuntu wheel which can be easily installed on the same machine (x64), same operating system (Ubuntu 18.04) and with same Python version (e.g., 3.6):
 
@@ -274,7 +274,7 @@ Note that the build mechanisms used for Exudyn, e.g., on GitHub or when building
 
  **Exudyn under RaspberryPi 4b**:
 
-- Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using `python3 setup.py install` command.
+- Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box with `pip wheel . -v -w dist --no-deps`.
 - Performance is quite ok and it is even capable to use all cores (but you should add a fan!)
 - $\ra$ this could be used for a nice realtime application!
 

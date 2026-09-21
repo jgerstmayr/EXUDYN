@@ -82,8 +82,9 @@ The item VObjectConnectorRollingDiscPenalty has the following parameters:
 
 The main geometrical setup is shown in the following figure:
 
-.. image:: docs/figures/ObjectJointRollingDiscSketch.png
+```{figure} /docs/figures/ObjectJointRollingDiscSketch.png
 :width: 600
+```
 
 First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
 With the helper vector,

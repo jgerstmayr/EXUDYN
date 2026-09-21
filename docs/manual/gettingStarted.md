@@ -56,9 +56,9 @@ There are several journal papers of the developers which were using Exudyn (list
 - M. Pieber, K. Ntarladima, R. Winkler, J. Gerstmayr. A Hybrid ALE Formulation for the Investigation of the Stability of Pipes Conveying Fluid and Axially Moving Beams, ASME Journal of Computational and Nonlinear Dynamics, 2022.
 - S. Holzinger, M. Schieferle, C. Gutmann, M. Hofer, J. Gerstmayr. Modeling and Parameter Identification for a Flexible Rotor with Impacts. Journal of Computational and Nonlinear Dynamics, 2022.
 - S. Holzinger, J. Gerstmayr. Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics, Vol. 53(5), 2021.
-- A. Zw{\"o}lfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction. Acta Mechanica, Vol. 232, pp.  835--851 (2021).
-- A. Zw{\"o}lfer, J. Gerstmayr. A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements, Journal of Multibody System Dynamics, Vol. 49(3), pp. 291 -- 313, 2020.
-- S. Holzinger, J. Sch{\"o}berl, J. Gerstmayr. The equations of motion for a rigid body using non-redundant unified local velocity coordinates. Multibody System Dynamics, Vol. 48, pp. 283 -- 309, 2020.
+- A. Zwölfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction. Acta Mechanica, Vol. 232, pp.  835--851 (2021).
+- A. Zwölfer, J. Gerstmayr. A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements, Journal of Multibody System Dynamics, Vol. 49(3), pp. 291 -- 313, 2020.
+- S. Holzinger, J. Schöberl, J. Gerstmayr. The equations of motion for a rigid body using non-redundant unified local velocity coordinates. Multibody System Dynamics, Vol. 48, pp. 283 -- 309, 2020.
 
 ### Developers of Exudyn and thanks
 
@@ -68,16 +68,16 @@ In general, most of the Exudyn is written by Johannes Gerstmayr, implementing id
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
 For the interoperability between C++ and Python, we extensively use **Pybind11**[pybind11], originally written by Jakob Wenzel, see `https://github.com/pybind/pybind11`. Without Pybind11 we couldn't have made this project -- Thanks a lot!
 
-Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who boosted the design of the code with great concepts.
+Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts.
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
 The following people have contributed to Python and C++ library implementations, testing, examples or theory:
 
-- Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve [Schoeberl1997; NGsolve2014; NGsolve2022] core library with `taskmanager` for **multi-threaded parallelization**, which is now replaced by a simplified internal version but closely following the original implementation; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
+- Joachim Schöberl, TU Vienna (Providing specialized NGsolve [Schoeberl1997; NGsolve2014; NGsolve2022] core library with `taskmanager` for **multi-threaded parallelization**, which is now replaced by a simplified internal version but closely following the original implementation; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 - Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node; helped with Lie group solvers, geometrically exact beam; testing)
 - Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics; several other fixes; examples)
-- Andreas Zw{\"o}lfer, Technical University Munich (theory and examples for FFRF, CMS formulation and ANCF 2D cable prototypes in MATLAB)
+- Andreas Zwölfer, Technical University Munich (theory and examples for FFRF, CMS formulation and ANCF 2D cable prototypes in MATLAB)
 - Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check; examples); Exudyn graphical user interface
 - Martin Sereinig, University of Innsbruck (special robotics functionality, mobile robots, manipulability measures, robot models)
 - Sebastian Weyrer, University of Innsbruck (ObjectContactSphereSphere; FEM RigidBodyInertia; some fixes; examples)
@@ -123,7 +123,7 @@ Future goals (2024-2026) are:
 - add GPU support (planned, 2025).
 
 For solved issues (and new features), see section 'Issues and Bugs', {ref}`sec-issuetracker`.
-For specific open issues, see `trackerlog.html` -- a document only intended for developers!
+The open issues are in the same section, and every resolved issue of every release is in the [changelog](../../CHANGELOG.md).
 
 (sec-install-simpleexample)=
 ## Run a simple example in Python

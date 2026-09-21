@@ -1,0 +1,16 @@
+{
+  "number": 2579,
+  "title": "the revision is not in the documentation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "Three months of changes - the repository layout, the build, the tests, the tools, the API - are recorded in the revision plan and log, which are working records and are not published. A reader of the documentation still found paths from before the main/ level was removed, an installation chapter that recommends python setup.py install (which current setuptools does not have), a sentence pointing at a developer-only trackerlog.html for open issues that have been published for weeks, a paragraph explaining how to bump a version by editing two constants that no longer exist, and eight author names written as Zw{\\\"o}lfer. Revision2026 step R7.2 in five parts: close the record, write down what the revision implies for the documentation (docs/revision/documentationImpact2026.md), work that list off in the pages and in the generators, add a revisions chapter for users at the end of the manual, and two lines on the landing page.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 21:22",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The revision is in the documentation. R7.2.1 closed the record: 195 of 216 steps are finished and every one of them points at its log entry (11 links added, R8.8 written up, three rows whose state had moved on corrected). R7.2.2 wrote docs/revision/documentationImpact2026.md from three scans over the tree - what a reader runs into, one row per item with file and line. R7.2.3 worked it off: paths from before R3.1 in four documents, the minor-bump paragraph that R8.4 had replaced, four setup.py commands in the installation chapter, the pointer to trackerlog.html, eight LaTeX umlauts and an RST figure directive - and two of the items were generator bugs, so latexToMarkdown.py learned .. image:: and the item definitions carry the character. R7.2.4 added docs/manual/revisions.md, written for somebody upgrading and structured by release so that the next one is a section on top. R7.2.5 put two lines on the landing page. One inventory entry was wrong and the strict Sphinx build caught it: the exception types of R6.3 are documented for users already.",
+  "resolvedInVersion": "1.11.238"
+}

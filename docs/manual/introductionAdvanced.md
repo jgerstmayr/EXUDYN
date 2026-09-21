@@ -48,14 +48,15 @@ NOTE that this approach is slower and it may lead to a (usually silient) crash a
 Since Q4 2021 a contact module is available in Exudyn.
 This separate module `GeneralContact` [**still under development, consider with care!**] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 
-.. _fig-contactexamples:
-.. figure:: docs/figures/contactTests.png
-   :width: 450
-
-```{figure} /docs/figures/contactTests2.jpg
+(fig-contactexamples)=
+```{figure} /docs/figures/contactTests.png
 :width: 450
 
 Some tests and examples using `GeneralContact`
+```
+
+```{figure} /docs/figures/contactTests2.jpg
+:width: 450
 ```
 
  **Note**:

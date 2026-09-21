@@ -334,6 +334,24 @@ def ConvertRSTFigures(text):
     return re.sub(pattern, Block, text)
 
 
+def ConvertRSTImages(text):
+    """The caption-less twin of ".. figure::"; one item description uses it of ".. figure::" and one item description uses it
+    (ObjectConnectorRollingDiscPenalty). Without this it stayed in the page as RST text, which
+    renders as literal ".. image:: docs/figures/..." (revision2026 step R7.2.3)."""
+    def Block(match):
+        (image, options) = match.groups()
+        lines = ['', '```{figure} ' + ImagePath(image)]
+        for option in re.findall(r':([a-z]+):\s*(\S+)', options or ''):
+            lines += [':' + option[0] + ': ' + option[1]]
+        lines += ['```', '']
+        return chr(10).join(lines)
+
+    newline = chr(10)
+    pattern = (r'\.\.\s+image::\s*(\S+)\s*' + newline
+               + r'((?:\s+:[a-z]+:[^' + newline + r']*' + newline + r')*)')
+    return re.sub(pattern, Block, text)
+
+
 def ConvertInline(text):
     """the one-argument text macros, and the ones that take none"""
     #the brace form of bold and italics, which the item definitions use: {\bf name}
@@ -487,6 +505,7 @@ def ConvertText(text):
     text = ResolveRSTSwitches(text)
     #the item definitions put their figures into the \onlyRST branch, as RST directives
     text = ConvertRSTFigures(text)
+    text = ConvertRSTImages(text)
     #a listing becomes a fenced block first: its content is code and no later pass may touch it
     text = ConvertListings(text)
     text = ConvertDisplayMath(text)

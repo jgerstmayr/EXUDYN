@@ -6,7 +6,7 @@
 
 This object is used to represent modally reduced flexible bodies using the {ref}`FFRF <FFRF>` and the {ref}`CMS <CMS>`. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in {ref}`sec-fem-feminterface---init--`. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, {ref}`sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions`.
 
-Authors: Gerstmayr Johannes, Zw\"olfer Andreas
+Authors: Gerstmayr Johannes, Zwölfer Andreas
 
 **Additional information for ObjectFFRFreducedOrder**:
 - This `Object` has/provides the following types = `Body`, `MultiNoded`, `SuperElement`
@@ -109,7 +109,7 @@ Additionally, the contour drawing of the object can make use the `OutputVariable
 
 The formulation is based on the EOM of `ObjectFFRF`, **also regarding parts of notation**
 and some input parameters, {ref}`sec-item-objectffrf`, and
-can be found in Zw{\"o}lfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
+can be found in Zwölfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
 The notation of kinematics quantities follows the floating frame of reference idea with
 quantities given in the tables above and sketched in {ref}`fig-objectffrfreducedorder-mesh`.
 

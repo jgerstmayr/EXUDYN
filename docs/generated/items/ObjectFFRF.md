@@ -6,7 +6,7 @@
 
 This object is used to represent equations modelled by the {ref}`FFRF <FFRF>`. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the {ref}`FFRF <FFRF>`. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
 
-Authors: Gerstmayr Johannes, Zw\"olfer Andreas
+Authors: Gerstmayr Johannes, Zwölfer Andreas
 
 **Additional information for ObjectFFRF**:
 - This `Object` has/provides the following types = `Body`, `MultiNoded`, `SuperElement`
@@ -98,7 +98,7 @@ Additionally, the contour drawing of the object can make use the `OutputVariable
 | flexible coordinates | $\LU{b}{\qv\indf}$ | flexible, body-fixed coordinates |
 | transformation of flexible coordinates | $\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$ | block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates |
 
-The derivations follow Zw{\"o}lfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
+The derivations follow Zwölfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
 
 #### Nodal coordinates
 
