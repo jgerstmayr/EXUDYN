@@ -64,6 +64,24 @@ cd tools/issueTracker
 
 ### API
 
+**From the command line** (revision2026 step R8.3), which is the way to use it:
+
+```powershell
+exudev issue list --open --type FIX --effort LOW    #the list a triage pass works from
+exudev issue show 2566
+exudev issue raise "title" "description" --type FIX --effort LOW --author Claude-JG
+exudev issue extend 2566 "what the analysis turned up"
+exudev issue remark 2566 "duplicate of #2134, check before starting"
+exudev issue resolve 2566 "what was done" --author Claude-JG     #bumps the micro version
+exudev issue abandon 2566 "decided against, because ..."
+exudev issue mode --release | --dev                              #fact 26
+```
+
+`exudev -n issue resolve ...` prints what it would do and writes nothing — worth using before
+anything that touches the version.
+
+**The same through the API**, which the CLI calls and which a script can import:
+
 | call | effect |
 |---|---|
 | `RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineNumber='', deadline='', author='JG', priority='')` | appends a `RAISED` issue; default deadline +180 days |

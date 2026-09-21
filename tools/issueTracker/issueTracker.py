@@ -23,6 +23,44 @@ import sys
 
 #import os
 
+#WHERE THE FILES ARE (revision2026 step R8.3). Until this step every path was relative to the
+#CURRENT directory, so the tracker could only be driven from tools/issueTracker/ - and a command
+#line, which is started from wherever the user stands, was impossible. The two directories are
+#module globals rather than constants inside the functions, so that the tests can point the
+#module at a copy of the log instead of writing to the real one.
+trackerDirectory = os.path.dirname(os.path.abspath(__file__))
+repositoryRoot = os.path.normpath(os.path.join(trackerDirectory, '..', '..'))
+
+
+def TrackerPath(name):
+    """a file next to this tool: trackerlog.txt, its backup, the HTML overview, versionName.txt"""
+    return os.path.join(trackerDirectory, name)
+
+
+def RepositoryPath(*parts):
+    """a file in the repository: version.txt, versionCpp.cpp, README.rst, the Markdown page"""
+    return os.path.join(repositoryRoot, *parts)
+
+
+#WHERE THE FILES ARE (revision2026 step R8.3). Until this step every path was relative to the
+#CURRENT directory, so the tracker could only be driven from tools/issueTracker/ - and a command
+#line, which is started from wherever the user stands, was impossible. The two directories are
+#module globals rather than constants inside the functions, so that the tests can point the
+#module at a copy of the log instead of writing to the real one.
+trackerDirectory = os.path.dirname(os.path.abspath(__file__))
+repositoryRoot = os.path.normpath(os.path.join(trackerDirectory, '..', '..'))
+
+
+def TrackerPath(name):
+    """a file next to this tool: trackerlog.txt, its backup, the HTML overview, versionName.txt"""
+    return os.path.join(trackerDirectory, name)
+
+
+def RepositoryPath(*parts):
+    """a file in the repository: version.txt, versionCpp.cpp, README.rst, the Markdown page"""
+    return os.path.join(repositoryRoot, *parts)
+
+
 absolute_path = os.path.dirname(__file__)
 relative_path = '../generators'   #autoGenerateHelper moved to tools/generators (revision2026 step R4.3 part 2g)
 helperPath = os.path.join(absolute_path, relative_path)
@@ -279,11 +317,11 @@ def GetDateTimeStr():
 
 #%%******************************************************************************************************
 def IssueTrackerBackup(): #create backup of issue log file
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     
-    fileWrite=open(trackerFile+'_backup.txt','w', encoding='utf-8')  #write file
+    fileWrite=open(TrackerPath(trackerFile+'_backup.txt'),'w', encoding='utf-8')  #write file
     
     for line in fileLines:
         fileWrite.write(line)
@@ -294,14 +332,14 @@ def IssueTrackerBackup(): #create backup of issue log file
 
 #%%******************************************************************************************************
 def NumberOfIssues(): #count number of existing issues
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     return len(fileLines)-nHeaderLines
 
 #%%******************************************************************************************************
 def GetIssue(number): #0-based, get dictionary of issue with number
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     
@@ -334,7 +372,7 @@ def GetIssue(number): #0-based, get dictionary of issue with number
 
 #%%******************************************************************************************************
 def GetIssues(): #get list of dictionaries of all issues
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     
@@ -368,14 +406,14 @@ def GetIssues(): #get list of dictionaries of all issues
 
 #%%******************************************************************************************************
 def ConvertToCSV(): #convert all issues to a .CSV file
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     
     #print(len(fileLines))
     #print(number)
 
-    fileWrite=open(trackerFile+'.csv','w', encoding='utf-8')  #write file
+    fileWrite=open(TrackerPath(trackerFile+'.csv'),'w', encoding='utf-8')  #write file
     
     nLine = 0
     for lineEOL in fileLines:
@@ -428,7 +466,7 @@ def GetReleaseAndVersionString(): #convert all issues to a .html file
 
 
 def GetMajorMinorMicroVersion(): #convert all issues to a .html file
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
 
@@ -459,7 +497,7 @@ def VersionString():
 def UpdateDateAndVersion(updateVersion = True):  
     IssueTrackerBackup()
     
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     
@@ -467,21 +505,24 @@ def UpdateDateAndVersion(updateVersion = True):
     fileLines[trackerReleaseLine ] = '# release = ' + str(GetReleaseAndVersionString()[0]) + '\n'
     fileLines[trackerVersionLine] = '# version = ' + str(GetReleaseAndVersionString()[1]) + '\n'
 
-    fileWrite=open(trackerFile+'.txt','w', encoding='utf-8') 
+    fileWrite=open(TrackerPath(trackerFile+'.txt'),'w', encoding='utf-8') 
     for line in fileLines:
         fileWrite.write(line)
         
     fileWrite.close()
 
     #update version in Python module versionPybind.h ==> this is shown in the module with python command version()
-    directoryString = '..\\..\\src\\Autogenerated\\'   #no main/ level since the flatten (revision2026 step R3.1)
+    #no main/ level since the flatten (revision2026 step R3.1); version.txt is at the
+    #repository ROOT since R3.4, and versionName.txt sits next to this tool since R7.1.7,
+    #when docs/theDoc/ was deleted with the LaTeX build (decision D8)
     #versionFile = directoryString + 'version.h' #not used anymore
-    cppVersionFile = directoryString + 'versionCpp.cpp'
-    texVersionFile = '..\\..\\version.txt'   #at the repository ROOT since revision2026 step R3.4; versionName.txt stays in docs/theDoc/
+    cppVersionFile = RepositoryPath('src', 'Autogenerated', 'versionCpp.cpp')
+    texVersionFile = RepositoryPath('version.txt')
     #versionName.txt sits next to this tool since revision2026 step R7.1.7, when
     #docs/theDoc/ was deleted with the LaTeX build (decision D8)
-    texVersionNameFile = 'versionName.txt'
-    readmeFile = '..\\..\\README.rst'   #hand-written since revision2026 step R7.1.5, except for its version line
+    texVersionNameFile = TrackerPath('versionName.txt')
+    #hand-written since revision2026 step R7.1.5, except for its version line
+    readmeFile = RepositoryPath('README.rst')
 
     #pyVersionFile = '..\\..\\src\\pythonGenerator\\exudynVersion.py'
     #[release,version] = GetReleaseAndVersion()
@@ -570,7 +611,7 @@ def UpdateDateAndVersion(updateVersion = True):
 
 #%%******************************************************************************************************
 def ConvertToHTML(): #convert all issues to a .html file
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
 
@@ -581,7 +622,7 @@ def ConvertToHTML(): #convert all issues to a .html file
     numberOfResolved = minor 
     lastChangeDate = fileLines[trackerDateLine].split('=')[1] 
     
-    fileWrite=io.open(trackerFile+'.html','w', encoding='utf-8')  #write file; utf-8 needed for sphinx
+    fileWrite=io.open(TrackerPath(trackerFile+'.html'),'w', encoding='utf-8')  #write file; utf-8 needed for sphinx
     # fileWrite=io.open('../../docs/'+trackerFile+'.html','w', encoding='utf-8')  #write file; utf-8 needed for sphinx
 
     #follows https://www.w3schools.com/html/tryit.asp?filename=tryhtml_table_cellspacing
@@ -728,7 +769,7 @@ def ConvertToMarkdown():
     known bugs. Markdown since revision2026 step R7.1.6; it wrote docs/theDoc/trackerlog.tex and
     docs/RST/trackerlog.rst until then, and the colours of the open issues, which were RST roles,
     are the CSS classes of docs/_static/custom.css written as inline HTML."""
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8')
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8')
     fileLines = fileRead.readlines()
     fileRead.close()
 
@@ -842,8 +883,7 @@ def ConvertToMarkdown():
     text += '\n## Open issues\n\n' + openIssues
     text += '\n## Known bugs\n\n' + bugs
 
-    markdownFile = os.path.abspath(os.path.join('..', '..', 'docs', 'generated',
-                                                trackerFile+'.md'))
+    markdownFile = RepositoryPath('docs', 'generated', trackerFile+'.md')
     os.makedirs(os.path.dirname(markdownFile), exist_ok=True)
     with io.open(markdownFile, 'w', encoding='utf-8', newline='\n') as file:
         file.write(text)
@@ -944,7 +984,7 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
 #    print(listDest)
 #    print(newIssue)
     
-    fileWrite=open(trackerFile+'.txt','a', encoding='utf-8')  #append to file
+    fileWrite=open(TrackerPath(trackerFile+'.txt'),'a', encoding='utf-8')  #append to file
     fileWrite.write(newIssue)            
     fileWrite.close()
 
@@ -986,13 +1026,13 @@ def ModifyDictIssue(issueDict): #raise a new issue into list (append to end of l
     
     newIssue += '\n'
 
-    fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
+    fileRead=open(TrackerPath(trackerFile+'.txt'),'r', encoding='utf-8') 
     fileLines = fileRead.readlines()
     fileRead.close()
     
     fileLines[issueNumber+nHeaderLines] = newIssue
 
-    fileWrite=open(trackerFile+'.txt','w', encoding='utf-8') 
+    fileWrite=open(TrackerPath(trackerFile+'.txt'),'w', encoding='utf-8') 
     for line in fileLines:
         fileWrite.write(line)
         

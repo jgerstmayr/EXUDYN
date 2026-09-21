@@ -13,6 +13,8 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import io
+import re
 import glob
 import os
 import shutil
@@ -748,3 +750,189 @@ class OptionsWith:
             raise AttributeError(name)   #do not pretend to have dunder attributes
 
         return None                      #an option a reused command does not have is simply off
+
+
+#%%******************************************************************************************************
+#%%******************************************************************************************************
+#THE ISSUE TRACKER (revision2026 step R8.3). The tracker was driven by importing the module from
+#its own directory and calling functions; every issue of this revision was raised with a four-line
+#"python -c". The maintainer placed the command line here rather than in a second entry point
+#(2026-09-21), so that one driver does the build, the tests, the documentation and the tracker.
+#
+#These verbs run IN THIS INTERPRETER: the tracker is standard library only and needs no
+#environment, unlike every other exudev command. They are still Steps, because a Step with an
+#'action' is what makes -n/--dry-run print what would happen and write nothing - which matters for
+#a tool that changes the version of the package.
+def IssueTracker():
+    """the tracker module, imported from tools/issueTracker/ without a permanent path entry"""
+    directory = os.path.join(runner.RepositoryRoot(), 'tools', 'issueTracker')
+    if directory not in sys.path:
+        sys.path.insert(0, directory)
+    import issueTracker                                                       #noqa: E402
+    return issueTracker
+
+
+def IssueNumber(tracker, number):
+    """the number as the tracker uses it, with a readable error instead of a printed warning"""
+    if number < 0 or number >= tracker.NumberOfIssues():
+        raise SystemExit('exudev issue: there is no issue ' + str(number)
+                         + ' (the tracker holds ' + str(tracker.NumberOfIssues()) + ')')
+    return number
+
+
+def IssueOneLine(issue, width=60):
+    """one issue as one line of the list: the fields a decision is made on"""
+    title = ' '.join(issue['issue'].split())
+    if len(title) > width:
+        title = title[:width - 1] + '~'
+    return ('  #' + issue['number'] + '  ' + issue['status'].ljust(9)
+            + issue['type'].ljust(12) + issue['effort'].ljust(7)
+            + issue['priority'].ljust(7) + title)
+
+
+def ShowIssue(issue):
+    for name in ['number', 'issue', 'status', 'type', 'effort', 'priority', 'author',
+                 'date raised', 'deadline', 'date resolved', 'resolved author', 'file', 'line']:
+        if issue[name].strip() != '':
+            print(name.ljust(16) + issue[name].strip())
+    for name in ['description', 'workingRemarks', 'releaseNotes']:
+        if issue[name].strip() != '':
+            print('')
+            print(name + ':')
+            print('  ' + issue[name].strip())
+    return 0
+
+
+def ListIssues(tracker, options):
+    """the backlog, newest first, with the filters a triage pass needs"""
+    issues = list(reversed(tracker.GetIssues()))
+    if options.open:
+        issues = [issue for issue in issues if issue['status'].strip() == 'RAISED']
+    for (name, wanted) in [('type', options.type), ('effort', options.effort),
+                           ('priority', options.priority)]:
+        if wanted:
+            issues = [issue for issue in issues if issue[name].strip().upper() == wanted.upper()]
+
+    shown = issues[:options.limit] if options.limit else issues
+    print('  ' + 'nr'.ljust(7) + 'status'.ljust(9) + 'type'.ljust(12) + 'effort'.ljust(7)
+          + 'prio'.ljust(7) + 'issue')
+    for issue in shown:
+        print(IssueOneLine(issue))
+    print('')
+    print(str(len(shown)) + ' of ' + str(len(issues)) + ' matching issues, '
+          + str(tracker.NumberOfIssues()) + ' in the tracker')
+    return 0
+
+
+def SwitchBuildMode(tracker, release):
+    """release or development mode: the one line of issueTracker.py that says which (fact 26). The
+    value stays in the source because it is read at import time and because the tracker is the one
+    definition of the version; this writes that line and runs the update that follows from it."""
+    path = os.path.join(runner.RepositoryRoot(), 'tools', 'issueTracker', 'issueTracker.py')
+    with io.open(path, encoding='utf-8', newline='') as file:
+        text = file.read()
+
+    wanted = "versionDev = ''" if release else "versionDev = '.dev1'"
+    pattern = re.compile(r"(?m)^versionDev = '[^']*'")
+    if pattern.search(text) is None:
+        raise SystemExit('exudev issue mode: no "versionDev = ..." line in ' + path)
+
+    before = tracker.VersionString()
+    with io.open(path, 'w', encoding='utf-8', newline='') as file:
+        file.write(pattern.sub(wanted, text, count=1))
+
+    #the module in memory still holds the old value; set it there as well and let the tracker
+    #rewrite version.txt, versionCpp.cpp, the README line and its own pages
+    tracker.versionDev = '' if release else '.dev1'
+    tracker.UpdateFiles()
+    print('build mode: ' + ('release' if release else 'development')
+          + '   version ' + before + ' -> ' + tracker.VersionString())
+    return 0
+
+
+def Issue(options):
+    """exudev issue <verb>: raise, extend, remark, resolve, abandon, show, list, modify, mode"""
+    tracker = IssueTracker()
+    verb = options.issueVerb
+
+    if verb == 'raise':
+        note = ('raise a ' + options.type.upper() + ' issue "' + options.title + '"'
+                + ' (author ' + options.author + ')')
+
+        def Action():
+            number = tracker.RaiseIssue(options.title, options.description,
+                                        issueType=options.type.upper(),
+                                        fileName=options.file or '',
+                                        lineNumber=options.line or '',
+                                        author=options.author,
+                                        priority=(options.priority or '').upper())
+            if options.effort:
+                tracker.ChangeIssue(number, 'effort', options.effort)
+            return 0
+
+    elif verb == 'extend':
+        note = 'extend the description of issue ' + str(options.number)
+
+        def Action():
+            tracker.ExtendIssue(IssueNumber(tracker, options.number), options.text,
+                                author=options.author)
+            return 0
+
+    elif verb == 'remark':
+        note = ('replace' if options.replace else 'append to') + \
+               ' the working remarks of issue ' + str(options.number)
+
+        def Action():
+            tracker.RemarkIssue(IssueNumber(tracker, options.number), options.text,
+                                author=options.author, replace=options.replace)
+            return 0
+
+    elif verb == 'resolve':
+        note = ('resolve issue ' + str(options.number) + ' - this BUMPS THE MICRO VERSION and '
+                'publishes the note in the release notes')
+
+        def Action():
+            tracker.ResolveIssue(IssueNumber(tracker, options.number), notes=options.notes,
+                                 author=options.author)
+            return 0
+
+    elif verb in ['abandon', 'close']:
+        note = ('close issue ' + str(options.number) + ' WITHOUT resolving it - it counts for the '
+                'version like a resolved one and appears in the release notes as neither')
+
+        def Action():
+            tracker.AbandonIssue(IssueNumber(tracker, options.number), reason=options.reason,
+                                 author=options.author)
+            return 0
+
+    elif verb == 'show':
+        note = 'show issue ' + str(options.number)
+
+        def Action():
+            return ShowIssue(tracker.GetIssue(IssueNumber(tracker, options.number)))
+
+    elif verb == 'list':
+        note = 'list the issues'
+
+        def Action():
+            return ListIssues(tracker, options)
+
+    elif verb == 'modify':
+        note = ('set "' + options.field + '" of issue ' + str(options.number) + ' to "'
+                + options.value + '"')
+
+        def Action():
+            tracker.ChangeIssue(IssueNumber(tracker, options.number), options.field, options.value)
+            return 0
+
+    elif verb == 'mode':
+        note = ('switch the build mode to ' + ('release' if options.release else 'development')
+                + ' and rewrite the version files')
+
+        def Action():
+            return SwitchBuildMode(tracker, options.release)
+
+    else:
+        raise SystemExit('exudev issue: unknown verb "' + str(verb) + '"')
+
+    return [Step('issue ' + verb, action=Action, note=note)]

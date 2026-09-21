@@ -28,6 +28,7 @@ everywhere else — WSL, linux, macOS — type `python tools/exudev`.
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
 | `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |
 | `exudev env [--py]` | python, exudyn, numpy, scipy and matplotlib per environment |
+| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `abandon`, `show`, `list`, `modify`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files (revision2026 step R8.3) |
 
 ## The three things worth knowing
 

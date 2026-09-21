@@ -11272,3 +11272,61 @@ that, five `textorange` classes short.
 **The version did not move**: no issue changed status, so the closed count and with it
 `version.txt` stayed at 1.11.223. 26 tests cover the tracker now (7 new ones here), and they
 run it on a copy of the log in a temporary directory.
+
+<a id="r8-3"></a>
+### R8.3 — the issue tracker gets a command line, in `exudev` (2026-09-21)
+
+The tracker was driven by **importing the module from its own directory and calling
+functions**: every issue of this revision was raised with a four-line `python -c`. Two things
+made that the only way, and both are gone:
+
+- **it only worked from `tools/issueTracker/`**. `trackerlog.txt` was opened relative to the
+  current directory (20 places), and the files it writes outside that directory were spelled
+  `'..\\..\\version.txt'`. `trackerDirectory` and `repositoryRoot` come from `__file__`
+  now, with `TrackerPath()` and `RepositoryPath()` in between. They are module globals on
+  purpose: the tests point the module at a copy of the log instead of changing directory,
+  which is what keeps a test run from writing into the real tracker.
+- **there was no command line**. There is now, and the maintainer placed it: not a second
+  entry point but `exudev issue <verb>`, beside `build`, `test`, `docs` and `env` — one
+  driver for the build, the tests, the documentation and the tracker.
+
+```
+exudev issue list --open --type FIX --effort LOW
+exudev issue show 2566
+exudev issue raise "title" "description" --type FIX --effort LOW --author Claude-JG
+exudev issue extend 2566 "what the analysis turned up"
+exudev issue remark 2566 "duplicate of #2134, check before starting"
+exudev issue resolve 2566 "what was done" --author Claude-JG
+exudev issue abandon 2566 "decided against, because ..."
+exudev issue mode --release | --dev
+```
+
+**The driver needed nothing new.** `runner.Step` already takes an `action` callable with a
+`note` for work that is not a process — it was written for deleting build directories — and
+that is exactly right here: every writing verb is such a step, so `exudev -n issue resolve 42
+"x"` prints *"resolve issue 42 — this BUMPS THE MICRO VERSION and publishes the note in the
+release notes"* and changes nothing. For a command that moves the version of the package,
+that dry run is worth more than any confirmation prompt.
+
+`mode --release | --dev` is fact 26: it rewrites the single `versionDev` line of
+`issueTracker.py` and reruns the update, so the version files and the tracker pages follow.
+The value stays in the source because it is read at import time and because the tracker is
+the one definition of the version.
+
+**Eight tests that should have existed for years.** `ResolvedIssues2Version` and
+`GetMajorMinorMicroVersion` are the only definition of what `version.txt` says — the micro
+number is the count of closed issues — and nothing covered them. The new ones state the
+properties: resolving moves the micro version by exactly one, abandoning counts like
+resolving, a count exactly on a minor baseline is that minor version at micro 0, and the
+`.dev1` suffix follows the build mode. Four more cover the CLI, including that every writing
+verb carries an `action` and a `note` and runs nothing as a process.
+
+**Two items of the step were void when it ran**, and the plan now says so rather than
+carrying them: the `NORMAL`-vs-`med` priority mismatch was settled in R8.5.3, and
+`execWithPythonVersion.bat`, whose stale `cd ..\tools\makeWindowsBinaries\` this step wanted
+fixed, exists only in the untracked `tmp/oldScripts/` since exudev replaced the batch files in
+R5.18.
+
+**Dogfooding**: #2567 was raised with `exudev issue raise`, and both it and #2566 were closed
+with `exudev issue resolve`. The version moved 1.11.223 → 1.11.225, which is the only way it
+is supposed to move.

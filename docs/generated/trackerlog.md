@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.223.dev1
+- Exudyn version = 1.11.225.dev1
 - last change =  2026-09-21
-- Number of issues = 2567
-- Number of resolved issues = 2296 (223 in current version)
+- Number of issues = 2568
+- Number of resolved issues = 2298 (225 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,17 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.225: resolved Issue 2567: the issue tracker gets a command line, in exudev (extension)
+  - issue author: Claude-JG
+  - description:  The tracker was driven by importing the module from its own directory and calling functions - every issue of this revision was raised with a four-line python -c - because trackerlog.txt was opened relative to the current directory and the version files were written as '..\\..\\version.txt' with Windows separators. It now derives its two directories from \_\_file\_\_ and works from anywhere, and the command line lives in exudev (maintainer 2026-09-21): exudev issue raise/extend/remark/resolve/abandon/show/list/modify/mode. Every writing verb is a Step with an action, so exudev -n issue resolve prints what it would do and writes nothing. mode --release/--dev rewrites the one versionDev line of fact 26. See revision2026 step R8.3.
+  - **notes:** issueTracker.py derives trackerDirectory and repositoryRoot from \_\_file\_\_ and works from any directory; the ~20 relative paths and the Windows-separator literals are gone. The command line is exudev issue \<verb\>: raise, extend, remark, resolve, abandon (alias close), show, list with the filters a triage pass needs, modify, and mode --release/--dev for fact 26, which rewrites the one versionDev line and reruns the update. Every writing verb is a Step with an action, so exudev -n issue resolve prints the note and writes nothing. Eight new tests cover the version arithmetic - the only definition of what version.txt says and untested until now - and the CLI. Two items of the step were void when it ran: the NORMAL-vs-med priority mismatch was settled in R8.5.3, and execWithPythonVersion.bat exists only in the untracked tmp/oldScripts/ since exudev replaced the batch files in R5.18.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-21 11:13**, date raised: 2026-09-21, resolved by: Claude-JG
+- Version 1.11.224: resolved Issue 2566: the tracker can extend an issue, and open notes are triage (extension)
+  - issue author: Claude-JG
+  - description:  Maintainer request 2026-09-21. (1) EXTEND: the tracker can raise and close an issue and ChangeIssue can overwrite one field, but the thing that actually happens - the first analysis turns up more than the issue says - has nowhere to go except a second issue or a rewritten description. ExtendIssue(number, text, author) appends a dated paragraph and touches nothing else; the CLI verb extend comes with the CLI of R8.3, and in the JSON of R8.5 it becomes one entry of an updates list. (2) TRIAGE NOTES: measured 2026-09-21, 0 of the 270 open issues use the notes field while 614 resolved ones do, so notes is the place to record the way to go while an issue is open - duplicate of \#xxxx, marked for deprecation, check whether this is still a problem. For that to work ResolveIssue and AbandonIssue must REPLACE those notes rather than prepend them, because the resolution note is published in the release notes. (3) The effort field that makes the 270 open issues sortable is R8.5.2, with the new format. See revision2026 steps R8.3.3 and R8.5.2.
+  - **notes:** ExtendIssue appends a dated paragraph to the description of an open issue and refuses a closed one; RemarkIssue writes the workingRemarks of an open issue. The field question behind the second half was settled in R8.5.3: notes became releaseNotes (written when the issue closes and published) and workingRemarks (what the work knows meanwhile and cleared when it closes), with effort beside them. The CLI verbs extend and remark came with R8.3.
+  - date resolved: **2026-09-21 11:13**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.223: resolved Issue 2565: the documentation emitters write LaTeX and RST (docu)
   - issue author: Claude-JG
   - description:  itemDocsEmitter, structureDocsEmitter, utilityDocsEmitter, mainSystemExtensionDocsEmitter and the issue tracker write 8 .tex files (~43000 lines) and the .rst pages beside them, through the PyLatexRST helper that builds both formats in one walk over the model. The PDF does not survive 2.0 (decision D8) and the RST pipeline goes in step R7.1.7, so the emitters emit Markdown into docs/generated/ instead - one emitter at a time, each with its old outputs deleted in the same commit. This is where \#2545 (the LaTeX escaping of the emitters) and \#2550 (the dropped citations) end. See revision2026 step R7.1.6.
@@ -7704,10 +7715,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- <span class="textorange">open issue 2566:</span> the tracker can extend an issue, and open notes are triage
-  - issue author: Claude-JG
-  - description:  Maintainer request 2026-09-21. (1) EXTEND: the tracker can raise and close an issue and ChangeIssue can overwrite one field, but the thing that actually happens - the first analysis turns up more than the issue says - has nowhere to go except a second issue or a rewritten description. ExtendIssue(number, text, author) appends a dated paragraph and touches nothing else; the CLI verb extend comes with the CLI of R8.3, and in the JSON of R8.5 it becomes one entry of an updates list. (2) TRIAGE NOTES: measured 2026-09-21, 0 of the 270 open issues use the notes field while 614 resolved ones do, so notes is the place to record the way to go while an issue is open - duplicate of \#xxxx, marked for deprecation, check whether this is still a problem. For that to work ResolveIssue and AbandonIssue must REPLACE those notes rather than prepend them, because the resolution note is published in the release notes. (3) The effort field that makes the 270 open issues sortable is R8.5.2, with the new format. See revision2026 steps R8.3.3 and R8.5.2.
-  - date raised: 2026-09-21
 - <span class="textorange">open issue 2562:</span> nothing in the test suite ever calls UpdateGraphics
   - issue author: Claude-JG
   - description:  The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9.

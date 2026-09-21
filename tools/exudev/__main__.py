@@ -41,6 +41,7 @@ epilogText = """examples:
   exudev test --fast                the test suite against the fast module
   exudev perf --fast                the performance tests against the fast module
   exudev env                        which environment has which python, exudyn and numpy
+  exudev issue list --open          the open issues; "issue raise/resolve/remark" write
   exudev -n release                 print everything a release would run, and do nothing
 
 every command takes --help, -n/--dry-run and -v/--verbose; quiet is the default.
@@ -113,6 +114,105 @@ def BuildParser(subParsers, parents):
     parser.add_argument('--no-docs', action='store_true', help='--complete: skip the documentation')
     parser.add_argument('--no-tests', action='store_true', help='--complete: skip all tests')
     parser.set_defaults(function=commands.Build)
+
+
+#%%******************************************************************************************************
+#%%******************************************************************************************************
+def IssueParser(subParsers, globalParser):
+    """exudev issue <verb>: the issue tracker, which was driven by importing its module from its
+    own directory until revision2026 step R8.3. One driver for the build, the tests, the
+    documentation and the tracker (maintainer 2026-09-21).
+
+    Every verb that WRITES is a step with an action, so "exudev -n issue resolve 42 ..." prints
+    what it would do and changes nothing - which matters here, because resolving an issue bumps
+    the version of the package."""
+    issue = subParsers.add_parser('issue', parents=[globalParser],
+        help='the issue tracker: raise, extend, remark, resolve, abandon, show, list',
+        description='The issue tracker of tools/issueTracker/. It also owns the version: the micro '
+                    'number is the count of closed issues, so "resolve" and "abandon" rewrite '
+                    'version.txt, versionCpp.cpp, the version line of README.rst and the tracker '
+                    'pages. Runs in the current interpreter; no conda environment is involved.')
+    verbs = issue.add_subparsers(dest='issueVerb', metavar='<verb>')
+    issue.set_defaults(function=commands.Issue)
+
+    author = argparse.ArgumentParser(add_help=False)
+    author.add_argument('--author', default='JG', metavar='NAME',
+                        help='who does this (default JG); Claude passes Claude-JG')
+
+    raiseIssue = verbs.add_parser('raise', parents=[globalParser, author],
+        help='raise a new issue', description='The type is checked against the one list of types.')
+    raiseIssue.add_argument('title', help='the issue in one line')
+    raiseIssue.add_argument('description', help='what it is about, in prose')
+    raiseIssue.add_argument('--type', required=True, metavar='TYPE',
+                            help='BUG, FIX, CHANGE, EXTENSION, IMPROVEMENT, TESTING, DOCU, '
+                                 'EXAMPLE, CHECK, IDEA')
+    raiseIssue.add_argument('--effort', metavar='E', help='LOW, MEDIUM, HIGH, HUGE')
+    raiseIssue.add_argument('--priority', metavar='P', help='LOW, NORMAL, HIGH')
+    raiseIssue.add_argument('--file', metavar='PATH', help='the file it is about')
+    raiseIssue.add_argument('--line', metavar='N', help='the line it is about')
+
+    extend = verbs.add_parser('extend', parents=[globalParser, author],
+        help='append to the description of an open issue',
+        description='For what the first analysis turns up: it is appended with the date and the '
+                    'author, never overwritten, and a closed issue is refused.')
+    extend.add_argument('number', type=int)
+    extend.add_argument('text')
+
+    remark = verbs.add_parser('remark', parents=[globalParser, author],
+        help='write the working remarks of an open issue',
+        description='"duplicate of #2134", "part A solved, B open", "check whether this still '
+                    'happens": what is worth knowing while the issue is open. It is CLEARED when '
+                    'the issue closes and is never published.')
+    remark.add_argument('number', type=int)
+    remark.add_argument('text')
+    remark.add_argument('--replace', action='store_true',
+                        help='replace the remarks instead of appending to them')
+
+    resolve = verbs.add_parser('resolve', parents=[globalParser, author],
+        help='resolve an issue (BUMPS THE VERSION)',
+        description='The note is the release note of this issue and is published.')
+    resolve.add_argument('number', type=int)
+    resolve.add_argument('notes', help='the release note: what was done')
+
+    abandon = verbs.add_parser('abandon', parents=[globalParser, author], aliases=['close'],
+        help='close an issue WITHOUT resolving it',
+        description='"decided against", "no longer applies", "superseded": the reason is '
+                    'mandatory. It counts for the version like a resolved issue and appears in '
+                    'the release notes as neither resolved nor open.')
+    abandon.add_argument('number', type=int)
+    abandon.add_argument('reason')
+
+    show = verbs.add_parser('show', parents=[globalParser], help='one issue, field by field')
+    show.add_argument('number', type=int)
+
+    listIssues = verbs.add_parser('list', parents=[globalParser],
+        help='the issues, newest first, with filters',
+        description='The list a triage pass works from: "--open --type FIX --effort LOW".')
+    listIssues.add_argument('--open', action='store_true', help='only the open ones')
+    listIssues.add_argument('--type', metavar='TYPE')
+    listIssues.add_argument('--effort', metavar='E')
+    listIssues.add_argument('--priority', metavar='P')
+    listIssues.add_argument('--limit', type=int, default=40, metavar='N',
+                            help='how many to print (default 40; 0 for all)')
+
+    modify = verbs.add_parser('modify', parents=[globalParser],
+        help='set one field of an issue',
+        description='The enum fields are checked here as well as when an issue is raised.')
+    modify.add_argument('number', type=int)
+    modify.add_argument('field')
+    modify.add_argument('value')
+
+    mode = verbs.add_parser('mode', parents=[globalParser],
+        help='switch between release and development build mode',
+        description='Fact 26: the .dev1 suffix decides the version string, which modules setup.py '
+                    'builds (168.9 s against 58.1 s on Windows/cp313) and whether a plain '
+                    '"pip install exudyn" would take the version. This was a hand edit of '
+                    'issueTracker.py.')
+    group = mode.add_mutually_exclusive_group(required=True)
+    group.add_argument('--release', action='store_true', help="versionDev = '' - 1.11.223")
+    group.add_argument('--dev', action='store_true', help="versionDev = '.dev1' - 1.11.223.dev1")
+
+    return issue
 
 
 #%%******************************************************************************************************
@@ -237,6 +337,8 @@ def BuildParsers():
     clean.add_argument('--linux', action='store_true', help='also delete build/*linux*')
     clean.add_argument('--all', action='store_true', help='--dist and --linux together')
     clean.set_defaults(function=commands.Clean)
+
+    IssueParser(subParsers, globalParser)
 
     environments = subParsers.add_parser('env', parents=[globalParser, versionParser],
         help='show python, exudyn and numpy in each environment',

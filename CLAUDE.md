@@ -63,8 +63,12 @@ version.txt                               version — an OUTPUT of issueTracker.
    `README.rst` are all written by `issueTracker.py`. The micro version is *derived* from the
    count of resolved issues.
 3. **Never hand-edit `tools/issueTracker/trackerlog.txt`.** Text fields cannot contain a literal
-   `,` (the tool escapes it to `\;`). Always go through the API, and pass
-   **`author='Claude-JG'`** to both `RaiseIssue` and `ResolveIssue` — they set two separate fields.
+   `,` (the tool escapes it to `\;`). Go through **`exudev issue <verb>`** (`raise`, `extend`,
+   `remark`, `resolve`, `abandon`, `show`, `list`; `-n` shows what a verb would do) or through the
+   API it calls, and pass **`--author Claude-JG`** / `author='Claude-JG'` to both the raising and
+   the closing call — they set two separate fields. The notes of an **open** issue are
+   `workingRemarks` and are cleared when it closes; `releaseNotes` is written by `resolve` or
+   `abandon` and is published.
 4. **Never `git push`, to any remote.** Never commit without explicit approval — prepare the
    commit, show the overview, wait.
    **Never touch the network without saying so first.** GitHub requires 2FA, released by hand in a

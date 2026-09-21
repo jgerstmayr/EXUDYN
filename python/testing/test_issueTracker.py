@@ -90,7 +90,10 @@ def tracker(tmp_path, monkeypatch):
     module = IssueTracker()
     shutil.copy(os.path.join(trackerDirectory, 'trackerlog.txt'),
                 os.path.join(str(tmp_path), 'trackerlog.txt'))
-    monkeypatch.chdir(str(tmp_path))
+    #the tracker reads its directory from a module global since revision2026 step R8.3, so the
+    #tests point it at the copy instead of changing the working directory
+    monkeypatch.setattr(module, 'trackerDirectory', str(tmp_path))
+    monkeypatch.setattr(module, 'repositoryRoot', str(tmp_path))
     monkeypatch.setattr(module, 'UpdateDateAndVersion', lambda *args, **kwargs: None)
     monkeypatch.setattr(module, 'ConvertToHTML', lambda *args, **kwargs: None)
     monkeypatch.setattr(module, 'ConvertToMarkdown', lambda *args, **kwargs: None)
@@ -213,3 +216,134 @@ def testTheSchemaIsTheOneOfTheFile(tracker):
         assert name in formatLine[0], name
     assert header[-1].strip() == '# end of comment (' + str(tracker.nHeaderLines) + ' lines)'
     assert len(tracker.trackerItems) == tracker.numberOfItems == 16
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the version arithmetic (revision2026 step R8.3). These two functions are the ONLY definition of
+#what version.txt says - the micro number is the count of closed issues - and nothing covered them.
+
+def testTheMicroVersionIsTheCountOfClosedIssues(tracker):
+    """what GetMajorMinorMicroVersion returns has to be what the file contains"""
+    closed = len([issue for issue in tracker.GetIssues()
+                  if issue['status'].strip() in tracker.closedStatuses])
+    [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
+
+    assert major == 1
+    assert minor == len(tracker.versionResolved) - 2
+    assert micro == closed - tracker.versionResolved[-1]
+
+
+def testResolvingMovesTheVersionByOne(tracker):
+    """the one property the whole scheme rests on; it is also why a closed-not-resolved issue
+    still counts (see the note on closedStatuses)"""
+    before = tracker.GetMajorMinorMicroVersion()
+    tracker.ResolveIssue(OpenIssueNumber(tracker), notes='done', author='Claude-JG')
+    after = tracker.GetMajorMinorMicroVersion()
+
+    assert after[2] == before[2] + 1 and after[:2] == before[:2]
+
+
+def testAbandoningCountsLikeResolving(tracker):
+    before = tracker.GetMajorMinorMicroVersion()
+    tracker.AbandonIssue(OpenIssueNumber(tracker), reason='decided against', author='Claude-JG')
+    after = tracker.GetMajorMinorMicroVersion()
+
+    assert after[2] == before[2] + 1
+
+
+def testResolvedIssues2VersionOnAndBetweenTheBaselines(tracker):
+    """the release notes are grouped by what this returns, so its boundaries matter: a count
+    exactly ON a minor baseline belongs to that minor version with micro 0"""
+    baselines = tracker.versionResolved
+    total = baselines[-1] + 10                      #ten issues into the current minor version
+
+    #ten issues back from the total is the baseline itself: minor = the last one, micro = 0
+    assert tracker.ResolvedIssues2Version(10, total) == [len(baselines) - 2, 0]
+    #the newest issue is the highest micro of the current minor version
+    assert tracker.ResolvedIssues2Version(0, total) == [len(baselines) - 2, 10]
+    #one below the baseline is the PREVIOUS minor version, at its highest micro
+    [minor, micro] = tracker.ResolvedIssues2Version(11, total)
+    assert minor == len(baselines) - 3
+    assert micro == baselines[-1] - 1 - baselines[-2]
+
+
+def testVersionStringFollowsTheBuildMode(tracker, monkeypatch):
+    """fact 26: the .dev1 suffix decides what setup.py builds and whether pip would take it"""
+    [major, minor, micro] = tracker.GetMajorMinorMicroVersion()
+    plain = str(major) + '.' + str(minor) + '.' + str(micro)
+
+    monkeypatch.setattr(tracker, 'versionDev', '')
+    assert tracker.VersionString() == plain
+
+    monkeypatch.setattr(tracker, 'versionDev', '.dev1')
+    assert tracker.VersionString() == plain + '.dev1'
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the command line: exudev issue <verb> (revision2026 step R8.3)
+
+def ExudevCommands():
+    """tools/exudev/commands.py, loaded by path like the tracker above - a plain "import commands"
+    would read as a dependency on the PyPI package of that name (tools/checkExtras.py says so)"""
+    exudevDirectory = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                    '..', '..', 'tools', 'exudev'))
+    if exudevDirectory not in sys.path:
+        sys.path.insert(0, exudevDirectory)      #commands.py imports runner from there
+    specification = importlib.util.spec_from_file_location(
+        'exudevCommandsUnderTest', os.path.join(exudevDirectory, 'commands.py'))
+    module = importlib.util.module_from_spec(specification)
+    specification.loader.exec_module(module)
+    return module
+
+
+def IssueOptions(**fields):
+    """the options object the parser would build"""
+    class Options:
+        pass
+    options = Options()
+    for (name, value) in fields.items():
+        setattr(options, name, value)
+    return options
+
+
+def testEveryWritingVerbIsAStepWithAnActionAndANote():
+    """--dry-run must be able to print what a verb would do WITHOUT doing it; that is only true
+    if the work sits in the step's action and the note describes it"""
+    commands = ExudevCommands()
+    verbs = [IssueOptions(issueVerb='extend', number=1, text='t', author='JG'),
+             IssueOptions(issueVerb='remark', number=1, text='t', author='JG', replace=False),
+             IssueOptions(issueVerb='resolve', number=1, notes='n', author='JG'),
+             IssueOptions(issueVerb='abandon', number=1, reason='r', author='JG'),
+             IssueOptions(issueVerb='modify', number=1, field='effort', value='LOW'),
+             IssueOptions(issueVerb='mode', release=True, dev=False)]
+
+    for options in verbs:
+        steps = commands.Issue(options)
+        assert len(steps) == 1, options.issueVerb
+        assert steps[0].action is not None and steps[0].note, options.issueVerb
+        assert steps[0].argv is None, options.issueVerb   #nothing is run as a process
+
+
+def testListFiltersByStatusTypeAndEffort(tracker, capsys):
+    commands = ExudevCommands()
+    options = IssueOptions(open=True, type='FIX', effort=None, priority=None, limit=0)
+
+    commands.ListIssues(tracker, options)
+
+    printed = capsys.readouterr().out
+    expected = len([issue for issue in tracker.GetIssues()
+                    if issue['status'].strip() == 'RAISED' and issue['type'].strip() == 'FIX'])
+    assert str(expected) + ' of ' + str(expected) + ' matching issues' in printed
+
+
+def testShowPrintsTheFieldsThatAreFilled(tracker, capsys):
+    commands = ExudevCommands()
+    issue = tracker.GetIssue(OpenIssueNumber(tracker))
+
+    commands.ShowIssue(issue)
+
+    printed = capsys.readouterr().out
+    assert issue['issue'].strip() in printed
+    assert 'description:' in printed
+    #an empty field is not printed at all - a screen full of empty labels helps nobody
+    assert 'date resolved' not in printed
