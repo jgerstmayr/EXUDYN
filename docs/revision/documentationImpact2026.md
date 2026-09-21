@@ -73,7 +73,7 @@ The `\_` escapes in `trackerlog.md` are the tracker escaping issue text (#2545) 
 | **the issue tracker is JSON, the version is the count of closed issues** | R8.5, R8.4 | `WORKFLOW.md` | ok for developers; the *user* only needs "how do I read the changelog" |
 | **issue and pull request templates** | R8.1 | `CONTRIBUTING.md` | ok |
 | **GitHub CI**: wheels and documentation | R5.6, R1.7 | `WORKFLOW.md` | two words on the landing page (R7.2.5) |
-| **star imports changed** (`np`, `sin`, `graphics`, …) | R4.22.x | info document §14 | **the** user-facing change; the revisions chapter and R8.6 |
+| **star imports changed** (`np`, `sin`, `graphics`, …) | R4.22.x | info document §14 | **the** user-facing change; the revisions chapter and revision2026b step RG10.1 |
 | **removed and renamed API** | R4.x, R11.x | info document §14, 11 rows | same |
 
 ## D. What goes into the revisions chapter (R7.2.4)
@@ -81,7 +81,7 @@ The `\_` escapes in `trackerlog.md` are the tracker escaping issue text (#2545) 
 The chapter is short and is written for a **user upgrading from 1.11**, in this order:
 
 1. **what breaks**: the star-import change, removed and renamed names (info §14), and the checker
-   of R8.6 that finds them in a script;
+   of revision2026b step RG10.1 that finds them in a script;
 2. **what is new to use**: `python -m exudyn`, the environment variables that keep a run silent,
    the exception types, the fast module;
 3. **what is new to read**: the documentation is Markdown and is published for every release;

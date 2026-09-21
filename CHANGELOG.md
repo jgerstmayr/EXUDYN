@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.11 | McLaughlin | 239 | 1.11.239 |
+| 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
 | 1.8 | Jones | 82 | 1.8.81 |
@@ -26,6 +26,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.11 - McLaughlin (current)
 
+- **1.11.240** `CHANGE` the revision plan is finished, and what is open has nowhere to live (#2581) - raised by Claude-JG
+  - docs/revision/exudynRevisionPlan2026b.md: eleven groups, the twenty open steps moved into them with their full text, their cross-references rewritten (a reference to a moved step becomes its RG number, one to a finished step becomes 'revision2026 step R...'), and each step saying where it came from. docs/revision/exudynRevisionLog2026b.md is opened empty; the first log is closed. The finished plan says so in its header and carries the mapping table old number to new; its R9 section left entirely, R10 and R11 keep the steps that are done. The info document is shared by both plans and records the decisions D15 (the revision completes as 1.12; 2.0 is reserved for the work of RG8 and RG9) and D16 (1.12 is internal, 1.13 is the first public release). CLAUDE.md and docs/dev/README.md list both plans, and the numbering rule now says that a plan step is always cited with its prefix.
 - **1.11.239** `DOCU` the documentation announces the revision as 2.0, and it is 1.12 (#2580) - raised by Claude-JG
   - The published documentation names 1.12, never 2.0: the revisions chapter (with a note saying that the individual issues carry 1.11.x numbers because the micro version does not restart, that 1.12.0 marks completion, and that 1.13 is the first release that carries it), the landing page, the FAQ and the exception section. docs/dev/WORKFLOW.md gains the rule - a feature is announced by the release that ships it (since 1.12) while exact micro versions (1.11.238) belong in the changelog and in notes between developers - and states that 1.12 is internal, with 1.13 the first public release. The branch keeps its name v2-dev, which is historical, and the pre-push hook now says that nothing reaches GitHub before 1.13.
 - **1.11.238** `DOCU` the revision is not in the documentation (#2579) - raised by Claude-JG

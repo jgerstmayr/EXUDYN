@@ -12,8 +12,9 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
 | [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
-| [exudynRevisionPlan2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026.md) | the restructuring plan, in steps R0.1 ... R11.x |
-| [exudynRevisionLog2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md) | the record of the steps already closed — the revision / migration document |
+| [exudynRevisionPlan2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026b.md) | **the plan that is open**: what the revision did not finish and what comes next, by group RG1 ... RG11 |
+| [exudynRevisionPlan2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026.md) | the finished plan of the 2026 revision, phases R0 ... R11 — a record; the revision completed as 1.12 |
+| [exudynRevisionLog2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026b.md) / [exudynRevisionLog2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md) | what each closed step actually turned out to be — the second is closed with its plan, the first is where the work of revision2026b is written up |
 | [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | how to contribute from outside |
 | [CLAUDE.md](https://github.com/jgerstmayr/EXUDYN/blob/master/CLAUDE.md) | the working contract for Claude Code sessions |
 

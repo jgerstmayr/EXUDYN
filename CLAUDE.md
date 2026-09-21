@@ -7,9 +7,10 @@ Instructions for Claude Code sessions on this repository. Humans: see
 
 | file | what it is |
 |---|---|
-| [docs/revision/exudynRevisionInfo2026.md](docs/revision/exudynRevisionInfo2026.md) | **Standing context.** The v1.11.0 → v2.0 revision: rules and step numbering, measured facts, decisions taken, material for the user documentation. Correct a fact in place if it turns out wrong. |
-| [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **The steps**, by phase R0-R11, numbered `R<phase>.<step>` (sub-steps `R4.10.3`). Load it; cite steps by number. |
-| [docs/revision/exudynRevisionLog2026.md](docs/revision/exudynRevisionLog2026.md) | **What was already done**, in plan order. Consult it before re-deriving something; **never edit a closed entry** — if it turns out wrong, correct the facts in the info document and append a dated note. |
+| [docs/revision/exudynRevisionInfo2026.md](docs/revision/exudynRevisionInfo2026.md) | **Standing context, shared by both plans.** The 2026 revision (1.11.0 → 1.12) and what follows: rules and step numbering, measured facts, decisions taken, material for the user documentation. Correct a fact in place if it turns out wrong. |
+| [docs/revision/exudynRevisionPlan2026b.md](docs/revision/exudynRevisionPlan2026b.md) | **The steps that are open**, by group RG1-RG11, numbered `RG<group>.<step>`. This is where new work is planned. Cite as "revision2026b step RG8.1". |
+| [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **The finished plan**, phases R0-R11, numbered `R<phase>.<step>`. A record: the revision completed as 1.12 on 2026-09-22. Cite as "revision2026 step R4.10.3" — always with the prefix, because both plans have an `R3.4`. |
+| [docs/revision/exudynRevisionLog2026b.md](docs/revision/exudynRevisionLog2026b.md) / [exudynRevisionLog2026.md](docs/revision/exudynRevisionLog2026.md) | **What was already done** — the second is closed, the first is where a step of revision2026b is written up. Consult them before re-deriving something; **never edit a closed entry**: if it turns out wrong, correct the facts in the info document and append a dated note. |
 | [docs/dev/CODING_STYLE.md](docs/dev/CODING_STYLE.md) | Naming, abbreviations, headers, reporting errors from C++ (§10), what is deprecated |
 | [docs/dev/WORKFLOW.md](docs/dev/WORKFLOW.md) | Issue tracker, versioning, commit gates |
 
@@ -131,8 +132,9 @@ for approval. Details and the commit tiers are in [docs/dev/WORKFLOW.md](docs/de
 
 ## Ask before
 
-- Any minor or major version bump (1.11 → 1.12, → 2.0). Micro bumps happen automatically on
-  `ResolveIssue`.
+- Any minor or major version bump (`exudev issue bump`). Micro bumps happen automatically on
+  `ResolveIssue`. 1.12 is internal (D16); the next one is the **1.13** release, and 2.0 is
+  reserved for the work of revision2026b groups RG8 and RG9 (D15).
 - Deleting or moving tracked files.
 - Anything under `.github/workflows/`.
 - Anything that would end up on the public GitHub remote.

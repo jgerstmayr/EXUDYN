@@ -1,6 +1,8 @@
 # Exudyn Revision 2026 — general information
 
-General information on the v1.11.0 → v2.0 restructuring: how the revision documents work, the
+General information on the 2026 restructuring of Exudyn — planned as 1.11.0 → 2.0 and
+completed as **1.12** (D15) — and on the work that continues in **revision2026b**: how the
+revision documents work, the
 repository, the measured facts, the decisions and their reasons, rules, and the material that goes
 into the user documentation. Written to be loaded as standing context in a Claude Code session.
 
@@ -40,8 +42,9 @@ The revision has **three documents**:
 - **Permanent hierarchical numbers**: `R<phase>.<step>`, sub-steps `R4.10.3`, further splits
   `R4.10.3a`. A number is given when the step is planned and never changes; steps are appended to
   their phase.
-- **Citing**: inside the three documents `R4.10.3`; in issues and commit messages
-  "revision2026 step R4.10.3". A fact of §3 is cited as "revision2026 fact 19". `revision2026` is
+- **Citing**: in issues and commit messages **always with the prefix** — "revision2026 step
+  R4.10.3" for the finished plan, "revision2026b step RG8.1" or "revision2026b group RG1" for
+  the one that continues. A bare `R3.4` is ambiguous: both documents have one. A fact of §3 is cited as "revision2026 fact 19". `revision2026` is
   the name of this revision (one word, so it can be searched); a later one would be `revision2028`.
 - **In code** (package, definitions, generators, TestModels, C++) a comment cites the **issue number**
   (`#2411`), not the plan step: comments live for years, issue numbers are stable references.
@@ -98,7 +101,7 @@ Where the code lives, which branch is which, and how they relate. Established 20
 |---|---|---|
 | `C:\DATA\cpp\EXUDYN_git` | the working clone — `--depth 1` of GitHub `master` at `e44aca1`, 65 MB `.git` | **active**; all v2.0 work happens here |
 | `<internal-gitlab>/exudyn` | internal server, **full history** plus `v2-dev` | **active**; the sync point for the group |
-| GitHub `jgerstmayr/EXUDYN` | the public repository | frozen at 1.11.0 until v2.0 (decision D6) |
+| GitHub `jgerstmayr/EXUDYN` | the public repository | frozen at 1.11.0 until the **1.13** release (decisions D6 and D16) |
 | `C:\DATA\cpp\EXUDYN_github_git` | full 446-commit clone of GitHub, used once to seed the server | keep; not a working repository |
 | Archived old local repo | the only copy of the fine-grained internal history | zipped, read-only, plus a copy on the university server (step R1.2) |
 | Golden-file archives | generated set at `e44aca1`, and `goldenFiles_V1.11.5_910e2b5.zip` | zipped (step R0.3) |
@@ -107,8 +110,8 @@ Where the code lives, which branch is which, and how they relate. Established 20
 
 | branch | purpose | pushed to |
 |---|---|---|
-| `master` | mirrors public GitHub `master`; stays at 1.11.0 | GitHub, only at v2.0 release (step R1.8) |
-| `v2-dev` | **all v2.0 work**; may carry `WIP:` sync commits | internal `origin` |
+| `master` | mirrors public GitHub `master`; stays at 1.11.0 | GitHub, only at the 1.13 release (revision2026b step RG1.1) |
+| `v2-dev` | **all revision work**; the name is historical (the revision was planned as 2.0); may carry `WIP:` sync commits | internal `origin` |
 | `release/*` | release preparation | GitHub |
 
 ### Remotes
@@ -126,7 +129,7 @@ be developed on.
 
 - **Work on `v2-dev`. Never commit on `master`.** `master` is a read-only mirror of public state.
 - Push `v2-dev` to `origin` freely; that is the point of having it.
-- Nothing reaches GitHub before the v2.0 release (D6). `tools/hooks/pre-push` enforces this
+- Nothing reaches GitHub before the **1.13** release (D6, D16). `tools/hooks/pre-push` enforces this
   mechanically — see step R1.5 — but it only works where `core.hooksPath` is set, which is per clone.
 - Claude never pushes to any remote under any circumstances, and announces any network access
   before it happens (GitHub 2FA is released by hand and otherwise times out silently).
@@ -686,6 +689,9 @@ Moved to [`exudynRevisionPlan2026.md`](exudynRevisionPlan2026.md) on 2026-09-15.
 | D13 | **The status of an issue that was not resolved is `CLOSED`**, not `ABANDONED` (maintainer, 2026-09-21). `CLOSED` means *everything except RESOLVED* — obsolete, won't fix, duplicate, superseded, not reproducible, abandoned — and the kind is named in the mandatory reason, not in a status. | The two names have stood side by side since R8.7 and do not mean the same thing: *abandoned* is one reason among several, while the status says only that the issue is closed and was not resolved. Naming the kinds as statuses was rejected in R8.3.1 and stays rejected: the distinction is prose, and every extra status is another branch in every converter. Step R8.3.4. |
 | D14 | **The version a closed issue produced is stored in the issue** (`resolvedInVersion`) and checked against recomputation, instead of being derived on every run from a sort by `dateResolved` (maintainer, 2026-09-21). | The micro version is a running count of closed issues, so with pure recomputation one corrected date or one lost file silently renumbers versions that are already published, and nothing reports it. A number written once and recomputed later is a check; the same derivation run twice is not. It also makes R7.4's `CHANGELOG.md` a rendering job. Step R8.4(b). |
 
+| D15 | **The 2026 revision completes as 1.12, not 2.0** (maintainer, 2026-09-22). 2.0 is reserved for the deep work that is still open: compiled user items (revision2026b group RG8), the fully generic object, `exudyn.Parameter`, autodiff, the kinematics and inverse-dynamics solvers (RG9). | What the revision changed for a script — star imports exporting only `__all__`, eleven removed vector helpers, a few renames — is the kind of change every minor release carried, and the revisions chapter names each one. A major number promises an architecture change; promising it for a reorganisation spends the number and tells users something untrue. |
+| D16 | **1.12 is internal; 1.13 is the first public release** (maintainer, 2026-09-22). 1.12 marks the completion of the revision: an annotated tag, no PyPI wheels, no GitHub release, no promotion. | What is still missing is not code: the colleagues' integration round against real models (RG2.2), a documentation review by somebody who did not write it, and macOS wheels, which need a machine that arrives around 2026-10-20. Publishing before those is publishing something nobody outside this machine has run. |
+
 ### Open
 
 - Whether `exudynFast` also ships or stays user-built for the *default* wheel — currently
@@ -785,7 +791,7 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 
 > **Remotes (step R1.3, done): `origin` is the internal GitLab, `github` is public.** Work on
 > `v2-dev`, never commit to `master`. Pushing `v2-dev` to `origin` is the normal sync; nothing
-> reaches GitHub before the v2.0 release, and `tools/hooks/pre-push` enforces that. See §2a.
+> reaches GitHub before the 1.13 release, and `tools/hooks/pre-push` enforces that. See §2a.
 
 ---
 
@@ -838,7 +844,7 @@ triple-quoted literal.
 ## 14. Material for the user documentation
 
 <a id="api-changes-v2"></a>
-### API changes for the v2.0 release notes
+### API changes for the 1.12 release notes
 
 Breaking changes of the Python API, collected as they happen; step R7.4 carries them into
 `CHANGELOG.md`.

@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.239.dev1
+- Exudyn version = 1.11.240.dev1
 - last change = 2026-09-22
-- Number of issues = 2581
-- Number of resolved issues = 2312 (239 in current version)
+- Number of issues = 2582
+- Number of resolved issues = 2313 (240 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.240: resolved Issue 2581: the revision plan is finished, and what is open has nowhere to live (change)
+  - issue author: Claude-JG
+  - description: The plan of the 2026 revision reached its end: 195 of its 216 steps are done and the twenty that are not are no longer a phase of that revision - a plugin ABI, a rendering revision, a contact-friction difference between platforms and a user-script checker are themes that run in parallel for years, not stages of one march. Keeping them in a finished plan also means the documentation would have to be revised again for each of them. Revision2026b: a second plan, organised by GROUP rather than phase and numbered RG\<group\>.\<step\>, because R3.4 existing in two documents with different meanings is unreadable. Eleven groups - release and publication, testing and verification, docs, implementation problems and bugs, performance, graphics and rendering, Python user items, compiled C++ user items, structural core improvements, tooling and process, misc - with the twenty open steps moved into them, their references rewritten, and a mapping table on both sides. The info document stays shared: there is one set of facts about this repository, not two.
+  - **notes:** docs/revision/exudynRevisionPlan2026b.md: eleven groups, the twenty open steps moved into them with their full text, their cross-references rewritten (a reference to a moved step becomes its RG number, one to a finished step becomes 'revision2026 step R...'), and each step saying where it came from. docs/revision/exudynRevisionLog2026b.md is opened empty; the first log is closed. The finished plan says so in its header and carries the mapping table old number to new; its R9 section left entirely, R10 and R11 keep the steps that are done. The info document is shared by both plans and records the decisions D15 (the revision completes as 1.12; 2.0 is reserved for the work of RG8 and RG9) and D16 (1.12 is internal, 1.13 is the first public release). CLAUDE.md and docs/dev/README.md list both plans, and the numbering rule now says that a plan step is always cited with its prefix.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-22 00:57**, date raised: 2026-09-22, resolved by: Claude-JG
 - Version 1.11.239: resolved Issue 2580: the documentation announces the revision as 2.0, and it is 1.12 (docu)
   - issue author: Claude-JG
   - description: The revision of 2026 was planned as v1.11.0 to v2.0 and the documentation says so in five published pages. The maintainer decided on 2026-09-22 that this is wrong for users: the interface changes it brought - star imports exporting only \_\_all\_\_, eleven removed vector helpers, a few renames - are the kind every minor release carried, and they are easy to find. A major number promises more: compiled user items, the fully generic object, exudyn.Parameter, autodiff, the kinematics and inverse-dynamics solvers, all of which are still open. So the revision completes as 1.12 and 2.0 is reserved for that work. The second half of the decision: 1.12 is INTERNAL - no PyPI wheels, no GitHub release, no promotion - because the colleagues' integration round, the documentation and the macOS wheels still need weeks; the first public release is 1.13, and only then does master move. This issue is the wording pass: the published pages, the landing page, the branch prose, the pre-push hook message, and the rule that a feature is announced by the release that ships it while exact micro versions stay in the changelog and in developer notes.

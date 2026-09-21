@@ -1,13 +1,18 @@
 # Exudyn Revision Plan 2026
 
-The steps of the v1.11.0 → v2.0 revision, by phase. General information, facts, decisions and the
+**This plan is finished and is now a record.** The revision it describes completed as **1.12**
+on 2026-09-22; what it had not done moved to [`exudynRevisionPlan2026b.md`](exudynRevisionPlan2026b.md)
+(see *What moved to revision2026b* at the end), and new work is planned there.
+
+The steps of the 2026 revision, by phase. General information, facts, decisions and the
 numbering rules are in [`exudynRevisionInfo2026.md`](exudynRevisionInfo2026.md); what was done and
 found, in the same order as here, is in [`exudynRevisionLog2026.md`](exudynRevisionLog2026.md).
 
-Numbers are permanent: `R<phase>.<step>`, sub-steps `R4.10.3`, further splits `R4.10.3a`. A done
-step keeps one line here (date, result, link to the log); an open step keeps its full text. Cite
-steps outside these documents as "revision2026 step R4.10.3". New top-level steps and new phases are
-proposed to the maintainer before they are written down; sub-steps may be added.
+Numbers are permanent: `R<phase>.<step>`, sub-steps `R4.10.3`, further splits `R4.10.3a`; each
+done step keeps one line here (date, result, link to the log). Cite them **always with the
+prefix** "revision2026 step R4.10.3", because revision2026b numbers its steps
+`RG<group>.<step>` and a bare R-number is ambiguous between the two documents. New work is
+planned there, not here.
 
 ## R0 — Freeze current behaviour (~1 week) — do first  <!-- old Phase 0 -->
 
@@ -60,21 +65,6 @@ proposed to the maintainer before they are written down; sub-steps may be added.
     if it is deleted, CI stops silently and the repository looks unchanged. An unnoticed red
     pipeline is the same as no pipeline, so this cannot be closed until a deliberate failure has
     been seen to arrive by mail.
-
-<a id="r1-8"></a>
-**R1.8** At v2.0: fast-forward `master`, push once with tags. Ordinary push; clones, permalinks and
-    issue references stay valid; GitHub renders the layout change as renames.
-
-<a id="r1-9"></a>
-**R1.9** Retroactively tag past releases where the commits can be identified.
-
-<a id="r1-10"></a>
-**R1.10** *(phase R1, when there is material)* **Second internal GitLab repository for development-only
-    Python.** Models that never make it to `Examples`, one-off study scripts, and internal
-    experiments live there rather than in the public tree. Not created yet — do it when there is
-    something to put in it, not before. Note the consequence for step R1.4: with a destination that
-    is a *repository*, the sibling-directory and nested-repo shapes stop being the answer, and
-    `experimental/` in `.gitignore` is only a safety net for work in progress.
 
 ## R2 — Make the wheel boring (~2 weeks)  <!-- old Phase 1 -->
 
@@ -600,18 +590,6 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
 
     Either run the comparison again in check mode after regenerating, or let that step's summary
     line say **TIER 1 DRIFT** instead of *ok*.
-
-<a id="r5-18-9"></a>
-**R5.18.9** *(sub-step of R5.18, added 2026-09-20)* **Nothing in the test suite ever calls
-    `UpdateGraphics`** (#2562). The drawing code of every item — ~4,000
-    lines — runs only when the renderer runs, and every runner sets
-    `EXUDYN_SUPPRESS_UI_WINDOW_OPEN`. Moving all 79 of those functions in R11.4.4 could therefore be
-    verified only by the compiler and by comparing the text of the bodies before and after.
-
-    What would make it testable: a headless path that updates the graphics data of a model and
-    returns a summary of it (triangles, lines, texts per item). The data already exists in
-    `VisualizationSystemData`; only the binding and the comparison are missing.
-
 
 **R6.1** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r6-1) — *(phase R6)*
     **Every bare `except:` in `python/exudyn/` names what it catches** (#2539): 52 of them in 16
@@ -1659,17 +1637,6 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     that a page in this browser cannot reach the store through a rebound name. The store is the
     version of the package and the server has no authentication.
 
-<a id="r8-6"></a>
-**R8.6** *(phase R8, last step of this plan; maintainer request 2026-09-15)* **Checker for user scripts
-    after the v2.0 API changes.** Teaching folders and user projects hold Exudyn scripts written
-    against 1.x. A static checker (parses, never runs) reports per file and line: names the script
-    uses but no longer gets from a star import (`np`, `sin`, `graphics`, ...; step R4.22.3), removed
-    names with their replacement (R4.22.1, R4.22.2), and submodules used without their import, with the
-    import line to add. The name lists come from the modules' `__all__` and from the table
-    [API changes for the v2.0 release notes](exudynRevisionInfo2026.md#api-changes-v2), which is
-    complete only once the other steps are done - hence last. Decide then whether it ships in the
-    package (users run it) or stays in `tools/`. The plan continues in a new document after this step.
-
 <a id="r8-8"></a>
 **R8.8** **DONE 2026-09-19** *(maintainer session; integrated 2026-09-20)* **The installed package — [log](exudynRevisionLog2026.md#r8-8)
     gets a command line: `python -m exudyn <command>`** (#2558). `monitor`, `plot`, `info`, `demo`,
@@ -1685,116 +1652,11 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     This is the user-facing counterpart of `tools/exudev`, which stays the maintainer driver and
     keeps its rule of never importing exudyn.
 
-## R9 — Compiled user extensions (after R6)  <!-- old Phase 8 -->
-
-Additive; nothing earlier changes. Two shipped variants remain after step R2.10, so a plugin is
-bound to the one it was built against (`use_AVX2` changes `exuMemoryAlignment`); step R9.2 turns
-that from silent corruption into a refusal.
-
-**Founding policy**: a plugin author builds exudyn from source once, then builds the plugin with
-the same toolchain. Compiler, CRT and flags are then identical by construction, so no C-ABI shim
-is needed — plugins inherit from `CObject` directly.
-
-<a id="r9-1"></a>
-**R9.1** Make the registry cross-binary. `MainObjectFactory.h:97` holds its singleton in a
-    function-local static inside a header-only class template, so every binary gets a private
-    copy. Move the storage into one exported accessor in a single translation unit. The dispatch
-    path needs no change.
-
-<a id="r9-2"></a>
-**R9.2** Define an ABI fingerprint checked at registration: exudyn version, active macro set, compiler
-    id and version, `__cplusplus`, and on MSVC `_ITERATOR_DEBUG_LEVEL` plus the CRT model. Add
-    `sizeof` canaries for `Vector`, `CObject`, `std::string`, `std::function`. Refuse with a
-    message naming the mismatch. **The Debug/Release CRT case matters most** — the registry holds
-    `std::map<std::string, std::function<...>>`, and debugging a new object in VS is exactly what
-    a plugin author will do.
-
-<a id="r9-3"></a>
-**R9.3** Commit a reference plugin subdirectory built on every commit: minimum compile, a trivial
-    registered object, a handshake assertion, and a test that adds it to a system and solves.
-    **This is the synchronisation mechanism** — interface drift breaks your build, not a user's.
-
-<a id="r9-4"></a>
-**R9.4** Ship the plugin headers in the wheel; add `exudyn.get_include()` (numpy/pybind11 convention).
-    Headers only: `Linalg/`, `Utilities/`, item base classes, plugin interface header.
-
-<a id="r9-5"></a>
-**R9.5** Change duplicate handling in `RegisterClass` from `CHECKandTHROWstring` to a collected,
-    reported error. Otherwise two third parties choosing the same name abort `import exudyn`.
-
-<a id="r9-6"></a>
-**R9.6** Discovery at import: `~/.exudyn/plugins/` plus `EXUDYN_PLUGIN_PATH`, and
-    `importlib.metadata` entry points for pip-installed plugins. Read a manifest *before* loading
-    the library. Load each in isolation; a broken plugin must never break `import exudyn`. Never
-    put the plugin directory inside the installed package.
-
-<a id="r9-7"></a>
-**R9.7** Record loaded plugins and versions in the solver log and solution file header. A script
-    yielding different results on a colleague's machine because of a library in their home
-    directory is a reproducibility hazard.
-
-<a id="r9-8"></a>
-**R9.8** Extend the step R4.3 emitter to scaffold a plugin from a user's definition file — C++ skeleton,
-    Python dict-building class, `.pyi` stub — emitted into the user's package.
-
-<a id="r9-9"></a>
-**R9.9** Document three constraints: plugins are never unloaded or reloaded (a rebuilt plugin needs a
-    kernel restart in Spyder/Jupyter); plugin authors build from source; the Python
-    dict-builder class stays an explicit `from myplugin import ObjectMyThing` rather than being
-    injected into `exudyn.itemInterface`, so every script says where its item types came from.
-
 ## R10 — Deeper implementation problems (last)  <!-- old Phase 9 -->
 
 A holding phase for problems that are real, reproducible, and too deep to fix while the
 restructuring is in flight. They are recorded here rather than worked around silently, so the
 debt stays visible and each item can be closed on evidence.
-
-<a id="r10-1"></a>
-**R10.1** **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
-    on manylinux_2_28 / cp313 / numpy 2.4.6, against the Windows reference values (Linux tolerance
-    `3e-11`), relative error:
-
-    | test | relative error |
-    |---|---|
-    | `coordinateSpringDamperExt.py` | 3.4e-11 |
-    | `rigidBodySpringDamperIntrinsic.py` | 1.9e-10 |
-    | `rollingDiscTangentialForces.py` | 1.5e-09 |
-    | `contactSphereSphereTest.py` | 6.2e-09 |
-    | `sphereTriangleTest2.py` | 1.7e-05 |
-    | `generalContactCylinderTest.py` | 2.2e-05 |
-    | `generalContactFrictionTests.py` | 4.9e-04 |
-    | **`sphereTriangleTest.py`** | **1.6e+04** |
-
-    These are **reproducible**, which distinguishes them from the non-deterministic tests of
-    fact 24: they are not chaos, they are a difference with a cause that has not been found. The
-    spread suggests more than one cause — four sit just above a very tight tolerance and look like
-    ordinary floating-point divergence, three are 1e-5..1e-3 and are plausibly contact-state
-    decisions taken differently, and **`sphereTriangleTest.py` is in another category entirely**:
-    reference 3.8226, Linux 59370.97. Four orders of magnitude is a divergence or a blow-up, not
-    an accuracy difference, and it should be looked at first and separately.
-
-    Held in `UnresolvedOnLinux()` in `runTestSuiteRefSol.py`, excluded from the exit code **on
-    Linux only** — the reference values are the Windows ones, and Windows must keep passing them
-    (verified: 106/106 with the list active). Marked `L` in the per-test overview so a reader sees
-    why a failure did not fail the run. **The list should shrink; every entry removed is a real
-    fix.**
-
-    Note what this nearly cost: a file-name based sensitive-test list would have swept
-    `sphereTriangleTest.py` in with the chaotic contact tests, excluded it from the exit code
-    permanently, and hidden a four-order-of-magnitude divergence behind a policy decision. That is
-    the argument for populating these lists from measurement, restated as a concrete near miss.
-
-<a id="r10-2"></a>
-**R10.2** *(phase R10)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
-    computed contact point is stored in the parameter structure and read by the visualization, so
-    it is neither system state nor configuration-dependent and keeps no history.
-
-<a id="r10-3"></a>
-**R10.3** *(phase R10)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
-    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
-    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
-    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
-    in explicit integration where the flag makes it unnecessary.
 
 <a id="r10-4"></a>
 **R10.4** **DONE 2026-09-17** (verified, not worked on) — *(phase R10 candidate)*
@@ -1805,48 +1667,6 @@ debt stays visible and each item can be closed on evidence.
 
 ## R11 — Misc (came up during the revision)
 
-<a id="r11-1"></a>
-**R11.1** *(before the rendering revision)* **Remove OpenVR.** It **blocks the rendering revision**, it
-    is not testable in CI or by most users, and it carries a vendored SDK and a prebuilt binary.
-    Scope: `main/src/Graphics/OpenVRinterface.cpp` and its header, every `__EXUDYN_USE_OPENVR`
-    guard, the `--openvr` flag and `-lopenvr_api` in `setup.py`, `main/include/openVR/`, and
-    `main/libs/openvr_api.dll` + `.lib`. Users needing OpenVR take Exudyn <= 1.11; say so in the
-    release notes rather than leaving them to discover it. `docs/howTo/openVR.txt` was already
-    removed with step R3.6.
-
-<a id="r11-2"></a>
-**R11.2** *(before R11.3; maintainer decision 2026-09-16; revised 2026-09-17)* **A maintained
-    micro-benchmark for the linear algebra, inside Exudyn** (#2397, from step R2.16).
-
-    *The starting point named by the original text is gone.* This step used to say "replace the
-    dead sweep in `PyTest()` (`src/Pymodules/pythonTests.cpp`)"; that file was **deleted** in step
-    R5.4.11 (#2484) as outdated and misleading. Nothing is replaced, then - this step **writes** the
-    benchmark. What the deleted code was is still worth knowing, because it says what not to
-    repeat: it sat inside comment blocks and `if (0)`, `exu.Test()` was not even bound in a release
-    build (`EXUDYN_RELEASE`), and it timed hand-written loops rather than the vector code the
-    solver actually runs. It can be read in commit `ad54a93` if anyone wants it.
-
-    Write a benchmark that is compiled into **every** build and runs the **real** operations -
-    `Vector`/`ResizableVectorParallel` add, subtract, scale and `MultAdd`, `SlimVector`/`Matrix3D`
-    products, `ConstSizeMatrix` and matrix-vector products - over a size sweep that crosses
-    `ResizableVectorParallelThreadingLimit`, single- and multithreaded. Exposed as
-    `exudyn.special.RunLinalgBenchmark()` (flags for sizes, repeats, which groups), so the user
-    interface grows by one function; `exu.special` already exists (`PySpecial` in
-    `src/Main/Experimental.h`, bound from `definitions/pybindModule.py`). This also lets a user
-    measure their own CPU: which build flags and how many threads make sense there. The tool-level
-    benchmark `tools/benchmarks/avx2Benchmark.py` stays as the solver-level counterpart.
-
-    The pattern to follow is `src/Linalg/symbolicCppDemo.h` from step R5.4.12: named functions, one
-    topic each, compiled by being included, and a header that says what it is for.
-
-<a id="r11-3"></a>
-**R11.3** *(after R11.2)* **Make the hot linear algebra vectorizable.** Step R2.16 measured that the
-    solver time of long-vector models sits in `ODE2RHS` (73-91 % of the explicit runs), i.e. in
-    per-object 3x3 and short-vector work, not in the long-vector loops that AVX2 accelerates, and
-    `ConstSizeMatrix` carries its size at runtime, so the compiler cannot unroll it. Candidates:
-    compile-time sizes where the size is known, more use of homogeneous transformations in the
-    rigid-body kinematics, and the object loop of `ODE2RHS` itself. Steered by the benchmark of
-    R11.2; a compile-flag decision alone (step R2.16) cannot achieve this.
 <a id="r11-4"></a>
 **R11.4** **DONE 2026-09-20** (all five sub-steps) *(maintainer, 2026-09-19; before R7 is — [log](exudynRevisionLog2026.md#r11-4-1)
     finished)* **The layout tasks that the
@@ -1905,4 +1725,45 @@ debt stays visible and each item can be closed on evidence.
     certainly not very systematic, but I would rather vote to stay with the smaller changes rather
     than restructuring everything."* Every file here is a tracked file, so the move needs approval
     when the step runs; `msvc/cppsrc.vcxproj`, `sources.json` and `tools/gen_sources.py` follow.
+
+<a id="moved-to-2026b"></a>
+## What moved to revision2026b (2026-09-22)
+
+The 20 steps this plan had not finished are in
+[`exudynRevisionPlan2026b.md`](exudynRevisionPlan2026b.md) with their full text. That plan is
+organised by **group** rather than by phase and numbers its steps `RG<group>.<step>`; a
+citation of the old number resolves here.
+
+| was | is now | group |
+|---|---|---|
+| R1.8 | [RG1.1](exudynRevisionPlan2026b.md#rg1-1) | Release and publication |
+| R1.9 | [RG1.2](exudynRevisionPlan2026b.md#rg1-2) | Release and publication |
+| R1.10 | [RG1.3](exudynRevisionPlan2026b.md#rg1-3) | Release and publication |
+| R5.18.9 | [RG2.1](exudynRevisionPlan2026b.md#rg2-1) | Testing and verification |
+| R8.6 | [RG10.1](exudynRevisionPlan2026b.md#rg10-1) | Tooling and process |
+| R9.1 | [RG8.1](exudynRevisionPlan2026b.md#rg8-1) | Compiled C++ user items |
+| R9.2 | [RG8.2](exudynRevisionPlan2026b.md#rg8-2) | Compiled C++ user items |
+| R9.3 | [RG8.3](exudynRevisionPlan2026b.md#rg8-3) | Compiled C++ user items |
+| R9.4 | [RG8.4](exudynRevisionPlan2026b.md#rg8-4) | Compiled C++ user items |
+| R9.5 | [RG8.5](exudynRevisionPlan2026b.md#rg8-5) | Compiled C++ user items |
+| R9.6 | [RG8.6](exudynRevisionPlan2026b.md#rg8-6) | Compiled C++ user items |
+| R9.7 | [RG8.7](exudynRevisionPlan2026b.md#rg8-7) | Compiled C++ user items |
+| R9.8 | [RG8.8](exudynRevisionPlan2026b.md#rg8-8) | Compiled C++ user items |
+| R9.9 | [RG8.9](exudynRevisionPlan2026b.md#rg8-9) | Compiled C++ user items |
+| R10.1 | [RG4.1](exudynRevisionPlan2026b.md#rg4-1) | Implementation problems and bugs |
+| R10.2 | [RG4.2](exudynRevisionPlan2026b.md#rg4-2) | Implementation problems and bugs |
+| R10.3 | [RG4.3](exudynRevisionPlan2026b.md#rg4-3) | Implementation problems and bugs |
+| R11.1 | [RG6.1](exudynRevisionPlan2026b.md#rg6-1) | Graphics and rendering |
+| R11.2 | [RG5.1](exudynRevisionPlan2026b.md#rg5-1) | Performance |
+| R11.3 | [RG5.2](exudynRevisionPlan2026b.md#rg5-2) | Performance |
+
+The phase section **R9** (compiled user extensions) left entirely — all nine of its steps
+were open. **R10** keeps R10.4 and **R11** keeps R11.4 with its five sub-steps, all done. **R3.5** stays here: it
+is a decision — the proposal was withdrawn and the remainder is the maintainer's own work —
+not open work.
+
+Everything else in this document is finished. 195 of its steps carry a link to the entry that
+describes them in [`exudynRevisionLog2026.md`](exudynRevisionLog2026.md), which is closed as
+well: the work of revision2026b is logged in
+[`exudynRevisionLog2026b.md`](exudynRevisionLog2026b.md).
 

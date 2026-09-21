@@ -1,0 +1,15 @@
+{
+  "number": 2581,
+  "title": "the revision plan is finished, and what is open has nowhere to live",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "The plan of the 2026 revision reached its end: 195 of its 216 steps are done and the twenty that are not are no longer a phase of that revision - a plugin ABI, a rendering revision, a contact-friction difference between platforms and a user-script checker are themes that run in parallel for years, not stages of one march. Keeping them in a finished plan also means the documentation would have to be revised again for each of them. Revision2026b: a second plan, organised by GROUP rather than phase and numbered RG<group>.<step>, because R3.4 existing in two documents with different meanings is unreadable. Eleven groups - release and publication, testing and verification, docs, implementation problems and bugs, performance, graphics and rendering, Python user items, compiled C++ user items, structural core improvements, tooling and process, misc - with the twenty open steps moved into them, their references rewritten, and a mapping table on both sides. The info document stays shared: there is one set of facts about this repository, not two.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 00:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "docs/revision/exudynRevisionPlan2026b.md: eleven groups, the twenty open steps moved into them with their full text, their cross-references rewritten (a reference to a moved step becomes its RG number, one to a finished step becomes 'revision2026 step R...'), and each step saying where it came from. docs/revision/exudynRevisionLog2026b.md is opened empty; the first log is closed. The finished plan says so in its header and carries the mapping table old number to new; its R9 section left entirely, R10 and R11 keep the steps that are done. The info document is shared by both plans and records the decisions D15 (the revision completes as 1.12; 2.0 is reserved for the work of RG8 and RG9) and D16 (1.12 is internal, 1.13 is the first public release). CLAUDE.md and docs/dev/README.md list both plans, and the numbering rule now says that a plan step is always cited with its prefix.",
+  "resolvedInVersion": "1.11.240"
+}
