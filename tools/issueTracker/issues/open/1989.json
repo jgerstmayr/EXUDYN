@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque",
   "dateRaised": "2025-04-15",
   "deadline": "2025-10-12"

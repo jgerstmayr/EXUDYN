@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes",
   "dateRaised": "2026-01-13",
   "deadline": "2026-07-12"

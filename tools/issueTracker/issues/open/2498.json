@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "TESTING",
   "priority": "LOW",
+  "effort": "HIGH",
   "description": "Successor of #1142. What that issue asked for is now covered for PARAMETERS - parameterConversionTest.py writes a fixed set of probe values into every parameter of every item and compares the outcome with a reference (revision2026 step R4.4.3.1) - and for the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4). What is still not tested per item type is its FUNCTIONS: that every object implements what its type requires (ComputeODE2LHS; GetOutputVariable; GetAccessFunctionTypes; ...) and that the output variables it advertises can actually be read. That needs the definitions database as its source of truth; like the parameter test does.",
   "dateRaised": "2026-09-17",
   "deadline": "2027-03-16",

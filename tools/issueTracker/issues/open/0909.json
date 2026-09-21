@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add functionality to store/restore contact state for start of time step",
   "dateRaised": "2022-02-02",
   "deadline": "2022-04-03"

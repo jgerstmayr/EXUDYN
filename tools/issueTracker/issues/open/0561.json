@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "setup new generalized alpha integrator with GGL",
   "dateRaised": "2021-01-26",
   "deadline": "2021-03-27"

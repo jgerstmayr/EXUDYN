@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "Test improved contact integration method with resolution of switching and correction of integration of discontinuous forces; compare to switching point resolution",
   "dateRaised": "2022-03-26",
   "deadline": "2022-05-25"

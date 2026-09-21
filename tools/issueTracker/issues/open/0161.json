@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "Add template specializations to SlimArray<T,2..4> similar to SlimVector to speed up initialization of short vectors",
   "dateRaised": "2019-06-02",
   "deadline": "2019-08-01"

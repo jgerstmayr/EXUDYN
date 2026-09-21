@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "priority": "HIGH",
+  "effort": "LOW",
   "description": "add option addReferenceCoordinates=False to include reference value in coordinate",
   "dateRaised": "2022-03-16",
   "deadline": "2022-05-15"

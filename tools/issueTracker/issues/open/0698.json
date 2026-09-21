@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "HIGH",
   "description": "unify constraint.GetAvailableJacobians() with jacobian computations in joints, in order to avoid large overheads for jacobian assembly",
   "dateRaised": "2021-07-01",
   "deadline": "2021-08-30"

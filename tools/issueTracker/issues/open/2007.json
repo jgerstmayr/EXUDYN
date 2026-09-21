@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add special timer for Python user functions, as solver timer for python does not include user functions",
   "dateRaised": "2025-05-10",
   "deadline": "2025-11-06"

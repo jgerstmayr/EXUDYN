@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "MEDIUM",
   "description": "Check if const consistency is realizable",
   "dateRaised": "2019-06-07",
   "deadline": "2019-08-06"

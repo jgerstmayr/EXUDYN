@@ -202,6 +202,11 @@ def IssueParser(subParsers, globalParser):
     modify.add_argument('field')
     modify.add_argument('value')
 
+    verbs.add_parser('triage', parents=[globalParser],
+        help='the open issues by type and effort',
+        description='The table a triage pass works from: how many open issues of each type are '
+                    'LOW, MEDIUM, HIGH, HUGE - and how many are not classified yet.')
+
     mode = verbs.add_parser('mode', parents=[globalParser],
         help='switch between release and development build mode',
         description='Fact 26: the .dev1 suffix decides the version string, which modules setup.py '

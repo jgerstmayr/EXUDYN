@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add dg/dq*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin",
   "dateRaised": "2021-02-07",
   "deadline": "2021-04-08"

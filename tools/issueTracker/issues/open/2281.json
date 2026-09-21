@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries",
   "dateRaised": "2026-02-11",
   "deadline": "2026-08-10"

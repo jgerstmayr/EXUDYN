@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.226.dev1
+- Exudyn version = 1.11.227.dev1
 - last change = 2026-09-21
 - Number of issues = 2569
-- Number of resolved issues = 2299 (226 in current version)
+- Number of resolved issues = 2300 (227 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.227: resolved Issue 2548: generated and hand-written documentation share directories and nothing says which is which (docu)
+  - issue author: Claude-JG
+  - description: Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.
+  - **notes:** One directory is either generated or hand-written and says which. docs/generated/ holds everything the emitters and the issue tracker write, each file saying so in its first line, with a hand-written README.md naming what writes each sub-directory and linguist-generated in .gitattributes; docs/manual/ is the hand-written user manual; index.md and README.rst are hand-written. docs/RST/ and docs/theDoc/ are deleted with the converters (R7.1.7), the figures moved to docs/figures/, and rule 1 of CLAUDE.md is one sentence.
+  - date resolved: **2026-09-21 13:09**, date raised: 2026-09-19, resolved by: Claude-JG
 - Version 1.11.226: resolved Issue 2568: the issues are one JSON file each (change)
   - issue author: Claude-JG
   - description: trackerlog.txt was one 723 KB file of comma-separated lines in which a text field could not contain a comma (the tracker escaped it to backslash-semicolon), every change rewrote the whole file, and two people editing two issues produced one merge conflict. The 2,568 issues are now one JSON file per open or recently closed issue in tools/issueTracker/issues/ and one file per year for the older ones, with meta.json holding the date of the last change. Decided with the maintainer on 2026-09-21: the files live beside the tool rather than in docs/dev/, and the field names are camelCase. The micro version is the count of closed issues, so each archive file states its own closedCount and tools/checkIssues.py - new in exudev generate --all-checks - compares the count with the files, the version with the count and version.txt with the version. See revision2026 step R8.5.
@@ -7724,800 +7729,1057 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textorange">open issue 2562:</span> nothing in the test suite ever calls UpdateGraphics
   - issue author: Claude-JG
   - description: The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9.
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-09-20
 - <span class="textorange">open issue 2550:</span> citations are silently dropped from the HTML documentation
   - issue author: Claude-JG
   - description: latexConverter.py removes every cite command without replacement, so the rendered pages contain sentences such as "similar but much more advanced and modular as earlier solvers by the main developer ." with the references simply gone - visible today in LHSRHSNamingConventionsInEXUDYN and in the theory chapter. The Markdown conversion of step R7.1.5 writes the citation keys in brackets instead, which is readable but not linked. The documentation needs a references page fed from docs/theDoc/bibliographyDoc.bib, and the keys need to point at it; sphinxcontrib-bibtex would do it as a dev-only dependency.
-  - date raised: 2026-09-19
-- <span class="textred">open issue 2548:</span> generated and hand-written documentation share directories and nothing says which is which
-  - issue author: Claude-JG
-  - description: Every .rst in the repository is generated - the ~498 files in docs/RST/ and index.rst and README.rst at the root - and docs/theDoc/ mixes 9 hand-written .tex chapters with 8 emitter-written ones plus the LaTeX build products. No banner, no separate directory and no gitattributes entry marks a generated file: in step R7.1.4 a hand edit to index.rst was silently reverted by the next regenerate run. Decide the target layout before the Markdown conversion of R7.1.5 writes files anywhere: one directory is either generated or hand-written, every generated file carries a banner in its first line, and the index is hand-written. See revision2026 step R7.1.8.
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-19
 - <span class="textorange">open issue 2541:</span> exudyn.config and exudyn.special are in no stub file
   - issue author: Claude-JG
   - description: exudyn.config is the run-time settings object (outputDirectory, printToConsole, suppressWarnings, precision) and exudyn.special holds the rarely needed corners; neither the objects nor their C++ classes Config and Special appear in python/exudyn/\_\_init\_\_.pyi, so no IDE completes exudyn.config.outputDirectory. The gap is older than this issue - stubtest simply did not check them while they arrived through a star import, and step R6.2 made them plain package attributes, which exposed it. Both are in the stubtest backlog with this number. The fix is generator work: emit Config and Special like the other bound structures.
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-19
 - <span class="textblue">open issue 2511:</span> the ROS examples were last tested in 2023 and nobody can run them
   - issue author: Claude-JG
   - description: ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-09-18
 - <span class="textred">open issue 2508:</span> checkExtras passed locally and failed in CI because of an untracked file
   - issue author: Claude-JG
   - description: tools/checkExtras.py built its set of "local module names" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: "import pytest" in test\_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported "UNCOVERED IMPORTS: pytest ... needed by \[tests\]" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in \[dependency-groups\]; not in any extra.
+  - effort: LOW (within 2 hours)
   - date raised: 2026-09-18
 - <span class="textblue">open issue 2498:</span> no test checks the member functions an item type must provide
   - issue author: Claude-JG
   - description: Successor of \#1142. What that issue asked for is now covered for PARAMETERS - parameterConversionTest.py writes a fixed set of probe values into every parameter of every item and compares the outcome with a reference (revision2026 step R4.4.3.1) - and for the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4). What is still not tested per item type is its FUNCTIONS: that every object implements what its type requires (ComputeODE2LHS; GetOutputVariable; GetAccessFunctionTypes; ...) and that the output variables it advertises can actually be read. That needs the definitions database as its source of truth; like the parameter test does.
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-09-17
 - <span class="textblue">open issue 2497:</span> 59 bare except: remain in the shipped package
   - issue author: Claude-JG
   - description: Successor of \#1988; which asked to change "except:" into "except Exception as e:" so that a KeyboardInterrupt passes through a long parameter variation. The change was never made; but it is no longer invisible: ruff E722 lists every one of the 59 with file and message in tools/ci/ruffBaseline.txt since revision2026 step R5.5.3; and a NEW one fails the check. Each needs a decision on which exception was actually meant; which is why they were baselined rather than rewritten. revision2026 step R6.1
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-17
 - <span class="textblue">open issue 2455:</span> pydoclint reports two violations in exudyn/\_\_init\_\_.py RequireVersion
   - issue author: Claude-JG
   - description: found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
+  - effort: LOW (within 2 hours)
   - date raised: 2026-09-16
 - <span class="boldblue">open issue 2423:</span> every C++ user error inspects the Python source for its file and line
   - issue author: Claude-JG
   - description: PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (revision2026 step R4.4.3.1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f\_code.co\_filename; f\_lineno) gives the same information without the scan. revision2026 step R6.6.
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-14
 - <span class="boldblue">open issue 2413:</span> ObjectContactConvexRoll.pContact is computed state stored in parameters
   - issue author: Claude-JG
   - description: pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).
+  - effort: LOW (within 2 hours)
   - date raised: 2026-09-13
 - <span class="textorange">open issue 2400:</span> computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
   - issue author: Claude-JG
   - description: the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-12
 - <span class="boldblue">open issue 2350:</span> MacOS
   - description: fix problem in raytracerNOGLFWtest.py on MacOS
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-08-05
 - <span class="boldblue">open issue 2349:</span> shells
   - description: adjust comments to fit to internal exudyn format
+  - effort: LOW (within 2 hours)
   - date raised: 2026-08-05
 - <span class="boldblue">open issue 2342:</span> itemInterface
   - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-04-17
 - <span class="boldblue">open issue 2337:</span> CreateCoordinateConstraint
   - description: change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-04-06
 - <span class="boldblue">open issue 2328:</span> ANCFCable
   - description: add documentation
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-03-24
 - <span class="boldblue">open issue 2326:</span> SliderCrank Benchmark
   - description: adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model
+  - effort: LOW (within 2 hours)
   - date raised: 2026-03-23
 - <span class="boldblue">open issue 2325:</span> GenericJoint
   - description: improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
+  - effort: LOW (within 2 hours)
   - date raised: 2026-03-23
 - <span class="boldblue">open issue 2321:</span> FEMinterface
   - description: meshes imported from NGsolve lead to triangles with wrong orientation as compared to GraphicsData
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-03-03
 - <span class="boldblue">open issue 2319:</span> FEM
   - description: extend interface to 6-noded triangles to represent quadratic shape functions / meshOrder=2 in ngsolve directly
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-03-02
 - <span class="boldblue">open issue 2318:</span> GraphicsData
   - description: extend GraphicsData (C++ and interface) for 6-noded triangles to represent curved geometries with option for fine-interpolation and smooth normals
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-03-02
 - <span class="boldblue">open issue 2317:</span> Add ObjectJointSliding
   - description: Add implementation and tests for SlidingJoint with thick ANCF beam
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-03-02
 - <span class="boldblue">open issue 2316:</span> Add ObjectJointSliding
   - description: Add tests for SlidingJoint with thin ANCF cable
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-03-02
 - <span class="boldblue">open issue 2315:</span> Add ObjectJointSliding
   - description: Extend SlidingJoint for rotation case
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-03-02
 - <span class="boldblue">open issue 2309:</span> ZoomAll
   - description: does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-02-19
 - <span class="boldblue">open issue 2308:</span> shadows
   - description: in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-02-19
 - <span class="boldblue">open issue 2305:</span> graphics
   - description: Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList
+  - effort: LOW (within 2 hours)
   - date raised: 2026-02-15
 - <span class="boldblue">open issue 2304:</span> graphics
   - description: add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation
+  - effort: LOW (within 2 hours)
   - date raised: 2026-02-15
 - <span class="boldblue">open issue 2281:</span> graphics
   - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-02-11
 - <span class="boldblue">open issue 2278:</span> linux GLFW
   - description: check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?
+  - effort: LOW (within 2 hours)
   - date raised: 2026-02-09
 - <span class="boldblue">open issue 2277:</span> linux GLFW
   - description: check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux
+  - effort: LOW (within 2 hours)
   - date raised: 2026-02-09
 - <span class="boldblue">open issue 2267:</span> GetURDFrobotData
   - description: add detailed description to function, in particular to returned dict
+  - effort: LOW (within 2 hours)
   - date raised: 2026-02-04
 - <span class="boldblue">open issue 2259:</span> SystemContainer
   - description: add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics
+  - effort: LOW (within 2 hours)
   - date raised: 2026-02-02
 - <span class="boldblue">open issue 2247:</span> camera
   - description: add documentation for model-centric and camera-centric views
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-31
 - <span class="boldblue">open issue 2244:</span> GLFWClient
   - description: add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-31
 - <span class="boldblue">open issue 2238:</span> explicit solver
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-27
 - <span class="boldblue">open issue 2237:</span> MacOS
   - description: Check Spyder-issues and crashes with PlotSensor on MacOS systems
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-26
 - <span class="boldblue">open issue 2236:</span> linux
   - description: fix wrong initialization for time in renderer on linux systems
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-26
 - <span class="boldblue">open issue 2235:</span> computeInitialAccelerations
   - description: add test for initial accelerations and velocities
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-23
 - <span class="boldblue">open issue 2234:</span> computeInitialAccelerations
   - description: add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-21
 - <span class="boldblue">open issue 2230:</span> ANCFThinPlate
   - description: add hemispheric test problem; compare to literature
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-18
 - <span class="boldblue">open issue 2229:</span> ANCFThinPlate
   - description: add cylindrical test problem; compare to ANCFCable2D
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-18
 - <span class="boldblue">open issue 2228:</span> Symmetric basis
   - description: add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-18
 - <span class="boldblue">open issue 2226:</span> ANCFThinPlate
   - description: compute optimal slopes scaling in ShellMesh functionality
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-16
 - <span class="boldblue">open issue 2225:</span> ANCFThinPlate
   - description: add documentation of equations
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-16
 - <span class="boldblue">open issue 2223:</span> symbolic
   - description: add vector and matrix functionality for Diff()
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-01-16
 - <span class="boldblue">open issue 2219:</span> NodePointSlope12
   - description: correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-13
 - <span class="boldblue">open issue 2218:</span> ANCFThinPlate
   - description: add access function for rotation
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-13
 - <span class="boldblue">open issue 2208:</span> GeometricallyExactBeam2D
   - description: add test for 3-node element
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-08
 - <span class="boldblue">open issue 2205:</span> perspective
   - description: test moving along a scene when changing the centerPoint
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-08
 - <span class="boldblue">open issue 2204:</span> perspective
   - description: check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-08
 - <span class="boldblue">open issue 2203:</span> MainSystem.Inspect
   - description: add function MainSystem.Inspect(itemIndex, what, optArgs) which retrieves additional info on items like available output variables, node/marker types, etc.
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-07
 - <span class="boldblue">open issue 2202:</span> OutputVariable
   - description: add kinetic and potential energy
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-07
 - <span class="boldblue">open issue 2200:</span> ANCFThinPlate
   - description: add test model
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-07
 - <span class="boldblue">open issue 2194:</span> OpenGL view
   - description: add manual offsets for zNear and zFar, to adjust visible objects
+  - effort: LOW (within 2 hours)
   - date raised: 2026-01-06
 - <span class="boldblue">open issue 2186:</span> RedrawAndSaveImage
   - description: add raytracer flag and make working offline
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-04
 - <span class="boldblue">open issue 2184:</span> MarkerSuperElementRigid
   - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-04
 - <span class="boldblue">open issue 2183:</span> SparseTripletMatrix
   - description: add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-04
 - <span class="boldblue">open issue 2182:</span> ObjectFFRFreducedOrder
   - description: improve efficiency by using internal sparse triplets for mass matrix in C++ code
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-01-04
 - <span class="boldblue">open issue 2155:</span> OpenGL
   - description: add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-11-02
 - <span class="boldblue">open issue 2154:</span> OpenGL
   - description: add textures for triangle lists, using texture reference number and coordinates, according to standard format
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-11-02
 - <span class="boldblue">open issue 2140:</span> linux
   - description: fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-07-10
 - <span class="boldblue">open issue 2131:</span> ObjectContact
   - description: add rolling resistance
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-07-05
 - <span class="boldblue">open issue 2130:</span> ObjectContact
   - description: consider changing contact objects like SphereSphere, SphereTriangle, etc. to switch in PostNewtonStep based on force sign rather than gap sign; possibly use global switch
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-07-05
 - <span class="boldblue">open issue 2120:</span> Screw graphics
   - description: add function to generate graphics for screw
+  - effort: LOW (within 2 hours)
   - date raised: 2025-07-02
 - <span class="boldblue">open issue 2110:</span> solver
   - description: add flag for local frame implicit solver, computing jacobians in local frame and using specific step updates
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-06-24
 - <span class="boldblue">open issue 2109:</span> DOPRI5
   - description: DOPRI5 automatic step size not working well with discontinuities (ContactSphereSphere, etc.)
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-06-22
 - <span class="boldblue">open issue 2106:</span> Chain drive
   - description: add function to create chain gears as well as geometry from chain drive; calculate length similar to reeving system, but with two chains (and kinck) to compensate length
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-06-21
 - <span class="boldblue">open issue 2097:</span> ContactSphereTriangle
   - description: add frictionStiffness similar to bristle model in ANCF contact
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-06-15
 - <span class="boldblue">open issue 2075:</span> GetDictionary
   - description: add read/write dict access for new structures SC.renderer and exudyn.config
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-06-02
 - <span class="boldblue">open issue 2017:</span> ContactCurveCircles
   - description: implement polynomial enhancements
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-05-13
 - <span class="boldblue">open issue 2016:</span> ContactCurveCircles
   - description: add output variables
+  - effort: LOW (within 2 hours)
   - date raised: 2025-05-11
 - <span class="boldblue">open issue 2007:</span> solver timers
   - description: add special timer for Python user functions, as solver timer for python does not include user functions
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-05-10
 - <span class="boldblue">open issue 1989:</span> Body force sensor
   - description: add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-04-15
 - <span class="boldblue">open issue 1977:</span> solver
   - description: check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-03-30
 - <span class="boldblue">open issue 1956:</span> items docu
   - description: add representative figure to each item
+  - effort: HUGE (above 40 hours)
   - date raised: 2025-02-09
 - <span class="boldblue">open issue 1954:</span> CreateLinearSpringDamper
   - description: add test example
+  - effort: LOW (within 2 hours)
   - date raised: 2025-02-05
 - <span class="boldblue">open issue 1953:</span> CreateLinearSpringDamper
   - description: add create function to MainSystem
+  - effort: LOW (within 2 hours)
   - date raised: 2025-02-05
 - <span class="boldblue">open issue 1947:</span> GeneralContact
   - description: check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2025-02-03
 - <span class="boldblue">open issue 1941:</span> URDF
   - description: include parent names and create correct parent indices in URDF files by using link name lists; store list of base link names as well and do reordering
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-11-12
 - <span class="boldblue">open issue 1932:</span> URDF import
   - description: GetURDFrobotData: add tool transformations accordingly (currently shown with no consecutive transformations)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-11-10
 - <span class="boldblue">open issue 1931:</span> URDF import
   - description: GetURDFrobotData: check for import of other scene information than mesh; check for import of collision
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-11-10
 - <span class="boldblue">open issue 1924:</span> ContactCurveCircles
   - description: extend to frictional contact
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-11-04
 - <span class="boldblue">open issue 1920:</span> ContactSphereSphere
   - description: add autodiff Jacobian
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-11-02
 - <span class="boldblue">open issue 1912:</span> co-simulation
   - description: add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-26
 - <span class="boldblue">open issue 1910:</span> total coordinates
   - description: consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-10-26
 - <span class="boldblue">open issue 1907:</span> particles
   - description: add improved functions to create densly packed particles in box using simulation
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-19
 - <span class="boldblue">open issue 1906:</span> particles
   - description: add improved functions to create more densly packed particles using advanced geometrical considerations for randomized radius spherical particles
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-19
 - <span class="boldblue">open issue 1905:</span> simulator coupling
   - description: add test model for simulator coupling using mbs0 with joints and implicit integrator coupled to mbs1 with explicit integration
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-19
 - <span class="boldblue">open issue 1904:</span> Reference/link data
   - description: evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-10-19
 - <span class="boldblue">open issue 1898:</span> particles
   - description: Add Python functionality for periodic walls, using pairs of walls at which particles are duplicated to the (-) side of a wall as soon as they transverse a periodic wall at the (+) side
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-16
 - <span class="boldblue">open issue 1896:</span> GeneralContact
   - description: add option to completely freeze searchTree bins if all velocities are below a certain threshold; mark these contact objects as inactive by checking activity from time to time; reactivate bins only if item at boundary exceeds velocity limit at active boundary
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-16
 - <span class="boldblue">open issue 1894:</span> GeneralContact
   - description: add n\*max(velocity)\*stepSize safety for bounding box, in order to update some objects less frequently (when max dist is reached)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-16
 - <span class="boldblue">open issue 1892:</span> Load/Save HDF5
   - description: Add Data structures like MatrixContainer, Vector3DList, etc.
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-13
 - <span class="boldblue">open issue 1888:</span> mbs.GetDictionary
   - description: does not work for symbolic userfunctions
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-11
 - <span class="boldblue">open issue 1864:</span> MatrixContainer
   - description: consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-10-02
 - <span class="boldblue">open issue 1863:</span> MatrixContainer
   - description: consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-10-02
 - <span class="boldblue">open issue 1848:</span> GeneralContact
   - description: Test and improve implicit SPHERE-TRIG contact
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-06-02
 - <span class="boldblue">open issue 1846:</span> ComputePostProcessingModes
   - description: numberOfThreads\> 1 not working: no modes computed
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-05-29
 - <span class="boldblue">open issue 1845:</span> ComputePostProcessingModes
   - description: numberOfThreads\> 1 not working: conversion of vectorInput to np.array makes problems
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-05-29
 - <span class="boldblue">open issue 1822:</span> inverse dynamics
   - description: consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure
+  - effort: HUGE (above 40 hours)
   - date raised: 2024-04-19
 - <span class="boldblue">open issue 1821:</span> kinematics solver
   - description: consider functionality of a kinematic solver; this could be based on a quasi-static solver which utilizes the velocity constraint level and computes unknown velocities for a given configuration; first attempt could be based on finite differences for prescribed incremental motion and resulting incremental coordinates; only possible for systems with DOF=0; alternatively, we could compute velocity coordinates only from the constrained system, which however would only work if all coordinates are constrained
+  - effort: HUGE (above 40 hours)
   - date raised: 2024-04-19
 - <span class="boldblue">open issue 1813:</span> Marker positions
   - description: wrong representation of marker positions in AnimateModes for deformation scaling=0
+  - effort: LOW (within 2 hours)
   - date raised: 2024-04-08
 - <span class="boldblue">open issue 1801:</span> joint constraints
   - description: add description of position jacobian for rigid bodies (in particular 3D rigid); add reference in description for MarkerBodyPosition
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-03-03
 - <span class="boldblue">open issue 1777:</span> GraphicsData Sphere
   - description: add spheres to graphicsData interface; user AddSphere method; only use in case that full sphere is shown; add option to fall back to regular triangular representation
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-02-07
 - <span class="boldblue">open issue 1776:</span> ComputeLinearizedSystem
   - description: consider paper of Agundez, Vallejo, Freire, Mikkola in International Journal of Mechanical Sciences, Vol 268, 2024 for computation of linearized system and eigenmodes. Test case with bicycle
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-02-07
 - <span class="boldblue">open issue 1769:</span> C++ user functions
   - description: Add cpp user functions fully to PythonUserFunctionBase capabilities
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-02-02
 - <span class="boldblue">open issue 1768:</span> C++ user functions
   - description: Add pybind object as container for Cpp user functions, similar to autogenerated SetUserFunction
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-02-02
 - <span class="boldblue">open issue 1767:</span> C++ user functions
   - description: add file for cpp user functions, registration mechanism like timers
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-02-02
 - <span class="boldblue">open issue 1764:</span> GeneralContact
   - description: add pickle functionality
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-01-31
 - <span class="boldblue">open issue 1751:</span> C++ user functions
   - description: check injection of user functions with special item-function method, and separate cpp file holding prototypes of those functions, which may be injected accordingly; use mechanism to record user functions in exudyn.functions.userCpp.SpringDamper
+  - effort: HIGH (within 40 hours)
   - date raised: 2024-01-29
 - <span class="boldblue">open issue 1740:</span> symbolic
   - description: check examples in Docu for consistency
+  - effort: LOW (within 2 hours)
   - date raised: 2023-12-19
 - <span class="boldblue">open issue 1722:</span> Parameter type
   - description: add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)
+  - effort: HUGE (above 40 hours)
   - date raised: 2023-12-09
 - <span class="boldblue">open issue 1720:</span> Mainsystem extensions
   - description: change create2D functions into separate Create functions
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-12-08
 - <span class="boldblue">open issue 1719:</span> generated examples
   - description: add set of generically generated examples, generated examples
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-12-08
 - <span class="boldblue">open issue 1684:</span> ObjectIndex
   - description: consider functionality such as ComputeMassMatrix; ComputeODE2RHS, etc.; would require some default simulation settings (store in mainsystem?)
+  - effort: HIGH (within 40 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1683:</span> ItemIndices
   - description: consider direct access to outputvariables in node: nodeIndex.current.position; at least nodeIndex.GetOutput(variableType, configuration) would be valuable
+  - effort: HIGH (within 40 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1682:</span> ItemIndices
   - description: add previous CallFunction functionalities to NodeIndex, etc.; IsNodeGroup(group), IsNodeType(type), SizeODE2(), ...,
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1681:</span> ItemIndices
   - description: add option to add force/torque directly; add gravity to bodies
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1677:</span> systemData
   - description: add GetDict(), Set(systemDict=\[Dict\]) functions which returns the whole dictionary for the system; containing list of nodes, objects, ...; each item is represented by its dictionary; could be used for set/get in future
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1676:</span> ItemIndices
   - description: consider overriding \_\_getattr\_\_ and \_\_setattr\_\_ methods through pybind (or in Python with patching); this should allow to access data directly mapped via the dictionary
+  - effort: HIGH (within 40 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1675:</span> ItemIndices
   - description: consider adding MainSystem\* to indices; this would allow to directly operate on Nodes
+  - effort: HIGH (within 40 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1674:</span> license.ext
   - description: split into internal and external licenses
+  - effort: LOW (within 2 hours)
   - date raised: 2023-10-29
 - <span class="boldblue">open issue 1668:</span> ANCFCable
   - description: add test example
+  - effort: LOW (within 2 hours)
   - date raised: 2023-10-16
 - <span class="boldblue">open issue 1653:</span> ANCFBeam
   - description: reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-08-16
 - <span class="boldblue">open issue 1631:</span> velocityOffset
   - description: add to CartesianSpringDamper, RigidBodySpringDamper
+  - effort: LOW (within 2 hours)
   - date raised: 2023-06-26
 - <span class="boldblue">open issue 1614:</span> static members
   - description: LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
+  - effort: LOW (within 2 hours)
   - date raised: 2023-06-11
 - <span class="boldblue">open issue 1565:</span> utilities InitializeFromRestartFile
   - description: finalize C++ functionality and Python function
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-05-14
 - <span class="boldblue">open issue 1550:</span> GeometricallyExactBeam
   - description: add F\_Lie\*Glocal\_q term for Jacobian to improve convergence
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-05-02
 - <span class="boldblue">open issue 1549:</span> KinematicTree
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
+  - effort: HIGH (within 40 hours)
   - date raised: 2023-05-02
 - <span class="boldblue">open issue 1548:</span> ODE1 loads
   - description: fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-05-01
 - <span class="boldblue">open issue 1529:</span> solver
   - description: solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-26
 - <span class="textred">open issue 1512:</span> return value policy
   - description: check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-13
 - <span class="textorange">open issue 1500:</span> ANCFBeam
   - description: check for advanced right-angle frame
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-08
 - <span class="textorange">open issue 1499:</span> GeometricallyExactBeam
   - description: check for advanced right-angle frame
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-08
 - <span class="textred">open issue 1494:</span> GeometricallyExactBeam
   - description: add reference configuration to residual and jacobian
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-06
 - <span class="boldblue">open issue 1493:</span> StaticSolver
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
+  - effort: LOW (within 2 hours)
   - date raised: 2023-04-06
 - <span class="boldblue">open issue 1485:</span> Spring-Damper connector description
   - description: add general description for connectors based on spring-dampers (penalty)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-01
 - <span class="boldblue">open issue 1484:</span> Joint description
   - description: add general description for joint constraints
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-04-01
 - <span class="textred">open issue 1450:</span> coordinatesSolution
   - description: add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-02-25
 - <span class="textred">open issue 1434:</span> solver
   - description: add CqT\*lambda terms to systemwide jacobian computation with flag
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-02-16
 - <span class="boldblue">open issue 1424:</span> NumericalJacobianODE1RHS
   - description: add case for duplicated ODE1 coordinates if connector has two markers for the same object, same as ltgODE2numDiff
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-02-08
 - <span class="boldblue">open issue 1415:</span> CoordinateSpringDamperExt
   - description: add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and \>0 is a directly recommended step size
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-01-22
 - <span class="boldblue">open issue 1414:</span> InteractiveDialog
   - description: extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2023-01-22
 - <span class="boldblue">open issue 1395:</span> ComputeLinearizedSystem
   - description: add test model
+  - effort: LOW (within 2 hours)
   - date raised: 2023-01-12
 - <span class="boldblue">open issue 1337:</span> Newton
   - description: C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-12-26
 - <span class="boldblue">open issue 1292:</span> CSensorObject
   - description: store MarkerDataStructure locally in order to avoid memory allocations for evaluation of sensor data; also do this for MainSystem::PyGetObjectOutputVariable
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-11-13
 - <span class="boldblue">open issue 1290:</span> ContactFrictionCircleCable2D
   - description: shows tangential forces in case of all friction stiffness and damping values are zero; may be caused by specific projection
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-11-05
 - <span class="boldblue">open issue 1273:</span> GeometricallyExactBeam
   - description: check quadratic velocity terms
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-09-24
 - <span class="boldblue">open issue 1247:</span> UserFunctions
   - description: check whether optimization of user functions with numba/JIT removes C-\>Python-\>C roundtrip overhead using pybind11 f.target approach from tests/test\_callbacks.cpp; this would enable to retrieve the original c-function pointer
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-09-02
 - <span class="boldblue">open issue 1241:</span> Register Items
   - description: consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-08-24
 - <span class="boldblue">open issue 1240:</span> Register unit tests
   - description: consider mechanism to self-register unit tests; same a swith TimerStructure registration
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-08-24
 - <span class="textred">open issue 1203:</span> parallel / multithreaded
   - description: C++: add multithreading for JacobianODE2 (analytic jacobians)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-07-12
 - <span class="textred">open issue 1202:</span> parallel / multithreaded
   - description: C++: add multithreading for JacobianAE
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-07-12
 - <span class="boldblue">open issue 1194:</span> generalizedAlpha scaling
   - description: turn on/off scaling in interface to test symmetric solver speedup
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-07-11
 - <span class="boldblue">open issue 1192:</span> ExplicitSolver
   - description: Newton / startOfStep: check if dataCoords should also be copied
+  - effort: LOW (within 2 hours)
   - date raised: 2022-07-10
 - <span class="boldblue">open issue 1189:</span> ContactFrictionCircleCable2D
   - description: add velocity offset to MarkerCable2DShape
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-07-08
 - <span class="boldblue">open issue 1167:</span> user functions
   - description: check https://pybind11.readthedocs.io/en/stable/advanced/cast/functional.html regarding stateless functions and test performance with C++ functions for simple spring-damper
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-06-29
 - <span class="textorange">open issue 1140:</span> c++ user elements
   - description: add auto registration for C++ user items
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-06-12
 - <span class="textorange">open issue 1139:</span> c++ user elements
   - description: add description regarding which functions are needed to add C++ user elements
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-06-12
 - <span class="boldblue">open issue 1104:</span> GenericObject
   - description: add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions
+  - effort: HUGE (above 40 hours)
   - date raised: 2022-05-23
 - <span class="boldblue">open issue 1100:</span> GeometricallyExactBeam3D
   - description: finalize implementation and fix jacobian computation
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-05-23
 - <span class="boldblue">open issue 1087:</span> ANCFBeam3D
   - description: complete implementation of all functions (rigid marker, etc.)
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-05-16
 - <span class="boldblue">open issue 1078:</span> BeamSectionGeometry
   - description: add BeamSectionGeometry to 2D beam elements
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-05-09
 - <span class="textred">open issue 1061:</span> Reference and copy
   - description: add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?
+  - effort: LOW (within 2 hours)
   - date raised: 2022-04-30
 - <span class="boldblue">open issue 1032:</span> ObjectConnectorCoordinateVector
   - description: cleanup, consider better UF and check implementation with theory (jac?)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-04-04
 - <span class="boldblue">open issue 1008:</span> Contact switching
   - description: Test improved contact integration method with resolution of switching and correction of integration of discontinuous forces; compare to switching point resolution
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-03-26
 - <span class="textred">open issue 0990:</span> MarkerNodeCoordinate
   - description: add option addReferenceCoordinates=False to include reference value in coordinate
+  - effort: LOW (within 2 hours)
   - date raised: 2022-03-16
 - <span class="boldblue">open issue 0988:</span> ComputeConstraintJacobianDerivative
   - description: make sparse version similar to numerically differentiated single objects in JacobianODE2RHS
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-03-15
 - <span class="textorange">open issue 0987:</span> ALEANCFCable2D
   - description: add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-03-15
 - <span class="boldblue">open issue 0984:</span> OutputVariableConnector
   - description: check all penalty-based connectors if OutputVariable for forces is only computed if activeConnector=True
+  - effort: LOW (within 2 hours)
   - date raised: 2022-03-14
 - <span class="boldblue">open issue 0973:</span> ContactFrictionCircleCable2D
   - description: adapt old tests and create new beltdrive test
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-03-09
 - <span class="boldblue">open issue 0971:</span> Renderer
   - description: add mechanisms to catch exceptions inside renderer thread; try detaching renderer thread
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-03-06
 - <span class="boldblue">open issue 0957:</span> JointRevolute2D
   - description: add OutputVariables in C++ and in DOCU; check other objects with missing OutputVariables
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-28
 - <span class="boldblue">open issue 0948:</span> update mecanumWheelRollingDiscTest
   - description: update w.r.t. Trajectory class and TorsionalSpringDamper
+  - effort: LOW (within 2 hours)
   - date raised: 2022-02-21
 - <span class="boldblue">open issue 0937:</span> GeneralContact
   - description: add option to draw contact forces
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-10
 - <span class="boldblue">open issue 0927:</span> GeneralContact ANCF
   - description: test if 3 maxTangentialVelocities in 3-point Lobatto integration lead to better Newton performance
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-04
 - <span class="boldblue">open issue 0926:</span> RollingDiscPenalty
   - description: rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-03
 - <span class="boldblue">open issue 0917:</span> mbs.ComputeObjectLHSJacobian
   - description: add computation functions for object; using system function; needing option for analytic/numeric computation
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0916:</span> mbs.ComputeObjectAccessFunction
   - description: add computation functions for access functions, e.g., TranlationalVelocity\_qt, AngVel\_qt, ...
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0915:</span> mbs.ComputeObject...
   - description: add mbs.ComputeObjectMassMatrix(...)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0914:</span> mbs.ComputeNode...
   - description: add computation functions for nodes, e.g., position or rotation jacobian; coordinates are already available in GetNodeOutput(...)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0912:</span> GeneralContact
   - description: add second CCactiveSetError mode, which computes error for given active set ==\> error for PostNewton computed (error in assumed conditions forces)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0911:</span> GeneralContact
   - description: implement contact laws
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0910:</span> GeneralContact
   - description: implement recommended step size (with error bound and separate min stepsize to avoid too small steps
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0909:</span> GeneralContact
   - description: add functionality to store/restore contact state for start of time step
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0908:</span> MarkerData
   - description: add configuration to markerdata computation; allows configuration in sensors and startOfStep configuration in Contact
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0907:</span> GeneralContact
   - description: add implicit Trig-Sphere contact
+  - effort: HIGH (within 40 hours)
   - date raised: 2022-02-02
 - <span class="boldblue">open issue 0904:</span> GeneralContact
   - description: PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force
+  - effort: LOW (within 2 hours)
   - date raised: 2022-01-31
 - <span class="boldblue">open issue 0892:</span> AccessFunctionType
   - description: add AccessFunctionType::TranslationalVelocity\_q and AccessFunctionType::AngularVelocity\_q needed for analytical jacobians
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-26
 - <span class="boldblue">open issue 0888:</span> add information on error handling
   - description: explain System errors, Python errors and Warnings; explain exception handling and add example
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-25
 - <span class="boldblue">open issue 0886:</span> Exceptions
   - description: test py::raise\_from for Python-induced exceptions (in renderPythonInterface) or for SystemErrors; check whether execeptions are originating from C or Python, see pybind11 Exceptions
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-25
 - <span class="boldblue">open issue 0873:</span> GenericJoint
   - description: improve computation of jacobian, using crossproduct
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-18
 - <span class="boldblue">open issue 0871:</span> restart method
   - description: add option solutionSettings.writeRestartFile to restart from separate restart file; solutionSettings.restartFileName defines folder and fileName; solutionSettings.restartWritePeriod defines time in seconds, how often it is written; also writes backup file
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-18
 - <span class="boldblue">open issue 0867:</span> GeneralContact
   - description: change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-17
 - <span class="boldblue">open issue 0859:</span> GeneralContact
   - description: split searchtree into regions, proportional to number of threads (FinalizeContact); use 2 splits in x, 2 splits in y, etc. until uneven number left; add class Box3Dindexed:Box3D, which adds index for region in searchtree; add access in GeneralContact for adding bounding box, creating the index; index is -1, if overlapping, filled in serially
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-13
 - <span class="boldblue">open issue 0858:</span> ParallelFor
   - description: use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-13
 - <span class="boldblue">open issue 0855:</span> Assemble() docu
   - description: add information on general approach of adding objects and mbs.Assemble() procedure in Overview on Exudyn; add figure Add Nodes/Objects-\>Assemble-\>Solve
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-09
 - <span class="boldblue">open issue 0853:</span> ComputeObjectJacobian...
   - description: add mbs computation functions for jacobians, for ODE1, ODE2 and AE
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-08
 - <span class="boldblue">open issue 0852:</span> ComputeObjectAlgebraicEquations
   - description: add mbs computation functions for constraints
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-01-08
 - <span class="boldblue">open issue 0845:</span> Jacobian documentation
   - description: add documentation to object and connector jacobians
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-12-23
 - <span class="boldblue">open issue 0844:</span> connector jacobian RigidBodySpringDamper
   - description: add analytic jacobian for RigidBodySpringDamper connector
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-12-23
 - <span class="boldblue">open issue 0841:</span> GeneralContact regularized friction
   - description: extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-12-19
 - <span class="boldblue">open issue 0836:</span> GeneralContact add cone
   - description: for 3D cables add cone (including cylinder) to contact with 3D cables
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-12-19
 - <span class="boldblue">open issue 0835:</span> GeneralContact add dissipative laws
   - description: add common dissipative (coeff of restitution, etc. laws to contact
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-12-19
 - <span class="boldblue">open issue 0834:</span> GeneralContact add contact laws
   - description: add Hertzian contact laws to contacts, using separate enum for contact laws and additional parameter
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-12-19
 - <span class="boldblue">open issue 0833:</span> GeneralContact rolling pivoting
   - description: add rolling and pivoting (drilling, boring) friction to spheres and triangles
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-12-17
 - <span class="boldblue">open issue 0829:</span> velocityOffset
   - description: add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-12-15
 - <span class="boldblue">open issue 0792:</span> test Pardiso integration
   - description: VS2017 settings with Intel Performance Libraries and test interface via Eigen
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-11-02
 - <span class="boldblue">open issue 0783:</span> SetObjectParameter
   - description: extend functionality of Set\[Item\]Parameter functions to accept lists AND numpy arrays for vectors
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-10-29
 - <span class="boldblue">open issue 0782:</span> MatrixContainer
   - description: add SetWithNGsolveSparseMatrix; add an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-10-27
 - <span class="boldblue">open issue 0777:</span> GenericODE2
   - description: add tests for dense and sparse mass and jacobian matrices, together with sparse/dense solvers
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-10-09
 - <span class="boldblue">open issue 0753:</span> autodiff for Connectors
   - description: add autodiff for connectors using spezial sizes like 6 for 2 position nodes, 14 for 2 rigid bodies and 40 for most objects (ObjectFFRFreducedOrder) + 100? as extreme case, falling back to numerical diff for any larger case
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-09-21
 - <span class="boldblue">open issue 0737:</span> ContactCoordinate
   - description: check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-08-13
 - <span class="boldblue">open issue 0736:</span> include GeomExactBeam3D
   - description: as provided by Jan Tomec
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-08-12
 - <span class="boldblue">open issue 0728:</span> optimize CollectCurrentNodeMarkerData
   - description: optimize function for CNodeRigidBodyRotVecLG
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-07-31
 - <span class="boldblue">open issue 0710:</span> CollectCurrentNodeData
   - description: implement CollectCurrentNodeData for NodeRigidBody2D, optimize CollectCurrentNodeData for all rigid body nodes
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-07-08
 - <span class="boldblue">open issue 0707:</span> LinkedDataVector,ResizableVector
   - description: consider removing ResizableVector(integrate into Vector), implement LinkedDataVector as templated spezialization of Vector, no virtual calls in Vector
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-07-06
 - <span class="boldblue">open issue 0698:</span> GetAvailableJacobians
   - description: unify constraint.GetAvailableJacobians() with jacobian computations in joints, in order to avoid large overheads for jacobian assembly
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-07-01
 - <span class="boldblue">open issue 0692:</span> CSystem
   - description: check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE\_ODE2\_t ... if \_t is correctly used
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-06-28
 - <span class="boldblue">open issue 0648:</span> solver tutorial
   - description: create video with frequent solver errors and FAQ
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-05-01
 - <span class="boldblue">open issue 0627:</span> ObjectContactFrictionCircleCable2D
   - description: add description, connector equations and figure
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-04-21
 - <span class="boldblue">open issue 0626:</span> GenericJoint
   - description: add more description on constraint configurations, coordinate transformations and figures for GenericJoint
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-04-21
 - <span class="boldblue">open issue 0625:</span> ObjectRigidBody
   - description: revise equations of motion and add figure for COM and local coordinates
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-04-15
 - <span class="boldblue">open issue 0617:</span> python userFunctions
   - description: consider adding an additional userFunctionVariable \[List? or Dict?\], which contains indices or further parameters needed in the userFunction
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-03-23
 - <span class="boldblue">open issue 0614:</span> sensor dependencies
   - description: add functionality to compute sensor-dependencies (for LTG computation), used in controller connectors? alternatively add dependentNodes to existing connectors
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-03-21
 - <span class="boldblue">open issue 0613:</span> MarkerObjectODE2Coordinates
   - description: add simple test into TestModels
+  - effort: LOW (within 2 hours)
   - date raised: 2021-03-21
 - <span class="boldblue">open issue 0608:</span> recommendedStepSize
   - description: add recommendedStepSize to ContactCoordinate element
+  - effort: LOW (within 2 hours)
   - date raised: 2021-03-20
 - <span class="boldblue">open issue 0591:</span> ObjectFFRF
   - description: Check forceVector and gravity forces in comparison to paper
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-02-21
 - <span class="boldblue">open issue 0574:</span> initialAccelerations
   - description: add dg/dq\*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-02-07
 - <span class="boldblue">open issue 0565:</span> Drift inspector
   - description: add functionality to check whether drift gets too large
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-01-29
 - <span class="boldblue">open issue 0561:</span> Gen alpha2
   - description: setup new generalized alpha integrator with GGL
+  - effort: HIGH (within 40 hours)
   - date raised: 2021-01-26
 - <span class="boldblue">open issue 0559:</span> Lie group tests2
   - description: add Lie group integrator flybar governor
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-01-26
 - <span class="boldblue">open issue 0517:</span> item number textures
   - description: add special textures for item numbers
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-12-22
 - <span class="boldblue">open issue 0436:</span> virtual functions
   - description: make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-07-21
 - <span class="boldblue">open issue 0410:</span> drawing information
   - description: add consistent drawing information in show field of every item
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-05-24
 - <span class="boldblue">open issue 0401:</span> add sensor miniexamples
   - description: .
+  - effort: LOW (within 2 hours)
   - date raised: 2020-05-21
 - <span class="boldblue">open issue 0390:</span> SlimVector
   - description: check if erasing all \<rule of 5\> methods in SlimVector work and speed up code performance
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-05-16
 - <span class="boldblue">open issue 0380:</span> mass matrix update
   - description: mass matrix is not updated in Generalized Alpha solver in CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian - may be critical for 3d rigid bodies
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-05-06
 - <span class="boldblue">open issue 0354:</span> autodiff
   - description: add consistent object (not connector) differentiation either manually or with autodiff
+  - effort: HUGE (above 40 hours)
   - date raised: 2020-03-05
 - <span class="boldblue">open issue 0347:</span> initialCoordinates\_t
   - description: instead of initialVelocities
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-02-24
 - <span class="boldblue">open issue 0332:</span> getobject/nodeparameter
   - description: extend getobjectparameter/node/.. with default function from MainObject / MainNode/ ... which returns basic information, e.g., NodeType
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-02-04
 - <span class="boldblue">open issue 0314:</span> Add user marker
   - description: add user marker
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2020-01-10
 - <span class="boldblue">open issue 0303:</span> constraints derivatives
   - description: add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-12-26
 - <span class="boldblue">open issue 0260:</span> static computation
   - description: add consistent flag to markerdata computation, ODE2RHS computation, etc. for static computation, which does not compute information on velocities then.
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-09-10
 - <span class="boldblue">open issue 0258:</span> contour plot
   - description: extend mass points and rigid bodies for contour plotting
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-08-30
 - <span class="boldblue">open issue 0252:</span> PostNewtonStep
   - description: post newton step object functions shall be called from solver including a ResizableVector& dataVariables to be changed; post newton function shall not use direct write access to nodal data coordinates
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-08-27
 - <span class="boldblue">open issue 0241:</span> PostNewtonStep
   - description: Check why markerData is computed with computeJacobian=true in CSystem::PostNewtonStep; is jacobian information really needed?
+  - effort: LOW (within 2 hours)
   - date raised: 2019-08-22
 - <span class="boldblue">open issue 0209:</span> contact iteration
   - description: make simple example for contact to check changing jacobian matrices from ContactCoordinate
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-06-28
 - <span class="boldblue">open issue 0194:</span> Jacobians
   - description: Make unique member function names for rotation/orientation jacobians in nodes and bodies
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-06-25
 - <span class="boldblue">open issue 0174:</span> Iterator begin
   - description: Check if const consistency is realizable
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-06-07
 - <span class="boldblue">open issue 0173:</span> LinkedDataVector
   - description: Check that the Vector is declared as const LinkedDataVectors if it is returned by a function; otherwise unforeseeable problems might occur
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-06-07
 - <span class="boldblue">open issue 0172:</span> Matrix Init
   - description: Consider to put this funciton into constructor and call constructor instead of init
+  - effort: LOW (within 2 hours)
   - date raised: 2019-06-07
 - <span class="boldblue">open issue 0171:</span> Matrix delete
   - description: Consider not to set data=NULL in order to detect memory which is deleted twice
+  - effort: LOW (within 2 hours)
   - date raised: 2019-06-07
 - <span class="boldblue">open issue 0161:</span> SlimArray
   - description: Add template specializations to SlimArray\<T,2..4\> similar to SlimVector to speed up initialization of short vectors
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-06-02
 - <span class="boldblue">open issue 0142:</span> Vector performance
   - description: check Vector operator\[\], and ConstVector performance regarding inlining
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-05-21
 - <span class="boldblue">open issue 0124:</span> ConstSizeVector
   - description: check if begin/end() overriding of Vector:: function is needed?
+  - effort: LOW (within 2 hours)
   - date raised: 2019-05-13
 - <span class="boldblue">open issue 0123:</span> Linalg Override
   - description: Add override statement to all derived classes in linalg for safety
+  - effort: LOW (within 2 hours)
   - date raised: 2019-05-13
 - <span class="boldblue">open issue 0121:</span> allocation failure
   - description: assert that every allocation in Matrix, Vector, ResizableArray, ... is performed with try/catch - compare Matrix::AllocateMemory(...)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-05-13
 - <span class="textblue">open issue 0098:</span> Destructors/Cleanup
   - description: add destructors/cleanup to MainSystemData and all other system functions (check new commands)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2019-04-01
 - <span class="textblue">open issue 0088:</span> Data dependency
   - description: use dependencies for every computational member function; node: 		NodeData: LinkedDataVector displacement, velocity, acceleration;; object(singlenoded): 	ObjectData: LinkedDataVector displacement, velocity, acceleration;; object(multinoded): 	ObjectData: ResizableArray\<LinkedDataVector\> displacements, velocities, accelerations;; constraint(Lagr.):	FunctionResults1, FunctionResults2 (e.g. RotMatrix1, Position1, ...); marker:		only transforms data (load/constraint); load:			only provides load information
+  - effort: HUGE (above 40 hours)
   - date raised: 2019-04-01
 
 ## Known bugs
@@ -8525,25 +8787,33 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textred">open BUG 2398:</span> explicit integration costs O(N^2) per step with the default dense linear solver
   - issue author: Claude-JG
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
+  - effort: HIGH (within 40 hours)
   - date raised: 2026-09-12
 - <span class="textred">open BUG 2127:</span> ContactSphereTorus
   - description: check torques on both bodies, as there seems to be momentum conservation issues in ball bearings
+  - effort: HIGH (within 40 hours)
   - date raised: 2025-07-03
 - <span class="textred">open BUG 1889:</span> symbolic
   - description: GetLoad and similar functions do not work with symbolic user functions and raise TypeError: Object of type 'exudyn.exudynCPP.symbolic.UserFunction' is not an instance of 'function'; see also issue with mbs.GetDictionary()
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-10-11
 - <span class="textred">open BUG 1772:</span> item.GetDictionary
   - description: item.GetDictionary not working for new user function interface with symbolic user function
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2024-02-04
 - <span class="textred">open BUG 1639:</span> SolveDynamic FFRF
   - description: repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables
+  - effort: HIGH (within 40 hours)
   - date raised: 2023-07-10
 - <span class="textred">open BUG 1048:</span> sse2neon.h
   - description: on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2022-04-25
 - <span class="textred">open BUG 0830:</span> PostNewton
   - description: PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-12-15
 - <span class="textred">open BUG 0738:</span> ObjectContactCoordinate
   - description: modified Newton does not work, no Jacobian update computed when switching
+  - effort: MEDIUM (within 16 hours)
   - date raised: 2021-08-13

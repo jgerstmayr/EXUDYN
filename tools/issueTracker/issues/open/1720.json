@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXAMPLE",
+  "effort": "MEDIUM",
   "description": "change create2D functions into separate Create functions",
   "dateRaised": "2023-12-08",
   "deadline": "2024-06-05"

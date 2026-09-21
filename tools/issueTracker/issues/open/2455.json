@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "FIX",
   "priority": "LOW",
+  "effort": "LOW",
   "description": "found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)",
   "dateRaised": "2026-09-16",
   "deadline": "2027-03-15",

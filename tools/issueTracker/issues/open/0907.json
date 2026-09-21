@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "add implicit Trig-Sphere contact",
   "dateRaised": "2022-02-02",
   "deadline": "2022-04-03"

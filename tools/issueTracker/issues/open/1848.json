@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "HIGH",
   "description": "Test and improve implicit SPHERE-TRIG contact",
   "dateRaised": "2024-06-02",
   "deadline": "2024-11-29"

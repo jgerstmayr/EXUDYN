@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "extend functionality of Set[Item]Parameter functions to accept lists AND numpy arrays for vectors",
   "dateRaised": "2021-10-29",
   "deadline": "2021-12-28"

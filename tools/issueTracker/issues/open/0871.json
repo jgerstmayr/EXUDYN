@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add option solutionSettings.writeRestartFile to restart from separate restart file; solutionSettings.restartFileName defines folder and fileName; solutionSettings.restartWritePeriod defines time in seconds, how often it is written; also writes backup file",
   "dateRaised": "2022-01-18",
   "deadline": "2022-03-19"

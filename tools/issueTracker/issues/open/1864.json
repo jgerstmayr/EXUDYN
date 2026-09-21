@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation",
   "dateRaised": "2024-10-02",
   "deadline": "2025-03-31"

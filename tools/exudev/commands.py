@@ -826,6 +826,46 @@ def ListIssues(tracker, options):
     return 0
 
 
+def TriageReport(tracker):
+    """the open backlog as a table of type against effort, and what is not classified yet
+    (revision2026 step R8.5.2). The question it answers is "what can be done in an afternoon",
+    which 270 issues in one list cannot."""
+    issues = [issue for issue in tracker.GetIssues()
+              if issue['status'].strip() not in tracker.closedStatuses]
+    efforts = list(tracker.issueEfforts) + ['']
+    types = sorted(set(issue['type'].strip() for issue in issues))
+
+    def Count(issueType, effort):
+        return len([issue for issue in issues if issue['type'].strip() == issueType
+                    and issue['effort'].strip() == effort])
+
+    print('open issues by type and effort   (' + ', '.join(
+        name + ' ' + tracker.issueEfforts[name] for name in tracker.issueEfforts) + ')')
+    print('')
+    print('  ' + 'type'.ljust(14) + ''.join(effort.ljust(8) or '-'.ljust(8) for effort in efforts)
+          + 'total')
+    for issueType in types:
+        row = '  ' + issueType.ljust(14)
+        for effort in efforts:
+            count = Count(issueType, effort)
+            row += (str(count) if count else '.').ljust(8)
+        row += str(len([issue for issue in issues if issue['type'].strip() == issueType]))
+        print(row)
+
+    row = '  ' + 'ALL'.ljust(14)
+    for effort in efforts:
+        count = len([issue for issue in issues if issue['effort'].strip() == effort])
+        row += (str(count) if count else '.').ljust(8)
+    print(row + str(len(issues)))
+
+    unclassified = [issue for issue in issues if issue['effort'].strip() == '']
+    print('')
+    print(str(len(unclassified)) + ' of ' + str(len(issues)) + ' open issues have no effort yet'
+          + ('' if not unclassified else '; the oldest are #'
+             + ', #'.join(str(issue['number']) for issue in unclassified[:8])))
+    return 0
+
+
 def SwitchBuildMode(tracker, release):
     """release or development mode: the one line of issueTracker.py that says which (fact 26). The
     value stays in the source because it is read at import time and because the tracker is the one
@@ -926,6 +966,18 @@ def Issue(options):
         def Action():
             tracker.ChangeIssue(IssueNumber(tracker, options.number), options.field, options.value)
             return 0
+
+    elif verb == 'triage':
+        note = 'report the open issues by type and effort'
+
+        def Action():
+            return TriageReport(tracker)
+
+    elif verb == 'triage':
+        note = 'report the open issues by type and effort'
+
+        def Action():
+            return TriageReport(tracker)
 
     elif verb == 'mode':
         note = ('switch the build mode to ' + ('release' if options.release else 'development')

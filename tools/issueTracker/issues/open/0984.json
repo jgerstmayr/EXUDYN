@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "LOW",
   "description": "check all penalty-based connectors if OutputVariable for forces is only computed if activeConnector=True",
   "dateRaised": "2022-03-14",
   "deadline": "2022-05-13"

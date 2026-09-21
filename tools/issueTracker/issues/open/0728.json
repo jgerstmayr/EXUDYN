@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
   "description": "optimize function for CNodeRigidBodyRotVecLG",
   "dateRaised": "2021-07-31",
   "deadline": "2021-09-29"

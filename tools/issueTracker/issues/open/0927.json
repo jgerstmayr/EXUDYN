@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "test if 3 maxTangentialVelocities in 3-point Lobatto integration lead to better Newton performance",
   "dateRaised": "2022-02-04",
   "deadline": "2022-04-05"

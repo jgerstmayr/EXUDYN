@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "MEDIUM",
   "description": "mass matrix is not updated in Generalized Alpha solver in CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian - may be critical for 3d rigid bodies",
   "dateRaised": "2020-05-06",
   "deadline": "2020-07-05"

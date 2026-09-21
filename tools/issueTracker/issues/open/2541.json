@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "DOCU",
   "priority": "NORMAL",
+  "effort": "MEDIUM",
   "description": "exudyn.config is the run-time settings object (outputDirectory, printToConsole, suppressWarnings, precision) and exudyn.special holds the rarely needed corners; neither the objects nor their C++ classes Config and Special appear in python/exudyn/__init__.pyi, so no IDE completes exudyn.config.outputDirectory. The gap is older than this issue - stubtest simply did not check them while they arrived through a star import, and step R6.2 made them plain package attributes, which exposed it. Both are in the stubtest backlog with this number. The fix is generator work: emit Config and Special like the other bound structures.",
   "dateRaised": "2026-09-19",
   "deadline": "2027-03-18",

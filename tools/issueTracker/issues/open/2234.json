@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces",
   "dateRaised": "2026-01-21",
   "deadline": "2026-07-20"

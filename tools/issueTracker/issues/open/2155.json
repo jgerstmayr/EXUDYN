@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists",
   "dateRaised": "2025-11-02",
   "deadline": "2026-05-01"

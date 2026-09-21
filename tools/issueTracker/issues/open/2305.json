@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList",
   "dateRaised": "2026-02-15",
   "deadline": "2026-08-14"

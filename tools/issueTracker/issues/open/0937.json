@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add option to draw contact forces",
   "dateRaised": "2022-02-10",
   "deadline": "2022-04-11"

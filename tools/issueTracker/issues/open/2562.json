@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "TESTING",
   "priority": "NORMAL",
+  "effort": "HIGH",
   "description": "The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9.",
   "dateRaised": "2026-09-20",
   "deadline": "2027-03-19",

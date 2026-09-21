@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add manual offsets for zNear and zFar, to adjust visible objects",
   "dateRaised": "2026-01-06",
   "deadline": "2026-07-05"

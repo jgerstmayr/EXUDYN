@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation",
   "dateRaised": "2026-02-15",
   "deadline": "2026-08-14"

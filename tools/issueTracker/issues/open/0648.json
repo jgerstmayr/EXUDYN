@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "HIGH",
   "description": "create video with frequent solver errors and FAQ",
   "dateRaised": "2021-05-01",
   "deadline": "2021-06-30"

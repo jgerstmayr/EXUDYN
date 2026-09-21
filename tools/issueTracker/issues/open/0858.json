@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage",
   "dateRaised": "2022-01-13",
   "deadline": "2022-03-14"

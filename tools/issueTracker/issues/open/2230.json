@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "TESTING",
+  "effort": "MEDIUM",
   "description": "add hemispheric test problem; compare to literature",
   "dateRaised": "2026-01-18",
   "deadline": "2026-07-17"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "split searchtree into regions, proportional to number of threads (FinalizeContact); use 2 splits in x, 2 splits in y, etc. until uneven number left; add class Box3Dindexed:Box3D, which adds index for region in searchtree; add access in GeneralContact for adding bounding box, creating the index; index is -1, if overlapping, filled in serially",
   "dateRaised": "2022-01-13",
   "deadline": "2022-03-14"

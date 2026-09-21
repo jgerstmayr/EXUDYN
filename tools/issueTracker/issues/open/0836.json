@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "for 3D cables add cone (including cylinder) to contact with 3D cables",
   "dateRaised": "2021-12-19",
   "deadline": "2022-02-17"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "adjust comments to fit to internal exudyn format",
   "dateRaised": "2026-08-05",
   "deadline": "2027-02-01"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "MEDIUM",
   "description": "check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic",
   "dateRaised": "2025-03-30",
   "deadline": "2025-09-26"

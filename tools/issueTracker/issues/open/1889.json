@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "BUG",
+  "effort": "MEDIUM",
   "description": "GetLoad and similar functions do not work with symbolic user functions and raise TypeError: Object of type 'exudyn.exudynCPP.symbolic.UserFunction' is not an instance of 'function'; see also issue with mbs.GetDictionary()",
   "dateRaised": "2024-10-11",
   "deadline": "2025-04-09"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "LOW",
   "description": "check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)",
   "dateRaised": "2026-01-08",
   "deadline": "2026-07-07"

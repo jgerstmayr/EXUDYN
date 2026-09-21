@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and >0 is a directly recommended step size",
   "dateRaised": "2023-01-22",
   "deadline": "2023-07-21"

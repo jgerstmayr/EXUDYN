@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "LOW",
   "description": "update w.r.t. Trajectory class and TorsionalSpringDamper",
   "dateRaised": "2022-02-21",
   "deadline": "2022-04-22"

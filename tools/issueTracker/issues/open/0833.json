@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "add rolling and pivoting (drilling, boring) friction to spheres and triangles",
   "dateRaised": "2021-12-17",
   "deadline": "2022-02-15"

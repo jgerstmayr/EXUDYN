@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "MEDIUM",
   "description": "add general description for joint constraints",
   "dateRaised": "2023-04-01",
   "deadline": "2023-09-28"

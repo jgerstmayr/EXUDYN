@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add SetWithNGsolveSparseMatrix; add an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz",
   "dateRaised": "2021-10-27",
   "deadline": "2021-12-26"

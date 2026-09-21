@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force",
   "dateRaised": "2022-01-31",
   "deadline": "2022-04-01"

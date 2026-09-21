@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "LOW",
   "description": "check if begin/end() overriding of Vector:: function is needed?",
   "dateRaised": "2019-05-13",
   "deadline": "2019-07-12"

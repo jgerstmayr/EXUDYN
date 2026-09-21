@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)",
   "dateRaised": "2026-01-31",
   "deadline": "2026-07-30"

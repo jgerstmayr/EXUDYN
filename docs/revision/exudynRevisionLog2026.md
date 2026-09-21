@@ -11382,3 +11382,51 @@ over lines with those indices — 154 lines that became 60 over the issues thems
 
 `trackerlog.txt` and `migrateSchema.py`, the migrator of R8.5.3 whose input no longer exists,
 are deleted: the old path is not kept in parallel, or its escaping trap survives.
+
+<a id="r8-5-2"></a>
+### R8.5.2 — the backlog becomes sortable (2026-09-21)
+
+The open backlog was 270 issues in one list, **244 of them without a priority**, which can be
+read but not worked from. It now has an `effort` (the field came with R8.5.3) and a report:
+
+```
+  type          LOW     MEDIUM  HIGH    HUGE            total
+  BUG           .       5       3       .       .       8
+  CHANGE        5       8       1       .       .       14
+  CHECK         11      17      5       .       .       33
+  DOCU          2       13      2       1       1       19
+  EXAMPLE       1       3       .       .       .       4
+  EXTENSION     21      90      36      5       .       152
+  FIX           4       13      3       .       .       20
+  IDEA          .       .       .       1       .       1
+  IMPROVEMENT   .       2       1       .       .       3
+  TESTING       5       8       3       .       .       16
+  ALL           49      159     54      7       1       270
+```
+
+`exudev issue triage` prints that table, and `exudev issue list --open --type FIX --effort
+LOW` prints the four issues behind one of its cells. That question — *what can be done in an
+afternoon* — could not be asked at all before.
+
+**How the 269 were classified.** From the title and the description of each issue, with one
+rule: LOW is a flag, a message, one small test, a paragraph of documentation or a rename in
+one place; MEDIUM is a contained feature or fix inside one item or module, with its test;
+HIGH is cross-cutting C++ work, a new solver or contact capability, platform debugging or
+performance architecture; HUGE is architecture, or something that touches every item. The
+seven HUGE ones are worth naming, because they are the shape of the next years: autodiff for
+objects (#354), the fully generic object (#1104), `exudyn.Parameter` for every item parameter
+(#1722), a kinematics solver (#1821) and an inverse-dynamics solver (#1822), the data-
+dependency architecture of 2019 (#88), and a representative figure for each of the 109 items
+(#1956).
+
+**They are proposals.** A classification read out of an issue text by someone who will not do
+the work is an opinion; `exudev issue modify <n> effort MEDIUM` corrects one in a second, and
+the table above is the place where a wrong one shows up.
+
+**The 270th issue was not classified but resolved**: #2548 asked for generated and
+hand-written documentation to stop sharing directories, and R7.1.7 finished exactly that. The
+pass over a backlog finds such things; that is half of what it is for.
+
+**Written through the store directly**, not through `ChangeIssue`: 269 calls would have
+regenerated the HTML and the Markdown 269 times. The pages are written once at the end, and
+`tools/checkIssues.py` confirms the store afterwards.

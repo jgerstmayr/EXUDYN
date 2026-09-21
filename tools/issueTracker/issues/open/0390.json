@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "MEDIUM",
   "description": "check if erasing all <rule of 5> methods in SlimVector work and speed up code performance",
   "dateRaised": "2020-05-16",
   "deadline": "2020-07-15"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HUGE",
   "description": "add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions",
   "dateRaised": "2022-05-23",
   "deadline": "2022-07-22"

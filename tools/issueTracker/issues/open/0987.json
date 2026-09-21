@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "DOCU",
   "priority": "NORMAL",
+  "effort": "MEDIUM",
   "description": "add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)",
   "dateRaised": "2022-03-15",
   "deadline": "2022-05-14"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "LOW",
   "description": "split into internal and external licenses",
   "dateRaised": "2023-10-29",
   "deadline": "2024-04-26"

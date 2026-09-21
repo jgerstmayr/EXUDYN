@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add test model",
   "dateRaised": "2026-01-07",
   "deadline": "2026-07-06"

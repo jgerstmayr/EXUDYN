@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "implement polynomial enhancements",
   "dateRaised": "2025-05-13",
   "deadline": "2025-11-09"

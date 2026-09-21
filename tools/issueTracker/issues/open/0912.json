@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "MEDIUM",
   "description": "add second CCactiveSetError mode, which computes error for given active set ==> error for PostNewton computed (error in assumed conditions forces)",
   "dateRaised": "2022-02-02",
   "deadline": "2022-04-03"

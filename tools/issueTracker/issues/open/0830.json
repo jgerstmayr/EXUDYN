@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "BUG",
+  "effort": "MEDIUM",
   "description": "PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)",
   "dateRaised": "2021-12-15",
   "deadline": "2022-02-13"

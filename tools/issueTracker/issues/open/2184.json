@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "highly improve efficiency for larger number of nodes by adding according precomputed transformations",
   "dateRaised": "2026-01-04",
   "deadline": "2026-07-03"

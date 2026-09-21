@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate",
   "dateRaised": "2021-08-13",
   "deadline": "2021-10-12"

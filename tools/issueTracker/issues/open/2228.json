@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12",
   "dateRaised": "2026-01-18",
   "deadline": "2026-07-17"

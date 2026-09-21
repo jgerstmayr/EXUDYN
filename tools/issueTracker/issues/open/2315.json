@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "Extend SlidingJoint for rotation case",
   "dateRaised": "2026-03-02",
   "deadline": "2026-08-29"

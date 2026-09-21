@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!",
   "dateRaised": "2019-12-26",
   "deadline": "2020-02-24"

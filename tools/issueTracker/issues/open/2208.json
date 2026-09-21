@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add test for 3-node element",
   "dateRaised": "2026-01-08",
   "deadline": "2026-07-07"

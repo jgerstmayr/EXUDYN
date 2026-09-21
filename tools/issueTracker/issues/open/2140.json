@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "HIGH",
   "description": "fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()",
   "dateRaised": "2025-07-10",
   "deadline": "2026-01-06"

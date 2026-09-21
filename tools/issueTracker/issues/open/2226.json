@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "compute optimal slopes scaling in ShellMesh functionality",
   "dateRaised": "2026-01-16",
   "deadline": "2026-07-15"

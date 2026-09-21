@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "TESTING",
   "priority": "LOW",
+  "effort": "HIGH",
   "description": "ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",

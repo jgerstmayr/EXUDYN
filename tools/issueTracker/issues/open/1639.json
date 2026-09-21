@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "BUG",
+  "effort": "HIGH",
   "description": "repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables",
   "dateRaised": "2023-07-10",
   "deadline": "2024-01-06"

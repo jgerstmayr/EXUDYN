@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "priority": "HIGH",
+  "effort": "MEDIUM",
   "description": "C++: add multithreading for JacobianODE2 (analytic jacobians)",
   "dateRaised": "2022-07-12",
   "deadline": "2022-09-10"

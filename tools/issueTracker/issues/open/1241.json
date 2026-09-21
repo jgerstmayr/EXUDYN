@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code",
   "dateRaised": "2022-08-24",
   "deadline": "2022-10-23"

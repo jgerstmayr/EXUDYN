@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "LOW",
   "description": "check examples in Docu for consistency",
   "dateRaised": "2023-12-19",
   "deadline": "2024-06-16"

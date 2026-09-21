@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "GetURDFrobotData: add tool transformations accordingly (currently shown with no consecutive transformations)",
   "dateRaised": "2024-11-10",
   "deadline": "2025-05-09"

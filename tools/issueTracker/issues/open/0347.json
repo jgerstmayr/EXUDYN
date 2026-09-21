@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "MEDIUM",
   "description": "instead of initialVelocities",
   "dateRaised": "2020-02-24",
   "deadline": "2020-04-24"

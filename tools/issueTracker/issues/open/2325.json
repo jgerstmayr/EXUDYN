@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "LOW",
   "description": "improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained",
   "dateRaised": "2026-03-23",
   "deadline": "2026-09-19"

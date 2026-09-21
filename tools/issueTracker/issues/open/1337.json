@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "MEDIUM",
   "description": "C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep",
   "dateRaised": "2022-12-26",
   "deadline": "2023-06-24"

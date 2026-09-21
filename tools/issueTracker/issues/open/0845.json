@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "HIGH",
   "description": "add documentation to object and connector jacobians",
   "dateRaised": "2021-12-23",
   "deadline": "2022-02-21"

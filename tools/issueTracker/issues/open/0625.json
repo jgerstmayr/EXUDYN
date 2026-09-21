@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "MEDIUM",
   "description": "revise equations of motion and add figure for COM and local coordinates",
   "dateRaised": "2021-04-15",
   "deadline": "2021-06-14"

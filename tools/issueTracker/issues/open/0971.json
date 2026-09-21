@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "add mechanisms to catch exceptions inside renderer thread; try detaching renderer thread",
   "dateRaised": "2022-03-06",
   "deadline": "2022-05-05"

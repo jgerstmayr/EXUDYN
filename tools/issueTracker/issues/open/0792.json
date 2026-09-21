@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "VS2017 settings with Intel Performance Libraries and test interface via Eigen",
   "dateRaised": "2021-11-02",
   "deadline": "2022-01-01"

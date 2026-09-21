@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "MEDIUM",
   "description": "explain System errors, Python errors and Warnings; explain exception handling and add example",
   "dateRaised": "2022-01-25",
   "deadline": "2022-03-26"

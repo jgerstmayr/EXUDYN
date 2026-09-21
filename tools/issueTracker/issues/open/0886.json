@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "test py::raise_from for Python-induced exceptions (in renderPythonInterface) or for SystemErrors; check whether execeptions are originating from C or Python, see pybind11 Exceptions",
   "dateRaised": "2022-01-25",
   "deadline": "2022-03-26"

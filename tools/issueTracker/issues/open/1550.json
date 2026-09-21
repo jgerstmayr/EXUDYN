@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "MEDIUM",
   "description": "add F_Lie*Glocal_q term for Jacobian to improve convergence",
   "dateRaised": "2023-05-02",
   "deadline": "2023-10-29"

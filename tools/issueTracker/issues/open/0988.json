@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "make sparse version similar to numerically differentiated single objects in JacobianODE2RHS",
   "dateRaised": "2022-03-15",
   "deadline": "2022-05-14"

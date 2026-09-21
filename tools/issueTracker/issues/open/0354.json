@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HUGE",
   "description": "add consistent object (not connector) differentiation either manually or with autodiff",
   "dateRaised": "2020-03-05",
   "deadline": "2020-05-04"

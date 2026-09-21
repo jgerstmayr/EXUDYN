@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "complete implementation of all functions (rigid marker, etc.)",
   "dateRaised": "2022-05-16",
   "deadline": "2022-07-15"

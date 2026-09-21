@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "MEDIUM",
   "description": "add more description on constraint configurations, coordinate transformations and figures for GenericJoint",
   "dateRaised": "2021-04-21",
   "deadline": "2021-06-20"

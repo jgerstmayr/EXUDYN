@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs",
   "dateRaised": "2021-12-19",
   "deadline": "2022-02-17"

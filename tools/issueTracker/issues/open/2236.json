@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "LOW",
   "description": "fix wrong initialization for time in renderer on linux systems",
   "dateRaised": "2026-01-26",
   "deadline": "2026-07-25"

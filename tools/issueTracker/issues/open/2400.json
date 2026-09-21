@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "CHECK",
   "priority": "NORMAL",
+  "effort": "MEDIUM",
   "description": "the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10",
   "dateRaised": "2026-09-12",
   "deadline": "2027-03-11",

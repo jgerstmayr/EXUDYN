@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "BUG",
+  "effort": "MEDIUM",
   "description": "modified Newton does not work, no Jacobian update computed when switching",
   "dateRaised": "2021-08-13",
   "deadline": "2021-10-12"

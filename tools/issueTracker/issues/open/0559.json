@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "TESTING",
+  "effort": "MEDIUM",
   "description": "add Lie group integrator flybar governor",
   "dateRaised": "2021-01-26",
   "deadline": "2021-03-27"

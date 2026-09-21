@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "TESTING",
+  "effort": "MEDIUM",
   "description": "add test model for simulator coupling using mbs0 with joints and implicit integrator coupled to mbs1 with explicit integration",
   "dateRaised": "2024-10-19",
   "deadline": "2025-04-17"

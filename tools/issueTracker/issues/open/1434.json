@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "priority": "HIGH",
+  "effort": "MEDIUM",
   "description": "add CqT*lambda terms to systemwide jacobian computation with flag",
   "dateRaised": "2023-02-16",
   "deadline": "2023-08-15"

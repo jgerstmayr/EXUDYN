@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add common dissipative (coeff of restitution, etc. laws to contact",
   "dateRaised": "2021-12-19",
   "deadline": "2022-02-17"

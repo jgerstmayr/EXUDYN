@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "Add tests for SlidingJoint with thin ANCF cable",
   "dateRaised": "2026-03-02",
   "deadline": "2026-08-29"

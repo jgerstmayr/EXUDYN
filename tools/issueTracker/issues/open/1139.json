@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "priority": "NORMAL",
+  "effort": "MEDIUM",
   "description": "add description regarding which functions are needed to add C++ user elements",
   "dateRaised": "2022-06-12",
   "deadline": "2022-08-11"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers",
   "dateRaised": "2023-01-22",
   "deadline": "2023-07-21"

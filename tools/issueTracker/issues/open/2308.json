@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "MEDIUM",
   "description": "in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode",
   "dateRaised": "2026-02-19",
   "deadline": "2026-08-18"

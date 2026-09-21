@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "TESTING",
+  "effort": "LOW",
   "description": "add simple test into TestModels",
   "dateRaised": "2021-03-21",
   "deadline": "2021-05-20"

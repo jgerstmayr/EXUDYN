@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "extend to frictional contact",
   "dateRaised": "2024-11-04",
   "deadline": "2025-05-03"

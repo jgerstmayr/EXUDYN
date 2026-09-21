@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add consistent drawing information in show field of every item",
   "dateRaised": "2020-05-24",
   "deadline": "2020-07-23"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "MEDIUM",
   "description": "does not work for symbolic userfunctions",
   "dateRaised": "2024-10-11",
   "deadline": "2025-04-09"

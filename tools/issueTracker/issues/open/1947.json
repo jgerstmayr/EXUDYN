@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "MEDIUM",
   "description": "check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact",
   "dateRaised": "2025-02-03",
   "deadline": "2025-08-02"

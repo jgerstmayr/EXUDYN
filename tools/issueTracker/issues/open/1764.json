@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add pickle functionality",
   "dateRaised": "2024-01-31",
   "deadline": "2024-07-29"

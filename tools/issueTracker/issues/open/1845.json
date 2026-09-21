@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "FIX",
+  "effort": "MEDIUM",
   "description": "numberOfThreads> 1 not working: conversion of vectorInput to np.array makes problems",
   "dateRaised": "2024-05-29",
   "deadline": "2024-11-25"

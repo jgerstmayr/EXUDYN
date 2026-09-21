@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "BUG",
   "priority": "NORMAL",
+  "effort": "HIGH",
   "description": "measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10",
   "dateRaised": "2026-09-12",
   "deadline": "2027-03-11",

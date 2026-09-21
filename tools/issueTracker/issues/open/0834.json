@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "add Hertzian contact laws to contacts, using separate enum for contact laws and additional parameter",
   "dateRaised": "2021-12-19",
   "deadline": "2022-02-17"

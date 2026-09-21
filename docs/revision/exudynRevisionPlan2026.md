@@ -1447,7 +1447,7 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     rather than assumed, and the literal `nLine > 9` in the HTML writer is gone.
 
 <a id="r8-5-2"></a>
-**R8.5.2** **FIELD DONE 2026-09-21 (R8.5.3); the triage pass is open** — *(sub-step of R8.5;
+**R8.5.2** **DONE 2026-09-21** — [log](exudynRevisionLog2026.md#r8-5-2) — *(sub-step of R8.5;
     maintainer request 2026-09-21)* **The open backlog becomes sortable: an `effort` field, and a
     place for what the work knows.** Measured 2026-09-21: **270
     open issues** — 152 EXTENSION, 33 CHECK, 20 FIX, 19 DOCU, 16 TESTING, 14 CHANGE, 8 BUG, 4
@@ -1471,9 +1471,13 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     `effort` column: it holds what the work knows while the issue is open and is cleared when it
     closes, so it can never reach the published release notes.
 
-    **The triage pass itself** is a maintainer decision per issue; the tracker side of it is the
-    field, the enum check, the `--effort` filter of the CLI list command, and a report that groups
-    the open issues by (type, effort) so that the pass can be done in one sitting rather than 270.
+    **Done 2026-09-21.** The tracker side: the field and its enum (R8.5.3), the `--effort` filter
+    of `exudev issue list`, and `exudev issue triage`, which prints the open issues as a table of
+    type against effort. The pass itself: **269 of the 270 open issues classified** from their
+    title and description — 49 LOW, 159 MEDIUM, 54 HIGH, 7 HUGE — and the 270th, #2548, turned
+    out to be finished by R7.1.7 and was resolved instead. **These are proposals**: a
+    classification made from the text of an issue, not by the person who will do the work, and
+    `exudev issue modify <n> effort <value>` corrects one in a second.
 
 <a id="r8-5-1"></a>
 **R8.5.1** *(sub-step of R8.5)* **A tiny local viewer/editor for the issues**, for maintainers:

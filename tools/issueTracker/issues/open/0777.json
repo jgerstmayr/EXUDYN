@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "TESTING",
+  "effort": "MEDIUM",
   "description": "add tests for dense and sparse mass and jacobian matrices, together with sparse/dense solvers",
   "dateRaised": "2021-10-09",
   "deadline": "2021-12-08"

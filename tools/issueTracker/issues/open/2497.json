@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "priority": "LOW",
+  "effort": "MEDIUM",
   "description": "Successor of #1988; which asked to change \"except:\" into \"except Exception as e:\" so that a KeyboardInterrupt passes through a long parameter variation. The change was never made; but it is no longer invisible: ruff E722 lists every one of the 59 with file and message in tools/ci/ruffBaseline.txt since revision2026 step R5.5.3; and a NEW one fails the check. Each needs a decision on which exception was actually meant; which is why they were baselined rather than rewritten. revision2026 step R6.1",
   "dateRaised": "2026-09-17",
   "deadline": "2027-03-16",

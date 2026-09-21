@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "MEDIUM",
   "description": "add documentation of equations",
   "dateRaised": "2026-01-16",
   "deadline": "2026-07-15"

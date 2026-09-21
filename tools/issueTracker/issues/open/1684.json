@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "HIGH",
   "description": "consider functionality such as ComputeMassMatrix; ComputeODE2RHS, etc.; would require some default simulation settings (store in mainsystem?)",
   "dateRaised": "2023-10-29",
   "deadline": "2024-04-26"

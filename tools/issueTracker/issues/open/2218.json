@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "LOW",
   "description": "add access function for rotation",
   "dateRaised": "2026-01-13",
   "deadline": "2026-07-12"

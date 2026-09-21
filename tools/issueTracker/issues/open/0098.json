@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "EXTENSION",
   "priority": "LOW",
+  "effort": "MEDIUM",
   "description": "add destructors/cleanup to MainSystemData and all other system functions (check new commands)",
   "dateRaised": "2019-04-01",
   "deadline": "2019-07-01"

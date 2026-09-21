@@ -5,6 +5,7 @@
   "status": "RAISED",
   "type": "TESTING",
   "priority": "NORMAL",
+  "effort": "MEDIUM",
   "description": "check for advanced right-angle frame",
   "dateRaised": "2023-04-08",
   "deadline": "2023-10-05"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "HIGH",
   "description": "add vector and matrix functionality for Diff()",
   "dateRaised": "2026-01-16",
   "deadline": "2026-07-15"

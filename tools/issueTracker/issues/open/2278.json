@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "LOW",
   "description": "check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?",
   "dateRaised": "2026-02-09",
   "deadline": "2026-08-08"

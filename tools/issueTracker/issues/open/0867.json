@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHANGE",
+  "effort": "MEDIUM",
   "description": "change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu",
   "dateRaised": "2022-01-17",
   "deadline": "2022-03-18"

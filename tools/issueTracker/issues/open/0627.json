@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "DOCU",
+  "effort": "MEDIUM",
   "description": "add description, connector equations and figure",
   "dateRaised": "2021-04-21",
   "deadline": "2021-06-20"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "MEDIUM",
   "description": "check Vector operator[], and ConstVector performance regarding inlining",
   "dateRaised": "2019-05-21",
   "deadline": "2019-07-20"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "add BeamSectionGeometry to 2D beam elements",
   "dateRaised": "2022-05-09",
   "deadline": "2022-07-08"

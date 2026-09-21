@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "CHECK",
+  "effort": "HIGH",
   "description": "consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal",
   "dateRaised": "2024-10-26",
   "deadline": "2025-04-24"

@@ -4,6 +4,7 @@
   "author": "JG",
   "status": "RAISED",
   "type": "EXTENSION",
+  "effort": "MEDIUM",
   "description": "fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one",
   "dateRaised": "2023-05-01",
   "deadline": "2023-10-28"
