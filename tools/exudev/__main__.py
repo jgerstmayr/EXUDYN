@@ -357,12 +357,22 @@ def BuildParsers():
 
     release = subParsers.add_parser('release', parents=[globalParser, versionParser],
         help='the full release path, with the guards a release needs',
-        description='"build --complete" over every Python version, plus: it refuses a development '
-                    'version, it uses "generate --check" so that a release cannot silently '
-                    'regenerate, and it builds the linux wheels afterwards.')
+        description='"build --complete" over every Python version, with the bracket a release '
+                    'needs: it refuses a development version, checks that the issue store and the '
+                    'published pages are consistent and that the working tree is clean, uses '
+                    '"generate --check" so that a release cannot silently regenerate, builds the '
+                    'linux wheels, writes dist/RELEASE_NOTES.md from CHANGELOG.md and - with '
+                    '--tag - tags HEAD. It never bumps the version (that is "issue bump") and '
+                    'never pushes.')
     release.add_argument('--dev', action='store_true',
                          help='allow a release build from a .dev version')
     release.add_argument('--no-linux', action='store_true', help='skip the linux wheels')
+    release.add_argument('--tag', action='store_true',
+                         help='create the annotated tag v<version> at HEAD afterwards; it is '
+                              'never pushed')
+    release.add_argument('--allow-dirty', action='store_true', dest='allow_dirty',
+                         help='build although the working tree has uncommitted changes (the '
+                              'wheels then belong to no commit)')
     release.add_argument('--no-docs', action='store_true', help='skip the documentation')
     release.set_defaults(function=commands.Release)
 

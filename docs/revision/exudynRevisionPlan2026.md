@@ -1264,20 +1264,33 @@ until R6.7 gave it a type — **597** call sites, 20 of them in `PyConversion.h`
     | 2 | **R8.5** (+**R8.5.2**, then R8.5.1) | the file format. Everything that writes or reads an issue is cheaper to write once against JSON than twice |
     | 3 | **R8.3.4** | `ABANDONED` — `CLOSED` (D13): a rename that every later step would otherwise carry twice |
     | 4 | **R8.4** | the minor-version bump belongs in the tracker, and its baseline should land in the new format, not in a Python list; **and (b)**, the stored version of a closed issue with its check (D14), which the maintainer asked for on 2026-09-21 |
-    | 5 | **R7.4** | `CHANGELOG.md` is a rendering of the JSON; the step already says it waits for R8.5 |
-    | 6 | **R8.1** | templates and `CONTRIBUTING.md`; independent of all of the above, can be pulled forward whenever it suits |
-    | 7 | **R8.2** | `tools/release.py` drives the tracker CLI (1), the minor bump (3) and the JSON (2). Written before them it is written twice — which is the maintainer's point |
+    | 5 | **R7.4** | **done 2026-09-21** — `CHANGELOG.md` is a rendering of the JSON |
+    | 6 | **R8.1** | **done 2026-09-21** — templates and `CONTRIBUTING.md` |
+    | 7 | **R8.2** | **done 2026-09-21** — and the maintainer was right that it comes late: it drives the tracker CLI (1), the bump (3) and the JSON (2), and turned out to be a bracket around `exudev release` rather than a new script |
     | 8 | **R7.2** | carry the revision into the documentation, with the R8 changes included (maintainer, 2026-09-21) |
     | 9 | **R8.6** | the user-script checker needs the complete API-changes table, so it stays last |
 
     R9 to R11 follow the documentation pass (maintainer, 2026-09-21).
 
 <a id="r8-1"></a>
-**R8.1** Issue and PR templates, and a `CONTRIBUTING.md` stating the actual policy now that a branch
-    exists to target.
+**R8.1** **DONE 2026-09-21** (#2577) — [log](exudynRevisionLog2026.md#r8-1) — Issue and PR
+    templates, and a `CONTRIBUTING.md` stating the actual policy now that a branch exists to
+    target.
+
+    Two issue forms (bug, feature) that ask for `python -m exudyn info` and a script; a config
+    with the links to Discussions, the documentation and the authors; a pull request template
+    whose checklist is the four gates; and a `CONTRIBUTING.md` that says what the policy is and
+    **why** — reports and ideas are read, code is agreed before it is written.
 
 <a id="r8-2"></a>
-**R8.2** `tools/release.py`: bump → regenerate → test → build → tag.
+**R8.2** **DONE 2026-09-21** (#2578) — [log](exudynRevisionLog2026.md#r8-2) — `tools/release.py`:
+    bump → regenerate → test → build → tag.
+
+    **Not a new script**: `exudev release` has been that path since R5.18, and a second entry
+    point beside the driver is what R8.3 removed for the tracker. What this step added is the
+    bracket around it — the readiness check, `dist/RELEASE_NOTES.md` cut from `CHANGELOG.md`,
+    and `--tag`. **Bumping stays out of it**: a release is a decision about the product, and
+    `exudev issue bump` is one command for it (R8.4).
 
 <a id="r8-3"></a>
 **R8.3** **DONE 2026-09-21** (#2567) → [log](exudynRevisionLog2026.md#r8-3) — *(phase R8)*

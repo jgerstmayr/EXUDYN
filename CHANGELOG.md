@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.11 | McLaughlin | 235 | 1.11.235 |
+| 1.11 | McLaughlin | 237 | 1.11.237 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
 | 1.8 | Jones | 82 | 1.8.81 |
@@ -26,6 +26,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.11 - McLaughlin (current)
 
+- **1.11.237** `EXTENSION` the release path has no guards, no notes and no tag (#2578) - raised by Claude-JG
+  - exudev release is now the whole path. Before the build, one readiness step reports everything that is wrong at once: the issue store and both published pages consistent, the working tree clean (or --allow-dirty), the release named in releases.json, and the tag v\<version\> still free. After it, dist/RELEASE\_NOTES.md is cut from the section of CHANGELOG.md that belongs to this release - the body of a GitHub release, written nowhere a second time - and --tag creates the annotated tag at HEAD with those notes as its message, without ever pushing. Bumping stays out of the release path: it is a decision about the product and exudev issue bump is one command for it.
+- **1.11.236** `DOCU` no issue templates, and CONTRIBUTING does not state the workflow (#2577) - raised by Claude-JG
+  - Two GitHub issue forms - a bug report that requires the output of python -m exudyn info and a script that shows the problem, and a feature request that asks what the person is trying to model rather than which function they want - plus a config pointing questions at Discussions and a pull request template whose checklist is the four gates. CONTRIBUTING.md now states the policy and the reason for it: reports and ideas are welcome and read, code is agreed before it is written, because review capacity is the scarce resource, the C++/Python boundary is narrow and deliberate, and large parts of the tree are generated. .github/\* is excluded from the Sphinx build: the templates are read by GitHub and are not documentation.
 - **1.11.235** `DOCU` the repository has no CHANGELOG (#2576) - raised by Claude-JG
   - CHANGELOG.md in the repository root is rendered from the issue store by the tracker, on every write that closes an issue: a table of the releases, then the current release with the release note of each resolved issue and the earlier releases as one line per issue. An issue closed without being resolved, and an IDEA, appear nowhere. tools/checkIssues.py renders both published pages - trackerlog.md and CHANGELOG.md - and compares them with the files, so a store edited by hand no longer leaves the documentation describing issues that do not exist.
 - **1.11.234** `FIX` opening an issue in the web page threw appendChild(null) (#2575) - raised by Claude-JG

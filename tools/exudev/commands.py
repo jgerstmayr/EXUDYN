@@ -429,23 +429,172 @@ def FastModuleVersions(versions):
 
 
 #%%******************************************************************************************************
+def IssueTrackerScript():
+    return os.path.join(runner.RepositoryRoot(), 'tools', 'checkIssues.py')
+
+
+def WorkingTreeIsClean():
+    """no uncommitted change to a TRACKED file. A wheel built from a dirty tree corresponds to no
+    commit, so nobody can ever rebuild it (revision2026 step R8.2)."""
+    result = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no'],
+                            cwd=runner.RepositoryRoot(), capture_output=True, text=True)
+    return (result.returncode == 0 and result.stdout.strip() == '', result.stdout.strip())
+
+
+def ReleaseTagName():
+    return 'v' + runner.RepositoryVersion()
+
+
+def CheckReleaseReady(options):
+    """What has to hold before a release is built, in one step that says everything that is wrong
+    rather than the first thing (revision2026 step R8.2).
+
+    None of it is new work for the release: the issue store is checked by the commit gate, the
+    pages are rendered by the tracker, the release is named by "exudev issue bump". This is the
+    place where all of them are true AT ONCE, which is what a release needs."""
+    problems = []
+
+    #the issues, the version files and the two published pages - tools/checkIssues.py is the gate
+    result = subprocess.run([sys.executable, IssueTrackerScript(), '--check'],
+                            cwd=runner.RepositoryRoot(), capture_output=True, text=True)
+    if result.returncode != 0:
+        problems.append('the issue store or a published page is not consistent:\n'
+                        + result.stdout.strip())
+
+    (clean, changes) = WorkingTreeIsClean()
+    if not clean and not options.allow_dirty:
+        problems.append('the working tree has uncommitted changes, so the wheels would belong to '
+                        'no commit:\n    ' + changes.replace('\n', '\n    ')
+                        + '\n  commit them, or "--allow-dirty" if this is deliberate')
+
+    tracker = IssueTracker()
+    release = tracker.CurrentRelease()
+    if not release.get('name', '').strip():
+        problems.append('release ' + release['version'] + ' has no name in releases.json; '
+                        '"exudev issue bump --name ..." gives it one')
+
+    existing = subprocess.run(['git', 'tag', '--list', ReleaseTagName()],
+                              cwd=runner.RepositoryRoot(), capture_output=True, text=True)
+    if existing.stdout.strip():
+        problems.append('tag ' + ReleaseTagName() + ' already exists - this version has been '
+                        'released once, and a released version is never rebuilt with other '
+                        'content. Resolve an issue, or bump the release.')
+
+    if problems:
+        print('exudev release: NOT ready')
+        for problem in problems:
+            print('  - ' + problem)
+        return 1
+
+    print('release ' + runner.RepositoryVersion() + ' (' + release['version'] + ' '
+          + release['name'] + '): issues consistent, pages current, working tree clean, '
+          + ReleaseTagName() + ' free')
+    return 0
+
+
+def ReleaseNotesPath():
+    return os.path.join(runner.RepositoryRoot(), 'dist', 'RELEASE_NOTES.md')
+
+
+def WriteReleaseNotes():
+    """The section of CHANGELOG.md that belongs to the current release, as its own file: that is
+    what goes into the body of a GitHub release and into an announcement. It is CUT from the
+    changelog rather than written again - the release notes of each issue are in the tracker and
+    nowhere else (revision2026 steps R7.4 and R8.2)."""
+    changelog = os.path.join(runner.RepositoryRoot(), 'CHANGELOG.md')
+    if not os.path.isfile(changelog):
+        raise SystemExit('exudev release: no CHANGELOG.md; any tracker verb writes it')
+
+    with io.open(changelog, encoding='utf-8') as file:
+        lines = file.read().split('\n')
+
+    start = None
+    section = []
+    for line in lines:
+        if line.startswith('## Version '):
+            if start is not None:
+                break
+            start = line
+            continue
+        if start is not None:
+            section.append(line)
+
+    version = runner.RepositoryVersion()
+    text = ('# Exudyn ' + version + '\n\n'
+            + (start.replace('## ', '') + '\n\n' if start else '')
+            + '\n'.join(section).strip() + '\n')
+
+    os.makedirs(os.path.dirname(ReleaseNotesPath()), exist_ok=True)
+    with io.open(ReleaseNotesPath(), 'w', encoding='utf-8', newline='\n') as file:
+        file.write(text)
+
+    print('release notes for ' + version + ': ' + ReleaseNotesPath() + ' ('
+          + str(len(section)) + ' lines from CHANGELOG.md)')
+    return 0
+
+
+def TagRelease():
+    """The annotated tag, at HEAD, with the release notes as its message. It is NEVER pushed
+    (CLAUDE.md rule 4): pushing is the maintainer's decision and needs their 2FA anyway."""
+    (clean, changes) = WorkingTreeIsClean()
+    if not clean:
+        raise SystemExit('exudev release --tag: the working tree is dirty, so the tag would '
+                         'point at a commit that is not what was built:\n    '
+                         + changes.replace('\n', '\n    '))
+
+    name = ReleaseTagName()
+    message = 'Exudyn ' + runner.RepositoryVersion()
+    if os.path.isfile(ReleaseNotesPath()):
+        with io.open(ReleaseNotesPath(), encoding='utf-8') as file:
+            message = file.read()
+
+    result = subprocess.run(['git', 'tag', '-a', name, '-F', '-'],
+                            cwd=runner.RepositoryRoot(), input=message, text=True)
+    if result.returncode != 0:
+        raise SystemExit('exudev release --tag: git tag failed')
+
+    print('tagged ' + name + ' at HEAD; it is NOT pushed - "git push origin ' + name
+          + '" is yours to run')
+    return 0
+
+
 def Release(options):
-    """The release path: 'build --complete' over all versions, with the guards a release needs and
-    the linux wheels afterwards - the old makeAndTestAllBinaries.bat, minus the separate windows."""
+    """The release path: the guards, 'build --complete' over all versions, the linux wheels, the
+    release notes and the tag - the old makeAndTestAllBinaries.bat, minus the separate windows.
+
+    The version itself is NOT bumped here (revision2026 step R8.2): starting a release is a
+    decision about the product and belongs to "exudev issue bump", which is one command and one
+    line in releases.json. What this path does is refuse to build a version that is not ready."""
     if runner.IsDevelopmentVersion() and not options.dev:
         raise SystemExit('exudev: version.txt is ' + runner.RepositoryVersion() + ', a development '
                          'version. A release built from it differs from a real release (the fast '
                          'module is compiled for Python 3.13 only, setup.py:440-445). Use '
                          '"exudev release --dev" to do it anyway, or "exudev build --complete".')
 
+    steps = [Step('check that the release is ready',
+                  action=lambda: CheckReleaseReady(options),
+                  note='issue store consistent, published pages current, working tree clean, '
+                       'release named, tag ' + ReleaseTagName() + ' still free')]
+
     completeOptions = OptionsWith(options, complete=True, release_checks=True,
                                   no_clean=False, no_tests=False,
                                   fast=True, no_parallel=False, no_install=False,
                                   unittests=False, minimal=False, no_glfw=False, clean=False)
-    steps = Complete(completeOptions)
+    steps += Complete(completeOptions)
 
     if not options.no_linux:
         steps += Linux(OptionsWith(options, manylinux=True, wsl_conda=False, fast=True))
+
+    steps += [Step('write the release notes',
+                    action=WriteReleaseNotes,
+                    note='cut the section of CHANGELOG.md that belongs to this release into '
+                         'dist/RELEASE_NOTES.md')]
+
+    if options.tag:
+        steps += [Step('tag the release',
+                       action=TagRelease,
+                       note='git tag -a ' + ReleaseTagName() + ' at HEAD, with the release notes '
+                            'as its message; NOT pushed')]
 
     steps += [Step('release checklist',
                    action=PrintReleaseChecklist,
@@ -460,8 +609,13 @@ def PrintReleaseChecklist():
     print('  after the release build, by hand:')
     print('    - check every log under python/logs/testmodels, python/logs/performance and '
           'python/logs/examples')
-    print('    - commit, then tag the release')
+    print('    - commit the logs and the version files')
+    print('    - tag it: "exudev release --tag" after that commit (or git tag -a '
+          + ReleaseTagName() + ')')
+    print('    - push the commit and the tag - the driver never pushes (CLAUDE.md rule 4)')
     print('    - upload the wheels from dist/ and dist/manylinux/')
+    print('    - the body of the GitHub release is dist/RELEASE_NOTES.md')
+    print('    - "exudev issue mode --dev" to go back to development mode')
 
     return 0
 

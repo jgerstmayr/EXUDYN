@@ -899,3 +899,36 @@ def testTheGeneratedPagesAreCheckedAgainstTheStore(tracker, tmp_path):
     tracker.RemarkIssue(OpenIssueNumber(tracker), 'a remark that the page does not know about')
     messages = checkIssues.CheckGeneratedPages()
     assert any('trackerlog.md' in message for message in messages), messages
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the release path (revision2026 step R8.2). The notes of a release are CUT from CHANGELOG.md, so
+#that the release notes of each issue live in the tracker and nowhere else.
+
+def testTheReleaseNotesAreTheCurrentSectionOfTheChangelog(tmp_path, monkeypatch):
+    commands = ExudevCommands()
+    monkeypatch.setattr(commands.runner, 'RepositoryRoot', lambda: str(tmp_path))
+    monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.12.3')
+
+    (tmp_path / 'CHANGELOG.md').write_text(
+        '# Changelog\n\nsome prose\n\n'
+        '## Version 1.12 - Metheney (current)\n\n'
+        '- **1.12.3** `FIX` the newest thing (#99)\n'
+        '- **1.12.2** `DOCU` something else (#98)\n\n'
+        '## Version 1.11 - McLaughlin\n\n'
+        '- **1.11.235** `DOCU` the previous release (#2576)\n', encoding='utf-8')
+
+    assert commands.WriteReleaseNotes() == 0
+
+    notes = (tmp_path / 'dist' / 'RELEASE_NOTES.md').read_text(encoding='utf-8')
+    assert notes.startswith('# Exudyn 1.12.3')
+    assert 'Version 1.12 - Metheney' in notes
+    assert 'the newest thing' in notes and 'something else' in notes
+    #and it stops at the previous release: that one has been published already
+    assert '1.11.235' not in notes and 'McLaughlin' not in notes
+
+
+def testTheReleaseTagIsTheVersion(monkeypatch):
+    commands = ExudevCommands()
+    monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.12.0')
+    assert commands.ReleaseTagName() == 'v1.12.0'

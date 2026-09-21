@@ -1,0 +1,50 @@
+name: Feature or change request
+description: Something Exudyn cannot do yet, or should do differently
+labels: ["extension"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Requests are read and go into the issue tracker of the project, which is published with
+        every release ([CHANGELOG.md](../../blob/main/CHANGELOG.md)). What a request cannot come
+        with is a date: the backlog is long and the resources are small.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: >
+        The modelling problem, not the function you have in mind. Half of the requests that turn
+        into features look different afterwards, because Exudyn could already do most of it in
+        another way.
+    validations:
+      required: true
+
+  - type: textarea
+    id: today
+    attributes:
+      label: How do you do it today?
+      description: >
+        The workaround, if there is one, and what is wrong with it - slow, wrong, unreadable,
+        impossible.
+    validations:
+      required: false
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would it look like?
+      description: >
+        A few lines of the Python you would like to write. A parameter, a new item, a utility
+        function - and if you know which existing item it belongs to, say which.
+      render: python
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Which Exudyn version are you on?
+      description: The first line of `python -m exudyn info`.
+    validations:
+      required: false

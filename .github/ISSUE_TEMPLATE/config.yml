@@ -1,0 +1,17 @@
+# The two forms above are the useful shapes of an issue; a blank issue is still allowed, because
+# a question that fits neither should not be pushed into one of them.
+blank_issues_enabled: true
+contact_links:
+  - name: Question about using Exudyn
+    url: https://github.com/jgerstmayr/EXUDYN/discussions
+    about: >
+      How do I model this, why does my solver not converge, which item fits - Discussions is the
+      place, and the answer helps the next person who searches for it.
+  - name: Documentation
+    url: https://exudyn.readthedocs.io
+    about: >
+      The user manual, the reference manual of all items, the examples and the issue tracker of
+      every release.
+  - name: Write to the authors
+    url: mailto:reply.exudyn@gmail.com
+    about: Anything that does not belong in public - a collaboration, a licence question.

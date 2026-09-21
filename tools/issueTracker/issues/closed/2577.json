@@ -1,0 +1,15 @@
+{
+  "number": 2577,
+  "title": "no issue templates, and CONTRIBUTING does not state the workflow",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "GitHub offered a blank text box for a bug report, so a report arrived without the version, without the platform and usually without a script - three rounds of questions before anything could be looked at. And CONTRIBUTING.md said that contributing is only possible by contacting the authors, without saying what a good report contains, what happens to a pull request that arrives unannounced, or which rules a change has to follow if it is agreed. Revision2026 step R8.1: two issue forms that ask for the output of python -m exudyn info and a script that shows the problem, a config with the links to Discussions and the documentation, a pull request template with the four gates as a checklist, and a CONTRIBUTING that states the policy as it is - reports and ideas welcome and read, code agreed before it is written, and why.",
+  "dateRaised": "2026-09-21",
+  "deadline": "2027-03-20",
+  "dateResolved": "2026-09-21 18:12",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Two GitHub issue forms - a bug report that requires the output of python -m exudyn info and a script that shows the problem, and a feature request that asks what the person is trying to model rather than which function they want - plus a config pointing questions at Discussions and a pull request template whose checklist is the four gates. CONTRIBUTING.md now states the policy and the reason for it: reports and ideas are welcome and read, code is agreed before it is written, because review capacity is the scarce resource, the C++/Python boundary is narrow and deliberate, and large parts of the tree are generated. .github/* is excluded from the Sphinx build: the templates are read by GitHub and are not documentation.",
+  "resolvedInVersion": "1.11.236"
+}

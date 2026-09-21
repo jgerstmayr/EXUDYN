@@ -95,6 +95,8 @@ exclude_patterns = ['rotorAnsys.rst',
                     #toctree or excluded - a page in neither fails the strict build (step R7.1.2).
                     'docs/revision/*',   #the revision plan, log and info: a working record
                     'CLAUDE.md',         #the working contract for Claude Code sessions
+                    '.github/*',         #issue and pull request templates: GitHub reads them,
+                                         #Sphinx must not (revision2026 step R8.1)
                     'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
 
 #for google search index file, placed into root folder

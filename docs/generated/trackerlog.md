@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.11.235.dev1
+- Exudyn version = 1.11.237.dev1
 - last change = 2026-09-21
-- Number of issues = 2577
-- Number of resolved issues = 2308 (235 in current version)
+- Number of issues = 2579
+- Number of resolved issues = 2310 (237 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.11
 
+- Version 1.11.237: resolved Issue 2578: the release path has no guards, no notes and no tag (extension)
+  - issue author: Claude-JG
+  - description: exudev release ran build --complete over every Python version and then printed a checklist, which leaves the bracket around a release to memory: whether the issue store and the published pages are consistent, whether the working tree is clean - a wheel built from a dirty tree belongs to no commit and can never be rebuilt - whether the release has a name, and whether this version was already released once. Revision2026 step R8.2 makes that one preflight step that reports everything that is wrong rather than the first thing, writes dist/RELEASE\_NOTES.md by cutting the section of CHANGELOG.md that belongs to this release, and creates the annotated tag with --tag. It never bumps the version, which is exudev issue bump and a decision about the product, and it never pushes.
+  - **notes:** exudev release is now the whole path. Before the build, one readiness step reports everything that is wrong at once: the issue store and both published pages consistent, the working tree clean (or --allow-dirty), the release named in releases.json, and the tag v\<version\> still free. After it, dist/RELEASE\_NOTES.md is cut from the section of CHANGELOG.md that belongs to this release - the body of a GitHub release, written nowhere a second time - and --tag creates the annotated tag at HEAD with those notes as its message, without ever pushing. Bumping stays out of the release path: it is a decision about the product and exudev issue bump is one command for it.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 18:12**, date raised: 2026-09-21, resolved by: Claude-JG
+- Version 1.11.236: resolved Issue 2577: no issue templates, and CONTRIBUTING does not state the workflow (docu)
+  - issue author: Claude-JG
+  - description: GitHub offered a blank text box for a bug report, so a report arrived without the version, without the platform and usually without a script - three rounds of questions before anything could be looked at. And CONTRIBUTING.md said that contributing is only possible by contacting the authors, without saying what a good report contains, what happens to a pull request that arrives unannounced, or which rules a change has to follow if it is agreed. Revision2026 step R8.1: two issue forms that ask for the output of python -m exudyn info and a script that shows the problem, a config with the links to Discussions and the documentation, a pull request template with the four gates as a checklist, and a CONTRIBUTING that states the policy as it is - reports and ideas welcome and read, code agreed before it is written, and why.
+  - **notes:** Two GitHub issue forms - a bug report that requires the output of python -m exudyn info and a script that shows the problem, and a feature request that asks what the person is trying to model rather than which function they want - plus a config pointing questions at Discussions and a pull request template whose checklist is the four gates. CONTRIBUTING.md now states the policy and the reason for it: reports and ideas are welcome and read, code is agreed before it is written, because review capacity is the scarce resource, the C++/Python boundary is narrow and deliberate, and large parts of the tree are generated. .github/\* is excluded from the Sphinx build: the templates are read by GitHub and are not documentation.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-21 18:12**, date raised: 2026-09-21, resolved by: Claude-JG
 - Version 1.11.235: resolved Issue 2576: the repository has no CHANGELOG (docu)
   - issue author: Claude-JG
   - description: A user of a released package looks for CHANGELOG.md in the repository root, and Exudyn had none: the only list of what changed was the issue tracker chapter of the documentation, which is the tracker itself - every resolved issue with its description, dates and author, plus the open issues and the known bugs, 119,000 words. Revision2026 step R7.4 renders CHANGELOG.md from the issue store, which step R8.4 made possible by storing in every closed issue the version it produced: the file only has to group and print. The current release is printed with the release note of each issue and the earlier ones as one line per issue, so that the file stays a changelog instead of a second copy of the tracker. tools/checkIssues.py compares both published pages with what the issues render to, which catches a store edited by hand.

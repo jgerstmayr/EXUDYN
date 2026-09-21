@@ -1,0 +1,67 @@
+name: Bug report
+description: Something goes wrong - a wrong result, an exception, a crash, a file not written
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting this. Two things make a report answerable in one round instead
+        of four: the output of `python -m exudyn info`, and a script that shows the problem and
+        nothing else.
+
+  - type: textarea
+    id: info
+    attributes:
+      label: Output of `python -m exudyn info`
+      description: >
+        Run it in the environment where the problem happens. It prints the version, where the
+        package is installed, which compiled module is loaded, the Python version and platform,
+        and which optional packages are present.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens, and what you expected instead
+      description: >
+        The exact message if there is one, copied rather than described. If the result is simply
+        wrong, say which number you expected and why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: script
+    attributes:
+      label: A script that shows it
+      description: >
+        As small as you can make it, and runnable as it stands. Remove everything that is not
+        needed to make the problem appear - that step alone often finds it.
+      render: python
+    validations:
+      required: true
+
+  - type: dropdown
+    id: renderer
+    attributes:
+      label: Does it also happen without the renderer?
+      description: >
+        Set `EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1`, or use `exu.SolveDynamic(..., simulationSettings)`
+        without `exu.StartRenderer()`. Graphics problems and solver problems need different
+        answers.
+      options:
+        - "I did not try"
+        - "Yes, also without the renderer"
+        - "No, only with the renderer"
+    validations:
+      required: false
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything else
+      description: >
+        When it started, whether an older version worked, what you already tried.
+    validations:
+      required: false
