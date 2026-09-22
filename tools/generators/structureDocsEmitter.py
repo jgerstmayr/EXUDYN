@@ -52,10 +52,17 @@ def StructureDocs(parseInfo, parameterList):
                     parseInfo['class'] + ' has the following items:\n', 
                     section=parseInfo['class'], sectionLevel=3, 
                     sectionLabel='sec:' + parseInfo['class'].replace(' ',''))
-        #the table of the structure's items (revision2026 step R7.1.6)
+        #the table of the structure's items (revision2026 step R7.1.6). The header is written
+        #before the rows and the loop below can skip every parameter of a structure - all of them
+        #deprecated, or none with a pybind interface - which leaves a table with five headings and
+        #nothing under them: an empty box in the HTML, and a hard failure of the LaTeX builder,
+        #which looks for a tbody that is not there (#2592, revision2026b step RG3.6). So the
+        #position is remembered and the header is taken back again if no row followed.
+        tableStart = len(plr.sMarkdown)
         plr.sMarkdown += ('\n| Name | type / function return type | size | default value / function '
                           'args | description |\n|---|---|---|---|---|\n')
-    
+        headerEnd = len(plr.sMarkdown)
+
         for parameter in parameterListSorted:
             if IsDeprecatedParameter(parameter):
                 continue
@@ -114,7 +121,13 @@ def StructureDocs(parseInfo, parameterList):
                 plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
                                             Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False), isFunction=True)
 
-                
+
+        if len(plr.sMarkdown) == headerEnd:       #no row was written: no table (#2592)
+            plr.sMarkdown = (plr.sMarkdown[:tableStart]
+                             + '\n*(none: this structure has no items in the Python interface. A '
+                             + 'deprecated item keeps working and is described where it moved to.)*'
+                             + '\n')
+
         plr.sMarkdown += '\n'
 
 

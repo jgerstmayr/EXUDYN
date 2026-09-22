@@ -130,9 +130,8 @@ with identity matrix $\ImTwo \in \Rcal^{2 \times 2}$ and the shape functions
 
 $$
 \begin{aligned}
-
 S_1(x) &= 1-3\frac{x^2}{L^2}+2\frac{x^3}{L^3}, \quad
-S_2(x) = x-2\frac{x^2}{L}+\frac{x^3}{L^2}\nonumber\\
+S_2(x) = x-2\frac{x^2}{L}+\frac{x^3}{L^2}\\
 S_3(x) &= 3\frac{x^2}{L^2}-2\frac{x^3}{L^3}, \; \; \; \; \; \;  \quad
 S_4(x) = -\frac{x^2}{L}+\frac{x^3}{L^2}
 \end{aligned}
@@ -162,7 +161,6 @@ $$
 with integration weights $w(x_{ip})$, $\sum w(x_{ip})=2$, and integration points $x_{ip}$, given as,
 
 $$
-
 x_{ip} = \frac{L}{2}\xi_{ip} + \frac{L}{2} \, .
 $$ (eq-ancfcable-iptransform)
 
@@ -175,7 +173,6 @@ The elastic forces $\Qm_e$ are implicitly defined by the relation to the
 virtual work of elastic forces, $\delta W_e$, of applied forces, $\delta W_a$ and of viscous forces, $\delta W_v$,
 
 $$
-
 \Qm_e^T \delta \qv = \delta W_e + \delta W_a + \delta W_v.
 $$ (eq-cable2d-elasticforces)
 
@@ -202,7 +199,6 @@ in which $\ev_3$ is the unit vector which is perpendicular to the plane of the p
 By derivation, we obtain the variation of axial strain
 
 $$
-
 \delta \varepsilon =\frac{\partial \varepsilon}{\partial q_i}\delta q_i
 
 =\frac{1}{\Vert \rv'\Vert}\rv'^{T}\Sm'_i \delta q_i.
@@ -212,8 +208,7 @@ and the variation of $K$
 
 $$
 \begin{aligned}
-
-\delta K &= \frac{\partial}{\partial q_i} \left( \frac{(\rv'^{T}\times \rv'' )^{T}\ev_{3}}{\Vert \rv' \Vert^2 }\right) \delta q_i\nonumber\\
+\delta K &= \frac{\partial}{\partial q_i} \left( \frac{(\rv'^{T}\times \rv'' )^{T}\ev_{3}}{\Vert \rv' \Vert^2 }\right) \delta q_i\\
 &= \frac{1}{\Vert \rv' \Vert^4} \left[ \Vert \rv' \Vert^2 (\Sm'_i  \times \rv'' +\rv' \times \Sm''_i) -2 (\rv' \times \rv'') (\rv'^{T} \Sm'_i) \right]^{T} \ev_3 \delta q_i
 \end{aligned}
 $$ (eq-cable2d-deltakappa)
@@ -221,7 +216,6 @@ $$ (eq-cable2d-deltakappa)
 The normal force (axial force) $N$ in the beam is defined as function of the current strain $\varepsilon$,
 
 $$
-
 N = EA \, (\varepsilon - \varepsilon_0 - f\cRef \cdot \varepsilon\cRef).
 $$ (eq-n)
 
@@ -235,7 +229,6 @@ A factor $f\cRef<1$ allows to realize a smooth transition between deformed and s
 The bending moment $M$ in the beam is defined as function of the current material measure of curvature $K$,
 
 $$
-
 M = EI \, (K - K_0 - f\cRef \cdot K\cRef).
 $$ (eq-m)
 
@@ -263,8 +256,8 @@ as well as the derivative of the curvature,
 
 $$
 \begin{aligned}
-\dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \nonumber\\
-& = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\nonumber\\
+\dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \\
+& = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\\
 
 & = &  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
 \end{aligned}

@@ -76,7 +76,7 @@ The item VObjectContactConvexRoll has the following parameters:
 The geometrical setup is shown in {ref}`fig-objectcontactconvexroll-sketch`. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
 
 $$
-\mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i} 
+\mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i}
 $$ (eq-connectorconvexrolling-polynomial)
 
 with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker `m1` in the bodies local frame and transformed accordingly.

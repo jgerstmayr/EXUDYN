@@ -40,6 +40,11 @@ file='tools/generators/generated/confHelperItems.py'
 exec(open(file).read(), globals())
 file='tools/generators/generated/confHelperPyUtilities.py'
 exec(open(file).read(), globals())
+#the citation keys of docs/bibliographyDoc.bib, for AppendCitationDefinitions() at the end
+#of this file (revision2026b step RG3.5)
+citationKeys=[]
+file='tools/generators/generated/confHelperCitations.py'
+exec(open(file).read(), globals())
 
 import pygments
 from pygments.lexers import PythonLexer
@@ -106,6 +111,25 @@ exclude_patterns = ['rotorAnsys.rst',
                     'docs/howTo/matplotlibExamples.md',
                     'docs/howTo/visualStudio2022.md',
                     'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE PDF (revision2026b step RG3.3, #2586). "sphinx -M latexpdf . _buildpdf -t pdf" sets the tag,
+#and only then is pdfIndex.md a document: it is the root of the PDF, its landing page and the
+#only place the order of the PDF is written down. The html build never sees it, and this branch is
+#the only difference between the two builds.
+#What the PDF leaves out and why: README.rst (ten badge images fetched from the web as SVG, and
+#three animated GIFs - none of which LaTeX can include; pdfIndex.md replaces it), and the 289
+#pages of example and test model SOURCE LISTINGS, which are 517 of the ~1400 pages and are what a
+#reader goes to github for. Nothing points at them internally: the item pages link the examples by
+#their github URL (tools/generators/generatorPaths.py, githubSourceURL), so excluding them costs
+#no reference. The issue tracker log stays IN, deliberately - it is a few hundred KB of why, and
+#it is what makes the PDF worth searching (maintainer, 2026-09-22).
+if tags.has('pdf'):                                                             # noqa: F821
+    master_doc = 'pdfIndex'
+    exclude_patterns += ['index.md', 'README.rst',
+                         'docs/generated/examples/*', 'docs/generated/testModels/*']
+else:
+    exclude_patterns += ['pdfIndex.md']
 
 #for google search index file, placed into root folder
 html_extra_path = ['docs/extraHtml/googleeeca4e2177bc5628.html']
@@ -392,7 +416,9 @@ mathjax3_config = {
             'termB': [r'{\color{red}{#1}}',1],
             'termC': [r'{\color{green}{#1}}',1],
 #solver:
-            'acc': r'{\ddot \mathbf{q}}',
+            #braces around the argument: MathJax reads \ddot \mathbf{q} as intended, LaTeX reads
+            #it as \ddot{\mathbf} and stops (revision2026b step RG3.3)
+            'acc': r'{\ddot{\mathbf{q}}}',
             'GA': r'{G\alpha}',
             'Hm': r'{\mathbf{H}}',
             'ImTwo': r'{\mathbf{I}_{2 \times 2}}',
@@ -412,12 +438,105 @@ mathjax3_config = {
             'vel': r'{\mathbf{v}}',
             'wv': r'{\mathbf{w}}',
 
-            }                       
-        }                           
-    }       
+            }
+        }
+    }
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE LATEX BUILD (revision2026b step RG3.3, #2586)
+#Everything below is read by "sphinx -M latexpdf", which "exudev docs --pdf" runs, and by nothing
+#else; the html build ignores it.
+#
+#THE MATH IS THE POINT. The chapters are written with this project's own macros - $\qv\cConfig$,
+#$\LU{0b}{\Rot}$ - and the dict above is the ONE place they are declared (revision2026 step
+#R7.1.5, #2549; tools/checkMathMacros.py is the gate that keeps it complete). MathJax reads that
+#dict in the browser; LaTeX knows none of it, so the same dict is turned into the preamble here
+#rather than written out a second time. \qv alone occurs 544 times in the pages of the PDF and
+#\LU 2628 times, so an undeclared macro is not a cosmetic problem.
+#FIVE of the names are commands LaTeX already has, which MathJax does not have to care about.
+#They were found by asking LaTeX itself (\ifdefined over all of them), and each one is a decision
+#that cannot be automated - so both lists are written out here, and everything else is emitted
+#with \newcommand, which FAILS LOUDLY if a macro added later collides with something.
+latexKeepsItsOwn = ['vspace']       #\vspace is layout: MathJax has a no-op for it (see above),
+                                    #LaTeX does the real thing, and Sphinx's own output uses it
+latexRedefined = ['AE', 'Im', 'mp', 'vec']
+                                    #here the project's meaning has to win: AE is the Lagrange
+                                    #multiplier and not the ligature, Im the identity matrix and
+                                    #not the imaginary part, mp a 2x2 matrix and not the minus-
+                                    #plus sign, vec the vec() operator and not the arrow accent
+latex_engine = 'xelatex'            #the pages hold box-drawing characters and arrows in their
+                                    #directory trees and tables; pdflatex has no glyph for them
+
+latexMacroDefinitions = []
+for (macroName, macroDefinition) in mathjax3_config['tex']['macros'].items():
+    if macroName in latexKeepsItsOwn:
+        continue
+    if isinstance(macroDefinition, list):   #['body', numberOfArguments], as MathJax wants it
+        (macroBody, argumentCount) = (macroDefinition[0], macroDefinition[1])
+    else:
+        (macroBody, argumentCount) = (macroDefinition, 0)
+    latexMacroDefinitions.append(('\\renewcommand' if macroName in latexRedefined
+                                  else '\\newcommand') + '{\\' + macroName + '}'
+                                 + ('[' + str(argumentCount) + ']' if argumentCount else '')
+                                 + '{' + macroBody + '}')
+
+latex_elements = {
+    'papersize': 'a4paper',
+    'pointsize': '10pt',
+    #mathtools for \prescript (the \LU family), xcolor for the \termA/B/C of the theory chapter
+    'preamble': ('\\usepackage{amssymb}\n\\usepackage{mathtools}\n\\usepackage{xcolor}\n'
+                 + '%the math macros of conf.py, written by conf.py itself:\n'
+                 + '\n'.join(latexMacroDefinitions) + '\n'),
+    }
+
+latex_documents = [('pdfIndex', 'exudynDocumentation.tex',
+                    'Exudyn \u2014 Documentation', 'Johannes Gerstmayr', 'manual')]
+
+#the diagrams: sphinxcontrib.mermaid renders each one to a PDF through this command for the LaTeX
+#build (its html output stays 'raw', i.e. rendered in the browser and needing nothing installed).
+#mermaidx is a pure-Python renderer - no Node, no browser - and is the maintained successor of the
+#package that used to be called mmdc; it is in the 'pdf' dependency group of pyproject.toml.
+mermaid_cmd = 'mermaidx'
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#CITATIONS (revision2026b step RG3.5, #2550)
+#The chapters cite in running text - "see Zwoelfer and Gerstmayr [ZwoelferGerstmayr2021]" - which
+#the LaTeX build resolved and nothing resolved after it: the keys were printed and pointed
+#nowhere. docs/generated/references.md gives every entry of the bibliography a target, and the
+#hook below appends one Markdown link definition per key to every Markdown document Sphinx reads.
+#CommonMark then resolves [Key] as a shortcut reference link, and it does so ONLY where the text
+#is text: a key inside a code fence or inline code stays what it is, because the Markdown parser
+#decides, not a regular expression of ours. A definition that no page uses produces no output.
+#The source files on disk are NOT touched; this happens to the text Sphinx has read.
+citationDefinitions = "".join(["\n[" + key + "]: #ref-" + key.lower()
+                               for key in citationKeys])
 
 
+def AppendCitationDefinitions(app, docname, source):
+    if docname == "docs/generated/references":   #it writes the targets; it must not link to them
+        return
+    if str(app.env.doc2path(docname)).endswith(".md"):
+        source[0] = source[0] + "\n" + citationDefinitions + "\n"
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#LINE BREAKS INSIDE TABLE CELLS, FOR LATEX ONLY (revision2026b step RG3.3, #2586)
+#The name cell of a settings table stacks the access paths of one item - the short name and the
+#full visualizationSettings.general.xxx path - and the emitters separate them with a raw <br>
+#(tools/generators/autoGenerateHelper.py). There are about 470 of them in SimulationSettings.md
+#and VisualizationSettings.md. Raw html is html: the LaTeX writer drops it and warns, and the two
+#paths would run together into one unreadable word in the PDF. Rather than change what the
+#emitters write - the html is right, and a Markdown table cell cannot hold a real line break -
+#the raw node is translated here, for the latex builder only.
+def BreakToNewline(app, doctree, docname):
+    if app.builder.format != "latex":
+        return
+    from docutils import nodes                    # noqa: PLC0415 - only the latex build needs it
+    for node in list(doctree.findall(nodes.raw)):
+        if node.get("format") == "html" and node.astext().strip().rstrip("/>").strip("<") == "br":
+            node.replace_self(nodes.raw("", "\\newline ", format="latex"))
 
 
+def setup(app):
+    app.connect("source-read", AppendCitationDefinitions)
+    app.connect("doctree-resolved", BreakToNewline)

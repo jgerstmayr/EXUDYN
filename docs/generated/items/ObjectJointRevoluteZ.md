@@ -101,7 +101,6 @@ The index 3 constraint equations read
 
 $$
 \begin{aligned}
-
 \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &= 0 \\
 \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &= 0
 \end{aligned}

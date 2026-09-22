@@ -99,20 +99,27 @@ $$
 
 We distinguish 3 cases (see also {ref}`fig-objectcontactfrictioncirclecable2d-sketch` for cases 1 and 2):
 
-1. If $\rho \le 0$, the shortest distance would be the distance to point $\pv_p=\pv_i$, reading $$
+1. If $\rho \le 0$, the shortest distance would be the distance to point $\pv_p=\pv_i$, reading
+
+$$
 d_g = |\pv_{m0} - \pv_i| \quad (\rho \le 0)
+$$
+
+2. If $\rho \ge 1$, the shortest distance would be the distance to point $\pv_p=\pv_{i+1}$, reading
 
 $$
-2. If $\rho \ge 1$, the shortest distance would be the distance to point $\pv_p=\pv_{i+1}$, reading $$
 d_g = |\pv_{m0} - \pv_{i+1}| \quad (\rho \ge 1)
+$$
+
+3. Finally, if $0 < \rho < 1$, then the shortest distance has a projected point somewhere on the segment with the point (projected on the segment)
 
 $$
-3. Finally, if $0 < \rho < 1$, then the shortest distance has a projected point somewhere on the segment with the point (projected on the segment) $$
 \pv_p = \pv_i + \rho \cdot \vv_s
+$$
+and the distance
 
-$$ and the distance $$
+$$
 d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
-
 $$
 
 Here, the shortest distance vector for every segment results from the projected point $\pv_p$
@@ -126,7 +133,6 @@ $$
 The contact gap for a specific point for segment $s_i$ is in general defined as
 
 $$
-
 g = g_{s_i} = d_g - r \, .
 $$ (objectcontactfrictioncirclecable2d-gap)
 
@@ -160,7 +166,6 @@ $$
 In a similar, the tangential velocity reads
 
 $$
-
 v_t = \left( \dot \pv_p - \dot \pv_{m0} \right) \tv
 $$ (objectcontactfrictioncirclecable2d-vtangent)
 
@@ -206,14 +211,12 @@ appropriate assumption.
 Thus, the current sticking position $x_{curStick}$ is computed per segment as
 
 $$
-
 x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad
 $$ (objectcontactfrictioncirclecable2d-lastcurstick)
 
 Due to the possibility of switching of $\alpha+\phi$ between $-\pi$ and $\pi$, the result is normalized to
 
 $$
-
 x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad
 $$ (objectcontactfrictioncirclecable2d-curstick)
 
@@ -226,7 +229,6 @@ In the `PostNewtonStep`, the last sticking position is computed, $x_{lastStick} 
 The contact force $f_n$ is zero for $g > 0$ and otherwise computed from
 
 $$
-
 f_n = k_c \cdot g + d_c \cdot v_n
 $$ (objectcontactfrictioncirclecable2d-contactforce)
 
@@ -268,38 +270,42 @@ $x_{isSlipStick}$ defines the stick or slip case,
 The basic algorithm in the `PostNewtonStep`, with all operations given for any segment $s_i$, can be summarized as follows:
 
 - Evaluate gap per segment $g$ using {eq}`objectcontactfrictioncirclecable2d-gap` and store in data variable: $x_{gap} = g$
-- If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$): 2. Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick` (terms are only evaluated if $\mu_k \neq 0$) 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$): $$
+- If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$): 2. Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick` (terms are only evaluated if $\mu_k \neq 0$) 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$): 4. Compute linear tangential force for friction stiffness and velocity penalty: 5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$): 6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already, 7. In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
+
+1. Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
+$$
 \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
 \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+$$
 
-$$ 4. Compute linear tangential force for friction stiffness and velocity penalty: $$
+$$
 f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+$$
 
-$$ 5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$): $$
+$$
 f_t =
 \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad
 |f_t^{(lin)}| \le \mu \cdot |f_n| \\
 \mu \cdot |f_n| \cdot \mathrm{Sign}(\Delta x_{stick}), \quad \mathrm{else}
 \end{cases}
+$$
 
-$$ 6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already, $$
+$$
 x_{lastStick} = x_{curStick} - \mathrm{Sign}(\Delta x_{stick}) \frac{\mu \cdot |f_n|}{\mu_k}, \quad
 x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
-
-$$ 7. In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
-
-1. Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
+$$
 
 - If $x_{gap} > 0$ or ($\mu_v == 0$ and $\mu_k == 0$), we set $x_{isSlipStick} = -2$ (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
-- Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`: 2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set $$
-\varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
+- Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`: 2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set while otherwise $\varepsilon^t_{PNS}=0$.
 
-$$ while otherwise $\varepsilon^t_{PNS}=0$.
-
-1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set $$
+1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set while otherwise $\varepsilon^n_{PNS}=0$.
+$$
 \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
+$$
 
-$$ while otherwise $\varepsilon^n_{PNS}=0$.
+$$
+\varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
+$$
 
 Note that the `PostNewtonStep` is iterated and the data variables are updated continuously until convergence, or until a max. number of iterations is reached. If `ignoreMaxIterations` == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare.
 
@@ -315,20 +321,22 @@ $x_{gap, s_i} <= 0$:
 - Compute contact force $f_n$, {eq}`objectcontactfrictioncirclecable2d-contactforce`.
 - In case of sticking ($|x_{isSlipStick}|\neq 1$):
 
-- the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.): $$
+- the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.):
+$$
 \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
 \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
-
 $$
+
 - if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
-- using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit) $$
+- using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit)
+$$
 f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
-
 $$
 
-- In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as (see again difference to `PostNewtonStep`!), $$
-f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
+- In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as (see again difference to `PostNewtonStep`!),
 
+$$
+f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
 $$
 
 Note that in the Newton method, the tangential force may be inconsistent with the Kuhn-Tucker conditions. However,
@@ -352,27 +360,34 @@ Choice of normals and tangent vectors for calculation of normal contact forces a
 Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
 
 - **CASE SN**: use **S**egment **N**ormals  
-If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see {ref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), contact forces $\fv_{s_i}$ are computed per segment, $$
-\fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
-$$ and added to every force at segment points according to $$
-\begin{aligned}
-\fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \nonumber
-\fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
+If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see {ref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), contact forces $\fv_{s_i}$ are computed per segment, and added to every force at segment points according to while in case $x_{gap}  > 0$ nothing is added.
 
+$$
+\fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
+$$
+
+$$
+\begin{aligned}
+\fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
 \end{aligned}
-$$ while in case $x_{gap}  > 0$ nothing is added.
+$$
+
 - **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)  
-If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see {ref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point, $$
+If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see {ref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point, while in case $x_{gap}  > 0$ nothing is added.
+
+$$
 \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
 \fv^r = f_n \cdot \nv_{r,s_i} + f_t \tv_{r,s_i}
+$$
+in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$,
+and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
+The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment,
 
-$$ in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$, and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals. The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment, $$
+$$
 \begin{aligned}
-\fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \nonumber
-\fv_{i+1} &\pluseq& \rho \cdot \fv^r
-
+\fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv^r
 \end{aligned}
-$$ while in case $x_{gap}  > 0$ nothing is added.
+$$
 
 The forces $\fv_i$ are then applied through the marker to the `ObjectANCFCable2D` element as point loads via a position jacobian
 (using the according access function), for details see the C++ implementation.

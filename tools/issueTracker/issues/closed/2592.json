@@ -1,0 +1,14 @@
+{
+  "number": 2592,
+  "title": "a generated settings page contains a table with a header and no rows",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "structureDocsEmitter.py writes the table header of a settings structure unconditionally, before the loop that writes the rows, and every parameter of a structure can be skipped by that loop (deprecated, or no pybind flag). VSettingsWindowDeprecated is such a structure today: all of its members are deprecated, so docs/generated/structures/VisualizationSettings.md carries five column headings with nothing under them, and the published page shows an empty box. It is also a hard blocker for a LaTeX build: sphinx.builders.latex.transforms.depart_table does next(node.findall(nodes.tbody)) and dies with StopIteration on a table with no body, which is what stops the PDF of revision2026b step RG3.3 (#2586). Fix in the emitter: emit the header only when at least one row follows, and a sentence instead when none does.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 21:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "structureDocsEmitter.py wrote the five column headings of a settings table before the loop that writes the rows, and the loop skips every parameter that is deprecated or has no pybind interface - VSettingsWindowDeprecated has nothing else left. The published page showed an empty box, and the LaTeX writer of sphinx aborted the whole build on it (next(node.findall(nodes.tbody)) raises StopIteration when a table has no body). The emitter now remembers where the header started and takes it back when no row followed, writing a sentence instead; the zero-row case is handled generically, not that one structure. revision2026b step RG3.6.",
+  "resolvedInVersion": "1.12.7"
+}

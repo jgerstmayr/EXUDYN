@@ -130,7 +130,7 @@ updates the marker $m1$ index if necessary.
 
 $$
 \begin{aligned}
-s_{el} < 0 \quad \ra \quad x_{data0} \;-\!\!=1 \nonumber\\
+s_{el} < 0 \quad \ra \quad x_{data0} \;-\!\!=1 \\
 s_{el} > L \quad \ra \quad x_{data0} \;+\!\!=1
 \end{aligned}
 $$

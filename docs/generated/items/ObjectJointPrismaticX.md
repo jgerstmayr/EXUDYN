@@ -84,7 +84,7 @@ The two translational index 3 constraints for a free motion along the local $x$-
 
 $$
 \begin{aligned}
-\LU{J0}{\pv}_{y,m1} - \LU{J0}{\pv}_{y,m0} &= \Null \nonumber \\
+\LU{J0}{\pv}_{y,m1} - \LU{J0}{\pv}_{y,m0} &= \Null \\
 \LU{J0}{\pv}_{z,m1} - \LU{J0}{\pv}_{z,m0} &= \Null
 \end{aligned}
 $$
@@ -93,7 +93,7 @@ and the translational index 2 constraints read
 
 $$
 \begin{aligned}
-\LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &= \Null \nonumber \\
+\LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &= \Null \\
 \LU{J0}{\vv}_{z,m1} - \LU{J0}{\vv}_{z,m0} &= \Null
 \end{aligned}
 $$
@@ -106,7 +106,6 @@ The index 3 constraint equations read
 
 $$
 \begin{aligned}
-
 \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &= 0 \\
 \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &= 0 \\
 \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &= 0

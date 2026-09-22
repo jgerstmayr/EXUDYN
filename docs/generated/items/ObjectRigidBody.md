@@ -97,7 +97,6 @@ rotation parameters $\ttheta$, see table above, which are the sum of reference a
 The angular velocity in body-fixed coordinates is related to the rotation parameters by means of a matrix $\LU{b}{\Gm_{rp}}$,
 
 $$
-
 \LU{b}{\tomega} = \LU{b}{\Gm_{rp}} \dot \ttheta = \LU{b}{\Gm_{rp}} \dot \tpsi \, ,
 $$ (eq-objectrigidbody-omegalocal)
 
@@ -105,14 +104,12 @@ and is specific for any rotation parametrization $rp$.
 The angular velocity in global coordinates is related to the rotation parameters by means of a matrix $\LU{0}{\Gm_{rp}}$,
 
 $$
-
 \LU{0}{\tomega} = \LU{0}{\Gm_{rp}} \dot \ttheta\, .
 $$ (eq-objectrigidbody-omega)
 
 The local angular accelerations follow as
 
 $$
-
 \LU{b}{\talpha} = \LU{b}{\dot \tomega}= \LU{b}{\Gm_{rp}} \ddot \ttheta + \LU{b}{\dot \Gm_{rp}} \dot \ttheta \, ,
 $$ (eq-objectrigidbody-alpha)
 
@@ -124,7 +121,6 @@ $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$.
 The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point $=$ {ref}`COM <COM>` and split for translations and rotations, using a coordinate-free notation,
 
 $$
-
 \mp{m \ImThree}{\Null}{\Null}{\Jm} \vp{\av_{COM}}{\talpha} = \vp{\Null}{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda}
 $$ (eq-objectrigidbody-eomcom0)
 
@@ -148,7 +144,6 @@ This immediately leads to the equations of motion for the rigid body with respec
 see e.g. [woernle2016](page 258ff.), which have the general coordinate-free form
 
 $$
-
 \mp{m \ImThree}{-m \tilde \bv_{COM}}{m \tilde \bv_{COM}}{\Jm} \vp{\av}{\talpha} =
 \vp{-m \tilde \tomega \tilde \tomega \bv_{COM} }{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda} \, ,
 $$ (eq-objectrigidbody-eomarbitrary)
@@ -157,7 +152,6 @@ in which $\Jm$ is the inertia tensor w.r.t. the chosen reference point (which ha
 {eq}`eq-objectrigidbody-eomarbitrary` can be written in the global frame (0),
 
 $$
-
 \mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} =
 \vp{-m \LU{0}{\tilde \tomega} \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}} }
 {-\LU{0}{\tilde \tomega} \LU{0}{\Jm} \LU{0}{\tomega}} + \vp{\LU{0}{\fv_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{\fv_\lambda}}{\LU{0}{\ttau_\lambda}} \, .
@@ -183,9 +177,8 @@ we obtain
 
 $$
 \begin{aligned}
-
 &&\mp{m \ImThree}  {-m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\Gm_{rp}}}  {m \LU{b}{\Gm_{rp}\tp} \LU{b}{\tilde \bv_{COM}}\LU{0b}{\Rot\tp}}  {\LU{b}{\Gm_{rp}\tp}\LU{b}{\Jm}\LU{b}{\Gm_{rp}}}
-\vp{\LU{0}{\av}}{\ddot \ttheta} \nonumber \\
+\vp{\LU{0}{\av}}{\ddot \ttheta} \\
 &&= \vp{m \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega}  + m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\dot \Gm_{rp}} \dot \ttheta}
 {-\LU{b}{\Gm_{rp}\tp}\LU{b}{\tilde \tomega} \LU{b}{\Jm} \LU{b}{\tomega} - \LU{b}{\Gm_{rp}\tp} \LU{b}{\Jm} \LU{b}{\dot \Gm_{rp}} \dot \ttheta} +
 \vp{\LU{0}{\fv}_a}{\LU{0}{\Gm_{rp}\tp}\LU{0}{\ttau}_a} + \vp{\LU{0}{\fv}_\lambda}{\fv_{\theta,\lambda}}
@@ -202,14 +195,12 @@ $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$ in case of Euler parameters and the
 In case of Euler parameters, a constraint equation is automatically added, reading for the index 3 case
 
 $$
-
 g_\theta(\ttheta) = \theta_0^2 + \theta_1^2 + \theta_2^2 + \theta_3^2 - 1 = 0
 $$ (eq-objectrigidbody-eulerparameters)
 
 and for the index 2 case
 
 $$
-
 \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
 $$ (eq-objectrigidbody-eulerparametersvel)
 

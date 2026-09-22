@@ -134,7 +134,6 @@ $$
 In case of `ObjectFFRFreducedOrder`, this jacobian is computed as
 
 $$
-
 \LU{0}{\Jm_{m,rot}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{\Gm_{local}},\;
 \LU{0r}{\Rot} \frac{\sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2} \right]
 $$ (eq-markersuperelementrigid-jacrotstandard)
@@ -158,7 +157,6 @@ has the interpretation of an inertia tensor built from nodes using weights equal
 In such an interpretation, the 'local angular momentum' w.r.t. the marker (averaged) position can be computed as
 
 $$
-
 \Wm \LU{r}{\tomega}_{m} = \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \left(\LU{r}{\vv^{(i)}} - \LU{r}{\vv^\mathrm{avg}}\right)=
 -\sum_i  \left( w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\tilde \pv_{ref}^{(i)}} \right) \LU{r}{\tomega}_{m}
 $$ (eq-markersuperelementrigid-omegaandwm)

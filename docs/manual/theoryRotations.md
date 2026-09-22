@@ -129,8 +129,8 @@ Multiplying {eq}`eq-theory-rotations-trans1` with the basis vectors $(\ev_{x1},\
 
 $$
 \begin{aligned}
-  \LUR{1}{a}{x} &= \LUR{2}{a}{x} \ev_{x1}^T\ev_{x2} + \LUR{2}{a}{y} \ev_{x1}^T\ev_{y2} +\LUR{2}{a}{z} \ev_{x1}^T\ev_{z2} \, , \nonumber\\
-  \LUR{1}{a}{y} &= \LUR{2}{a}{x} \ev_{y1}^T\ev_{x2} + \LUR{2}{a}{y} \ev_{y1}^T\ev_{y2} +\LUR{2}{a}{z} \ev_{y1}^T\ev_{z2} \, , \nonumber\\
+  \LUR{1}{a}{x} &= \LUR{2}{a}{x} \ev_{x1}^T\ev_{x2} + \LUR{2}{a}{y} \ev_{x1}^T\ev_{y2} +\LUR{2}{a}{z} \ev_{x1}^T\ev_{z2} \, ,\\
+  \LUR{1}{a}{y} &= \LUR{2}{a}{x} \ev_{y1}^T\ev_{x2} + \LUR{2}{a}{y} \ev_{y1}^T\ev_{y2} +\LUR{2}{a}{z} \ev_{y1}^T\ev_{z2} \, ,\\
   \LUR{1}{a}{z} &= \LUR{2}{a}{x} \ev_{z1}^T\ev_{x2} + \LUR{2}{a}{y} \ev_{z1}^T\ev_{y2} +\LUR{2}{a}{z} \ev_{z1}^T\ev_{z2} \, .
 \end{aligned}
 $$
@@ -170,9 +170,9 @@ We note the following rules:
 
 $$
 \begin{aligned}
-  \LU{21}{\Rot} &= \LURU{12}{\Rot}{}{-1} \, ,\nonumber \\
-  \LURU{12}{\Rot}{}{-1} &= \LURU{12}{\Rot}{}{T} \, ,\nonumber \\
-  \LU{12}{\Rot} \LURU{12}{\Rot}{}{T} &= \Im \, , \nonumber \\
+  \LU{21}{\Rot} &= \LURU{12}{\Rot}{}{-1} \, , \\
+  \LURU{12}{\Rot}{}{-1} &= \LURU{12}{\Rot}{}{T} \, , \\
+  \LU{12}{\Rot} \LURU{12}{\Rot}{}{T} &= \Im \, , \\
   \LURU{12}{\Rot}{}{T} \LU{12}{\Rot} &= \Im \, .
 \end{aligned}
 $$

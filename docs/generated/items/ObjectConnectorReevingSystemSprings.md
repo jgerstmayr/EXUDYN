@@ -129,7 +129,6 @@ $$
 or
 
 $$
-
 \rv_A\tp \cv + \rv_A\tp \rv_B - R_A^2 = 0,
 \quad \mathrm{and} \quad
 \rv_B\tp \cv - \rv_B\tp\rv_A + R_B^2 = 0 \, .

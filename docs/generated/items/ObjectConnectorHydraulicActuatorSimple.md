@@ -154,7 +154,6 @@ $$
 The effective bulk modulus for chamber $k \in {0,1}$ is computed as follows,
 
 $$
-
 K_{k,eff} = \frac{1}{ \frac{1}{K_{oil}} + \frac{V_{k,cur} - V_{h,k}}{V_{k,cur} \cdot K_{cyl}} + \frac{V_{h,k}}{V_{k,cur} \cdot K_{hose}} },
 $$ (eq-hydraulicactuator-effbulkmodulus)
 

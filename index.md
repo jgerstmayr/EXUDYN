@@ -43,6 +43,7 @@ docs/generated/cInterface/cInterfaceIndex
 docs/generated/items/itemsIndex
 docs/generated/pythonUtilities/utilitiesIndex
 docs/generated/structures/structuresIndex
+docs/generated/references
 ```
 
 ```{toctree}

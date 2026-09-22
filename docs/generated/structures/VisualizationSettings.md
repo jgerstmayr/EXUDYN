@@ -412,8 +412,7 @@ OpenGL Window and interaction settings for visualization; handle changes with ca
 
 VSettingsWindowDeprecated has the following items:
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
+*(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)*
 
 
 

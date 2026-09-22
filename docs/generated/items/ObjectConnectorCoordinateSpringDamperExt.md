@@ -92,15 +92,16 @@ $F_N$ is an according normal force.
 The friction force is computed for different cases:
 
 - CASE 1: `frictionProportionalZone != 0` ($v_\mathrm{reg} \neq 0$):   
-This case works well for explicit integrators and represents simplified friction. It is suited best, e.g., for drives if considered for a specific velocity, but not for the velocity=0 (at which no friction force is produced). If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with $$
+This case works well for explicit integrators and represents simplified friction. It is suited best, e.g., for drives if considered for a specific velocity, but not for the velocity=0 (at which no friction force is produced). If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, but may be problematic in implicit integration).  
+
+$$
 f_\mathrm{friction} = \begin{cases}
 (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg}
 \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
 \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} +
 f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
 \end{cases}
-
-$$ This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, but may be problematic in implicit integration).  
+$$
 
 - CASE 2: `frictionProportionalZone != 0` (or `useLimitStops=True`):   
 This case is perfectly suited for implicit integration, as it includes special switching variables that help to avoid numerical problems due to switching (e.g., between stick and slip) during a Newton iteration. In this case, a so-called bristle model is used, which requires the nodeNumber (data node) to be defined by a GenericDataNode, which must contain 3 data variables. In case of sticking, the sticking force results from a spring-damper model with parameters $k_\mathrm{limits}$ and $d_\mathrm{limits}$, which resolves sticking very well. The last sticking position is tracked, which allows to change between stick and slip; however, transition means a reduction of accuracy and requires additional computation of system Jacobians and Newton or discontinuous iterations. This case includes a PostNewton iteration to switch between stick and slip.
@@ -111,10 +112,11 @@ In CASE 2, the GenericDataNode has the 3 data variables (friction mode, last sti
 - $d_{\mu}=0$: stick,
 - $d_{\mu}=\pm f_\mathrm{slip}$: slip (in according positive or negative direction); $f_\mathrm{slip}$ representing the slipping force
 - last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; in the sticking case, any deviation from that position leads to an additional bristle force    
-$$
-f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
 
 $$
+f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
+$$
+
 - limit stop state $d_{ls}$: $d_{ls} = 0$: no limit reached (no contact, $d_{ls}<0$: limitStopsLower surpassed, $d_{ls}>0$: limitStopsUpper surpassed; $|d_{ls}|$ contains the penetration value of the soft contact model
 
 Initialization of the GenericDataNode should be done such that the initial state (e.g. stick) is already set within this variable.

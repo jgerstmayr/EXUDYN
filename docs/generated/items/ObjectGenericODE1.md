@@ -55,7 +55,6 @@ which is used throughout the description of this object.
 #### Equations of motion
 
 $$
-
 \dot \qv = \fv + \fv_{user}(mbs, t, i_N, \qv)
 $$ (eq-objectgenericode1-eom)
 

@@ -1,0 +1,14 @@
+{
+  "number": 2593,
+  "title": "display math opened at the end of a text line swallows the text",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "In three documents a display math block starts at the end of a line of prose - '- $g = L - r_i + r_j$: $$' - and closes after a blank line. MyST reads the sentence as the formula and the formula as prose: on the published page docs/manual/theoryContact.html the bullet text is typeset as a display formula and the formula that should follow it is shown as a code block of raw LaTeX. 27 such blocks in docs/manual/theoryContact.md and 18 in two generated item pages (ObjectContactFrictionCircleCable2D, ObjectConnectorCoordinateSpringDamperExt), where they come from the list conversion in tools/generators/latexToMarkdown.py: ConvertLists joins an item into one line, and the display math placeholder of ProtectMath is joined with it. A blank line inside a block has the same effect, and \\nonumber left over from the eqnarray days is a hard LaTeX error. Found while building the PDF of revision2026b step RG3.3 (#2586), which cannot compile any of it.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 21:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "45 display math blocks in three documents opened at the end of a line of prose, so MyST typeset the sentence as the formula and showed the formula as a code block of raw LaTeX - wrong on the published HTML, not only in the PDF. Two causes, two fixes. In tools/generators/latexToMarkdown.py the display blocks are protected by ProtectMath before ConvertLists runs, and ConvertLists joins an item into one line: display math now gets a placeholder of its own kind that stays on its own line. Two smaller things with it: the body was stripped of newlines but not of indentation, leaving a line of blanks before the closing dollar-dollar - and a blank line ends a block in MyST; and \\nonumber, left from the eqnarray days, is ignored by MathJax and is a hard LaTeX error inside aligned, so it is dropped (30 in definitions/, 42 removed from four chapters). docs/manual/theoryContact.md was written that way by the conversion of revision2026 step R7.1.5 and is hand-written since, so all 87 of its display blocks were normalised in place, keeping the two equation labels on their closing line. revision2026b step RG3.7.",
+  "resolvedInVersion": "1.12.8"
+}

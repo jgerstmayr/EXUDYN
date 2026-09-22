@@ -129,7 +129,6 @@ The kinematics of the {ref}`FFRF <FFRF>` is based on a splitting of
 translational ($\cv_t \in \Rcal^{n\indf}$), rotational ($\cv\indr \in \Rcal^{n\indf}$) and flexible ($\cv\indf \in \Rcal^{n\indf}$) nodal displacements,
 
 $$
-
 \LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \, .
 $$ (eq-objectffrf-coordinatessplitting)
 
@@ -184,7 +183,6 @@ $$
 and the special tilde matrix for vectors $\pv \in \Rcal^{3 {n_\mathrm{nf}}}$,
 
 $$
-
 \LU{b}{\tilde \pv} = \vr{\LU{b}{\tilde\pv^{(i)}}}{\vdots}{\LU{b}{\tilde\pv^{(i)}}} \in \Rcal^{3{n_\mathrm{nf}} \times 3} \, .
 $$ (eq-objectffrf-specialtilde)
 
@@ -218,7 +216,6 @@ matrices defined in the body frame.
 Elementary differentiation rules of the Lagrange equations lead to
 
 $$
-
 \Lm\tp \Mm \Lm \ddot \qv + \Lm\tp \Mm \dot \Lm \dot \qv + \hat \Km \qv + \frac{\partial \gv}{\partial \qv\tp} \tlambda = \Lm\tp \fv
 $$ (eq-objectffrf-leq)
 
@@ -229,7 +226,6 @@ for the rotation part and in body-fixed coordinates for the flexible part of the
 In case that `computeFFRFterms = True`, {eq}`eq-objectffrf-leq` can be transformed into the equations of motion,
 
 $$
-
 \left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf}
 {\mathrm{sym.}}{}{\LU{b}{\Mm}} \right) \ddot \qv +
 \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Dm}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Km}} \qv =

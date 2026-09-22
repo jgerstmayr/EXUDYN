@@ -33,6 +33,11 @@ Documentation build, from the repository root:
 sphinx-build -b html . _build -E
 ```
 
+The **printable documentation** is a separate thing and is built only for a release:
+`exudev docs --pdf` needs a LaTeX installation with `xelatex` and `latexmk`, writes
+`dist/exudynDocumentationV<version>.pdf`, and is in **no gate** — see revision2026b step RG3.3
+and decision D17.
+
 ### Dependencies
 
 **numpy is the only hard requirement**, and that follows from the nature of the C++/Python

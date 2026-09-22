@@ -23,7 +23,7 @@ everywhere else — WSL, linux, macOS — type `python tools/exudev`.
 | `exudev test [--py] [--fast] [--parallel [N]]` | `runTestSuite.py`, always with `--exit-code` |
 | `exudev examples [--py] [--timeout S]` | `runTestExamples.py` (slow; default `venvP312`) |
 | `exudev perf [--py] [--fast]` | `runPerformanceTests.py` |
-| `exudev docs [--keep-cache] [--open]` | `sphinx-build -b html . _build -E` |
+| `exudev docs [--keep-cache] [--open] [--pdf]` | `sphinx-build -b html . _build -E`; `--pdf` adds the printable documentation in `dist/` (LaTeX needed, release only) |
 | `exudev linux [--manylinux \| --wsl-conda]` | the linux wheels through WSL; manylinux in docker is the release path |
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
 | `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |

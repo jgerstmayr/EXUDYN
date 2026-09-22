@@ -89,6 +89,10 @@ stages = [
           ['python/exudyn/__init__.pyi', 'python/exudyn/symbolic.pyi']),
     #the example and test model pages, and the abbreviations: what doc2rst.py did besides
     #converting LaTeX, which is why it outlived it (revision2026 step R7.1.7)
+    #the references page and the citation keys conf.py needs to turn [Key2021] into a link
+    #(revision2026b step RG3.5, #2550); its only input is the bibliography
+    Stage('tools/generators/referencesDocsEmitter.py', ['docs/bibliographyDoc.bib'],
+          ['docs/generated/references.md', G + 'confHelperCitations.py']),
     Stage('tools/generators/examplesDocsEmitter.py',
           ['python/Examples', 'python/TestModels'],
           ['docs/generated/examples', 'docs/generated/testModels',

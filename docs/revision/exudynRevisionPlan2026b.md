@@ -39,7 +39,7 @@ carries the same table from its side, so a citation from either direction resolv
 |---|---|---|
 | **RG1** Release and publication | getting a release out and onto GitHub and PyPI | 4 |
 | **RG2** Testing and verification | what is not tested, and who tests it before a release | 3 |
-| **RG3** Docs | what the documentation still gets wrong or does not say | 4 |
+| **RG3** Docs | what the documentation still gets wrong or does not say | 8 |
 | **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 3 |
 | **RG5** Performance | measurement first, then the code that is actually hot | 2 |
 | **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 3 |
@@ -179,26 +179,56 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     that is excluded stays in git and is readable there; it is simply not a page.
 
 <a id="rg3-3"></a>
-**RG3.3** *(group RG3; maintainer question 2026-09-22)* **Is there a PDF, and should there be?**
+**RG3.3** **DONE 2026-09-22** (#2586) — [log](exudynRevisionLog2026b.md#rg3-3) — *(group RG3; maintainer question 2026-09-22)* **Is there a PDF, and should there be?**
     (#2586). There is none: decision D8 ended the PDF with the LaTeX sources, because keeping it
     meant keeping a LaTeX toolchain and a second rendering of every page. A PDF **from the
     Markdown** is possible - `sphinx-build -b latex` renders MyST, and the math macros that
     `conf.py` declares to MathJax can generate the LaTeX preamble from the same list that
     `tools/checkMathMacros.py` already checks, which is the part that would otherwise be work.
 
-    What this step decides: whether the PDF is wanted at all and for whom; and if it is, it is a
-    **release-only build** (`exudev docs --pdf`), never part of the documentation gate, so that a
-    missing LaTeX installation cannot stop an ordinary docs build.
+    **Answered 2026-09-22 (D17): yes.** `exudev docs --pdf`, release only, everything except
+    the source listings of the examples and test models — and the **issue history is in**,
+    because a reader who searches the document, or feeds it to an AI tool, gets the reason for
+    each change with it. 1159 pages. The three defects it uncovered are RG3.6, RG3.7 and RG3.8.
 
 <a id="rg3-4"></a>
-**RG3.4** *(group RG3; maintainer 2026-09-22)* **The revisions chapter says where the details
+**RG3.4** **DONE 2026-09-22** (#2587) — [log](exudynRevisionLog2026b.md#rg3-4) — *(group RG3; maintainer 2026-09-22)* **The revisions chapter says where the details
     are** (#2587). It is deliberately short, and it should end by pointing at the developer
     documentation: the revision is recorded in full in a plan and a log, and there are **two**
     of them now - revision2026, finished and completed as 1.12, and revision2026b, continuing.
 
-    Open in the tracker for this group besides these: **#2550** (citations such as
-    `[ZwoelferGerstmayr2021]` are printed but resolve to nothing - the documentation needs a
-    references page).
+<a id="rg3-5"></a>
+**RG3.5** **DONE 2026-09-22** (#2550) — [log](exudynRevisionLog2026b.md#rg3-5) — *(group RG3; maintainer 2026-09-22)* **The citations point nowhere**
+    (#2550). The chapters cite in running text — "see Zwölfer and Gerstmayr
+    [ZwoelferGerstmayr2021]" — which the LaTeX build resolved and nothing resolved after
+    it: the keys were printed and linked to nothing. `docs/bibliographyDoc.bib` survived the
+    LaTeX build (revision2026 step R7.1.7 moved it to `docs/`) and holds every key that is used.
+
+    A generated references page, and the citations become links to it without a single source
+    text being edited.
+
+<a id="rg3-6"></a>
+**RG3.6** **DONE 2026-09-22** (#2592) — [log](exudynRevisionLog2026b.md#rg3-6) —
+    *(group RG3; found in RG3.3)* **A generated settings page shows a table with no rows.**
+    `structureDocsEmitter.py` writes the table header before the loop that writes the rows, and
+    every row of a structure can be skipped - `VSettingsWindowDeprecated` has nothing left that
+    is not deprecated. An empty box on the published page, and the reason `sphinx -b latex`
+    aborted.
+
+<a id="rg3-7"></a>
+**RG3.7** **DONE 2026-09-22** (#2593) — [log](exudynRevisionLog2026b.md#rg3-7) —
+    *(group RG3; found in RG3.3)* **Display math opened at the end of a text line swallows the
+    text.** 45 blocks in three documents: the sentence is typeset as the formula and the formula
+    is shown as raw LaTeX in a code block. Two causes - the list conversion of
+    `latexToMarkdown.py` joins an item into one line, and `theoryContact.md` was written that way
+    by the conversion of revision2026 step R7.1.5.
+
+<a id="rg3-8"></a>
+**RG3.8** *(group RG3; found in RG3.3)* **Fourteen figure files nothing references** (#2594).
+    Twelve `.pdf` and two `.eps` in `docs/figures/`, the vector originals of the LaTeX era, most
+    with a `.png` twin that is used. Copies are in `tmp/unusedFigures/` for the maintainer;
+    nothing has left version control. **Open**: delete them, or keep them as the editable source
+    of the twins and say so somewhere.
 
 ## RG4 — Implementation problems and bugs
 

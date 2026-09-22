@@ -1,0 +1,18 @@
+{
+  "number": 2550,
+  "title": "citations are silently dropped from the HTML documentation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "latexConverter.py removes every cite command without replacement, so the rendered pages contain sentences such as \"similar but much more advanced and modular as earlier solvers by the main developer .\" with the references simply gone - visible today in LHSRHSNamingConventionsInEXUDYN and in the theory chapter. The Markdown conversion of step R7.1.5 writes the citation keys in brackets instead, which is readable but not linked. The documentation needs a references page fed from docs/theDoc/bibliographyDoc.bib, and the keys need to point at it; sphinxcontrib-bibtex would do it as a dev-only dependency.",
+  "dateRaised": "2026-09-19",
+  "deadline": "2027-03-18",
+  "dateResolved": "2026-09-22 19:11",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/theDoc/bibliographyDoc.bib",
+  "line": "1",
+  "releaseNotes": "The citations are links now. docs/generated/references.md is written by the new tools/generators/referencesDocsEmitter.py from docs/bibliographyDoc.bib - 100 entries, of which 54 are cited - and gives every entry a target. conf.py then appends one Markdown link definition per key ([Hairer1987]: #ref-hairer1987) to every Markdown document Sphinx reads, so CommonMark resolves the [Key] of the running text as a shortcut reference link. No source text is edited: not the 24 manual chapters, not the 450 generated pages, not the cite commands still standing in definitions/. Because the Markdown parser decides, a key inside a code fence or inline code stays literal text, which a regular expression over the sources could not have guaranteed. The emitter reports any key that is cited but missing from the bibliography; there is none today. Two characters of the .bib that had become U+FFFD in an old encoding conversion were repaired. revision2026b step RG3.5.",
+  "resolvedInVersion": "1.12.5"
+}

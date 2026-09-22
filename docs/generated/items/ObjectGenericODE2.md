@@ -78,7 +78,6 @@ which is used throughout the description of this object.
 The equations of motion read,
 
 $$
-
 \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
 $$ (eq-objectgenericode2-eom)
 
@@ -105,7 +104,6 @@ In case that a `jacobianUserFunction` is specified, it must represent the jacobi
 without $\Km$ and $\Dm$ (these matrices are added internally),
 
 $$
-
 \Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
 -f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) -
 f_{ODE2_t} \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right)

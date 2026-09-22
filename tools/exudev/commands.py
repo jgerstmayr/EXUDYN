@@ -383,7 +383,11 @@ def Complete(options):
     steps += Generate(generateOptions)
 
     if not options.no_docs:
-        steps += Docs(OptionsWith(options, env=None, keep_cache=False, open=False))
+        #the pdf is built for a RELEASE and only there: it is an artifact to attach, it needs a
+        #LaTeX installation, and it must not be able to fail an ordinary --complete run
+        #(revision2026b step RG3.3, #2586)
+        steps += Docs(OptionsWith(options, env=None, keep_cache=False, open=False,
+                                  pdf=getattr(options, 'release_checks', False)))
 
     buildOptions = OptionsWith(options, complete=False, clean=False, py=','.join(versions))
     steps += Build(buildOptions)
@@ -614,6 +618,7 @@ def PrintReleaseChecklist():
           + ReleaseTagName() + ')')
     print('    - push the commit and the tag - the driver never pushes (CLAUDE.md rule 4)')
     print('    - upload the wheels from dist/ and dist/manylinux/')
+    print('    - attach the documentation pdf: ' + os.path.basename(DocumentationPdfPath()))
     print('    - the body of the GitHub release is dist/RELEASE_NOTES.md')
     print('    - "exudev issue mode --dev" to go back to development mode')
 
@@ -706,8 +711,35 @@ def Performance(options):
 
 
 #%%******************************************************************************************************
+#where "sphinx -M latexpdf" puts the .tex and the .pdf; git-ignored, like _build/ (revision2026b
+#step RG3.3, #2586)
+pdfBuildDirectory = '_buildpdf'
+
+
+def DocumentationPdfPath():
+    """the PDF as it is named for a release: the version is in the file name, because this file is
+    the artifact of ONE release and is meant to be citable"""
+    return os.path.join(runner.RepositoryRoot(), 'dist',
+                        'exudynDocumentationV' + runner.RepositoryVersion() + '.pdf')
+
+
+def CollectDocumentationPdf():
+    """beside the wheels and RELEASE_NOTES.md, which is where a release is assembled from"""
+    built = os.path.join(runner.RepositoryRoot(), pdfBuildDirectory, 'latex',
+                         'exudynDocumentation.pdf')
+    if not os.path.isfile(built):
+        print('exudev docs: no ' + built + ' - the LaTeX run did not produce a PDF')
+        return 1
+
+    os.makedirs(os.path.dirname(DocumentationPdfPath()), exist_ok=True)
+    shutil.copyfile(built, DocumentationPdfPath())
+    print('documentation pdf: ' + DocumentationPdfPath() + ' ('
+          + str(round(os.path.getsize(DocumentationPdfPath()) / (1024 * 1024), 1)) + ' MB)')
+    return 0
+
+
 def Docs(options):
-    """The html documentation: sphinx reads conf.py and index.rst in the repository root."""
+    """The html documentation, and with --pdf the printable one as well."""
     root = runner.RepositoryRoot()
     environment = options.env or runner.generatorEnvironment
 
@@ -726,6 +758,37 @@ def Docs(options):
 
     steps = [Step('html documentation (' + environment + ')',
                   argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+    if options.pdf:
+        #TWO steps rather than sphinx's own "-M latexpdf": that shortcut runs make, and on Windows
+        #it calls a make.bat that needs a make which MiKTeX does not bring. Doing it in the open
+        #also puts the LaTeX run in the summary as what it is - the part that needs an
+        #installation outside python (revision2026b step RG3.3, #2586).
+        #"-t pdf" sets the tag that conf.py branches on. NOT strict: the pdf is a release
+        #artifact, not a gate, and a LaTeX warning must not fail a release build.
+        pdfArgv = ['python', '-m', 'sphinx', '-b', 'latex', '.', pdfBuildDirectory + '/latex',
+                   '-t', 'pdf']
+        pdfArgv += runner.QuietFlag('sphinx-build', options.verbose)
+
+        steps += [Step('pdf: the latex sources (' + environment + ')',
+                       argv=runner.InEnvironment(environment, pdfArgv, options), cwd=root)]
+
+        #latexmk runs the engine as often as the table of contents and the references need, and
+        #reads the latexmkrc that sphinx writes beside the .tex. --enable-installer lets MiKTeX
+        #fetch a package it does not have yet instead of opening a dialog nobody is there to
+        #answer; on TeX Live the option is unknown to the engine and simply not passed.
+        engine = 'xelatex --enable-installer %O %S' if runner.onWindows else 'xelatex %O %S'
+        latexmkArgv = ['latexmk', '-pdfxe', '-e', '$xelatex=q/' + engine + '/',
+                       '-interaction=nonstopmode']
+        if not options.verbose:
+            latexmkArgv += ['-quiet']
+        steps += [Step('pdf: the latex run (xelatex)',
+                       argv=latexmkArgv + ['exudynDocumentation.tex'],
+                       cwd=os.path.join(root, pdfBuildDirectory, 'latex'))]
+
+        steps += [Step('collect the pdf into dist/', action=CollectDocumentationPdf,
+                       note='copy ' + pdfBuildDirectory + '/latex/exudynDocumentation.pdf to '
+                            + 'dist/exudynDocumentationV<version>.pdf, beside the wheels')]
 
     if options.open:
         indexFile = os.path.join(root, '_build', 'index.html')

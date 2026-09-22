@@ -64,8 +64,7 @@ Within a regularized friction law, similar to a well known law attributed to Haf
 
 $$
 \begin{aligned}
-
-  v_t &= |\LU{0}{\vv_t}|, \nonumber \\
+  v_t &= |\LU{0}{\vv_t}|, \\
   \fv_f(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} ) &=
   \begin{cases}
     \frac{\mu_s \cdot |f_c|}{v_{\mu,reg}}\LU{0}{\vv_t}, \quad \mathrm{if} \quad v_t < v_{\mu,reg} \\
@@ -139,18 +138,20 @@ Note that quantities $^*$ are only computed if contact is active.
 $$
   \LU{0}{\pv_{c}} = \LU{0}{\pv_{m0}} + r_i^* \cdot \nv_0 \, ,
 $$
+
 the velocities of the spheres at the contact point (In case of no friction, the angular velocities are not included in these relations),
 
 $$
 \begin{aligned}
   \LU{0}{\vv_{c,i}} &= \LU{0}{\vv_i} + \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times
                \left( \LU{0}{\pv_c} - \LU{0}{\pv_i} \right)
-              = \LU{0}{\vv_i} + r_i^* \cdot \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times \LU{0}{\nv_0},\nonumber \\
+              = \LU{0}{\vv_i} + r_i^* \cdot \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times \LU{0}{\nv_0}, \\
   \LU{0}{\vv_{c,j}} &= \LU{0}{\vv_j} + \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times
                \left( \LU{0}{\pv_c} - \LU{0}{\pv_j} \right)
               = \LU{0}{\vv_j} - r_j^* \cdot \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \LU{0}{\nv_0},
 \end{aligned}
 $$
+
 the velocity in contact normal direction, which can be computed from sphere's center points,
 
 $$
@@ -158,42 +159,48 @@ $$
       = \LU{0}{\nv_0\tp} \left( \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} \right)
   \, ,
 $$
+
 the velocity in tangential direction, considering the tangential velocities,
 
 $$
 \begin{aligned}
   \LU{0}{\vv_t} &= \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0}
-  = \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} \right), \nonumber \\
+  = \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} \right), \\
   &= \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right)
   \left( \LU{0}{\vv_j} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j}
-        -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \nonumber \\
+        -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \\
   &= \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right)
   \left( \LU{0}{\vv_j} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j}
         -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i} \right)
   \, ,
 \end{aligned}
 $$
+
 the effective contact stiffness coefficient based on the stiffness $k_i$ of sphere $i$ and stiffness $k_j$ of sphere $j$,
 
 $$
   k_c = \frac{k_i \cdot k_j}{k_i + k_j} \, ,
 $$
+
 and the effective contact damping coefficient (Note that this simplicial damping law is used according to the idea of parallel dampers, because serial dampers would not allow to adjust damping for different particles) based on the damping $k_i$ of sphere $i$ and damping $k_j$ of sphere $j$
 
 $$
   d_c = d_i + d_j \, .
 $$
+
 The contact force (negative contact pressure) is computed from gap $g$ and normal velocity $v_n$,
 
 $$
   f_c = k_c \cdot g + d_c \cdot v_n \, ,
 $$
+
 and the total vectorial contact force is computed with the help of {eq}`eq-generalcontactregularizedfriction`, defining the friction force $\fv_f(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} )$,
 
 $$
   \LU{0}{\fv_c} = f_c \cdot \nv_0 + \fv_f
   \, .
 $$
+
 The torque due to friction for sphere $i$ and sphere $j$ results into (note that both signs are the same and that $\LU{0}{\fv_f}$ could be replaced by $\fv_c$)
 
 $$
@@ -201,6 +208,7 @@ $$
   \LU{0}{\ttau_{f,j}} = (-r_j^* \cdot \nv_0) \times \LU{0}{\fv_f}
   \, .
 $$
+
 ### Generalized forces due to contact
 
 Based on the contact pressure and the friction forces, forces and torques are applied via the markers' Jacobians, resulting in generalized forces to whatever the marker is attached to.
@@ -210,11 +218,12 @@ The generalized forces to the marker $m0$ and $m1$ (sphere $i$ and $j$) are comp
 $$
 \begin{aligned}
   \fv_{m0,LHS} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} +
-                 \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}, \nonumber \\
+                 \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}, \\
   \fv_{m1,LHS} = \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_c} +
                  \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\ttau_{f,j}} \, .
 \end{aligned}
 $$
+
 ### Jacobi matrix for sphere $g_i$ and sphere $g_j$
 
 For implicit time integration, the (contact) Jacobian (Here, we only consider the local Jacobian related to the coordinates underlying the two markers $m0$ and $m1$; in the implementation, the parts of the Jacobian are added to the sparse system) represents the derivative of the generalized forces
@@ -222,11 +231,13 @@ For implicit time integration, the (contact) Jacobian (Here, we only consider th
 $$
   \fv_{LHS} = \vp{\fv_{m0,LHS}}{\fv_{m1,LHS}}
 $$
+
 with respect to the generalized coordinates affected by the two markers,
 
 $$
   \qv = \vp{\qv_{m0}}{\qv_{m1}} \, .
 $$
+
 The Jacobian thus reads (**NOTE** that only terms marked in **green** are currently fully implemented and terms in **blue** are approximated, while other terms are neglected)
 
 $$
@@ -236,11 +247,12 @@ $$
                 {\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\ttau_{f,j}}\right)}{\partial \qv_{m0}}}
                 {\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\ttau_{f,j}}\right)}{\partial \qv_{m1}}}}
 $$
+
 The single terms may be expressed as
 
 $$
 \begin{aligned}
-  &&\termA{\frac{\partial \left(-\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}\right)}{\partial \qv_{m0,1}} } = \nonumber \\
+  &&\termA{\frac{\partial \left(-\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}\right)}{\partial \qv_{m0,1}} } = \\
   &&-\frac{\partial \LU{0}{\Jm_{pos,m0}\tp}}{\partial \qv_{m0,1}} \LU{0}{\fv_c}
   \termC{-\LU{0}{\Jm_{pos,m0}\tp}} \termA{\frac{\partial \LU{0}{\fv_c}}{\partial \qv_{m0,1}}}
   +\frac{\partial \LU{0}{\Jm_{rot,m0}\tp}}{\partial \qv_{m0,1}} \LU{0}{\ttau_{f,i}}
@@ -248,6 +260,7 @@ $$
   \, ,
 \end{aligned}
 $$
+
 and similar for $m_1$.
 In order to simplify implementation (avoiding arrays with 3 indices) and improve computational efficiency,
 derivatives of Jacobians are realized as
@@ -257,6 +270,7 @@ $$
   \frac{\partial \LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\bar \fv_c}}{\partial \qv_{m0}}
   \, ,
 $$
+
 in which $\LU{0}{\bar \fv_c} = \LU{0}{\fv_c}$, but assumed to be a constant and not depending on $\qv$ in the computation of derivatives.
 Note that derivatives for position Jacobians, e.g., $\frac{\partial \LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\bar \fv_c}}{\partial \qv_{m0}}$ or rotation
 Jacobians are provided by the according markers (will be described there in the near future).
@@ -264,88 +278,111 @@ Jacobians are provided by the according markers (will be described there in the 
 For the jacobians, we need to compute the derivatives of the following terms (terms that are implemented are marked in green; black terms are not implemented or unused) (to keep derivations short, we use $\LU{0}{\Jm_{pos}}$, which represents $-\LU{0}{\Jm_{pos,m0}}$ in case of
 $\frac{\partial }{\partial \qv_{m0}}$ and $\LU{0}{\Jm_{pos,m1}}$ in case of $\frac{\partial }{\partial \qv_{m1}}$):
 
-- $L = \left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^\frac{1}{2}$: $$
+- $L = \left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^\frac{1}{2}$:
+
+$$
     \termC{\diffmOI{L} =
     \diffmOI{\left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^\frac{1}{2} } =
     \frac{1}{L}\left(\LU{0}{\nv}\!\tp \diffmOI{\LU{0}{\nv}} \right) =
     \frac{1}{L}\left(\LU{0}{\nv}\!\tp \LU{0}{\Jm_{pos}} \right) =
     \left(\LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} \right) }
+$$
+
+- $L^{-1} = \left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^{-\frac{1}{2}}$:
 
 $$
-- $L^{-1} = \left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^{-\frac{1}{2}}$: $$
     \termC{\diffmOI{L^{-1}} =
     \diffmOI{\left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^{-\frac{1}{2}} } =
     -\frac{1}{ L^3}\left(\LU{0}{\nv}\!\tp \diffmOI{\LU{0}{\nv}} \right) =
     -\frac{1}{ L^2}\left(\LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} \right) }
+$$
+
+- $\LU{0}{\nv} = \LU{0}{\pv}_{j} - \LU{0}{\pv}_{i}$:
 
 $$
-- $\LU{0}{\nv} = \LU{0}{\pv}_{j} - \LU{0}{\pv}_{i}$: $$
     \termC{\diffmOI{\LU{0}{\nv}} = \LU{0}{\Jm_{pos}} }
+$$
+
+- $\LU{0}{\nv_0} = \frac{1}{L} \LU{0}{\nv}$: (NOTE: dyadic product $\otimes$)
 
 $$
-- $\LU{0}{\nv_0} = \frac{1}{L} \LU{0}{\nv}$: (NOTE: dyadic product $\otimes$) $$
     \termC{\diffmOI{\LU{0}{\nv_0}} =
         -\frac{1}{L^3}\left(\LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}
         +\frac{1}{L} \LU{0}{\Jm_{pos}}
         =
         \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}}
         }
+$$
+
+- $g = L - r_i + r_j$:
 
 $$
-- $g = L - r_i + r_j$: $$
     \termC{\diffmOI{g} = \LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} }
+$$
+
+- $v_n = \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \LU{0}{\nv_0}$ (**NOTE**: only valid in case that markers are attached to node or body reference point!!!):
 
 $$
-- $v_n = \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \LU{0}{\nv_0}$ (**NOTE**: only valid in case that markers are attached to node or body reference point!!!): $$
     \termC{\diffmOI{v_n} =
     \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \left(
      \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}}
        \right)  }
+$$
 
-$$ $$
-    \termC{
-    \diffmOIt{v_n} = \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos}} }
+
 
 $$
-- $f_c = k_c \cdot g + d_c \cdot v_n$: $$
+    \termC{
+    \diffmOIt{v_n} = \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos}} }
+$$
+
+- $f_c = k_c \cdot g + d_c \cdot v_n$:
+
+$$
     \termA{\diffmOI{f_c} } =
     \termC{k_c \diffmOI{g} + d_c \diffmOI{v_n} } =
     \termC{k_c \cdot \LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} + d_c \cdot \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \left(
      \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}} \right)}
+$$
 
-$$ $$
-    \diffmOIt{f_c} =
-     \termC{d_c \diffmOIt{v_n} =  d_c \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos}} }
+
 
 $$
+    \diffmOIt{f_c} =
+     \termC{d_c \diffmOIt{v_n} =  d_c \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos}} }
+$$
+
 - $\LU{0}{\vv_t} = \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0}=
 \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left( \LU{0}{\vv_j} -\LU{0}{\vv_i} \right)
         + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j}
-        + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i}$: $$
+        + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i}$:
+
+$$
 \begin{aligned}
     \diffmOI{\LU{0}{\vv_t}} &=
-    -\LU{0}{\nv_0} \otimes \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right) \left(\frac{1}{L}\left(\Im - \LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}        \right) \nonumber\\
+    -\LU{0}{\nv_0} \otimes \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right) \left(\frac{1}{L}\left(\Im - \LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}        \right)\\
     && -v_n \left(\frac{1}{L}\left(\Im - \LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}        \right)
     -v_n \cdot \left(\frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}}
-        \right)\nonumber \\
+        \right) \\
     && + r_{i,j} \cdot \left( -\frac{1}{L}\LU{0}{\tilde \tomega}_{i,j}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right)  + \LU{0}{\tilde \nv_0} \diffmOI{\LU{0}{\tomega}_{i,j}} \right)
-
 \end{aligned}
 $$
-- velocity coordinate derivatives for $\LU{0}{\vv_t}$: $$
+
+- velocity coordinate derivatives for $\LU{0}{\vv_t}$:
+
+$$
 \begin{aligned}
     \termC{\frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m0}} } &= \termC{
     \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(-\LU{0}{\Jm_{pos,m0}} \right)
     + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}}
     } \, ,
     \\
-
     \termC{\frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m1}} } &= \termC{
     \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\Jm_{pos,m1}} \right)
     + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} }
-
 \end{aligned}
 $$
+
 The contact force reads (note that because $f_c$ is always negative, the sign of regularization term is negative),
 
 $$
@@ -356,6 +393,7 @@ $$
                 f_c \cdot \LU{0}{\nv_0} + \fv_f, \quad \mbox{else with $\fv_f = const.$}
               \end{cases}
 $$
+
 Thus we introduce a factor $\delta_f$, which is $\delta_f=1$ in the regularized small velocity state, and in the saturated (constant) friction force we use $\delta_f=0$.
 Thus, the jacobian of the contact force $\LU{0}{\fv_c}$ reads (note the diadic product $\otimes$),
 
@@ -363,12 +401,11 @@ $$
 \begin{aligned}
  \termC{ \diffmOI{\LU{0}{\fv_c}} } &=
    \termC{\left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \diffmOI{f_c}+
-  f_c \left(\diffmOI{\LU{0}{\nv_0}} - \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffmOI{\LU{0}{\vv_t}} \right) } \nonumber \\
-
+  f_c \left(\diffmOI{\LU{0}{\nv_0}} - \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffmOI{\LU{0}{\vv_t}} \right) } \\
   &= \termC{\left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right)
          \left( k_c \diffmOI{g} + d_c \diffmOI{v_n} \right) +
         f_c \left(\diffmOI{\LU{0}{\nv_0}} - \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffmOI{\LU{0}{\vv_t}} \right)
-        }  \nonumber \\
+        } \\
   &=
   \termC{\left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes
          \left(k_c \cdot \LU{0}{\nv_0\tp} + d_c \cdot \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp
@@ -377,6 +414,7 @@ $$
         }
 \end{aligned}
 $$
+
 The jacobian for the contact force $\LU{0}{\fv_c}$ w.r.t. velocity marker coordinates reads, note that $\LU{0}{\nv_0} \otimes \LU{0}{\nv_0} - \Im = -\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right)$,
 
 $$
@@ -384,20 +422,21 @@ $$
   \left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \frac{\partial \LU{0}{f_c}}{\partial \dot \qv_{m0,1}} -
   f_c \cdot \left(\delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m0,1}} \right) }
 $$
+
 $$
 \begin{aligned}
   \termC{ \frac{\partial \LU{0}{\fv_c}}{\partial \dot \qv_{m0}} }
   &=   \termC{ -d_c \left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes
-  \left( \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos,m0}}\right) - } \nonumber \\
+  \left( \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos,m0}}\right) - } \\
   &&
   \termC{ f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
   \left( -\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right)
   \LU{0}{\Jm_{pos,m0}} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)
   }
-  \nonumber \\
+ \\
   \termC{ \frac{\partial \LU{0}{\fv_c}}{\partial \dot \qv_{m1}} }
   &=   \termC{ d_c \left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes
-  \left( \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos,m1}}\right) - } \nonumber \\
+  \left( \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos,m1}}\right) - } \\
   &&
   \termC{ f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
   \left( \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right)
@@ -405,50 +444,53 @@ $$
   }
 \end{aligned}
 $$
+
  The jacobians for torques are computed for the case that friction is in the regularized small velocity state ($\delta_f=1$), while otherwise derivatives of $\LU{0}{\ttau_{f,(i,j)}}$ are zero,
 
 $$
   \LU{0}{\ttau_{f,i}} = (-r_i^* \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right), \quad
   \LU{0}{\ttau_{f,j}} = (-r_j^* \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right)
 $$
+
 in case of no friction or constant friction forces, $\delta_f=0$.
 The jacobians follow from (accordingly for $\ttau_{f,i}$, $\ttau_{f,j}$ and derivatives w.r.t $\qv_{m0,1}$):
 
 $$
 \begin{aligned}
     \frac{\partial \LU{0}{\ttau_{f,(i,j)}}}{\partial \qv_{m0,1}}
-    &=\frac{\partial \left(-r_ {(i,j)} \cdot \LU{0}{\nv_0} \right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) }{\partial \qv_{m0,1}}\nonumber \\
+    &=\frac{\partial \left(-r_ {(i,j)} \cdot \LU{0}{\nv_0} \right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) }{\partial \qv_{m0,1}} \\
    &= \left(-r_ {(i,j)} \frac{\partial \LU{0}{\nv_0}}{\partial \qv_{m0,1}}\right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) +
     \left(-r_ {(i,j)} \cdot \LU{0}{\nv_0} \right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial \qv_{m0,1}}\right) + \diffmOI{f_c} (...)
-    \nonumber \\
+ \\
    &= \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\tilde \vv_t} \right) \left(r_ {(i,j)} \frac{\partial \LU{0}{\nv_0}}{\partial \qv_{m0,1}} \right) +
     \left(-r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial \qv_{m0,1}}\right) + \diffmOI{f_c} (...)
 \end{aligned}
 $$
+
 and (note that $\LU{0}{\tilde \nv_0} \LU{0}{\nv_0} = \Null$),
 
 $$
 \begin{aligned}
     \termC{ \frac{\partial \LU{0}{\ttau_{f,(i,j)}}}{\partial \dot \qv_{m0}}  }
-   &=\termC{\left(-r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial    \dot \qv_{m0}} - \diffmOt{f_c} \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\vv_t} \right)  } \nonumber\\
+   &=\termC{\left(-r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial    \dot \qv_{m0}} - \diffmOt{f_c} \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\vv_t} \right)  }\\
    &=\termC{ \left(r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
     \left( - \LU{0}{\Jm_{pos,m0}}
-
     + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)  - d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m0}} ) \right)
     }
 \end{aligned}
 $$
+
 $$
 \begin{aligned}
     \termC{ \frac{\partial \LU{0}{\ttau_{f,(i,j)}}}{\partial \dot \qv_{m1}} }
-   &=\termC{\left(-r_ {(i,j)} \cdot \tilde \nv_0 \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial    \dot \qv_{m1}} - \diffmIt{f_c} \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\vv_t}  \right)  } \nonumber\\
+   &=\termC{\left(-r_ {(i,j)} \cdot \tilde \nv_0 \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial    \dot \qv_{m1}} - \diffmIt{f_c} \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\vv_t}  \right)  }\\
    &=\termC{ \left(r_ {(i,j)} \cdot \tilde \nv_0 \right) \left(f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
     \left( \LU{0}{\Jm_{pos,m1}}
-
     + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right) + d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m1}} ) \right)
     }
 \end{aligned}
 $$
+
 (seccontactspheretriangle)=
 ## Sphere-triangle contact: Equations
 
@@ -483,11 +525,13 @@ We compute the vector between the two points,
 $$
   \LU{0}{\tdelta_p} = \LU{0}{\pv_{p}} - \LU{0}{\pv_{s,i}}
 $$
+
 and the distance
 
 $$
   d = |\LU{0}{\tdelta_p}|
 $$
+
 Contact is only considered, if $d < r$.
 
 In case of contact, we compute the normalized vector
@@ -495,16 +539,19 @@ In case of contact, we compute the normalized vector
 $$
   \LU{0}{\tdelta_{p0}} = \frac{1}{d} \LU{0}{\tdelta_{p}}
 $$
+
 as well as the penetration
 
 $$
   \Delta = r_i - d
 $$
+
 In the case of a linear model, the normal contact force results as
 
 $$
   f_n = -k \cdot \Delta^p - d \cdot \dot \Delta
 $$
+
 in which $p$ is the exponent of the penetration, which is set to $1$ by default, but could have different values according to the geometry (however, this has to be adjusted in the C++ part).
 
 For tangential contact and damping, the relative velocity has to be computed.
@@ -514,6 +561,7 @@ $$
   \LU{0}{\pv_{sp}} = \left( \LU{0s}{\Am} \LU{s}{\tomega_s} \right) \times \left( \LU{0}{\pv_{p}} - \LU{0}{\pv_{s,i}}  \right)
   + \LU{0}{\vv_{s,i}}
 $$
+
 Here, $\LU{0}{\vv_{s,i}}$ is the sphere's velocity at the midpoint.
 The velocity of the rigid body (at which the triangle is attached) at the contact point reads
 
@@ -521,6 +569,7 @@ $$
   \LU{0}{\pv_{tp}} = \left( \LU{0r}{\Am} \LU{r}{\tomega_r} \right) \times \left( \LU{0}{\pv_{p}} - \LU{0}{\pv_r}  \right)
   + \LU{0}{\vv_{r}}
 $$
+
 in which $\LU{0}{\vv_{r}}$ is the rigid body's velocity at the reference point and $\LU{0}{\pv_r}$ is the rigid body's reference point.
 
 From the latter two quantities, we are able to compute the penetration velocity
@@ -528,17 +577,20 @@ From the latter two quantities, we are able to compute the penetration velocity
 $$
   \dot \Delta = \LU{0}{\tdelta_{p0}\tp} \left( \LU{0}{\pv_{sp}} - \LU{0}{\pv_{tp}} \right)
 $$
+
 The tangent velocity vector is then computed as
 
 $$
   \LU{0}{\tdelta_{vt}} = \left( \LU{0}{\pv_{sp}} - \LU{0}{\pv_{tp}} \right) - \dot \Delta \LU{0}{\tdelta_{p0}}
 $$
+
 The friction model follows again {eq}`eq-generalcontactregularizedfriction`, defining the friction force $\LU{0}{\fv_f}(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} )$, and resulting in the contact force
 
 $$
   \LU{0}{\fv_c} = f_c \cdot \LU{0}{\tdelta_{p0}} + \LU{0}{\fv_f}
   \, .
 $$
+
 The torque due to friction for sphere marker $i$ and for triangle $j$ rigid body results into (note that both signs are the same and that $\LU{0}{\fv_f}$ could be replaced by $\LU{0}{\fv_c}$)
 
 $$
@@ -546,6 +598,7 @@ $$
   \LU{0}{\ttau_{f,j}} = \left(  \LU{0}{\pv_{p}} - \LU{0}{\pv_r} \right) \times \LU{0}{\fv_f}
   \, .
 $$
+
 Jacobians for the derivative of contact forces w.r.t. marker positions and rotations only include the main dependencies of normal and tangential forces.
 
 ## Contact relations for ANCF cable $g_i$ (marker $m0$) and sphere $g_j$ (marker $m1$)
@@ -560,16 +613,19 @@ The integration is performed over $n_{ip}$ integration points $x_k \in [x_{i0},\
 $$
   x_k \in [s_0, (s_0+s_1)/2, s_1] \, .
 $$
+
 According weights are
 
 $$
   w_k \in [1/3, 4/3, 1/3] \, .
 $$
+
 The ANCF cable provides the global position of an integration point $k \in \{i0,\, i1,\, \ldots\}$ via
 
 $$
   \LU{0}{\rv(x_{k})} = \LU{0}{\Sm(x_{k})} \qv
 $$
+
 with ANCF shape function matrix $\Sm$ and current ANCF coordinates $\qv$.
 Note that in the simplified case with linear segments, $\LU{0}{\rv(x_{k})}$ is computed from linear interpolation of the segment which is attached to the cable.
 The velocity is computed in the same way,
@@ -577,6 +633,7 @@ The velocity is computed in the same way,
 $$
   \LU{0}{\dot \rv(x_{k})} = \LU{0}{\Sm(x_{k})} \dot\qv
 $$
+
 again using linear interpolation of the velocities along the straight segment, if linear segments are used.
 
 In order to perform the integration of contact forces due to penetration as well as tangential (friction) forces, we iterate over all integration points, and sum up the according generalized forces on the cable and the circle marker object.
@@ -586,22 +643,26 @@ In order to perform the integration of contact forces due to penetration as well
 $$
   f_k = \frac{s_1 - s_0}{2} w_k \, ,
 $$
+
 assuming axial stretch of the cable element being moderately small.
 The vector $\ANCFdk$ which points from the center of the circle to the cable (integration) point reads
 
 $$
   \ANCFdk = \LU{0}{\rv(x_{k})} - \LU{0}{\pv_j}
 $$
+
 The velocity of the circle at the contact integration point $k$ follows as
 
 $$
   \LU{0}{\vv_{c,k}} = \LU{0}{\vv_j} + \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j} \right) \times \ANCFdk
 $$
+
 The distance $L$ between cable and circle center point, gap $g$ and the contact normal vector read
 
 $$
   L_k = |\ANCFdk|, \quad g= L_k - (r + h_{1/2}), \quad \LU{0}{\dv_{0,k}} = \frac{1}{L_k} \ANCFdk
 $$
+
 with the half height of the ANCF element $h_{1/2}$, which gives additional penetration. Note that this height is added on the side of the circle, which virtually represents a larger circle, behaving slightly different from a cable with thickness $h$.
 
  The velocity in contact normal direction reads (note that we use the velocity of the circle's center point),
@@ -609,6 +670,7 @@ with the half height of the ANCF element $h_{1/2}$, which gives additional penet
 $$
   v_n = \LU{0}{\dv_{0,k}} \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_j \right)
 $$
+
 The contact force (tension! is always negative) follows in the simplistic case of a linear contact model as
 
 $$
@@ -622,11 +684,12 @@ with contact stiffness $k_c$ and contact normal damping $d_c$.
 $$
 \begin{aligned}
   \vv_{t,k} &= \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} - v_n \cdot \LU{0}{\dv_{0,k}}
-  = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} - \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j} \right) \times \ANCFdk - v_n \cdot \LU{0}{\dv_{0,k}} \nonumber \\
+  = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} - \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j} \right) \times \ANCFdk - v_n \cdot \LU{0}{\dv_{0,k}} \\
   &= -\left(\LU{0}{\dv_{0,k}} \otimes \LU{0}{\dv_{0,k}} -\Im \right) \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right)
       +\LU{0}{\tilde \dv_k} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j}
 \end{aligned}
 $$
+
 and the friction force is computed from {eq}`eq-generalcontactregularizedfriction` using the contact pressure $-f_{c,k}$ from {eq}`eq-generalcontactasfc`, while otherwise $\LU{0}{\fv_f} = \Null$.
 
 The force vector for the contact point for integration point $k$, including integration weight $f_k$ (this is done, because all further terms are proportional to $\fv_k$.) thus reads
@@ -634,23 +697,27 @@ The force vector for the contact point for integration point $k$, including inte
 $$
   \LU{0}{\fv_k} = f_k \cdot \left(f_{c,k} \cdot \LU{0}{\dv_{0,k}} + \LU{0}{\fv_f} \right)
 $$
+
 The total force and torque on the circle $j$ is found by summation over all integration points $k$,
 
 $$
   \LU{0}{\fv_{circ}} = \sum_k \LU{0}{\fv_{circ,k}}  = \sum_k \LU{0}{\fv_k}, \quad
   \LU{0}{\tv_{circ}} = \sum_k \LU{0}{\tv_{circ,k}}  = \sum_k \left( r_j \cdot \LU{0}{\dv_{0,k}} \right) \times \LU{0}{\fv_k}
 $$
+
 and the contribution to the generalized forces of the ANCF cable element (with generalized coordinates $\qv_{ANCF}$) read
 
 $$
   \fv_{ANCF} = \sum_k \fv_{ANCF,k} = \sum_k \LU{0}{\Sm(x_{k})\tp} \cdot \LU{0}{\fv_k}
 $$
+
 The generalized {ref}`LHS <LHS>` forces for marker $m1$ (with generalized coordinates $\qv_{m1}$) thus read
 
 $$
   \fv_{m1,LHS} = \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} +
                  \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}} \, .
 $$
+
 The Jacobian matrix for the circle-ANCF contact on position level thus reads (terms that are implemented are marked in green; black terms are not implemented or unused),
 
 $$
@@ -661,6 +728,7 @@ $$
                 {\diffmI{ \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}}
                 }
 $$
+
 and on velocity level, it follows as
 
 $$
@@ -671,81 +739,120 @@ $$
                 {\diffmIt{ \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}}
                 }
 $$
+
 For the calculation of the jacobian, the derivatives of the following terms are needed:
 
-- $\ANCFdk = \LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} $: $$
+- $\ANCFdk = \LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} $:
+
+$$
     \diffANCF{\ANCFdk} = \diffANCF{\LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} }
     = \LU{0}{\Sm(x_{k})}
+$$
 
-$$ $$
+
+
+$$
     \diffmI{\ANCFdk} = \diffmI{\LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} }
     = -\LU{0}{\Jm_{pos,m1}}
+$$
+
+- $\ANCFdkt = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\dot \vv_j} $:
 
 $$
-- $\ANCFdkt = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\dot \vv_j} $: $$
     \diffANCFt{\ANCFdkt} = \diffANCF{\LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} }
     = \LU{0}{\Sm(x_{k})}
+$$
 
-$$ $$
+
+
+$$
     \diffmIt{\ANCFdkt} = \diffmI{\LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} }
     = -\LU{0}{\Jm_{pos,m1}}
+$$
+
+- $L_k = |\ANCFdk| = \left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{1/2}$:
 
 $$
-- $L_k = |\ANCFdk| = \left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{1/2}$: $$
     \diffANCFmI{ |\ANCFdk| } = \frac{1}{L_k}\left(\LU{0}{\dv_k\tp} \diffANCFdk \right) =
     \ANCFdkOtp \diffANCFdk
+$$
+
+- $L_k^{-1} = \left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{-1/2}$ (note different sign as in $L$-term due to $-1/2$):
 
 $$
-- $L_k^{-1} = \left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{-1/2}$ (note different sign as in $L$-term due to $-1/2$): $$
     \diffANCFmI{ L_k^{-1} } = \diffANCFmI{\left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{-1/2} } =
     -\frac{1}{L_k}\left(\ANCFdkOtp \diffANCFdk \right)
+$$
+
+- $\ANCFdkO = \frac{1}{L_k} \ANCFdk$:
 
 $$
-- $\ANCFdkO = \frac{1}{L_k} \ANCFdk$: $$
     \diffANCFmI{ \ANCFdkO } = \diffANCFmI{\frac{1}{L_k} \ANCFdk } =
     - \frac{1}{L_k^2}\ANCFdk \otimes \left(\ANCFdkOtp \diffANCFdk \right)
     + \frac{1}{L_k} \diffANCFdk = \frac{1}{L_k} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \diffANCFdk
+$$
+
+- $g= L_k - (r + h_{1/2})$:
 
 $$
-- $g= L_k - (r + h_{1/2})$: $$
     \diffANCFmI{ g } = \diffANCFmI{ L_k } =
     \ANCFdkOtp \diffANCFdk
+$$
+
+- velocity at circle contact point $k$: $\LU{0}{\vv_{c,k}} = \LU{0}{\vv_j} + \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \ANCFdk = \LU{0}{\vv_j} - \LU{0}{\tilde \dv_k} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} $:
 
 $$
-- velocity at circle contact point $k$: $\LU{0}{\vv_{c,k}} = \LU{0}{\vv_j} + \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \ANCFdk = \LU{0}{\vv_j} - \LU{0}{\tilde \dv_k} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} $: $$
     \diffmIt{ \LU{0}{\vv_{c,k}} } =\LU{0}{\Jm_{pos,m1}}  - \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}}
+$$
+
+- $v_n = \ANCFdkO \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right)$: (the approximate sign is used, because $\LU{0}{\vv}_{c,k}$ includes a normal component if ANCF cable is not fully tangential, which is not considered here.)
 
 $$
-- $v_n = \ANCFdkO \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right)$: (the approximate sign is used, because $\LU{0}{\vv}_{c,k}$ includes a normal component if ANCF cable is not fully tangential, which is not considered here.) $$
     \diffANCFmIt{ v_n } = \ANCFdkO \diffANCFt{\left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right) }
     \approx
         \ANCFdkOtp \diffANCFdk
-
 $$
+
 - $\vv_{t,k} = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_j - v_n \cdot \ANCFdkO =
   \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} \right)
-      +\LU{0}{\tilde \dv_k} \LU{0}{\tomega}_{j} $: $$
-    \diffANCFt{\vv_{t,k} } = \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Sm(x_{k})}
-
-$$ $$
-    \diffmIt{\vv_{t,k} } = -\left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Jm_{pos,m1}} + \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}}
+      +\LU{0}{\tilde \dv_k} \LU{0}{\tomega}_{j} $:
 
 $$
-- $f_{c,k} = k_c \cdot g  + d_c \cdot v_n$: $$
+    \diffANCFt{\vv_{t,k} } = \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Sm(x_{k})}
+$$
+
+
+
+$$
+    \diffmIt{\vv_{t,k} } = -\left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Jm_{pos,m1}} + \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}}
+$$
+
+- $f_{c,k} = k_c \cdot g  + d_c \cdot v_n$:
+
+$$
     \termA{ \diffANCF{ f_{c,k} } } = \termC{ k_c \cdot \diffANCF{ g } }  + d_c \cdot \diffANCF{ v_n }
     \approx \termC{ k_c \cdot \LU{0}{\dv_{k,0}\tp} \LU{0}{\Sm(x_{k})} }
+$$
 
-$$ $$
-    \termA{ \diffmI{ f_{c,k} } } = \termC{ k_c \cdot \diffmI{ p } }  + d_c \cdot \diffmI{ v_n }
-    \approx \termC{ -k_c \cdot \LU{0}{\dv_{k,0}\tp} \LU{0}{\Jm_{pos,m1}} }
 
-$$ $$
-    \termC{\diffANCFt{ f_{c,k} } = d_c \cdot \diffANCFt{ v_n } = d_c \cdot \ANCFdkO \LU{0}{\Sm(x_{k})} }
-
-$$ $$
-    \termC{\diffmIt{ f_{c,k} } = d_c \cdot \diffmIt{ v_n } = -d_c \cdot \ANCFdkO \LU{0}{\Jm_{pos,m1}} }
 
 $$
+    \termA{ \diffmI{ f_{c,k} } } = \termC{ k_c \cdot \diffmI{ p } }  + d_c \cdot \diffmI{ v_n }
+    \approx \termC{ -k_c \cdot \LU{0}{\dv_{k,0}\tp} \LU{0}{\Jm_{pos,m1}} }
+$$
+
+
+
+$$
+    \termC{\diffANCFt{ f_{c,k} } = d_c \cdot \diffANCFt{ v_n } = d_c \cdot \ANCFdkO \LU{0}{\Sm(x_{k})} }
+$$
+
+
+
+$$
+    \termC{\diffmIt{ f_{c,k} } = d_c \cdot \diffmIt{ v_n } = -d_c \cdot \ANCFdkO \LU{0}{\Jm_{pos,m1}} }
+$$
+
 The contact force reads (note that because $f_c$ is always negative, the sign of regularization term is negative),
 
 $$
@@ -756,17 +863,18 @@ $$
                 f_k \cdot \left( f_{c,k} \cdot \ANCFdkO + \fv_f \right), \quad \mbox{else with $\fv_f = const.$}
               \end{cases}
 $$
+
 We introduce a factor $\delta_f$, which is $\delta_f=1$ in the regularized small velocity state, and in the saturated (constant) friction force we use $\delta_f=0$. Thus, the derivative of $\fv_f$, using $|f_{c,k}| = -f_{c,k}$, reads:
 
 $$
 \begin{aligned}
     \termA{ \diffANCFmIt{\fv_f} } &= \termA{ \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffANCFmIt{ (-f_{c,k} \LU{0}{\vv_t}) } } \approx
-    \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \diffANCFmIt{ \LU{0}{\vv_t} } } \nonumber \\
-    \termC{ \diffANCFt{\fv_f} } &\approx& \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Sm(x_{k})} } \nonumber \\
+    \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \diffANCFmIt{ \LU{0}{\vv_t} } } \\
+    \termC{ \diffANCFt{\fv_f} } &\approx& \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Sm(x_{k})} } \\
     \termC{ \diffmIt{\fv_f} } &\approx& \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(-\left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Jm_{pos,m1}} + \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}} \right) }
-
 \end{aligned}
 $$
+
 The term $\LU{0}{\fv_k}$ gives:
 
 $$
@@ -774,45 +882,46 @@ $$
     \termA{\frac{\partial \LU{0}{\fv_k}}{\partial \qv_{ANCF,m1}} } &=
     \termC{f_k \cdot} \left(\termA{ \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \frac{\partial f_{c,k}}{\partial \qv_{ANCF,m1}} } +
     f_{c,k} \cdot \frac{\partial \ANCFdkO}{\partial \qv_{ANCF,m1}} +
-    \diffANCFmI{\LU{0}{\fv_f}} \right)  \nonumber \\
+    \diffANCFmI{\LU{0}{\fv_f}} \right) \\
     &\approx& \termC{f_k \cdot k_c \cdot \left( \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \ANCFdkO \diffANCFmI{\LU{0}{\dv_{k}}} \right) }
-
 \end{aligned}
 $$
+
 and the velocity terms yield
 
 $$
 \begin{aligned}
     \termA{\diffANCFt{\LU{0}{\fv_k}} } &=
     \termC{f_k \cdot \left(d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \diffANCFt{v_n}  +
-    \diffANCFt{\LU{0}{\fv_f}} \right) } \nonumber \\
+    \diffANCFt{\LU{0}{\fv_f}} \right) } \\
     &\approx& \termC{f_k \cdot \left( d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \ANCFdkO -
     \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \right)\diffANCFt{\ANCFdkt}  }
-
 \end{aligned}
 $$
+
 $$
 \begin{aligned}
     \termA{\diffmIt{\LU{0}{\fv_k}} } &=
     \termC{f_k \cdot \left(d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \diffmIt{v_n}  +
-    \diffmIt{\LU{0}{\fv_f}} \right) } \nonumber \\
+    \diffmIt{\LU{0}{\fv_f}} \right) } \\
     &\approx& \termC{f_k \cdot \left( \left( d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \ANCFdkO  -
-    \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO\right) \right) \diffmIt{\ANCFdkt}\right.  } \nonumber\\
+    \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO\right) \right) \diffmIt{\ANCFdkt}\right.  }\\
     && \termC{\left.  + \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}} \right) }
-
 \end{aligned}
 $$
+
 The single jacobian terms w.r.t. $\qv_{ANCF}$ and $\qv_{m1}$ may be expressed as
 
 $$
 \begin{aligned}
-  &&\termA{\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}{\partial \qv_{ANCF,m1}}} = \nonumber \\
+  &&\termA{\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}{\partial \qv_{ANCF,m1}}} = \\
   &&\frac{\partial \LU{0}{\Jm_{pos,m1}\tp}}{\partial \qv_{ANCF,m1}} \LU{0}{\fv_{circ}}
   +\termC{\LU{0}{\Jm_{pos,m1}\tp}} \termA{\frac{\partial \LU{0}{\fv_{circ}}}{\partial \qv_{ANCF,m1}}}
   +\frac{\partial \LU{0}{\Jm_{rot,m1}\tp}}{\partial \qv_{m0,1}} \LU{0}{\tv_{circ}}
   +\termC{\LU{0}{\Jm_{rot,m1}\tp}} \termA{\frac{\partial \LU{0}{\tv_{circ}}}{\partial \qv_{ANCF,m1}}}
 \end{aligned}
 $$
+
 Note that similar relations follow for the time derivatives $\frac{\partial}{\partial \dot \qv_{ANCF,m1}}\left( \right) $.
 
  The derivatives of $\LU{0}{\fv_{ANCF}}$, $\LU{0}{\fv_{circ}}$, and
@@ -821,15 +930,16 @@ $$
   \LU{0}{\tv_{circ}} = \sum_k r_j \cdot  \ANCFdkO \times \LU{0}{\fv_k} =
                        \sum_k r_j \cdot  \LU{0}{\tilde \dv_{0,k}} \LU{0}{\fv_k}
 $$
+
 follow from
 
 $$
 \begin{aligned}
-  \diffANCFmI{\LU{0}{\fv_{ANCF}} } &= \termC{\sum_k \LU{0}{\Sm(x_{k})\tp}} \termA{\frac{\partial \LU{0}{\fv_k}}{\partial \qv_{ANCF,m1}}}, \nonumber \\
-
-  \termA{\diffANCFmI{ \LU{0}{\fv_{circ}} } } &= \termA{ \sum_k \diffANCFmI{ \LU{0}{\fv_k} } }, \nonumber \\
+  \diffANCFmI{\LU{0}{\fv_{ANCF}} } &= \termC{\sum_k \LU{0}{\Sm(x_{k})\tp}} \termA{\frac{\partial \LU{0}{\fv_k}}{\partial \qv_{ANCF,m1}}}, \\
+  \termA{\diffANCFmI{ \LU{0}{\fv_{circ}} } } &= \termA{ \sum_k \diffANCFmI{ \LU{0}{\fv_k} } }, \\
   \termA{\frac{\partial  \LU{0}{\tv_{circ}} }{\partial \qv_{ANCF,m1}}} &\approx&
   \sum_k \left( \termC{r_j \cdot  \LU{0}{\tilde \dv_{0,k}} } \termA{\diffANCFmI{\LU{0}{\fv_k}} } -
                 r_j \cdot \LU{0}{\tilde \fv_k} \diffANCFmI{\LU{0}{\dv_{0,k}} } \right)
 \end{aligned}
 $$
+

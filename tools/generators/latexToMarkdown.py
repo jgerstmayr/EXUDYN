@@ -76,12 +76,14 @@ def ProtectMath(text):
     returns (textWithPlaceholders, pieces)"""
     pieces = []
 
-    def Store(match):
+    def Store(match, marker='MATH'):
         pieces.append(match.group(0))
-        return '\x00MATH' + str(len(pieces) - 1) + '\x00'
+        return '\x00' + marker + str(len(pieces) - 1) + '\x00'
 
-    #display math first (written by ConvertDisplayMath), then inline $..$
-    text = re.sub(r'(?<!\\)\$\$.*?\$\$', Store, text, flags=re.S)
+    #display math first (written by ConvertDisplayMath), then inline $..$; the two get DIFFERENT
+    #markers because a later pass has to tell them apart - a display block must keep a line of its
+    #own, an inline one must not (see ConvertLists, #2593)
+    text = re.sub(r'(?<!\\)\$\$.*?\$\$', lambda m: Store(m, 'DISPLAYMATH'), text, flags=re.S)
     text = re.sub(r'(?<!\\)\$(?:\\.|[^$\\])*\$', Store, text, flags=re.S)
     return (text, pieces)
 
@@ -89,6 +91,12 @@ def ProtectMath(text):
 def RestoreMath(text, pieces):
     for (i, piece) in enumerate(pieces):
         text = text.replace('\x00MATH' + str(i) + '\x00', piece)
+        #a display block that stands alone on an indented line - inside a list item - keeps that
+        #indentation on every one of its lines, or it falls out of the item (#2593)
+        for match in re.findall(r'(?m)^([ ]+)\x00DISPLAYMATH' + str(i) + '\x00[ ]*$', text):
+            text = text.replace(match + '\x00DISPLAYMATH' + str(i) + '\x00',
+                                match + piece.replace('\n', '\n' + match))
+        text = text.replace('\x00DISPLAYMATH' + str(i) + '\x00', piece)
     return text
 
 
@@ -173,6 +181,11 @@ def ConvertLists(text):
                     block += ['  ' + line.strip()]
                 elif inFence:
                     block += ['  ' + line]      #code, verbatim
+                elif line.strip().startswith('\x00DISPLAYMATH'):
+                    #a formula of its own inside an item: it must NOT be joined into the item's
+                    #text line, where the $$ would end up in the middle of a sentence and MyST
+                    #would read the sentence as the formula and the formula as prose (#2593)
+                    block += ['  ' + line.strip()]
                 elif line.lstrip()[:2] in ['- ', '1.'] or (len(block) != 0 and line.startswith('  ')):
                     block += ['  ' + line.strip() if not line.startswith('  ') else '  ' + line]
                 elif line.strip() != '':
@@ -200,11 +213,22 @@ def ConvertDisplayMath(text):
             label = RefLabel(match.group(1))
             body = body[:match.start()] + body[match.end():]
         body = body.replace('\\eqComma', '\\, ,').replace('\\eqDot', '\\, .')
-        body = body.strip('\n')
+        #\nonumber suppressed the number of an eqnarray row. There is no eqnarray any more: the
+        #block becomes $$ .. $$ with \begin{aligned}, which numbers nothing, so MathJax ignores it
+        #and LaTeX refuses it ("Missing \cr inserted", #2593)
+        body = re.sub(r'\\nonumber\s*', '', body)
+        #.strip() and not .strip('\n'): the LaTeX body is indented, so stripping newlines alone
+        #leaves a line of blanks before the closing $$ - and a blank line ENDS a display math
+        #block in MyST, which left the last line of the formula outside it (#2593)
+        body = body.strip()
         if aligned:
             body = body.replace('&=&', '&=').replace('\\\\\n', '\\\\\n')
             body = '\\begin{aligned}\n' + body + '\n\\end{aligned}'
-        out = '\n$$\n' + body + '\n$$'
+        #a BLANK line before the $$, not just a newline: inside a \item the list conversion joins
+        #the item's text into one line, and a single newline there is not enough to keep the $$ at
+        #the start of a line - which is what turned formulas into prose and prose into formulas
+        #in ObjectContactFrictionCircleCable2D and ObjectConnectorCoordinateSpringDamperExt (#2593)
+        out = '\n\n$$\n' + body + '\n$$'
         if label is not None:
             out += ' (' + label + ')'
         return out + '\n'

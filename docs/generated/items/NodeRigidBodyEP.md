@@ -91,7 +91,6 @@ The derivatives of the angular velocity vectors w.r.t. the rotation velocity coo
 
 $$
 \begin{aligned}
-
 \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
 \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
 \end{aligned}

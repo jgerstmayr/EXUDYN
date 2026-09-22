@@ -207,7 +207,6 @@ $$
 Finally, the connector forces read in joint coordinates
 
 $$
-
 \LU{J1}{\fv} = \vr{f_{t,x}}{f_{t,y}}{f_n}
 $$ (eq-connectorrollingdiscpenalty-forces)
 

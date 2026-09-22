@@ -198,8 +198,8 @@ The {ref}`ODE1 <ODE1>` and {ref}`ODE2 <ODE2>` equations of {eq}`eq-systemeom`, w
 $$
 \begin{aligned}
 
-  \dot \qv &= \vel \nonumber \\
-  \dot \vel & = &\Mm^{-1} \fv_\SO(\qv, \vel, t) \nonumber \\
+  \dot \qv &= \vel \\
+  \dot \vel & = &\Mm^{-1} \fv_\SO(\qv, \vel, t) \\
   \dot \yv & = &\fv_\FO(\yv, t) \\
 \end{aligned}
 $$ (eq-systemeom)
@@ -340,8 +340,8 @@ The $2^\mathrm{nd}$ order differential equations displacements and velocities an
 $$
 \begin{aligned}
 
-  \qv_T & = &      \qv_0 + h \dot \qv_0 + h^2 (\frac 1 2 -\beta) \aalg_0 + h^2 \beta \aalg_T \nonumber\\
-  \dot \qv_T & = & \dot \qv_0 + h (1-\gamma) \aalg_0 + h\gamma \aalg_T \nonumber\\
+  \qv_T & = &      \qv_0 + h \dot \qv_0 + h^2 (\frac 1 2 -\beta) \aalg_0 + h^2 \beta \aalg_T\\
+  \dot \qv_T & = & \dot \qv_0 + h (1-\gamma) \aalg_0 + h\gamma \aalg_T\\
   \yv_T & = & \yv_0 + h (1-\gamma_\FO) \vel^0_\FO + h\gamma_\FO \vel^T_\FO
 \end{aligned}
 $$ (eq-newmark-interpolation)
@@ -462,18 +462,18 @@ $$
                = \frac{\partial \rv^\GA_\SO}{\partial \qv} \frac{\partial \qv}{\partial \acc}
                  + \frac{\partial \rv^\GA_\SO}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \acc}
                = h^2 \beta \Km + h \gamma \Dm
-               \nonumber \\
+ \\
   \Jm_{\SO\AE}&=\frac{\partial \rv^\GA_\SO}{\partial \tlambda}
-               = \frac{\partial \gv}{\partial \qv} \quad (\mbox{or } \frac{\partial \gv}{\partial \dot \qv} \mbox{ for constraints at velocity level)} \nonumber \\
-  \Jm_{\FO\FO}&=\frac{\partial \rv^\GA_\FO}{\partial \yv} \nonumber \\
+               = \frac{\partial \gv}{\partial \qv} \quad (\mbox{or } \frac{\partial \gv}{\partial \dot \qv} \mbox{ for constraints at velocity level)} \\
+  \Jm_{\FO\FO}&=\frac{\partial \rv^\GA_\FO}{\partial \yv} \\
   \Jm_{\AE\SO}&=\frac{\partial \rv^\GA_\AE}{\partial \acc}
                = \frac{\partial \gv}{\partial \acc}
                = \frac{\partial \gv}{\partial \qv} \frac{\partial \qv}{\partial \acc} +
                  \frac{\partial \gv}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \acc}
                = h^2 \beta \frac{\partial \gv}{\partial \qv}
                  + h \gamma \frac{\partial \gv}{\partial \dot \qv}
-              \nonumber \\
-  \Jm_{\AE\FO}&=\frac{\partial \rv^\GA_\AE}{\partial \yv} \nonumber \\
+ \\
+  \Jm_{\AE\FO}&=\frac{\partial \rv^\GA_\AE}{\partial \yv} \\
   \Jm_{\AE\AE}&=\frac{\partial \rv^\GA_\AE}{\partial \tlambda}
                = \frac{\partial \gv}{\partial \tlambda}
 \end{aligned}

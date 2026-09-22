@@ -200,7 +200,6 @@ This algorithm does not show the highest performance, but creates the mass matri
 in a conventional form. The equations read
 
 $$
-
 \Mm_{CRB}(\qv) \ddot \qv = \fv_{CRB}(\qv,\dot \qv) + \fv + \fv_{PD} + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
 $$ (eq-kinematictree-eom)
 

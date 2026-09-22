@@ -1,0 +1,15 @@
+{
+  "number": 2586,
+  "title": "there is no PDF of the documentation, and no decision on whether there should be",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "The PDF ended with the LaTeX sources: decision D8 (2026-09-19) says theDoc.pdf does not survive the revision, because keeping it meant keeping a LaTeX toolchain and a second rendering of every page. The maintainer asked on 2026-09-22 whether a PDF from the Markdown sources is possible. It is: sphinx-build -b latex renders MyST and needs a LaTeX installation at build time only, and the math macros that conf.py declares to MathJax can generate the LaTeX preamble from the same list that tools/checkMathMacros.py checks. What is needed is a decision (is the PDF wanted at all, and for which audience) and, if yes, a release-only build that is not part of the documentation gate.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 21:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The documentation has a PDF again, built from the Markdown: exudev docs --pdf, 1158 pages, 10.1 MB, zero LaTeX errors (the old theDoc.pdf was 1090 pages). Decision D17 records it and what it does not undo: D8 ended the LaTeX SOURCES and they stay ended; what comes back is a rendering. It holds everything except the 517 pages of example and test model listings, and it deliberately includes the complete issue history, which is what makes the document worth searching and worth feeding to an AI tool. The two builds are one build: sphinx -b latex with '-t pdf' sets a tag that conf.py branches on once, making pdfIndex.md the root and excluding index.md, README.rst (ten badges fetched as SVG, three animated GIFs) and the listing directories. The LaTeX math preamble is GENERATED from the same mathjax3_config dict that declares the macros to the browser - 162 newcommands written by conf.py itself, no second list - with five names LaTeX already has decided by hand and everything else emitted as \\newcommand, which fails loudly on a future collision. xelatex rather than pdflatex, for the box-drawing characters and arrows of the directory trees: zero missing glyphs. The mermaid diagrams are rendered by mermaidx, a pure-Python renderer in a new dev-only 'pdf' dependency group. A post-transform turns the 468 raw <br> of the settings tables into \\newline for the latex builder only. It is in no gate: exudev docs alone is unchanged, --complete does not build it, Read the Docs cannot; a release builds it into dist/ beside the wheels and the checklist names it as an asset. revision2026b step RG3.3.",
+  "resolvedInVersion": "1.12.6"
+}

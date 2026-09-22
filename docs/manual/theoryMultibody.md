@@ -179,7 +179,7 @@ However, there are two algebraic relations (constraint conditions) between these
 
 $$
 \begin{aligned}
-  {l_a\sin(\phi_a) + l_b\sin(\phi_b) - l_c\sin(\phi_c) - d_1 = 0} \nonumber \\
+  {l_a\sin(\phi_a) + l_b\sin(\phi_b) - l_c\sin(\phi_c) - d_1 = 0} \\
   {l_a\cos(\phi_a) - l_b\cos(\phi_b) - l_c\cos(\phi_c) + h_1 = 0}
 \end{aligned}
 $$

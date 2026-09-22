@@ -334,14 +334,17 @@ def BuildParsers():
 
     docs = subParsers.add_parser('docs', parents=[globalParser, versionParser],
         help='build the html documentation with sphinx',
-        description='sphinx-build -b html . _build -E, from the repository root. The LaTeX document '
-                    'docs/theDoc is NOT built here: it has not compiled for many commits and '
-                    'revision2026 phase R7 replaces it.')
+        description='sphinx-build -b html . _build -E, from the repository root. With --pdf it '
+                    'also builds the printable documentation, which is a release artifact and not '
+                    'part of any gate (revision2026b step RG3.3).')
     docs.add_argument('--keep-cache', action='store_true',
                       help='incremental build (drop -E); faster, but stale pages are possible')
     docs.add_argument('--no-strict', action='store_true',
                       help='do not turn warnings into errors; the default is -W --keep-going, '
                            'which is what the GitLab docs job runs')
+    docs.add_argument('--pdf', action='store_true',
+                      help='also build the pdf documentation into dist/ (needs a LaTeX '
+                           'installation; everything except the example and test model listings)')
     docs.add_argument('--open', action='store_true', help='open _build/index.html afterwards')
     docs.set_defaults(function=commands.Docs)
 

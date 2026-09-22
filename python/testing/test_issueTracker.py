@@ -190,7 +190,9 @@ def testTheStatusListIsTheOneTheStoreKnows(tracker):
 
 def testRemarkAppendsAndReplaces(tracker):
     number = OpenIssueNumber(tracker)
-    tracker.RemarkIssue(number, 'part A solved')
+    #replace=True for the FIRST one: the newest open issue of the store may already carry working
+    #remarks, and then an appending test reads them back too (#2594 did exactly that)
+    tracker.RemarkIssue(number, 'part A solved', replace=True)
     tracker.RemarkIssue(number, 'B still open')
     assert tracker.GetIssue(number)['workingRemarks'] == 'part A solved; B still open'
 

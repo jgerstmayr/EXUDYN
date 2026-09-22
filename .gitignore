@@ -100,6 +100,9 @@ python/TestModels/testData/netgenTestMesh2*.npz
 _build/
 docs/_build/
 .doctrees/
+#"exudev docs --pdf": the .tex and the LaTeX run (revision2026b step RG3.3). NOTE .gitignore has
+#no inline comments - a comment after a pattern is part of the pattern
+_buildpdf/
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Editors and OS
