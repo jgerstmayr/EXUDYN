@@ -167,7 +167,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       split, if two names fit it better.
 
 <a id="rg3-2"></a>
-**RG3.2** *(group RG3; maintainer 2026-09-22)* **The internal how-to notes leave the published
+**RG3.2** **DONE 2026-09-22** (#2585) — [log](exudynRevisionLog2026b.md#rg3-2) — *(group RG3; maintainer 2026-09-22)* **The internal how-to notes leave the published
     documentation** (#2585). `docs/howTo/` holds two kinds of note: what a **user** needs
     (building from source, conda environments) and what only a maintainer needs (ffmpeg,
     matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not).

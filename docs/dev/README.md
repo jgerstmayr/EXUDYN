@@ -70,16 +70,26 @@ VS2017/VS2019, 32-bit builds, Python ≤ 3.7 or the pre-WSLg X-server era was de
 worth keeping were lifted into `buildQuirks.md`. The originals remain in git history, in the
 archived internal repository and on GitHub.
 
+Three of them are **pages of the documentation**, because a user or a first-time contributor
+needs them:
+
 | file | what it is for |
 |---|---|
 | [condaEnvironments.md](../howTo/condaEnvironments.md) | environment recipes, the package→feature map, the scipy pin |
 | [buildFromSource.md](../howTo/buildFromSource.md) | the canonical build reference, Windows and Linux |
-| [buildQuirks.md](../howTo/buildQuirks.md) | traps that cost real time: MSVC↔GCC flags, `/bigobj`, ABI tags, debugging a startup crash |
-| [gccVsMsvcTraps.md](../howTo/gccVsMsvcTraps.md) | what MSVC accepts and GCC does not, and why |
-| [visualStudio2022.md](../howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
 | [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
-| [convertVideosFfmpeg.md](../howTo/convertVideosFfmpeg.md) | producing the demo animations |
-| [matplotlibExamples.md](../howTo/matplotlibExamples.md) | plotting recipes used in examples |
+
+The other five are **maintainer notes**: they are in the repository, and they are linked here to
+GitHub rather than to a page, because they are not published (revision2026b step RG3.2,
+#2585 — `exclude_patterns` in `conf.py`).
+
+| file | what it is for |
+|---|---|
+| [buildQuirks.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildQuirks.md) | traps that cost real time: MSVC↔GCC flags, `/bigobj`, ABI tags, debugging a startup crash |
+| [gccVsMsvcTraps.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md) | what MSVC accepts and GCC does not, and why |
+| [visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
+| [convertVideosFfmpeg.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/convertVideosFfmpeg.md) | producing the demo animations |
+| [matplotlibExamples.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/matplotlibExamples.md) | plotting recipes used in examples |
 
 macOS setup is covered in [docs/manual/gettingStarted.md](../manual/gettingStarted.md),
 not here.

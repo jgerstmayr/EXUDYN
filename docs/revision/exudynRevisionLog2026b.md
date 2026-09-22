@@ -60,3 +60,43 @@ actually ask. A user of a wheel needs no more; a developer was reading the wrong
 
 The structure was invisible to every check — `-W` catches a broken reference, not a chapter
 in the wrong place. This one needed a person to look at the sidebar.
+
+<a id="rg3-2"></a>
+### RG3.2 — five how-to notes go back to being repository files (2026-09-22, #2585)
+
+`docs/howTo/` holds eight notes, and revision2026 step R7.1.2 published all eight because all
+eight are Markdown. Being readable is not the same as being documentation: five of them answer
+questions that only somebody who *maintains* Exudyn ever asks.
+
+| stays a page | why |
+|---|---|
+| `buildFromSource.md` | a user builds from source; `README.rst` and `CONTRIBUTING.md` both send people here |
+| `condaEnvironments.md` | the environments, the package→feature map, the scipy pin |
+| `sphinxDocs.md` | a first contributor who changes a page has to build it |
+
+| leaves the build | why |
+|---|---|
+| `buildQuirks.md` | `/bigobj`, ABI tags, a startup crash under the debugger |
+| `gccVsMsvcTraps.md` | what MSVC accepts and GCC does not |
+| `visualStudio2022.md` | which VS2022 components to tick |
+| `convertVideosFfmpeg.md` | producing the demo animations |
+| `matplotlibExamples.md` | the plotting recipes of the examples |
+
+The mechanism is `exclude_patterns` in `conf.py` — the list that already keeps `docs/revision/*`,
+`CLAUDE.md` and `.github/*` out. An excluded file is still in git, still readable on GitHub and
+still linked; it is simply not a page.
+
+**The work was not the exclusion, it was the links.** A relative Markdown link into an excluded
+file is a link to a document that does not exist, and the strict build fails on it — which is why
+revision2026 step R7.1.2, when these same files were excluded for a different reason, linked them
+to GitHub from the developer index. Nine links needed that treatment: four in `buildFromSource.md`
+(it is the page that sends a reader to the Windows quirks, the GCC traps and Visual Studio) and
+five in the how-to table of `docs/dev/README.md`, which is now **two** tables: three pages and
+five repository notes, so that the table itself says which is which.
+
+`index.md` keeps the how-to section with the three pages and one paragraph naming the other five
+with a link to the directory — the "mentioned in one line" the maintainer asked for.
+
+What this does **not** change: nothing is deleted, nothing moves, and a maintainer who clones the
+repository has exactly what they had. What a reader of the published documentation no longer finds
+is five pages of instructions for a machine they are not sitting at.

@@ -19,7 +19,8 @@ the one just built. This page is what that driver does, and what to do when it d
 - **Python 3.10 – 3.14, 64 bit.** See [condaEnvironments.md](condaEnvironments.md) for the
   environments the project builds and tests against.
 - **A C++17 compiler**: Visual Studio 2022 on Windows (see
-  [visualStudio2022.md](visualStudio2022.md)), GCC on Linux.
+  [visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md)),
+  GCC on Linux.
 - **numpy**, and `wheel` if you build wheels by hand.
 - Nothing else: pybind11, GLFW, Eigen and LEST are **vendored** in `include/`, and the GLFW import
   library for Windows is in the repository.
@@ -105,9 +106,11 @@ ImportError: .../exudyn.cpython-313-x86_64-linux-gnu.so: undefined symbol: ...
 
 An undefined symbol at **import** time is a compile-time mistake that the linker of a shared object
 does not catch — most often a `static const` used as a template argument, which needs to be
-`constexpr`. [gccVsMsvcTraps.md](gccVsMsvcTraps.md) collects that one and its relatives.
+`constexpr`. [gccVsMsvcTraps.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md) collects that one and its
+relatives.
 
-For the Windows side of "it built but it does not work", see [buildQuirks.md](buildQuirks.md).
+For the Windows side of "it built but it does not work", see
+[buildQuirks.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildQuirks.md).
 
 ## Debugging the C++ from a Python run
 
@@ -126,7 +129,8 @@ gdb python3
 ```
 
 On Windows this is what Visual Studio does much better: mixed Python/native debugging, a breakpoint
-in the C++ hit from the Python model — see [visualStudio2022.md](visualStudio2022.md).
+in the C++ hit from the Python model — see
+[visualStudio2022.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md).
 
 For Python-level debugging, `python3 -m pdb myModel.py`.
 

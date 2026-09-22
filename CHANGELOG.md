@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 4 | 1.12.3 |
+| 1.12 | Metheney | 5 | 1.12.4 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.4** `DOCU` internal how-to notes are published to Read the Docs (#2585) - raised by Claude-JG
+  - Five of the eight docs/howTo notes are maintainer material and leave the published documentation: buildQuirks, gccVsMsvcTraps, visualStudio2022, convertVideosFfmpeg and matplotlibExamples are now in exclude\_patterns in conf.py, beside docs/revision/, CLAUDE.md and .github/. buildFromSource, condaEnvironments and sphinxDocs stay pages, because a user or a first contributor needs them. Nothing is deleted: the five stay in the repository, are named in one paragraph of index.md with a link to the directory, and keep their row in the how-to table of docs/dev/README.md - which is now two tables, pages and repository notes. The actual work was the nine relative links that pointed into the five: a link to an excluded document fails the strict build, so the four in buildFromSource.md and the five in the developer index now point to GitHub, as revision2026 step R7.1.2 did for the same files. revision2026b step RG3.2.
 - **1.12.3** `DOCU` the user manual has a broken section structure (#2584) - raised by Claude-JG
   - The toctree left docs/manual/introduction.md, so Installation and Getting Started comes first and Exudyn Basics and Advanced topics stand at the level of Overview on Exudyn instead of below its last section. 'Mapping between local and global coordinate indices' is a sub-section of 'Items: Nodes, Objects, Loads, Markers, Sensors'. The C++ chapter is split and gone: its four principles moved into docs/dev/ARCHITECTURE.md as 'Why it looks like this', its two worked cases of adding an item into docs/dev/CODING\_STYLE.md section 9 - which said TBD and now says how, with the file names of the current layout - and its style, notation and no-abbreviation sections were dropped because CODING\_STYLE already carries them better. The manual keeps a short 'The C++ core' section in Advanced topics that points at both.
 - **1.12.2** `DOCU` the revisions chapter does not say where the details are (#2587) - raised by Claude-JG

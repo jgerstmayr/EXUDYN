@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.3.dev1
+- Exudyn version = 1.12.4.dev1
 - last change = 2026-09-22
 - Number of issues = 2592
-- Number of resolved issues = 2317 (3 in current version)
+- Number of resolved issues = 2318 (4 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.4: resolved Issue 2585: internal how-to notes are published to Read the Docs (docu)
+  - issue author: Claude-JG
+  - description: docs/howTo/ holds notes of two kinds: what a USER needs (building from source, conda environments) and what only a maintainer needs (converting videos with ffmpeg, matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not). All of them are in the toctree and are published. The second kind should stay in the repository and be mentioned in one line - "further notes are in the repository" with a link - rather than being part of the manual. The mechanism is exclude\_patterns in conf.py, which already excludes docs/revision/ and .github/.
+  - **notes:** Five of the eight docs/howTo notes are maintainer material and leave the published documentation: buildQuirks, gccVsMsvcTraps, visualStudio2022, convertVideosFfmpeg and matplotlibExamples are now in exclude\_patterns in conf.py, beside docs/revision/, CLAUDE.md and .github/. buildFromSource, condaEnvironments and sphinxDocs stay pages, because a user or a first contributor needs them. Nothing is deleted: the five stay in the repository, are named in one paragraph of index.md with a link to the directory, and keep their row in the how-to table of docs/dev/README.md - which is now two tables, pages and repository notes. The actual work was the nine relative links that pointed into the five: a link to an excluded document fails the strict build, so the four in buildFromSource.md and the five in the developer index now point to GitHub, as revision2026 step R7.1.2 did for the same files. revision2026b step RG3.2.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-22 10:05**, date raised: 2026-09-22, resolved by: Claude-JG
 - Version 1.12.3: resolved Issue 2584: the user manual has a broken section structure (docu)
   - issue author: Claude-JG
   - description: The conversion of revision2026 step R7.1.5 left the toctree of docs/manual/introduction.md BELOW its last section, so Exudyn Basics, Advanced topics and C++ Code appear in the documentation as sub-pages of "Mapping between local and global coordinate indices". Wanted (maintainer, 2026-09-22): Installation and Getting Started before Overview on Exudyn; Exudyn Basics and Advanced topics at the same level as Overview on Exudyn; "Mapping between local and global coordinate indices" as the last sub-section of "Items: Nodes, Objects, Loads, Markers, Sensors"; and C++ Code reduced to a short pointer in Advanced topics, with its content moved into the developer documentation under a name that says what it is.
@@ -7855,11 +7861,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - issue author: Claude-JG
   - description: The PDF ended with the LaTeX sources: decision D8 (2026-09-19) says theDoc.pdf does not survive the revision, because keeping it meant keeping a LaTeX toolchain and a second rendering of every page. The maintainer asked on 2026-09-22 whether a PDF from the Markdown sources is possible. It is: sphinx-build -b latex renders MyST and needs a LaTeX installation at build time only, and the math macros that conf.py declares to MathJax can generate the LaTeX preamble from the same list that tools/checkMathMacros.py checks. What is needed is a decision (is the PDF wanted at all, and for which audience) and, if yes, a release-only build that is not part of the documentation gate.
   - effort: MEDIUM (within 16 hours)
-  - date raised: 2026-09-22
-- <span class="boldblue">open issue 2585:</span> internal how-to notes are published to Read the Docs
-  - issue author: Claude-JG
-  - description: docs/howTo/ holds notes of two kinds: what a USER needs (building from source, conda environments) and what only a maintainer needs (converting videos with ffmpeg, matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not). All of them are in the toctree and are published. The second kind should stay in the repository and be mentioned in one line - "further notes are in the repository" with a link - rather than being part of the manual. The mechanism is exclude\_patterns in conf.py, which already excludes docs/revision/ and .github/.
-  - effort: LOW (within 2 hours)
   - date raised: 2026-09-22
 - <span class="boldblue">open issue 2583:</span> the renderer extraction functions are not shaped for testing
   - issue author: Claude-JG

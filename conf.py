@@ -97,6 +97,14 @@ exclude_patterns = ['rotorAnsys.rst',
                     'CLAUDE.md',         #the working contract for Claude Code sessions
                     '.github/*',         #issue and pull request templates: GitHub reads them,
                                          #Sphinx must not (revision2026 step R8.1)
+                    #maintainer notes: they stay in the repository and are linked from the
+                    #how-to section of the documentation, but they are not pages of the manual
+                    #(revision2026b step RG3.2, #2585)
+                    'docs/howTo/buildQuirks.md',
+                    'docs/howTo/convertVideosFfmpeg.md',
+                    'docs/howTo/gccVsMsvcTraps.md',
+                    'docs/howTo/matplotlibExamples.md',
+                    'docs/howTo/visualStudio2022.md',
                     'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
 
 #for google search index file, placed into root folder

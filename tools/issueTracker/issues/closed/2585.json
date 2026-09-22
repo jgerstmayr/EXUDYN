@@ -1,0 +1,15 @@
+{
+  "number": 2585,
+  "title": "internal how-to notes are published to Read the Docs",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "docs/howTo/ holds notes of two kinds: what a USER needs (building from source, conda environments) and what only a maintainer needs (converting videos with ffmpeg, matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not). All of them are in the toctree and are published. The second kind should stay in the repository and be mentioned in one line - \"further notes are in the repository\" with a link - rather than being part of the manual. The mechanism is exclude_patterns in conf.py, which already excludes docs/revision/ and .github/.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 10:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Five of the eight docs/howTo notes are maintainer material and leave the published documentation: buildQuirks, gccVsMsvcTraps, visualStudio2022, convertVideosFfmpeg and matplotlibExamples are now in exclude_patterns in conf.py, beside docs/revision/, CLAUDE.md and .github/. buildFromSource, condaEnvironments and sphinxDocs stay pages, because a user or a first contributor needs them. Nothing is deleted: the five stay in the repository, are named in one paragraph of index.md with a link to the directory, and keep their row in the how-to table of docs/dev/README.md - which is now two tables, pages and repository notes. The actual work was the nine relative links that pointed into the five: a link to an excluded document fails the strict build, so the four in buildFromSource.md and the five in the developer index now point to GitHub, as revision2026 step R7.1.2 did for the same files. revision2026b step RG3.2.",
+  "resolvedInVersion": "1.12.4"
+}
