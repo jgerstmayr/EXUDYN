@@ -8,6 +8,26 @@ Related, deliberately not repeated here: repository layout in [README.md](README
 commit workflow in [WORKFLOW.md](WORKFLOW.md), naming and file headers in
 [CODING_STYLE.md](CODING_STYLE.md).
 
+## Why it looks like this
+
+*(From the user manual, where this stood until the 2026 revision; revision2026b step RG3.1.)*
+
+The C++ side follows four principles, in this order of priority:
+
+1. **developer-friendly**  — first, because a formulation that cannot be implemented without a
+   fight does not get implemented correctly;
+2. **error minimization**;
+3. **user-friendliness**;
+4. **efficiency**.
+
+What follows from that order: the basic libraries are slim and extensively tested rather than
+general; new program parts get unit tests while they are written (LEST for C++, the test models
+for everything above); parallelization classes exist, but the assumption behind them is a
+multi-core processor with one main memory, so the gain is in what stays inside the caches, and
+vectorization is written for SIMD as Intel processors have it; and the Python interface is a
+nearly 1:1 image of the system and of what happens in it, so that anything Python can do can be
+done to a model.
+
 ## The shape of the thing
 
 A C++ computational core exposed to Python through pybind11. The boundary is deliberate and hard:

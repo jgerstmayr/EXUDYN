@@ -152,7 +152,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 
 
 <a id="rg3-1"></a>
-**RG3.1** *(group RG3; maintainer 2026-09-22)* **HIGH PRIORITY: the section structure of the user
+**RG3.1** **DONE 2026-09-22** (#2584) — [log](exudynRevisionLog2026b.md#rg3-1) — *(group RG3; maintainer 2026-09-22)* **HIGH PRIORITY: the section structure of the user
     manual is wrong** (#2584). The conversion of revision2026 step R7.1.5 left the `toctree` of
     `docs/manual/introduction.md` **below its last section**, so *Exudyn Basics*, *Advanced
     topics* and *C++ Code* appear as sub-pages of *"Mapping between local and global coordinate

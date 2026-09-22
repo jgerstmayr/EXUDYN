@@ -1,0 +1,16 @@
+{
+  "number": 2584,
+  "title": "the user manual has a broken section structure",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "The conversion of revision2026 step R7.1.5 left the toctree of docs/manual/introduction.md BELOW its last section, so Exudyn Basics, Advanced topics and C++ Code appear in the documentation as sub-pages of \"Mapping between local and global coordinate indices\". Wanted (maintainer, 2026-09-22): Installation and Getting Started before Overview on Exudyn; Exudyn Basics and Advanced topics at the same level as Overview on Exudyn; \"Mapping between local and global coordinate indices\" as the last sub-section of \"Items: Nodes, Objects, Loads, Markers, Sensors\"; and C++ Code reduced to a short pointer in Advanced topics, with its content moved into the developer documentation under a name that says what it is.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The toctree left docs/manual/introduction.md, so Installation and Getting Started comes first and Exudyn Basics and Advanced topics stand at the level of Overview on Exudyn instead of below its last section. 'Mapping between local and global coordinate indices' is a sub-section of 'Items: Nodes, Objects, Loads, Markers, Sensors'. The C++ chapter is split and gone: its four principles moved into docs/dev/ARCHITECTURE.md as 'Why it looks like this', its two worked cases of adding an item into docs/dev/CODING_STYLE.md section 9 - which said TBD and now says how, with the file names of the current layout - and its style, notation and no-abbreviation sections were dropped because CODING_STYLE already carries them better. The manual keeps a short 'The C++ core' section in Advanced topics that points at both.",
+  "resolvedInVersion": "1.12.3"
+}

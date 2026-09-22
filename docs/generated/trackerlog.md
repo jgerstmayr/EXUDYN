@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.2.dev1
+- Exudyn version = 1.12.3.dev1
 - last change = 2026-09-22
 - Number of issues = 2592
-- Number of resolved issues = 2316 (2 in current version)
+- Number of resolved issues = 2317 (3 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.3: resolved Issue 2584: the user manual has a broken section structure (docu)
+  - issue author: Claude-JG
+  - description: The conversion of revision2026 step R7.1.5 left the toctree of docs/manual/introduction.md BELOW its last section, so Exudyn Basics, Advanced topics and C++ Code appear in the documentation as sub-pages of "Mapping between local and global coordinate indices". Wanted (maintainer, 2026-09-22): Installation and Getting Started before Overview on Exudyn; Exudyn Basics and Advanced topics at the same level as Overview on Exudyn; "Mapping between local and global coordinate indices" as the last sub-section of "Items: Nodes, Objects, Loads, Markers, Sensors"; and C++ Code reduced to a short pointer in Advanced topics, with its content moved into the developer documentation under a name that says what it is.
+  - **notes:** The toctree left docs/manual/introduction.md, so Installation and Getting Started comes first and Exudyn Basics and Advanced topics stand at the level of Overview on Exudyn instead of below its last section. 'Mapping between local and global coordinate indices' is a sub-section of 'Items: Nodes, Objects, Loads, Markers, Sensors'. The C++ chapter is split and gone: its four principles moved into docs/dev/ARCHITECTURE.md as 'Why it looks like this', its two worked cases of adding an item into docs/dev/CODING\_STYLE.md section 9 - which said TBD and now says how, with the file names of the current layout - and its style, notation and no-abbreviation sections were dropped because CODING\_STYLE already carries them better. The manual keeps a short 'The C++ core' section in Advanced topics that points at both.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-22 08:29**, date raised: 2026-09-22, resolved by: Claude-JG
 - Version 1.12.2: resolved Issue 2587: the revisions chapter does not say where the details are (docu)
   - issue author: Claude-JG
   - description: docs/manual/revisions.md is deliberately short, but it ends there: a reader who wants to know why something changed has no pointer. It should refer to the developer documentation and say that the revision is recorded in full in a plan and a log - and there are two of them now, revision2026 (finished, completed as 1.12) and revision2026b (continuing), each with its own plan and log.
@@ -7854,11 +7860,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - issue author: Claude-JG
   - description: docs/howTo/ holds notes of two kinds: what a USER needs (building from source, conda environments) and what only a maintainer needs (converting videos with ffmpeg, matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not). All of them are in the toctree and are published. The second kind should stay in the repository and be mentioned in one line - "further notes are in the repository" with a link - rather than being part of the manual. The mechanism is exclude\_patterns in conf.py, which already excludes docs/revision/ and .github/.
   - effort: LOW (within 2 hours)
-  - date raised: 2026-09-22
-- <span class="textred">open issue 2584:</span> the user manual has a broken section structure
-  - issue author: Claude-JG
-  - description: The conversion of revision2026 step R7.1.5 left the toctree of docs/manual/introduction.md BELOW its last section, so Exudyn Basics, Advanced topics and C++ Code appear in the documentation as sub-pages of "Mapping between local and global coordinate indices". Wanted (maintainer, 2026-09-22): Installation and Getting Started before Overview on Exudyn; Exudyn Basics and Advanced topics at the same level as Overview on Exudyn; "Mapping between local and global coordinate indices" as the last sub-section of "Items: Nodes, Objects, Loads, Markers, Sensors"; and C++ Code reduced to a short pointer in Advanced topics, with its content moved into the developer documentation under a name that says what it is.
-  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-22
 - <span class="boldblue">open issue 2583:</span> the renderer extraction functions are not shaped for testing
   - issue author: Claude-JG

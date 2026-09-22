@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 3 | 1.12.2 |
+| 1.12 | Metheney | 4 | 1.12.3 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.3** `DOCU` the user manual has a broken section structure (#2584) - raised by Claude-JG
+  - The toctree left docs/manual/introduction.md, so Installation and Getting Started comes first and Exudyn Basics and Advanced topics stand at the level of Overview on Exudyn instead of below its last section. 'Mapping between local and global coordinate indices' is a sub-section of 'Items: Nodes, Objects, Loads, Markers, Sensors'. The C++ chapter is split and gone: its four principles moved into docs/dev/ARCHITECTURE.md as 'Why it looks like this', its two worked cases of adding an item into docs/dev/CODING\_STYLE.md section 9 - which said TBD and now says how, with the file names of the current layout - and its style, notation and no-abbreviation sections were dropped because CODING\_STYLE already carries them better. The manual keeps a short 'The C++ core' section in Advanced topics that points at both.
 - **1.12.2** `DOCU` the revisions chapter does not say where the details are (#2587) - raised by Claude-JG
   - The revisions chapter now ends by saying where the full record is: the revision is written down step by step in a plan and a log, there are two of them - revision2026, finished and what 1.12 is, and revision2026b which carries what it did not finish - and both are linked from the developer documentation together with the standing information document. The chapter itself stays short; the published page does not link the plan files directly, because docs/revision/ is excluded from the documentation build.
 - **1.12.1** `TESTING` checkExtras passed locally and failed in CI because of an untracked file (#2508) - raised by Claude-JG

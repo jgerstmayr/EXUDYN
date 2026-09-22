@@ -217,7 +217,7 @@ Note that commonly the `OutputVariableType` `Coordinates` returns coordinates wi
 In contrast the `OutputVariableType` `CoordinatesTotal` returns (Since Exudyn1.9.25) the sum of reference and displacement (or rotation) coordinates for any configuration (e.g., current, initial or visualization).
 
 (sec-overview-ltgmapping)=
-## Mapping between local and global coordinate indices
+### Mapping between local and global coordinate indices
 
 The {ref}`LTG <LTG>`-index-mappings (local-to-global coordinate index mappings containing transformation from local object coordinate indices to global (system) coordinate indices; this is different for **coordinate transformations**!) between local coordinate **indices**, on node or object level, and global (=system) coordinate **indices** follows the following rules:
 
@@ -227,10 +227,4 @@ The {ref}`LTG <LTG>`-index-mappings (local-to-global coordinate index mappings c
 - Objects have their own {ref}`LTG <LTG>`-index-mappings for their respective coordinate types. The {ref}`ODE2 <ODE2>` coordinates of an object `j` can be retrieved via `mbs.systemData.GetObjectLTGODE2(j)`. For a body, these are the global {ref}`ODE2 <ODE2>` coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the {ref}`LTG <LTG>`-index-mapping is empty; see also {ref}`sec-systemdata-objectltg`.
 - Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number `k`, the global index to algebraic variables (of {ref}`AE <AE>`-type) can be accessed via `mbs.systemData.GetObjectLTGAE(k)`.
 
-```{toctree}
-:maxdepth: 2
 
-introductionBasics
-introductionAdvanced
-introductionCppCode
-```

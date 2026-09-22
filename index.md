@@ -23,8 +23,10 @@ fewer results than the search itself.
 :caption: Exudyn User Manual
 
 README
-docs/manual/introduction
 docs/manual/gettingStarted
+docs/manual/introduction
+docs/manual/introductionBasics
+docs/manual/introductionAdvanced
 docs/manual/tutorial
 docs/manual/GUI
 docs/manual/commandLine

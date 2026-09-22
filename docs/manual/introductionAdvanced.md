@@ -207,6 +207,27 @@ To finally check if the GLFW renderer also runs via julia, just use:
 For the full range of possibilities, see [github.com/JuliaPy/PyCall.jl](https://github.com/JuliaPy/PyCall.jl).
 
 (sec-overview-advanced-interactwithcodes)=
+(sec-advanced-cppcore)=
+## The C++ core
+
+The computation happens in C++: `mbs.AddObject(...)` creates an object on the C++ side from a
+validated dictionary, `exu.SolveDynamic(...)` runs a C++ solver, and Python holds the model and
+reads the results. Nothing of that needs to be known to use Exudyn - but two questions come up
+often enough to say where they are answered, both in the **developer documentation** in the
+repository:
+
+- *How is the C++ side organised, and where do I start reading?* -
+  [`docs/dev/ARCHITECTURE.md`](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/dev/ARCHITECTURE.md):
+  the item abstraction, the split into computational, main and visualization classes, what each
+  directory under `src/` is, and what happens when `mbs.AddObject(...)` is called.
+- *I want to add my own item in C++.* -
+  [`docs/dev/CODING_STYLE.md`](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/dev/CODING_STYLE.md),
+  section 9: the two worked cases (a body and a connector), and the advice that comes before
+  them - write it in Python first, with user functions, and go to C++ when that works and is too
+  slow.
+
+Building Exudyn from source is {ref}`sec-install-installinstructions`.
+
 ## Interaction with other codes
 
 Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
