@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.0.dev1
+- Exudyn version = 1.12.2.dev1
 - last change = 2026-09-22
-- Number of issues = 2582
-- Number of resolved issues = 2313 (0 in current version)
+- Number of issues = 2592
+- Number of resolved issues = 2316 (2 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,24 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.2: resolved Issue 2587: the revisions chapter does not say where the details are (docu)
+  - issue author: Claude-JG
+  - description: docs/manual/revisions.md is deliberately short, but it ends there: a reader who wants to know why something changed has no pointer. It should refer to the developer documentation and say that the revision is recorded in full in a plan and a log - and there are two of them now, revision2026 (finished, completed as 1.12) and revision2026b (continuing), each with its own plan and log.
+  - **notes:** The revisions chapter now ends by saying where the full record is: the revision is written down step by step in a plan and a log, there are two of them - revision2026, finished and what 1.12 is, and revision2026b which carries what it did not finish - and both are linked from the developer documentation together with the standing information document. The chapter itself stays short; the published page does not link the plan files directly, because docs/revision/ is excluded from the documentation build.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-22 01:34**, date raised: 2026-09-22, resolved by: Claude-JG
+- Version 1.12.1: resolved Issue 2508: checkExtras passed locally and failed in CI because of an untracked file (testing)
+  - issue author: Claude-JG
+  - description: tools/checkExtras.py built its set of "local module names" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: "import pytest" in test\_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported "UNCOVERED IMPORTS: pytest ... needed by \[tests\]" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in \[dependency-groups\]; not in any extra.
+  - **notes:** Verified 2026-09-22: tools/checkExtras.py builds its set of local module names from TRACKED files only - LocalModuleNames() calls TrackedFiles() and its docstring names this failure mode - so a file that exists on the development machine but is not in git can no longer make an import look local. The difference between a local run and CI is gone.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-22 01:30**, date raised: 2026-09-18, resolved by: Claude-JG
+- Version 1.12.0: resolved Issue 2455: pydoclint reports two violations in exudyn/\_\_init\_\_.py RequireVersion (fix)
+  - issue author: Claude-JG
+  - description: found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
+  - **notes:** Verified 2026-09-22 on 1.12.0.dev1: pydoclint with the project configuration reports 'No violations' for python/exudyn/\_\_init\_\_.py, and DOC111 does not occur anywhere in the package any more. The two findings were removed by the docstring work of revision2026 steps R5.13 and R4.8; nothing was needed here beyond the check.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-22 01:30**, date raised: 2026-09-16, resolved by: Claude-JG
 
 ### Version 1.11
 
@@ -7807,9 +7825,54 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- <span class="textorange">open issue 2562:</span> nothing in the test suite ever calls UpdateGraphics
+- <span class="textorange">open issue 2591:</span> the settings dialogs work but are hard to use, and GUI.py is hard to change
   - issue author: Claude-JG
-  - description: The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9.
+  - description: python/exudyn/GUI.py does its job with tkinter - it runs everywhere and needs no installation - but it is in bad shape, and the dialogs are called from rendererPythonInterface.cpp, which executes Python inside C++. What the maintainer names (2026-09-22): the table of the visualization settings is restricted; illegal input is caught but there are no type hints; the font size cannot be adjusted on Linux; the columns can hardly be adjusted; a description should appear in a pop-up rather than only with a special key; fields cannot be edited inline; combo boxes are unhandy. Two things changed the ground under it: revision2026 step R4.10 makes the parameter TYPES available to Python, and the interface is generic enough that a second front end (Qt6, or a form that takes Qt5 and Qt6) would be a small overhead on top. A snapshot of the dialog as it is: docs/theDoc/figures/visualizationSettings.png in the history.
+  - effort: HIGH (within 40 hours)
+  - date raised: 2026-09-22
+- <span class="textorange">open issue 2590:</span> there is no way to see which settings differ from the defaults
+  - issue author: Claude-JG
+  - description: A user who wants to know what a model actually changed in simulationSettings or visualizationSettings has to compare by hand: both have GetDictionary(), and a default instance is one call away (exudyn.SimulationSettings(), exudyn.VisualizationSettings()), but nothing subtracts them. A helper in the utilities should print the difference AS PYTHON CODE, so that it can be pasted into a script and reproduces the settings - which is also what makes a session in the visualization dialog reusable. Worth considering as additional information in solution and sensor files, for reproducibility. The GUI should show the same thing for the current settings.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-22
+- <span class="textorange">open issue 2589:</span> item parameters cannot be deprecated
+  - issue author: Claude-JG
+  - description: When an item parameter is renamed there is no path that keeps an old script working: unlike visualizationSettings, the item interfaces have no deprecation mechanism. Wanted (maintainer, 2026-09-22): the same feature for item parameters, either restricted to the classes of itemInterface.py - which is generated, so one place - or extended to the Get/Set functions of the items themselves. If it reaches the C++ side, the deprecated names must be searched LAST, so that the common case pays nothing.
+  - effort: HIGH (within 40 hours)
+  - date raised: 2026-09-22
+- <span class="boldblue">open issue 2588:</span> simulationSettings has no deprecation mechanism
+  - issue author: Claude-JG
+  - description: A member of visualizationSettings can be marked deprecated in the definitions - Deprecated(since, expires) plus the SFDeprecated flag, 93 members carry it today - and a user who sets the old name gets a message that names the new one. simulationSettings uses none of it, although the mechanism is the same generator and the same structure machinery: a renamed solver setting simply disappears. Apply it there.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-22
+- <span class="boldblue">open issue 2586:</span> there is no PDF of the documentation, and no decision on whether there should be
+  - issue author: Claude-JG
+  - description: The PDF ended with the LaTeX sources: decision D8 (2026-09-19) says theDoc.pdf does not survive the revision, because keeping it meant keeping a LaTeX toolchain and a second rendering of every page. The maintainer asked on 2026-09-22 whether a PDF from the Markdown sources is possible. It is: sphinx-build -b latex renders MyST and needs a LaTeX installation at build time only, and the math macros that conf.py declares to MathJax can generate the LaTeX preamble from the same list that tools/checkMathMacros.py checks. What is needed is a decision (is the PDF wanted at all, and for which audience) and, if yes, a release-only build that is not part of the documentation gate.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-22
+- <span class="boldblue">open issue 2585:</span> internal how-to notes are published to Read the Docs
+  - issue author: Claude-JG
+  - description: docs/howTo/ holds notes of two kinds: what a USER needs (building from source, conda environments) and what only a maintainer needs (converting videos with ffmpeg, matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not). All of them are in the toctree and are published. The second kind should stay in the repository and be mentioned in one line - "further notes are in the repository" with a link - rather than being part of the manual. The mechanism is exclude\_patterns in conf.py, which already excludes docs/revision/ and .github/.
+  - effort: LOW (within 2 hours)
+  - date raised: 2026-09-22
+- <span class="textred">open issue 2584:</span> the user manual has a broken section structure
+  - issue author: Claude-JG
+  - description: The conversion of revision2026 step R7.1.5 left the toctree of docs/manual/introduction.md BELOW its last section, so Exudyn Basics, Advanced topics and C++ Code appear in the documentation as sub-pages of "Mapping between local and global coordinate indices". Wanted (maintainer, 2026-09-22): Installation and Getting Started before Overview on Exudyn; Exudyn Basics and Advanced topics at the same level as Overview on Exudyn; "Mapping between local and global coordinate indices" as the last sub-section of "Items: Nodes, Objects, Loads, Markers, Sensors"; and C++ Code reduced to a short pointer in Advanced topics, with its content moved into the developer documentation under a name that says what it is.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-22
+- <span class="boldblue">open issue 2583:</span> the renderer extraction functions are not shaped for testing
+  - issue author: Claude-JG
+  - description: SC.renderer.RedrawAndGetImage() and GetRenderState() exist and are what a graphics test has to build on, but they were written for interactive use: the image comes back as a full-resolution array, there is no way to ask for a summary of the graphics data (triangles, lines, texts per item) without rendering, and the raytracer path and the GLFW path differ in what they update. Revise them into an API a test can use: a documented headless call that updates the graphics data and returns counts, plus an image call with a resolution argument. The data is in VisualizationSystemData and the update path is MainRenderer::RedrawAndGetImage -\> VSC.UpdateGraphicsDataNow/UpdateGraphicsData.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-22
+- <span class="textorange">open issue 2582:</span> a graphics regression suite: several models, several visualization settings
+  - issue author: Claude-JG
+  - description: The drawing code is exercised by exactly one model (\#2562): raytracerNOGLFWtest.py, one set of visualization settings, one checksum. A checksum changes with any visualization change and does not say what changed, so it can only ever be "different" or "equal". What is wanted is a suite over several models and several settings - show/hide of nodes, markers, loads and sensors, different colours and text settings - comparing either low-resolution reference images that a human can also look at, or counts extracted from the graphics data (triangles, lines, texts per item), or both: the counts say WHAT changed, the images say whether it still looks right. Needs the extraction API of the issue filed beside this one.
+  - effort: HIGH (within 40 hours)
+  - date raised: 2026-09-22
+- <span class="textorange">open issue 2562:</span> the drawing code is exercised by exactly one test model
+  - issue author: Claude-JG
+  - description: The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9. \[2026-09-22, Claude-JG\]: CORRECTION (maintainer, 2026-09-22): the original premise was wrong. python/TestModels/raytracerNOGLFWtest.py runs in the test suite with a reference checksum (runTestSuiteRefSol.py: 0.28151013387134) and calls SC.renderer.RedrawAndGetImage(useRaytracer=True), which goes through MainRenderer::RedrawAndGetImage -\> VSC.UpdateGraphicsDataNow() and VSC.UpdateGraphicsData(), so the UpdateGraphics of every visible item IS executed and its result enters a compared number. What is true is narrower: exactly one model, one set of visualization settings, and a single checksum that changes with any visualization change without saying what changed. The broader work - a graphics regression suite over several models and settings, and the extraction API it needs - is filed separately.
   - effort: HIGH (within 40 hours)
   - date raised: 2026-09-20
 - <span class="textorange">open issue 2550:</span> citations are silently dropped from the HTML documentation
@@ -7827,11 +7890,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
   - effort: HIGH (within 40 hours)
   - date raised: 2026-09-18
-- <span class="textred">open issue 2508:</span> checkExtras passed locally and failed in CI because of an untracked file
-  - issue author: Claude-JG
-  - description: tools/checkExtras.py built its set of "local module names" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: "import pytest" in test\_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported "UNCOVERED IMPORTS: pytest ... needed by \[tests\]" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in \[dependency-groups\]; not in any extra.
-  - effort: LOW (within 2 hours)
-  - date raised: 2026-09-18
 - <span class="textblue">open issue 2498:</span> no test checks the member functions an item type must provide
   - issue author: Claude-JG
   - description: Successor of \#1142. What that issue asked for is now covered for PARAMETERS - parameterConversionTest.py writes a fixed set of probe values into every parameter of every item and compares the outcome with a reference (revision2026 step R4.4.3.1) - and for the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4). What is still not tested per item type is its FUNCTIONS: that every object implements what its type requires (ComputeODE2LHS; GetOutputVariable; GetAccessFunctionTypes; ...) and that the output variables it advertises can actually be read. That needs the definitions database as its source of truth; like the parameter test does.
@@ -7842,11 +7900,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Successor of \#1988; which asked to change "except:" into "except Exception as e:" so that a KeyboardInterrupt passes through a long parameter variation. The change was never made; but it is no longer invisible: ruff E722 lists every one of the 59 with file and message in tools/ci/ruffBaseline.txt since revision2026 step R5.5.3; and a NEW one fails the check. Each needs a decision on which exception was actually meant; which is why they were baselined rather than rewritten. revision2026 step R6.1
   - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-17
-- <span class="textblue">open issue 2455:</span> pydoclint reports two violations in exudyn/\_\_init\_\_.py RequireVersion
-  - issue author: Claude-JG
-  - description: found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
-  - effort: LOW (within 2 hours)
-  - date raised: 2026-09-16
 - <span class="boldblue">open issue 2423:</span> every C++ user error inspects the Python source for its file and line
   - issue author: Claude-JG
   - description: PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (revision2026 step R4.4.3.1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f\_code.co\_filename; f\_lineno) gives the same information without the scan. revision2026 step R6.6.

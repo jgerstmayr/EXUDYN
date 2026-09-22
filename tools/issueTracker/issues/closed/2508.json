@@ -2,12 +2,16 @@
   "number": 2508,
   "title": "checkExtras passed locally and failed in CI because of an untracked file",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "priority": "HIGH",
   "effort": "LOW",
   "description": "tools/checkExtras.py built its set of \"local module names\" with os.listdir/os.walk over python/; so ANY file present on the development machine made an import look local. python/pytest.py - the gitignored scratch copy of pytestTemplate.py - did exactly that: \"import pytest\" in test_testModels.py resolved to that file locally and the check reported OK; while the GitLab job of 2026-09-18; which has no such file; reported \"UNCOVERED IMPORTS: pytest ... needed by [tests]\" and failed. A gate that is green locally and red in CI is worse than no gate; and the same trap applies to any untracked helper anyone drops into python/ or TestModels/. Fixed in revision2026 step R5.18.3 by listing TRACKED files only (git ls-files); and by giving pytest a real exemption entry with its reason - it is a dev tool declared in [dependency-groups]; not in any extra.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
-  "file": "tools/checkExtras.py"
+  "dateResolved": "2026-09-22 01:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkExtras.py",
+  "releaseNotes": "Verified 2026-09-22: tools/checkExtras.py builds its set of local module names from TRACKED files only - LocalModuleNames() calls TrackedFiles() and its docstring names this failure mode - so a file that exists on the development machine but is not in git can no longer make an import look local. The difference between a local run and CI is gone.",
+  "resolvedInVersion": "1.12.1"
 }

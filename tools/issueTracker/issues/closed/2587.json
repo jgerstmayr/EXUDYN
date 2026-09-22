@@ -1,0 +1,15 @@
+{
+  "number": 2587,
+  "title": "the revisions chapter does not say where the details are",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "docs/manual/revisions.md is deliberately short, but it ends there: a reader who wants to know why something changed has no pointer. It should refer to the developer documentation and say that the revision is recorded in full in a plan and a log - and there are two of them now, revision2026 (finished, completed as 1.12) and revision2026b (continuing), each with its own plan and log.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 01:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The revisions chapter now ends by saying where the full record is: the revision is written down step by step in a plan and a log, there are two of them - revision2026, finished and what 1.12 is, and revision2026b which carries what it did not finish - and both are linked from the developer documentation together with the standing information document. The chapter itself stays short; the published page does not link the plan files directly, because docs/revision/ is excluded from the documentation build.",
+  "resolvedInVersion": "1.12.2"
+}

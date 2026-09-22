@@ -1,0 +1,12 @@
+{
+  "number": 2589,
+  "title": "item parameters cannot be deprecated",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "When an item parameter is renamed there is no path that keeps an old script working: unlike visualizationSettings, the item interfaces have no deprecation mechanism. Wanted (maintainer, 2026-09-22): the same feature for item parameters, either restricted to the classes of itemInterface.py - which is generated, so one place - or extended to the Get/Set functions of the items themselves. If it reaches the C++ side, the deprecated names must be searched LAST, so that the common case pays nothing.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21"
+}

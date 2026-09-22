@@ -7,6 +7,13 @@ written against the previous one. Every single resolved issue is in the
 {ref}`issue tracker <sec-issuetracker>`; this chapter is the short version, and a new section is
 added on top of it at each release.
 
+This chapter is deliberately short. The revision behind it is recorded **step by step** in a
+plan and a log, which are working documents of the project rather than user documentation:
+there are two of them, *revision2026* - finished, and what version 1.12 is - and
+*revision2026b*, which carries what it did not finish. Both are linked from the
+[developer documentation](../dev/README.md), together with the standing information document
+that holds the measured facts and the decisions.
+
 (sec-revisions-1-12)=
 ## Version 1.12
 

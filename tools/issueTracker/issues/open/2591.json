@@ -1,0 +1,12 @@
+{
+  "number": 2591,
+  "title": "the settings dialogs work but are hard to use, and GUI.py is hard to change",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "python/exudyn/GUI.py does its job with tkinter - it runs everywhere and needs no installation - but it is in bad shape, and the dialogs are called from rendererPythonInterface.cpp, which executes Python inside C++. What the maintainer names (2026-09-22): the table of the visualization settings is restricted; illegal input is caught but there are no type hints; the font size cannot be adjusted on Linux; the columns can hardly be adjusted; a description should appear in a pop-up rather than only with a special key; fields cannot be edited inline; combo boxes are unhandy. Two things changed the ground under it: revision2026 step R4.10 makes the parameter TYPES available to Python, and the interface is generic enough that a second front end (Qt6, or a form that takes Qt5 and Qt6) would be a small overhead on top. A snapshot of the dialog as it is: docs/theDoc/figures/visualizationSettings.png in the history.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21"
+}

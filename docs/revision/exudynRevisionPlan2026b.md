@@ -20,8 +20,9 @@ this plan is organised by group.
 - **Numbers are permanent**: `RG<group>.<step>`, sub-steps `RG8.3.1`, further splits `RG8.3.1a`.
   A number is given when the step is planned and never changes; steps are appended to their group.
 - **Cite them** as "revision2026b group RG1" and "revision2026b step RG8.3.1" - and a step of the
-  FIRST plan is always cited as "revision2026 step R4.3", never as a bare number. `R3.4` exists in
-  both documents and means different things; the prefix is what keeps them apart.
+  FIRST plan is always cited as "revision2026 step R4.3", never as a bare number: a bare
+  "step 3.4" could be R3.4 of the finished plan or RG3.4 of this one, and the prefix is what
+  keeps them apart.
 - **In code** a comment cites the **issue number** (`#2411`), as before: comments live for years,
   issue numbers are stable references and plan numbers are not.
 - A done step keeps one line here - status, date, outcome, link to the log; an open step keeps its
@@ -37,16 +38,17 @@ carries the same table from its side, so a citation from either direction resolv
 | group | what belongs in it | open steps today |
 |---|---|---|
 | **RG1** Release and publication | getting a release out and onto GitHub and PyPI | 4 |
-| **RG2** Testing and verification | what is not tested, and who tests it before a release | 2 |
-| **RG3** Docs | what the documentation still gets wrong or does not say | - |
+| **RG2** Testing and verification | what is not tested, and who tests it before a release | 3 |
+| **RG3** Docs | what the documentation still gets wrong or does not say | 4 |
 | **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 3 |
 | **RG5** Performance | measurement first, then the code that is actually hot | 2 |
-| **RG6** Graphics and rendering | the renderer, and the rendering revision it is heading for | 1 |
+| **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 3 |
 | **RG7** Python user items | items whose behaviour is written in Python | - |
 | **RG8** Compiled C++ user items | plugins: user items compiled against the shipped headers | 9 |
 | **RG9** Structural core improvements | the architecture of the core, where a change touches everything | - |
 | **RG10** Tooling and process | exudev, the issue tracker, the generators, CI | 1 |
 | **RG11** Misc | what has no group yet; three of a kind become a group |  - |
+| **RG12** Python interface | the shape of the Python API itself: deprecation, settings, what a script sees | 3 |
 
 ## RG1 — Release and publication
 
@@ -97,15 +99,21 @@ Python versions and three platforms (revision2026 phase R5). This group is about
 NOT cover, and about the testing that no suite can do.
 
 <a id="rg2-1"></a>
-**RG2.1** *(group RG2, added 2026-09-20; revision2026 step R5.18.9)* **Nothing in the test suite ever calls
-    `UpdateGraphics`** (#2562). The drawing code of every item — ~4,000
-    lines — runs only when the renderer runs, and every runner sets
-    `EXUDYN_SUPPRESS_UI_WINDOW_OPEN`. Moving all 79 of those functions in revision2026 step R11.4.4 could therefore be
-    verified only by the compiler and by comparing the text of the bodies before and after.
+**RG2.1** *(group RG2, added 2026-09-20; revision2026 step R5.18.9)* **The drawing code is
+    exercised by exactly one test model** (#2562).
 
-    What would make it testable: a headless path that updates the graphics data of a model and
-    returns a summary of it (triangles, lines, texts per item). The data already exists in
-    `VisualizationSystemData`; only the binding and the comparison are missing.
+    **The step was written on a wrong premise and is corrected here** (maintainer, 2026-09-22):
+    it said that *nothing* in the test suite ever calls `UpdateGraphics`. In fact
+    `python/TestModels/raytracerNOGLFWtest.py` runs in the suite against a reference checksum and
+    calls `SC.renderer.RedrawAndGetImage(useRaytracer=True)`, which goes through
+    `MainRenderer::RedrawAndGetImage` to `VSC.UpdateGraphicsDataNow()` and
+    `VSC.UpdateGraphicsData()` — so the `UpdateGraphics` of every visible item **is** executed,
+    and its result enters a compared number.
+
+    What is true is narrower, and is what remains of this step: **one model, one set of
+    visualization settings, one checksum**. A checksum can only say "different"; it cannot say
+    *what* changed, and it changes on any visualization change whether or not the change was
+    wanted. The work that follows from it is RG2.3 (the suite) and RG6.3 (the API it needs).
 
 <a id="rg2-2"></a>
 **RG2.2** *(group RG2; maintainer decision 2026-09-22)* **The integration round before 1.13.**
@@ -117,6 +125,18 @@ NOT cover, and about the testing that no suite can do.
     Every finding becomes an issue (`exudev issue raise`), so that the round leaves a record
     rather than a memory. The round is what RG1.4 waits for.
 
+
+<a id="rg2-3"></a>
+**RG2.3** *(group RG2; maintainer 2026-09-22)* **A graphics regression suite** (#2582). RG2.1
+    leaves one model, one setting and one checksum. What is wanted: several models against
+    several visualization settings - show and hide of nodes, markers, loads and sensors,
+    different colours and text settings - compared as **low-resolution reference images** that a
+    human can also look at, or as **counts taken from the graphics data** (triangles, lines,
+    texts per item), or both: the counts say what changed, the images say whether it still looks
+    right. Depends on RG6.3.
+
+    Open in the tracker for this group besides these: **#2498** (nothing checks that an item type
+    provides the member functions it must), **#2511** (the ROS examples were last run in 2023).
 
 ## RG3 — Docs
 
@@ -131,12 +151,64 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 *No steps yet.*
 
 
+<a id="rg3-1"></a>
+**RG3.1** *(group RG3; maintainer 2026-09-22)* **HIGH PRIORITY: the section structure of the user
+    manual is wrong** (#2584). The conversion of revision2026 step R7.1.5 left the `toctree` of
+    `docs/manual/introduction.md` **below its last section**, so *Exudyn Basics*, *Advanced
+    topics* and *C++ Code* appear as sub-pages of *"Mapping between local and global coordinate
+    indices"*. What the maintainer asks for:
+
+    - **Installation and Getting Started before Overview on Exudyn** (it was before it);
+    - **Exudyn Basics** and **Advanced topics** at the same level as *Overview on Exudyn*;
+    - **"Mapping between local and global coordinate indices"** as the **last sub-section of
+      "Items: Nodes, Objects, Loads, Markers, Sensors"**, where it belongs;
+    - **C++ Code**: a short section in *Advanced topics* that points at the developer
+      documentation, with the content moved there and given a name that says what it is - or
+      split, if two names fit it better.
+
+<a id="rg3-2"></a>
+**RG3.2** *(group RG3; maintainer 2026-09-22)* **The internal how-to notes leave the published
+    documentation** (#2585). `docs/howTo/` holds two kinds of note: what a **user** needs
+    (building from source, conda environments) and what only a maintainer needs (ffmpeg,
+    matplotlib recipes, Visual Studio 2022, build quirks, what MSVC accepts where gcc does not).
+    The second kind stays in the repository and is **mentioned in one line** with a link, rather
+    than published.
+
+    **Where the exclusion happens** is `exclude_patterns` in `conf.py` - the same list that keeps
+    `docs/revision/*` (the plans, the logs, this file) and `.github/*` out of the build. A file
+    that is excluded stays in git and is readable there; it is simply not a page.
+
+<a id="rg3-3"></a>
+**RG3.3** *(group RG3; maintainer question 2026-09-22)* **Is there a PDF, and should there be?**
+    (#2586). There is none: decision D8 ended the PDF with the LaTeX sources, because keeping it
+    meant keeping a LaTeX toolchain and a second rendering of every page. A PDF **from the
+    Markdown** is possible - `sphinx-build -b latex` renders MyST, and the math macros that
+    `conf.py` declares to MathJax can generate the LaTeX preamble from the same list that
+    `tools/checkMathMacros.py` already checks, which is the part that would otherwise be work.
+
+    What this step decides: whether the PDF is wanted at all and for whom; and if it is, it is a
+    **release-only build** (`exudev docs --pdf`), never part of the documentation gate, so that a
+    missing LaTeX installation cannot stop an ordinary docs build.
+
+<a id="rg3-4"></a>
+**RG3.4** *(group RG3; maintainer 2026-09-22)* **The revisions chapter says where the details
+    are** (#2587). It is deliberately short, and it should end by pointing at the developer
+    documentation: the revision is recorded in full in a plan and a log, and there are **two**
+    of them now - revision2026, finished and completed as 1.12, and revision2026b, continuing.
+
+    Open in the tracker for this group besides these: **#2550** (citations such as
+    `[ZwoelferGerstmayr2021]` are printed but resolve to nothing - the documentation needs a
+    references page).
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
 rather than worked around silently, so the debt stays visible and each item can be closed on
 evidence. An ordinary bug goes into the issue tracker and is fixed; a step appears here when the
 fix needs a plan of its own.
+
+Open in the tracker for this group: **#2423** (every C++ user error inspects the Python source to
+find its file and line, on every raise).
 
 <a id="rg4-1"></a>
 **RG4.1** *(group RG4; revision2026 step R10.1)* **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
@@ -243,6 +315,34 @@ This group is that revision and what has to happen before it can start.
     removed with revision2026 step R3.6.
 
 
+<a id="rg6-2"></a>
+**RG6.2** *(group RG6; maintainer 2026-09-22)* **The settings dialogs, and the shape of
+    `GUI.py`** (#2591). It works, it runs everywhere and it needs no installation - tkinter -
+    and that is the reason to keep it. What is wrong with it, in the maintainer's words: the
+    table of the visualization settings is restricted; illegal input is caught but there are no
+    type hints; the font size cannot be adjusted on Linux; the columns can hardly be adjusted; a
+    description should appear in a pop-up rather than only with a special key; fields cannot be
+    edited inline; combo boxes are unhandy. The dialogs are called from
+    `rendererPythonInterface.cpp`, which executes Python inside C++ - that file belongs to the
+    same review.
+
+    Two things changed the ground under it: **revision2026 step R4.10 makes the parameter types
+    available to Python**, so a dialog can know what it is editing; and the interface is generic
+    enough that a **second front end** (Qt6, or a form that takes Qt5 and Qt6) would be a small
+    overhead rather than a second GUI. The step is refined after a look at the current state.
+
+    It also shows what RG12.3 produces: the settings that differ from the defaults, as code to
+    paste.
+
+<a id="rg6-3"></a>
+**RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
+    for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a
+    graphics test has to build on, but they were written for interactive use: the image comes
+    back at full resolution, nothing returns a **summary** of the graphics data without
+    rendering, and the raytracer path and the GLFW path differ in what they update. RG2.3 needs
+    a documented headless call that updates the graphics data and returns counts, and an image
+    call that takes a resolution.
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -
@@ -343,6 +443,9 @@ The machinery a maintainer uses: `exudev` (revision2026 step R5.18), the issue t
 JSON store (revision2026 steps R8.3 to R8.5), the generators (revision2026 step R4.3), the checks of the commit gate, and the CI. It
 works; this group carries what it still lacks.
 
+Open in the tracker for this group: **#2541** (`exudyn.config` and `exudyn.special` are in no stub
+file, so an editor cannot complete them).
+
 <a id="rg10-1"></a>
 **RG10.1** *(group RG10; maintainer request 2026-09-15; revision2026 step R8.6)* **Checker for user scripts
     after the 1.12 API changes.** Teaching folders and user projects hold Exudyn scripts written
@@ -363,3 +466,39 @@ works; this group carries what it still lacks.
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
 
 *No steps yet.*
+
+## RG12 — Python interface
+
+*(Group proposed by the maintainer, 2026-09-22.)* The shape of the Python API itself, as opposed
+to what it computes: how a parameter is named, what happens when a name changes, what a user can
+find out about the settings of a model. It is the group a user notices most and reads least about.
+
+<a id="rg12-1"></a>
+**RG12.1** *(group RG12; maintainer 2026-09-22)* **`simulationSettings` gets the deprecation
+    mechanism** (#2588). `visualizationSettings` has it: a member is marked `Deprecated(since,
+    expires)` in the definitions - 93 members carry it today - and a user who sets the old name
+    is told the new one instead of being ignored. `simulationSettings` uses none of it, although
+    it is the same generator and the same structure machinery, so a renamed solver setting
+    simply disappears.
+
+<a id="rg12-2"></a>
+**RG12.2** *(group RG12; maintainer 2026-09-22)* **Item parameters can be deprecated** (#2589).
+    The case that actually hurts: an item parameter is renamed and every script that used the
+    old name stops working, with no message that says what to write instead. Two levels are
+    possible - the generated classes of `itemInterface.py`, which is one place and covers what a
+    script writes, or the `Get`/`Set` functions of the items themselves, which also covers
+    `mbs.GetObjectParameter`. If it reaches the C++ side, **the deprecated names are searched
+    last**, so that the common case pays nothing.
+
+<a id="rg12-3"></a>
+**RG12.3** *(group RG12; maintainer 2026-09-22)* **What did this model actually change?** (#2590)
+    Both settings structures have `GetDictionary()`, and a default instance is one call away
+    (`exudyn.SimulationSettings()`, `exudyn.VisualizationSettings()`), but nothing subtracts the
+    two. A helper in the utilities should print the difference **as Python code**, so that it can
+    be pasted into a script and reproduces the settings - which is what makes a session in the
+    visualization dialog reusable, and what RG6.2 should show for the current settings. Worth
+    considering as additional information in solution and sensor files, where it would make a
+    result reproducible.
+
+    Open in the tracker for this group: **#2497** (59 bare `except:` remain in the shipped
+    package).

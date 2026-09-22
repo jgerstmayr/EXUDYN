@@ -2,13 +2,17 @@
   "number": 2455,
   "title": "pydoclint reports two violations in exudyn/__init__.py RequireVersion",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "priority": "LOW",
   "effort": "LOW",
   "description": "found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)",
   "dateRaised": "2026-09-16",
   "deadline": "2027-03-15",
+  "dateResolved": "2026-09-22 01:30",
+  "resolvedAuthor": "Claude-JG",
   "file": "main/python/exudyn/__init__.py",
-  "line": "146"
+  "line": "146",
+  "releaseNotes": "Verified 2026-09-22 on 1.12.0.dev1: pydoclint with the project configuration reports 'No violations' for python/exudyn/__init__.py, and DOC111 does not occur anywhere in the package any more. The two findings were removed by the docstring work of revision2026 steps R5.13 and R4.8; nothing was needed here beyond the check.",
+  "resolvedInVersion": "1.12.0"
 }

@@ -1,0 +1,11 @@
+{
+  "number": 2583,
+  "title": "the renderer extraction functions are not shaped for testing",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "SC.renderer.RedrawAndGetImage() and GetRenderState() exist and are what a graphics test has to build on, but they were written for interactive use: the image comes back as a full-resolution array, there is no way to ask for a summary of the graphics data (triangles, lines, texts per item) without rendering, and the raytracer path and the GLFW path differ in what they update. Revise them into an API a test can use: a documented headless call that updates the graphics data and returns counts, plus an image call with a resolution argument. The data is in VisualizationSystemData and the update path is MainRenderer::RedrawAndGetImage -> VSC.UpdateGraphicsDataNow/UpdateGraphicsData.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21"
+}
