@@ -123,18 +123,11 @@ public:
 		stopSimulationFlagSC = false;
 		InitializeRenderState(false); //! this is done to have valid values in RenderState
 		settings.Init(&settings); //link all sub-structures
-		//++++++++++++++++++++++++++++++++
-		//initialize light1-3 different from light0:
-		settings.openGL.light1.diffuse = 0.25f; //make this smaller than standard to avoid overexposure
-		settings.openGL.light1.specular = 0.25f; //make this smaller than standard to avoid overexposure
-		settings.openGL.light2.diffuse = 0.2f; //make this smaller than standard to avoid overexposure
-		settings.openGL.light2.specular = 0.2f; //make this smaller than standard to avoid overexposure
-		settings.openGL.light3.diffuse = 0.2f; //make this smaller than standard to avoid overexposure
-		settings.openGL.light3.specular = 0.2f; //make this smaller than standard to avoid overexposure
-
-		settings.openGL.light2.enable = false;
-		settings.openGL.light3.enable = false;
-		settings.openGL.light1.position = Float4({ 2.f,2.f,-10.f,0.f });
+		//light1 to light3 start from their own values - dimmed against
+		//overexposure, light2 and light3 off - which are in
+		//definitions/structureDefsVisualizationSettings.py since revision2026b
+		//step RG6.2.20, so that the documentation and the settings dialog see
+		//them too; VSettingsOpenGL() carries them now
 	}
 
 	virtual ~VisualizationSystemContainer() { Reset(); }

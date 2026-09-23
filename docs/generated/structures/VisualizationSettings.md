@@ -436,7 +436,7 @@ VSettingsDialogs has the following items:
 (sec-vsettingsmaterial)=
 ### VSettingsMaterial
 
-Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.
+Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; the ten materials of the raytracer each start from their own values, which are listed at material0 to material9.
 
 VSettingsMaterial has the following items:
 
@@ -482,16 +482,16 @@ VSettingsRaytracer has the following items:
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `advanced`<br>`SC.visualizationSettings.raytracer.advanced` | VSettingsRaytracerAdvanced |  |  | advanced settings for raytracer |
-| `material0`<br>`SC.visualizationSettings.raytracer.material0` | VSettingsMaterial |  |  | settings for material0 |
-| `material1`<br>`SC.visualizationSettings.raytracer.material1` | VSettingsMaterial |  |  | settings for material1 |
-| `material2`<br>`SC.visualizationSettings.raytracer.material2` | VSettingsMaterial |  |  | settings for material2 |
-| `material3`<br>`SC.visualizationSettings.raytracer.material3` | VSettingsMaterial |  |  | settings for material3 |
-| `material4`<br>`SC.visualizationSettings.raytracer.material4` | VSettingsMaterial |  |  | settings for material4 |
-| `material5`<br>`SC.visualizationSettings.raytracer.material5` | VSettingsMaterial |  |  | settings for material5 |
-| `material6`<br>`SC.visualizationSettings.raytracer.material6` | VSettingsMaterial |  |  | settings for material6 |
-| `material7`<br>`SC.visualizationSettings.raytracer.material7` | VSettingsMaterial |  |  | settings for material7 |
-| `material8`<br>`SC.visualizationSettings.raytracer.material8` | VSettingsMaterial |  |  | settings for material8 |
-| `material9`<br>`SC.visualizationSettings.raytracer.material9` | VSettingsMaterial |  |  | settings for material9 |
+| `material0`<br>`SC.visualizationSettings.raytracer.material0` | VSettingsMaterial |  |  | settings for material0; starts from name='default', baseColor=[0.4, 0.4, 0.9], specular=[0.6, 0.6, 0.6]; every other value is the default of the type |
+| `material1`<br>`SC.visualizationSettings.raytracer.material1` | VSettingsMaterial |  |  | settings for material1; starts from name='matt', baseColor=[0., 1., 0.], specular=[0.3, 0.3, 0.3], shininess=5.0; every other value is the default of the type |
+| `material2`<br>`SC.visualizationSettings.raytracer.material2` | VSettingsMaterial |  |  | settings for material2; starts from name='steel', baseColor=[0.6, 0.6, 0.6], specular=[0.3, 0.33, 0.4], shininess=25.0, reflectivity=0.1; every other value is the default of the type |
+| `material3`<br>`SC.visualizationSettings.raytracer.material3` | VSettingsMaterial |  |  | settings for material3; starts from name='plastic', baseColor=[1., 0., 0.], specular=[0.4, 0.45, 0.45], shininess=20.0, reflectivity=0.1; every other value is the default of the type |
+| `material4`<br>`SC.visualizationSettings.raytracer.material4` | VSettingsMaterial |  |  | settings for material4; starts from name='chrome', baseColor=[0.75, 0.75, 0.75], specular=[0.6, 0.62, 0.67], shininess=60.0, reflectivity=0.25; every other value is the default of the type |
+| `material5`<br>`SC.visualizationSettings.raytracer.material5` | VSettingsMaterial |  |  | settings for material5; starts from name='shiny', baseColor=[1., 0.5, 0.], specular=[0.7, 0.65, 0.7], shininess=100.0, reflectivity=0.5; every other value is the default of the type |
+| `material6`<br>`SC.visualizationSettings.raytracer.material6` | VSettingsMaterial |  |  | settings for material6; starts from name='transparent', baseColor=[0.75, 0.75, 0.75], specular=[0.4, 0.4, 0.45], shininess=20.0, ior=1.05, alpha=0.3; every other value is the default of the type |
+| `material7`<br>`SC.visualizationSettings.raytracer.material7` | VSettingsMaterial |  |  | settings for material7; starts from name='glass', baseColor=[0.8, 0.8, 0.8], specular=[0.6, 0.68, 0.63], shininess=50.0, reflectivity=0.6, ior=1.5, alpha=0.15; every other value is the default of the type |
+| `material8`<br>`SC.visualizationSettings.raytracer.material8` | VSettingsMaterial |  |  | settings for material8; starts from name='mirror', baseColor=[0.8, 0.8, 0.8], specular=[0.4, 0.4, 0.4], shininess=50.0, reflectivity=0.8; every other value is the default of the type |
+| `material9`<br>`SC.visualizationSettings.raytracer.material9` | VSettingsMaterial |  |  | settings for material9; starts from name='emission', baseColor=[0.85, 0.85, 0.7], specular=[0.6, 0.6, 0.6], shininess=20.0, emission=[0.8, 0.8, 0.7]; every other value is the default of the type |
 | `globalFogColor`<br>`SC.visualizationSettings.raytracer.globalFogColor` | Float4 | 4 | [0.5,0.5,0.5,1.] | scene RGBA fog color |
 | `globalFogDensity`<br>`SC.visualizationSettings.raytracer.globalFogDensity` | UFloat |  | 0. | global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1) |
 | `imageSizeFactor`<br>`SC.visualizationSettings.raytracer.imageSizeFactor` | PInt |  | 1 | Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc. |
@@ -568,9 +568,9 @@ VSettingsOpenGL has the following items:
 |---|---|---|---|---|
 | `advanced`<br>`SC.visualizationSettings.openGL.advanced` | VSettingsOpenGLAdvanced |  |  | advanced settings for openGL |
 | `light0`<br>`SC.visualizationSettings.openGL.light0` | VSettingsLight |  |  | settings for light0 and shadow |
-| `light1`<br>`SC.visualizationSettings.openGL.light1` | VSettingsLight |  |  | settings for light1 and shadow |
-| `light2`<br>`SC.visualizationSettings.openGL.light2` | VSettingsLight |  |  | settings for light2 and shadow |
-| `light3`<br>`SC.visualizationSettings.openGL.light3` | VSettingsLight |  |  | settings for light3 and shadow |
+| `light1`<br>`SC.visualizationSettings.openGL.light1` | VSettingsLight |  |  | settings for light1 and shadow; starts from diffuse=0.25, specular=0.25, position=[2., 2., -10., 0.]; every other value is the default of the type |
+| `light2`<br>`SC.visualizationSettings.openGL.light2` | VSettingsLight |  |  | settings for light2 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type |
+| `light3`<br>`SC.visualizationSettings.openGL.light3` | VSettingsLight |  |  | settings for light3 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type |
 | `drawFaceNormals`<br>`SC.visualizationSettings.openGL.drawFaceNormals` | bool |  | False | draws triangle normals, e.g. at center of triangles; used for debugging of faces |
 | `drawNormalsLength`<br>`SC.visualizationSettings.openGL.drawNormalsLength` | PFloat |  | 0.1 | length of normals; used for debugging |
 | `drawVertexNormals`<br>`SC.visualizationSettings.openGL.drawVertexNormals` | bool |  | False | draws vertex normals; used for debugging |

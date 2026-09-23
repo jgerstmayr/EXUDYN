@@ -29,6 +29,42 @@ from latexToMarkdown import NormalizeHeadings                                   
 
 
 #************************************************
+def InstanceDefaultsText(className, pythonName):
+    """what THIS instance of a sub-structure starts from, as one readable sentence, or ''
+
+    Without this the reference printed the defaults of the sub-structure's own class, which for
+    the ten raytracer materials and the dimmed lights are values the renderer never uses - the
+    documentation could not say what light1.diffuse defaults to (revision2026b step RG6.2.20).
+    """
+    definition = StructureDefinitionByName(className)
+    if definition is None:
+        return ''
+    for member in definition['members']:
+        if member.get('pythonName', '') != pythonName:
+            continue
+        memberDefaults = MemberDefaults(member)
+        if memberDefaults == {}:
+            return ''
+        parts = []
+        for name in memberDefaults:
+            parts.append(name + '=' + ReadableDefault(memberDefaults[name]))
+        return 'starts from ' + ', '.join(parts) + '; every other value is the default of the type'
+    return ''
+
+
+#************************************************
+def ReadableDefault(value):
+    """a memberDefaults value as a reader wants it: Float3({0.f,1.f,0.f}) becomes [0, 1, 0]"""
+    if not isinstance(value, str):
+        return str(value)
+    for prefix in ['Float3({', 'Float4({', 'Vector3D({', 'Float2({']:
+        if value.startswith(prefix) and value.endswith('})'):
+            numbers = value[len(prefix):-2].split(',')
+            return '[' + ', '.join(number.strip().rstrip('f') for number in numbers) + ']'
+    return "'" + value + "'"
+
+
+#************************************************
 #the documentation of one structure
 def StructureDocs(parseInfo, parameterList):
     """returns [Markdown text, parameter changes list]"""
@@ -76,6 +112,12 @@ def StructureDocs(parseInfo, parameterList):
                 #write latex doc:
                 defaultValueStr = parameter['defaultValue']
                 paramDescriptionStr = parameter['parameterDescription'].replace('_','\\_')
+                #a sub-structure instance with values of its own says so, because the table of
+                #its class shows the class defaults (revision2026b step RG6.2.20)
+                instanceDefaults = InstanceDefaultsText(parseInfo['class'],
+                                                        parameter['pythonName'])
+                if instanceDefaults != '':
+                    paramDescriptionStr += '; ' + instanceDefaults.replace('_', '\\_')
                 if len(defaultValueStr) > 18:
                     paramDescriptionStr = '\\tabnewline ' + paramDescriptionStr
                 pythonName = Str2Latex(parameter['pythonName']) 

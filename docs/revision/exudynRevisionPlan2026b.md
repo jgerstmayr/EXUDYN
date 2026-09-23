@@ -753,7 +753,15 @@ This group is that revision and what has to happen before it can start.
     open, which is the maintainer's own suggestion for the window that kept coming up behind it.
 
 <a id="rg6-2-20"></a>
-**RG6.2.20** *(group RG6; from RG6.2.19, 2026-09-23)* **The defaults of the lights and the
+**RG6.2.20** **DONE 2026-09-23** (#2626) — [log](exudynRevisionLog2026b.md#rg6-2-20) —
+    **The defaults of the lights and the raytracer materials are hidden in C++ constructors.**
+    They are defaults of the **structure** now: `StructureParameter` gained `memberDefaults`, the
+    89 values are in `definitions/structureDefsVisualizationSettings.py`, the generated
+    constructors carry them, the C++ that set them afterwards is gone, and the reference says
+    what `material1` and `light2` start from. Every one of the 89 was compared against the C++ it
+    replaces and is identical. The original text of the step follows.
+
+    *(group RG6; from RG6.2.19, 2026-09-23)* **The defaults of the lights and the
     raytracer materials are hidden in C++ constructors** (#2626). `exu.VisualizationSettings()`
     is not the state a user starts from: `VisualizationSystemContainer()` overrides nine light
     settings in its constructor (`light1`-`light3` diffuse, specular, enable and

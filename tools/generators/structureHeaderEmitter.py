@@ -55,6 +55,36 @@ def IsDirectScalar(parameter):
 
 
 #************************************************
+def MemberDefaultLines(parameter):
+    """the C++ assignments that give ONE sub-structure member its own starting values
+
+    The values in memberDefaults are written as the sub-member's defaultValue would be, so the
+    sub-structure's definition is looked up to know the sub-member's type - a String is the one
+    that has to be quoted, exactly as the ordinary defaults are (revision2026b step RG6.2.20).
+    """
+    memberDefaults = MemberDefaults(parameter)
+    if memberDefaults == {}:
+        return []
+    subDefinition = StructureDefinitionByName(parameter['type'])
+    if subDefinition is None:
+        raise ValueError('memberDefaults on ' + str(parameter['pythonName'])
+                         + ': its type ' + str(parameter['type']) + ' is not a structure')
+    subMembers = {member['pythonName']: member for member in subDefinition['members']}
+    lines = []
+    for name in memberDefaults:              #the order of the definition file is the order here
+        if name not in subMembers:
+            raise ValueError('memberDefaults on ' + str(parameter['pythonName']) + ': '
+                             + str(parameter['type']) + ' has no member ' + str(name))
+        subMember = subMembers[name]
+        valueString = DefaultCpp(dict(subMember, defaultValue=memberDefaults[name]))
+        if subMember['type'] in ['String', 'FileName']:
+            valueString = '"' + valueString + '"'
+        lines.append(parameter['cplusplusName'] + '.' + subMember['cplusplusName']
+                     + ' = ' + valueString + ';')
+    return lines
+
+
+#************************************************
 #create the C++ header text of one structure
 def StructureCppHeader(parseInfo):
     """returns [header text, dictionary get/set text, implementation text]; parseInfo is the
@@ -199,6 +229,12 @@ def StructureCppHeader(parseInfo):
                     if parameter['type'] == 'String' or parameter['type'] == 'FileName':
                         strDefault = '"' + strDefault + '"'
                     s+='    ' + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'
+        for parameter in parameterListSorted:
+            #a sub-structure that starts from other values than its own defaults
+            #(revision2026b step RG6.2.20); these values used to be set in C++ constructors
+            #elsewhere, where neither the documentation nor the settings dialog could see them
+            for line in MemberDefaultLines(parameter):
+                s += '    ' + line + chr(10)
         s+=Header(parseInfo, 'addConstructor').replace('\\n','\n')
         s+='  };\n'
 

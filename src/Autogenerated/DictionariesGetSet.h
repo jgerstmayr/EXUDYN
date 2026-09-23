@@ -3747,7 +3747,7 @@ inline void SetDictionary(VSettingsDialogs& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsMaterial& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.";
+    structureDict["structureDescription"] = "Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; the ten materials of the raytracer each start from their own values, which are listed at material0 to material9.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.alpha;

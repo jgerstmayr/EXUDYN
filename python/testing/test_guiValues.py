@@ -326,23 +326,27 @@ def testTheDialogNeverCreatesASystemContainer():
         ' the render engine (#2625)')
 
 
-def testWhatASystemContainerInitialisesIsNamedInTheDialog(comboLists):
-    """exu.VisualizationSettings() is not what a user starts from - a SystemContainer overrides
-    the lights and fills the raytracer materials - and the dialog says so instead of pretending.
-    This test requires that the note stays true: every difference must be one of the paths the
-    module lists (revision2026b step RG6.2.19; RG6.2.20 is the real fix)."""
+def testASystemContainerInitialisesNothingBeyondTheDefaults(comboLists):
+    """the point of revision2026b step RG6.2.20: a fresh SystemContainer must show NO difference
+    to a plain exu.VisualizationSettings(). Until then a container dimmed three lights and filled
+    ten raytracer materials after construction, so the dialog reported 59 settings as changed that
+    nobody had touched, and the documentation printed defaults the renderer did not use. The
+    values are defaults of the structure now; containerInitialisedSettings is where an exception
+    would be named, and it has to stay empty."""
     container = exudyn.SystemContainer()
     leaves = gui.SettingsLeafList(container.visualizationSettings.GetDictionaryWithTypeInfo())
     plain = gui.SettingsValueStrings(
         gui.DefaultSettingsDictionary(container.visualizationSettings))
 
     differences = gui.SettingsCodeLines(leaves, plain, 'SC.visualizationSettings', comboLists)
-    assert differences != [], 'if this is empty, RG6.2.20 is done and the note can go'
     unexpected = [path for (path, _) in differences
                   if not any(path.startswith(known)
                              for known in gui.containerInitialisedSettings)]
-    assert unexpected == [], ('a SystemContainer now also initialises: ' + ', '.join(unexpected)
-                              + ' - containerInitialisedSettings must name it')
+    assert unexpected == [], ('a SystemContainer initialises these beyond the defaults: '
+                              + ', '.join(unexpected) + ' - they belong in'
+                              ' definitions/structureDefsVisualizationSettings.py')
+    assert gui.containerInitialisedSettings == [], (
+        'nothing should need this list any more (revision2026b step RG6.2.20)')
 
 
 def testReadingTheDefaultsLeavesTheRendererItsContainer():

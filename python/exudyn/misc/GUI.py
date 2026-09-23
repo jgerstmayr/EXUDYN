@@ -435,13 +435,13 @@ def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTy
     return lines
 
 
-#the settings a SystemContainer initialises beyond the defaults of the structure itself: the
-#four lights in VisualizationSystemContainer() and the ten raytracer materials in
-#MainGraphicsMaterialList::Reset(). They therefore ALWAYS appear as differing from the defaults,
-#and the window of RG6.2.9 says so rather than pretending otherwise. RG6.2.20 (#2626) moves those
-#values into the definitions, and then this note can go.
-containerInitialisedSettings = ['openGL.light1', 'openGL.light2', 'openGL.light3',
-                                'raytracer.material']
+#the settings a SystemContainer initialises beyond the defaults of the structure itself - and
+#since revision2026b step RG6.2.20 (#2626) there are NONE: the three dimmed lights and the ten
+#raytracer materials are defaults of the structure now, written in
+#definitions/structureDefsVisualizationSettings.py, so the constructor is the truth and a
+#difference shown by the dialog is a difference a user made. The list stays as the place to name
+#an exception, and a test requires it to remain empty.
+containerInitialisedSettings = []
 
 
 def DefaultSettingsDictionary(settingsStructure):
@@ -1069,12 +1069,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         description = 'every setting that differs from the Exudyn defaults'
         if self.defaultValueStrings == {}:
             description = 'the defaults are not available in this session'
-        elif SettingsPrefix(self.settingsStructure) == 'SC.visualizationSettings':
-            #honest rather than tidy (#2625): the lights and the materials are set by the
-            #SystemContainer, not by the settings structure, so they are always in this list
-            description += ('\nNOTE: the lights and the raytracer materials are initialised by'
-                            ' the SystemContainer, so they appear here even when nothing'
-                            ' touched them')
         self.ShowCodeLines('settings differing from the defaults',
                            self.ChangedCodeLines(self.defaultValueStrings), description)
 

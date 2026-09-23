@@ -1679,7 +1679,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        VSettingsMaterial
-* @brief        Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.
+* @brief        Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; the ten materials of the raytracer each start from their own values, which are listed at material0 to material9.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
@@ -1880,6 +1880,56 @@ public: // AUTO:
     multiSampling = 1;
     numberOfThreads = 8;
     verbose = 0;
+    material0.name = "default";
+    material0.baseColor = Float3({0.4f,0.4f,0.9f});
+    material0.specular = Float3({0.6f,0.6f,0.6f});
+    material1.name = "matt";
+    material1.baseColor = Float3({0.f,1.f,0.f});
+    material1.specular = Float3({0.3f,0.3f,0.3f});
+    material1.shininess = 5.f;
+    material2.name = "steel";
+    material2.baseColor = Float3({0.6f,0.6f,0.6f});
+    material2.specular = Float3({0.3f,0.33f,0.4f});
+    material2.shininess = 25.f;
+    material2.reflectivity = 0.1f;
+    material3.name = "plastic";
+    material3.baseColor = Float3({1.f,0.f,0.f});
+    material3.specular = Float3({0.4f,0.45f,0.45f});
+    material3.shininess = 20.f;
+    material3.reflectivity = 0.1f;
+    material4.name = "chrome";
+    material4.baseColor = Float3({0.75f,0.75f,0.75f});
+    material4.specular = Float3({0.6f,0.62f,0.67f});
+    material4.shininess = 60.f;
+    material4.reflectivity = 0.25f;
+    material5.name = "shiny";
+    material5.baseColor = Float3({1.f,0.5f,0.f});
+    material5.specular = Float3({0.7f,0.65f,0.7f});
+    material5.shininess = 100.f;
+    material5.reflectivity = 0.5f;
+    material6.name = "transparent";
+    material6.baseColor = Float3({0.75f,0.75f,0.75f});
+    material6.specular = Float3({0.4f,0.4f,0.45f});
+    material6.shininess = 20.f;
+    material6.ior = 1.05f;
+    material6.alpha = 0.3f;
+    material7.name = "glass";
+    material7.baseColor = Float3({0.8f,0.8f,0.8f});
+    material7.specular = Float3({0.6f,0.68f,0.63f});
+    material7.shininess = 50.f;
+    material7.reflectivity = 0.6f;
+    material7.ior = 1.5f;
+    material7.alpha = 0.15f;
+    material8.name = "mirror";
+    material8.baseColor = Float3({0.8f,0.8f,0.8f});
+    material8.specular = Float3({0.4f,0.4f,0.4f});
+    material8.shininess = 50.f;
+    material8.reflectivity = 0.8f;
+    material9.name = "emission";
+    material9.baseColor = Float3({0.85f,0.85f,0.7f});
+    material9.specular = Float3({0.6f,0.6f,0.6f});
+    material9.shininess = 20.f;
+    material9.emission = Float3({0.8f,0.8f,0.7f});
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {
@@ -2232,6 +2282,15 @@ public: // AUTO:
     materialSpecular = Float4({0.6f,0.6f,0.6f,1.f});
     multiSampling = 1;
     zMaxSceneFactor = 2.f;
+    light1.diffuse = 0.25f;
+    light1.specular = 0.25f;
+    light1.position = Float4({2.f,2.f,-10.f,0.f});
+    light2.diffuse = 0.2f;
+    light2.specular = 0.2f;
+    light2.enable = false;
+    light3.diffuse = 0.2f;
+    light3.specular = 0.2f;
+    light3.enable = false;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {

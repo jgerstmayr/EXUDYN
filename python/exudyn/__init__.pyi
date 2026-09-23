@@ -1589,7 +1589,7 @@ class VSettingsDialogs:
 
 
 class VSettingsMaterial:
-    """Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials."""
+    """Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; the ten materials of the raytracer each start from their own values, which are listed at material0 to material9."""
     alpha: float
     """alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel."""
     baseColor: Tuple[float,float,float]

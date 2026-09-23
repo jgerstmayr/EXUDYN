@@ -696,7 +696,16 @@ TVector2DList                      = TypeSpec('Vector2DList')
 def StructureParameter(type=Required, pythonName=Required, defaultValue=Required,
                        description=Required,
                        cFlags='', size='', args='', cplusplusName='',
-                       isLinked=False, fromParent=False, deprecated=None):
+                       isLinked=False, fromParent=False, deprecated=None,
+                       memberDefaults=None):
+    """one member of a structure
+
+    memberDefaults is only for a member whose type is another structure, and only where THIS
+    instance starts from other values than the structure's own defaults: {subMemberName: value},
+    each value written exactly as that sub-member's defaultValue would be. It is what makes
+    raytracer.material1 a green matt material and openGL.light2 a disabled one, instead of a C++
+    constructor somewhere setting them afterwards (revision2026b step RG6.2.20).
+    """
     return _member('StructureParameter', locals())
 
 

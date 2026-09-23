@@ -201,6 +201,25 @@ def DefaultCpp(member):
     return _im.DefaultValueString(member)
 
 
+def MemberDefaults(member):
+    """what THIS instance of a sub-structure starts from, {subMemberName: value}, or {}
+
+    The values are written as the sub-member's own defaultValue would be; the emitter looks the
+    sub-member up to know whether it is a string (revision2026b step RG6.2.20).
+    """
+    if _IsRecord(member):
+        return {}
+    return member.get('memberDefaults', None) or {}
+
+
+def StructureDefinitionByName(className):
+    """the definition of one structure, or None if nothing defines it"""
+    for definition in StructureDefinitions():
+        if definition['className'] == className:
+            return definition
+    return None
+
+
 def Args(member):
     return member.get('args', '') or ''
 

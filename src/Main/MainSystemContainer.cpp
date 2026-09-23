@@ -869,96 +869,21 @@ void MainGraphicsMaterialList::Reset()
 	//data.SetNumberOfItems(minNumberOfMaterials);
 	data.resize(minNumberOfMaterials);
 
-	data[0].name = "default";							//Exudyn's openGL default shiny material
-	data[0].baseColor = Float3({ 0.4f,0.4f,0.9f });		//steelblue; used if triangle color has -1 in R-component
-	data[0].specular = Float3({ 0.6f, 0.6f, 0.6f });
-	data[0].shininess = 32.0f;
-	data[0].reflectivity = 0.f;							//reflectivity (extra computations)
-	data[0].emission = Float3({ 0.0f, 0.0f, 0.0f });	//not self-luminous
-	data[0].ior = 1.f;									//only relevant for transparency
-	data[0].alpha = 1.f;								//alpha-transparency
-
-	data[1].name = "matt";
-	data[1].baseColor = Float3({ 0.f,1.f,0.f });		//green
-	data[1].specular = Float3({ 0.3f, 0.3f, 0.3f });	//strong white highlights
-	data[1].shininess = 5.0f;
-	data[1].reflectivity = 0.f;
-	data[1].emission = Float3({ 0.0f, 0.0f, 0.0f }); 
-	data[1].ior = 1.f;
-	data[1].alpha = 1.f;
-
-	data[2].name = "steel";	//slighly reflective
-	data[2].baseColor = Float3({ 0.6f,0.6f,0.6f });		//grey
-	data[2].specular = Float3({ 0.3f, 0.33f, 0.4f });
-	data[2].shininess = 25.0f;
-	data[2].reflectivity = 0.1f;
-	data[2].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[2].ior = 1.f;
-	data[2].alpha = 1.f;
-
-	
-	data[3].name = "plastic";	//slighly reflective
-	data[3].baseColor = Float3({ 1.f,0.f,0.f });		//red
-	data[3].specular = Float3({ 0.4f, 0.45f, 0.45f });
-	data[3].shininess = 20.0f;
-	data[3].reflectivity = 0.1f;
-	data[3].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[3].ior = 1.f;
-	data[3].alpha = 1.f;
-
-	data[4].name = "chrome"; //metal/chromium (shiny and reflective):
-	data[4].baseColor = Float3({ 0.75f,0.75f,0.75f });	//light grey
-	data[4].specular = Float3({ 0.6f, 0.62f, 0.67f });
-	data[4].shininess = 60.0f;
-	data[4].reflectivity = 0.25f;
-	data[4].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[4].ior = 1.f;
-	data[4].alpha = 1.f;
-
-	data[5].name = "shiny";	//highly reflective and shiny
-	data[5].baseColor = Float3({ 1.f,0.5f,0.f });		//orange
-	data[5].specular = Float3({ 0.7f, 0.65f, 0.7f });
-	data[5].shininess = 100.0f;
-	data[5].reflectivity = 0.50f;
-	data[5].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[5].ior = 1.f;
-	data[5].alpha = 1.f;
-
-	data[6].name = "transparent"; //for user, to adjust via visualization settings
-	data[6].baseColor = Float3({ 0.75f,0.75f,0.75f });	//light grey
-	data[6].specular = Float3({ 0.4f, 0.4f, 0.45f });
-	data[6].shininess = 20.0f;
-	data[6].reflectivity = 0.f;
-	data[6].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[6].ior = 1.05f;
-	data[6].alpha = 0.3f;
-
-	data[7].name = "glass";
-	data[7].baseColor = Float3({ 0.8f,0.8f,0.8f });		//light grey
-	data[7].specular = Float3({ 0.6f, 0.68f, 0.63f });
-	data[7].shininess = 50.0f;
-	data[7].reflectivity = 0.6f;
-	data[7].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[7].ior = 1.5f;
-	data[7].alpha = 0.15f;
-
-	data[8].name = "mirror";
-	data[8].baseColor = Float3({ 0.8f,0.8f,0.8f });		//light grey
-	data[8].specular = Float3({ 0.4f, 0.4f, 0.4f });
-	data[8].shininess = 50.0f;
-	data[8].reflectivity = 0.8f;
-	data[8].emission = Float3({ 0.0f, 0.0f, 0.0f });
-	data[8].ior = 1.f;
-	data[8].alpha = 1.f;
-
-	data[9].name = "emission";
-	data[9].baseColor = Float3({ 0.85f,0.85f,0.7f });	//light yellow
-	data[9].specular = Float3({ 0.6f, 0.6f, 0.6f });
-	data[9].shininess = 20.0f;
-	data[9].reflectivity = 0.f;
-	data[9].emission = Float3({ 0.8f, 0.8f, 0.7f });
-	data[9].ior = 1.f;
-	data[9].alpha = 1.f;
+	//the ten default materials are defined in
+	//definitions/structureDefsVisualizationSettings.py and are carried by the
+	//constructor of VSettingsRaytracer since revision2026b step RG6.2.20, so that the
+	//documentation and the settings dialog show the same values the renderer uses
+	VSettingsRaytracer defaultRaytracer;
+	data[0] = defaultRaytracer.material0;
+	data[1] = defaultRaytracer.material1;
+	data[2] = defaultRaytracer.material2;
+	data[3] = defaultRaytracer.material3;
+	data[4] = defaultRaytracer.material4;
+	data[5] = defaultRaytracer.material5;
+	data[6] = defaultRaytracer.material6;
+	data[7] = defaultRaytracer.material7;
+	data[8] = defaultRaytracer.material8;
+	data[9] = defaultRaytracer.material9;
 
 	CopyToVisSettings();
 }

@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 36 | 1.12.36 |
+| 1.12 | Metheney | 37 | 1.12.37 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.37** `IMPROVEMENT` the defaults of the lights and the raytracer materials are hidden in C++ constructors (#2626) - raised by Claude-JG
+  - revision2026b step RG6.2.20. The defaults of the three dimmed lights and of the ten raytracer materials are defaults of the STRUCTURE now, not values set by C++ after construction. StructureParameter gained memberDefaults - for a member whose type is another structure, this instance's own starting values, written as that sub-member's defaultValue would be - and the 89 values (80 material, 9 light) are in definitions/structureDefsVisualizationSettings.py. structureHeaderEmitter.py writes them into the generated constructor; the lines in VisualizationSystemContainer() are gone and MainGraphicsMaterialList::Reset() copies from a fresh VSettingsRaytracer. structureDocsEmitter.py appends them to the reference row, so the documentation can finally state what light1.diffuse and material1.baseColor start from, and the apology in the class description is gone. All 89 values were read out of the C++ at the previous commit, parsed and compared: identical. containerInitialisedSettings in exudyn.misc.GUI is empty, the note in the diff window is gone, and the test of RG6.2.19 now requires the difference between a SystemContainer and a plain exu.VisualizationSettings() to be empty; test\_settingsDefaults.py pins the values.
 - **1.12.36** `FIX` the settings dialog asks before reset and revert, and undo does not take them back (#2627) - raised by Claude-JG
   - revision2026b step RG6.2.21. The settings dialog no longer asks before reset and before revert - a wrong click is taken back by undo or by revert, so a question that is always answered with yes was only in the way. And undo now goes back to the PREVIOUS STATE instead of one value: the dialog pushes the whole state (the ~470 value strings the tree shows) onto a stack before a single edit, a bool toggle, a reset and a revert alike, and undo pops one, so a chain of them comes back one by one and the button disables itself when the stack empties. ApplyValues gained one argument, pushUndo, false only for the undo itself.
 - **1.12.35** `IMPROVEMENT` the item sources pay for pybind11 through the graphics helpers (#2622) - raised by Claude-JG

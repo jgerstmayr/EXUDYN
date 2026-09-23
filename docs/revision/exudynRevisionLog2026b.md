@@ -1169,3 +1169,50 @@ environment variables do not cover tkinter message boxes, only Exudyn's own wind
 of a dialog must do is check that it is testing the code it just changed, and stay away from any
 handler that can open a modal box.
 
+<a id="rg6-2-20"></a>
+### RG6.2.20 — the defaults of the lights and the materials come out of C++ (2026-09-23, #2626)
+
+The maintainer's diagnosis was the one that mattered, and it is sharper than the step was written:
+
+> *"the 'diff to default' does not work ... because it takes the default values for lights and
+> materials as they are defined in the default VSettingsMaterial, but this does not make sense —
+> there is a 'default' material0, material1, etc. which are defined later. Same for lights ...
+> This is more like a bug and we need a solid fix, in order to represent that also in the docu."*
+
+So the settings dialog was not merely noisy. It compared against a state that **never exists**:
+`VisualizationSystemContainer()` dimmed `light1` to `light3` and turned two of them off after
+construction, and `MainGraphicsMaterialList::Reset()` filled the ten raytracer materials, all of
+it **after** the structure had been built. The generated reference had the same problem from the
+other side — it printed the defaults of `VSettingsLight` and `VSettingsMaterial`, which is not
+what `light1.diffuse` or `material1.baseColor` start from, and the class description carried an
+apology for it: *"the default values shown in the documentation only reflect material0 but not
+all 10 default materials"*.
+
+**The fix is in the definition language, not in the dialog.** `StructureParameter` gained
+`memberDefaults`: for a member whose type is another structure, *this* instance's own starting
+values, written exactly as that sub-member's `defaultValue` would be. The 89 values — 80 for
+the materials, 9 for the lights — are now in
+`definitions/structureDefsVisualizationSettings.py`, `structureHeaderEmitter.py` writes them into
+the generated constructor, and the C++ that set them afterwards is gone:
+`MainGraphicsMaterialList::Reset()` copies from a fresh `VSettingsRaytracer`, which is also what
+keeps the Python-facing `SC.renderer.materials.Reset()` working.
+
+**And the documentation says it**, which is what the maintainer asked for. `structureDocsEmitter.py`
+appends the instance's own values to its row:
+
+> `light2— ` *settings for light2 and shadow; starts from diffuse=0.2, specular=0.2,
+> enable=False; every other value is the default of the type*
+
+The apology in the class description is gone with the reason for it.
+
+**Every value was checked, not transcribed and hoped for.** A script read the 89 assignments out
+of the C++ at `HEAD`, parsed them, and compared them with what a fresh `SystemContainer` reports:
+**all identical**. That is the only way to move 80 hand-written numbers with a straight face.
+
+**What this un-blocks.** `containerInitialisedSettings` in `exudyn.misc.GUI` is **empty**, the
+note that RG6.2.19 had to put into the diff window is gone, and the test of that step now requires
+the difference between a container and a plain `exu.VisualizationSettings()` to be **empty** —
+the same test, with the assertion turned around, which is why it was written that way.
+`test_settingsDefaults.py` pins the ten material names and the marks that tell them apart, so an
+edit to those values is a decision rather than an accident.
+
