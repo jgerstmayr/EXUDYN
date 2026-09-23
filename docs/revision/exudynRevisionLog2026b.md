@@ -294,3 +294,43 @@ step, and it does not work on Windows — it shells out to a `make.bat` that wan
 does not have. The .tex build and the LaTeX run are two steps now, which is better anyway: the
 summary shows which of the two failed, and the one that needs an installation outside Python is
 visible as such.
+
+<a id="rg6-2-1"></a>
+### RG6.2.1 — the dialogs leave the C++ (2026-09-22, #2595)
+
+`src/Main/rendererPythonInterface.cpp` went from **775 lines to 528**, and the 220 of them that
+were Python are Python now. The file had six `R"PY(...)PY"` literals: the help dialog (69 lines),
+the command window (10 + 93), the quit question (29), the right-mouse dialog (built by C++ string
+concatenation) and the one-line call that the settings dialog already was. Five calls of five
+lines each are left.
+
+What a raw string literal costs is not hypothetical. One of the blocks carried
+
+```
+    tkWindow.attributes('-topmost', True) #puts window topmost(permanent)\n";
+```
+
+— a fragment of the C++ that wrote it, sitting inside the Python, harmless only because it
+landed after a `#`. No syntax check, no ruff, no stub check and no import test had ever looked at
+any of it.
+
+**Nothing changes for a user.** The same settings decide the same things: the window setup that
+the C++ assembled by concatenating `visualizationSettings.dialogs.alwaysTopmost` and
+`alphaTransparency` into the source text is now `ApplyDialogWindowSettings()`, which reads them
+through `GetRendererSystemContainer()` — which is how `EditDictionaryWithTypeInfo` has always
+done it. The quit question still answers through `exudyn.sys['quitResponse']` as 2 or 3, and each
+dialog prints what it printed before when tkinter is missing.
+
+**What is now possible and was not**: the utility documentation emitter picked the five functions
+up by itself, so they have a page; ruff reads them; `allExudynModulesTest.py` imports them with
+the rest of the package; and the two paths that do NOT need a window —
+`ShowVisualizationSettingsDialog` with no renderer attached, `ShowRightMouseSelectionDialog` with
+no selection — were run here and print what the renderer expects.
+
+**Not tested, and it cannot be**: everything that opens a window. That is what RG6.2.2 is for —
+the layer under the widgets, which needs no window at all.
+
+**The help text moved as it was**, 48 lines of key bindings. It is the third copy of the same
+knowledge — `GlfwClient.cpp` implements the keys, `docs/manual/GUI.md` tabulates them in 64
+rows — and moving it does not fix that. It is now a module constant rather than a string inside
+C++, which is the position a generator would need; RG6.2.6 records the rest.

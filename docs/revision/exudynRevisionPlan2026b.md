@@ -359,10 +359,96 @@ This group is that revision and what has to happen before it can start.
     Two things changed the ground under it: **revision2026 step R4.10 makes the parameter types
     available to Python**, so a dialog can know what it is editing; and the interface is generic
     enough that a **second front end** (Qt6, or a form that takes Qt5 and Qt6) would be a small
-    overhead rather than a second GUI. The step is refined after a look at the current state.
+    overhead rather than a second GUI.
 
     It also shows what RG12.3 produces: the settings that differ from the defaults, as code to
     paste.
+
+    **REVIEWED 2026-09-22.** `python/exudyn/misc/GUI.py`, 1017 lines, two dialog classes:
+    `TkinterEditDictionaryWithTypeInfo` (the settings tree) and `TkinterEditDictionary` (a plain
+    dictionary, used by right-mouse edit). Each of the seven complaints has a cause in the code,
+    and most of them are small:
+
+    | the complaint | what the code does | what it needs |
+    |---|---|---|
+    | the table is restricted | the tree has three columns, `Name`, `value`, `description`; **type and size are read and stored but never shown** (`self.typeStorage`, `self.sizeStorage`) | a type column, and the unit/range where the definition has one |
+    | illegal input is caught, no type hints | `CheckType()` validates on commit and opens a `messagebox.showerror`; the type is known at that moment and is not in the message | show the expected type before the input, in the edit row and in the error |
+    | the font cannot be adjusted on Linux | `if not IsApple(): fontFactor = 1` — the font factor is **forced to 1** off macOS and only the row height follows the display scaling; the setting is called `dialogs.fontScalingMacOS` | one `dialogs.fontScaling` for every platform, with `fontScalingMacOS` kept as a deprecated name (the mechanism of RG12.1) |
+    | the columns can hardly be adjusted | **`tree.column(...)` is never called** — no width, no minwidth, no stretch, so every column keeps the tkinter default of 200 px and the description is cut | set the widths, let the description take the rest, remember what the user drags |
+    | the description needs a key press | bound to the literal key `h`, shown in a modal `messagebox`; the column heading reads *"Description (press H to show)"* | a hover tooltip, and the full text in a wrapped area below the tree |
+    | fields cannot be edited inline | the value is edited in a **separate `Entry`/`Combobox` at the bottom of the window**, and the two swap by z-order (`lower()`/`lift()`) | edit in the cell; the bottom row can stay as the place for the long description |
+    | combo boxes are unhandy | one `Combobox` reused for every enum, values from `GetComboBoxListsDict()`, which **hard-codes three enum types** | build the list from the type name through `exu`, so that every enum gets a list |
+
+    **The hard-coded three are a real gap, not only a smell**: `OutputVariableType`,
+    `LinearSolverType` and `ItemType` are in the dict, and
+    `timeIntegration.explicitIntegration.dynamicSolverType` is a `DynamicSolverType` — so it is
+    edited as free text, where a typo is a silent wrong value.
+
+    **The finding that changes the step**: the dialog is **not specific to
+    `visualizationSettings`**. `GetDictionaryWithTypeInfo()` is generated for 100 structures and
+    bound for `SimulationSettings` as well, with name, value, type, size and description for
+    every leaf: **470 editable values in `visualizationSettings`, 152 in `simulationSettings`, and
+    not one of them without a description**. `EditDictionaryWithTypeInfo(SC.simulationSettings)`
+    is a call that nothing offers today. So "a settings dialog for the solver" is not a new
+    dialog, and a second front end is a second *renderer* of the same data.
+
+    **`rendererPythonInterface.cpp` is worse than "it executes Python inside C++"**: **220 of its
+    775 lines ARE Python**, in six raw string literals. Only the settings dialog is a one-line
+    call into `exudyn.misc.GUI`; the **help dialog (69 lines) and the command window (93 lines)
+    are written in full inside the C++ file**, where ruff never sees them, the stub check never
+    sees them, no test imports them, and one of them carries a leftover `\n";` inside a Python
+    comment — which is what code looks like when nothing reads it. Moving those two into
+    `exudyn.misc.GUI` beside the third, and leaving one call each in the C++, is the part of this
+    step with the clearest boundary.
+
+    **What no test touches**: `allExudynModulesTest.py` imports `GUI.py` because it imports every
+    module of the package, and **nothing calls a single function of it**. A dialog needs a window,
+    so the suite cannot; what *can* be tested without one is the layer underneath —
+    `ConvertString2Value`, `ConvertValue2String`, `CheckType`, `GetComboBoxListsDict` — and that
+    is worth doing first, because it is where a wrong value comes from.
+
+    **The order, as sub-steps.** Each one stands on its own and none of them needs the next.
+
+<a id="rg6-2-1"></a>
+**RG6.2.1** **DONE 2026-09-22** (#2595) — [log](exudynRevisionLog2026b.md#rg6-2-1) — **The dialogs leave the C++.** The help dialog, the command window, the quit
+    question and the right-mouse dialog become functions of `exudyn.misc.GUI`, and
+    `rendererPythonInterface.cpp` keeps one call each — which is what it already does for the
+    settings dialog. The window setup that the C++ assembles by string concatenation today
+    (`-topmost`, `-alpha` from `visualizationSettings.dialogs`) becomes one helper on the Python
+    side, where those settings are readable anyway. **No behaviour changes**; what changes is that
+    220 lines of Python become Python: ruff reads them, the stub check reads them, and a person
+    editing them gets a syntax error instead of a runtime one.
+
+<a id="rg6-2-2"></a>
+**RG6.2.2** **The layer under the widgets gets tests.** `ConvertString2Value`,
+    `ConvertValue2String`, `CheckType` and `GetComboBoxListsDict` decide what a typed value
+    becomes, and no test calls them. They need no window, so pytest can: every type the settings
+    structures actually use (20 of them, `bool` to `VectorFloat`), the round trip value -> string
+    -> value, and the rejection of a wrong one.
+
+<a id="rg6-2-3"></a>
+**RG6.2.3** **The six small complaints**, a handful of lines each: the column widths
+    (`tree.column(...)` is never called), one `dialogs.fontScaling` for every platform with
+    `fontScalingMacOS` deprecated (the mechanism of RG12.1), the enum lists built from the type
+    name instead of the hard-coded three, the type shown in the table and named in the error
+    message, and the description in a tooltip rather than behind the key `h`.
+
+<a id="rg6-2-4"></a>
+**RG6.2.4** **Inline editing** — the one real rewrite: the value is edited in the cell instead of
+    in a separate field at the bottom of the window that swaps with a combo box by z-order.
+
+<a id="rg6-2-5"></a>
+**RG6.2.5** **A second front end**, if it is still wanted once RG6.2.1-RG6.2.4 have shown what
+    the interface between the data and the widgets actually is. The data side is ready:
+    `GetDictionaryWithTypeInfo()` is bound for every settings structure.
+
+<a id="rg6-2-6"></a>
+**RG6.2.6** **The key bindings are written down three times**: `GlfwClient.cpp` implements them,
+    `docs/manual/GUI.md` tabulates them in 64 rows, and the help dialog prints its own 55-line
+    text. Two of the three are prose that nothing keeps in step with the first. One source — a
+    table in Python — could feed both the dialog and a generated page, the way `definitions/`
+    feeds the reference manual (rule 10). Raised here because RG6.2.1 moves the third copy
+    without fixing the duplication.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped

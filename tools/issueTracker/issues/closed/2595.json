@@ -1,0 +1,14 @@
+{
+  "number": 2595,
+  "title": "220 of the 775 lines of rendererPythonInterface.cpp are Python in raw strings",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "Four of the five renderer dialogs are written IN the C++ file that launches them, as R\"PY(...)PY\" literals: the help dialog (69 lines), the command window (10+93 lines), the quit question (29 lines) and the right-mouse dialog (built by C++ string concatenation). Only the visualization settings dialog is a call into exudyn.misc.GUI. In a raw string literal there is no syntax check, no ruff, no stub check and no import test: one of the blocks carries a leftover '\\n\";' inside a Python comment, which is what code looks like when nothing reads it. The window setup is assembled by C++ string concatenation from visualizationSettings.dialogs (-topmost, -alpha), although the same settings are readable from Python, which is how the settings dialog already does it. Move the four into exudyn.misc.GUI as functions and leave one call each in the C++. No behaviour change intended. revision2026b step RG6.2.1, from the review of #2591.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-22 22:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The four dialogs the renderer opens are functions of exudyn.misc.GUI now, and rendererPythonInterface.cpp calls them: ShowHelpDialog, ShowPythonCommandDialog, ShowRightMouseSelectionDialog and AskQuitDialog, beside the ShowVisualizationSettingsDialog that the settings dialog already had. The file goes from 775 to 528 lines and its six raw Python string literals become five calls of five lines each; the window setup that the C++ assembled by string concatenation from visualizationSettings.dialogs is ApplyDialogWindowSettings on the Python side, where the same settings are read. No behaviour is changed: the same settings decide topmost and transparency, the quit question still answers through exudyn.sys['quitResponse'] as 2 or 3, and each dialog prints what it printed when tkinter is missing. What changes is that 220 lines of Python are Python: ruff reads them (the 2 new fenced call sites and the 300 moved lines pass without a baseline entry), the utility documentation emitter documents them, and the import test imports them. The help text and the command window examples are module constants, so the next step can generate the first from one source (RG6.2.6). revision2026b step RG6.2.1.",
+  "resolvedInVersion": "1.12.9"
+}

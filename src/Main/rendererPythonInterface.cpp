@@ -375,22 +375,15 @@ void PyProcessShowVisualizationSettingsDialog()
 #ifdef USE_GLFW_GRAPHICS
     //open window to execute a python command ... 
     std::string str = R"PY(
-import exudyn
-import numpy as np
 try:
-    import exudyn.misc.GUI #this may also fail because of tkinter
+    import exudyn.misc.GUI   #this may fail if tkinter is missing
     try:
-        guiSC = exudyn.misc.GUI.GetRendererSystemContainer()
-        if guiSC == None:
-            print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
-        else:
-            exudyn.misc.GUI.EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exudyn, 'Visualization Settings') 
+        exudyn.misc.GUI.ShowVisualizationSettingsDialog()
     except Exception as exceptionVariable:
         print("edit dialog for visualizationSettings failed")
         print(exceptionVariable) #not necessary, but can help to identify reason
-except:
-    print("visualizationSettings dialog failed: cannot import exudyn.misc.GUI / tkinter; tkinter probably missing")
-
+except ImportError:
+    print("edit dialog for visualizationSettings failed: cannot import exudyn.misc.GUI / tkinter; tkinter probably missing")
 )PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
@@ -402,244 +395,39 @@ void PyProcessShowHelpDialog()
 {
 #ifdef USE_GLFW_GRAPHICS
 
-    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
     std::string str = R"PY(
-import tkinter as tk
-import exudyn
-from exudyn.misc.GUI import GetTkRootAndNewWindow
-
-[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
-
-)PY";
-    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
-    {
-        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
-    }
-    if (alphaTransparency < 1.f)
-    {
-        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
-    }
-    str += R"PY(
-tkWindow.title("Help on keyboard commands and mouse")
-tkWindow.lift() #window has focus
-tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
-tkWindow.focus_force() #window has focus
-scrollW = tk.Scrollbar(tkWindow)
-#resize grid columns/rows if window is resized:
-tkWindow.grid_columnconfigure(0, weight=1)
-tkWindow.grid_rowconfigure(0, weight=1)
-
-textW = tk.Text(tkWindow, height = 30, width = 90, background='gray98')
-textW.focus_set()
-textW.grid(row=0, column=0, padx=10, pady=10, sticky=tk.NSEW)
-scrollW.grid(row=0, column=1, pady=10, sticky=tk.NSEW)
-scrollW.config(command = textW.yview)
-textW.config(yscrollcommand = scrollW.set)
-msg = """Mouse action:
-left mouse button     ... hold and drag: move model
-left mouse button     ... click: select item (deactivated if mouse coordinates shown)
-right mouse button    ... hold and drag: rotate model
-right mouse button    ... click: open edit dialog (if activated in visualizationSettings)
-mouse wheel           ... zoom
-======================
-Key(s) action:
-1,2,3,4 or 5          ... visualization update speed (0.02, 0.1=default, 0.5, 2, 
-                          100 seconds)
-'.' or KEYPAD '+'     ... zoom in (with optional CTRL key for small zoom)
-',' or KEYPAD '-'     ... zoom out (with optional CTRL key for small zoom)
-CTRL+1                ... set view to 1/2-plane
-SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
-CTRL+2                ... set view to 1/3-plane
-SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
-CTRL+3,4,5,6          ... other views (with optional SHIFT key)
-CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements, 
-                          SHIFT for rotations (ALT for z-axis))
-KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
-F2                    ... ignore all keyboard input, except for KeyPress user function, 
-                          F2 and escape keys
-F3                    ... show mouse coordinates
-CTRL+F3               ... show model view parameters (zoom, rotationVector, centerPoint)
-Q      ... stop current solver and proceed to next simulation (or end of file); 
-           after general.reallyQuitTimeLimit (default:900) seconds a safety dialog opens
-A      ... zoom all
-C      ... show/hide connectors
-CTRL+C ... show/hide connector numbers
-B      ... show/hide bodies
-CTRL+B ... show/hide body numbers
-L      ... show/hide loads
-CTRL+L ... show/hide load numbers
-M      ... show/hide markers
-CTRL+M ... show/hide marker numbers
-N      ... show/hide nodes
-CTRL+N ... show/hide node numbers
-S      ... show/hide sensors
-CTRL+S ... show/hide sensor numbers
-O      ... change center of rotation to current center of the window (affects only 
-           current plane coordinates; rotate model to ajust other coordinates)
-T      ... switch between faces transparent/ faces transparent + edges / 
-           only face edges / full faces with edges / only faces
-X      ... execute command; dialog may appear in background! may crash simulation!
-V      ... visualization settings; dialog may appear behind the visualization window!
-ESCAPE ... close render window and stop all simulations (same as close window button); 
-           after general.reallyQuitTimeLimit seconds a dialog opens for safety
-SPACE  ... continue simulation
-"""
-textW.insert(tk.END, msg)
-textW.configure(state='disabled') #unable to edit
-if tkRuns:
-    root.wait_window(tkWindow)
-else:
-    tk.mainloop()
+try:
+    import exudyn.misc.GUI   #this may fail if tkinter is missing
+    try:
+        exudyn.misc.GUI.ShowHelpDialog()
+    except Exception as exceptionVariable:
+        print("help dialog failed")
+        print(exceptionVariable) #not necessary, but can help to identify reason
+except ImportError:
+    print("help dialog failed: cannot import exudyn.misc.GUI / tkinter; tkinter probably missing")
 )PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
 
 }
 
-//define these strings outside of PyProcessShowPythonCommandDialog
-//otherwise, compiler gives "unexpected end of line" error!!!
-std::string strPythonCommandInit = R"PY(
-import exudyn
-import tkinter as tk
-import tkinter.font
-import traceback #for exception printing
-from tkinter import ttk
-from tkinter import scrolledtext
-from exudyn.misc.GUI import GetTkRootAndNewWindow
-
-[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
-commandString = ''
-tkWindow.title("Exudyn command window")
-)PY";
-
-std::string strPythonCommandWork = R"PY(
-#resize grid columns/rows if window is resized:
-tkWindow.grid_columnconfigure(0, weight=1)
-tkWindow.grid_rowconfigure(1, weight=1)
-#tkWindow.grid_rowconfigure(3, weight=1)
-
-description ='Enter Python command which operates in global scope of you Python model;\n'
-description+='Evaluate or CHANGE your current model (parameters) during simulation;\n'
-description+='Press CRTL+RETURN to execute, escape to close:'
-
-label = tk.Label(tkWindow, text=description, justify=tk.LEFT, 
-                 relief=tk.SUNKEN, background='gray94')
-label.grid(row=0, column=0, padx=15, pady=(15,0), sticky='W')
-
-text_area = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD,
-                                      width=60, height=8,
-                                      )
-#configure tab size:
-font = tk.font.Font(font=text_area['font'])
-tab_size = font.measure(' '*4) #in pixels
-text_area.config(tabs=tab_size)
-
-#++++++++++++++++++++++++++++++++
-#read command string and execute
-globs=None
-def OnRunCode(event): 
-    global text_area
-    global globs
-
-    commandString = text_area.get('1.0', tk.END)
-    print('command window execute:\n',commandString.strip(),sep='') #printout the command
-    print('output:')
-
-    if commandString.strip() == '': #empty command causes exception
-        return
-    commandString = commandString.replace('\t',' '*4) #tabs may cause problems
-
-    try:
-        exec(commandString, globals(), locals())
-        #old version: for single line, it prints out the result
-        # exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
-        # if locals()['tempEXUDYNexecute']!=None:
-        #     print(locals()['tempEXUDYNexecute'])
-    # except:
-    except:
-        print("Execution of command failed; error:")
-        #traceback.print_exc()
-        globs = traceback.format_exc()
-        lines = globs.split('\n')
-        for s in lines:
-            s = s.replace('  File "<string>", ','')
-            if (('File "' not in s) and 
-                ('exec(commandString, globals(), locals())' not in s) ):
-                print(s)
-    if event!=None:
-        return "break" #prevent from passing Return key to text ...
-
-#run code
-def OnClose(event):
-    global tkWindow
-    tkWindow.destroy() 
-
-#++++++++++++++++++++++++++++++++
-text_area.grid(row=1, column=0, pady=15,padx=10,sticky=tk.NSEW)
-text_area.bind('<Control-Return>',OnRunCode)
-text_area.bind('<Escape>',OnClose)
-tkWindow.bind('<Escape>',OnClose)
-
-#++++++++++++++++++++++++++++++++
-frame = tk.Frame(tkWindow)
-runButton = tk.Button(frame, text = "    Run code    ", command = lambda: OnRunCode(None))
-closeButton = tk.Button(frame, text = "    Close    ", command = lambda: OnClose(None))
-
-frame.grid(row=2, column=0, padx=15, pady=(0,15), sticky='', columnspan=3)
-runButton.grid(row=0, column=0, padx=80, sticky='')
-closeButton.grid(row=0, column=1, padx=80, sticky='')
-
-#show some examples:
-examples = 'helpful examples:\n'
-examples+= 'show overall info of mbs:\n'
-examples+= 'print(mbs)\n'
-examples+= '#change current dynamic solver end time:\n'
-examples+= "mbs.sys['dynamicSolver'].it.endTime=10 \n"
-examples+= '#change verbose mode of dynamic solver:\n'
-examples+= "mbs.sys['dynamicSolver'].output.verboseMode=1\n"
-examples+= '#stop file writing:\n'
-examples+= "mbs.sys['dynamicSolver'].output.writeToSolutionFile=False\n"
-examples+= '#print values of sensor 0:\n'
-examples+= "print(mbs.GetSensorValues(0))\n"
-examples+= '#pause after each step:\n'
-examples+= "simulationSettings.pauseAfterEachStep=True\n"
-examples+= '\n#==>BUT changing simulationSettings is dangerous!'
-
-textExample = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD,
-                                      width=60, height=examples.count('\n')+1,
-                                      background='gray94',
-                                      )
-textExample.grid(row=3, column=0, padx=15, pady=(0,15), sticky=tk.NSEW)
-textExample.insert(tk.END, examples)
-textExample.configure(state='disabled') #unable to edit
-
-# placing cursor in text area
-text_area.focus_set()
-tkWindow.focus_force() #window has focus
-
-if tkRuns:
-    root.wait_window(tkWindow)
-else:
-    tk.mainloop()
-)PY";
 
 
 void PyProcessShowPythonCommandDialog()
 {
 #ifdef USE_GLFW_GRAPHICS
 
-    //open window to execute a python command ... 
-    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
-	std::string str = strPythonCommandInit;
-    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
-    {
-        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
-    }
-    if (alphaTransparency < 1.f)
-    {
-        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
-    }
-	str += strPythonCommandWork;
+    std::string str = R"PY(
+try:
+    import exudyn.misc.GUI   #this may fail if tkinter is missing
+    try:
+        exudyn.misc.GUI.ShowPythonCommandDialog()
+    except Exception as exceptionVariable:
+        print("command window failed")
+        print(exceptionVariable) #not necessary, but can help to identify reason
+except ImportError:
+    print("command window failed: cannot import exudyn.misc.GUI / tkinter; tkinter probably missing")
+)PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
 
@@ -649,17 +437,17 @@ void PyProcessShowRightMouseSelectionDialog(Index itemID)
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active
     GetGlfwRenderer().PySetRendererSelectionDict(itemID);
-    STDstring strName = "edit item";
-    STDstring str = "import exudyn\n";
-    str += "import numpy as np\n";
-    str += "import exudyn.misc.GUI\n";
-    //str += "d=exudyn.GetInternalSelectionDict()\n";
-    str += "d=exudyn.sys['currentRendererSelectionDict']\n";
-    str += "try:\n";
-    str += "    strName = 'properties of <' + d['name'] + '>'\n";
-    str += "    exudyn.misc.GUI.EditDictionary(d,False,dialogName=strName)\n";
-    str += "except:\n";
-    str += "    print('showing of dictionary failed')\n";
+    STDstring str = R"PY(
+try:
+    import exudyn.misc.GUI   #this may fail if tkinter is missing
+    try:
+        exudyn.misc.GUI.ShowRightMouseSelectionDialog()
+    except Exception as exceptionVariable:
+        print("showing of dictionary failed")
+        print(exceptionVariable) #not necessary, but can help to identify reason
+except ImportError:
+    print("showing of dictionary failed: cannot import exudyn.misc.GUI / tkinter; tkinter probably missing")
+)PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
 
@@ -672,47 +460,13 @@ void PyProcessAskQuit()
 
     try
     {
-        //open window to execute a python command ... 
-        //float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
         PyWriteToSysDictionary("quitResponse", py::cast((int)1) );
 
         std::string str = R"PY(
 try:
-    import exudyn
-    import tkinter as tk
-    from exudyn.misc.GUI import GetTkRootAndNewWindow
-
-    response = False #if user just shuts window
-
-    [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
-    tkWindow.attributes('-topmost', True) #puts window topmost(permanent)\n";
-    tkWindow.bind("<Escape>", lambda x : tkWindow.destroy())
-    tkWindow.title("WARNING - long running simulation!")
-
-    def QuitResponse(clickResponse) :
-        global tkWindow
-        global response
-        response = clickResponse
-        tkWindow.destroy()
-
-    label = tk.Label(tkWindow, text = "Do you really want to stop simulation and close renderer?", justify = tk.LEFT)
-    yes_button = tk.Button(tkWindow, text = "        Yes        ", command = lambda: QuitResponse(True))
-    no_button = tk.Button(tkWindow, text = "        No        ", command = lambda: QuitResponse(False))
-
-    label.grid(row=0, column=0, pady=(20,0),padx=50,columnspan=5)
-    yes_button.grid(row=1, column=1, pady=20)
-    no_button.grid(row=1, column=3, pady=20)
-
-    tkWindow.focus_force() #window has focus
-
-    if tkRuns:
-        root.wait_window(tkWindow)
-    else:
-        tk.mainloop()
-
-    #response ready
-    exudyn.sys['quitResponse'] = response+2 #2=do not quit, 3=quit
-except:
+    import exudyn.misc.GUI   #this may fail if tkinter is missing
+    exudyn.misc.GUI.AskQuitDialog()
+except Exception:
     pass #if fails, user shall not be notified
 )PY";
         PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);

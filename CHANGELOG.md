@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 9 | 1.12.8 |
+| 1.12 | Metheney | 10 | 1.12.9 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.9** `IMPROVEMENT` 220 of the 775 lines of rendererPythonInterface.cpp are Python in raw strings (#2595) - raised by Claude-JG
+  - The four dialogs the renderer opens are functions of exudyn.misc.GUI now, and rendererPythonInterface.cpp calls them: ShowHelpDialog, ShowPythonCommandDialog, ShowRightMouseSelectionDialog and AskQuitDialog, beside the ShowVisualizationSettingsDialog that the settings dialog already had. The file goes from 775 to 528 lines and its six raw Python string literals become five calls of five lines each; the window setup that the C++ assembled by string concatenation from visualizationSettings.dialogs is ApplyDialogWindowSettings on the Python side, where the same settings are read. No behaviour is changed: the same settings decide topmost and transparency, the quit question still answers through exudyn.sys\['quitResponse'\] as 2 or 3, and each dialog prints what it printed when tkinter is missing. What changes is that 220 lines of Python are Python: ruff reads them (the 2 new fenced call sites and the 300 moved lines pass without a baseline entry), the utility documentation emitter documents them, and the import test imports them. The help text and the command window examples are module constants, so the next step can generate the first from one source (RG6.2.6). revision2026b step RG6.2.1.
 - **1.12.8** `DOCU` display math opened at the end of a text line swallows the text (#2593) - raised by Claude-JG
   - 45 display math blocks in three documents opened at the end of a line of prose, so MyST typeset the sentence as the formula and showed the formula as a code block of raw LaTeX - wrong on the published HTML, not only in the PDF. Two causes, two fixes. In tools/generators/latexToMarkdown.py the display blocks are protected by ProtectMath before ConvertLists runs, and ConvertLists joins an item into one line: display math now gets a placeholder of its own kind that stays on its own line. Two smaller things with it: the body was stripped of newlines but not of indentation, leaving a line of blanks before the closing dollar-dollar - and a blank line ends a block in MyST; and \\nonumber, left from the eqnarray days, is ignored by MathJax and is a hard LaTeX error inside aligned, so it is dropped (30 in definitions/, 42 removed from four chapters). docs/manual/theoryContact.md was written that way by the conversion of revision2026 step R7.1.5 and is hand-written since, so all 87 of its display blocks were normalised in place, keeping the two equation labels on their closing line. revision2026b step RG3.7.
 - **1.12.7** `DOCU` a generated settings page contains a table with a header and no rows (#2592) - raised by Claude-JG

@@ -30,6 +30,11 @@ __all__ = [
     'GetComboBoxListsDict', 'ConvertString2Value', 'ConvertValue2String', 'CheckType',
     'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
     'EditDictionary',
+    #the dialogs the renderer opens; they were Python inside rendererPythonInterface.cpp until
+    #revision2026b step RG6.2.1 (#2595)
+    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
+    'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
+    'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -995,10 +1000,302 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
         return {}
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE DIALOGS THE RENDERER OPENS (revision2026b step RG6.2.1, #2595)
+#
+#They were written as Python inside src/Main/rendererPythonInterface.cpp - 220 of its 775 lines were
+#raw string literals holding tkinter code, where no syntax check, no ruff and no import test ever
+#saw them. Each one is a function here now, and the C++ calls it. The window setup that the C++
+#assembled by string concatenation from visualizationSettings.dialogs is ApplyDialogWindowSettings.
 
-        
+def ApplyDialogWindowSettings(tkWindow, alwaysTopmost=None, alphaTransparency=None):
+    """Apply what visualizationSettings.dialogs says about a dialog window.
+
+    Args:
+        tkWindow: the window to configure
+        alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it
+        alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
+
+    Returns:
+        None
+    """
+    guiSC = GetRendererSystemContainer()
+    if guiSC is not None:
+        if alwaysTopmost is None:
+            alwaysTopmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
+        if alphaTransparency is None:
+            alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
+
+    if alwaysTopmost:
+        tkWindow.attributes('-topmost', True)   #permanent, otherwise it hides behind the renderer
+    if alphaTransparency is not None and alphaTransparency < 1:
+        tkWindow.attributes('-alpha', alphaTransparency)
+
+
+#the keyboard and mouse commands of the renderer. NOTE that docs/manual/GUI.md lists the same
+#bindings in a 64 row table and GlfwClient.cpp implements them: three copies of one thing, which
+#is revision2026b step RG6.2.6
+rendererHelpText = """Mouse action:
+left mouse button     ... hold and drag: move model
+left mouse button     ... click: select item (deactivated if mouse coordinates shown)
+right mouse button    ... hold and drag: rotate model
+right mouse button    ... click: open edit dialog (if activated in visualizationSettings)
+mouse wheel           ... zoom
+======================
+Key(s) action:
+1,2,3,4 or 5          ... visualization update speed (0.02, 0.1=default, 0.5, 2,
+                          100 seconds)
+'.' or KEYPAD '+'     ... zoom in (with optional CTRL key for small zoom)
+',' or KEYPAD '-'     ... zoom out (with optional CTRL key for small zoom)
+CTRL+1                ... set view to 1/2-plane
+SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
+CTRL+2                ... set view to 1/3-plane
+SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
+CTRL+3,4,5,6          ... other views (with optional SHIFT key)
+CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements,
+                          SHIFT for rotations (ALT for z-axis))
+KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
+F2                    ... ignore all keyboard input, except for KeyPress user function,
+                          F2 and escape keys
+F3                    ... show mouse coordinates
+CTRL+F3               ... show model view parameters (zoom, rotationVector, centerPoint)
+Q      ... stop current solver and proceed to next simulation (or end of file);
+           after general.reallyQuitTimeLimit (default:900) seconds a safety dialog opens
+A      ... zoom all
+C      ... show/hide connectors
+CTRL+C ... show/hide connector numbers
+B      ... show/hide bodies
+CTRL+B ... show/hide body numbers
+L      ... show/hide loads
+CTRL+L ... show/hide load numbers
+M      ... show/hide markers
+CTRL+M ... show/hide marker numbers
+N      ... show/hide nodes
+CTRL+N ... show/hide node numbers
+S      ... show/hide sensors
+CTRL+S ... show/hide sensor numbers
+O      ... change center of rotation to current center of the window (affects only
+           current plane coordinates; rotate model to ajust other coordinates)
+T      ... switch between faces transparent/ faces transparent + edges /
+           only face edges / full faces with edges / only faces
+X      ... execute command; dialog may appear in background! may crash simulation!
+V      ... visualization settings; dialog may appear behind the visualization window!
+ESCAPE ... close render window and stop all simulations (same as close window button);
+           after general.reallyQuitTimeLimit seconds a dialog opens for safety
+SPACE  ... continue simulation
+"""
+
+
+def ShowHelpDialog():
+    """The keyboard and mouse commands of the renderer, in a read-only window; opened with H in
+    the render window.
+
+    Returns:
+        None
+    """
+    [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+    ApplyDialogWindowSettings(tkWindow)
+
+    tkWindow.title("Help on keyboard commands and mouse")
+    tkWindow.lift()                          #window has focus
+    tkWindow.bind("<Escape>", lambda event: tkWindow.destroy())
+    tkWindow.focus_force()
+
+    scrollW = tk.Scrollbar(tkWindow)
+    #resize grid columns/rows if window is resized:
+    tkWindow.grid_columnconfigure(0, weight=1)
+    tkWindow.grid_rowconfigure(0, weight=1)
+
+    textW = tk.Text(tkWindow, height=30, width=90, background='gray98')
+    textW.focus_set()
+    textW.grid(row=0, column=0, padx=10, pady=10, sticky=tk.NSEW)
+    scrollW.grid(row=0, column=1, pady=10, sticky=tk.NSEW)
+    scrollW.config(command=textW.yview)
+    textW.config(yscrollcommand=scrollW.set)
+
+    textW.insert(tk.END, rendererHelpText)
+    textW.configure(state='disabled')        #unable to edit
+
+    if tkRuns:
+        root.wait_window(tkWindow)
+    else:
+        tk.mainloop()
+
+
+#the examples shown under the command input; they are what people ask for most often while a
+#simulation runs
+pythonCommandExamples = ('helpful examples:\n'
+                         'show overall info of mbs:\n'
+                         'print(mbs)\n'
+                         '#change current dynamic solver end time:\n'
+                         "mbs.sys['dynamicSolver'].it.endTime=10 \n"
+                         '#change verbose mode of dynamic solver:\n'
+                         "mbs.sys['dynamicSolver'].output.verboseMode=1\n"
+                         '#stop file writing:\n'
+                         "mbs.sys['dynamicSolver'].output.writeToSolutionFile=False\n"
+                         '#print values of sensor 0:\n'
+                         'print(mbs.GetSensorValues(0))\n'
+                         '#pause after each step:\n'
+                         'simulationSettings.pauseAfterEachStep=True\n'
+                         '\n#==>BUT changing simulationSettings is dangerous!')
+
+
+def ShowPythonCommandDialog():
+    """A window that executes a Python command in the global scope of the running model; opened
+    with X in the render window. CTRL+RETURN runs what is in the text area.
+
+    Returns:
+        None
+    """
+    import traceback                                                            # noqa: PLC0415
+    from tkinter import scrolledtext                                            # noqa: PLC0415
+
+    [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+    tkWindow.title("Exudyn command window")
+    ApplyDialogWindowSettings(tkWindow)
+
+    #resize grid columns/rows if window is resized:
+    tkWindow.grid_columnconfigure(0, weight=1)
+    tkWindow.grid_rowconfigure(1, weight=1)
+
+    description = ('Enter Python command which operates in global scope of you Python model;\n'
+                   'Evaluate or CHANGE your current model (parameters) during simulation;\n'
+                   'Press CRTL+RETURN to execute, escape to close:')
+
+    label = tk.Label(tkWindow, text=description, justify=tk.LEFT,
+                     relief=tk.SUNKEN, background='gray94')
+    label.grid(row=0, column=0, padx=15, pady=(15, 0), sticky='W')
+
+    textArea = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD, width=60, height=8)
+    #configure tab size:
+    font = tk.font.Font(font=textArea['font'])
+    textArea.config(tabs=font.measure(' '*4))   #in pixels
+
+    def OnRunCode(event):
+        commandString = textArea.get('1.0', tk.END)
+        print('command window execute:\n', commandString.strip(), sep='')  #printout the command
+        print('output:')
+
+        if commandString.strip() == '':      #empty command causes exception
+            return None
+        commandString = commandString.replace('\t', ' '*4)  #tabs may cause problems
+
+        try:
+            exec(commandString, globals(), locals())        # noqa: S102 - this IS the feature
+        except Exception:                    #whatever the user typed; it must not kill the dialog
+            print("Execution of command failed; error:")
+            for line in traceback.format_exc().split('\n'):
+                line = line.replace('  File "<string>", ', '')
+                if ('File "' not in line) and ('exec(commandString' not in line):
+                    print(line)
+
+        if event is not None:
+            return "break"                   #prevent from passing Return key to text ...
+        return None
+
+    def OnClose(event):
+        tkWindow.destroy()
+
+    textArea.grid(row=1, column=0, pady=15, padx=10, sticky=tk.NSEW)
+    textArea.bind('<Control-Return>', OnRunCode)
+    textArea.bind('<Escape>', OnClose)
+    tkWindow.bind('<Escape>', OnClose)
+
+    frame = tk.Frame(tkWindow)
+    runButton = tk.Button(frame, text="    Run code    ", command=lambda: OnRunCode(None))
+    closeButton = tk.Button(frame, text="    Close    ", command=lambda: OnClose(None))
+
+    frame.grid(row=2, column=0, padx=15, pady=(0, 15), sticky='', columnspan=3)
+    runButton.grid(row=0, column=0, padx=80, sticky='')
+    closeButton.grid(row=0, column=1, padx=80, sticky='')
+
+    textExample = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD, width=60,
+                                            height=pythonCommandExamples.count('\n')+1,
+                                            background='gray94')
+    textExample.grid(row=3, column=0, padx=15, pady=(0, 15), sticky=tk.NSEW)
+    textExample.insert(tk.END, pythonCommandExamples)
+    textExample.configure(state='disabled')  #unable to edit
+
+    textArea.focus_set()                     #placing cursor in text area
+    tkWindow.focus_force()
+
+    if tkRuns:
+        root.wait_window(tkWindow)
+    else:
+        tk.mainloop()
+
+
+def ShowVisualizationSettingsDialog():
+    """The settings tree of the renderer; opened with V in the render window.
+
+    Returns:
+        None
+    """
+    guiSC = GetRendererSystemContainer()
+    if guiSC is None:
+        print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
+        return
+
+    EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exudyn, 'Visualization Settings')
+
+
+def ShowRightMouseSelectionDialog():
+    """The properties of the item the right mouse button selected, read-only; the renderer has
+    put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
+
+    Returns:
+        None
+    """
+    try:
+        d = exudyn.sys['currentRendererSelectionDict']
+        EditDictionary(d, False, dialogName='properties of <' + d['name'] + '>')
+    except Exception:                        #a dict without 'name', or no dict at all
+        print('showing of dictionary failed')
+
+
+def AskQuitDialog():
+    """Ask whether a long running simulation really shall be stopped; the answer goes back to the
+    renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
+
+    Returns:
+        None
+    """
+    response = False                         #if the user just shuts the window
+
+    [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+    #topmost unconditionally: this question is the reason the renderer is waiting
+    ApplyDialogWindowSettings(tkWindow, alwaysTopmost=True, alphaTransparency=1)
+    tkWindow.bind("<Escape>", lambda event: tkWindow.destroy())
+    tkWindow.title("WARNING - long running simulation!")
+
+    def QuitResponse(clickResponse):
+        nonlocal response
+        response = clickResponse
+        tkWindow.destroy()
+
+    label = tk.Label(tkWindow, text="Do you really want to stop simulation and close renderer?",
+                     justify=tk.LEFT)
+    yesButton = tk.Button(tkWindow, text="        Yes        ",
+                          command=lambda: QuitResponse(True))
+    noButton = tk.Button(tkWindow, text="        No        ",
+                         command=lambda: QuitResponse(False))
+
+    label.grid(row=0, column=0, pady=(20, 0), padx=50, columnspan=5)
+    yesButton.grid(row=1, column=1, pady=20)
+    noButton.grid(row=1, column=3, pady=20)
+
+    tkWindow.focus_force()
+
+    if tkRuns:
+        root.wait_window(tkWindow)
+    else:
+        tk.mainloop()
+
+    exudyn.sys['quitResponse'] = response + 2   #2=do not quit, 3=quit
+
+
 ##+++++++++++++++++++++++++++++++++++++++
-##EXAMPLE        
+##EXAMPLE
 
 #DATA2={'objectType': 'ConnectorSpringDamper',
 # 'markerNumbers': [1, 3],
