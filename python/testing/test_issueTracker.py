@@ -945,7 +945,10 @@ def testThePageTextIsARawString():
 #changes are written down
 
 def testTheChangelogListsAResolvedIssueUnderTheVersionItProduced(tracker):
-    number = OpenIssueNumber(tracker)
+    #its OWN issue, of a type the changelog carries: the newest open issue of the real store may
+    #be an IDEA, and the next test is the one that says an IDEA is left out
+    number = tracker.RaiseIssue('an issue that reaches the changelog', 'what it is about',
+                                issueType='IMPROVEMENT', author='Claude-JG')
     tracker.ResolveIssue(number, notes='what was done', author='Claude-JG')
     issue = tracker.GetIssue(number)
 

@@ -1,0 +1,13 @@
+{
+  "number": 2609,
+  "title": "the light and shadow descriptions of visualizationSettings are misleading",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.4. Two things, both from the maintainer, 2026-09-23. First, every member of a light repeats \"of GL_LIGHT0\" (1,2,3): within a light that is noise and it should read \"of this light\", with the mapping of light0..light3 to GL_LIGHT0..GL_LIGHT3 said once, at the enable flag of the light. Second, the remarks are out of date: they say light0 is the one used for shadows, which was a performance decision that no longer holds - every light can cast shadows now. And the sentence \"approximates directional lights by enlarging the direction to 200 times maxSceneSize\" belongs to the shadow settings, not to a light, and it should not name a factor that has already changed once and will change again.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "file": "definitions/structureDefsVisualizationSettings.py"
+}

@@ -39,15 +39,15 @@ carries the same table from its side, so a citation from either direction resolv
 |---|---|---|
 | **RG1** Release and publication | getting a release out and onto GitHub and PyPI | 4 |
 | **RG2** Testing and verification | what is not tested, and who tests it before a release | 3 |
-| **RG3** Docs | what the documentation still gets wrong or does not say | 10 |
+| **RG3** Docs | what the documentation still gets wrong or does not say | 11 |
 | **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 4 |
 | **RG5** Performance | measurement first, then the code that is actually hot | 2 |
-| **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 3 |
+| **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 4 |
 | **RG7** Python user items | items whose behaviour is written in Python | - |
 | **RG8** Compiled C++ user items | plugins: user items compiled against the shipped headers | 9 |
 | **RG9** Structural core improvements | the architecture of the core, where a change touches everything | - |
 | **RG10** Tooling and process | exudev, the issue tracker, the generators, CI | 2 |
-| **RG11** Misc | what has no group yet; three of a kind become a group |  - |
+| **RG11** Misc | what has no group yet; three of a kind become a group | 1 |
 | **RG12** Python interface | the shape of the Python API itself: deprecation, settings, what a script sees | 3 |
 
 ## RG1 — Release and publication
@@ -288,6 +288,17 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       resolved bugs" section becomes "Resolved issues and resolved bugs before version x.y.z" 
       or similar and contains only the earlier changes so there is no duplication - but still
       containing all issues for searching.
+
+<a id="rg3-11"></a>
+**RG3.11** **DONE 2026-09-23** (#2611) — [log](exudynRevisionLog2026b.md#rg3-11) — *(group RG3; maintainer 2026-09-23)* **"The C++ core" points at the repository
+    instead of at the documentation** (#2611). The section in *Advanced topics* stays — it is
+    short and it answers a question users ask — but it was written when the developer
+    documentation lived only in the repository, and it still sends the reader to **GitHub URLs**
+    of `docs/dev/ARCHITECTURE.md` and `docs/dev/CODING_STYLE.md`. Those are published pages of
+    this documentation since RG3.2. It links to the **developer documentation** as a whole and to
+    those two pages within it, and it says what the links cannot: that for a deeper understanding
+    of the core, and for any low-level change, there is no way around visiting and studying the
+    **GitHub project** itself.
 
 ## RG4 — Implementation problems and bugs
 
@@ -564,6 +575,63 @@ This group is that revision and what has to happen before it can start.
     as a side effect, so which folders are open outlives the dialog and every SystemContainer in
     the process shares it.
 
+<a id="rg6-2-8"></a>
+**RG6.2.8** **The bottom row reads like code, and says each thing once** (#2605)
+    *(maintainer, 2026-09-23, after trying RG6.2.4)*. Four small things, all in the row RG6.2.4
+    introduced:
+
+    - the pastable line uses the dialog font on the window background; it wants a **smaller,
+      fixed font — the one of the cells — and a box or a background of its own**, so that it
+      reads as code and is seen as copyable;
+    - the label under it **repeats the description** that the pop-up of RG6.2.3 already shows in
+      full; it goes;
+    - **`copy` does not say what it copies**: it becomes `copy line` (or `copy last edit`), which
+      is only worth doing because RG6.2.9 puts a second copy button beside it;
+    - the type and size stay — they are what the pop-up does *not* say.
+
+<a id="rg6-2-9"></a>
+**RG6.2.9** **A changed value is visible, and every change can be copied at once** (#2606)
+    *(maintainer, 2026-09-23)*. Nothing in the tree marks the rows a user has edited, so after
+    ten edits in four folders the ten cannot be found again. A changed row is shown **boldface or
+    in a colour** (a blue dark enough to read on the row background; a tkinter `Treeview` tag
+    carries both), and a **second button** at the bottom copies **all** changes, as the lines that
+    set them. That button is RG12.3 for one dialog session, and the two share one question that
+    this step answers: *changed against what* — against the values the dialog opened with, or
+    against the defaults. The first is what a user means while editing; the second is what makes
+    a script reproduce the settings.
+
+<a id="rg6-2-10"></a>
+**RG6.2.10** **Find a setting** (#2607) *(maintainer, 2026-09-23)*. Several hundred values in a
+    tree of folders, and the only route to one is knowing its folder. **CTRL-F and a find
+    button**, matching **names first and descriptions second**, then jumping to the row: expand
+    its folders, select it, scroll it into view. The form is decided in this step; the
+    recommendation is **an entry plus a drop-down of the hits**, because it is the one shape that
+    serves both ways of searching: as the user types, the drop-down lists the matches as their
+    dotted paths (`general.textSize`), names before descriptions, description hits with a snippet
+    of what matched; **Return** jumps to the first, **Return again** or **F3** to the next, and
+    picking one from the drop-down jumps straight to it. Rejected alternatives, recorded so they
+    are not re-proposed: *filtering the tree* to the hits (loses where a setting sits, and the
+    tree is the map), and a *separate result window* (a third place to look, in a dialog that
+    already has three).
+
+<a id="rg6-2-11"></a>
+**RG6.2.11** **The catalogue of optional features** (#2608) *(maintainer, 2026-09-23)*. A list to
+    pick from or to close, not a commitment, collected while RG6.2 is fresh:
+
+    - **a reset**: per row back to the default, and a reset of everything; the defaults are one
+      call away (`exu.VisualizationSettings()`) and the dialog already knows the paths;
+    - **load and save**: the whole structure to a `.json` (or the code of RG6.2.9) and back, so
+      that a set of settings survives the session;
+    - **remember the window**: size, position and which folders were open — today the open
+      folders are module-level state that outlives the dialog (RG6.2.7) and the geometry is not
+      kept at all;
+    - **the same dialog for `simulationSettings`**: `GetDictionaryWithTypeInfo()` is bound for it
+      too, and after RG6.2.4 the code line already names the right structure; what is missing is
+      a way to open it;
+    - **apply while it is open** for the settings that can take it, instead of on close;
+    - **units in the description**, where a value has one;
+    - **a "changed only" view**, once RG6.2.9 knows what changed.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a
@@ -572,6 +640,25 @@ This group is that revision and what has to happen before it can start.
     rendering, and the raytracer path and the GLFW path differ in what they update. RG2.3 needs
     a documented headless call that updates the graphics data and returns counts, and an image
     call that takes a resolution.
+
+<a id="rg6-4"></a>
+**RG6.4** *(group RG6; maintainer 2026-09-23)* **The light and shadow descriptions say things
+    that are no longer true** (#2609). The descriptions in
+    `definitions/structureDefsVisualizationSettings.py` are what a user reads in the dialog, in
+    the reference manual and in an editor tooltip, so they are the documentation of the lights.
+    Three faults, all from the maintainer:
+
+    - every member of a light repeats **"of GL_LIGHT0"** (`1`, `2`, `3`). Inside `light0` that is
+      noise: it reads **"of this light"**, and the mapping — `light0` to `light3` are OpenGL's
+      `GL_LIGHT0` to `GL_LIGHT3— ` is said **once**, at the `enable` flag of the light.
+    - the remarks single out **light0 as the light that casts shadows**. That was a performance
+      decision and it no longer holds: **every light can cast shadows**. Every such sentence is
+      checked and adjusted.
+    - *"approximates directional lights by enlarging the direction to 200 times maxSceneSize"*
+      describes **shadows**, not a light, so it belongs to the shadow settings — and it must not
+      name the factor, which has changed once already and will change again. Generated
+      documentation that quotes a number no generator produced is wrong the day the number
+      changes.
 
 ## RG7 — Python user items
 
@@ -711,7 +798,30 @@ file, so an editor cannot complete them).
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
 
-*No steps yet.*
+<a id="rg11-1"></a>
+**RG11.1** *(group RG11; maintainer 2026-09-23)* **The results monitor runs beside the
+    simulation, or it is redundant** (#2610). `exudyn.misc.resultsMonitor` was a **command line**
+    tool: a second terminal watched a solution file grow while the simulation wrote it, which is
+    the whole point of a monitor. The documented in-script form
+
+    ```python
+    from exudyn.misc.resultsMonitor import MonitorResults
+    MonitorResults('solution/genetic.txt', logY=True, updatePeriod=0.5)
+    ```
+
+    only earns its place if it does **not** block: if it returns when the window closes, it plots
+    a finished file and `PlotSensor` already does that — a second way to do one thing, against
+    rule 10. This step evaluates how it could run **beside** the simulation and recommends one
+    way; the candidates and what each costs:
+
+    - a **second thread** — cheapest to write, and matplotlib is not thread safe: the plot has
+      to live on the main thread or in a backend that tolerates it;
+    - a **second process** — no shared state, works with any backend, needs the file as the
+      protocol (which it already is) and a way to end it with the script;
+    - the **renderer's own loop** — there is already a GUI thread and a periodic callback, but
+      it ties the monitor to a running renderer;
+    - **drop the in-script call** and document the command line form, which is the honest outcome
+      if none of the above is worth its complexity.
 
 ## RG12 — Python interface
 

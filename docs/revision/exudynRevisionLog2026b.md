@@ -585,3 +585,30 @@ checks pass — and nothing here can be seen without a window, which this sessio
 (rule 11). Whether a click now opens the editor too eagerly, whether the combo box reads well in
 a cell, whether the copy button is where a hand expects it: that is the maintainer's to say, and
 it is why this went over as soon as it built.
+
+<a id="rg3-11"></a>
+### RG3.11 — the C++ core section points into the documentation (2026-09-23, #2611)
+
+Small and worth doing at once. *"The C++ core"* in *Advanced topics* is the section RG3.1 left
+behind when the old C++ chapter was split into `docs/dev/ARCHITECTURE.md` and section 9 of
+`docs/dev/CODING_STYLE.md`: three sentences and two pointers. The pointers were **GitHub URLs**,
+written when those files were visible only to someone with a clone — and RG3.2 published the
+developer documentation, so they were sending a reader out of the documentation to a raw file of
+a page they were already inside of. They are relative links now, `../dev/README.md`,
+`../dev/ARCHITECTURE.md`, `../dev/CODING_STYLE.md`, which the strict build resolves and which
+work in the PDF as well.
+
+The one sentence that was added is the maintainer's, and it is the opposite of a link: those
+pages say what the C++ side is and how to work on it, and **that is as far as prose goes** —
+for a deeper understanding of the core and for any low-level change it is inevitable to visit and
+study the GitHub project itself, the sources, the generators that write parts of them and the
+history that says why something is the way it is. A documentation that does not say where it
+stops sends people looking for a page that was never written.
+
+**One test came with it**, because raising the seven issues of this round broke it:
+`testTheChangelogListsAResolvedIssueUnderTheVersionItProduced` resolved *the newest open issue*
+of the store and expected to find it in the changelog. The newest open issue was #2610, an
+**IDEA** — and the very next test is the one asserting that an IDEA never reaches the changelog.
+The test now raises its own issue of a type the changelog carries. Nothing was wrong with the
+tracker; a test that reads whatever the store happens to hold has no business asserting on the
+type of it.

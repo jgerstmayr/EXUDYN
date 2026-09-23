@@ -213,18 +213,21 @@ For the full range of possibilities, see [github.com/JuliaPy/PyCall.jl](https://
 The computation happens in C++: `mbs.AddObject(...)` creates an object on the C++ side from a
 validated dictionary, `exu.SolveDynamic(...)` runs a C++ solver, and Python holds the model and
 reads the results. Nothing of that needs to be known to use Exudyn - but two questions come up
-often enough to say where they are answered, both in the **developer documentation** in the
-repository:
+often enough to say where they are answered, both in the
+[developer documentation](../dev/README.md), which is part of this documentation:
 
 - *How is the C++ side organised, and where do I start reading?* -
-  [`docs/dev/ARCHITECTURE.md`](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/dev/ARCHITECTURE.md):
-  the item abstraction, the split into computational, main and visualization classes, what each
-  directory under `src/` is, and what happens when `mbs.AddObject(...)` is called.
-- *I want to add my own item in C++.* -
-  [`docs/dev/CODING_STYLE.md`](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/dev/CODING_STYLE.md),
-  section 9: the two worked cases (a body and a connector), and the advice that comes before
-  them - write it in Python first, with user functions, and go to C++ when that works and is too
-  slow.
+  [C++ architecture](../dev/ARCHITECTURE.md): the item abstraction, the split into computational,
+  main and visualization classes, what each directory under `src/` is, and what happens when
+  `mbs.AddObject(...)` is called.
+- *I want to add my own item in C++.* - [coding style](../dev/CODING_STYLE.md), section 9: the two
+  worked cases (a body and a connector), and the advice that comes before them - write it in
+  Python first, with user functions, and go to C++ when that works and is too slow.
+
+Those pages say what the C++ side is and how to work on it, and that is as far as prose goes: for
+a deeper understanding of the core, and for any low-level change, it is inevitable to visit and
+study the [GitHub project](https://github.com/jgerstmayr/EXUDYN) itself - the sources, the
+generators that write parts of them, and the history that says why something is the way it is.
 
 Building Exudyn from source is {ref}`sec-install-installinstructions`.
 

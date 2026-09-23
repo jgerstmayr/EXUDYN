@@ -1,0 +1,17 @@
+{
+  "number": 2611,
+  "title": "\"The C++ core\" points at the repository instead of at the developer documentation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG3.11. The section stays - the maintainer wants it - but it sends the reader to GitHub URLs of files that are now published pages of this documentation (revision2026b step RG3.2). It should link to the developer documentation as a whole and to its architecture and coding style pages, and it should say that for a deeper understanding of the core, and for low-level changes, there is no way around the GitHub project itself. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 12:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/introductionAdvanced.md",
+  "releaseNotes": "The \"C++ core\" section of Advanced topics now links to the developer documentation as published pages - the developer documentation itself, the C++ architecture and the coding style - instead of to raw files on GitHub, and it says that a deeper understanding of the core and any low-level change means visiting the GitHub project itself.",
+  "resolvedInVersion": "1.12.17"
+}

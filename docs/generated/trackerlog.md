@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.16.dev1
+- Exudyn version = 1.12.17.dev1
 - last change = 2026-09-23
-- Number of issues = 2605
-- Number of resolved issues = 2330 (16 in current version)
+- Number of issues = 2612
+- Number of resolved issues = 2331 (17 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.17: resolved Issue 2611: "The C++ core" points at the repository instead of at the developer documentation (docu)
+  - issue author: Claude-JG
+  - description: revision2026b step RG3.11. The section stays - the maintainer wants it - but it sends the reader to GitHub URLs of files that are now published pages of this documentation (revision2026b step RG3.2). It should link to the developer documentation as a whole and to its architecture and coding style pages, and it should say that for a deeper understanding of the core, and for low-level changes, there is no way around the GitHub project itself. Maintainer, 2026-09-23.
+  - **notes:** The "C++ core" section of Advanced topics now links to the developer documentation as published pages - the developer documentation itself, the C++ architecture and the coding style - instead of to raw files on GitHub, and it says that a deeper understanding of the core and any low-level change means visiting the GitHub project itself.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 12:36**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.16: resolved Issue 2604: the settings dialog edits a value far away from the row it belongs to (improvement)
   - issue author: Claude-JG
   - description: In TkinterEditDictionaryWithTypeInfo the value is not edited in the table: an Entry and a Combobox sit at the bottom of the window, occupy the same grid cell and swap places by z-order (lower()/lift()), so a user selects a row at the top and types at the bottom, and which of the two widgets is in front depends on the type of the selected item. Wanted (maintainer, 2026-09-22, refined 2026-09-23): edit IN THE CELL, and let the bottom row say what the selected item is instead - as the LINE THAT SETS IT, 'SC.visualizationSettings.general.textSize = 16.0', with a way to copy it, so that a session in the dialog can be pasted into a script. That is the same thing RG12.3 wants to produce for the whole settings structure. revision2026b step RG6.2.4.
@@ -7899,6 +7905,36 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- <span class="textorange">open issue 2610:</span> the results monitor must run beside the simulation, or it is redundant
+  - issue author: Claude-JG
+  - description: revision2026b step RG11.1. The monitor was a command line tool: a second terminal watched a solution file while the simulation wrote it. It now also has MonitorResults(...), documented for use inside a script. If that call blocks until the window is closed, it does nothing that PlotSensor does not already do, and it should not exist as a second way to plot a file. What would make it worth having is that it runs BESIDE the simulation - a thread, a process, or the renderer event loop. This step evaluates those options, says what each costs (matplotlib is not thread safe, a process needs no shared state but needs a protocol), and recommends one. Maintainer, 2026-09-23.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
+- <span class="textorange">open issue 2609:</span> the light and shadow descriptions of visualizationSettings are misleading
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.4. Two things, both from the maintainer, 2026-09-23. First, every member of a light repeats "of GL\_LIGHT0" (1,2,3): within a light that is noise and it should read "of this light", with the mapping of light0..light3 to GL\_LIGHT0..GL\_LIGHT3 said once, at the enable flag of the light. Second, the remarks are out of date: they say light0 is the one used for shadows, which was a performance decision that no longer holds - every light can cast shadows now. And the sentence "approximates directional lights by enlarging the direction to 200 times maxSceneSize" belongs to the shadow settings, not to a light, and it should not name a factor that has already changed once and will change again.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
+- <span class="textblue">open issue 2608:</span> settings dialog: the catalogue of optional features
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.11. A list, not a commitment: what else the settings dialog could do, collected while RG6.2 is fresh, for the maintainer to pick from or to close. Written in the plan step. Maintainer, 2026-09-23.
+  - effort: LOW (within 2 hours)
+  - date raised: 2026-09-23
+- <span class="textorange">open issue 2607:</span> settings dialog: find a setting by name, with CTRL-F
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.10. The visualization settings are several hundred values in a tree of folders, and the only way to a setting is to know which folder it is in. A find is needed: CTRL-F and a find button, searching the NAMES first and the descriptions second, and jumping to the row that is chosen - which means expanding its folders, selecting it and scrolling it into view. The form is to be decided in this step; a recommendation is in the plan. Maintainer, 2026-09-23.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
+- <span class="textorange">open issue 2606:</span> settings dialog: a changed value should be visible, and all changes copyable at once
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.9. Nothing in the tree says which values differ from what the dialog started with, so a user who has edited ten settings cannot see the ten. A changed row is shown boldface or in a colour (a blue that is dark enough to read), and a second button at the bottom copies every change at once, as the lines that set them. That is RG12.3 for one dialog session, and the two share the question of what "changed" means: against the value the dialog opened with, or against the defaults. Maintainer, 2026-09-23.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
+- <span class="textorange">open issue 2605:</span> settings dialog: the pastable line needs to look like code, and it is said twice
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.8. The line that sets the selected item (RG6.2.4, \#2604) works, but it does not read as code: it uses the dialog font at dialog size and sits on the window background. It should be smaller, in the same fixed font the cells use, and set apart by a box or a background of its own. The label under it repeats the description that the pop-up already shows in full, and that repetition goes. The button says "copy", which does not say what is copied; it becomes "copy line" (or "copy last edit"), because a second button for all changes joins it in RG6.2.9. Maintainer, 2026-09-23.
+  - effort: LOW (within 2 hours)
+  - date raised: 2026-09-23
 - <span class="boldblue">open issue 2599:</span> CHANGELOG.md and the issue tracker page hold the same list twice
   - issue author: Claude-JG
   - description: Maintainer, 2026-09-23. Both are written by issueTracker.py from the same store and both list every resolved issue per release, newest first: CHANGELOG.md is 2384 lines, the tracker page 8987, and about 2370 lines of the first are a shorter rendering of what the second says in full - the tracker page adds the author, the description, both dates, and it also carries the open issues and the known bugs, which the changelog does not. In the PDF that is roughly 35 duplicated pages. It also shows why releases 1.10 and older are one line per issue in the changelog while 1.11 and newer carry a paragraph: the old issues have a title and no release note, so there is nothing else to print. What has to be decided is what each of the two is FOR. Options, to be weighed by the maintainer: (a) CHANGELOG.md becomes the CURRENT release only - which is what a reader of the GitHub page or of PyPI wants to know - and the full history lives in the tracker page, which the documentation publishes; (b) CHANGELOG.md keeps every release but only as an index, one line per issue, and the release notes are printed only in the tracker page; (c) CHANGELOG.md is a repository artifact like README.md and leaves the documentation altogether, so that the published documentation has exactly one issue history; (d) leave both as they are. revision2026b step RG3.10.

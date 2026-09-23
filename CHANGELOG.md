@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 17 | 1.12.16 |
+| 1.12 | Metheney | 18 | 1.12.17 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.17** `DOCU` "The C++ core" points at the repository instead of at the developer documentation (#2611) - raised by Claude-JG
+  - The "C++ core" section of Advanced topics now links to the developer documentation as published pages - the developer documentation itself, the C++ architecture and the coding style - instead of to raw files on GitHub, and it says that a deeper understanding of the core and any low-level change means visiting the GitHub project itself.
 - **1.12.16** `IMPROVEMENT` the settings dialog edits a value far away from the row it belongs to (#2604) - raised by Claude-JG
   - The value is edited in the cell. An Entry - or a Combobox for bool and for every enum - is placed over the value cell of the selected row, commits on Return or when the focus leaves, and is taken away on Escape; the bool double click still toggles. The two widgets that used to sit at the bottom of the window and swap by z-order are gone, and with them four handlers. The bottom row is the LINE THAT SETS THE SELECTED ITEM, in a read-only field with a copy button beside it: 'SC.visualizationSettings.general.textSize = 16.0'. The value is written as a Python literal - a String and a FileName are quoted, an enum is prefixed with exu. - and the prefix follows the structure being edited, so the same dialog on simulationSettings writes 'simulationSettings....'. Under it stands the type, the size where it is not scalar, and the description. The validation is the one of \#2597: CheckType with the combo lists, then ConvertString2Value for the range, and the error box names the path and the expected type. ItemPath() builds the dotted path once for both the code line and the error message, where the loop that built it stood inside the click handler. revision2026b step RG6.2.4.
 - **1.12.15** `IMPROVEMENT` the dialog font size cannot be changed off macOS (#2602) - raised by Claude-JG
