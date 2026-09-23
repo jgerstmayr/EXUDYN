@@ -106,7 +106,8 @@ def Meta():
             'statuses': issueTracker.issueStatuses,
             'fields': issueStore.issueFields,
             'total': issueTracker.NumberOfIssues(),
-            'closed': issueStore.ClosedCount()}
+            'closed': issueStore.ClosedCount(),
+            'open': issueStore.OpenCount()}
 
 
 def ExistingIssue(payload):
@@ -444,8 +445,13 @@ async function LoadMeta() {
     if (!data) return;
     const first = meta === null;
     meta = data;
-    document.getElementById('versionLabel').textContent =
-        'version ' + meta.version + ' - ' + meta.closed + ' closed of ' + meta.total;
+    //the open count is what a maintainer looks for, so it is the bold part (maintainer,
+    //2026-09-23); textContent would print the markup, so the label is built from nodes
+    const label = document.getElementById('versionLabel');
+    label.textContent = 'version ' + meta.version + ' - ' + meta.closed + ' closed of '
+                        + meta.total + ' ';
+    const openPart = El('b', {text: '(' + meta.open + ' open)'});
+    label.appendChild(openPart);
     if (first) {
         FillSelect('type', meta.types, 'any type');
         FillSelect('effort', meta.efforts, 'any effort');

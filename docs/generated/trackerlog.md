@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.43.dev1
 - last change = 2026-09-23
-- Number of issues = 2632
+- Number of issues = 2633
 - Number of resolved issues = 2357 (43 in current version)
 
 ## Resolved issues and resolved bugs
@@ -8054,6 +8054,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- <span class="textorange">open issue 2632:</span> the TestModels import the test suite to find out whether they are being tested
+  - issue author: Claude-JG
+  - description: revision2026b step RG10.6, maintainer 2026-09-23. 125 of the 129 files in python/TestModels/ carry the same nine-line try/except block that imports exudynTestGlobals from modelUnitTests, and 90 of them also hard-code a reference solution that runTestSuite already holds. The step replaces both with exudyn.sys, which did not exist when the tests were written. The details, the recommendation and the options are in the plan step.
+  - effort: HIGH (within 40 hours)
+  - date raised: 2026-09-23
 - <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.

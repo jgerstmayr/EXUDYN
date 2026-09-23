@@ -1097,6 +1097,70 @@ file, so an editor cannot complete them).
     C/C++ extension about them. `.vscode/` is git-ignored, so the fix is a committed template
     that `tools/setupLocalWorkspace.py` copies, as for `exudyn.sln` and `python/pytest.py`.
 
+<a id="rg10-6"></a>
+**RG10.6** *(group RG10; maintainer 2026-09-23)* **The TestModels import the test suite to find
+    out whether they are being tested** (#2632). Every model carries the same nine lines:
+
+    ```python
+    useGraphics = True #without test
+    try: #only if called from test suite
+        from modelUnitTests import exudynTestGlobals
+        useGraphics = exudynTestGlobals.useGraphics
+    except:
+        class ExudynTestGlobals:
+            pass
+        exudynTestGlobals = ExudynTestGlobals()
+    ```
+
+    It exists because `exudyn.sys` did not exist when the first tests were written. It does now,
+    it is reserved for the system, and it makes the whole block **one line**. **Measured
+    2026-09-23**: **125** of the **129** files in `python/TestModels/` carry the block and **90**
+    set `exudynTestGlobals.testError`. The models are published as documentation
+    (`docs/generated/testModels/`), so the block is also on 125 documentation pages.
+
+    **The recommendation, in three parts.**
+
+    1. **One flag, named for what it is.** `testIsActive = exu.sys.get('testIsActive', False)` —
+       one line, no import, no `try`, no bare `except`. `useGraphics` goes: the maintainer is
+       right that two flags would diverge, and *"is the test suite running this"* is the fact a
+       model actually has; *"draw something"* is a consequence of it.
+    2. **Most of the graphics branches can go entirely, and that is a measurement, not an
+       opinion.** `testRunnerTools.py:724` calls `exu.special.userInterface.SuppressAll(True)`,
+       and `MainRenderer::Start`, `Stop`, `IsActive` and `DoIdleTasks` are **already no-ops**
+       under it (`src/Main/MainSystemContainer.cpp:369,377,385,406` — `DoIdleTasks` returns
+       `true` instead of waiting for a human). So `if useGraphics:` around renderer calls guards
+       against something that cannot happen any more. `testIsActive` stays only where the model
+       must **genuinely differ**: the end time (`endTime = 1 + 0*useGraphics*4` becomes
+       `endTime = 1 if testIsActive else 5`), solver settings, `writeSolutionToFile`, and
+       matplotlib.
+    3. **One result, and no reference solution inside the model.**
+       `exu.sys['testResult'] = value` at the end. The line
+       `exudynTestGlobals.testError = value - (4.172189649307425)` goes: `runTestSuite.py:380`
+       already computes `testError = testResult - examplesTestRefSol[name]` from
+       `runTestSuiteRefSol.py`, so that number in the model is a **second copy of the reference**
+       — two places to update, one of which nothing checks.
+
+    **Options, to be decided when the step is taken.**
+
+    - **flat keys or a namespace.** `exu.sys['testIsActive']` and `exu.sys['testResult']`, against
+      `exu.sys['testGlobals'] = {...}` with `exu.sys.get('testGlobals', {}).get('isActive', False)`.
+      **Flat is recommended**: it is what makes the read one honest line, and `exudyn.sys` is
+      already a flat namespace of system keys (`currentRendererSystemContainer`, `renderState`,
+      `dynamicSolver`).
+    - **`modelUnitTests.ExudynTestStructure` stays or is bridged.** The mini examples and the unit
+      tests use it too; the cheapest path is that the runner writes **both** for one release, so
+      that a model that has not been converted still works.
+    - **one sweep or batches.** Recommended: **one model first** (`bricardMechanism.py`), run the
+      suite, then a scripted sweep in batches with the full 116 + 23 after each — the suite is
+      the test for this step, and it has to produce **identical numbers**, not merely pass.
+    - **a helper in `exudyn.misc.testing`** was considered and is **not** recommended: it would be
+      a function whose whole body is `exu.sys.get(...)`, and a model that imports it is back to
+      importing something to find out how it is being run.
+
+    The value beyond tidiness: 125 models stop depending on a module in `python/testing/`, which
+    is what makes them runnable as examples; the `except:` that swallowed every error goes; and
+    the reference solutions live in exactly one file.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

@@ -223,6 +223,13 @@ def NextNumber():
 
 
 #%%******************************************************************************************************
+def OpenCount():
+    """how many issues are waiting; the open directory holds one file per issue"""
+    if not os.path.isdir(OpenDirectory()):
+        return 0
+    return len([name for name in os.listdir(OpenDirectory()) if name.endswith('.json')])
+
+
 def ClosedCount():
     """THE number the micro version is derived from. The archives state their own count, so a
     missing archive file is noticed by CheckStore() instead of silently lowering the version."""
