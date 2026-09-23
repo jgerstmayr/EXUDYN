@@ -1045,3 +1045,45 @@ A list is only useful if someone goes through it, and the maintainer did, the sa
   always, restore the position only when the rectangle still lies inside the virtual desktop —
   is written down, so that the step, if it is ever taken, starts from it.
 
+<a id="rg6-2-19"></a>
+### RG6.2.19 — the dialog closed the render window (2026-09-23, #2625)
+
+The worst defect of this group, and it is mine. *"Opening the visualizationsettings dialog closes
+(crashes?) the render window."*
+
+`MainSystemContainer()— ` the thing `exudyn.SystemContainer()` creates — calls
+**`AttachToRenderEngineInternal()` in its constructor**, and its destructor calls `Reset()`, which
+begins with **`visualizationSystems.DetachFromRenderEngine(...)`**. A `SystemContainer` that exists
+for a moment therefore **takes the running render window away from the container that owns it and
+hands it back to nothing**. RG6.2.12 created exactly such a container every time the settings
+dialog opened, to read the defaults that a container initialises.
+
+That also corrects RG6.2.17 (#2623) of the same day, which treated the symptom: restoring
+`exudyn.sys['currentRendererSystemContainer']` put the Python entry back and could not put the
+**render engine** back, because the damage is in C++ and happens on construction and destruction.
+The restore is gone with the container that needed it; what stays from #2623 is
+`GetRendererSystemContainer` catching `RuntimeError`, which is right on its own.
+
+**The dialog creates no container**, and the reference is `exu.VisualizationSettings()` again —
+with the 59 differences that made the maintainer report #2612 in the first place. The difference
+now is that the window **says so**: *"the lights and the raytracer materials are initialised by the
+SystemContainer, so they appear here even when nothing touched them"*. An honest note is better
+than a number that is wrong, and RG6.2.20 (#2626) removes the need for both by moving those
+values into the definitions, where `exu.VisualizationSettings()` can see them.
+
+**Two tests hold the line.** One greps the module for `exudyn.SystemContainer()` and fails if it
+ever comes back — a crude test, and the only kind that can catch this without a render window.
+The other requires every difference between the plain defaults and a fresh container to be one of
+the paths the module lists, so the note in the dialog cannot quietly become untrue.
+
+**And the dialog steps aside.** The window with the changes kept coming up *behind* the settings
+dialog, which keeps itself `-topmost` because it blocks the render window. The maintainer's own
+suggestion was to test without that flag, and that is what happens now: the flag is taken off the
+dialog and off its root while the window is open, and put back when it closes.
+
+**What this session should have done differently:** the fix of #2612 was verified against the
+settings it produced, and never against *the process it runs in*. A `SystemContainer` looked like
+a value, and it is a handle on the render engine. Nothing in Python says so — the constructor
+that attaches is fifteen lines of C++ in a header — but the question *"what does this object do
+to the session when it dies?"* is one to ask before creating one inside a running renderer.
+

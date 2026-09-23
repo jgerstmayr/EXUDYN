@@ -312,27 +312,37 @@ def testEveryDifferenceIsALineThatRuns(comboLists):
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #WHAT a difference is measured against (revision2026b step RG6.2.12, #2612)
 
-def testTheSettingsOfAFreshContainerDifferInNothing(comboLists):
-    """the defect this test exists for: the dialog called 59 untouched settings changed, because
-    it compared against exu.VisualizationSettings() while a SystemContainer initialises the four
-    lights and the ten raytracer materials when it is created. A user who changed nothing must
-    see nothing."""
+def testTheDialogNeverCreatesASystemContainer():
+    """the defect this test exists for (#2625): MainSystemContainer() ATTACHES to the running
+    render engine in its constructor and DETACHES in its destructor, so a temporary container -
+    which is what the dialog used to create to read the defaults - takes the render window away
+    from the container that owns it, and the window closes. The reference is the structure's own
+    constructor, and nothing here may allocate a container."""
+    import io                                                                  # noqa: PLC0415
+    with io.open(gui.__file__, encoding='utf-8') as file:
+        source = file.read()
+    assert 'exudyn.SystemContainer()' not in source, (
+        'the settings dialog must not create a SystemContainer: it attaches to and detaches from'
+        ' the render engine (#2625)')
+
+
+def testWhatASystemContainerInitialisesIsNamedInTheDialog(comboLists):
+    """exu.VisualizationSettings() is not what a user starts from - a SystemContainer overrides
+    the lights and fills the raytracer materials - and the dialog says so instead of pretending.
+    This test requires that the note stays true: every difference must be one of the paths the
+    module lists (revision2026b step RG6.2.19; RG6.2.20 is the real fix)."""
     container = exudyn.SystemContainer()
     leaves = gui.SettingsLeafList(container.visualizationSettings.GetDictionaryWithTypeInfo())
-    reference = gui.SettingsValueStrings(
+    plain = gui.SettingsValueStrings(
         gui.DefaultSettingsDictionary(container.visualizationSettings))
-    assert gui.SettingsCodeLines(leaves, reference, 'SC.visualizationSettings', comboLists) == []
 
-
-def testTheConstructorIsNotTheStateAUserStartsFrom(comboLists):
-    """why the function above exists at all; if this ever reports nothing, the initialisation
-    moved into the structure itself and DefaultSettingsDictionary can be simplified"""
-    container = exudyn.SystemContainer()
-    leaves = gui.SettingsLeafList(container.visualizationSettings.GetDictionaryWithTypeInfo())
-    plain = gui.SettingsValueStrings(exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
     differences = gui.SettingsCodeLines(leaves, plain, 'SC.visualizationSettings', comboLists)
-    assert len(differences) > 20
-    assert all('light' in path or 'material' in path for (path, _) in differences), differences
+    assert differences != [], 'if this is empty, RG6.2.20 is done and the note can go'
+    unexpected = [path for (path, _) in differences
+                  if not any(path.startswith(known)
+                             for known in gui.containerInitialisedSettings)]
+    assert unexpected == [], ('a SystemContainer now also initialises: ' + ', '.join(unexpected)
+                              + ' - containerInitialisedSettings must name it')
 
 
 def testReadingTheDefaultsLeavesTheRendererItsContainer():

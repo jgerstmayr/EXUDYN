@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 33 | 1.12.32 |
+| 1.12 | Metheney | 34 | 1.12.34 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.34** `BUG` opening the settings dialog closes the render window (#2625) - raised by Claude-JG
+  - The settings dialog creates no SystemContainer any more: MainSystemContainer() attaches to the running render engine in its constructor and detaches in its destructor, so the temporary container that \#2612 created to read the defaults took the render window away from the container that owns it - opening the dialog closed the window. The reference is exu.VisualizationSettings() again, and the window listing the differences says which settings a SystemContainer initialises instead of reporting them as changed; \#2626 removes the need for that note. The dialog also gives up its -topmost while that window is open, so it no longer comes up behind it.
 - **1.12.32** `BUG` opening the settings dialog re-points exudyn.sys at a throw-away SystemContainer (#2623) - raised by Claude-JG
   - DefaultSettingsDictionary saves and restores exudyn.sys\["currentRendererSystemContainer"\] around the SystemContainer it creates to read the defaults: constructing one replaces that entry, so since \#2612 the settings dialog handed the renderer a throw-away container - the redraw signal went to it, the window settings were read from it, and once it was collected, touching it was an access violation, which is what made the two change windows do nothing. GetRendererSystemContainer also catches RuntimeError now.
 - **1.12.31** `BUG` the window with the changes is invisible, and the buttons sit under the scroll bar (#2621) - raised by Claude-JG

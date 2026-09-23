@@ -740,6 +740,32 @@ This group is that revision and what has to happen before it can start.
     the renderer should offer a key for it while a solver is running, where changing a solver
     setting mid-step is not the harmless thing that changing a colour is.
 
+<a id="rg6-2-19"></a>
+**RG6.2.19** **DONE 2026-09-23** (#2625) — [log](exudynRevisionLog2026b.md#rg6-2-19) —
+    **Opening the settings dialog closed the render window** *(maintainer, 2026-09-23)*.
+    `MainSystemContainer()` calls `AttachToRenderEngineInternal()` in its **constructor** and
+    `Reset()— ` which calls `DetachFromRenderEngine— ` in its **destructor**. The temporary
+    container that RG6.2.12 created to read the defaults therefore took the render window away
+    from the container that owns it and handed it back to nothing. The dialog creates no
+    container any more; the reference is the structure's own constructor again, and the window
+    that lists the differences **says** which settings a `SystemContainer` initialises, instead
+    of pretending they were changed. The dialog also gives up its `-topmost` while that window is
+    open, which is the maintainer's own suggestion for the window that kept coming up behind it.
+
+<a id="rg6-2-20"></a>
+**RG6.2.20** *(group RG6; from RG6.2.19, 2026-09-23)* **The defaults of the lights and the
+    raytracer materials are hidden in C++ constructors** (#2626). `exu.VisualizationSettings()`
+    is not the state a user starts from: `VisualizationSystemContainer()` overrides nine light
+    settings in its constructor (`light1`-`light3` diffuse, specular, enable and
+    `light1.position`) and `MainGraphicsMaterialList::Reset()` fills the ten raytracer materials
+    — about 59 values. That is the only reason the settings dialog cannot say what really
+    differs from the defaults, and why it now carries a note instead. The values belong in
+    `definitions/structureDefsVisualizationSettings.py` as the `defaultValue` of those members, so
+    that the **generated** structure carries them and the constructor is the truth; the C++ lines
+    then go. Nothing changes for a user: the container sets the same values today. The test of
+    RG6.2.19 says when this is done — it requires the difference to be **non-empty** and names
+    the paths, so it fails the day the last one moves.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a

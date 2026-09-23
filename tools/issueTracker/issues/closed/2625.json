@@ -1,0 +1,17 @@
+{
+  "number": 2625,
+  "title": "opening the settings dialog closes the render window",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.19. Reported by the maintainer 2026-09-23 and traced in the C++: MainSystemContainer() calls AttachToRenderEngineInternal() in its CONSTRUCTOR, and its destructor calls Reset(), which calls visualizationSystems.DetachFromRenderEngine(). So a temporary SystemContainer created while a renderer runs takes the render window away from the real container and gives it back to nothing - the window closes. DefaultSettingsDictionary (#2612) creates one to read the defaults every time the settings dialog opens. It must not: the reference goes back to exu.VisualizationSettings(), and the window that lists the differences says which settings a SystemContainer initialises and therefore always appear there.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 18:17",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The settings dialog creates no SystemContainer any more: MainSystemContainer() attaches to the running render engine in its constructor and detaches in its destructor, so the temporary container that #2612 created to read the defaults took the render window away from the container that owns it - opening the dialog closed the window. The reference is exu.VisualizationSettings() again, and the window listing the differences says which settings a SystemContainer initialises instead of reporting them as changed; #2626 removes the need for that note. The dialog also gives up its -topmost while that window is open, so it no longer comes up behind it.",
+  "resolvedInVersion": "1.12.34"
+}

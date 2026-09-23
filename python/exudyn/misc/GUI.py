@@ -30,11 +30,12 @@ __all__ = [
     'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector',
     'GetExudynDisplayScaling', 'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict',
     'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral',
-    'SettingsCodeLines', 'DefaultSettingsDictionary', 'SettingsValueStrings', 'FindMatches',
-    'SettingsPrefix', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo',
-    'TkinterEditDictionary', 'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText',
-    'ShowHelpDialog', 'pythonCommandExamples', 'ShowPythonCommandDialog',
-    'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'SettingsCodeLines', 'containerInitialisedSettings', 'DefaultSettingsDictionary',
+    'SettingsValueStrings', 'FindMatches', 'SettingsPrefix', 'Tooltip',
+    'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
+    'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
+    'pythonCommandExamples', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
+    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -434,13 +435,25 @@ def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTy
     return lines
 
 
-def DefaultSettingsDictionary(settingsStructure):
-    """the settings as a USER finds them, which is what a difference is measured against
+#the settings a SystemContainer initialises beyond the defaults of the structure itself: the
+#four lights in VisualizationSystemContainer() and the ten raytracer materials in
+#MainGraphicsMaterialList::Reset(). They therefore ALWAYS appear as differing from the defaults,
+#and the window of RG6.2.9 says so rather than pretending otherwise. RG6.2.20 (#2626) moves those
+#values into the definitions, and then this note can go.
+containerInitialisedSettings = ['openGL.light1', 'openGL.light2', 'openGL.light3',
+                                'raytracer.material']
 
-    Not what the constructor of the structure produces: a SystemContainer initialises 59 of the
-    visualization settings when it is created - the four lights and the ten raytracer materials,
-    which are synced with the renderer - so a standalone exu.VisualizationSettings() reports all
-    of them as changed for a user who changed nothing (#2612, found in demo 2).
+
+def DefaultSettingsDictionary(settingsStructure):
+    """the defaults of a settings structure, as its own constructor produces them
+
+    NOT from a SystemContainer, although that is the state a user really starts from: creating one
+    ATTACHES IT TO THE RUNNING RENDER ENGINE (MainSystemContainer() calls
+    AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() ->
+    DetachFromRenderEngine), so a temporary container opened for a moment takes the render window
+    away from the container that owns it - the window closes (#2625). The settings a container
+    initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where
+    this function can see them.
 
     Args:
         settingsStructure: the structure being edited
@@ -448,21 +461,6 @@ def DefaultSettingsDictionary(settingsStructure):
     Returns:
         the dictionary with type info of a fresh structure of the same kind
     """
-    if type(settingsStructure).__name__ == 'VisualizationSettings':
-        #A SystemContainer opens no window, and it is the only way to the initialised state - but
-        #CREATING ONE REPLACES exudyn.sys['currentRendererSystemContainer'] (#2623). Everything
-        #that asks for the renderer's container would get this throw-away one afterwards: the
-        #dialog would read its window settings from it, the redraw signal would go to it instead
-        #of to the renderer, and once it is collected, reading a member of it is an access
-        #violation. So the entry is put back exactly as it was.
-        previous = None
-        if 'currentRendererSystemContainer' in exudyn.sys:
-            previous = exudyn.sys['currentRendererSystemContainer']
-        try:
-            return exudyn.SystemContainer().visualizationSettings.GetDictionaryWithTypeInfo()
-        finally:
-            if previous is not None:
-                exudyn.sys['currentRendererSystemContainer'] = previous
     return type(settingsStructure)().GetDictionaryWithTypeInfo()
 
 
@@ -1068,11 +1066,17 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                  SettingsPrefix(self.settingsStructure), self.dictionaryTypesT)
 
     def OnShowDiffToDefault(self):
+        description = 'every setting that differs from the Exudyn defaults'
+        if self.defaultValueStrings == {}:
+            description = 'the defaults are not available in this session'
+        elif SettingsPrefix(self.settingsStructure) == 'SC.visualizationSettings':
+            #honest rather than tidy (#2625): the lights and the materials are set by the
+            #SystemContainer, not by the settings structure, so they are always in this list
+            description += ('\nNOTE: the lights and the raytracer materials are initialised by'
+                            ' the SystemContainer, so they appear here even when nothing'
+                            ' touched them')
         self.ShowCodeLines('settings differing from the defaults',
-                           self.ChangedCodeLines(self.defaultValueStrings),
-                           'every setting that differs from the Exudyn defaults'
-                           if self.defaultValueStrings != {}
-                           else 'the defaults are not available in this session')
+                           self.ChangedCodeLines(self.defaultValueStrings), description)
 
     def OnShowSessionChanges(self):
         self.ShowCodeLines('settings changed in this dialog',
@@ -1158,6 +1162,28 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #what a window manager never puts behind.
         window.transient(self.parentFrame)
         ApplyDialogWindowSettings(window, alwaysTopmost=True)
+        #THE DIALOG STEPS ASIDE (maintainer, 2026-09-23): it keeps itself -topmost, which is why
+        #this window came up behind it whatever was done to the window. The flag is taken off the
+        #dialog - and off its root, where EditDictionaryWithTypeInfo sets it - while the window is
+        #open, and put back when it closes.
+        topmostWindows = []
+        for candidate in [self.parentFrame, self.parentFrame.master]:
+            try:
+                if candidate is not None and candidate.attributes('-topmost'):
+                    candidate.attributes('-topmost', False)
+                    topmostWindows.append(candidate)
+            except (tk.TclError, AttributeError):
+                pass
+
+        def RestoreTopmost():
+            for candidate in topmostWindows:
+                try:
+                    candidate.attributes('-topmost', True)
+                except tk.TclError:
+                    pass
+
+        window.bind('<Destroy>', lambda event: RestoreTopmost() if event.widget is window
+                    else None)
         self.parentFrame.update_idletasks()
         window.geometry('+' + str(self.parentFrame.winfo_rootx() + 60) + '+'
                         + str(self.parentFrame.winfo_rooty() + 60))

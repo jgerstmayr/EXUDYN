@@ -12,7 +12,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-gettkrootandnewwindow)=
 ## Function: GetTkRootAndNewWindow
 
-[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L79)
+[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L80)
 
 - **function description**: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
 
@@ -20,7 +20,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tkrootexists)=
 ## Function: TkRootExists
 
-[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L92)
+[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L93)
 
 - **function description**: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
 
@@ -28,7 +28,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogscaling)=
 ## Function: DialogScaling
 
-[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L155)
+[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L156)
 
 - **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602, revision2026b step RG6.2.3.1).
 - **input**: root: the tkinter root window, which knows the display scaling
@@ -38,7 +38,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-getcomboboxlistsdict)=
 ## Function: GetComboBoxListsDict
 
-[`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L190)
+[`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L191)
 
 - **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: until revision2026b step RG6.2.3 this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
 - **input**: exu: the exudyn module
@@ -48,7 +48,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-settingsleaflist)=
 ## Function: SettingsLeafList
 
-[`SettingsLeafList(dictionaryWithTypeInfo, path = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L370)
+[`SettingsLeafList(dictionaryWithTypeInfo, path = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L371)
 
 - **function description**: every editable value of a settings structure, in tree order
 - **input**: dictionaryWithTypeInfo: what GetDictionaryWithTypeInfo() returns, or a part of it path: the dotted path the given dictionary sits at, '' for the whole structure
@@ -58,7 +58,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-valueliteral)=
 ## Function: ValueLiteral
 
-[`ValueLiteral(valueStr, vType, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L395)
+[`ValueLiteral(valueStr, vType, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L396)
 
 - **function description**: the value as PYTHON writes it: a string is quoted, an enum carries its module
 - **input**: valueStr: the value as the dialog shows it vType: the type name of the setting dictionaryTypesT: the lists of the types that have a fixed set of values
@@ -68,7 +68,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-settingscodelines)=
 ## Function: SettingsCodeLines
 
-[`SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L413)
+[`SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L414)
 
 - **function description**: the settings that differ from a reference, as the lines that set them The comparison is on the string the dialog SHOWS, not on the value: that is what makes a float and an enum comparable at all, and it marks exactly what a user sees in the cell.
 - **input**: currentLeaves: SettingsLeafList(...), or the same six fields taken from the dialog referenceValueStrings: {path: valueString} of what is compared against - the defaults, or the values a dialog opened with; a path that is not in it counts as unchanged prefix: SettingsPrefix(...) of the structure dictionaryTypesT: the lists of the types that have a fixed set of values
@@ -78,9 +78,9 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-defaultsettingsdictionary)=
 ## Function: DefaultSettingsDictionary
 
-[`DefaultSettingsDictionary(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L437)
+[`DefaultSettingsDictionary(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L447)
 
-- **function description**: the settings as a USER finds them, which is what a difference is measured against Not what the constructor of the structure produces: a SystemContainer initialises 59 of the visualization settings when it is created - the four lights and the ten raytracer materials, which are synced with the renderer - so a standalone exu.VisualizationSettings() reports all of them as changed for a user who changed nothing (#2612, found in demo 2).
+- **function description**: the defaults of a settings structure, as its own constructor produces them NOT from a SystemContainer, although that is the state a user really starts from: creating one ATTACHES IT TO THE RUNNING RENDER ENGINE (MainSystemContainer() calls AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() -> DetachFromRenderEngine), so a temporary container opened for a moment takes the render window away from the container that owns it - the window closes (#2625). The settings a container initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where this function can see them.
 - **input**: settingsStructure: the structure being edited
 - **output**: the dictionary with type info of a fresh structure of the same kind
 
@@ -88,7 +88,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-settingsvaluestrings)=
 ## Function: SettingsValueStrings
 
-[`SettingsValueStrings(dictionaryWithTypeInfo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L469)
+[`SettingsValueStrings(dictionaryWithTypeInfo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L467)
 
 - **function description**: {path: valueString} of a settings structure - what SettingsCodeLines compares against
 
@@ -96,7 +96,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-findmatches)=
 ## Function: FindMatches
 
-[`FindMatches(leaves, searchText)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L475)
+[`FindMatches(leaves, searchText)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L473)
 
 - **function description**: the settings a search text finds: the NAMES first, the descriptions second Several hundred values in a tree of folders, and until revision2026b step RG6.2.10 the only way to a setting was knowing which folder it sits in.
 - **input**: leaves: SettingsLeafList(...) of the settings being searched searchText: what the user typed; case does not matter
@@ -106,7 +106,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-settingsprefix)=
 ## Function: SettingsPrefix
 
-[`SettingsPrefix(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L506)
+[`SettingsPrefix(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L504)
 
 - **function description**: the name a script uses for this settings structure, e.g. SC.visualizationSettings
 
@@ -114,7 +114,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1321)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1347)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**: settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings exu: exudyn module dictionaryName: name displayed in dialog
@@ -124,7 +124,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1654)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1680)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**: tkWindow: the window to configure alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
@@ -134,7 +134,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1684)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1710)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -143,7 +143,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1738)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1764)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -152,7 +152,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1823)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1849)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -161,7 +161,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1838)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1864)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -170,7 +170,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1852)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1878)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
@@ -185,7 +185,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-show)=
 ### Class function: Show
 
-[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L533)
+[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L531)
 
 - **class function description**: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer's (#2614): a description that appears the moment the pointer crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a setting any more.
 
@@ -193,7 +193,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-cancel)=
 ### Class function: Cancel
 
-[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L546)
+[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L544)
 
 - **class function description**: forget a tooltip that was scheduled and has not appeared yet
 
@@ -201,7 +201,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-bind)=
 ### Class function: Bind
 
-[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L555)
+[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L553)
 
 - **class function description**: let a widget - a button, say - show this tooltip while the pointer rests on it
 
@@ -209,6 +209,6 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-place)=
 ### Class function: Place
 
-[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L560)
+[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L558)
 
 - **class function description**: place the tooltip at the screen position (x, y), a little below the pointer

@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.33.dev1
+- Exudyn version = 1.12.34.dev1
 - last change = 2026-09-23
-- Number of issues = 2625
-- Number of resolved issues = 2347 (33 in current version)
+- Number of issues = 2627
+- Number of resolved issues = 2348 (34 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.34: <span class="textred">resolved BUG 2625</span>: opening the settings dialog closes the render window
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.19. Reported by the maintainer 2026-09-23 and traced in the C++: MainSystemContainer() calls AttachToRenderEngineInternal() in its CONSTRUCTOR, and its destructor calls Reset(), which calls visualizationSystems.DetachFromRenderEngine(). So a temporary SystemContainer created while a renderer runs takes the render window away from the real container and gives it back to nothing - the window closes. DefaultSettingsDictionary (\#2612) creates one to read the defaults every time the settings dialog opens. It must not: the reference goes back to exu.VisualizationSettings(), and the window that lists the differences says which settings a SystemContainer initialises and therefore always appear there.
+  - **notes:** The settings dialog creates no SystemContainer any more: MainSystemContainer() attaches to the running render engine in its constructor and detaches in its destructor, so the temporary container that \#2612 created to read the defaults took the render window away from the container that owns it - opening the dialog closed the window. The reference is exu.VisualizationSettings() again, and the window listing the differences says which settings a SystemContainer initialises instead of reporting them as changed; \#2626 removes the need for that note. The dialog also gives up its -topmost while that window is open, so it no longer comes up behind it.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 18:17**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.32: <span class="textred">resolved BUG 2623</span>: opening the settings dialog re-points exudyn.sys at a throw-away SystemContainer
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.17. Constructing an exudyn.SystemContainer() REPLACES exudyn.sys\["currentRendererSystemContainer"\] - measured 2026-09-23. DefaultSettingsDictionary (\#2612) creates one to read the defaults, so from the moment the settings dialog opens, everything that asks for the renderers container gets the throw-away one: ApplyDialogWindowSettings reads topmost and alpha from it, and UpdateSettingsStructure sends the redraw signal to it, so a settings change stops reaching the renderer. Once the temporary is collected, reading a member of it is an access violation ("no RTTI data"), which is what made the two change windows do nothing at all. The entry is saved and restored around the construction, and GetRendererSystemContainer also catches RuntimeError, because a dangling container must not take the dialog down.
@@ -7995,6 +8001,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- <span class="textorange">open issue 2626:</span> the defaults of the lights and the raytracer materials are hidden in C++ constructors
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.20. exu.VisualizationSettings() is not the state a user starts from: VisualizationSystemContainer() overrides nine light settings in its constructor (light1-3 diffuse, specular, enable, light1.position) and MainGraphicsMaterialList::Reset() fills the ten raytracer materials, about 59 values in total. That is why the settings dialog cannot say what differs from the defaults without creating a SystemContainer - which it must not do (\#2625). The values belong in definitions/structureDefsVisualizationSettings.py as the defaultValue of the members, so that the generated structure carries them and the constructor is the truth; the C++ lines then go. Behaviour does not change, since the container sets the same values today.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
 - <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.
