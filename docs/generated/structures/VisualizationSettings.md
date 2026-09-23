@@ -427,7 +427,7 @@ VSettingsDialogs has the following items:
 |---|---|---|---|---|
 | `alphaTransparency`<br>`SC.visualizationSettings.dialogs.alphaTransparency` | UFloat |  | 0.94 | alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all) |
 | `alwaysTopmost`<br>`SC.visualizationSettings.dialogs.alwaysTopmost` | bool |  | True | True: dialogs are always topmost (otherwise, they are sometimes hidden) |
-| `fontScalingMacOS`<br>`SC.visualizationSettings.dialogs.fontScalingMacOS` | UFloat |  | 1.35 | font scaling value for MacOS systems (on Windows, system display scaling is used) |
+| `fontScaling`<br>`SC.visualizationSettings.dialogs.fontScaling` | UFloat |  | 0. | scaling of the font in dialogs; 0 = automatic, which is what every platform did before this setting existed: the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop (revision2026b step RG6.2.3.1) |
 | `multiThreadedDialogs`<br>`SC.visualizationSettings.dialogs.multiThreadedDialogs` | bool |  | True | True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed |
 | `openTreeView`<br>`SC.visualizationSettings.dialogs.openTreeView` | bool |  | False | True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened |
 
@@ -723,6 +723,7 @@ The following parameter changes have been made:
 - `visualizationSettings.window.showRenderStateInfo` → `visualizationSettings.view0.window.showRenderStateInfo` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.window.showWindow` → `visualizationSettings.view0.window.showWindow` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.window.startupTimeout` → `visualizationSettings.general.rendererStartupTimeout` (changed in version 1.10.80, expires: 2030)
+- `visualizationSettings.dialogs.fontScalingMacOS` → `visualizationSettings.dialogs.fontScaling` (changed in version 1.12.15, expires: 2032)
 - `visualizationSettings.raytracer.ambientLightColor` → `visualizationSettings.openGL.lightModelAmbient` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.raytracer.backgroundColorReflections` → `visualizationSettings.raytracer.advanced.backgroundColorReflections` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.raytracer.enable` → `visualizationSettings.view0.camera.useRaytracer` (changed in version 1.10.80, expires: 2030)

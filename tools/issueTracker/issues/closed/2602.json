@@ -1,0 +1,14 @@
+{
+  "number": 2602,
+  "title": "the dialog font size cannot be changed off macOS",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "python/exudyn/misc/GUI.py does 'if not IsApple(): fontFactor = 1' - off macOS the font factor is forced to 1 and only the row height follows the display scaling, so a maintainer on Linux cannot make the settings dialog readable. The setting that exists is called dialogs.fontScalingMacOS and is applied on macOS alone, with default 1.35. Wanted (maintainer, 2026-09-23): one dialogs.fontScaling for every platform, default 0 meaning 'as today on this platform', any value above 0 setting the font factor everywhere - so nothing changes for anybody who does not touch it, and Linux gets the knob. fontScalingMacOS becomes deprecated and forwards to the new name through the mechanism the visualizationSettings already have (SFDeprecated plus Deprecated(since, expires) in definitions/structureDefsVisualizationSettings.py, which 93 members carry), so old scripts keep working and are told the new name. revision2026b step RG6.2.3.1.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 11:20",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "dialogs.fontScaling replaces dialogs.fontScalingMacOS and works on every platform. It defaults to 0, and 0 means what each platform did before the setting existed - a fixed factor on MacOS, the system display scaling on Windows and Linux - so nothing changes for anybody who does not touch it. A value above 0 sets the font factor AND the row height on every platform, which is what makes the dialog readable on a Linux desktop, where 'if not IsApple(): fontFactor = 1' made it unchangeable. fontScalingMacOS is deprecated through the mechanism the visualizationSettings already have (SFDeprecated plus Deprecated('1.12.15', 2032)); the generated C++ forwards it to the new name and raises a DeprecationWarning, verified through a SystemContainer. The scaling logic itself lived TWICE in GUI.py - once in EditDictionaryWithTypeInfo, once in EditDictionary - and is one function now, DialogScaling(root), which is 30 lines less to keep in step and part of what RG6.2.7 would have had to clean up. The reference of parameterConversionTest changed in one line, as intended: the dictionary of VisualizationSettings.dialogs lists fontScaling where it listed fontScalingMacOS, because a deprecated member is not part of GetDictionary. The stubtest baseline gained exudyn.VSettingsDialogs.fontScalingMacOS, which is where every one of the 93 deprecated members is listed, and lost the stale exudyn.misc.resultsMonitor entry. revision2026b step RG6.2.3.1.",
+  "resolvedInVersion": "1.12.15"
+}

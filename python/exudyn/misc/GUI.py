@@ -27,7 +27,8 @@ __all__ = [
     'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'IsApple',
     'GetRendererSystemContainer', 'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight',
     'IsFloat', 'IsArrayInt', 'IsVector', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
-    'GetComboBoxListsDict', 'ConvertString2Value', 'ConvertValue2String', 'CheckType',
+    'DialogScaling',
+    'GetComboBoxListsDict', 'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'Tooltip',
     'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
     'EditDictionary',
     #the dialogs the renderer opens; they were Python inside rendererPythonInterface.cpp until
@@ -146,6 +147,40 @@ def GetGUIContentScaling(root):
     except tk.TclError:
         return 1
     
+def DialogScaling(root):
+    """How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor].
+
+    dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting
+    existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value
+    > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux
+    desktop - off MacOS the font factor used to be forced to 1 and nothing could change it
+    (#2602, revision2026b step RG6.2.3.1).
+
+    Args:
+        root: the tkinter root window, which knows the display scaling
+
+    Returns:
+        [systemScaling, fontFactor]
+    """
+    fontScaling = 0.
+    guiSC = GetRendererSystemContainer()
+    if guiSC is not None:
+        #the deprecated fontScalingMacOS forwards to this one in the C++, so it is read once
+        fontScaling = guiSC.visualizationSettings.dialogs.fontScaling
+
+    systemScaling = 1.35                #ideal for MacOS
+    fontFactor = systemScaling
+    if not IsApple():
+        #the font size is not changed here; the content scaling does it internally
+        fontFactor = 1
+        systemScaling = GetGUIContentScaling(root)
+
+    if fontScaling > 0:                 #explicit, and it wins on every platform
+        fontFactor = fontScaling
+        systemScaling = fontScaling
+
+    return [systemScaling, fontFactor]
+
 #create dictionaries for lists in combo box: bool, OutputVariableType, ...
 def GetComboBoxListsDict(exu = None):
     """The values a settings item of an enum type may take, as {typeName: [values]}.
@@ -328,12 +363,44 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
     
     return [True, '']
 
+class Tooltip:
+    """The small yellow window that shows the description of the row under the mouse.
+
+    tkinter has none, and the description used to be behind the key 'h' and a modal message box -
+    which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a
+    borderless Toplevel that is created when it is first needed and hidden afterwards, so a
+    dialog that is never hovered never builds one.
+    """
+
+    def __init__(self, widget, wrapLength=520):
+        self.widget = widget
+        self.wrapLength = wrapLength
+        self.window = None
+        self.label = None
+
+    def Show(self, text, x, y):
+        """place the tooltip at the screen position (x, y), a little below the pointer"""
+        if self.window is None:
+            self.window = tk.Toplevel(self.widget)
+            self.window.wm_overrideredirect(True)   #no title bar, no border
+            self.label = tk.Label(self.window, justify=tk.LEFT, background='#ffffe0',
+                                  relief=tk.SOLID, borderwidth=1, wraplength=self.wrapLength)
+            self.label.pack(ipadx=3, ipady=2)
+        self.label.configure(text=text)
+        self.window.wm_geometry('+' + str(int(x) + 16) + '+' + str(int(y) + 18))
+        self.window.deiconify()
+
+    def Hide(self):
+        if self.window is not None:
+            self.window.withdraw()
+
+
 #this class gets a dictionary with type information structure in, but a plain dictionary with types (int, float, string, list, ...) out
 #settingsStructure: contains hierarchical settings structure with function GetDictionaryWithTypeInfo() to obtain dictionary for editing
 #dictionaryTypes: contains a dictionary with the available types, e.g. bool, etc.
 #updateOnChange: every change is directly applied to the settingsStructure and redraw is signaled in stored renderer
 class TkinterEditDictionaryWithTypeInfo(tk.Frame):
-    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False, textHeight = 15):
+    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False, textHeight = 15, systemScaling = 1):
         tk.Frame.__init__(self, parent)
         
         self.parentFrame = parent #parent frame stored for member functions
@@ -342,6 +409,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.updateOnChange = updateOnChange
         self.treeOpen = treeOpen
         self.textHeight = textHeight
+        self.systemScaling = systemScaling
 
         self.dictionaryData = settingsStructure.GetDictionaryWithTypeInfo()
 
@@ -351,7 +419,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.descriptionStorage = dict()
 
         #create treeview:
-        self.tree = ttk.Treeview(self, columns=("value","description"), selectmode='browse', height=self.textHeight)
+        self.tree = ttk.Treeview(self, columns=("value","type","description"), selectmode='browse',
+                                 height=self.textHeight)
         self.vertivalScrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.vertivalScrollbar.set)
 
@@ -368,7 +437,18 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         
         self.tree.heading("#0",text="Name",anchor=tk.W)
         self.tree.heading("value",text="Value",anchor=tk.W)
-        self.tree.heading("description",text="Description (press H to show)",anchor=tk.W)
+        self.tree.heading("type",text="Type",anchor=tk.W)
+        self.tree.heading("description",text="Description",anchor=tk.W)
+
+        #the columns had no width at all until revision2026b step RG6.2.3 (#2601): tree.column()
+        #was never called, so every one of them kept tkinter's 200 px default - the name was cut,
+        #the description was unreadable, and dragging one moved the others. Only the description
+        #stretches with the window; the rest keep what they are given.
+        scale = max(1, int(round(self.systemScaling)))
+        self.tree.column("#0", width=260*scale, minwidth=120, stretch=False)
+        self.tree.column("value", width=150*scale, minwidth=60, stretch=False)
+        self.tree.column("type", width=90*scale, minwidth=50, stretch=False, anchor=tk.W)
+        self.tree.column("description", width=420*scale, minwidth=120, stretch=True)
 
 
         self.AddNodeFromDictionaryWithTypeInfo(value=self.dictionaryData, parentNode="")
@@ -376,7 +456,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.bind("<Double-1>", self.OnTreeDoubleClick) #an item has been selected for change
         self.tree.bind("<Return>", self.OnTreeEdit) #an item has been selected for change
         self.tree.bind("<ButtonRelease-1>", self.OnTreeEdit) #an item has been selected for change #1357
-        self.tree.bind("h", self.OnTreeHelp) #show description for selected item
+        self.tree.bind("h", self.OnTreeHelp) #show description for selected item; the tooltip
+                                             #below is the ordinary way since #2601
+        self.tooltip = Tooltip(self.tree)
+        self.tooltipRow = ''
+        self.tree.bind("<Motion>", self.OnTreeHover)
+        self.tree.bind("<Leave>", lambda event: self.tooltip.Hide())
         self.tree.bind("<Escape>", self.OnQuit) 
         self.tree.bind("q", self.OnQuit) 
         
@@ -440,7 +525,9 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 #strValue = str(value['value'])
                 strValue = ConvertValue2String(value['value'], value['type'], value['size'])
                 
-                self.tree.item(id, values=(strValue, value['description']))
+                #(value, type, description): the type is what tells a reader whether to
+                #type 3, 3.0, True or [1,2,3], and it was read and never shown (#2601)
+                self.tree.item(id, values=(strValue, value['type'], value['description']))
                 #store additional data in dictionaries (could also be tuples ...)
                 self.typeStorage[id] = value['type']
                 self.sizeStorage[id] = value['size']
@@ -486,6 +573,21 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 d.update({self.tree.item(i,'text'): self.GetDictionary(i)})
         return d
 
+    def OnTreeHover(self,event):
+        """the description of the row under the mouse, as a tooltip: it was behind the key 'h'
+        and a modal message box, which is not where anybody looks for it (#2601)"""
+        row = self.tree.identify_row(event.y)
+        if row == self.tooltipRow:
+            return                          #same row: leave the tooltip where it is
+        self.tooltipRow = row
+        self.tooltip.Hide()
+        description = self.descriptionStorage.get(row, '')
+        if description.strip() != '':
+            name = self.tree.item(row,'text')
+            vType = self.typeStorage.get(row, '')
+            self.tooltip.Show(name + ('  [' + vType + ']' if vType else '') + '\n' + description,
+                              event.x_root, event.y_root)
+
     def OnTreeHelp(self,event):
         item = self.tree.selection()[0]
         if item in self.descriptionStorage:
@@ -515,7 +617,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 if value=='True': value='False'
                 else: value='True'
 
-                self.tree.item(item, values=(value, self.descriptionStorage[item]))
+                self.tree.item(item, values=(value, self.typeStorage[item],
+                                             self.descriptionStorage[item]))
                 self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
                 self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
                 return
@@ -613,7 +716,9 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 if rangeMessage != '':
                     (rv, errorMSG) = (False, rangeMessage)
             if rv:
-                self.tree.item(self.selectedItem, values=(self.editItemVar.get(), self.descriptionStorage[self.selectedItem]))
+                self.tree.item(self.selectedItem,
+                               values=(self.editItemVar.get(), vType,
+                                       self.descriptionStorage[self.selectedItem]))
                 currentItem = self.selectedItem
                 self.selectedItem = '' #modification finished
                 self.editItemVar.set('')
@@ -622,7 +727,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.tree.focus(currentItem)
             else:
                 self.editItem.unbind('<FocusOut>') #otherwise OnEditEntryItem called twice
-                tk.messagebox.showerror("Error", errorMSG+'\npress ESCAPE to reset to original values')
+                #the expected TYPE is in the message: a user who is told "invalid float number"
+                #still has to guess what the field wants (#2601)
+                tk.messagebox.showerror("Error", self.editItemName.get() + ' expects ' + vType
+                                        + ':\n' + errorMSG
+                                        + '\npress ESCAPE to reset to original values')
                 self.editItem.bind('<FocusOut>', self.OnEditEntryItem) #bind again
             
             self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
@@ -645,7 +754,9 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             value = self.comboItem.current()
             valueStr = self.comboItem['values'][value]
             
-            self.tree.item(self.selectedItem, values=(valueStr, self.descriptionStorage[self.selectedItem]))
+            self.tree.item(self.selectedItem,
+                           values=(valueStr, self.typeStorage[self.selectedItem],
+                                   self.descriptionStorage[self.selectedItem]))
             currentItem = self.selectedItem
             self.selectedItem = '' #modification finished
             self.editItemVar.set('')
@@ -698,23 +809,17 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
 
     guiSC = GetRendererSystemContainer()
     updateOnChange = False
-    systemScaling = 1.35 #ideal for MacOS 
     topmost = True
     alphaTransparency = 1 #<1 means transparency
     treeOpen = True
     if guiSC is not None:
         updateOnChange = guiSC.visualizationSettings.dialogs.multiThreadedDialogs
-        systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
         topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
         if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:
             alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
         treeOpen = guiSC.visualizationSettings.dialogs.openTreeView
-        
-    fontFactor = systemScaling
-    if not IsApple():
-        #it seems that the font size should not be changed (what is done due to scaling internally ...)
-        fontFactor = 1
-        systemScaling = GetGUIContentScaling(root)
+
+    [systemScaling, fontFactor] = DialogScaling(root)
 
     tkWindow.lift() #brings it to front of other; not always "strong" enough
     if topmost:
@@ -741,7 +846,8 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     
     comboListsT = GetComboBoxListsDict(exu)
     ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
-                                         updateOnChange=updateOnChange, treeOpen=treeOpen, textHeight = textHeight)
+                                         updateOnChange=updateOnChange, treeOpen=treeOpen, textHeight = textHeight,
+                                         systemScaling = systemScaling)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
@@ -964,20 +1070,14 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     tkWindow.geometry(str(dialogDefaultWidth)+'x'+str(dialogDefaultHeight))
 
     guiSC = GetRendererSystemContainer()
-    systemScaling = 1.35 #ideal for MacOS 
     topmost = True
     alphaTransparency = 1 #<1 means transparency
     if guiSC is not None:
-        systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
         topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
         if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:
             alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
-        
-    fontFactor = systemScaling
-    if not IsApple():
-        #it seems that the font size should not be changed (what is done due to scaling internally ...)
-        fontFactor = 1
-        systemScaling = GetGUIContentScaling(root)
+
+    [systemScaling, fontFactor] = DialogScaling(root)
 
     tkWindow.lift() #brings it to front of other; not always "strong" enough
     if topmost:

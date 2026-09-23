@@ -12,7 +12,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-gettkrootandnewwindow)=
 ## Function: GetTkRootAndNewWindow
 
-[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L68)
+[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L69)
 
 - **function description**: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
 
@@ -20,15 +20,25 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tkrootexists)=
 ## Function: TkRootExists
 
-[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L81)
+[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L82)
 
 - **function description**: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
+
+
+(sec-gui-dialogscaling)=
+## Function: DialogScaling
+
+[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L150)
+
+- **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602, revision2026b step RG6.2.3.1).
+- **input**: root: the tkinter root window, which knows the display scaling
+- **output**: [systemScaling, fontFactor]
 
 
 (sec-gui-getcomboboxlistsdict)=
 ## Function: GetComboBoxListsDict
 
-[`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L150)
+[`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L185)
 
 - **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: until revision2026b step RG6.2.3 this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
 - **input**: exu: the exudyn module
@@ -38,7 +48,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L672)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L783)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**: settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings exu: exudyn module dictionaryName: name displayed in dialog
@@ -48,7 +58,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1029)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1129)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**: tkWindow: the window to configure alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
@@ -58,7 +68,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1107)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1207)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -67,7 +77,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1161)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1261)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -76,7 +86,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1246)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1346)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -85,7 +95,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1260)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1360)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -94,7 +104,21 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1274)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1374)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
+
+
+(sec-module-misc.gui-class-tooltip)=
+## CLASS Tooltip (in module misc.GUI)
+
+**class description**: The small yellow window that shows the description of the row under the mouse. tkinter has none, and the description used to be behind the key 'h' and a modal message box - which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a borderless Toplevel that is created when it is first needed and hidden afterwards, so a dialog that is never hovered never builds one.
+
+
+(sec-gui-tooltip-show)=
+### Class function: Show
+
+[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L381)
+
+- **class function description**: place the tooltip at the screen position (x, y), a little below the pointer

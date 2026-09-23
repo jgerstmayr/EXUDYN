@@ -83,6 +83,7 @@ exudyn.VSettingsContour.colorBarTiling
 exudyn.VSettingsContour.showColorBar
 exudyn.VSettingsContourAdvanced
 exudyn.VSettingsDialogs
+exudyn.VSettingsDialogs.fontScalingMacOS
 exudyn.VSettingsExportImages
 exudyn.VSettingsGeneral
 exudyn.VSettingsGeneral.drawCoordinateSystem
@@ -211,7 +212,6 @@ exudyn.particles.mbs
 exudyn.particles.p
 exudyn.particles.particles
 exudyn.particles.r
-exudyn.misc.resultsMonitor
 exudyn.robotics.future.HTErrorExu
 exudyn.robotics.future.HTRandCorke
 exudyn.robotics.future.HTRandError

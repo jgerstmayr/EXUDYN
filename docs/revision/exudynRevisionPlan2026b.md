@@ -40,7 +40,7 @@ carries the same table from its side, so a citation from either direction resolv
 | **RG1** Release and publication | getting a release out and onto GitHub and PyPI | 4 |
 | **RG2** Testing and verification | what is not tested, and who tests it before a release | 3 |
 | **RG3** Docs | what the documentation still gets wrong or does not say | 10 |
-| **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 3 |
+| **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 4 |
 | **RG5** Performance | measurement first, then the code that is actually hot | 2 |
 | **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 3 |
 | **RG7** Python user items | items whose behaviour is written in Python | - |
@@ -347,6 +347,29 @@ find its file and line, on every raise).
     in explicit integration where the flag makes it unnecessary.
 
 
+<a id="rg4-4"></a>
+**RG4.4** *(group RG4; found in RG6.2.3.1, 2026-09-23)* **Two lines of Python segfault the
+    process** (#2603):
+
+    ```python
+    import exudyn as exu
+    exu.VisualizationSettings().general.drawWorldBasis     #exit code 139
+    ```
+
+    It is not that member: **every one of the 93 deprecated members** of `visualizationSettings`
+    does it, on read and on write. A deprecated member forwards to its replacement through
+    `backlink->view0.scene.drawWorldBasis`, the backlink of every sub-structure is set by
+    `VisualizationSettings::Init(&settings)`, and that call happens in **exactly one place** `
+    —VisualizationSystemContainer.h:153`, for the settings that belong to a `SystemContainer`.
+    A `VisualizationSettings` that Python constructs on its own never gets `Init`, so every
+    backlink stays `nullptr` and the first deprecated access dereferences it. Through
+    `SC.visualizationSettings` everything works, which is why nobody has met it.
+
+    It needs a plan rather than a one-liner, because a fix has to say what a **copy** of a
+    settings structure means: a constructor that calls `Init(this)` is one line, and a copied
+    object would then carry a backlink to the original. The same question arrives at
+    `simulationSettings` with RG12.1, which gives it deprecated members for the first time.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -486,11 +509,12 @@ This group is that revision and what has to happen before it can start.
     -> value, and the rejection of a wrong one.
 
 <a id="rg6-2-3"></a>
-**RG6.2.3** **The six small complaints**, a handful of lines each: the column widths
-    (`tree.column(...)` is never called), one `dialogs.fontScaling` for every platform with
-    `fontScalingMacOS` deprecated (the mechanism of RG12.1), the enum lists built from the type
-    name instead of the hard-coded three, the type shown in the table and named in the error
-    message, and the description in a tooltip rather than behind the key `h`.
+**RG6.2.3** **DONE 2026-09-23** (#2597, #2601) — [log](exudynRevisionLog2026b.md#rg6-2-3)
+    — **The six small complaints.** The column widths (`tree.column(...)` was never called),
+    the enum lists built from the module instead of the hard-coded three, the type shown in the
+    table and named in the error message, and the description in a tooltip rather than behind the
+    key `h`. **`dialogs.fontScaling` is RG6.2.3.1**, because it is the only one that leaves
+    Python.
 
     **The three defects RG6.2.2 found are DONE 2026-09-23** (#2597) —
     [log](exudynRevisionLog2026b.md#rg6-2-3): `CheckType` had no branch for an enum type, so it
@@ -501,8 +525,14 @@ This group is that revision and what has to happen before it can start.
     the dialog accepted an edit that never arrived. The enum lists are built from the module with
     them, which is what closed the last of the five.
 
-    **Open in this step**: the column widths, the type in the table, the description in a
-    tooltip, and one `dialogs.fontScaling` for every platform.
+<a id="rg6-2-3-1"></a>
+**RG6.2.3.1** **DONE 2026-09-23** (#2602) — [log](exudynRevisionLog2026b.md#rg6-2-3-1) — **One `dialogs.fontScaling` for every platform.** `if not IsApple(): fontFactor = 1`
+    — off macOS the font factor is forced to 1 and only the row height follows the display
+    scaling, so the maintainer cannot make the dialog readable on Linux. The setting is called
+    `dialogs.fontScalingMacOS`, so the fix is a rename with a **deprecation** — the mechanism of
+    RG12.1, `Deprecated(since, expires)` in `definitions/structureDefsVisualizationSettings.py`.
+    It is the only part of RG6.2.3 that leaves Python: the definitions regenerate the C++ settings
+    headers, so it needs a build and it can break one.
 
 <a id="rg6-2-4"></a>
 **RG6.2.4** **Inline editing** — the one real rewrite: the value is edited in the cell instead of

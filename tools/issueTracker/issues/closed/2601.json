@@ -1,0 +1,14 @@
+{
+  "number": 2601,
+  "title": "the settings dialog does not show the type, the columns are unusable and the description hides behind a key",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "Maintainer's complaints of 2026-09-22 on the visualization settings dialog, the visible half of revision2026b step RG6.2.3. (1) tree.column(...) is NEVER called in TkinterEditDictionaryWithTypeInfo, so every column keeps tkinter's 200 px default: the name is cut, the description is unreadable and nothing can be dragged to a useful width. (2) The TYPE of an item is read into self.typeStorage and never shown, although it is what tells a user whether to type 3, 3.0, True or [1,2,3] - and the error message that rejects a wrong value does not name it either. (3) The description is behind the key 'h' and appears in a modal message box; the column heading literally reads 'Description (press H to show)'. It should appear on hover, as a tooltip, like any other table. python/exudyn/misc/GUI.py.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 10:36",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The settings tree has four columns now - Name, Value, Type, Description - and each of them has a width: tree.column() was never called before, so every column kept tkinter's 200 px default, the name was cut and the description was unreadable. Only the description stretches with the window; the others keep what they are given, scaled with the display scaling. The TYPE is the new column: it was read into typeStorage and never shown, although it is what tells a user whether to type 3, 3.0, True or [1,2,3] - and the error box now names it too ('general.textSize expects PFloat: ...') instead of only saying what is wrong. The description appears on HOVER, as a tooltip beside the pointer, with the name and the type above it: it was behind the key 'h' and a modal message box, and the column heading said so ('Description (press H to show)'). The key still works. Tooltip is a small class in the same module - tkinter has none - and it builds its window the first time it is needed, so a dialog nobody hovers never creates one. revision2026b step RG6.2.3.",
+  "resolvedInVersion": "1.12.14"
+}

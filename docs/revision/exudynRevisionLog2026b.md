@@ -485,3 +485,64 @@ ordinary assertion.
 One thing worth remembering from this step: the docstring of a changed function has to keep the
 house shape — prose first, then `Args:`, then `Returns:`. A paragraph written after `Returns:`
 stopped `utilityDocsEmitter.py` with a clear message, which is the generator doing its job.
+
+**RG6.2.3, second half** (2026-09-23, #2601): the part a user sees.
+
+**The columns have widths.** `tree.column(...)` was never called, so all of them kept tkinter's
+200 px default: the name was cut, the description was unreadable, and dragging one moved the
+others. Name, value and type keep what they are given (scaled with the display scaling), the
+description stretches with the window.
+
+**The type is a column.** It was read into `typeStorage` at load and never shown, although it is
+what tells a reader whether to type `3`, `3.0`, `True` or `[1,2,3]`. The error box names it too
+now — *"general.textSize expects PFloat: invalid float number"* instead of only *"invalid float
+number"*.
+
+**The description follows the mouse.** It was behind the key `h` and a modal message box, and the
+column heading said so: *"Description (press H to show)"*. It is a tooltip beside the pointer now,
+with the name and the type above it; the key still works. `Tooltip` is a small class in the same
+module — tkinter has none — and it builds its window the first time it is needed, so a dialog
+nobody hovers never creates one.
+
+**What could not be verified here**: anything that opens a window. The module parses, the round
+trip tests pass, every row write now carries three values and `GetDictionary` still reads the
+value at index 0 — but whether the dialog *looks* right is for the maintainer to say, which is
+why this half was handed over as soon as it built.
+
+<a id="rg6-2-3-1"></a>
+### RG6.2.3.1 — one font scaling for every platform (2026-09-23, #2602)
+
+`dialogs.fontScaling` replaces `dialogs.fontScalingMacOS`, and the rule is the maintainer's:
+**0 means what this platform did before the setting existed** — a fixed factor on MacOS, the
+system display scaling on Windows and Linux — and any value above 0 sets the font factor and
+the row height on **every** platform. So nothing changes for anybody who does not touch it, and a
+Linux desktop finally has the knob: off MacOS the code said `if not IsApple(): fontFactor = 1`
+and nothing could change that.
+
+`fontScalingMacOS` is deprecated rather than removed, through the mechanism
+`visualizationSettings` already has — `cFlags=SFDeprecated` and `Deprecated('1.12.15', 2032)`
+in the definitions, which 93 other members carry. The generated C++ forwards the old name to the
+new one and raises a `DeprecationWarning`; verified by setting it and reading the new name back.
+
+**The scaling logic existed twice** — once in `EditDictionaryWithTypeInfo`, once in
+`EditDictionary— ` and is one function now, `DialogScaling(root)`. That is 30 lines less to
+keep in step, and one of the items RG6.2.7 would otherwise have had to clean up.
+
+Two consequences worth recording, because both are the project's own machinery working:
+
+- `parameterConversionTest` changed in **one line**: the dictionary of
+  `VisualizationSettings.dialogs` lists `fontScaling` where it listed `fontScalingMacOS`, because
+  a deprecated member is not part of `GetDictionary`. The reference was re-recorded, and the
+  diff was read before it was accepted.
+- the **stubtest baseline** gained `exudyn.VSettingsDialogs.fontScalingMacOS`. That is where
+  every deprecated member is listed: the stub emitter skips them deliberately (a deprecated name
+  is not part of the documented API) while the runtime still exposes them. The regeneration also
+  dropped the stale `exudyn.misc.resultsMonitor` entry, which had been reported as "no longer
+  occurs" for days.
+
+**And it found a segfault.** `exu.VisualizationSettings().general.drawWorldBasis— ` a standalone
+settings object, an existing deprecated member — kills the process with exit code 139. The
+backlink those members forward through is set in one place only, for the settings of a
+`SystemContainer`; a standalone object never gets it. My new member behaves exactly like the 93
+others, so nothing here caused it, and it is RG4.4 (#2603) because the fix has to decide what a
+copy of a settings structure means.
