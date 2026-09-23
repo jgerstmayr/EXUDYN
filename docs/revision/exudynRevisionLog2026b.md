@@ -446,3 +446,42 @@ included, and the page shows a heading and nothing else — and the two headless
 cannot give it at the moment, because the Edge of this machine updated under itself and now
 prints no DOM for any address. Verified by breaking the script on purpose and watching the check
 catch it.
+
+<a id="rg6-2-3"></a>
+### RG6.2.3 — the validator agrees with the settings (2026-09-23, #2597)
+
+The first half of RG6.2.3: the three defects that RG6.2.2's round trip found, and the enum lists
+that the last of them needed. `python/testing/test_guiValues.py` had a list of five settings that
+did not survive being shown and read back; **the list is empty now**, and the test fails if
+anybody puts an entry back that works.
+
+**An enum is a value of a list, and `CheckType` did not know that.** It took no combo lists, so
+`LinearSolverType.EXUdense` fell into its `exec()` fallback, raised `NameError` and came back as
+*"invalid array or matrix: check brackets and types"*. It never showed, because an enum is edited
+through the combo box and the combo box calls `ConvertString2Value` directly — so the entry
+field and the combo box disagreed about what is valid, and nothing said so. `CheckType` takes the
+lists now and rejects a wrong enum by **naming every value it may take**.
+
+**`:` is a file name character.** It was not in `validFileNameChar`, so `C:/models/gear.stl` was
+refused — and so was the dialog's own default for
+`interactive.openVR.actionManifestFileName`, which is `C:/openVRactionsManifest.json`. A dialog
+that rejects the value it is showing is the clearest kind of wrong.
+
+**An edit that is out of range no longer disappears.** `CheckType` judges the SHAPE of a value;
+the RANGE lives in the type name — `PReal` > 0, `UInt` >= 0 — and only `ConvertString2Value`
+knows it. `-3` for a `UInt` therefore passed the check, went into the tree, and was dropped again
+by `GetDictionary`, which printed *"illegal value"* to a console nobody is looking at while the
+setting kept its old value. `OnEditEntryItem` now asks `ConvertString2Value` as well and puts its
+message in the error box.
+
+**And the enum lists come from the module.** `GetComboBoxListsDict` named three types by hand —
+`OutputVariableType`, `LinearSolverType`, `ItemType— ` so
+`timeIntegration.explicitIntegration.dynamicSolverType` was edited as free text, where a typo is
+a silent wrong value. A pybind11 enum is recognised by its `__members__`, so the dict is built by
+walking the module: **14 enum types instead of 3**, and an enum added to exudyn arrives in the
+dialog by itself. That is what closed the fifth gap, and the `xfail` that recorded it became an
+ordinary assertion.
+
+One thing worth remembering from this step: the docstring of a changed function has to keep the
+house shape — prose first, then `Args:`, then `Returns:`. A paragraph written after `Returns:`
+stopped `utilityDocsEmitter.py` with a clear message, which is the generator doing its job.

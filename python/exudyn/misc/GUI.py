@@ -148,38 +148,30 @@ def GetGUIContentScaling(root):
     
 #create dictionaries for lists in combo box: bool, OutputVariableType, ...
 def GetComboBoxListsDict(exu = None):
-    d=dict()  #as string
+    """The values a settings item of an enum type may take, as {typeName: [values]}.
+
+    EVERY enum of the module, not a hand-written list of three: until revision2026b step RG6.2.3
+    this named OutputVariableType, LinearSolverType and ItemType, and
+    timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore
+    edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is
+    recognised by its __members__, so an enum added to the module arrives here by itself.
+
+    Args:
+        exu: the exudyn module
+
+    Returns:
+        the dictionary the dialog picks its combo box entries from
+    """
     dT=dict() #as type
-    
+
     if exu is not None: #exudyn loaded
-        listOfTypes = []
-        listOfTypesT = []
-        dTypes = exu.OutputVariableType.__members__
-        for i in dTypes: 
-            listOfTypes+=[str(dTypes[i])]
-            listOfTypesT+=[dTypes[i]]
-        d['OutputVariableType'] = listOfTypes
-        dT['OutputVariableType'] = listOfTypesT
-
-        
-        listOfTypes = []
-        listOfTypesT = []
-        dTypes = exu.LinearSolverType.__members__
-        for i in dTypes: 
-            listOfTypes+=[str(dTypes[i])]
-            listOfTypesT+=[dTypes[i]]
-        d['LinearSolverType'] = listOfTypes
-        dT['LinearSolverType'] = listOfTypesT
-
-        listOfTypes = []
-        listOfTypesT = []
-        dTypes = exu.ItemType.__members__
-        for i in dTypes: 
-            listOfTypes+=[str(dTypes[i])]
-            listOfTypesT+=[dTypes[i]]
-        d['ItemType'] = listOfTypes
-        dT['ItemType'] = listOfTypesT
-
+        for name in dir(exu):
+            if name.startswith('_'):
+                continue
+            candidate = getattr(exu, name, None)
+            members = getattr(candidate, '__members__', None)
+            if isinstance(members, dict) and len(members) != 0:
+                dT[name] = [members[key] for key in members]
     else:
         print('WARNING: exudyn not loaded as "exu"')
 
@@ -260,10 +252,22 @@ def ConvertValue2String(value, vType, vSize):
 #check if a valueStr corresponds to correct type and size; return True, if correct; False if type incorrect
 #returns [isValid, errorMSG]
 #isValid=True: everything is ok
-def CheckType(valueStr, vType, vSize):
+def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
 #    print('str=',valueStr)
-    
-    validFileNameChar = " `'{}()%&-@#$~!_^./\\"
+
+    #':' belongs in a file name: C:/models/gear.stl is what a Windows user types, and without it
+    #the dialog refused even its own default (#2597, revision2026b step RG6.2.3)
+    validFileNameChar = " `'{}()%&-@#$~!_^./\\:"
+
+    #an enum is a value of a fixed list and nothing else. Without this branch the string
+    #'LinearSolverType.EXUdense' fell through to the exec() below, raised NameError and was
+    #reported as "invalid array or matrix" - which the combo box hid, because it never asks
+    #CheckType (#2597)
+    if dictionaryTypesT is not None and vType in dictionaryTypesT:
+        allowed = [str(value) for value in dictionaryTypesT[vType]]
+        if valueStr in allowed:
+            return [True, '']
+        return [False, vType + ' must be one of: ' + ', '.join(allowed)]
     
 #    if vType == 'bool':
 #        if valueStr=='False' or valueStr=='True':
@@ -593,7 +597,21 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def OnEditEntryItem(self,event):
         if self.selectedItem != '':
             valueStr = self.editItemVar.get()
-            [rv, errorMSG] = CheckType(valueStr, self.typeStorage[self.selectedItem], self.sizeStorage[self.selectedItem])
+            vType = self.typeStorage[self.selectedItem]
+            vSize = self.sizeStorage[self.selectedItem]
+            [rv, errorMSG] = CheckType(valueStr, vType, vSize, self.dictionaryTypesT)
+            if rv:
+                #CheckType says the SHAPE is right; the range lives in the type name (PReal > 0,
+                #UInt >= 0, ...) and only ConvertString2Value knows it. Without this the dialog
+                #accepted the edit, GetDictionary printed 'illegal value' to a console nobody is
+                #looking at, and the setting silently kept its old value (#2597)
+                try:
+                    [_, rangeMessage] = ConvertString2Value(valueStr, vType, vSize,
+                                                            self.dictionaryTypesT)
+                except (ValueError, SyntaxError) as exception:
+                    rangeMessage = str(exception)
+                if rangeMessage != '':
+                    (rv, errorMSG) = (False, rangeMessage)
             if rv:
                 self.tree.item(self.selectedItem, values=(self.editItemVar.get(), self.descriptionStorage[self.selectedItem]))
                 currentItem = self.selectedItem

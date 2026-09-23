@@ -61,18 +61,12 @@ def testThereIsSomethingToTest(leaves):
     assert len({leafType for (_, _, leafType, _) in leaves}) > 15
 
 
-#What does NOT survive the round trip today, by path (#2597, revision2026b step RG6.2.3). This
-#list is meant to SHRINK: a path that starts working has to be taken out here, and a path that
-#stops working is a new failure. CheckType has no branch for an enum type, and ':' is not one of
-#its valid file name characters - so an absolute Windows path is refused, including this one,
-#which is a shipped default.
-knownRoundTripGaps = [
-    'timeIntegration.explicitIntegration.dynamicSolverType',
-    'linearSolverType',
-    'contour.outputVariable',
-    'interactive.highlightItemType',
-    'interactive.openVR.actionManifestFileName',
-    ]
+#What does NOT survive the round trip, by path. The list is meant to SHRINK: a path that starts
+#working has to be taken out here, and a path that stops working is a new failure. It held five
+#entries when this test was written (#2597) - every enum value, because CheckType had no branch
+#for one, and every absolute path, because ':' was not a valid file name character - and
+#revision2026b step RG6.2.3 emptied it.
+knownRoundTripGaps = []
 
 
 def testEveryCurrentValueSurvivesTheRoundTrip(leaves, comboLists):
@@ -82,7 +76,8 @@ def testEveryCurrentValueSurvivesTheRoundTrip(leaves, comboLists):
     survived = []
     for (path, value, leafType, size) in leaves:
         asString = gui.ConvertValue2String(value, leafType, size)
-        [isValid, message] = gui.CheckType(asString, leafType, size)
+        #with the combo lists, which is what the dialog has: an enum is a value of a list
+        [isValid, message] = gui.CheckType(asString, leafType, size, comboLists)
         if not isValid:
             failures.append(path + ' (' + leafType + '): CheckType says "' + message + '"')
             continue
@@ -211,13 +206,12 @@ def testCheckTypeRejectsWithAMessageThatSaysWhy(text, valueType, size, inMessage
 
 def testEveryEnumSettingCouldBePickedFromAList(leaves, comboLists):
     """an enum that has no list is edited as free text, where a typo is a silent wrong value.
-    KNOWN GAP: GetComboBoxListsDict names three enum types by hand, and
-    timeIntegration.explicitIntegration.dynamicSolverType is not one of them (revision2026b step
-    RG6.2.3)"""
+    GetComboBoxListsDict named three enum types by hand until revision2026b step RG6.2.3, and
+    timeIntegration.explicitIntegration.dynamicSolverType was not one of them; it builds the
+    lists from the module now, so a new enum arrives here by itself"""
     missing = sorted({leafType + ' (' + path + ')' for (path, _, leafType, _) in leaves
                       if leafType.endswith('Type') and leafType not in comboLists})
-    if missing != []:
-        pytest.xfail('enum types without a list: ' + ', '.join(missing))
+    assert missing == [], 'enum types without a list: ' + ', '.join(missing)
 
 
 def testTheListsHoldTheValuesTheyOfferAsStrings(comboLists):

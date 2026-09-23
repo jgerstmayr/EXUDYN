@@ -492,12 +492,17 @@ This group is that revision and what has to happen before it can start.
     name instead of the hard-coded three, the type shown in the table and named in the error
     message, and the description in a tooltip rather than behind the key `h`.
 
-    **And the three defects RG6.2.2 found** (#2597): `CheckType` has no branch for an enum type,
-    so it rejects every enum value and only the combo box hides it; `:` is not one of its valid
-    file name characters, so no absolute Windows path can be typed into a file name setting -
-    including the shipped default `C:/openVRactionsManifest.json`; and a value that passes
-    `CheckType` but fails `ConvertString2Value` is dropped with a `print()` to the console, so
-    the dialog accepts an edit that never arrives.
+    **The three defects RG6.2.2 found are DONE 2026-09-23** (#2597) —
+    [log](exudynRevisionLog2026b.md#rg6-2-3): `CheckType` had no branch for an enum type, so it
+    rejected every enum value and only the combo box hid it; `:` was not one of its valid file
+    name characters, so no absolute Windows path could be typed into a file name setting —
+    including the shipped default `C:/openVRactionsManifest.json`; and a value that passed
+    `CheckType` but failed `ConvertString2Value` was dropped with a `print()` to the console, so
+    the dialog accepted an edit that never arrived. The enum lists are built from the module with
+    them, which is what closed the last of the five.
+
+    **Open in this step**: the column widths, the type in the table, the description in a
+    tooltip, and one `dialogs.fontScaling` for every platform.
 
 <a id="rg6-2-4"></a>
 **RG6.2.4** **Inline editing** — the one real rewrite: the value is edited in the cell instead of

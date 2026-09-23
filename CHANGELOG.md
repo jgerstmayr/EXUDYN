@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 13 | 1.12.12 |
+| 1.12 | Metheney | 14 | 1.12.13 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.13** `BUG` the settings dialog rejects values the settings themselves hold (#2597) - raised by Claude-JG
+  - All three are fixed and the round trip list of test\_guiValues.py is empty. (1) CheckType takes the combo lists now and has an ENUM BRANCH: a value of an enum type is accepted when it is one of the listed values and rejected with a message that names them all, instead of falling into the exec() fallback and coming back as 'invalid array or matrix'. The entry field and the combo box now agree about what is valid. (2) ':' is a valid file name character, so C:/models/gear.stl can be typed - the dialog refused even its own default, C:/openVRactionsManifest.json. (3) A value whose SHAPE is right but whose RANGE is wrong no longer disappears: OnEditEntryItem asks ConvertString2Value after CheckType and shows its message ('UInt must be \>= 0') in the error box, where before the dialog accepted the edit, GetDictionary printed 'illegal value' to a console nobody is looking at, and the setting silently kept its old value. And with it, GetComboBoxListsDict builds its lists from EVERY enum the module exposes - a pybind11 enum is recognised by its \_\_members\_\_ - instead of naming OutputVariableType, LinearSolverType and ItemType by hand: 14 enum types instead of 3, which is what closes the last round trip gap (timeIntegration.explicitIntegration.dynamicSolverType, a DynamicSolverType), and an enum added to exudyn arrives in the dialog by itself. revision2026b step RG6.2.3.
 - **1.12.12** `IMPROVEMENT` the issue table of 'exudev issue serve' has unlabelled columns and no priority (#2600) - raised by Claude-JG
   - The issue table has a header now, and the priority is in it. tools/issueTracker/issueServer.py: a sticky \<thead\> with the six columns - number, status, type, effort, priority, title - whose tooltips carry what the values mean, built from the tracker's own vocabularies through /api/meta, so that 'LOW: within 2 hours' is one hover away and this page does not know the list itself. The priority column is new: the API already sent it in every row and the filter bar already filtered on it, only the row renderer left it out. And because effort and priority share their spelling - LOW and HIGH are values of both - the effort tag now reads 'LOW EFF', 'MEDIUM EFF', 'HIGH EFF', 'HUGE EFF' while the priority tag stays plain; each tag also carries its meaning as a tooltip. Two tests: one that the page has named columns, an effort tag that says EFF and a priority in the row; and one that the page script PARSES, through quickjs (which arrives with mermaidx, and is skipped when it is absent) - defining a function parses its body without running it, which is the check that \#2574 needed and which the browser tests cannot give while the Edge of this machine prints no DOM. revision2026b step RG10.2.
 - **1.12.11** `DOCU` three corrections to the landing pages and the developer chapters (#2598) - raised by Claude-JG
