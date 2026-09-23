@@ -66,8 +66,7 @@ def Simulate(SC, mbs):
     SC.visualizationSettings.openGL.multiSampling = 4
     
     # SC.renderer.Start()
-    # if 'renderState' in exu.sys: #reload old view
-    #     SC.renderer.SetState(exu.sys['renderState'])
+    # SC.renderer.RestoreSavedState() #reload old view
     
     SC.renderer.DoIdleTasks() #stop before simulating
     
@@ -91,8 +90,7 @@ CreateSystem(mbs2, [0.6,-1.2,0], graphics.color.green)
 
 SC.renderer.Attach()
 SC.renderer.Start()
-if 'renderState' in exu.sys: #reload old view
-    SC.renderer.SetState(exu.sys['renderState'])
+SC.renderer.RestoreSavedState() #reload old view
     
 Simulate(SC, mbs)
 # SC.renderer.DoIdleTasks()
@@ -102,8 +100,7 @@ SC.renderer.Stop() #safely close rendering window!
 
 SC2.renderer.Attach()
 SC.renderer.Start()
-if 'renderState' in exu.sys: #reload old view
-    SC2.renderer.SetState(exu.sys['renderState'])
+SC2.renderer.RestoreSavedState() #reload old view
 Simulate(SC2, mbs2)
 
 SC2.renderer.DoIdleTasks() #stop before closing

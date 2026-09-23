@@ -449,8 +449,7 @@ SC.visualizationSettings.openGL.light0.shadow = 0.4
 
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
     
 # pTCP = mbs.GetSensorValues(sTCP)

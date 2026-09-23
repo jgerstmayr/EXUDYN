@@ -192,8 +192,7 @@ SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 #useGraphics = True
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys[ 'renderState' ])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)

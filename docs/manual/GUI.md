@@ -58,7 +58,7 @@ When starting with an empty `mbs` and calling `SC.renderer.Start()`, the `SC.ren
 
 Note that in case that you compiled with OpenVR, there will be a separate key `openVRstate`, containing details on OpenVR, e.g., HMD pose, eye projections and controller poses.
 Most entries in `renderState` are having single precision due to compatibility with values entered in OpenGL.
-The most typical scenario for using `SC.renderer.SetState(...)` is to restore a previous view or to start a simulation with a specific view, projection or similar. Furthermore, mouse and joystick values can be used for interactive models.
+The most typical scenario for using `SC.renderer.SetState(...)` is to restore a previous view or to start a simulation with a specific view, projection or similar. For exactly that case there is `SC.renderer.RestoreSavedState()`, which reads the state that `SC.renderer.Stop()` saved in `exu.sys` and returns `False` if there is none yet. Furthermore, mouse and joystick values can be used for interactive models.
 Note that a simpler way to restore the model view is based on pressing CTRL-F3, to obtain the current model view values, see {ref}`sec-overview-basics-storingmodelview`.
 
 There is a set of variables, which can be actively changed by calling  `SC.renderer.SetState(renderState)` with `renderState`

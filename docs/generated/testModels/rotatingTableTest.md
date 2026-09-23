@@ -214,8 +214,7 @@ for mode in range(2):
     
     if useGraphics:
         SC.renderer.Start()
-        if 'renderState' in exu.sys:
-            SC.renderer.SetState(exu.sys['renderState'])
+        SC.renderer.RestoreSavedState()
         SC.renderer.DoIdleTasks()
     
     mbs.SolveDynamic(simulationSettings, 

@@ -63,6 +63,13 @@ try:
 except:
     exu.Print('import matplotlib failed ... using standard plot engine')
 
+#NO WINDOW, IN EITHER PATH (revision2026b step RG10.6, #2632): the two worker bootstraps in
+#testRunnerTools.py have called this since revision2026 step R5.17, but the SERIAL path of this
+#runner did not - the models' own 'if useGraphics:' was the only thing keeping windows shut, and
+#a model that drops that branch opens one on the screen of whoever runs the suite. The suite
+#never wants a window: it sets useGraphics=False for every model a few lines below.
+exu.special.userInterface.SuppressAll(True)
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -342,6 +349,13 @@ if TSScope.runTestExamples:
         exu.config.outputDirectory = TSScope.solutionDirectory + '/' + TSScope.file[:-3]
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
         exudynTestGlobals.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
+        #the channel a model uses since revision2026b step RG10.6 (#2632): exu.sys instead of an
+        #import of this module. It is cleared for every model, because exu.sys lives as long as
+        #the interpreter and a value left over from the previous model would be read as this
+        #model's result
+        exu.sys['testIsActive'] = True
+        exu.sys['testResult'] = TSScope.invalidResult
+        exu.sys.pop('testTolerance', None)
         TSScope.testTimeStart = time.perf_counter()
         try:
             if TSScope.parallel:
@@ -361,6 +375,12 @@ if TSScope.runTestExamples:
             TSScope.examplesTestTimeList[TSScope.name] = (TSScope.parallelResults[TSScope.file]['seconds']
                                                           if TSScope.parallel else
                                                           time.perf_counter() - TSScope.testTimeStart)
+            #a converted model writes exu.sys['testResult']; one that has not been converted
+            #yet still writes exudynTestGlobals.testResult (revision2026b step RG10.6)
+            if exu.sys.get('testResult', TSScope.invalidResult) != TSScope.invalidResult:
+                exudynTestGlobals.testResult = exu.sys['testResult']
+            exu.sys['testIsActive'] = False
+
             TSScope.examplesTestErrorList[TSScope.name] = exudynTestGlobals.testError
             TSScope.examplesTestSolList[TSScope.name] = exudynTestGlobals.testResult
             
@@ -381,13 +401,21 @@ if TSScope.runTestExamples:
                 exu.Print("refsol=",TSScope.examplesTestRefSol[TSScope.name])
                 exu.Print("tol=", TSScope.testTolerance*TSScope.testTolFact)
     
-            TSScope.examplesTestTolList[TSScope.name] = TSScope.testTolerance*TSScope.testTolFact
+            #a model may state an absolute tolerance of its own (revision2026b step RG10.6);
+            #it replaces multiplying the result by a factor to make it fit, which hid the
+            #tolerance inside the number the test compares
+            TSScope.testModelTolerance = TSScope.testTolerance*TSScope.testTolFact
+            if 'testTolerance' in exu.sys:
+                TSScope.testModelTolerance = float(exu.sys['testTolerance'])
+                exu.Print('tolerance of this model =', TSScope.testModelTolerance)
+
+            TSScope.examplesTestTolList[TSScope.name] = TSScope.testModelTolerance
             #NOTE: examplesTestErrorList above is captured BEFORE the error is recomputed from
             #the reference solution, so for most models it holds the default -1 rather than the
             #comparison error. Keep that dictionary as it was, and record the final error here.
             TSScope.examplesTestFinalErrorList[TSScope.name] = exudynTestGlobals.testError
 
-            if abs(exudynTestGlobals.testError) < TSScope.testTolerance*TSScope.testTolFact:
+            if abs(exudynTestGlobals.testError) < TSScope.testModelTolerance:
                 exu.Print('******************************************')
                 exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") FINISHED SUCCESSFUL')
                 exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))

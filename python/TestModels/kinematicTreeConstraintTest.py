@@ -170,7 +170,7 @@ SC.visualizationSettings.nodes.basisSize = 0.5
 if useGraphics:
 
     SC.renderer.Start()
-    if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
+    SC.renderer.RestoreSavedState() #load last model view
 
     SC.renderer.DoIdleTasks() #press space to continue
 

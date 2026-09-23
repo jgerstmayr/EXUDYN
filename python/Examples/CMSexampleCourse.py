@@ -383,7 +383,7 @@ lifeVisualization = True
 if lifeVisualization:
     SC.visualizationSettings.general.autoFitScene=False #if reloaded view settings
     SC.renderer.Start()
-    if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
+    SC.renderer.RestoreSavedState() #load last model view
     SC.renderer.DoIdleTasks() #press space to continue
         
 mbs.SolveDynamic(#solverType=exu.DynamicSolverType.TrapezoidalIndex2, 

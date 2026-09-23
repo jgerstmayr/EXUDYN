@@ -391,8 +391,7 @@ SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True
 if useGraphics:
     exu.StartRenderer()
-    if 'renderState' in exu.sys:
-        SC.SetRenderState(exu.sys[ 'renderState' ])
+    SC.renderer.RestoreSavedState()
     mbs.WaitForUserToContinue()
 
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)

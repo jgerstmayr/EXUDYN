@@ -132,8 +132,7 @@ SC.visualizationSettings.raytracer.imageSizeFactor=2 #for faster rendering
 
 #visualize in Exudyn:
 SC.renderer.Start()              #start graphics visualization
-if 'renderState' in exu.sys: #reload last view
-    SC.renderer.SetState(exu.sys['renderState'])
+SC.renderer.RestoreSavedState() #reload last view
 
 #to run Exudyn and netgen in parallel (not recommended), we need to run an event loop
 while SC.renderer.IsActive():

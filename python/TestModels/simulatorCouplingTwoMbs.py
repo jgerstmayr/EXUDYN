@@ -507,8 +507,7 @@ if doSimulatorCoupling:
     if useGraphics:
         if False: #for testing only
             SC.renderer.Start()
-            if 'renderState' in exu.sys:
-                SC.renderer.SetState(exu.sys['renderState'])
+            SC.renderer.RestoreSavedState()
 
 
 
@@ -634,8 +633,7 @@ mbs0.SetPreStepUserFunction(PreStepUserFunction)
 #start implicit solver which calls explicit solver in every preStepUserFunction
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     #mbs0.WaitForUserToContinue()
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)

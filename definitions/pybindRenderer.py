@@ -157,6 +157,15 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetState', cName='SetState',
                         returnType='None',
                         )
 
+pb.DefPyFunctionAccess(cClass=classStr, pyName='RestoreSavedState', cName='RestoreSavedState',
+                        description="Restore the render state that exu.sys holds: renderer.Stop() saves the state of every open view there, so this brings back the view of the previous run; returns False if nothing has been saved yet, which is not an error but the ordinary case on the first run of a script; it replaces the two lines that tested for renderState in exu.sys and called SetState with it",
+                        example = "SC = exu.SystemContainer()\\\\SC.renderer.Start()\\\\SC.renderer.RestoreSavedState()",
+                        argList=['viewID'],
+                        argTypes=['int'],
+                        defaultArgs=[mainViewID],
+                        returnType='bool',
+                        )
+
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetMouseCoordinates', cName='GetMouseCoordinates', 
                         description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
                         argList=['useOpenGLcoordinates','viewID'],

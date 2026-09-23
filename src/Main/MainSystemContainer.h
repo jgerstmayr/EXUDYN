@@ -159,6 +159,9 @@ public:
 	void SetState(py::dict renderState, bool waitForRendererFullStartup = false,
 		Index viewID = VisualizationSystemContainer::mainViewID);
 
+	//! restore the render state that exudyn.sys holds, saved there by the last renderer.Stop()
+	bool RestoreSavedState(Index viewID = VisualizationSystemContainer::mainViewID);
+
 	//! get OpenGL coordinates as list, faster than using render state
 	py::list GetMouseCoordinates(bool useOpenGLcoordinates = false, Index viewID = VisualizationSystemContainer::mainViewID) const;
 

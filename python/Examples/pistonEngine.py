@@ -380,8 +380,7 @@ SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
 ## start visualization and solve
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 SC.renderer.Start()
-if 'renderState' in exu.sys:
-    SC.renderer.SetState(exu.sys[ 'renderState' ])
+SC.renderer.RestoreSavedState()
 
 SC.renderer.DoIdleTasks()
 

@@ -408,8 +408,7 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
 useGraphics = True
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys[ 'renderState' ])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 

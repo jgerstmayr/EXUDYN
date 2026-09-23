@@ -131,8 +131,7 @@ if useGraphics:
     simulationSettings.displayStatistics = True
     SC.renderer.Start()
     ## reload previous render configuration
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys[ 'renderState' ])
+    SC.renderer.RestoreSavedState()
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False
 

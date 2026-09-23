@@ -489,8 +489,7 @@ def SimulationUF(mbs, dialog):
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 SC.renderer.Start()
-if 'renderState' in exu.sys:
-    SC.renderer.SetState(exu.sys[ 'renderState' ])
+SC.renderer.RestoreSavedState()
 
 InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
                   simulationFunction=SimulationUF, 
@@ -506,8 +505,7 @@ SC.renderer.Stop()
 if 0: 
     if useGraphics:
         SC.renderer.Start()
-        if 'renderState' in exu.sys:
-            SC.renderer.SetState(exu.sys['renderState'])
+        SC.renderer.RestoreSavedState()
         SC.renderer.DoIdleTasks()
         
     mbs.SolveDynamic(simulationSettings, showHints=True)

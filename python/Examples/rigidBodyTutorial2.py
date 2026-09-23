@@ -108,8 +108,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.general.autoFitScene = False
 
 SC.renderer.Start()
-if 'renderState' in exu.sys: #reload previous model view
-    SC.renderer.SetState(exu.sys['renderState'])
+SC.renderer.RestoreSavedState() #reload previous model view
 
 SC.renderer.DoIdleTasks() #stop before simulating
 

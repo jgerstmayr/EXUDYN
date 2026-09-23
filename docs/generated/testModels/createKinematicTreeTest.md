@@ -178,8 +178,7 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)

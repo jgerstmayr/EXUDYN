@@ -374,8 +374,7 @@ The option `autoFitScene` is used in order to avoid zooming while loading the la
  In order to reload the model view of the last simulation (if there is any), we can use the following commands:
 
 ```python
-  if 'renderState' in exu.sys: #reload old view
-      SC.renderer.SetState(exu.sys['renderState'])
+  SC.renderer.RestoreSavedState() #reload the view of the last run
 
   SC.renderer.DoIdleTasks()    #stop before simulating
 ```

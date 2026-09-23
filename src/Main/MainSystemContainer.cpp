@@ -618,6 +618,23 @@ py::dict MainRenderer::GetState(Index viewID) const
 	return mainSystemContainer->RenderState2PyDict(mainSystemContainer->GetVisualizationSystemContainer().GetRenderViewData(viewID).renderState);
 }
 
+//! restore the render state that exudyn.sys holds (revision2026b step RG6.5)
+bool MainRenderer::RestoreSavedState(Index viewID)
+{
+	//the key is the one PyStopOpenGLRenderer writes when the renderer stops: the main
+	//view under "renderState", every other view under "renderState<viewID>"
+	STDstring key = "renderState";
+	if (viewID != VisualizationSystemContainer::mainViewID) { key += EXUstd::ToString(viewID); }
+
+	py::dict systemVariables = py::module::import("exudyn").attr("sys");
+	//NOTHING SAVED IS NOT AN ERROR: the first run of a script has no state, which is the
+	//case the two Python lines this function replaces were guarding against
+	if (!systemVariables.contains(key.c_str())) { return false; }
+
+	SetState(py::cast<py::dict>(systemVariables[key.c_str()]), false, viewID);
+	return true;
+}
+
 //! set render state dictionary
 void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartup, Index viewID)
 {

@@ -261,8 +261,7 @@ useGraphics = True
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 

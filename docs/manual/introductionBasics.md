@@ -372,8 +372,7 @@ A simple way is to reload the stored render state (model view) after simulating 
   SC=exu.SystemContainer()
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
   SC.renderer.Start()
-  if 'renderState' in exu.sys:
-      SC.renderer.SetState(exu.sys['renderState'])
+  SC.renderer.RestoreSavedState() #the view of the previous run, if there is one
   #+++++++++++++++
   #do simulation here and adjust model view settings with mouse
   #+++++++++++++++

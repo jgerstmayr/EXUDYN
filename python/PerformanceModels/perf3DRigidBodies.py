@@ -136,8 +136,7 @@ SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys[ 'renderState' ])
+    SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False

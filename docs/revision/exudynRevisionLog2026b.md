@@ -1457,3 +1457,81 @@ is already in the header: `simulationSettings.solutionSettings.solutionInformati
 file reproducible today, and the function's docstring says so. Adding a second mechanism beside it
 would have been the wrong kind of completeness.
 
+<a id="rg6-5"></a>
+### RG6.5 — the renderer restores its own saved state (2026-09-24, #2633)
+
+`SC.renderer.Stop()` has always saved the render state of every open view into `exudyn.sys`, and
+every model that wanted the previous view back said so in two lines:
+
+```python
+if 'renderState' in exu.sys:
+    SC.renderer.SetState(exu.sys['renderState'])
+```
+
+**82 occurrences in 85 files**, and the survey is the reason the replacement could be scripted at
+all, because they were not 82 copies of one line. Five variants: 26 one-liners, 46 two-line forms,
+12 with a trailing comment, 2 in the shipped package spelling the module `exudyn` rather than
+`exu`, and **4 still using the deprecated `SC.SetRenderState`**. Within those, the indentation is
+0, 4, 8 or 12 spaces, the brackets are written `['renderState']` and `[ 'renderState' ]`, and
+`python/Examples/multiMbsTest.py:105` calls it on **`SC2`** rather than `SC`. A `sed` would have
+got three of those wrong.
+
+**The function is C++ because the dictionary is C++.** `exudyn.sys` is a `py::dict` held by the
+module, written by `PyStopOpenGLRenderer`; `MainRenderer::RestoreSavedState(viewID)` reads the same
+key the saving code writes — `renderState` for the main view, `renderState<N>` for the others —
+and hands it to the existing `SetState`. **Nothing saved is not an error**: it returns `false` and
+changes nothing, which is exactly what the `if` in those two lines was doing.
+
+The binding is generated: the entry goes into `definitions/pybindRenderer.py`, and one
+regeneration writes the pybind header, the `.pyi` stub and `docs/generated/cInterface/Renderer.md`.
+
+**Two things the script got wrong, and both were caught by a check rather than by reading.**
+
+- `python/Examples/mouseInteractionExample.py` had the guard with an **`else:`** — a hard-coded
+  view for the first run — and collapsing the `if` orphaned the `else`. `checkExtras` reported
+  the file as unparsable, which is how it was found. It reads better now than before, because the
+  return value is what the `else` needs: `if not SC.renderer.RestoreSavedState():`. The same file
+  also had `SC.renderer.SetState(renderState)` written twice in a row; one is gone.
+- three files came out with `CR CR LF` on every line, from a line-ending conversion applied twice.
+  A byte check found it; the same slip had happened in RG12.3 the day before, which is twice for
+  one mistake and the reason the replacement script now ends with an `ast.parse` of every file it
+  wrote.
+
+**A measurement corrected an assumption in the plan**: it said a bad value in the dictionary would
+be reported by `SysError` and not raise. It raises. `RestoreSavedState` adds no error handling of
+its own and passes that through, and the test says so rather than asserting the comfortable thing.
+
+`python/testing/test_rendererState.py` covers the four cases that matter — nothing saved, a state
+that comes back, an unknown key ignored, a bad value raising — and one crude one: no source file
+under `python/` or `docs/manual/` may contain the old idiom, so the sweep cannot be half done.
+
+<a id="rg10-6-1"></a>
+### RG10.6.1 and RG10.6.2 — the channel, and the first model (2026-09-24, #2632)
+
+The runners now talk to a model through `exu.sys` instead of an import. Before each model they set
+`testIsActive`, clear `testResult— ` it outlives a model, so a value left from the previous one
+would be read as this one's result — and honour an `exu.sys['testTolerance']` the model may set
+for itself. `exudynTestGlobals` still works beside it, so a model that has not been converted runs
+unchanged.
+
+`bricardMechanism.py` is the first model: nine lines and an import became
+
+```python
+testIsActive = exu.sys.get('testIsActive', False)
+```
+
+the hard-coded reference `4.172189649307425` is gone (`runTestSuiteRefSol.py` has held it all
+along), the local variable that held the **result** and was called `testError` has the right name,
+and the file ends with `exu.sys['testResult'] = testResult`. The number is **identical**:
+4.172189649306508.
+
+**And a window opened on the maintainer's screen**, which is the part worth recording. The plan
+said, as a measurement, that the `if useGraphics:` around the renderer calls guarded nothing
+because the runners suppress windows. That was measured on the **worker bootstraps**
+(`testRunnerTools.py:724,886`), which do call `SuppressAll(True)— ` and not on the **serial**
+path of `runTestSuite.py`, which did not. The models' own branch was the only thing keeping windows
+shut there. The fix belongs in the runner and not in 125 models, so `runTestSuite.py` calls
+`SuppressAll(True)` like the workers; and the maintainer's decision is that the models **keep** an
+explicit `if not testIsActive:` anyway, because a test is worth running with and without graphics.
+A measurement of half the paths is not a measurement.
+

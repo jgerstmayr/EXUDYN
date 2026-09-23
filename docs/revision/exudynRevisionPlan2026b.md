@@ -870,6 +870,22 @@ This group is that revision and what has to happen before it can start.
       documentation that quotes a number no generator produced is wrong the day the number
       changes.
 
+<a id="rg6-5"></a>
+**RG6.5** **DONE 2026-09-24** (#2633) — [log](exudynRevisionLog2026b.md#rg6-5) —
+    *(group RG6; maintainer 2026-09-24)* **Restoring the saved render state took two lines in 82
+    places.** `SC.renderer.Stop()` saves the state of every open view in `exudyn.sys`, and every
+    model that wanted the previous view back repeated
+
+    ```python
+    if 'renderState' in exu.sys:
+        SC.renderer.SetState(exu.sys['renderState'])
+    ```
+
+    `exudyn.sys` lives on the C++ side, so **`SC.renderer.RestoreSavedState()`** does it, and
+    returns `False` when nothing has been saved — the first run of a script, which is what the
+    guard was for. 82 occurrences in 85 files, in five variants of which four still used the
+    deprecated `SC.SetRenderState`, are now one call each.
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -
@@ -1140,22 +1156,45 @@ file, so an editor cannot complete them).
        `runTestSuiteRefSol.py`, so that number in the model is a **second copy of the reference**
        — two places to update, one of which nothing checks.
 
-    **Options, to be decided when the step is taken.**
+    **Decided by the maintainer on 2026-09-24**, and the last one enlarges the step:
 
-    - **flat keys or a namespace.** `exu.sys['testIsActive']` and `exu.sys['testResult']`, against
-      `exu.sys['testGlobals'] = {...}` with `exu.sys.get('testGlobals', {}).get('isActive', False)`.
-      **Flat is recommended**: it is what makes the read one honest line, and `exudyn.sys` is
-      already a flat namespace of system keys (`currentRendererSystemContainer`, `renderState`,
-      `dynamicSolver`).
-    - **`modelUnitTests.ExudynTestStructure` stays or is bridged.** The mini examples and the unit
-      tests use it too; the cheapest path is that the runner writes **both** for one release, so
-      that a model that has not been converted still works.
-    - **one sweep or batches.** Recommended: **one model first** (`bricardMechanism.py`), run the
-      suite, then a scripted sweep in batches with the full 116 + 23 after each — the suite is
-      the test for this step, and it has to produce **identical numbers**, not merely pass.
-    - **a helper in `exudyn.misc.testing`** was considered and is **not** recommended: it would be
-      a function whose whole body is `exu.sys.get(...)`, and a model that imports it is back to
-      importing something to find out how it is being run.
+    - **flat keys**: `exu.sys['testIsActive']`, `exu.sys['testResult']`;
+    - **`modelUnitTests.py` goes.** Its ten unit tests become ordinary files in
+      `python/TestModels/`, which removes the module the models import, the `TestInterface` they
+      are handed and the second way of running a test. That is the reason the step is worth its
+      size: afterwards there is **one** kind of test file;
+    - the **MiniExamples** write `exu.sys['testResult']` and nothing else;
+    - **a tolerance of its own** may be given by `exu.sys['testTolerance']`, which overrides the
+      suite's default for that model; it is usually omitted. It replaces the habit of
+      **multiplying a solution by a factor** to make it fit a tolerance, which hides the
+      tolerance inside the result;
+    - **`bricardMechanism.py` first**;
+    - **no `exudyn.misc.testing` helper.**
+
+    **Sub-steps.**
+
+    - **RG10.6.1** **DONE 2026-09-24** the channel: the runners write `exu.sys['testIsActive']`, read
+      `exu.sys['testResult']` and honour `exu.sys['testTolerance']` — in the in-process runner,
+      in the parallel worker bootstrap and for the mini examples. `exudynTestGlobals` keeps
+      working beside it, so that an unconverted model still runs.
+    - **RG10.6.2** **DONE 2026-09-24** one model: `bricardMechanism.py`, and its number is **identical**, 4.172189649306508.
+    - **RG10.6.3** the remaining ~124 models, in batches, with the full suite after each; the
+      hard-coded `testError = result - <number>` line goes with them, since
+      `runTestSuiteRefSol.py` already holds that reference.
+    - **RG10.6.4** the mini examples.
+    - **RG10.6.5** `modelUnitTests.py` becomes ten files in `python/TestModels/` and is deleted,
+      together with `TestInterface`, `ExudynTestStructure` and the `exudynTestGlobals` fallback
+      in the runners.
+    - **RG10.6.6** the documentation of the test suite, and `python/pytestTemplate.py` and
+      `docs/dev/` wherever they describe the old pattern.
+
+    **Options that remain open.**
+
+    - whether a converted model keeps a `useGraphics` name for the branches that really are
+      about drawing (a plot, a solution viewer), or writes `not testIsActive` there. It is a
+      question of reading, not of behaviour, and it is answered on the first model.
+    - what the runner does with a model that writes **no** result: today an invalid marker value
+      makes it fail. That stays, but the message can say which key it looked for.
 
     The value beyond tidiness: 125 models stop depending on a module in `python/testing/`, which
     is what makes them runnable as examples; the `except:` that swallowed every error goes; and

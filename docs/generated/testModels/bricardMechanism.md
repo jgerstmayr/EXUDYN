@@ -26,19 +26,9 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
-endTime = 1 + 0*useGraphics*4 #test with only 1 second
+endTime = 1 #test with only 1 second
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create rigid body with revolute joint:
@@ -127,7 +117,7 @@ for i, p in enumerate(listP):
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = not testIsActive
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.verboseMode = 1
@@ -160,10 +150,9 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 dof=mbs.ComputeSystemDegreeOfFreedom()
@@ -173,7 +162,7 @@ exu.Print('eigenvalues=',eigenValues)
 
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop()
 
 if False:
@@ -181,12 +170,11 @@ if False:
     mbs.SolutionViewer()
 
 #%%++++
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
-testError += dof['degreeOfFreedom'] + dof['redundantConstraints'] + eigenValues[0]
-exu.Print('solution of bricardMechanism test=',testError)
+testResult = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testResult += dof['degreeOfFreedom'] + dof['redundantConstraints'] + eigenValues[0]
+exu.Print('solution of bricardMechanism test=',testResult)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-exudynTestGlobals.testError = testError - (4.172189649307425)   #2023-06-12: 4.172189649307425
-exudynTestGlobals.testResult = testError
+exu.sys['testResult'] = testResult
 ```

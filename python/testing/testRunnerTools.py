@@ -885,7 +885,9 @@ matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
 exu.special.userInterface.SuppressAll(True)  #revision2026 step R5.17
 exu.config.outputDirectory = {outputDirectory!r}
-from modelUnitTests import exudynTestGlobals
+exu.sys['testIsActive'] = True          #revision2026b step RG10.6: the channel is exu.sys
+exu.sys['testResult'] = {invalidResult!r}
+from modelUnitTests import exudynTestGlobals   #until every model is converted
 exudynTestGlobals.useGraphics = False
 exudynTestGlobals.performTests = True
 exudynTestGlobals.testResult = {invalidResult!r}
@@ -894,8 +896,11 @@ start = time.perf_counter()
 try:
     exec(open({fileName!r}, encoding='utf8').read(), globals())
 finally:
+    _result = exu.sys.get('testResult', {invalidResult!r})
+    if _result == {invalidResult!r}:            #not converted yet
+        _result = exudynTestGlobals.testResult
     try: #models return numpy scalars; the parent parses plain text, so convert here
-        _testResult = float(exudynTestGlobals.testResult)
+        _testResult = float(_result)
     except Exception:
         _testResult = float('nan')
     print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start))

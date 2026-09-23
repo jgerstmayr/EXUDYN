@@ -764,7 +764,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
         
     if not SC.renderer.IsActive():
         SC.renderer.Start()
-        if 'renderState' in exudyn.sys: SC.renderer.SetState(exudyn.sys['renderState']) #load last model view
+        SC.renderer.RestoreSavedState() #load last model view
 
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
@@ -939,7 +939,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
 
     if not SC.renderer.IsActive():
         SC.renderer.Start()
-        if 'renderState' in exudyn.sys: SC.renderer.SetState(exudyn.sys['renderState']) #load last model view
+        SC.renderer.RestoreSavedState() #load last model view
 
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)

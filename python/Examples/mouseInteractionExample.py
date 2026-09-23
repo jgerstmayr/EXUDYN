@@ -202,9 +202,7 @@ SC.visualizationSettings.general.useMultiThreadedRendering = True
 useGraphics = True
 if useGraphics:
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
-    else:
+    if not SC.renderer.RestoreSavedState(): #no view saved yet: start from this one
         renderState = {'centerPoint': [-0.33064934611320496,
                          -0.5762133598327637,
                          0.41875001788139343],
@@ -216,7 +214,6 @@ if useGraphics:
                          [0.0, 1.0, -4.371138828673793e-08]],
                         'mouseCoordinates': [713.0, 379.0],
                         'openGLcoordinates': [1.7853742130100727, -0.5235759578645229]}
-        SC.renderer.SetState(renderState)
         SC.renderer.SetState(renderState)
     SC.renderer.DoIdleTasks()
 

@@ -124,8 +124,7 @@ SC.visualizationSettings.nodes.showBasis=True
 SC.visualizationSettings.general.useGradientBackground = True
 
 SC.renderer.Start()
-if 'renderState' in exu.sys: #reload old view
-    SC.renderer.SetState(exu.sys['renderState'])
+SC.renderer.RestoreSavedState() #reload old view
 
 SC.renderer.DoIdleTasks() #stop before simulating
 

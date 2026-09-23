@@ -195,8 +195,7 @@ SC.visualizationSettings.loads.show = False
 
 
 SC.renderer.Start()              #start graphics visualization
-if 'renderState' in exu.sys: #reload last view
-    SC.renderer.SetState(exu.sys['renderState'])
+SC.renderer.RestoreSavedState() #reload last view
 SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
 #start solver:

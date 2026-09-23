@@ -266,8 +266,7 @@ useGraphics = True
 if useGraphics:
     # start graphics
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
     
 # hte the simulation with the set up simulationsettings is started 

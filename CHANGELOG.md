@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 44 | 1.12.44 |
+| 1.12 | Metheney | 45 | 1.12.45 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.45** `IMPROVEMENT` restoring the saved render state takes two lines in 82 places (#2633) - raised by Claude-JG
+  - revision2026b step RG6.5. SC.renderer.RestoreSavedState() restores the render state that SC.renderer.Stop() saved in exudyn.sys, and returns False when nothing has been saved yet - the first run of a script, which is what the old guard was for. It is C++ because the dictionary is C++: MainRenderer::RestoreSavedState(viewID) reads the key PyStopOpenGLRenderer writes (renderState for the main view, renderState\<N\> for the others) and hands it to the existing SetState; the binding comes from definitions/pybindRenderer.py, so the pybind header, the stub and docs/generated/cInterface/Renderer.md follow from one regeneration. The two-line idiom is gone from 85 files: 82 occurrences in five variants, of which four still used the deprecated SC.SetRenderState, with indentation of 0 to 12 spaces, two bracket spellings and one call on SC2 rather than SC. docs/manual/introductionBasics.md, tutorialRigidBody.md and GUI.md say the new form. python/testing/test\_rendererState.py covers nothing-saved, a state that comes back, an unknown key, a bad value that raises as SetState does, and that no source file carries the old idiom any more.
 - **1.12.44** `EXTENSION` there is no way to see which settings differ from the defaults (#2590) - raised by Claude-JG
   - revision2026b step RG12.3. ChangedSettings, ChangedSettingsCode and PrintChangedSettings say which settings a model changed, as the Python that sets them, for visualizationSettings and simulationSettings alike. They live in the new exudyn.misc.settingsUtilities, which is the window-free half of exudyn.misc.GUI: that module imports tkinter at module scope, because the dialog class inherits from tk.Frame, so a model script on a machine without tkinter could not use any of it. 322 lines moved - the type predicates, the conversions and the settings layer of RG6.2.8 to RG6.2.10 - and the names stay importable from exudyn.misc.GUI, which is where they were public. A reference argument turns 'differs from the defaults' into 'changed since this moment', which is what the dialog calls changes since start. Tests: a fresh interpreter imports the module and 'tkinter' in sys.modules must be False, and the generated block is exec-ed against a fresh structure and must reproduce the settings it was read from. No C++ change for solution files: solutionSettings.solutionInformation is already written into the solution header and takes the block as it is, which the docstring says.
 - **1.12.43** `BUG` dialogs.fontScaling only works at 0: the rows and the columns do not follow the font (#2631) - raised by Claude-JG

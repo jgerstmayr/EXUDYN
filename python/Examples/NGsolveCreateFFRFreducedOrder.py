@@ -84,7 +84,7 @@ SC.visualizationSettings.openGL.light0.shadow = 0.2
 SC.visualizationSettings.openGL.multiSampling = 2
 
 SC.renderer.Start()
-if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
+SC.renderer.RestoreSavedState() #load last model view
 
 SC.renderer.DoIdleTasks() #press space to continue
 

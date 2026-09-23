@@ -435,8 +435,7 @@ for engine in engines:
     SC.renderer.DoIdleTasks()
     cws = SC.renderer.GetState()['currentWindowSize']
     print('window size=', cws, '(check that this is according to needs of Head Mounted Display)')
-    # if 'renderState' in exu.sys:
-    #     SC.renderer.SetState(exu.sys[ 'renderState' ])
+    # SC.renderer.RestoreSavedState()
     
     mbs.SolveDynamic(simulationSettings)
     

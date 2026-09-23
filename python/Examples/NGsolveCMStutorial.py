@@ -339,7 +339,7 @@ if True: #now import mesh as mechanical model to EXUDYN
             SC.visualizationSettings.general.autoFitScene=False
 
             SC.renderer.Start()
-            if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
+            SC.renderer.RestoreSavedState() #load last model view
         
             SC.renderer.DoIdleTasks() #press space to continue
 

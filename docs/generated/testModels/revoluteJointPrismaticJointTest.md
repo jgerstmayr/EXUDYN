@@ -163,8 +163,7 @@ if useGraphics:
     simulationSettings.displayComputationTime = True
     simulationSettings.displayStatistics = True
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys[ 'renderState' ])
+    SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False

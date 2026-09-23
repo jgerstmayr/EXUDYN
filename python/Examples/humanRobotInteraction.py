@@ -481,8 +481,7 @@ SC.visualizationSettings.openGL.lineWidth = 2
 SC.visualizationSettings.openGL.light0.position=[-6,2,12,0]
 
 SC.renderer.Start()
-if 'renderState' in exu.sys: #reload old view
-    SC.renderer.SetState(exu.sys['renderState'])
+SC.renderer.RestoreSavedState() #reload old view
 
 SC.renderer.DoIdleTasks() #stop before simulating
 

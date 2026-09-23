@@ -1184,6 +1184,16 @@ class Renderer:
         """
         ...
     @overload
+    def RestoreSavedState(self, viewID: int=0) -> bool: 
+        """Restore the render state that exu.sys holds: renderer.Stop() saves the state of every open view there, so this brings back the view of the previous run; returns False if nothing has been saved yet, which is not an error but the ordinary case on the first run of a script; it replaces the two lines that tested for renderState in exu.sys and called SetState with it.
+        
+        Examples:
+            SC = exu.SystemContainer()
+            SC.renderer.Start()
+            SC.renderer.RestoreSavedState()
+        """
+        ...
+    @overload
     def GetMouseCoordinates(self, useOpenGLcoordinates: bool=False, viewID: int=0) -> [float,float]: 
         """Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane."""
         ...

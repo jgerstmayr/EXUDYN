@@ -411,8 +411,7 @@ if __name__=='__main__':
     
     if useGraphics:
         exu.StartRenderer()
-        if 'renderState' in exu.sys:
-            SC.SetRenderState(exu.sys['renderState'])
+        SC.renderer.RestoreSavedState()
         mbs.WaitForUserToContinue()
         
     mbs.SolveDynamic(simulationSettings, 

@@ -272,8 +272,7 @@ SC.visualizationSettings.nodes.basisSize = 0.05
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 

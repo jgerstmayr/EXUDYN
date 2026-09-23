@@ -1,0 +1,17 @@
+{
+  "number": 2633,
+  "title": "restoring the saved render state takes two lines in 82 places",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.5, maintainer 2026-09-24. SC.renderer.Stop() saves the render state of every open view in exudyn.sys, and every model and example that wants the previous view back writes the same two lines: if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']). Measured: 82 occurrences in 85 files, in five spelling variants, four of them still using the deprecated SC.SetRenderState. exudyn.sys lives on the C++ side, so C++ can read it: SC.renderer.RestoreSavedState() does the whole thing and returns False when nothing has been saved yet, which is the ordinary case on the first run of a script and is why the two lines had a guard at all.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 01:25",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/MainSystemContainer.h",
+  "releaseNotes": "revision2026b step RG6.5. SC.renderer.RestoreSavedState() restores the render state that SC.renderer.Stop() saved in exudyn.sys, and returns False when nothing has been saved yet - the first run of a script, which is what the old guard was for. It is C++ because the dictionary is C++: MainRenderer::RestoreSavedState(viewID) reads the key PyStopOpenGLRenderer writes (renderState for the main view, renderState<N> for the others) and hands it to the existing SetState; the binding comes from definitions/pybindRenderer.py, so the pybind header, the stub and docs/generated/cInterface/Renderer.md follow from one regeneration. The two-line idiom is gone from 85 files: 82 occurrences in five variants, of which four still used the deprecated SC.SetRenderState, with indentation of 0 to 12 spaces, two bracket spellings and one call on SC2 rather than SC. docs/manual/introductionBasics.md, tutorialRigidBody.md and GUI.md say the new form. python/testing/test_rendererState.py covers nothing-saved, a state that comes back, an unknown key, a bad value that raises as SetState does, and that no source file carries the old idiom any more.",
+  "resolvedInVersion": "1.12.45"
+}

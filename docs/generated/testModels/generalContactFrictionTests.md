@@ -402,8 +402,7 @@ SC.visualizationSettings.openGL.light0.position = [-3,3,10,0]
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     SC.renderer.Start()
-    if 'renderState' in exu.sys:
-        SC.renderer.SetState(exu.sys['renderState'])
+    SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)

@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.44.dev1
+- Exudyn version = 1.12.45.dev1
 - last change = 2026-09-24
-- Number of issues = 2633
-- Number of resolved issues = 2358 (44 in current version)
+- Number of issues = 2634
+- Number of resolved issues = 2359 (45 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.45: resolved Issue 2633: restoring the saved render state takes two lines in 82 places (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.5, maintainer 2026-09-24. SC.renderer.Stop() saves the render state of every open view in exudyn.sys, and every model and example that wants the previous view back writes the same two lines: if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys\['renderState'\]). Measured: 82 occurrences in 85 files, in five spelling variants, four of them still using the deprecated SC.SetRenderState. exudyn.sys lives on the C++ side, so C++ can read it: SC.renderer.RestoreSavedState() does the whole thing and returns False when nothing has been saved yet, which is the ordinary case on the first run of a script and is why the two lines had a guard at all.
+  - **notes:** revision2026b step RG6.5. SC.renderer.RestoreSavedState() restores the render state that SC.renderer.Stop() saved in exudyn.sys, and returns False when nothing has been saved yet - the first run of a script, which is what the old guard was for. It is C++ because the dictionary is C++: MainRenderer::RestoreSavedState(viewID) reads the key PyStopOpenGLRenderer writes (renderState for the main view, renderState\<N\> for the others) and hands it to the existing SetState; the binding comes from definitions/pybindRenderer.py, so the pybind header, the stub and docs/generated/cInterface/Renderer.md follow from one regeneration. The two-line idiom is gone from 85 files: 82 occurrences in five variants, of which four still used the deprecated SC.SetRenderState, with indentation of 0 to 12 spaces, two bracket spellings and one call on SC2 rather than SC. docs/manual/introductionBasics.md, tutorialRigidBody.md and GUI.md say the new form. python/testing/test\_rendererState.py covers nothing-saved, a state that comes back, an unknown key, a bad value that raises as SetState does, and that no source file carries the old idiom any more.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-24 01:25**, date raised: 2026-09-24, resolved by: Claude-JG
 - Version 1.12.44: resolved Issue 2590: there is no way to see which settings differ from the defaults (extension)
   - issue author: Claude-JG
   - description: A user who wants to know what a model actually changed in simulationSettings or visualizationSettings has to compare by hand: both have GetDictionary(), and a default instance is one call away (exudyn.SimulationSettings(), exudyn.VisualizationSettings()), but nothing subtracts them. A helper in the utilities should print the difference AS PYTHON CODE, so that it can be pasted into a script and reproduces the settings - which is also what makes a session in the visualization dialog reusable. Worth considering as additional information in solution and sensor files, for reproducibility. The GUI should show the same thing for the current settings.
