@@ -1402,3 +1402,58 @@ font is *and* how much room the layout needs — and they are only the same numb
 whose scaling is 1. A value that means two things is wrong in one of them as soon as they diverge,
 and this one had diverged since the setting was added.
 
+<a id="rg12-3"></a>
+### RG12.3 — what did this model actually change? (2026-09-24, #2590)
+
+The settings dialog could always show it for one session. A **script** could not, and the reason
+was an import: everything needed sat in `exudyn.misc.GUI`, which does `import tkinter` on line 14,
+at module scope, because the dialog class inherits from `tk.Frame`. A model on a machine without
+tkinter — a cluster, a container, a CI runner — could not ask what it had changed.
+
+**So the window-free half moved out**, into `exudyn.misc.settingsUtilities`. On the name: the
+maintainer asked whether `settings.py` was right for a file that only operates on settings. The
+package already answers it — `basicUtilities`, `advancedUtilities`, `rigidBodyUtilities`,
+`graphicsDataUtilities— ` so `settingsUtilities` it is: it says *operates on* settings rather
+than *is* settings, which is what `visualizationSettings` and `simulationSettings` are.
+
+What moved: the type predicates (`IsFloat`, `IsArrayInt`, `IsVector`), the conversions
+(`ConvertString2Value`, `ConvertValue2String`, `CheckType`, `GetComboBoxListsDict`) and the
+settings layer of RG6.2.8 to RG6.2.10 (`SettingsLeafList`, `ValueLiteral`, `SettingsCodeLines`,
+`SettingsValueStrings`, `DefaultSettingsDictionary`, `FindMatches`, `SettingsPrefix`). 322 lines,
+and the compiler of this move was **ruff**: `--select F821` found `IsFloat`, which the block used
+and which had stayed behind.
+
+**The three new functions** are thin, because the machinery was already there and tested:
+
+```python
+from exudyn.misc.settingsUtilities import PrintChangedSettings
+PrintChangedSettings(SC.visualizationSettings)
+#3 settings of SC.visualizationSettings differ from the defaults
+#SC.visualizationSettings.nodes.show = False
+#SC.visualizationSettings.openGL.lineWidth = 2.0
+#SC.visualizationSettings.general.textColor = [1.0, 0.0, 0.0, 1.0]
+```
+
+`ChangedSettings` returns `(path, line)` pairs, `ChangedSettingsCode` the pastable block, and
+`PrintChangedSettings` prints it. A `reference` argument turns *"differs from the defaults"* into
+*"changed since this moment"*, which is what the dialog calls **changes since start** — the same
+function, without a window.
+
+**The test that matters is the crudest one**: it starts a fresh interpreter, imports the module and
+requires `'tkinter' in sys.modules` to be **False**. Every other test here would keep passing if
+that broke, and it is the one property the whole step exists for. The second is the round trip:
+the generated block is `exec`-ed against a fresh structure, and the result must equal the one it
+was read from — a pastable line that does not reproduce its setting is worse than none.
+
+**The names stay importable from `exudyn.misc.GUI`.** They were its public API; `checkAll` keeps
+an imported name out of `__all__`, so each is documented once, on the page of the module that
+defines it, and nothing that used them breaks.
+
+**Solution and sensor files, which the step raised as worth considering: no C++ change.** The
+ASCII solution header is written by `CSolverBase::WriteSolutionFileHeader` and the binary one is a
+fixed field sequence with its own version tag — but a free-text escape hatch already exists and
+is already in the header: `simulationSettings.solutionSettings.solutionInformation`. So
+`solutionSettings.solutionInformation = ChangedSettingsCode(simulationSettings)` makes a solution
+file reproducible today, and the function's docstring says so. Adding a second mechanism beside it
+would have been the wrong kind of completeness.
+

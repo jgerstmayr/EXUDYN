@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.43.dev1
-- last change = 2026-09-23
+- Exudyn version = 1.12.44.dev1
+- last change = 2026-09-24
 - Number of issues = 2633
-- Number of resolved issues = 2357 (43 in current version)
+- Number of resolved issues = 2358 (44 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.44: resolved Issue 2590: there is no way to see which settings differ from the defaults (extension)
+  - issue author: Claude-JG
+  - description: A user who wants to know what a model actually changed in simulationSettings or visualizationSettings has to compare by hand: both have GetDictionary(), and a default instance is one call away (exudyn.SimulationSettings(), exudyn.VisualizationSettings()), but nothing subtracts them. A helper in the utilities should print the difference AS PYTHON CODE, so that it can be pasted into a script and reproduces the settings - which is also what makes a session in the visualization dialog reusable. Worth considering as additional information in solution and sensor files, for reproducibility. The GUI should show the same thing for the current settings.
+  - **notes:** revision2026b step RG12.3. ChangedSettings, ChangedSettingsCode and PrintChangedSettings say which settings a model changed, as the Python that sets them, for visualizationSettings and simulationSettings alike. They live in the new exudyn.misc.settingsUtilities, which is the window-free half of exudyn.misc.GUI: that module imports tkinter at module scope, because the dialog class inherits from tk.Frame, so a model script on a machine without tkinter could not use any of it. 322 lines moved - the type predicates, the conversions and the settings layer of RG6.2.8 to RG6.2.10 - and the names stay importable from exudyn.misc.GUI, which is where they were public. A reference argument turns 'differs from the defaults' into 'changed since this moment', which is what the dialog calls changes since start. Tests: a fresh interpreter imports the module and 'tkinter' in sys.modules must be False, and the generated block is exec-ed against a fresh structure and must reproduce the settings it was read from. No C++ change for solution files: solutionSettings.solutionInformation is already written into the solution header and takes the block as it is, which the docstring says.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-24 00:14**, date raised: 2026-09-22, resolved by: Claude-JG
 - Version 1.12.43: <span class="textred">resolved BUG 2631</span>: dialogs.fontScaling only works at 0: the rows and the columns do not follow the font
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.23, maintainer 2026-09-23. Setting dialogs.fontScaling=1.0 gives a larger font but much too small a row height and too narrow columns, and changing the value does not help - only 0.0 is usable. Measured with a withdrawn Tk root: DialogScaling sets systemScaling=fontScaling when fontScaling\>0, and systemScaling is what the row height and the column width are computed from - TkTextHeight returns int(treeviewDefaultFontSize\*textHeightFactor\*systemScaling), which is 13 pixels at fontScaling=1.0 while the font really renders with a linespace of 16 to 18 pixels, because the point-to-pixel conversion follows the tk scaling that GetGUIContentScaling set and fontScaling never touches. The columns are worse: the scale factor is max(1,int(round(systemScaling))), an INTEGER, so it is 1 for every fontScaling below 1.5. The fix is to stop guessing: the row height and the column width are MEASURED from the font the tree will actually use (linespace and the width of the digits), so that any fontScaling works and the default appearance is unchanged.
@@ -8078,11 +8084,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - issue author: Claude-JG
   - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.
   - **remarks:** Copies are in tmp/unusedFigures/ with a README naming the issue; the originals are untouched in docs/figures/ and still in git, because tmp/ is git-ignored and a move would have taken them out of version control. Waiting for the maintainer to look at them (revision2026b step RG3.8).
-  - date raised: 2026-09-22
-- <span class="textorange">open issue 2590:</span> there is no way to see which settings differ from the defaults
-  - issue author: Claude-JG
-  - description: A user who wants to know what a model actually changed in simulationSettings or visualizationSettings has to compare by hand: both have GetDictionary(), and a default instance is one call away (exudyn.SimulationSettings(), exudyn.VisualizationSettings()), but nothing subtracts them. A helper in the utilities should print the difference AS PYTHON CODE, so that it can be pasted into a script and reproduces the settings - which is also what makes a session in the visualization dialog reusable. Worth considering as additional information in solution and sensor files, for reproducibility. The GUI should show the same thing for the current settings.
-  - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-22
 - <span class="textorange">open issue 2589:</span> item parameters cannot be deprecated
   - issue author: Claude-JG

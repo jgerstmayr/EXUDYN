@@ -1223,7 +1223,17 @@ find out about the settings of a model. It is the group a user notices most and 
     last**, so that the common case pays nothing.
 
 <a id="rg12-3"></a>
-**RG12.3** *(group RG12; maintainer 2026-09-22)* **What did this model actually change?** (#2590)
+**RG12.3** **DONE 2026-09-24** (#2590) — [log](exudynRevisionLog2026b.md#rg12-3) —
+    **What did this model actually change?** `ChangedSettings`, `ChangedSettingsCode` and
+    `PrintChangedSettings` answer it, for `visualizationSettings` and `simulationSettings` alike,
+    in the new **`exudyn.misc.settingsUtilities`** — which is the window-free half of
+    `exudyn.misc.GUI`, moved out because that module imports tkinter at module scope and a model
+    script therefore could not use any of it. A test starts a fresh interpreter and requires that
+    importing the new module pulls in **no tkinter**. The solution file needs no C++ change:
+    `solutionSettings.solutionInformation` is written into its header and takes the block as it
+    is. The original text follows.
+
+    *(group RG12; maintainer 2026-09-22)* **What did this model actually change?** (#2590)
     Both settings structures have `GetDictionary()`, and a default instance is one call away
     (`exudyn.SimulationSettings()`, `exudyn.VisualizationSettings()`), but nothing subtracts the
     two. A helper in the utilities should print the difference **as Python code**, so that it can

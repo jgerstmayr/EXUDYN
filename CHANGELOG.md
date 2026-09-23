@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 43 | 1.12.43 |
+| 1.12 | Metheney | 44 | 1.12.44 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.44** `EXTENSION` there is no way to see which settings differ from the defaults (#2590) - raised by Claude-JG
+  - revision2026b step RG12.3. ChangedSettings, ChangedSettingsCode and PrintChangedSettings say which settings a model changed, as the Python that sets them, for visualizationSettings and simulationSettings alike. They live in the new exudyn.misc.settingsUtilities, which is the window-free half of exudyn.misc.GUI: that module imports tkinter at module scope, because the dialog class inherits from tk.Frame, so a model script on a machine without tkinter could not use any of it. 322 lines moved - the type predicates, the conversions and the settings layer of RG6.2.8 to RG6.2.10 - and the names stay importable from exudyn.misc.GUI, which is where they were public. A reference argument turns 'differs from the defaults' into 'changed since this moment', which is what the dialog calls changes since start. Tests: a fresh interpreter imports the module and 'tkinter' in sys.modules must be False, and the generated block is exec-ed against a fresh structure and must reproduce the settings it was read from. No C++ change for solution files: solutionSettings.solutionInformation is already written into the solution header and takes the block as it is, which the docstring says.
 - **1.12.43** `BUG` dialogs.fontScaling only works at 0: the rows and the columns do not follow the font (#2631) - raised by Claude-JG
   - revision2026b step RG6.2.23. dialogs.fontScaling works at any value now. DialogScaling set systemScaling=fontScaling, and the row height and the column width were computed from that number, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display. Measured with a withdrawn Tk root: at fontScaling=1 the rows were 13 pixels for a font whose linespace is 16 to 18, so the text was clipped, and the column factor max(1,int(round(systemScaling))) was an integer and stayed at 1 for every value below 1.5. The new DialogRowMetrics(root, fontFactor) builds the font the tree will use and asks it: the row height is metrics('linespace') times rowHeightFactor=1.15, chosen to reproduce the pixel height the dialog had at the default font, and the column scale is the width of the digits in that font over the width in the unscaled one. Measured after: fontScaling 1.0/1.25/1.5/2.0 gives row heights 17/20/25/31 and column scales 1.00/1.14/1.57/1.86. The default appearance is unchanged - at fontScaling=0 the column scale is exactly 1 and the row height is within a pixel of what it was. A test requires every row to be at least as tall as the linespace of its own font.
 - **1.12.42** `BUG` a double click on a bool setting no longer toggles it (#2630) - raised by Claude-JG

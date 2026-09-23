@@ -16,11 +16,22 @@ import tkinter.messagebox
 import tkinter.ttk as ttk
 import tkinter.font as tkFont
 import numpy as np #for array checks
-from numpy import float32
-import ast #for ast.literal_eval
 import sys
 import exudyn
 from exudyn.misc.keyBindings import RendererHelpText
+
+#the settings layer moved to its own module in revision2026b step RG12.3 (#2590): it works on
+#dictionaries and needs no window, and this module imports tkinter at module scope, so a model
+#script could not have used it from here. The names stay importable from HERE, because they were
+#the public API of this module; checkAll keeps an imported name out of __all__, so each of them
+#is documented once, on the page of the module that defines it.
+from exudyn.misc.settingsUtilities import (CheckType, ConvertString2Value,  # noqa: F401
+                                           IsArrayInt, IsFloat, IsVector,
+                                           ConvertValue2String, DefaultSettingsDictionary,
+                                           FindMatches, GetComboBoxListsDict,
+                                           SettingsCodeLines, SettingsLeafList,
+                                           SettingsPrefix, SettingsValueStrings,
+                                           ValueLiteral, containerInitialisedSettings)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -29,15 +40,11 @@ __all__ = [
     'treeEditMaxInitialHeight', 'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems',
     'treeEditLastOpenItems', 'codeLineBackground', 'changedValueColor', 'IsApple',
     'GetRendererSystemContainer', 'GetTkRootAndNewWindow', 'TkRootExists', 'DialogFontSize',
-    'DialogRowMetrics', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector',
-    'GetExudynDisplayScaling', 'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict',
-    'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral',
-    'SettingsCodeLines', 'containerInitialisedSettings', 'DefaultSettingsDictionary',
-    'SettingsValueStrings', 'FindMatches', 'SettingsPrefix', 'Tooltip',
-    'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
-    'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
-    'pythonCommandExamples', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
-    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
+    'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo',
+    'TkinterEditDictionary', 'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText',
+    'ShowHelpDialog', 'pythonCommandExamples', 'ShowPythonCommandDialog',
+    'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -152,29 +159,6 @@ def TkTextHeight(systemScaling):
     
     return int((treeviewDefaultFontSize*textHeightFactor)*systemScaling) #must be int; 13 is good with treeviewDefaultFontSize = 9; 12 leads to some cuts of 'g'
 
-#check if is float:
-def IsFloat(v):
-    try:
-        float(v)
-    except ValueError:
-        return False
-    return True
-
-#check if converts to numpy array
-def IsArrayInt(v):
-    try:
-        np.fromstring(v,dtype=int,sep=',') #frombuffer does not work!
-    except ValueError:
-        return False
-    return True
-    
-def IsVector(v):
-    try:
-        np.fromstring(v,dtype=float,sep=',') #frombuffer does not work!
-    except ValueError:
-        return False
-    return True
-
 #safely request scaling factor from exudyn
 def GetExudynDisplayScaling():
     try:
@@ -234,330 +218,6 @@ def DialogScaling(root):
         systemScaling = fontScaling
 
     return [systemScaling, fontFactor]
-
-#create dictionaries for lists in combo box: bool, OutputVariableType, ...
-def GetComboBoxListsDict(exu = None):
-    """The values a settings item of an enum type may take, as {typeName: [values]}.
-
-    EVERY enum of the module, not a hand-written list of three: until revision2026b step RG6.2.3
-    this named OutputVariableType, LinearSolverType and ItemType, and
-    timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore
-    edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is
-    recognised by its __members__, so an enum added to the module arrives here by itself.
-
-    Args:
-        exu: the exudyn module
-
-    Returns:
-        the dictionary the dialog picks its combo box entries from
-    """
-    dT=dict() #as type
-
-    if exu is not None: #exudyn loaded
-        for name in dir(exu):
-            if name.startswith('_'):
-                continue
-            candidate = getattr(exu, name, None)
-            members = getattr(candidate, '__members__', None)
-            if isinstance(members, dict) and len(members) != 0:
-                dT[name] = [members[key] for key in members]
-    else:
-        exudyn.Print('WARNING: GetComboBoxListsDict: exudyn not loaded as "exu"')
-
-    #d['bool'] = ['True','False']
-    dT['bool'] = [True, False]
-    return dT
-    
-#convert string into exudyn type
-def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
-    errorMsg = ''
-    if vType == 'FileName' or vType == 'String':
-        return [value, errorMsg]
-
-    if vType == 'bool':
-        if value == 'True':
-            return [True, errorMsg]
-        else:
-            return [False, errorMsg]
-
-    if (vType == 'float' 
-        or vType == 'PReal' or vType == 'UReal' or vType == 'Real'
-        or vType == 'PFloat' or vType == 'UFloat'):
-        floatValue = float(value)
-        if vType == 'PReal' and floatValue <= 0:
-                errorMsg = 'PReal must be > 0'
-        if vType == 'UReal' and floatValue < 0:
-                errorMsg = 'UReal must be >= 0'
-        if vType == 'PFloat' and floatValue <= 0:
-                errorMsg = 'PFloat must be > 0'
-        if vType == 'UFloat' and floatValue < 0:
-                errorMsg = 'UFloat must be >= 0'
-        
-        return [float(value), errorMsg]
-
-    if vType == 'Index' or vType == 'Int' or vType == 'PInt' or vType == 'UInt':
-        intValue = int(value)
-
-        if vType == 'Index' or vType == 'UInt':
-            if intValue < 0:
-                errorMsg = 'UInt must be >= 0'
-
-        if vType == 'PInt':
-            if intValue <= 0:
-                errorMsg = 'PInt must be > 0'
-                
-        return [intValue, errorMsg]
-
-#    print('vType=',vType)
-#    print('value=',value)
-    
-    if vType in dictionaryTypesT:#search for correct type in list
-        for iValue in dictionaryTypesT[vType]:
-            if str(iValue) == value:
-                return [iValue, errorMsg]
-
-    if (len(vSize) == 2 or                      #must be matrix
-        (len(vSize)==1 and vSize[0] > 1) or     #must be vector with fixed size
-        (len(vSize)==1 and vSize[0] == -1) ):   #array / vector with undefined size
-        return [ast.literal_eval(value), errorMsg]
-
-    return [0, 'unknown type '+vType]
-
-#convert values to string; special treatment of floats (C++ float, single precision)
-def ConvertValue2String(value, vType, vSize):
-    if (len(vSize)==1 and vSize[0] == 1 and #special treatment for conversion with according number of digits!
-        (  vType == 'float'
-        or vType == 'PFloat'
-        or vType == 'UFloat'
-        )):
-        return str(float32(value))
-    #elif len(vSize)==1 and vType == 'VectorFloat':
-    elif vType == 'VectorFloat' or vType == 'MatrixFloat': #special treatment for conversion with according number of digits!
-        #return str(np.array(value,dtype=float32).tolist()) #still produces float64 converted numbers
-        return str(np.array(value,dtype=float32).astype(str).tolist()).replace("'","") #workaround to produce single-precition numbers ...
-    return str(value)
-
-#check if a valueStr corresponds to correct type and size; return True, if correct; False if type incorrect
-#returns [isValid, errorMSG]
-#isValid=True: everything is ok
-def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
-#    print('str=',valueStr)
-
-    #':' belongs in a file name: C:/models/gear.stl is what a Windows user types, and without it
-    #the dialog refused even its own default (#2597, revision2026b step RG6.2.3)
-    validFileNameChar = " `'{}()%&-@#$~!_^./\\:"
-
-    #an enum is a value of a fixed list and nothing else. Without this branch the string
-    #'LinearSolverType.EXUdense' fell through to the exec() below, raised NameError and was
-    #reported as "invalid array or matrix" - which the combo box hid, because it never asks
-    #CheckType (#2597)
-    if dictionaryTypesT is not None and vType in dictionaryTypesT:
-        allowed = [str(value) for value in dictionaryTypesT[vType]]
-        if valueStr in allowed:
-            return [True, '']
-        return [False, vType + ' must be one of: ' + ', '.join(allowed)]
-    
-#    if vType == 'bool':
-#        if valueStr=='False' or valueStr=='True':
-#            return [True, '']
-#        else:
-#            return [False, 'bool may only be True or False']
-
-    if vType == 'FileName':
-        if len(valueStr) == 0 or valueStr[0]==' ': #space at first position may be possible on file systems, but is not recommended
-            return [False, 'filename may neither be empty nor begin with a SPACE character']
-        for x in valueStr: #this is inefficient but should not delay too much
-            if not ((x in validFileNameChar)  or x.isalpha() or x.isnumeric()):
-                return [False, 'invalid character in file name: may only be A-Z, a-z, 0-9, "'+validFileNameChar +'"']
-        return [True, '']
-
-    if vType == 'String':
-        return [True, '']
-    if vType == 'float':
-        rv = IsFloat(valueStr)
-        if rv:
-            return [True, '']
-        else:
-            return [False, 'invalid float number']
-    if vType == 'Index' and not valueStr.isdigit():
-        return [False, 'invalid integer (must be positive)']
-    
-    #Now check vectors, matrices, ...: try if value can be converted ...
-    x=[0]
-    try:
-        s = 'locx='+str(valueStr)# + '\nprint(x)'
-        mylocals={'locx':[]}
-        exec(s,globals(),mylocals)
-        x=mylocals['locx']
-    except Exception:
-        return [False, 'invalid array or matrix: check brackets and types']
-
-    
-    if len(vSize) == 1 and vSize[0] > 1: #vector/array
-        if len(x) != vSize[0]:
-            return [False, 'vector/array must have length '+str(vSize[0])]
-        
-        if vType == 'IndexArray':
-            for i in x:
-                if int(i) != i or i < 0: #not an integer
-                    return [False, 'array values must be positive integer (including 0)']
-    if len(vSize) == 2:
-        if len(x) != vSize[0]:
-            return [False, 'matrix must have '+str(vSize[0]) + ' rows']
-        for row in x:
-            if len(row) != vSize[1]:
-                return [False, 'matrix must have '+str(vSize[1]) + ' columns']
-    
-    return [True, '']
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHAT THE DIALOG SHOWS, WITHOUT A WINDOW (revision2026b steps RG6.2.8 to RG6.2.10).
-#The tree, the code line, the marking of a changed value and the find ask the same questions -
-#which leaves are there, and what does a leaf look like as Python - so they are asked here, on
-#dictionaries, where a test can reach them without opening anything.
-
-def SettingsLeafList(dictionaryWithTypeInfo, path=''):
-    """every editable value of a settings structure, in tree order
-
-    Args:
-        dictionaryWithTypeInfo: what GetDictionaryWithTypeInfo() returns, or a part of it
-        path: the dotted path the given dictionary sits at, '' for the whole structure
-
-    Returns:
-        list of (path, value, valueString, vType, vSize, description); valueString is what the
-        dialog shows in the cell, which is what everything else compares and copies, and value is
-        what the settings structure holds
-    """
-    leaves = []
-    for (key, value) in dictionaryWithTypeInfo.items():
-        if not isinstance(value, dict):
-            continue
-        if 'itemIdentifier' in value:
-            leaves.append((path + key, value['value'],
-                           ConvertValue2String(value['value'], value['type'], value['size']),
-                           value['type'], value['size'], value['description']))
-        else:
-            leaves += SettingsLeafList(value, path + key + '.')
-    return leaves
-
-
-def ValueLiteral(valueStr, vType, dictionaryTypesT=None):
-    """the value as PYTHON writes it: a string is quoted, an enum carries its module
-
-    Args:
-        valueStr: the value as the dialog shows it
-        vType: the type name of the setting
-        dictionaryTypesT: the lists of the types that have a fixed set of values
-
-    Returns:
-        a string that can stand on the right hand side of an assignment
-    """
-    if vType in ['String', 'FileName']:
-        return repr(valueStr)
-    if vType != 'bool' and dictionaryTypesT is not None and vType in dictionaryTypesT:
-        return 'exu.' + valueStr           #an enum needs the module it lives in
-    return valueStr
-
-
-def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT=None):
-    """the settings that differ from a reference, as the lines that set them
-
-    The comparison is on the string the dialog SHOWS, not on the value: that is what makes a float
-    and an enum comparable at all, and it marks exactly what a user sees in the cell.
-
-    Args:
-        currentLeaves: SettingsLeafList(...), or the same six fields taken from the dialog
-        referenceValueStrings: {path: valueString} of what is compared against - the defaults, or
-            the values a dialog opened with; a path that is not in it counts as unchanged
-        prefix: SettingsPrefix(...) of the structure
-        dictionaryTypesT: the lists of the types that have a fixed set of values
-
-    Returns:
-        list of (path, line), in tree order
-    """
-    lines = []
-    for (path, _, valueStr, vType, _, _) in currentLeaves:
-        if referenceValueStrings.get(path, valueStr) != valueStr:
-            lines.append((path, prefix + '.' + path + ' = '
-                          + ValueLiteral(valueStr, vType, dictionaryTypesT)))
-    return lines
-
-
-#the settings a SystemContainer initialises beyond the defaults of the structure itself - and
-#since revision2026b step RG6.2.20 (#2626) there are NONE: the three dimmed lights and the ten
-#raytracer materials are defaults of the structure now, written in
-#definitions/structureDefsVisualizationSettings.py, so the constructor is the truth and a
-#difference shown by the dialog is a difference a user made. The list stays as the place to name
-#an exception, and a test requires it to remain empty.
-containerInitialisedSettings = []
-
-
-def DefaultSettingsDictionary(settingsStructure):
-    """the defaults of a settings structure, as its own constructor produces them
-
-    NOT from a SystemContainer, although that is the state a user really starts from: creating one
-    ATTACHES IT TO THE RUNNING RENDER ENGINE (MainSystemContainer() calls
-    AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() ->
-    DetachFromRenderEngine), so a temporary container opened for a moment takes the render window
-    away from the container that owns it - the window closes (#2625). The settings a container
-    initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where
-    this function can see them.
-
-    Args:
-        settingsStructure: the structure being edited
-
-    Returns:
-        the dictionary with type info of a fresh structure of the same kind
-    """
-    return type(settingsStructure)().GetDictionaryWithTypeInfo()
-
-
-def SettingsValueStrings(dictionaryWithTypeInfo):
-    """{path: valueString} of a settings structure - what SettingsCodeLines compares against"""
-    return {path: valueStr
-            for (path, _, valueStr, _, _, _) in SettingsLeafList(dictionaryWithTypeInfo)}
-
-
-def FindMatches(leaves, searchText):
-    """the settings a search text finds: the NAMES first, the descriptions second
-
-    Several hundred values in a tree of folders, and until revision2026b step RG6.2.10 the only
-    way to a setting was knowing which folder it sits in.
-
-    Args:
-        leaves: SettingsLeafList(...) of the settings being searched
-        searchText: what the user typed; case does not matter
-
-    Returns:
-        list of (path, label), name hits first, then hits in the path, then hits that are only in
-        the description - those labelled with the part of the description that matched
-    """
-    searchText = searchText.strip().lower()
-    if searchText == '':
-        return []
-    (nameHits, pathHits, descriptionHits) = ([], [], [])
-    for (path, _, _, _, _, description) in leaves:
-        name = path.split('.')[-1]
-        if searchText in name.lower():
-            nameHits.append((path, path))
-        elif searchText in path.lower():
-            pathHits.append((path, path))
-        elif searchText in description.lower():
-            start = max(0, description.lower().find(searchText) - 20)
-            snippet = ' '.join(description[start:start + 70].split())
-            descriptionHits.append((path, path + '  -  ...' + snippet + '...'))
-    return nameHits + pathHits + descriptionHits
-
-
-def SettingsPrefix(settingsStructure):
-    """the name a script uses for this settings structure, e.g. SC.visualizationSettings"""
-    structure = type(settingsStructure).__name__
-    if structure == 'VisualizationSettings':
-        return 'SC.visualizationSettings'
-    if structure == 'SimulationSettings':
-        return 'simulationSettings'
-    return structure[:1].lower() + structure[1:]
-
 
 class Tooltip:
     """The small yellow window that shows the description of the row under the mouse.

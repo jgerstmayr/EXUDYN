@@ -1,0 +1,16 @@
+{
+  "number": 2590,
+  "title": "there is no way to see which settings differ from the defaults",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "A user who wants to know what a model actually changed in simulationSettings or visualizationSettings has to compare by hand: both have GetDictionary(), and a default instance is one call away (exudyn.SimulationSettings(), exudyn.VisualizationSettings()), but nothing subtracts them. A helper in the utilities should print the difference AS PYTHON CODE, so that it can be pasted into a script and reproduces the settings - which is also what makes a session in the visualization dialog reusable. Worth considering as additional information in solution and sensor files, for reproducibility. The GUI should show the same thing for the current settings.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-24 00:14",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "revision2026b step RG12.3. ChangedSettings, ChangedSettingsCode and PrintChangedSettings say which settings a model changed, as the Python that sets them, for visualizationSettings and simulationSettings alike. They live in the new exudyn.misc.settingsUtilities, which is the window-free half of exudyn.misc.GUI: that module imports tkinter at module scope, because the dialog class inherits from tk.Frame, so a model script on a machine without tkinter could not use any of it. 322 lines moved - the type predicates, the conversions and the settings layer of RG6.2.8 to RG6.2.10 - and the names stay importable from exudyn.misc.GUI, which is where they were public. A reference argument turns 'differs from the defaults' into 'changed since this moment', which is what the dialog calls changes since start. Tests: a fresh interpreter imports the module and 'tkinter' in sys.modules must be False, and the generated block is exec-ed against a fresh structure and must reproduce the settings it was read from. No C++ change for solution files: solutionSettings.solutionInformation is already written into the solution header and takes the block as it is, which the docstring says.",
+  "resolvedInVersion": "1.12.44"
+}

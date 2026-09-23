@@ -103,6 +103,7 @@ filesParsed=[
              'graphics.py',
              'graphicsDataUtilities.py',
              'misc/GUI.py', 
+             'misc/settingsUtilities.py',
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger

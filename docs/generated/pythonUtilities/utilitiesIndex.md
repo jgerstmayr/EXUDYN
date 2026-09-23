@@ -30,6 +30,7 @@ FEM
 graphics
 graphicsDataUtilities
 misc.GUI
+misc.settingsUtilities
 interactive
 kinematicTree
 lieGroupBasics
