@@ -1,0 +1,16 @@
+{
+  "number": 2591,
+  "title": "the settings dialogs work but are hard to use, and GUI.py is hard to change",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "python/exudyn/GUI.py does its job with tkinter - it runs everywhere and needs no installation - but it is in bad shape, and the dialogs are called from rendererPythonInterface.cpp, which executes Python inside C++. What the maintainer names (2026-09-22): the table of the visualization settings is restricted; illegal input is caught but there are no type hints; the font size cannot be adjusted on Linux; the columns can hardly be adjusted; a description should appear in a pop-up rather than only with a special key; fields cannot be edited inline; combo boxes are unhandy. Two things changed the ground under it: revision2026 step R4.10 makes the parameter TYPES available to Python, and the interface is generic enough that a second front end (Qt6, or a form that takes Qt5 and Qt6) would be a small overhead on top. A snapshot of the dialog as it is: docs/theDoc/figures/visualizationSettings.png in the history.",
+  "dateRaised": "2026-09-22",
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-09-23 15:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The settings dialogs and GUI.py, in ten sub-steps: the dialogs left rendererPythonInterface.cpp, the layer under the widgets got tests, the validator was made to agree with the settings, one dialogs.fontScaling replaced fontScalingMacOS, the value is edited in its cell, the bottom row is the line that sets it, a setting differing from the defaults is shown in colour and can be copied as code, and a find bar with CTRL+F searches names first and descriptions second. The key bindings of the render window come from ONE table in exudyn.misc.keyBindings: the help dialog and the tables of the manual are generated from it, and a test compares it with GlfwClient.cpp - which found five bindings documented nowhere (H, R, CTRL+R, CTRL+V, CTRL+7) and the keypad rotation keys named wrongly in both copies. GUI.py was cleaned up last: the dead EXAMPLE block and 32 lines of commented-out code removed, the bare prints turned into exudyn.Print with WARNING/ERROR and the name of the function, and the dialog no longer writes treeEditOpenItems, which is the user configuration - what was open is remembered in treeEditLastOpenItems. A second front end (RG6.2.5) was dropped by the maintainer.",
+  "resolvedInVersion": "1.12.21"
+}

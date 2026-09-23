@@ -93,6 +93,10 @@ stages = [
     #(revision2026b step RG3.5, #2550); its only input is the bibliography
     Stage('tools/generators/referencesDocsEmitter.py', ['docs/bibliographyDoc.bib'],
           ['docs/generated/references.md', G + 'confHelperCitations.py']),
+    #the mouse and keyboard tables of the manual, from the one table the help dialog also uses
+    #(revision2026b step RG6.2.6, #2591)
+    Stage('tools/generators/keyBindingsEmitter.py', ['python/exudyn/misc/keyBindings.py'],
+          ['docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md']),
     Stage('tools/generators/examplesDocsEmitter.py',
           ['python/Examples', 'python/TestModels'],
           ['docs/generated/examples', 'docs/generated/testModels',

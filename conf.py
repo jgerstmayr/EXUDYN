@@ -110,6 +110,11 @@ exclude_patterns = ['rotorAnsys.rst',
                     'docs/howTo/gccVsMsvcTraps.md',
                     'docs/howTo/matplotlibExamples.md',
                     'docs/howTo/visualStudio2022.md',
+                    #the mouse and keyboard tables, generated from
+                    #python/exudyn/misc/keyBindings.py and INCLUDED by docs/manual/GUI.md;
+                    #as documents of their own they would be orphans and fail the strict
+                    #build (revision2026b step RG6.2.6, #2591)
+                    'docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md',
                     'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

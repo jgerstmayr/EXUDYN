@@ -720,3 +720,83 @@ happens below the widgets — and whether a find bar of this shape is the one th
 the blue is readable on a row, and whether the two buttons are where a hand looks for them is the
 maintainer's to say.
 
+<a id="rg6-2-6"></a>
+### RG6.2.6 — the key bindings come from one table (2026-09-23, #2591)
+
+What the render window does when a key is pressed was written down **three times**:
+`src/Graphics/GlfwClient.cpp` implements it, `docs/manual/GUI.md` tabulated it, and the help
+dialog printed its own text. Two of the three were prose, and nothing kept them in step with the
+first — so they had drifted, and the drift is the argument for this step:
+
+- **four bindings that exist were documented nowhere**: **H** (which opens the help window
+  itself), **R** (auto-rotate the model view), **CTRL+R** (raytracing on and off for the current
+  view) and **CTRL+V** (open the window of the next configured view). **CTRL+7**, the 3D view, was
+  in neither table either.
+- the **keypad rotation keys were named wrongly in both copies**: they read *KEYPAD 2/8, 4/6,
+  1/9*, and the renderer uses `GLFW_KEY_KP_7` and `GLFW_KEY_KP_9`. A user following either
+  document pressed a key that does nothing.
+
+`python/exudyn/misc/keyBindings.py` is the one table now: per binding the keys as a user presses
+them, what it does, the remarks for the documentation, the short form for the help dialog, and
+**the GLFW key names it is implemented with**. `RendererHelpText()` builds the dialog text from
+it (the 53-line literal in `GUI.py` is gone), and `tools/generators/keyBindingsEmitter.py` writes
+`docs/generated/mouseBindings.md` and `docs/generated/keyBindings.md`, which `docs/manual/GUI.md`
+includes where its tables stood. Two prose copies became renderings of one source.
+
+**The third copy cannot be generated, so it is compared.** The emitter reads the key tests out of
+`GlfwClient.cpp` and reports what one side has and the other does not; today the two agree
+exactly. `python/testing/test_keyBindings.py` makes that a test rather than a report: a
+documented binding that nothing implements is a failure, and an implemented key that is documented
+nowhere is a failure with a list of accepted exceptions that is **empty**. The next key someone
+adds to the renderer will fail the suite until it is written down — which is the only way a
+copy that cannot be generated stays honest.
+
+<a id="rg6-2-7"></a>
+### RG6.2.7 — GUI.py is cleaned up (2026-09-23, #2591)
+
+Last, as the maintainer asked, because every other sub-step edited this module.
+
+**Dead code out**: the `#EXAMPLE` dictionary at the end (19 lines of a call nobody makes) and 32
+lines of commented-out code — `#print('select')`, `#print(kids)`, an abandoned `exec` string,
+two font lines under the comment *"no effect"*. Kept, deliberately: the two commented lines that
+say **why** the code around them looks as it does, such as the `float32` conversion that produces
+the single precision the C++ side holds. A comment that explains is not dead code; a line of code
+behind a `#` is.
+
+**One way of reporting**: seven bare `print()` calls became `exudyn.Print`, with `WARNING:` or
+`ERROR:` and the name of the function that failed — they go where the rest of Exudyn's output
+goes, and a message such as *"showing of dictionary failed"* now says which dialog said it. The
+command window keeps its plain `print`: that one is a transcript of what the user just ran, and
+it belongs in the console.
+
+**And the module stopped writing the user's configuration.** `treeEditOpenItems` is documented as
+the list of folders a settings dialog opens with, and a user sets it — while the dialog
+**appended to it and removed from it on every click on a folder**, so opening a folder once
+rewrote the configuration for the rest of the process, and every `SystemContainer` shared the
+result. The list is configuration now and nothing writes it; the dialog keeps its own
+`self.openItems`, and what was open when a dialog was last used is remembered in
+`treeEditLastOpenItems`, which says in its name that it is session state. The remembering that
+the clicks used to do by accident is kept on purpose, and both lists are in the manual.
+
+`GUI.py` is 1680 lines after all of RG6.2, having been 1017 when the group was written up —
+against 528 lines that left `rendererPythonInterface.cpp` (RG6.2.1) and four dialogs, a tooltip,
+a cell editor, the diff windows and the find that were added.
+
+<a id="rg6-2"></a>
+### RG6.2 is closed (2026-09-23, #2591)
+
+Every sub-step is done or dropped. What the maintainer named on 2026-09-22 — a restricted
+table, no type hints, no font scaling off macOS, columns that cannot be adjusted, descriptions
+behind a special key, no inline editing, unhandy combo boxes — is answered by RG6.2.1 to
+RG6.2.10, and **RG6.2.5 (a second front end) is dropped**: tkinter needs no installation, runs
+everywhere and now does what was asked of it. What the group produced beyond the complaints is
+the part worth remembering: the dialogs left the C++ (RG6.2.1), the layer under the widgets got
+tests where there were none (RG6.2.2), the validator was made to agree with the settings it
+validates (RG6.2.3), and everything that can be decided without a window is now a module level
+function on dictionaries — which is why a group whose result cannot be seen by the session that
+wrote it could be built at all.
+
+Two things it leaves open, both deliberate: **RG6.2.11** (#2608), the catalogue of optional
+features with **undo** at the top of it, and **RG12.3**, which is the *diff to default* of
+RG6.2.9 for a whole settings structure rather than for one dialog.
+

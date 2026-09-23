@@ -439,7 +439,8 @@ This group is that revision and what has to happen before it can start.
 
 
 <a id="rg6-2"></a>
-**RG6.2** *(group RG6; maintainer 2026-09-22)* **The settings dialogs, and the shape of
+**RG6.2** **DONE 2026-09-23** (#2591) — every sub-step is done or dropped; the open work that came out of it stands in RG6.2.11
+    (#2608, the optional features) and in RG12.3. — *(group RG6; maintainer 2026-09-22)* **The settings dialogs, and the shape of
     `GUI.py`** (#2591). It works, it runs everywhere and it needs no installation - tkinter -
     and that is the reason to keep it. What is wrong with it, in the maintainer's words: the
     table of the visualization settings is restricted; illegal input is caught but there are no
@@ -552,12 +553,17 @@ This group is that revision and what has to happen before it can start.
     (maintainer, 2026-09-23) — which is what RG12.3 produces for the whole structure.
 
 <a id="rg6-2-5"></a>
-**RG6.2.5** **A second front end**, if it is still wanted once RG6.2.1-RG6.2.4 have shown what
-    the interface between the data and the widgets actually is. The data side is ready:
-    `GetDictionaryWithTypeInfo()` is bound for every settings structure.
+**RG6.2.5** **DROPPED 2026-09-23** *(maintainer)* — **A second front end.** It was planned
+    as a question, not as work: whether another toolkit is wanted once RG6.2.1-RG6.2.4 have shown
+    what the interface between the data and the widgets is. The answer is no. tkinter runs
+    everywhere and needs no installation, which is the reason it was kept in the first place, and
+    RG6.2.8 to RG6.2.10 have made it do what was asked of it. What the step would have needed is
+    ready in any case — `GetDictionaryWithTypeInfo()` is bound for every settings structure, and
+    everything below the widgets is module level functions on dictionaries since RG6.2.8 — so a
+    second front end remains possible without this step standing open.
 
 <a id="rg6-2-6"></a>
-**RG6.2.6** **The key bindings are written down three times**: `GlfwClient.cpp` implements them,
+**RG6.2.6** **DONE 2026-09-23** (#2591) — [log](exudynRevisionLog2026b.md#rg6-2-6) — **The key bindings are written down three times**: `GlfwClient.cpp` implements them,
     `docs/manual/GUI.md` tabulates them in 64 rows, and the help dialog prints its own 55-line
     text. Two of the three are prose that nothing keeps in step with the first. One source — a
     table in Python — could feed both the dialog and a generated page, the way `definitions/`
@@ -565,7 +571,7 @@ This group is that revision and what has to happen before it can start.
     without fixing the duplication.
 
 <a id="rg6-2-7"></a>
-**RG6.2.7** **`GUI.py` is cleaned up, last** *(maintainer, 2026-09-23)*. The module is the one
+**RG6.2.7** **DONE 2026-09-23** (#2591) — [log](exudynRevisionLog2026b.md#rg6-2-7) — **`GUI.py` is cleaned up, last** *(maintainer, 2026-09-23)*. The module is the one
     that every other sub-step edits, so the tidying belongs at the end, when the shape has
     settled and RG6.2.2 can say whether the tidying broke anything. What is there to do today,
     in 1315 lines: **55 lines of commented-out code**, the dead `#EXAMPLE` dictionary at the end,

@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 21 | 1.12.20 |
+| 1.12 | Metheney | 22 | 1.12.21 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.21** `IMPROVEMENT` the settings dialogs work but are hard to use, and GUI.py is hard to change (#2591) - raised by Claude-JG
+  - The settings dialogs and GUI.py, in ten sub-steps: the dialogs left rendererPythonInterface.cpp, the layer under the widgets got tests, the validator was made to agree with the settings, one dialogs.fontScaling replaced fontScalingMacOS, the value is edited in its cell, the bottom row is the line that sets it, a setting differing from the defaults is shown in colour and can be copied as code, and a find bar with CTRL+F searches names first and descriptions second. The key bindings of the render window come from ONE table in exudyn.misc.keyBindings: the help dialog and the tables of the manual are generated from it, and a test compares it with GlfwClient.cpp - which found five bindings documented nowhere (H, R, CTRL+R, CTRL+V, CTRL+7) and the keypad rotation keys named wrongly in both copies. GUI.py was cleaned up last: the dead EXAMPLE block and 32 lines of commented-out code removed, the bare prints turned into exudyn.Print with WARNING/ERROR and the name of the function, and the dialog no longer writes treeEditOpenItems, which is the user configuration - what was open is remembered in treeEditLastOpenItems. A second front end (RG6.2.5) was dropped by the maintainer.
 - **1.12.20** `EXTENSION` settings dialog: find a setting by name, with CTRL-F (#2607) - raised by Claude-JG
   - A find bar above the settings tree: CTRL+F puts the cursor in it, RETURN or F3 or the find button steps to the next hit and around at the end, and a drop-down lists the hits so that one can be picked. It searches the names first and the descriptions second, and a description hit is labelled with the piece of description that matched. A hit is jumped to rather than filtered to: the folders it sits in are opened and the row is scrolled into view. FindMatches is a module level function on the leaf list, with tests for the order and for the promise that every hit names a setting the tree holds. The manual section on the visualization settings dialog now also says how the dialog is used at all.
 - **1.12.19** `IMPROVEMENT` settings dialog: a changed value should be visible, and all changes copyable at once (#2606) - raised by Claude-JG

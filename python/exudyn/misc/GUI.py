@@ -19,17 +19,18 @@ from numpy import float32
 import ast #for ast.literal_eval
 import sys
 import exudyn
+from exudyn.misc.keyBindings import RendererHelpText
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'useRenderWindowDisplayScaling', 'treeviewDefaultFontSize', 'textHeightFactor',
     'treeEditDefaultWidth', 'treeEditDefaultHeight', 'treeEditMaxInitialHeight',
-    'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'codeLineBackground',
-    'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'GetTkRootAndNewWindow',
-    'TkRootExists', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector', 'GetExudynDisplayScaling',
-    'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict', 'ConvertString2Value',
-    'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral', 'SettingsCodeLines',
-    'SettingsValueStrings', 'FindMatches', 'SettingsPrefix', 'Tooltip',
+    'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'treeEditLastOpenItems',
+    'codeLineBackground', 'changedValueColor', 'IsApple', 'GetRendererSystemContainer',
+    'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector',
+    'GetExudynDisplayScaling', 'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict',
+    'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral',
+    'SettingsCodeLines', 'SettingsValueStrings', 'FindMatches', 'SettingsPrefix', 'Tooltip',
     'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
     'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
     'pythonCommandExamples', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
@@ -46,7 +47,14 @@ treeEditDefaultHeight = 800     #unscaled height of e.g. visualizationSettings
 treeEditMaxInitialHeight = 1440 #larger height, if screen resolution admits
 dialogDefaultWidth = 800        #unscaled width of e.g. right mouse edit
 dialogDefaultHeight = 600       #unscaled height of e.g. right mouse edit
-treeEditOpenItems = ['bodies','connectors','nodes','general'] #these items are opened at the beginning
+#the folders that are open when a settings dialog is opened; a user sets this, and nothing
+#else writes it (revision2026b step RG6.2.7, #2591 - the dialog used to APPEND to it and remove
+#from it on every click, so that clicking in the dialog silently rewrote the configuration)
+treeEditOpenItems = ['bodies','connectors','nodes','general']
+#which folders were open when a dialog was last used in this process; None until one was, and
+#then it is what the next dialog opens with. This is the remembering the clicks used to do, with
+#a name that says it is session state and not configuration.
+treeEditLastOpenItems = None
 codeLineBackground = '#eef1f6'  #the box holding the line that sets a setting (#2605)
 changedValueColor = '#1a3fb0'   #a setting that differs from its default (#2606)
 
@@ -123,24 +131,19 @@ def GetExudynDisplayScaling():
             guiSC = exudyn.sys['currentRendererSystemContainer']
             if guiSC != 0: #this would mean that renderer is detached
                 rs = guiSC.renderer.GetState()
-                #print('return render state')
                 return rs['displayScaling']
         
         return 1
 
     except (KeyError, AttributeError, tk.TclError): 
-        #print('except!')
         return 1
 
 #return either exudyn or tkinter scaling, unified approach
 def GetGUIContentScaling(root):
     try:
         if useRenderWindowDisplayScaling: #would also work under linux
-            #print('exudyn scaling      =',GetExudynDisplayScaling())
-            #print('tkinter scaling(OLD)=',root.tk.call('tk', 'scaling'))
             s = 1.4*GetExudynDisplayScaling() #gives similar size as other programs; factor 1.4 is empirical
             root.tk.call('tk', 'scaling', s) #needed to update font size internally ...
-            #print('tkinter scaling(NEW)=',root.tk.call('tk', 'scaling'))
             return s
         else:
             return root.tk.call('tk', 'scaling') #obtains current scaling?
@@ -208,7 +211,7 @@ def GetComboBoxListsDict(exu = None):
             if isinstance(members, dict) and len(members) != 0:
                 dT[name] = [members[key] for key in members]
     else:
-        print('WARNING: exudyn not loaded as "exu"')
+        exudyn.Print('WARNING: GetComboBoxListsDict: exudyn not loaded as "exu"')
 
     #d['bool'] = ['True','False']
     dT['bool'] = [True, False]
@@ -267,7 +270,6 @@ def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
         (len(vSize)==1 and vSize[0] == -1) ):   #array / vector with undefined size
         return [ast.literal_eval(value), errorMsg]
 
-    #print("Error in ConvertString2Value: unknown type",vType, "value=", value)
     return [0, 'unknown type '+vType]
 
 #convert values to string; special treatment of floats (C++ float, single precision)
@@ -315,14 +317,12 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
             return [False, 'filename may neither be empty nor begin with a SPACE character']
         for x in valueStr: #this is inefficient but should not delay too much
             if not ((x in validFileNameChar)  or x.isalpha() or x.isnumeric()):
-                #print('(x in validFileNameChar)=',(x in validFileNameChar),',x.isalpha()=',x.isalpha(),',x.isnumeric()=',x.isnumeric())
                 return [False, 'invalid character in file name: may only be A-Z, a-z, 0-9, "'+validFileNameChar +'"']
         return [True, '']
 
     if vType == 'String':
         return [True, '']
     if vType == 'float':
-        #print('float=',IsFloat(valueStr))
         rv = IsFloat(valueStr)
         if rv:
             return [True, '']
@@ -334,17 +334,13 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
     #Now check vectors, matrices, ...: try if value can be converted ...
     x=[0]
     try:
-        #s = 'global x\nx='+str(valueStr) + '\nprint(x)'
         s = 'locx='+str(valueStr)# + '\nprint(x)'
         mylocals={'locx':[]}
         exec(s,globals(),mylocals)
         x=mylocals['locx']
-        #print('mylocals=',mylocals)
     except Exception:
-        #print("entered text does not comply with the value's type")
         return [False, 'invalid array or matrix: check brackets and types']
 
-    #print('x=',x)
     
     if len(vSize) == 1 and vSize[0] > 1: #vector/array
         if len(x) != vSize[0]:
@@ -536,6 +532,10 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.codeFontSize = max(6, int(treeviewDefaultFontSize*fontFactor) - 1)
 
         self.dictionaryData = settingsStructure.GetDictionaryWithTypeInfo()
+        #the folders this dialog opens with: the configuration, or what was open when a dialog
+        #was last used in this process (revision2026b step RG6.2.7, #2591)
+        self.openItems = list(treeEditOpenItems if treeEditLastOpenItems is None
+                              else treeEditLastOpenItems)
 
         #additional storage for type, size, etc.
         self.typeStorage = dict() #dictionary is stored as {'ID1': 'type1', 'ID2': 'type2', ...}
@@ -682,8 +682,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             self.defaultValueStrings = SettingsValueStrings(
                 type(self.settingsStructure)().GetDictionaryWithTypeInfo())
         except Exception as exception:                                       # noqa: BLE001
-            print('note: the settings defaults are not available, so nothing is marked as'
-                  ' changed:', exception)
+            exudyn.Print('WARNING: the settings defaults are not available, so nothing is'
+                         ' marked as changed: ' + str(exception))
         #and what THIS dialog started with, which is the other thing a user calls "changed"
         self.openingValueStrings = {path: valueStr
                                     for (path, _, valueStr, _, _, _) in self.TreeLeaves()}
@@ -703,19 +703,15 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             id = ""
         else:
             id = self.tree.insert(parentNode, "end", text=key)
-        #print("key =", key)
         isOpen = self.treeOpen and (level<=1)
 
         if isinstance(value, dict):
             itemIsOpen = isOpen
-            if ('itemIdentifier' not in value) and (key in treeEditOpenItems): 
+            if ('itemIdentifier' not in value) and (key in self.openItems): 
                 itemIsOpen = True
                 
             self.tree.item(id, open=itemIsOpen)
             if 'itemIdentifier' in value: #is a value with types:
-                #strValue = ConvertValue2String(value['value'], value['type'], value['size'])
-                #print('v=',value['value'],',t=',str(value['type']),'s=', value['size'])
-                #strValue = str(value['value'])
                 strValue = ConvertValue2String(value['value'], value['type'], value['size'])
                 
                 #(value, type, description): the type is what tells a reader whether to
@@ -729,8 +725,9 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 for (key, value) in value.items():
                     self.AddNodeFromDictionaryWithTypeInfo(value, id, key, level=level+1)
         else:
-            print("Error in AddNodeFromDictionaryWithTypeInfo with item:", value, ", parent=", parentNode, ", key=", key)
-            #self.tree.item(id, values=(value))
+            exudyn.Print('ERROR: AddNodeFromDictionaryWithTypeInfo: item ' + str(value)
+                         + ' (parent=' + str(parentNode) + ', key=' + str(key)
+                         + ') is no settings value and no sub-structure')
 
     #create treeview from plain dictionary
     def AddNodeFromDictionary(self, value, parentNode="", key=None):
@@ -749,7 +746,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def GetDictionary(self, item):
         d=dict()
         kids = self.tree.get_children(item)
-        #print(kids)
         for i in kids:
             nchilds = len(self.tree.get_children(i))
             if nchilds == 0:
@@ -759,7 +755,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                     if errorMsg == '':
                         d.update({self.tree.item(i,'text'): val})
                     else:
-                        print('item '+ str(self.tree.item(i,'text')) + ' has illegal value "'+valStr + '": '+errorMsg)
+                        exudyn.Print('ERROR: item ' + str(self.tree.item(i,'text'))
+                                     + ' has illegal value "' + valStr + '": ' + errorMsg)
                 else:
                     d.update({self.tree.item(i,'text'): ''})
             else:
@@ -794,7 +791,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             tk.messagebox.showinfo(s, d)
 
     def OnTreeDoubleClick(self,event):
-        #print('tree double clicked')
         self.OnTreeEditOrDoubleClick(event, True)
         
     def OnTreeEdit(self,event):
@@ -803,7 +799,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def OnTreeEditOrDoubleClick(self,event,doubleClick=False):
         item = self.tree.selection()[0]
         nchilds = len(self.tree.get_children(item))
-        #print('tree edit: item=',item, ', childs=', nchilds)
 
         #only edit items which have no subitems (no folders!)
         if nchilds == 0:
@@ -829,11 +824,13 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         else: #folders (may be opened/closed)
             openState = self.tree.item(item, 'open')
             s = self.tree.item(item,'text')
-            #print('  openState=', openState, ', text=',s)
-            if openState and (s not in treeEditOpenItems):
-                treeEditOpenItems.append(s)
-            elif not openState and (s in treeEditOpenItems):
-                treeEditOpenItems.remove(s)
+            global treeEditLastOpenItems                                     # noqa: PLW0603
+            if openState and (s not in self.openItems):
+                self.openItems.append(s)
+            elif not openState and (s in self.openItems):
+                self.openItems.remove(s)
+            #remembered for the next dialog of this process, without touching the configuration
+            treeEditLastOpenItems = list(self.openItems)
         
 
     def OnQuit(self,event): #new selection --> nothing to edit for now
@@ -1128,13 +1125,13 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     windowHeight = treeEditDefaultHeight
     if treeEditMaxInitialHeight > treeEditDefaultHeight:
         try:
-            #screen_width = root.winfo_screenwidth()
             screen_height = root.winfo_screenheight()
-            #print('screen height=', screen_height)
             if screen_height > 1.2*treeEditDefaultHeight:
                 windowHeight = int(min(treeEditMaxInitialHeight, 0.85*screen_height))
         except tk.TclError:
-            print('WARNING: EditDictionaryWithTypeInfo could not determine screen size; please report error, Python version and platform as github issue')
+            exudyn.Print('WARNING: EditDictionaryWithTypeInfo could not determine the screen'
+                         ' size; please report this with your Python version and platform as a'
+                         ' github issue')
 
     tkWindow.geometry(str(treeEditDefaultWidth)+'x'+str(windowHeight))
 
@@ -1173,7 +1170,6 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
     style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ))
     
-    #style.configure("Vertical.TScrollbar", width=4)
     
     comboListsT = GetComboBoxListsDict(exu)
     ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
@@ -1187,7 +1183,6 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
         root.wait_window(tkWindow)
     
     settingsStructure.SetDictionary(ex.modifiedDictionary)
-    #return ex.modifiedDictionary
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1273,7 +1268,6 @@ class TkinterEditDictionary(tk.Frame):
             for (key, value) in value.items():
                 self.AddNodeFromDictionary(value, id, key)
         else:
-            #print("value =", value)
             if isinstance(value, bool) : #bool first, bool is also int
                 self.tree.item(id, values=(str(value)))
             elif isinstance(value, int) or isinstance(value, float):
@@ -1306,7 +1300,6 @@ class TkinterEditDictionary(tk.Frame):
     def GetDictionary(self, item):
         d=dict()
         kids = self.tree.get_children(item)
-        #print(kids)
         for i in kids:
             nchilds = len(self.tree.get_children(i))
             if nchilds == 0:
@@ -1346,7 +1339,6 @@ class TkinterEditDictionary(tk.Frame):
         self.parent.destroy()
         
     def TreeviewSelect(self,event): #new selection --> nothing to edit for now
-        #print('select')
         self.selectedItem = '' #now item can be modified
         self.editItemVar.set('')
         self.editItemName.set('')
@@ -1354,11 +1346,9 @@ class TkinterEditDictionary(tk.Frame):
         
     def OnEditEntryItem(self,event):
         if self.selectedItem != '':
-            #print('edit')
             if self.dictionaryIsEditable:
                 valueStr = self.editItemVar.get()
                 valueStr = str(valueStr).replace(' ','\\ ')
-                #print(valueStr)
                 self.tree.item(self.selectedItem, values=(valueStr))
                 currentItem = self.selectedItem
                 self.selectedItem = '' #now item can be modified
@@ -1382,10 +1372,8 @@ class TkinterEditDictionary(tk.Frame):
                 self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
 
     def OnEditEscapeItem(self,event):
-        #print('escape')
         if self.selectedItem != '':
             valueStr = self.tree.item(self.selectedItem,'values')[0]
-            #print(valueStr)
             valueStr = str(valueStr).replace(' ','\\ ')
             self.editItemVar.set(valueStr)
             self.selectedItem = '' #now item can be modified
@@ -1418,10 +1406,6 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     
 
     textHeight = TkTextHeight(systemScaling)
-
-    #no effect:
-    # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
-    # defaultFont.configure(size=treeviewDefaultFontSize*fontFactor)
 
     tkWindow.title(dialogName)
     tkWindow.focus_force() #window has focus
@@ -1481,58 +1465,10 @@ def ApplyDialogWindowSettings(tkWindow, alwaysTopmost=None, alphaTransparency=No
         tkWindow.attributes('-alpha', alphaTransparency)
 
 
-#the keyboard and mouse commands of the renderer. NOTE that docs/manual/GUI.md lists the same
-#bindings in a 64 row table and GlfwClient.cpp implements them: three copies of one thing, which
-#is revision2026b step RG6.2.6
-rendererHelpText = """Mouse action:
-left mouse button     ... hold and drag: move model
-left mouse button     ... click: select item (deactivated if mouse coordinates shown)
-right mouse button    ... hold and drag: rotate model
-right mouse button    ... click: open edit dialog (if activated in visualizationSettings)
-mouse wheel           ... zoom
-======================
-Key(s) action:
-1,2,3,4 or 5          ... visualization update speed (0.02, 0.1=default, 0.5, 2,
-                          100 seconds)
-'.' or KEYPAD '+'     ... zoom in (with optional CTRL key for small zoom)
-',' or KEYPAD '-'     ... zoom out (with optional CTRL key for small zoom)
-CTRL+1                ... set view to 1/2-plane
-SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
-CTRL+2                ... set view to 1/3-plane
-SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
-CTRL+3,4,5,6          ... other views (with optional SHIFT key)
-CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements,
-                          SHIFT for rotations (ALT for z-axis))
-KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
-F2                    ... ignore all keyboard input, except for KeyPress user function,
-                          F2 and escape keys
-F3                    ... show mouse coordinates
-CTRL+F3               ... show model view parameters (zoom, rotationVector, centerPoint)
-Q      ... stop current solver and proceed to next simulation (or end of file);
-           after general.reallyQuitTimeLimit (default:900) seconds a safety dialog opens
-A      ... zoom all
-C      ... show/hide connectors
-CTRL+C ... show/hide connector numbers
-B      ... show/hide bodies
-CTRL+B ... show/hide body numbers
-L      ... show/hide loads
-CTRL+L ... show/hide load numbers
-M      ... show/hide markers
-CTRL+M ... show/hide marker numbers
-N      ... show/hide nodes
-CTRL+N ... show/hide node numbers
-S      ... show/hide sensors
-CTRL+S ... show/hide sensor numbers
-O      ... change center of rotation to current center of the window (affects only
-           current plane coordinates; rotate model to ajust other coordinates)
-T      ... switch between faces transparent/ faces transparent + edges /
-           only face edges / full faces with edges / only faces
-X      ... execute command; dialog may appear in background! may crash simulation!
-V      ... visualization settings; dialog may appear behind the visualization window!
-ESCAPE ... close render window and stop all simulations (same as close window button);
-           after general.reallyQuitTimeLimit seconds a dialog opens for safety
-SPACE  ... continue simulation
-"""
+#the keyboard and mouse commands of the renderer, from the ONE table that also feeds the
+#tables of docs/manual/GUI.md through tools/generators/keyBindingsEmitter.py. This text
+#was a third copy of them, and it had drifted (revision2026b step RG6.2.6, #2591).
+rendererHelpText = RendererHelpText()
 
 
 def ShowHelpDialog():
@@ -1682,7 +1618,8 @@ def ShowVisualizationSettingsDialog():
     """
     guiSC = GetRendererSystemContainer()
     if guiSC is None:
-        print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
+        exudyn.Print('ERROR: ShowRightMouseSelectionDialog: problems with the'
+                     ' SystemContainer, probably not attached to the renderer yet')
         return
 
     EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exudyn, 'Visualization Settings')
@@ -1699,7 +1636,7 @@ def ShowRightMouseSelectionDialog():
         d = exudyn.sys['currentRendererSelectionDict']
         EditDictionary(d, False, dialogName='properties of <' + d['name'] + '>')
     except Exception:                        #a dict without 'name', or no dict at all
-        print('showing of dictionary failed')
+        exudyn.Print('ERROR: ShowRightMouseSelectionDialog: showing the dictionary failed')
 
 
 def AskQuitDialog():
@@ -1741,23 +1678,3 @@ def AskQuitDialog():
         tk.mainloop()
 
     exudyn.sys['quitResponse'] = response + 2   #2=do not quit, 3=quit
-
-
-##+++++++++++++++++++++++++++++++++++++++
-##EXAMPLE
-
-#DATA2={'objectType': 'ConnectorSpringDamper',
-# 'markerNumbers': [1, 3],
-# 'referenceLength': 1.0,
-# 'stiffness': 1000.0,
-# 'damping': 5.0,
-# 'force': 0.0,
-# 'activeConnector': True,
-# 'springForceUserFunction': None,
-# 'name': 'spring damper0',
-# 'Vshow': True,
-# 'VdrawSize': 0.0,
-# 'Vcolor': [-1.0, -1.0, -1.0, -1.0]}
-#
-#x=EditDictionaryWithTypeInfo(DATA2)
-

@@ -168,7 +168,8 @@ The appearance of visualization settings dialogs may be adjusted by directly mod
   exudyn.misc.GUI.treeEditDefaultWidth = 800
   exudyn.misc.GUI.treeEditDefaultHeight = 600
   exudyn.misc.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
-  exudyn.misc.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened each time the dialog is opened
+  exudyn.misc.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened when a dialog is opened the first time
+  exudyn.misc.GUI.treeEditLastOpenItems          #which folders were open when a dialog was last used in this process; the next dialog opens with them (None until a dialog was used)
   #
   exudyn.misc.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
   exudyn.misc.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the `tkinter` internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
