@@ -576,7 +576,7 @@ This group is that revision and what has to happen before it can start.
     the process shares it.
 
 <a id="rg6-2-8"></a>
-**RG6.2.8** **The bottom row reads like code, and says each thing once** (#2605)
+**RG6.2.8** **DONE 2026-09-23** (#2605) — [log](exudynRevisionLog2026b.md#rg6-2-8) — **The bottom row reads like code, and says each thing once**
     *(maintainer, 2026-09-23, after trying RG6.2.4)*. Four small things, all in the row RG6.2.4
     introduced:
 
@@ -590,7 +590,7 @@ This group is that revision and what has to happen before it can start.
     - the type and size stay — they are what the pop-up does *not* say.
 
 <a id="rg6-2-9"></a>
-**RG6.2.9** **A changed value is visible, and every change can be copied at once** (#2606)
+**RG6.2.9** **DONE 2026-09-23** (#2606) — [log](exudynRevisionLog2026b.md#rg6-2-9) — **A changed value is visible, and every change can be copied at once**
     *(maintainer, 2026-09-23)*. Nothing in the tree marks the rows a user has edited, so after
     ten edits in four folders the ten cannot be found again. A changed row is shown **boldface or
     in a colour** (a blue dark enough to read on the row background; a tkinter `Treeview` tag
@@ -601,7 +601,7 @@ This group is that revision and what has to happen before it can start.
     a script reproduce the settings.
 
 <a id="rg6-2-10"></a>
-**RG6.2.10** **Find a setting** (#2607) *(maintainer, 2026-09-23)*. Several hundred values in a
+**RG6.2.10** **DONE 2026-09-23** (#2607) — [log](exudynRevisionLog2026b.md#rg6-2-10) — **Find a setting** *(maintainer, 2026-09-23)*. Several hundred values in a
     tree of folders, and the only route to one is knowing its folder. **CTRL-F and a find
     button**, matching **names first and descriptions second**, then jumping to the row: expand
     its folders, select it, scroll it into view. The form is decided in this step; the
@@ -628,9 +628,15 @@ This group is that revision and what has to happen before it can start.
     - **the same dialog for `simulationSettings`**: `GetDictionaryWithTypeInfo()` is bound for it
       too, and after RG6.2.4 the code line already names the right structure; what is missing is
       a way to open it;
-    - **apply while it is open** for the settings that can take it, instead of on close;
-    - **units in the description**, where a value has one;
-    - **a "changed only" view**, once RG6.2.9 knows what changed.
+    - **undo** *(maintainer, 2026-09-23)*: the dialog applies every change immediately, which is
+      the behaviour that is wanted and stays — and that is exactly why there is no way back from
+      a value one did not mean to type. What it would take: the list RG6.2.9 already keeps of what
+      the dialog opened with, and one step back per row;
+    - **units in the description**, where a value has one.
+
+    Struck out by the maintainer on 2026-09-23, so that they are not proposed again: *apply while
+    it is open* — changes **are** applied immediately today and that is to stay; and *a "changed
+    only" view* — the two windows of RG6.2.9 are that view.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped

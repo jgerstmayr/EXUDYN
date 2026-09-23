@@ -27,14 +27,13 @@ import exudyn.misc.GUI as gui
 
 
 def Leaves(dictionary, path=''):
-    """every editable value of a settings structure, as (path, value, type, size)"""
-    leaves = []
-    for (key, value) in dictionary.items():
-        if isinstance(value, dict) and 'itemIdentifier' in value:
-            leaves.append((path + key, value['value'], value['type'], value['size']))
-        elif isinstance(value, dict):
-            leaves += Leaves(value, path + key + '.')
-    return leaves
+    """every editable value of a settings structure, as (path, value, type, size)
+
+    The walk itself is gui.SettingsLeafList since revision2026b step RG6.2.8 (#2605), where the
+    dialog began to need it as well; this keeps the four fields the tests below read."""
+    return [(leafPath, value, leafType, size)
+            for (leafPath, value, _, leafType, size, _)
+            in gui.SettingsLeafList(dictionary, path)]
 
 
 def SettingsLeaves():
@@ -199,6 +198,153 @@ def testCheckTypeRejectsWithAMessageThatSaysWhy(text, valueType, size, inMessage
     [isValid, message] = gui.CheckType(text, valueType, size)
     assert not isValid
     assert inMessage in message
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the line that sets a setting (revision2026b steps RG6.2.4 and RG6.2.8): what the dialog offers to
+#copy into a script
+
+def testValueLiteralWritesWhatPythonReadsBack(comboLists):
+    """a string is quoted, an enum carries the module it lives in, a number stands as it is"""
+    assert gui.ValueLiteral('some text', 'String', comboLists) == "'some text'"
+    assert gui.ValueLiteral('C:/a path/file.txt', 'FileName', comboLists) == "'C:/a path/file.txt'"
+    assert gui.ValueLiteral('True', 'bool', comboLists) == 'True'
+    assert gui.ValueLiteral('16.0', 'float', comboLists) == '16.0'
+    assert gui.ValueLiteral('[1.0, 2.0]', 'VectorFloat', comboLists) == '[1.0, 2.0]'
+    assert (gui.ValueLiteral('OutputVariableType.Displacement', 'OutputVariableType', comboLists)
+            == 'exu.OutputVariableType.Displacement')
+
+
+def testEveryCurrentValueCanBeWrittenAsALineThatSetsIt(leaves, comboLists):
+    """the copy of the dialog is only worth having if what it copies can be run: every literal it
+    writes has to be one Python evaluates back to the value it came from"""
+    import ast
+    failures = []
+    for (path, value, leafType, size) in leaves:
+        literal = gui.ValueLiteral(gui.ConvertValue2String(value, leafType, size),
+                                   leafType, comboLists)
+        if literal.startswith('exu.'):
+            continue                    #an enum needs the module, which ast does not have
+        try:
+            ast.literal_eval(literal)
+        except (ValueError, SyntaxError) as exception:
+            failures.append(path + ' (' + leafType + '): ' + literal + ' - ' + str(exception))
+    assert failures == [], '\n'.join(failures)
+
+
+def testTheSettingsPrefixIsTheNameAScriptUses():
+    assert gui.SettingsPrefix(exudyn.VisualizationSettings()) == 'SC.visualizationSettings'
+    assert gui.SettingsPrefix(exudyn.SimulationSettings()) == 'simulationSettings'
+
+
+def testTheLeafListCoversTheWholeStructure():
+    """if the walk ever stops at a sub-structure, everything built on it goes quietly wrong"""
+    leaves = gui.SettingsLeafList(exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
+    paths = [path for (path, _, _, _, _, _) in leaves]
+    assert len(paths) > 400
+    assert len(set(paths)) == len(paths)
+    assert 'openGL.lineWidth' in paths              #a leaf two levels down
+    assert 'openGL.advanced.textLineWidth' in paths #and one three levels down
+    assert all('.' in path for path in paths)   #every setting sits in a folder
+    #the string is the one the dialog shows in the cell
+    (_, value, valueString, leafType, size, _) = leaves[0]
+    assert valueString == gui.ConvertValue2String(value, leafType, size)
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#what differs from a reference (revision2026b step RG6.2.9): the coloured rows of the dialog and
+#the two windows it copies from are this one comparison
+
+@pytest.fixture(scope='module')
+def visualizationLeaves():
+    return gui.SettingsLeafList(exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
+
+
+def testNothingDiffersFromItself(visualizationLeaves, comboLists):
+    reference = gui.SettingsValueStrings(
+        exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
+    assert gui.SettingsCodeLines(visualizationLeaves, reference,
+                                 'SC.visualizationSettings', comboLists) == []
+
+
+def testOneChangedValueGivesOneLineThatSetsIt(visualizationLeaves, comboLists):
+    """the line has to name the path and the new value, and it has to be Python"""
+    import ast
+    reference = gui.SettingsValueStrings(
+        exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
+    reference['openGL.lineWidth'] = 'a value it never had'
+
+    lines = gui.SettingsCodeLines(visualizationLeaves, reference, 'SC.visualizationSettings',
+                                 comboLists)
+    assert len(lines) == 1
+    (path, line) = lines[0]
+    assert path == 'openGL.lineWidth'
+    assert line.startswith('SC.visualizationSettings.openGL.lineWidth = ')
+    parsed = ast.parse(line).body[0]
+    assert isinstance(parsed, ast.Assign)
+
+
+def testAPathTheReferenceDoesNotKnowCountsAsUnchanged(visualizationLeaves, comboLists):
+    """a settings structure that gained a value must not report all of it as changed"""
+    reference = gui.SettingsValueStrings(
+        exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
+    del reference['openGL.lineWidth']
+    assert gui.SettingsCodeLines(visualizationLeaves, reference,
+                                 'SC.visualizationSettings', comboLists) == []
+
+
+def testEveryDifferenceIsALineThatRuns(comboLists):
+    """the worst case of the copy: a structure where EVERY value differs from the reference, so
+    that every type is written as a line - each one has to parse"""
+    import ast
+    leaves = gui.SettingsLeafList(exudyn.SimulationSettings().GetDictionaryWithTypeInfo())
+    lines = gui.SettingsCodeLines(leaves, {}, 'simulationSettings', comboLists)
+    assert lines == []                      #an empty reference means nothing is known to differ
+
+    reference = {path: 'a value it never had' for (path, _, _, _, _, _) in leaves}
+    lines = gui.SettingsCodeLines(leaves, reference, 'simulationSettings', comboLists)
+    assert len(lines) == len(leaves)
+    for (_, line) in lines:
+        parsed = ast.parse(line).body[0]    #raises if the dialog writes something Python rejects
+        assert isinstance(parsed, ast.Assign)
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#find a setting (revision2026b step RG6.2.10): what the dialog offers when a user does not know
+#which folder a setting sits in
+
+def testFindPutsTheNameHitsFirst(visualizationLeaves):
+    """the maintainer's requirement in one assertion: names before descriptions. 'shadow' is both
+    a setting and a word many descriptions use"""
+    hits = gui.FindMatches(visualizationLeaves, 'shadow')
+    assert hits != []
+    nameHits = [path for (path, _) in hits if 'shadow' in path.split('.')[-1].lower()]
+    assert nameHits != []
+    assert [path for (path, _) in hits][:len(nameHits)] == nameHits
+
+
+def testFindReadsTheDescriptionsToo(visualizationLeaves):
+    """a word that is in no name at all still has to lead somewhere, and the hit says why"""
+    hits = gui.FindMatches(visualizationLeaves, 'transparency')
+    fromDescription = [(path, label) for (path, label) in hits
+                       if 'transparen' not in path.lower()]
+    assert fromDescription != []
+    assert all('...' in label for (_, label) in fromDescription)
+
+
+def testFindIgnoresCaseAndFindsNothingForNothing(visualizationLeaves):
+    assert (gui.FindMatches(visualizationLeaves, 'LINEWIDTH')
+            == gui.FindMatches(visualizationLeaves, 'linewidth'))
+    assert gui.FindMatches(visualizationLeaves, '   ') == []
+    assert gui.FindMatches(visualizationLeaves, 'zzz no such setting zzz') == []
+
+
+def testEveryFindHitNamesASettingThatExists(visualizationLeaves):
+    """the hit is what the dialog jumps to, so a path that is in no tree is a dead end"""
+    paths = {path for (path, _, _, _, _, _) in visualizationLeaves}
+    for searchText in ['color', 'size', 'draw', 'openGL']:
+        for (path, _) in gui.FindMatches(visualizationLeaves, searchText):
+            assert path in paths
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

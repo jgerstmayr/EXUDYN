@@ -137,6 +137,29 @@ Details on visualization settings and its substructures are provided in {ref}`se
 The visualization settings dialog is shown exemplarily in {ref}`fig-visualizationsettings`.
 Note that this dialog is automatically created and uses Python's `tkinter`, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
 
+**Working in the dialog.** A setting is edited **in its cell**: select the row and type, or pick
+from the list where the value is a `bool` or one of the Exudyn enumeration types; RETURN or
+leaving the field applies the value, ESCAPE keeps the old one, and a double click toggles a
+`bool`. Hovering a row shows its description, its type and, for a vector or matrix setting, its
+size. Every change is applied immediately.
+
+The row at the bottom holds the **line that sets the selected setting**, ready to be pasted into a
+script, with a button that copies it:
+
+```python
+  SC.visualizationSettings.openGL.lineWidth = 2.0
+```
+
+A setting whose value differs from the Exudyn **default** is shown in colour, from the moment the
+dialog opens, so that a model's own settings can be told from the rest. The two buttons beside the
+copy button open a window that lists those differences as the code that makes them, and copies all
+of it at once: **diff to default** for everything that differs from the defaults, and
+**this session** for what was changed since the dialog was opened.
+
+To find a setting without knowing which folder it sits in, use the **find** field at the top or
+press CTRL+F: it searches the names first and the descriptions second, RETURN or F3 steps to the
+next hit, and the drop-down beside it lists the hits so that one can be picked.
+
 The appearance of visualization settings dialogs may be adjusted by directly modifying `exudyn.misc.GUI` variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
 
 ```python

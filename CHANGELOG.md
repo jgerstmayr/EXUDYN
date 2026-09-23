@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 18 | 1.12.17 |
+| 1.12 | Metheney | 21 | 1.12.20 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,12 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.20** `EXTENSION` settings dialog: find a setting by name, with CTRL-F (#2607) - raised by Claude-JG
+  - A find bar above the settings tree: CTRL+F puts the cursor in it, RETURN or F3 or the find button steps to the next hit and around at the end, and a drop-down lists the hits so that one can be picked. It searches the names first and the descriptions second, and a description hit is labelled with the piece of description that matched. A hit is jumped to rather than filtered to: the folders it sits in are opened and the row is scrolled into view. FindMatches is a module level function on the leaf list, with tests for the order and for the promise that every hit names a setting the tree holds. The manual section on the visualization settings dialog now also says how the dialog is used at all.
+- **1.12.19** `IMPROVEMENT` settings dialog: a changed value should be visible, and all changes copyable at once (#2606) - raised by Claude-JG
+  - A setting that differs from the Exudyn defaults is shown in blue and bold, from the moment the dialog opens. Two buttons at the bottom open a window that shows the changes as the code that makes them and copies it: "diff to default" for everything differing from the defaults, "this session" for what was edited since the dialog was opened. The comparison is on the string the dialog shows, not on the value, which is what makes a single precision float and an enum comparable; SettingsCodeLines and SettingsValueStrings are module level functions on dictionaries, so the marking, the windows and the tests are one piece of code.
+- **1.12.18** `IMPROVEMENT` settings dialog: the pastable line needs to look like code, and it is said twice (#2605) - raised by Claude-JG
+  - The line that sets the selected setting sits in a box of its own now, in the font of the cells one size smaller, and the button says "copy line". The label under it is gone with the description it repeated - the tooltip shows that, and it carries the size of a vector or matrix setting as well. SettingsLeafList, ValueLiteral and SettingsPrefix left the tkinter class and are module level functions on dictionaries, so that they can be tested without a window; test\_guiValues.py checks that every literal the dialog writes, for every setting of both structures, is one Python reads back.
 - **1.12.17** `DOCU` "The C++ core" points at the repository instead of at the developer documentation (#2611) - raised by Claude-JG
   - The "C++ core" section of Advanced topics now links to the developer documentation as published pages - the developer documentation itself, the C++ architecture and the coding style - instead of to raw files on GitHub, and it says that a deeper understanding of the core and any low-level change means visiting the GitHub project itself.
 - **1.12.16** `IMPROVEMENT` the settings dialog edits a value far away from the row it belongs to (#2604) - raised by Claude-JG

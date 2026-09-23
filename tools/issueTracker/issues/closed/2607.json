@@ -1,0 +1,17 @@
+{
+  "number": 2607,
+  "title": "settings dialog: find a setting by name, with CTRL-F",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.2.10. The visualization settings are several hundred values in a tree of folders, and the only way to a setting is to know which folder it is in. A find is needed: CTRL-F and a find button, searching the NAMES first and the descriptions second, and jumping to the row that is chosen - which means expanding its folders, selecting it and scrolling it into view. The form is to be decided in this step; a recommendation is in the plan. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 14:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "A find bar above the settings tree: CTRL+F puts the cursor in it, RETURN or F3 or the find button steps to the next hit and around at the end, and a drop-down lists the hits so that one can be picked. It searches the names first and the descriptions second, and a description hit is labelled with the piece of description that matched. A hit is jumped to rather than filtered to: the folders it sits in are opened and the row is scrolled into view. FindMatches is a module level function on the leaf list, with tests for the order and for the promise that every hit names a setting the tree holds. The manual section on the visualization settings dialog now also says how the dialog is used at all.",
+  "resolvedInVersion": "1.12.20"
+}

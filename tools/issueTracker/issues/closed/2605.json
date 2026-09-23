@@ -2,12 +2,16 @@
   "number": 2605,
   "title": "settings dialog: the pastable line needs to look like code, and it is said twice",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "revision2026b step RG6.2.8. The line that sets the selected item (RG6.2.4, #2604) works, but it does not read as code: it uses the dialog font at dialog size and sits on the window background. It should be smaller, in the same fixed font the cells use, and set apart by a box or a background of its own. The label under it repeats the description that the pop-up already shows in full, and that repetition goes. The button says \"copy\", which does not say what is copied; it becomes \"copy line\" (or \"copy last edit\"), because a second button for all changes joins it in RG6.2.9. Maintainer, 2026-09-23.",
   "dateRaised": "2026-09-23",
   "deadline": "2027-03-22",
-  "file": "python/exudyn/misc/GUI.py"
+  "dateResolved": "2026-09-23 14:10",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The line that sets the selected setting sits in a box of its own now, in the font of the cells one size smaller, and the button says \"copy line\". The label under it is gone with the description it repeated - the tooltip shows that, and it carries the size of a vector or matrix setting as well. SettingsLeafList, ValueLiteral and SettingsPrefix left the tkinter class and are module level functions on dictionaries, so that they can be tested without a window; test_guiValues.py checks that every literal the dialog writes, for every setting of both structures, is one Python reads back.",
+  "resolvedInVersion": "1.12.18"
 }

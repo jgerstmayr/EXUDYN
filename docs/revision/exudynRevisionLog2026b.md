@@ -612,3 +612,111 @@ of the store and expected to find it in the changelog. The newest open issue was
 The test now raises its own issue of a type the changelog carries. Nothing was wrong with the
 tracker; a test that reads whatever the store happens to hold has no business asserting on the
 type of it.
+
+<a id="rg6-2-8"></a>
+### RG6.2.8 — the line to copy looks like a line to copy (2026-09-23, #2605)
+
+Four small things the maintainer asked for after using RG6.2.4, and one of them is not small.
+
+**The code line sits in a box.** It was a borderless `Entry` in the dialog font on the window
+background, which is a thing one reads, not a thing one copies. It is a `tk.Entry` with no border
+inside a `tk.Frame` with `relief=tk.SOLID` and a background of its own now, in the **tree's font
+one size smaller** — for which the widget class had to be told the `fontFactor` that
+`EditDictionaryWithTypeInfo` computes with `DialogScaling(root)` and had kept to itself. The
+fixed-width font went: the maintainer asked for the font of the cells.
+
+**The label under it is gone**, and with it the description it repeated — the tooltip of
+RG6.2.3 shows the same text, in full, where the mouse already is. The one fact it carried that
+nothing else did was the **size** of a vector or matrix setting, and that moved into the tooltip:
+`textColor [VectorFloat, size 4]`.
+
+**`copy` is `copy line`**, which matters only because RG6.2.9 puts two more copy buttons beside
+it.
+
+**And three functions left the widget class**, which is the part that is not small:
+`SettingsLeafList`, `ValueLiteral` and `SettingsPrefix` are module level now, they work on
+dictionaries, and they open no window. `CodeLine()` is two calls. The reason is the test file:
+everything that can be moved out of a tkinter class can be tested, and everything left inside it
+can only be looked at by the maintainer. `test_guiValues.py` has four new tests because of it,
+among them the one that matters for the copy feature — **every literal the dialog writes, for
+every setting of both structures, is one Python reads back**. The walk over the settings tree
+that the test file had written for itself is that same `SettingsLeafList` now, so it exists once.
+
+One correction on the way: the example in the docstrings was
+`SC.visualizationSettings.general.textSize`, which is a **deprecated** name (it moved to
+`view0.window.globalFontSize` in 1.10.80) and therefore appears in no dictionary the dialog ever
+shows. The examples name `openGL.lineWidth` now. A test asserting on a setting that does not exist
+is a test that passes for the wrong reason, and it was a test that caught it.
+
+<a id="rg6-2-9"></a>
+### RG6.2.9 — what differs from the defaults, in colour and as code (2026-09-23, #2606)
+
+**Changed means changed against the defaults** — the maintainer's decision, and the one that
+makes the feature worth having: a dialog that marks only what *this session* touched tells a user
+nothing about the model they opened. A row whose value differs from `exu.VisualizationSettings()`
+is written in a dark blue and bold, **as the dialog opens**, and it stops being marked the moment
+the value is typed back.
+
+The defaults are one constructor call away, which had to be checked rather than assumed: a
+settings structure Python builds on its own segfaults on any **deprecated** member (#2603, RG4.4)
+— `GetDictionaryWithTypeInfo()` touches none, and returns all 470 leaves. The call is wrapped
+all the same: if it ever fails, the marking stays off and the dialog does not.
+
+**Two buttons, two windows**, because the maintainer asked for both notions after all:
+*diff to default* and *this session*. Each opens a window that holds the changes **as the code
+that makes them** — which is the second half of the request: a window that *shows* the changes
+is also the one that copies them, so the "changed only" view of RG6.2.11 is struck out. Both go
+through one comparison with a different reference dictionary:
+
+```python
+SC.visualizationSettings.openGL.lineWidth = 2.0
+SC.visualizationSettings.general.graphicsUpdateInterval = 0.5
+```
+
+**The comparison is on the string the dialog shows**, not on the value. That is what makes a float
+and an enum comparable at all — `0.1` read back from single precision is not `0.1— ` and it
+marks exactly what a user sees in the cell and what the copied line writes. `SettingsCodeLines`,
+`SettingsValueStrings` and `TreeLeaves` are the whole of it: the first two are module level and
+work on dictionaries, the third hands the tree's own rows to them in the same shape, so **the
+marking, the two windows and the tests are one piece of code**. Four tests came with it, including
+the one that matters: a reference in which **every** value of `simulationSettings` differs, so
+that every type is written as a line and every line has to parse as a Python assignment.
+
+<a id="rg6-2-10"></a>
+### RG6.2.10 — find a setting (2026-09-23, #2607)
+
+Several hundred values in a tree of folders, and until today the only route to one was knowing
+which folder it sits in. A **find bar above the tree**: CTRL-F (bound on the dialog window, so it
+works wherever the focus is) puts the cursor in it, RETURN or **F3** or the *find* button steps to
+the next hit and around at the end, and the **drop-down** beside it lists the hits so that one can
+be picked instead of stepped to. A hit is jumped to, not filtered to: `tree.see()` opens the
+folders the row sits in and scrolls it into view, and the focus stays in the find field so that
+RETURN keeps stepping.
+
+**Names first, descriptions second**, which is what the maintainer asked for and what
+`FindMatches` returns: a hit in the **name** of the setting, then a hit anywhere in its **path**,
+then a hit that is only in the **description** — and that last kind is labelled with the piece
+of description that matched, because otherwise it looks like a hit for no reason. The function is
+module level and works on the leaf list, so the four tests that check the order need no window;
+one of them asserts that every path a search returns is a path the tree actually holds, since a
+hit that cannot be jumped to is worse than no hit.
+
+Two things were rejected, and they stand in the plan so that they are not proposed again:
+**filtering the tree** to the hits (the tree is the map of where a setting lives, and filtering
+takes the map away) and a **separate result window** (a third place to look, in a dialog that has
+three already).
+
+**And the manual says how the dialog works** —
+{ref}`the visualization settings dialog <sec-overview-basics-visualizationsettings>` described
+what the settings are for and how to resize the window, and nothing about editing in it. It now
+says what RG6.2.3 to RG6.2.10 built: editing in the cell, the tooltip, the line to copy, the
+colour of a value that differs from the default, the two windows, and the find. The **screenshot**
+in that section is from before all of it and cannot be re-taken by a session that must not open a
+window (rule 11) — it is the maintainer's to replace.
+
+**A note for the reader of this log:** nothing in RG6.2.8 to RG6.2.10 has been seen. The module
+parses, the whole suite passes, the tests of `test_guiValues.py` cover everything that
+happens below the widgets — and whether a find bar of this shape is the one that helps, whether
+the blue is readable on a row, and whether the two buttons are where a hand looks for them is the
+maintainer's to say.
+

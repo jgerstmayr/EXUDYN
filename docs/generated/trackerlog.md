@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.17.dev1
+- Exudyn version = 1.12.20.dev1
 - last change = 2026-09-23
 - Number of issues = 2612
-- Number of resolved issues = 2331 (17 in current version)
+- Number of resolved issues = 2334 (20 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,24 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.20: resolved Issue 2607: settings dialog: find a setting by name, with CTRL-F (extension)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.10. The visualization settings are several hundred values in a tree of folders, and the only way to a setting is to know which folder it is in. A find is needed: CTRL-F and a find button, searching the NAMES first and the descriptions second, and jumping to the row that is chosen - which means expanding its folders, selecting it and scrolling it into view. The form is to be decided in this step; a recommendation is in the plan. Maintainer, 2026-09-23.
+  - **notes:** A find bar above the settings tree: CTRL+F puts the cursor in it, RETURN or F3 or the find button steps to the next hit and around at the end, and a drop-down lists the hits so that one can be picked. It searches the names first and the descriptions second, and a description hit is labelled with the piece of description that matched. A hit is jumped to rather than filtered to: the folders it sits in are opened and the row is scrolled into view. FindMatches is a module level function on the leaf list, with tests for the order and for the promise that every hit names a setting the tree holds. The manual section on the visualization settings dialog now also says how the dialog is used at all.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-23 14:26**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.19: resolved Issue 2606: settings dialog: a changed value should be visible, and all changes copyable at once (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.9. Nothing in the tree says which values differ from what the dialog started with, so a user who has edited ten settings cannot see the ten. A changed row is shown boldface or in a colour (a blue that is dark enough to read), and a second button at the bottom copies every change at once, as the lines that set them. That is RG12.3 for one dialog session, and the two share the question of what "changed" means: against the value the dialog opened with, or against the defaults. Maintainer, 2026-09-23.
+  - **notes:** A setting that differs from the Exudyn defaults is shown in blue and bold, from the moment the dialog opens. Two buttons at the bottom open a window that shows the changes as the code that makes them and copies it: "diff to default" for everything differing from the defaults, "this session" for what was edited since the dialog was opened. The comparison is on the string the dialog shows, not on the value, which is what makes a single precision float and an enum comparable; SettingsCodeLines and SettingsValueStrings are module level functions on dictionaries, so the marking, the windows and the tests are one piece of code.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-23 14:20**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.18: resolved Issue 2605: settings dialog: the pastable line needs to look like code, and it is said twice (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.8. The line that sets the selected item (RG6.2.4, \#2604) works, but it does not read as code: it uses the dialog font at dialog size and sits on the window background. It should be smaller, in the same fixed font the cells use, and set apart by a box or a background of its own. The label under it repeats the description that the pop-up already shows in full, and that repetition goes. The button says "copy", which does not say what is copied; it becomes "copy line" (or "copy last edit"), because a second button for all changes joins it in RG6.2.9. Maintainer, 2026-09-23.
+  - **notes:** The line that sets the selected setting sits in a box of its own now, in the font of the cells one size smaller, and the button says "copy line". The label under it is gone with the description it repeated - the tooltip shows that, and it carries the size of a vector or matrix setting as well. SettingsLeafList, ValueLiteral and SettingsPrefix left the tkinter class and are module level functions on dictionaries, so that they can be tested without a window; test\_guiValues.py checks that every literal the dialog writes, for every setting of both structures, is one Python reads back.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 14:10**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.17: resolved Issue 2611: "The C++ core" points at the repository instead of at the developer documentation (docu)
   - issue author: Claude-JG
   - description: revision2026b step RG3.11. The section stays - the maintainer wants it - but it sends the reader to GitHub URLs of files that are now published pages of this documentation (revision2026b step RG3.2). It should link to the developer documentation as a whole and to its architecture and coding style pages, and it should say that for a deeper understanding of the core, and for low-level changes, there is no way around the GitHub project itself. Maintainer, 2026-09-23.
@@ -7918,21 +7936,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textblue">open issue 2608:</span> settings dialog: the catalogue of optional features
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.11. A list, not a commitment: what else the settings dialog could do, collected while RG6.2 is fresh, for the maintainer to pick from or to close. Written in the plan step. Maintainer, 2026-09-23.
-  - effort: LOW (within 2 hours)
-  - date raised: 2026-09-23
-- <span class="textorange">open issue 2607:</span> settings dialog: find a setting by name, with CTRL-F
-  - issue author: Claude-JG
-  - description: revision2026b step RG6.2.10. The visualization settings are several hundred values in a tree of folders, and the only way to a setting is to know which folder it is in. A find is needed: CTRL-F and a find button, searching the NAMES first and the descriptions second, and jumping to the row that is chosen - which means expanding its folders, selecting it and scrolling it into view. The form is to be decided in this step; a recommendation is in the plan. Maintainer, 2026-09-23.
-  - effort: MEDIUM (within 16 hours)
-  - date raised: 2026-09-23
-- <span class="textorange">open issue 2606:</span> settings dialog: a changed value should be visible, and all changes copyable at once
-  - issue author: Claude-JG
-  - description: revision2026b step RG6.2.9. Nothing in the tree says which values differ from what the dialog started with, so a user who has edited ten settings cannot see the ten. A changed row is shown boldface or in a colour (a blue that is dark enough to read), and a second button at the bottom copies every change at once, as the lines that set them. That is RG12.3 for one dialog session, and the two share the question of what "changed" means: against the value the dialog opened with, or against the defaults. Maintainer, 2026-09-23.
-  - effort: MEDIUM (within 16 hours)
-  - date raised: 2026-09-23
-- <span class="textorange">open issue 2605:</span> settings dialog: the pastable line needs to look like code, and it is said twice
-  - issue author: Claude-JG
-  - description: revision2026b step RG6.2.8. The line that sets the selected item (RG6.2.4, \#2604) works, but it does not read as code: it uses the dialog font at dialog size and sits on the window background. It should be smaller, in the same fixed font the cells use, and set apart by a box or a background of its own. The label under it repeats the description that the pop-up already shows in full, and that repetition goes. The button says "copy", which does not say what is copied; it becomes "copy line" (or "copy last edit"), because a second button for all changes joins it in RG6.2.9. Maintainer, 2026-09-23.
+  - **remarks:** Amended by the maintainer, 2026-09-23: UNDO joins the list - the dialog applies every change immediately, which stays, and that is why a wrong value cannot be taken back. Struck out: "apply while it is open" (changes ARE applied immediately and that is to stay) and the "changed only" view (the two windows of RG6.2.9 are that view).
   - effort: LOW (within 2 hours)
   - date raised: 2026-09-23
 - <span class="boldblue">open issue 2599:</span> CHANGELOG.md and the issue tracker page hold the same list twice

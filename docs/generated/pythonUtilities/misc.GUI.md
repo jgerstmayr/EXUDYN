@@ -45,10 +45,66 @@ Helper functions and classes for graphical interaction with Exudyn
 - **output**: the dictionary the dialog picks its combo box entries from
 
 
+(sec-gui-settingsleaflist)=
+## Function: SettingsLeafList
+
+[`SettingsLeafList(dictionaryWithTypeInfo, path = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L372)
+
+- **function description**: every editable value of a settings structure, in tree order
+- **input**: dictionaryWithTypeInfo: what GetDictionaryWithTypeInfo() returns, or a part of it path: the dotted path the given dictionary sits at, '' for the whole structure
+- **output**: list of (path, value, valueString, vType, vSize, description); valueString is what the dialog shows in the cell, which is what everything else compares and copies, and value is what the settings structure holds
+
+
+(sec-gui-valueliteral)=
+## Function: ValueLiteral
+
+[`ValueLiteral(valueStr, vType, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L397)
+
+- **function description**: the value as PYTHON writes it: a string is quoted, an enum carries its module
+- **input**: valueStr: the value as the dialog shows it vType: the type name of the setting dictionaryTypesT: the lists of the types that have a fixed set of values
+- **output**: a string that can stand on the right hand side of an assignment
+
+
+(sec-gui-settingscodelines)=
+## Function: SettingsCodeLines
+
+[`SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L415)
+
+- **function description**: the settings that differ from a reference, as the lines that set them The comparison is on the string the dialog SHOWS, not on the value: that is what makes a float and an enum comparable at all, and it marks exactly what a user sees in the cell.
+- **input**: currentLeaves: SettingsLeafList(...), or the same six fields taken from the dialog referenceValueStrings: {path: valueString} of what is compared against - the defaults, or the values a dialog opened with; a path that is not in it counts as unchanged prefix: SettingsPrefix(...) of the structure dictionaryTypesT: the lists of the types that have a fixed set of values
+- **output**: list of (path, line), in tree order
+
+
+(sec-gui-settingsvaluestrings)=
+## Function: SettingsValueStrings
+
+[`SettingsValueStrings(dictionaryWithTypeInfo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L439)
+
+- **function description**: {path: valueString} of a settings structure - what SettingsCodeLines compares against
+
+
+(sec-gui-findmatches)=
+## Function: FindMatches
+
+[`FindMatches(leaves, searchText)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L445)
+
+- **function description**: the settings a search text finds: the NAMES first, the descriptions second Several hundred values in a tree of folders, and until revision2026b step RG6.2.10 the only way to a setting was knowing which folder it sits in.
+- **input**: leaves: SettingsLeafList(...) of the settings being searched searchText: what the user typed; case does not matter
+- **output**: list of (path, label), name hits first, then hits in the path, then hits that are only in the description - those labelled with the part of the description that matched
+
+
+(sec-gui-settingsprefix)=
+## Function: SettingsPrefix
+
+[`SettingsPrefix(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L476)
+
+- **function description**: the name a script uses for this settings structure, e.g. SC.visualizationSettings
+
+
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L805)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1114)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**: settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings exu: exudyn module dictionaryName: name displayed in dialog
@@ -58,7 +114,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1151)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1460)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**: tkWindow: the window to configure alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
@@ -68,7 +124,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1229)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1538)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -77,7 +133,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1283)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1592)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -86,7 +142,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1368)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1677)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -95,7 +151,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1382)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1691)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -104,7 +160,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1396)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1705)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
@@ -119,6 +175,6 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-show)=
 ### Class function: Show
 
-[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L381)
+[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L501)
 
 - **class function description**: place the tooltip at the screen position (x, y), a little below the pointer

@@ -2,12 +2,16 @@
   "number": 2606,
   "title": "settings dialog: a changed value should be visible, and all changes copyable at once",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "revision2026b step RG6.2.9. Nothing in the tree says which values differ from what the dialog started with, so a user who has edited ten settings cannot see the ten. A changed row is shown boldface or in a colour (a blue that is dark enough to read), and a second button at the bottom copies every change at once, as the lines that set them. That is RG12.3 for one dialog session, and the two share the question of what \"changed\" means: against the value the dialog opened with, or against the defaults. Maintainer, 2026-09-23.",
   "dateRaised": "2026-09-23",
   "deadline": "2027-03-22",
-  "file": "python/exudyn/misc/GUI.py"
+  "dateResolved": "2026-09-23 14:20",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "A setting that differs from the Exudyn defaults is shown in blue and bold, from the moment the dialog opens. Two buttons at the bottom open a window that shows the changes as the code that makes them and copies it: \"diff to default\" for everything differing from the defaults, \"this session\" for what was edited since the dialog was opened. The comparison is on the string the dialog shows, not on the value, which is what makes a single precision float and an enum comparable; SettingsCodeLines and SettingsValueStrings are module level functions on dictionaries, so the marking, the windows and the tests are one piece of code.",
+  "resolvedInVersion": "1.12.19"
 }

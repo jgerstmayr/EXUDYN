@@ -24,18 +24,16 @@ import exudyn
 __all__ = [
     'useRenderWindowDisplayScaling', 'treeviewDefaultFontSize', 'textHeightFactor',
     'treeEditDefaultWidth', 'treeEditDefaultHeight', 'treeEditMaxInitialHeight',
-    'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'IsApple',
-    'GetRendererSystemContainer', 'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight',
-    'IsFloat', 'IsArrayInt', 'IsVector', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
-    'DialogScaling',
-    'GetComboBoxListsDict', 'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'Tooltip',
+    'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'codeLineBackground',
+    'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'GetTkRootAndNewWindow',
+    'TkRootExists', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector', 'GetExudynDisplayScaling',
+    'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict', 'ConvertString2Value',
+    'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral', 'SettingsCodeLines',
+    'SettingsValueStrings', 'FindMatches', 'SettingsPrefix', 'Tooltip',
     'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
-    'EditDictionary',
-    #the dialogs the renderer opens; they were Python inside rendererPythonInterface.cpp until
-    #revision2026b step RG6.2.1 (#2595)
-    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
-    'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
-    'AskQuitDialog',
+    'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
+    'pythonCommandExamples', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
+    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -49,6 +47,8 @@ treeEditMaxInitialHeight = 1440 #larger height, if screen resolution admits
 dialogDefaultWidth = 800        #unscaled width of e.g. right mouse edit
 dialogDefaultHeight = 600       #unscaled height of e.g. right mouse edit
 treeEditOpenItems = ['bodies','connectors','nodes','general'] #these items are opened at the beginning
+codeLineBackground = '#eef1f6'  #the box holding the line that sets a setting (#2605)
+changedValueColor = '#1a3fb0'   #a setting that differs from its default (#2606)
 
 def IsApple():
     if sys.platform == 'darwin':
@@ -363,6 +363,126 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
     
     return [True, '']
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#WHAT THE DIALOG SHOWS, WITHOUT A WINDOW (revision2026b steps RG6.2.8 to RG6.2.10).
+#The tree, the code line, the marking of a changed value and the find ask the same questions -
+#which leaves are there, and what does a leaf look like as Python - so they are asked here, on
+#dictionaries, where a test can reach them without opening anything.
+
+def SettingsLeafList(dictionaryWithTypeInfo, path=''):
+    """every editable value of a settings structure, in tree order
+
+    Args:
+        dictionaryWithTypeInfo: what GetDictionaryWithTypeInfo() returns, or a part of it
+        path: the dotted path the given dictionary sits at, '' for the whole structure
+
+    Returns:
+        list of (path, value, valueString, vType, vSize, description); valueString is what the
+        dialog shows in the cell, which is what everything else compares and copies, and value is
+        what the settings structure holds
+    """
+    leaves = []
+    for (key, value) in dictionaryWithTypeInfo.items():
+        if not isinstance(value, dict):
+            continue
+        if 'itemIdentifier' in value:
+            leaves.append((path + key, value['value'],
+                           ConvertValue2String(value['value'], value['type'], value['size']),
+                           value['type'], value['size'], value['description']))
+        else:
+            leaves += SettingsLeafList(value, path + key + '.')
+    return leaves
+
+
+def ValueLiteral(valueStr, vType, dictionaryTypesT=None):
+    """the value as PYTHON writes it: a string is quoted, an enum carries its module
+
+    Args:
+        valueStr: the value as the dialog shows it
+        vType: the type name of the setting
+        dictionaryTypesT: the lists of the types that have a fixed set of values
+
+    Returns:
+        a string that can stand on the right hand side of an assignment
+    """
+    if vType in ['String', 'FileName']:
+        return repr(valueStr)
+    if vType != 'bool' and dictionaryTypesT is not None and vType in dictionaryTypesT:
+        return 'exu.' + valueStr           #an enum needs the module it lives in
+    return valueStr
+
+
+def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT=None):
+    """the settings that differ from a reference, as the lines that set them
+
+    The comparison is on the string the dialog SHOWS, not on the value: that is what makes a float
+    and an enum comparable at all, and it marks exactly what a user sees in the cell.
+
+    Args:
+        currentLeaves: SettingsLeafList(...), or the same six fields taken from the dialog
+        referenceValueStrings: {path: valueString} of what is compared against - the defaults, or
+            the values a dialog opened with; a path that is not in it counts as unchanged
+        prefix: SettingsPrefix(...) of the structure
+        dictionaryTypesT: the lists of the types that have a fixed set of values
+
+    Returns:
+        list of (path, line), in tree order
+    """
+    lines = []
+    for (path, _, valueStr, vType, _, _) in currentLeaves:
+        if referenceValueStrings.get(path, valueStr) != valueStr:
+            lines.append((path, prefix + '.' + path + ' = '
+                          + ValueLiteral(valueStr, vType, dictionaryTypesT)))
+    return lines
+
+
+def SettingsValueStrings(dictionaryWithTypeInfo):
+    """{path: valueString} of a settings structure - what SettingsCodeLines compares against"""
+    return {path: valueStr
+            for (path, _, valueStr, _, _, _) in SettingsLeafList(dictionaryWithTypeInfo)}
+
+
+def FindMatches(leaves, searchText):
+    """the settings a search text finds: the NAMES first, the descriptions second
+
+    Several hundred values in a tree of folders, and until revision2026b step RG6.2.10 the only
+    way to a setting was knowing which folder it sits in.
+
+    Args:
+        leaves: SettingsLeafList(...) of the settings being searched
+        searchText: what the user typed; case does not matter
+
+    Returns:
+        list of (path, label), name hits first, then hits in the path, then hits that are only in
+        the description - those labelled with the part of the description that matched
+    """
+    searchText = searchText.strip().lower()
+    if searchText == '':
+        return []
+    (nameHits, pathHits, descriptionHits) = ([], [], [])
+    for (path, _, _, _, _, description) in leaves:
+        name = path.split('.')[-1]
+        if searchText in name.lower():
+            nameHits.append((path, path))
+        elif searchText in path.lower():
+            pathHits.append((path, path))
+        elif searchText in description.lower():
+            start = max(0, description.lower().find(searchText) - 20)
+            snippet = ' '.join(description[start:start + 70].split())
+            descriptionHits.append((path, path + '  -  ...' + snippet + '...'))
+    return nameHits + pathHits + descriptionHits
+
+
+def SettingsPrefix(settingsStructure):
+    """the name a script uses for this settings structure, e.g. SC.visualizationSettings"""
+    structure = type(settingsStructure).__name__
+    if structure == 'VisualizationSettings':
+        return 'SC.visualizationSettings'
+    if structure == 'SimulationSettings':
+        return 'simulationSettings'
+    return structure[:1].lower() + structure[1:]
+
+
 class Tooltip:
     """The small yellow window that shows the description of the row under the mouse.
 
@@ -400,7 +520,7 @@ class Tooltip:
 #dictionaryTypes: contains a dictionary with the available types, e.g. bool, etc.
 #updateOnChange: every change is directly applied to the settingsStructure and redraw is signaled in stored renderer
 class TkinterEditDictionaryWithTypeInfo(tk.Frame):
-    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False, textHeight = 15, systemScaling = 1):
+    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False, textHeight = 15, systemScaling = 1, fontFactor = 1):
         tk.Frame.__init__(self, parent)
         
         self.parentFrame = parent #parent frame stored for member functions
@@ -410,6 +530,10 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.treeOpen = treeOpen
         self.textHeight = textHeight
         self.systemScaling = systemScaling
+        self.fontFactor = fontFactor
+        #the code line is read, not edited: one size below the cells, which is what the
+        #maintainer asked for after using it (revision2026b step RG6.2.8, #2605)
+        self.codeFontSize = max(6, int(treeviewDefaultFontSize*fontFactor) - 1)
 
         self.dictionaryData = settingsStructure.GetDictionaryWithTypeInfo()
 
@@ -424,12 +548,33 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.vertivalScrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.vertivalScrollbar.set)
 
-        self.tree.grid(row=0, column=0, columnspan=3, sticky="nsew")
-        self.vertivalScrollbar.grid(row=0, column=3, sticky='nse')
+        #THE FIND BAR (revision2026b step RG6.2.10, #2607) stands above the tree, which is
+        #where CTRL-F puts one. It searches the NAMES first and the descriptions second, and the
+        #drop-down holds the hits, so that one can be picked instead of stepped to.
+        self.findFrame = tk.Frame(self)
+        self.findFrame.grid(row=0, column=0, columnspan=4, sticky=tk.E+tk.W)
+        self.findFrame.grid_columnconfigure(2, weight=1)
+        tk.Label(self.findFrame, text='find:').grid(row=0, column=0, padx=(4, 2))
+        self.findVar = tk.StringVar()
+        self.findEntry = tk.Entry(self.findFrame, textvariable=self.findVar, width=24)
+        self.findEntry.grid(row=0, column=1, pady=2)
+        self.findEntry.bind('<Return>', self.OnFindNext)
+        self.findEntry.bind('<Escape>', lambda event: self.tree.focus_set())
+        self.findVar.trace_add('write', lambda *arguments: self.UpdateFindHits())
+        self.findCombo = ttk.Combobox(self.findFrame, state='readonly', values=())
+        self.findCombo.grid(row=0, column=2, sticky=tk.E+tk.W, padx=4)
+        self.findCombo.bind('<<ComboboxSelected>>', self.OnFindPick)
+        self.findButton = tk.Button(self.findFrame, text='find', command=self.OnFindNext)
+        self.findButton.grid(row=0, column=3, padx=(0, 4))
+        self.findHits = []
+        self.findIndex = -1
+
+        self.tree.grid(row=1, column=0, columnspan=3, sticky="nsew")
+        self.vertivalScrollbar.grid(row=1, column=3, sticky='nse')
         self.vertivalScrollbar.configure(command=self.tree.yview)
 
 
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0,weight=1)
         self.grid_columnconfigure(1,weight=2)
         self.grid_columnconfigure(2,weight=2)
@@ -450,6 +595,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.column("type", width=90*scale, minwidth=50, stretch=False, anchor=tk.W)
         self.tree.column("description", width=420*scale, minwidth=120, stretch=True)
 
+
+        #a row that differs from the default is written in colour and bold (#2606); the size
+        #has to be given here, because a tag font does not follow the style of the tree
+        self.tree.tag_configure('changed', foreground=changedValueColor,
+                                font=(None, int(treeviewDefaultFontSize*fontFactor), 'bold'))
 
         self.AddNodeFromDictionaryWithTypeInfo(value=self.dictionaryData, parentNode="")
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
@@ -483,18 +633,36 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
         #+++++++++++++++++++++++++++++++++++++++++
         #the bottom row is not an editor any more: it says what the selected item IS, as the line
-        #that sets it - which is what the maintainer asked for, a line to copy into a script
-        self.codeLineVar = tk.StringVar()
-        self.codeLine = tk.Entry(self, textvariable=self.codeLineVar, state='readonly',
-                                 readonlybackground='gray95', borderwidth=0,
-                                 font='TkFixedFont')
-        self.codeLine.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.E+tk.S+tk.W)
-        self.copyButton = tk.Button(self, text='copy', command=self.OnCopyCodeLine)
-        self.copyButton.grid(row=1, column=3, sticky=tk.N+tk.E+tk.S+tk.W)
+        #that sets it - which is what the maintainer asked for, a line to copy into a script.
+        #It sits in a BOX of its own since revision2026b step RG6.2.8 (#2605): the plain entry on
+        #the window background did not look like something one copies. The label that stood under
+        #it went with the same step - it repeated the description that the tooltip already shows,
+        #and the size it also carried is in the tooltip now.
+        self.bottomFrame = tk.Frame(self)
+        self.bottomFrame.grid(row=2, column=0, columnspan=4, sticky=tk.E+tk.W)
+        self.bottomFrame.grid_columnconfigure(0, weight=1)
 
-        self.infoText = tk.Label(self, text='', justify=tk.LEFT, anchor=tk.W,
-                                 wraplength=int(treeEditDefaultWidth*0.95))
-        self.infoText.grid(row=2, column=0, columnspan=4, sticky=tk.N+tk.E+tk.S+tk.W)
+        codeBox = tk.Frame(self.bottomFrame, relief=tk.SOLID, borderwidth=1,
+                           background=codeLineBackground)
+        codeBox.grid(row=0, column=0, sticky=tk.E+tk.W, padx=4, pady=4)
+        self.codeLineVar = tk.StringVar()
+        self.codeLine = tk.Entry(codeBox, textvariable=self.codeLineVar, state='readonly',
+                                 readonlybackground=codeLineBackground, borderwidth=0,
+                                 highlightthickness=0, font=(None, self.codeFontSize))
+        self.codeLine.pack(fill=tk.X, expand=True, padx=4, pady=2)
+
+        self.copyButton = tk.Button(self.bottomFrame, text='copy line',
+                                    command=self.OnCopyCodeLine)
+        self.copyButton.grid(row=0, column=1, padx=2)
+
+        #the two windows of revision2026b step RG6.2.9 (#2606): they SHOW the changes as the code
+        #that makes them, and copy it - which is what RG12.3 is to produce for a whole structure
+        self.diffButton = tk.Button(self.bottomFrame, text='diff to default',
+                                    command=self.OnShowDiffToDefault)
+        self.diffButton.grid(row=0, column=2, padx=2)
+        self.sessionButton = tk.Button(self.bottomFrame, text='this session',
+                                       command=self.OnShowSessionChanges)
+        self.sessionButton.grid(row=0, column=3, padx=(2, 4))
 
         #+++++++++++++++++++++++++++++++++++++++++
         #pre-select item
@@ -504,6 +672,30 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.selection_set((first))
         
         self.modifiedDictionary = self.GetDictionary('')
+
+        #WHAT DIFFERS FROM THE DEFAULTS IS MARKED (revision2026b step RG6.2.9, #2606). The
+        #defaults are one constructor call away, and a settings structure Python builds on its own
+        #is safe to read as long as no DEPRECATED member is touched, which none of this does
+        #(#2603). If it ever fails, the marking stays off rather than the dialog.
+        self.defaultValueStrings = {}
+        try:
+            self.defaultValueStrings = SettingsValueStrings(
+                type(self.settingsStructure)().GetDictionaryWithTypeInfo())
+        except Exception as exception:                                       # noqa: BLE001
+            print('note: the settings defaults are not available, so nothing is marked as'
+                  ' changed:', exception)
+        #and what THIS dialog started with, which is the other thing a user calls "changed"
+        self.openingValueStrings = {path: valueStr
+                                    for (path, _, valueStr, _, _, _) in self.TreeLeaves()}
+        self.MarkChangedValues()
+
+        #what the find searches and where it jumps to (revision2026b step RG6.2.10, #2607); the
+        #names and descriptions do not change while the dialog is open, so this is built once
+        self.findLeaves = self.TreeLeaves()
+        self.itemByPath = {self.ItemPath(item): item for item in self.LeafItems()}
+        for widget in [self.parentFrame, self.tree]:
+            widget.bind('<Control-f>', self.OnFindFocus)
+            widget.bind('<F3>', self.OnFindNext)
 
     #create treeview from dictionary with type info
     def AddNodeFromDictionaryWithTypeInfo(self, value, parentNode="", key=None, level=0):
@@ -586,6 +778,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         if description.strip() != '':
             name = self.tree.item(row,'text')
             vType = self.typeStorage.get(row, '')
+            #the size stands here since revision2026b step RG6.2.8 (#2605): it was the only fact
+            #of the label under the tree that nothing else said
+            size = self.sizeStorage.get(row, '')
+            if str(size) not in ['[1]', '1', '']:
+                vType += ', size ' + str(size)
             self.tooltip.Show(name + ('  [' + vType + ']' if vType else '') + '\n' + description,
                               event.x_root, event.y_root)
 
@@ -620,6 +817,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
                 self.tree.item(item, values=(value, self.typeStorage[item],
                                              self.descriptionStorage[item]))
+                self.MarkChangedValue(item)
                 self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
                 self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
                 return
@@ -666,7 +864,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     #THE CELL EDITOR (revision2026b step RG6.2.4, #2604)
 
     def ItemPath(self, item):
-        """the dotted path of a row, as a script writes it: general.textSize"""
+        """the dotted path of a row, as a script writes it: openGL.lineWidth"""
         path = self.tree.item(item,'text')
         parent = self.tree.parent(item)
         depth = 0
@@ -679,40 +877,20 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def CodeLine(self, item):
         """the selected setting as the LINE THAT SETS IT, ready to paste into a script:
 
-            SC.visualizationSettings.general.textSize = 16.0
+            SC.visualizationSettings.openGL.lineWidth = 2.0
 
         which is what makes a session in this dialog reusable (maintainer, 2026-09-23). The
         prefix follows the structure being edited, the value is written as a Python literal."""
-        valueStr = self.tree.item(item,'values')[0]
-        vType = self.typeStorage.get(item, '')
-        if vType in ['String', 'FileName']:
-            literal = repr(valueStr)
-        elif vType != 'bool' and vType in self.dictionaryTypesT:
-            literal = 'exu.' + valueStr       #an enum needs the module it lives in
-        else:
-            literal = valueStr
-
-        structure = type(self.settingsStructure).__name__
-        if structure == 'VisualizationSettings':
-            prefix = 'SC.visualizationSettings'
-        elif structure == 'SimulationSettings':
-            prefix = 'simulationSettings'
-        else:
-            prefix = structure[:1].lower() + structure[1:]
-        return prefix + '.' + self.ItemPath(item) + ' = ' + literal
+        literal = ValueLiteral(self.tree.item(item,'values')[0],
+                               self.typeStorage.get(item, ''), self.dictionaryTypesT)
+        return SettingsPrefix(self.settingsStructure) + '.' + self.ItemPath(item) + ' = ' + literal
 
     def ShowInfo(self, item):
-        """the bottom row: the line to copy, and what the item is"""
+        """the bottom row: the line that sets the selected item"""
         if item == '' or item not in self.typeStorage:
             self.codeLineVar.set('')
-            self.infoText.configure(text='')
             return
         self.codeLineVar.set(self.CodeLine(item))
-        vType = self.typeStorage[item]
-        size = self.sizeStorage.get(item, '')
-        sizeText = '' if str(size) in ['[1]', '1', ''] else ', size ' + str(size)
-        self.infoText.configure(text=vType + sizeText + ' - '
-                                + self.descriptionStorage.get(item, ''))
 
     def OnCopyCodeLine(self):
         """the line into the clipboard; tkinter keeps it only while it runs, so it is flushed"""
@@ -722,6 +900,136 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.clipboard_clear()
         self.clipboard_append(line)
         self.update()                         #without this the clipboard is empty after closing
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #WHAT DIFFERS, AND FROM WHAT (revision2026b step RG6.2.9, #2606)
+
+    def LeafItems(self, item=''):
+        """the rows that hold a value, in tree order - folders are not settings"""
+        items = []
+        for child in self.tree.get_children(item):
+            if self.tree.get_children(child):
+                items += self.LeafItems(child)
+            elif child in self.typeStorage:
+                items.append(child)
+        return items
+
+    def TreeLeaves(self):
+        """the rows of the tree in the shape of SettingsLeafList, so that one comparison serves
+        the marking, the two windows and the tests. The TREE is asked, not the settings structure:
+        what a user sees is what is copied."""
+        return [(self.ItemPath(item), None, self.tree.item(item,'values')[0],
+                 self.typeStorage[item], self.sizeStorage[item], self.descriptionStorage[item])
+                for item in self.LeafItems()]
+
+    def MarkChangedValues(self):
+        """colour every row that differs from the default; that is what the maintainer means by
+        a changed value, and it is true as the dialog opens, not only after an edit"""
+        if self.defaultValueStrings == {}:
+            return
+        for item in self.LeafItems():
+            self.MarkChangedValue(item)
+
+    def MarkChangedValue(self, item):
+        path = self.ItemPath(item)
+        valueStr = self.tree.item(item,'values')[0]
+        isChanged = (path in self.defaultValueStrings
+                     and self.defaultValueStrings[path] != valueStr)
+        self.tree.item(item, tags=('changed',) if isChanged else ())
+
+    def ChangedCodeLines(self, referenceValueStrings):
+        return SettingsCodeLines(self.TreeLeaves(), referenceValueStrings,
+                                 SettingsPrefix(self.settingsStructure), self.dictionaryTypesT)
+
+    def OnShowDiffToDefault(self):
+        self.ShowCodeLines('settings differing from the defaults',
+                           self.ChangedCodeLines(self.defaultValueStrings),
+                           'every setting that differs from the Exudyn defaults'
+                           if self.defaultValueStrings != {}
+                           else 'the defaults are not available in this session')
+
+    def OnShowSessionChanges(self):
+        self.ShowCodeLines('settings changed in this dialog',
+                           self.ChangedCodeLines(self.openingValueStrings),
+                           'what was changed since this dialog was opened')
+
+    def ShowCodeLines(self, title, lines, description):
+        """the changes as the code that makes them, in a window that shows AND copies: a dialog
+        session that can be pasted into a script (maintainer, 2026-09-23)"""
+        window = tk.Toplevel(self)
+        window.title(title)
+        ApplyDialogWindowSettings(window)
+        window.grid_columnconfigure(0, weight=1)
+        window.grid_rowconfigure(1, weight=1)
+
+        tk.Label(window, text=description, justify=tk.LEFT, anchor=tk.W).grid(
+            row=0, column=0, columnspan=2, sticky=tk.E+tk.W, padx=8, pady=(8, 2))
+
+        textArea = tk.Text(window, wrap=tk.NONE, width=80, height=min(25, max(4, len(lines) + 1)),
+                           background=codeLineBackground, font=(None, self.codeFontSize))
+        textArea.grid(row=1, column=0, columnspan=2, sticky=tk.NSEW, padx=(8, 0))
+        #a structure can differ from the defaults in more lines than fit on a screen
+        scrollbar = ttk.Scrollbar(window, orient='vertical', command=textArea.yview)
+        scrollbar.grid(row=1, column=2, sticky=tk.N+tk.S, padx=(0, 8))
+        textArea.configure(yscrollcommand=scrollbar.set)
+        code = '\n'.join([line for (_, line) in lines])
+        textArea.insert(tk.END, code if lines else '#nothing')
+        textArea.configure(state='disabled')
+
+        def CopyAll():
+            if lines:
+                self.clipboard_clear()
+                self.clipboard_append(code)
+                self.update()       #without this the clipboard is empty once the window closes
+
+        tk.Button(window, text='copy all', command=CopyAll).grid(row=2, column=0, pady=6)
+        tk.Button(window, text='close', command=window.destroy).grid(row=2, column=1, pady=6)
+        window.bind('<Escape>', lambda event: window.destroy())
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #FIND A SETTING (revision2026b step RG6.2.10, #2607)
+
+    def OnFindFocus(self, event=None):
+        """CTRL-F: the find entry takes the focus and its text is selected, ready to be replaced"""
+        self.findEntry.focus_set()
+        self.findEntry.select_range(0, tk.END)
+        return 'break'
+
+    def UpdateFindHits(self):
+        """as the text is typed: the hits, in the drop-down, names before descriptions"""
+        self.findHits = FindMatches(self.findLeaves, self.findVar.get())
+        self.findIndex = -1
+        self.findCombo['values'] = tuple(label for (_, label) in self.findHits)
+        self.findCombo.set(str(len(self.findHits)) + ' found' if self.findHits
+                           else ('nothing found' if self.findVar.get().strip() != '' else ''))
+
+    def OnFindPick(self, event=None):
+        """a hit is picked from the drop-down: jump to it"""
+        index = self.findCombo.current()
+        if 0 <= index < len(self.findHits):
+            self.findIndex = index
+            self.JumpToPath(self.findHits[index][0])
+
+    def OnFindNext(self, event=None):
+        """RETURN, F3 or the find button: the next hit, and around at the end"""
+        if self.findHits == []:
+            return 'break'
+        self.findIndex = (self.findIndex + 1) % len(self.findHits)
+        self.findCombo.current(self.findIndex)
+        self.JumpToPath(self.findHits[self.findIndex][0])
+        return 'break'
+
+    def JumpToPath(self, path):
+        """show the row a path names: see() opens the folders it sits in and scrolls it into view.
+        The focus stays in the find entry, so that RETURN steps on."""
+        item = self.itemByPath.get(path, '')
+        if item == '':
+            return
+        self.CancelCellEdit()
+        self.tree.see(item)
+        self.tree.selection_set(item)
+        self.tree.focus(item)
+        self.ShowInfo(item)
 
     def CellBox(self, item):
         """where the value cell of a row is, in the coordinates of the tree"""
@@ -795,6 +1103,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
         self.CancelCellEdit()
         self.tree.item(item, values=(valueStr, vType, self.descriptionStorage[item]))
+        self.MarkChangedValue(item)
         self.tree.focus_set()
         self.tree.focus(item)
         self.ShowInfo(item)
@@ -869,7 +1178,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     comboListsT = GetComboBoxListsDict(exu)
     ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
                                          updateOnChange=updateOnChange, treeOpen=treeOpen, textHeight = textHeight,
-                                         systemScaling = systemScaling)
+                                         systemScaling = systemScaling, fontFactor = fontFactor)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
