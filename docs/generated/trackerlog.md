@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.41.dev1
+- Exudyn version = 1.12.43.dev1
 - last change = 2026-09-23
-- Number of issues = 2630
-- Number of resolved issues = 2355 (41 in current version)
+- Number of issues = 2632
+- Number of resolved issues = 2357 (43 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.43: <span class="textred">resolved BUG 2631</span>: dialogs.fontScaling only works at 0: the rows and the columns do not follow the font
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.23, maintainer 2026-09-23. Setting dialogs.fontScaling=1.0 gives a larger font but much too small a row height and too narrow columns, and changing the value does not help - only 0.0 is usable. Measured with a withdrawn Tk root: DialogScaling sets systemScaling=fontScaling when fontScaling\>0, and systemScaling is what the row height and the column width are computed from - TkTextHeight returns int(treeviewDefaultFontSize\*textHeightFactor\*systemScaling), which is 13 pixels at fontScaling=1.0 while the font really renders with a linespace of 16 to 18 pixels, because the point-to-pixel conversion follows the tk scaling that GetGUIContentScaling set and fontScaling never touches. The columns are worse: the scale factor is max(1,int(round(systemScaling))), an INTEGER, so it is 1 for every fontScaling below 1.5. The fix is to stop guessing: the row height and the column width are MEASURED from the font the tree will actually use (linespace and the width of the digits), so that any fontScaling works and the default appearance is unchanged.
+  - **notes:** revision2026b step RG6.2.23. dialogs.fontScaling works at any value now. DialogScaling set systemScaling=fontScaling, and the row height and the column width were computed from that number, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display. Measured with a withdrawn Tk root: at fontScaling=1 the rows were 13 pixels for a font whose linespace is 16 to 18, so the text was clipped, and the column factor max(1,int(round(systemScaling))) was an integer and stayed at 1 for every value below 1.5. The new DialogRowMetrics(root, fontFactor) builds the font the tree will use and asks it: the row height is metrics('linespace') times rowHeightFactor=1.15, chosen to reproduce the pixel height the dialog had at the default font, and the column scale is the width of the digits in that font over the width in the unscaled one. Measured after: fontScaling 1.0/1.25/1.5/2.0 gives row heights 17/20/25/31 and column scales 1.00/1.14/1.57/1.86. The default appearance is unchanged - at fontScaling=0 the column scale is exactly 1 and the row height is within a pixel of what it was. A test requires every row to be at least as tall as the linespace of its own font.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-23 23:30**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.42: <span class="textred">resolved BUG 2630</span>: a double click on a bool setting no longer toggles it
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.22, maintainer 2026-09-23. It used to switch True/False and it does not any more. The cause is the cell editor of RG6.2.4 (\#2604): the tree binds ButtonRelease-1 to OnTreeEdit, which opens the editor immediately, and for a bool that is a Combobox placed OVER the value cell. The second click of a double click therefore lands on the combobox, not on the tree, so the Double-1 binding never fires and the toggle in OnTreeEditOrDoubleClick is unreachable. The toggle code itself is intact. Fix: for a bool row the cell edit is scheduled with after(...) instead of opened at once, and a double click cancels that job and toggles; every other type keeps the immediate editor, so nothing else becomes slower.
+  - **notes:** revision2026b step RG6.2.22. A double click on a bool setting toggles it again. The toggle code was never removed: RG6.2.4 (\#2604) bound the cell editor to ButtonRelease-1, and for a bool that editor is a Combobox placed OVER the value cell, so the second click of a double click landed on the combobox and the Double-1 binding on the tree never fired. On a bool row the cell edit is scheduled with after(220 ms) now and a double click cancels the job before it fires; every other type keeps the editor that opens at once, so nothing else became slower. Checked with a withdrawn Tk root: a single click arms the job and changes nothing, the double click toggles True to False and back, each as its own undo step, and a float row schedules nothing and has its editor up immediately.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 23:30**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.41: <span class="textred">resolved BUG 2629</span>: the item header emitter writes files in the locale encoding, not UTF-8
   - issue author: Claude-JG
   - description: revision2026b step RG9.2, found while regenerating for \#2628. tools/generators/itemHeaderEmitter.py reads an existing generated header with encoding='utf8' but writes it with a bare open(fileName,'w'), which uses the LOCALE encoding - cp1252 on this Windows machine. It only bites when a header that contains a non-ASCII character is rewritten: CObjectFFRF.h and CObjectFFRFreducedOrder.h carry the author name Zwoelfer with an o-umlaut, and the moment RG9.2 changed every user-function header, those two were written as cp1252 and the NEXT run of the generator could not read them back - UnicodeDecodeError, byte 0xf6, and the whole regeneration step failed. The committed files were valid UTF-8 before, so this had been latent for as long as those two headers did not change. The write gets encoding='utf8'.

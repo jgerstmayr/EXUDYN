@@ -459,3 +459,49 @@ def testTheListsHoldTheValuesTheyOfferAsStrings(comboLists):
         values = comboLists[name]
         assert len(values) > 1
         assert all(str(value).startswith(name + '.') for value in values)
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#how large a row is (revision2026b step RG6.2.23, #2631): dialogs.fontScaling only worked at 0,
+#because the row height and the column width were computed from systemScaling instead of from the
+#font that is really drawn - 13 pixels for a font with a linespace of 16 to 18, and an INTEGER
+#column factor that stayed at 1 for every value below 1.5
+
+def testTheFontSizeFollowsTheScalingAndNeverCollapses():
+    assert gui.DialogFontSize(1.) == gui.treeviewDefaultFontSize
+    assert gui.DialogFontSize(2.) == 2*gui.treeviewDefaultFontSize
+    assert gui.DialogFontSize(0.) >= 6, 'a font of zero points is not a font'
+    assert gui.DialogFontSize(-1.) >= 6
+
+
+def TkRootOrSkip():
+    """a withdrawn root; no window is ever mapped, and a machine without a display skips"""
+    import tkinter as tk                                                        # noqa: PLC0415
+    try:
+        root = tk.Tk()
+    except Exception:                        # noqa: BLE001 - any display problem is a skip
+        pytest.skip('no tkinter display available')
+    root.withdraw()
+    return root
+
+
+def testTheRowHeightAndTheColumnsFollowTheFont():
+    """the point of the step: both are MEASURED, so any fontScaling is usable"""
+    root = TkRootOrSkip()
+    try:
+        [smallRow, smallColumns] = gui.DialogRowMetrics(root, 1.)
+        [largeRow, largeColumns] = gui.DialogRowMetrics(root, 2.)
+
+        #a row must hold the line it draws
+        for fontFactor in [1., 1.25, 1.5, 2.]:
+            [rowHeight, _] = gui.DialogRowMetrics(root, fontFactor)
+            import tkinter.font as tkFont                                       # noqa: PLC0415
+            font = tkFont.Font(root=root, size=gui.DialogFontSize(fontFactor))
+            assert rowHeight >= font.metrics('linespace'), (
+                'the text is clipped at fontScaling=' + str(fontFactor))
+
+        assert largeRow > smallRow, 'a larger font must get taller rows'
+        assert largeColumns > smallColumns, 'a larger font must get wider columns'
+        assert smallColumns == 1., 'the unscaled font must leave the columns as they were'
+    finally:
+        root.destroy()

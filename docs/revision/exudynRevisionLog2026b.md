@@ -1334,3 +1334,71 @@ Three measurements, one conclusion — on this machine the item sources are not 
 spends its minute on. The value of both steps is that the dependency is now what it claims to be,
 and `test_cppIncludes.py` holds the count at 11 so it cannot quietly climb back.
 
+<a id="rg6-2-22"></a>
+### RG6.2.22 — the bool toggle came back (2026-09-23, #2630)
+
+*"Previously, bool variables had the feature that a double click switched the state — please
+restore that feature."*
+
+The toggle was never removed. RG6.2.4 (#2604) gave the tree an editor **in the cell**, bound to
+`<ButtonRelease-1>`, and for a `bool` that editor is a Combobox **placed over the value cell**. So
+the first click of a double click put a widget under the mouse, the second click went to that
+widget, and the `<Double-1>` binding on the tree never fired. Fifteen lines of working toggle code
+sat there unreachable.
+
+The fix is the ordinary one for this conflict, kept as narrow as it can be: **on a bool row the
+cell edit is scheduled** with `after(220 ms)` instead of opened at once, and a double click cancels
+the job before it fires. Every other type keeps the editor that opens immediately, so nothing else
+got slower — a float still edits on the first click.
+
+Checked with a withdrawn Tk root: a single click on `nodes.show` leaves the value alone and arms
+the job; the double click toggles `True -> False`, and again `-> True`; each is its own undo step;
+a float row schedules nothing and has its editor up at once.
+
+**What this says about the earlier step:** RG6.2.4 was verified by editing values, which is what it
+was for, and a *regression* in a feature it did not mention went unnoticed for a week. A bound
+event that another binding can swallow is not visible in either piece of code.
+
+<a id="rg6-2-23"></a>
+### RG6.2.23 — a font scaling that actually scales (2026-09-23, #2631)
+
+*"dialogs.fontScaling does not work at all. Using 1.0 gives a larger font, but much too small row
+height and smaller column width. Changing fontsize does not resolve that — only 0.0 works."*
+
+Right, and the numbers say why. `DialogScaling` set `systemScaling = fontScaling` when the setting
+is greater than zero, and **systemScaling was what the layout was computed from**:
+
+- the row height was `int(treeviewDefaultFontSize * textHeightFactor * systemScaling)— ` at
+  `fontScaling=1` that is `int(9*1.45*1) = 13` pixels, while the font on this display really draws
+  with a **linespace of 16 to 18**, because the point-to-pixel conversion follows the tk scaling
+  that `GetGUIContentScaling` had set and `fontScaling` never touches. Hence rows too small for
+  their own text;
+- the column factor was `max(1, int(round(systemScaling)))— ` an **integer**. It is 1 for every
+  `fontScaling` below 1.5, so the columns could not widen at all while the glyphs did.
+
+**So the layout stops guessing and measures.** `DialogRowMetrics(root, fontFactor)` builds the font
+the tree will use and asks it: the row height is its `metrics('linespace')` times `rowHeightFactor`
+(1.15, chosen to reproduce the pixel height the dialog had at the default font), and the column
+scale is the width of `'0123456789'` in that font divided by the width in the unscaled one. Both
+are then right at any display scaling, on any platform, for any value of the setting:
+
+| fontScaling | font | row height | columns | row height before |
+|---|---|---|---|---|
+| 1.0 | 9 | 17 | 1.00 | 13 |
+| 1.25 | 11 | 20 | 1.14 | 16 |
+| 1.5 | 14 | 25 | 1.57 | 19 |
+| 2.0 | 18 | 31 | 1.86 | 26 |
+
+The default appearance does not change: at `fontScaling=0` the column scale is exactly 1 and the
+row height is within a pixel of what it was.
+
+**Confirmed by the maintainer** at 0.5, 1 and 2, with one request that came out of seeing it
+work: the name, value and type columns are **25% wider** than they were (325, 188 and
+113 pixels at the unscaled font). The description keeps its width and still takes the
+rest of the window.
+
+**The lesson is about the name.** `systemScaling` was one number doing two jobs — how large the
+font is *and* how much room the layout needs — and they are only the same number on a display
+whose scaling is 1. A value that means two things is wrong in one of them as soon as they diverge,
+and this one had diverged since the setting was added.
+

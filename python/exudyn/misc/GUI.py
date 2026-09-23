@@ -14,6 +14,7 @@
 import tkinter as tk
 import tkinter.messagebox
 import tkinter.ttk as ttk
+import tkinter.font as tkFont
 import numpy as np #for array checks
 from numpy import float32
 import ast #for ast.literal_eval
@@ -23,11 +24,12 @@ from exudyn.misc.keyBindings import RendererHelpText
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'useRenderWindowDisplayScaling', 'treeviewDefaultFontSize', 'textHeightFactor',
-    'treeEditDefaultWidth', 'treeEditDefaultHeight', 'treeEditMaxInitialHeight',
-    'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'treeEditLastOpenItems',
-    'codeLineBackground', 'changedValueColor', 'IsApple', 'GetRendererSystemContainer',
-    'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector',
+    'useRenderWindowDisplayScaling', 'treeviewDefaultFontSize', 'rowHeightFactor',
+    'boolDoubleClickDelay', 'textHeightFactor', 'treeEditDefaultWidth', 'treeEditDefaultHeight',
+    'treeEditMaxInitialHeight', 'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems',
+    'treeEditLastOpenItems', 'codeLineBackground', 'changedValueColor', 'IsApple',
+    'GetRendererSystemContainer', 'GetTkRootAndNewWindow', 'TkRootExists', 'DialogFontSize',
+    'DialogRowMetrics', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector',
     'GetExudynDisplayScaling', 'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict',
     'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral',
     'SettingsCodeLines', 'containerInitialisedSettings', 'DefaultSettingsDictionary',
@@ -41,6 +43,11 @@ __all__ = [
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
 
 treeviewDefaultFontSize = 9 #this is then scaled; but it could be changed to make fonts smaller
+rowHeightFactor = 1.15  #the factor between the MEASURED linespace of the font and the row height
+                        #(revision2026b step RG6.2.23); 1.15 reproduces the 18 pixels the dialog
+                        #had at the default font, and follows the font at any other scaling
+boolDoubleClickDelay = 220 #ms a bool row waits before it opens its editor, so that a double
+                        #click can cancel it and toggle instead (revision2026b step RG6.2.22)
 textHeightFactor = 1.45 #this is the factor between font size and text height; larger values leading to more space between lines
 
 treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
@@ -97,7 +104,48 @@ def TkRootExists():
 
 
 
-#unique text height for tk with given scaling
+def DialogFontSize(fontFactor):
+    """the point size the tree, its headings and its tags use
+
+    Args:
+        fontFactor: the multiplier DialogScaling returned
+
+    Returns:
+        the size in points, never below 6
+    """
+    return max(6, int(round(treeviewDefaultFontSize*fontFactor)))
+
+
+def DialogRowMetrics(root, fontFactor):
+    """how tall a row must be and how much wider the columns must be, MEASURED
+
+    Both used to be computed from systemScaling, which is not what decides how large a
+    glyph comes out: the point-to-pixel conversion follows the tk scaling of the
+    display, so at dialogs.fontScaling=1 the rows were 13 pixels tall for a font with a
+    linespace of 16 to 18 and the text was clipped, while the column factor
+    max(1,int(round(systemScaling))) stayed at 1 for every value below 1.5 (#2631). The
+    font is asked instead, which is right at any scaling and on any platform.
+
+    Args:
+        root: the tkinter root, which the fonts are measured against
+        fontFactor: the multiplier DialogScaling returned
+
+    Returns:
+        [rowHeight in pixels, columnScale relative to the unscaled font]
+    """
+    try:
+        font = tkFont.Font(root=root, size=DialogFontSize(fontFactor))
+        reference = tkFont.Font(root=root, size=treeviewDefaultFontSize)
+        #the digits are a fair sample of the width of a column of values
+        columnScale = (font.measure('0123456789')
+                       / max(1, reference.measure('0123456789')))
+        return [int(round(font.metrics('linespace')*rowHeightFactor)),
+                max(1., columnScale)]
+    except tk.TclError:
+        return [TkTextHeight(fontFactor), 1.]
+
+
+#unique text height for tk with given scaling; the fallback of DialogRowMetrics
 def TkTextHeight(systemScaling):
     #OLD, without     style.configure("Treeview", font=(None, treeviewDefaultFontSize ) ):
     #return int(13*systemScaling) #must be int; 13 is good; 16 is too big on surface
@@ -579,7 +627,8 @@ class Tooltip:
 #dictionaryTypes: contains a dictionary with the available types, e.g. bool, etc.
 #updateOnChange: every change is directly applied to the settingsStructure and redraw is signaled in stored renderer
 class TkinterEditDictionaryWithTypeInfo(tk.Frame):
-    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False, textHeight = 15, systemScaling = 1, fontFactor = 1):
+    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False,
+                 textHeight = 15, systemScaling = 1, fontFactor = 1, columnScale = 1.):
         tk.Frame.__init__(self, parent)
         
         self.parentFrame = parent #parent frame stored for member functions
@@ -590,9 +639,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.textHeight = textHeight
         self.systemScaling = systemScaling
         self.fontFactor = fontFactor
+        #how much wider the columns have to be than at the unscaled font; MEASURED by
+        #DialogRowMetrics, because an integer factor was 1 for every fontScaling below 1.5 (#2631)
+        self.columnScale = columnScale
         #the code line is read, not edited: one size below the cells, which is what the
         #maintainer asked for after using it (revision2026b step RG6.2.8, #2605)
-        self.codeFontSize = max(6, int(treeviewDefaultFontSize*fontFactor) - 1)
+        self.codeFontSize = max(6, DialogFontSize(fontFactor) - 1)
 
         self.dictionaryData = settingsStructure.GetDictionaryWithTypeInfo()
         #the folders this dialog opens with: the configuration, or what was open when a dialog
@@ -655,17 +707,19 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #was never called, so every one of them kept tkinter's 200 px default - the name was cut,
         #the description was unreadable, and dragging one moved the others. Only the description
         #stretches with the window; the rest keep what they are given.
-        scale = max(1, int(round(self.systemScaling)))
-        self.tree.column("#0", width=260*scale, minwidth=120, stretch=False)
-        self.tree.column("value", width=150*scale, minwidth=60, stretch=False)
-        self.tree.column("type", width=90*scale, minwidth=50, stretch=False, anchor=tk.W)
-        self.tree.column("description", width=420*scale, minwidth=120, stretch=True)
+        scale = self.columnScale
+        #the first three are 25% wider than they were until 2026-09-23, which the
+        #maintainer asked for after using the measured scaling of RG6.2.23
+        self.tree.column("#0", width=int(325*scale), minwidth=120, stretch=False)
+        self.tree.column("value", width=int(188*scale), minwidth=60, stretch=False)
+        self.tree.column("type", width=int(113*scale), minwidth=50, stretch=False, anchor=tk.W)
+        self.tree.column("description", width=int(420*scale), minwidth=120, stretch=True)
 
 
         #a row that differs from the default is written in colour and bold (#2606); the size
         #has to be given here, because a tag font does not follow the style of the tree
         self.tree.tag_configure('changed', foreground=changedValueColor,
-                                font=(None, int(treeviewDefaultFontSize*fontFactor), 'bold'))
+                                font=(None, DialogFontSize(fontFactor), 'bold'))
 
         self.AddNodeFromDictionaryWithTypeInfo(value=self.dictionaryData, parentNode="")
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
@@ -759,6 +813,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
         #one WHOLE state back per entry, so that undo takes a reset and a revert back too
         self.undoStack = []
+        #the after() job of a bool row, which a double click cancels in order to toggle (#2630)
+        self.pendingCellEdit = None
 
         #+++++++++++++++++++++++++++++++++++++++++
         #pre-select item
@@ -892,12 +948,37 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             tk.messagebox.showinfo(s, d)
 
     def OnTreeDoubleClick(self,event):
+        self.CancelPendingCellEdit()   #the first click of this double click must not edit
         self.OnTreeEditOrDoubleClick(event, True)
         
+    def CancelPendingCellEdit(self):
+        """drop a scheduled cell edit, so that the second click of a double click wins"""
+        if self.pendingCellEdit is not None:
+            try:
+                self.tree.after_cancel(self.pendingCellEdit)
+            except (tk.TclError, ValueError):
+                pass
+            self.pendingCellEdit = None
+
     def OnTreeEdit(self,event):
+        """a single click opens the editor - except on a bool, where it waits
+
+        A bool is edited with a Combobox placed OVER the value cell, so opening it at
+        once put it under the second click of a double click and the toggle of #1354
+        became unreachable (#2630). On a bool row the edit is scheduled and a double
+        click cancels the job; every other type keeps the immediate editor.
+        """
+        self.CancelPendingCellEdit()
+        selection = self.tree.selection()
+        if selection != () and self.typeStorage.get(selection[0], '') == 'bool':
+            self.pendingCellEdit = self.tree.after(
+                boolDoubleClickDelay, lambda: self.OnTreeEditOrDoubleClick(event))
+            return
         self.OnTreeEditOrDoubleClick(event)
         
     def OnTreeEditOrDoubleClick(self,event,doubleClick=False):
+        if self.tree.selection() == ():    #the row may be gone when a scheduled edit fires
+            return
         item = self.tree.selection()[0]
         nchilds = len(self.tree.get_children(item))
 
@@ -1395,23 +1476,22 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     tkWindow.title(dictionaryName)
     tkWindow.focus_force() #window has focus
 
-    textHeight = TkTextHeight(systemScaling)
+    [textHeight, columnScale] = DialogRowMetrics(root, fontFactor)
+    fontSize = DialogFontSize(fontFactor)
 
-    #no effect:
-    # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
-    # defaultFont.configure(size=treeviewDefaultFontSize*fontFactor)
         
     style = ttk.Style(tkWindow)
     style.configure('Treeview', rowheight=textHeight) 
     
-    style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
-    style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ))
+    style.configure("Treeview.Heading", font=(None, fontSize))
+    style.configure("Treeview", font=(None, fontSize))
     
     
     comboListsT = GetComboBoxListsDict(exu)
     ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
                                          updateOnChange=updateOnChange, treeOpen=treeOpen, textHeight = textHeight,
-                                         systemScaling = systemScaling, fontFactor = fontFactor)
+                                         systemScaling = systemScaling, fontFactor = fontFactor,
+                                         columnScale = columnScale)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
@@ -1642,7 +1722,7 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
         tkWindow.attributes("-alpha", alphaTransparency) 
     
 
-    textHeight = TkTextHeight(systemScaling)
+    [textHeight, _] = DialogRowMetrics(root, fontFactor)
 
     tkWindow.title(dialogName)
     tkWindow.focus_force() #window has focus
@@ -1651,8 +1731,8 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     style.configure('Treeview', rowheight=textHeight) 
     #it seems that the font size should not be changed (what is done due to scaling internally ...)
 
-    style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
-    style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
+    style.configure("Treeview.Heading", font=(None, DialogFontSize(fontFactor)))
+    style.configure("Treeview", font=(None, DialogFontSize(fontFactor)))
 
     #this has no effect style.configure("Vertical.TScrollbar", width=4)
 

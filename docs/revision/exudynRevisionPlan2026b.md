@@ -813,6 +813,27 @@ This group is that revision and what has to happen before it can start.
     pushed by a single edited value, by reset and by revert alike, so a chain of them comes back
     one by one.
 
+<a id="rg6-2-22"></a>
+**RG6.2.22** **DONE 2026-09-23** (#2630) — [log](exudynRevisionLog2026b.md#rg6-2-22) —
+    **A double click on a bool no longer toggled it** *(maintainer, 2026-09-23)*. It used to
+    switch `True`/`False`, and the cause is the cell editor of RG6.2.4 (#2604): the tree binds
+    `<ButtonRelease-1>` to the editor, and for a `bool` that editor is a **Combobox placed over
+    the value cell**, so the second click of a double click landed on the combobox and the
+    `<Double-1>` binding on the tree never fired. The toggle code itself was untouched and
+    unreachable. On a bool row the cell edit is **scheduled** now and a double click cancels the
+    job; every other type keeps the editor that opens at once.
+
+<a id="rg6-2-23"></a>
+**RG6.2.23** **DONE 2026-09-23** (#2631) — [log](exudynRevisionLog2026b.md#rg6-2-23) —
+    **`dialogs.fontScaling` only worked at 0** *(maintainer, 2026-09-23)*: *"1.0 gives a larger
+    font, but much too small row height and smaller column width"*. `DialogScaling` set
+    `systemScaling = fontScaling`, and the row height and the column width were computed from
+    that number — which is not what decides how large a glyph comes out, because the
+    point-to-pixel conversion follows the **tk scaling of the display**. Measured: at
+    `fontScaling=1` the rows were **13** pixels for a font whose linespace is **16 to 18**, and
+    the column factor `max(1,int(round(systemScaling)))` was an **integer**, so it stayed at 1 for
+    every value below 1.5. Both are **measured from the font** now, by `DialogRowMetrics`.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a

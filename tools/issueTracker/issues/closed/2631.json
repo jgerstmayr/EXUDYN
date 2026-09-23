@@ -1,0 +1,17 @@
+{
+  "number": 2631,
+  "title": "dialogs.fontScaling only works at 0: the rows and the columns do not follow the font",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.2.23, maintainer 2026-09-23. Setting dialogs.fontScaling=1.0 gives a larger font but much too small a row height and too narrow columns, and changing the value does not help - only 0.0 is usable. Measured with a withdrawn Tk root: DialogScaling sets systemScaling=fontScaling when fontScaling>0, and systemScaling is what the row height and the column width are computed from - TkTextHeight returns int(treeviewDefaultFontSize*textHeightFactor*systemScaling), which is 13 pixels at fontScaling=1.0 while the font really renders with a linespace of 16 to 18 pixels, because the point-to-pixel conversion follows the tk scaling that GetGUIContentScaling set and fontScaling never touches. The columns are worse: the scale factor is max(1,int(round(systemScaling))), an INTEGER, so it is 1 for every fontScaling below 1.5. The fix is to stop guessing: the row height and the column width are MEASURED from the font the tree will actually use (linespace and the width of the digits), so that any fontScaling works and the default appearance is unchanged.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 23:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "revision2026b step RG6.2.23. dialogs.fontScaling works at any value now. DialogScaling set systemScaling=fontScaling, and the row height and the column width were computed from that number, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display. Measured with a withdrawn Tk root: at fontScaling=1 the rows were 13 pixels for a font whose linespace is 16 to 18, so the text was clipped, and the column factor max(1,int(round(systemScaling))) was an integer and stayed at 1 for every value below 1.5. The new DialogRowMetrics(root, fontFactor) builds the font the tree will use and asks it: the row height is metrics('linespace') times rowHeightFactor=1.15, chosen to reproduce the pixel height the dialog had at the default font, and the column scale is the width of the digits in that font over the width in the unscaled one. Measured after: fontScaling 1.0/1.25/1.5/2.0 gives row heights 17/20/25/31 and column scales 1.00/1.14/1.57/1.86. The default appearance is unchanged - at fontScaling=0 the column scale is exactly 1 and the row height is within a pixel of what it was. A test requires every row to be at least as tall as the linespace of its own font.",
+  "resolvedInVersion": "1.12.43"
+}

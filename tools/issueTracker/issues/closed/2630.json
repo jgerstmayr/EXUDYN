@@ -1,0 +1,17 @@
+{
+  "number": 2630,
+  "title": "a double click on a bool setting no longer toggles it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.22, maintainer 2026-09-23. It used to switch True/False and it does not any more. The cause is the cell editor of RG6.2.4 (#2604): the tree binds ButtonRelease-1 to OnTreeEdit, which opens the editor immediately, and for a bool that is a Combobox placed OVER the value cell. The second click of a double click therefore lands on the combobox, not on the tree, so the Double-1 binding never fires and the toggle in OnTreeEditOrDoubleClick is unreachable. The toggle code itself is intact. Fix: for a bool row the cell edit is scheduled with after(...) instead of opened at once, and a double click cancels that job and toggles; every other type keeps the immediate editor, so nothing else becomes slower.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 23:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "revision2026b step RG6.2.22. A double click on a bool setting toggles it again. The toggle code was never removed: RG6.2.4 (#2604) bound the cell editor to ButtonRelease-1, and for a bool that editor is a Combobox placed OVER the value cell, so the second click of a double click landed on the combobox and the Double-1 binding on the tree never fired. On a bool row the cell edit is scheduled with after(220 ms) now and a double click cancels the job before it fires; every other type keeps the editor that opens at once, so nothing else became slower. Checked with a withdrawn Tk root: a single click arms the job and changes nothing, the double click toggles True to False and back, each as its own undo step, and a float row schedules nothing and has its editor up immediately.",
+  "resolvedInVersion": "1.12.42"
+}
