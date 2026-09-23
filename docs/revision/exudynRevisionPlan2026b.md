@@ -359,7 +359,15 @@ find its file and line, on every raise).
 
 
 <a id="rg4-4"></a>
-**RG4.4** *(group RG4; found in RG6.2.3.1, 2026-09-23)* **Two lines of Python segfault the
+**RG4.4** **DONE 2026-09-23** (#2603) — [log](exudynRevisionLog2026b.md#rg4-4) —
+    **Two lines of Python segfault the process.** The top settings class calls `Init(this)` in
+    its constructor, so a structure Python builds links itself; it defines a copy constructor and
+    a copy assignment that re-link the **copy**, which is the answer to the question the step
+    left open; and every deprecated forwarding checks its backlink and raises instead of
+    dereferencing `nullptr`. All 93 deprecated members of a standalone
+    `exu.VisualizationSettings()` are read and written in a test. The original text follows.
+
+    *(group RG4; found in RG6.2.3.1, 2026-09-23)* **Two lines of Python segfault the
     process** (#2603):
 
     ```python
@@ -807,7 +815,15 @@ This group is that revision and what has to happen before it can start.
     call that takes a resolution.
 
 <a id="rg6-4"></a>
-**RG6.4** *(group RG6; maintainer 2026-09-23)* **The light and shadow descriptions say things
+**RG6.4** **DONE 2026-09-23** (#2609) — [log](exudynRevisionLog2026b.md#rg6-4) —
+    **The light and shadow descriptions say things that are no longer true.** All three faults
+    are fixed: the members of a light read *"of this light"* and the mapping to
+    `GL_LIGHT0`-`GL_LIGHT3` is said once at `enable`; the claim that `light0` is the light with
+    shadows is gone, and `shadow` says that every light casts one; the directional-light
+    approximation moved from `position` to `shadow` and names **no factor**. Two deprecated
+    setting names in the hand-written manual went with them. The original text follows.
+
+    *(group RG6; maintainer 2026-09-23)* **The light and shadow descriptions say things
     that are no longer true** (#2609). The descriptions in
     `definitions/structureDefsVisualizationSettings.py` are what a user reads in the dialog, in
     the reference manual and in an editor tooltip, so they are the documentation of the lights.

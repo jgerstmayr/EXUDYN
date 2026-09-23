@@ -85,6 +85,27 @@ def MemberDefaultLines(parameter):
 
 
 #************************************************
+def CopyOperations(parseInfo, parameterListSorted):
+    """copy constructor and assignment of the TOP settings class (#2603)
+
+    The implicit ones copy the backlink of every sub-structure as well, so the copy would point
+    at the original and a deprecated member of the copy would write into the original's
+    replacement. Copying the members and then calling Init(this) is what makes a copy a copy.
+    """
+    className = Header(parseInfo, 'class')
+    members = [parameter['cplusplusName'] for parameter in parameterListSorted
+               if IsVariable(parameter) and not IsDeclarationOnly(parameter)]
+    assignments = ''.join('      ' + name + ' = other.' + name + ';\n' for name in members)
+    return ('  //! AUTO: copy constructor: a copy links ITSELF, not the original (#2603)\n'
+            + '  ' + className + '(const ' + className + '& other)\n'
+            + '  {\n' + assignments.replace('      ', '    ') + '    Init(this);\n  }\n'
+            + '  //! AUTO: copy assignment, for the same reason\n'
+            + '  ' + className + '& operator=(const ' + className + '& other)\n'
+            + '  {\n    if (this != &other)\n    {\n' + assignments
+            + '      Init(this);\n    }\n    return *this;\n  }\n')
+
+
+#************************************************
 #create the C++ header text of one structure
 def StructureCppHeader(parseInfo):
     """returns [header text, dictionary get/set text, implementation text]; parseInfo is the
@@ -235,8 +256,17 @@ def StructureCppHeader(parseInfo):
             #elsewhere, where neither the documentation nor the settings dialog could see them
             for line in MemberDefaultLines(parameter):
                 s += '    ' + line + chr(10)
+        if classInitBackLink and not classHasBackLink:
+            #THE TOP CLASS LINKS ITSELF (#2603, revision2026b step RG4.4): Init was called in
+            #exactly one place, for the settings of a SystemContainer, so a VisualizationSettings
+            #that Python constructs had every backlink at nullptr and the first deprecated member
+            #- all 93 of them forward through the backlink - dereferenced it: a segfault from two
+            #lines of Python
+            s+='    Init(this);\n'
         s+=Header(parseInfo, 'addConstructor').replace('\\n','\n')
         s+='  };\n'
+        if classInitBackLink and not classHasBackLink:
+            s+=CopyOperations(parseInfo, parameterListSorted)
 
     #++++++++++++
     #add initializatio nof backlink
@@ -305,6 +335,14 @@ def StructureCppHeader(parseInfo):
                 deprecationWarning = 'PyDeprecated("VisualizationSettings parameter '
                 deprecationWarning += ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
                 deprecationWarning += ' is deprecated! use '+Description(parameter)+' instead!");'+lineBreakIDP
+                #and it must not dereference a backlink that was never set (#2603): a
+                #standalone sub-structure has none, and a segfault is not a diagnosis
+                deprecationWarning += ('if (backlink == nullptr) { CHECKandTHROWstring("'
+                    + ConvertClassName2member(Header(parseInfo, 'class')) + '.'
+                    + parameter['pythonName'] + ' is deprecated and forwards to '
+                    + Description(parameter) + ', which needs the settings structure it belongs'
+                    ' to; this one was constructed on its own and is not linked"); }'
+                    + lineBreakIDP)
                 (version, expDate) = DParameter2VersionExpiration(parameter)
                 if expDate <= yearStr:
                     print('parameter outdated '+expDate+':', Header(parseInfo, 'class')+'::'+parameter['cplusplusName'])

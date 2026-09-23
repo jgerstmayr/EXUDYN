@@ -3875,7 +3875,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
     d["value"] = data.shadowSmoothingSteps;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)";
+    d["description"] = "if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)";
     structureDict["shadowSmoothingSteps"] = d;
 
     d = py::dict(); //reset local dict
@@ -4288,7 +4288,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.constantAttenuation;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "constant attenuation coefficient of GL_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1";
+    d["description"] = "constant attenuation coefficient of this light, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1";
     structureDict["constantAttenuation"] = d;
 
     d = py::dict(); //reset local dict
@@ -4296,7 +4296,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.diffuse;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "diffuse value of GL_LIGHT[0,1,2,3]";
+    d["description"] = "diffuse value of this light";
     structureDict["diffuse"] = d;
 
     d = py::dict(); //reset local dict
@@ -4304,7 +4304,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.enable;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "turn on/off light";
+    d["description"] = "turn this light on or off; the four lights light0 to light3 of visualizationSettings.openGL are OpenGL GL_LIGHT0 to GL_LIGHT3, and each of them can cast a shadow - see shadow below";
     structureDict["enable"] = d;
 
     d = py::dict(); //reset local dict
@@ -4320,7 +4320,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.linearAttenuation;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance";
+    d["description"] = "linear attenuation coefficient of this light, this is a linear factor for attenuation of the light source with distance";
     structureDict["linearAttenuation"] = d;
 
     d = py::dict(); //reset local dict
@@ -4328,7 +4328,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = EPyUtils::ToPythonMember(data.position);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
-    d["description"] = "4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals";
+    d["description"] = "4D position vector of this light; the 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for the attenuation factor to be computed); if this light casts a shadow, its position decides where the shadow falls, so it has to be at a reasonable place for the scene; see opengl manuals";
     structureDict["position"] = d;
 
     d = py::dict(); //reset local dict
@@ -4336,7 +4336,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.quadraticAttenuation;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance";
+    d["description"] = "quadratic attenuation coefficient of this light, this is a quadratic factor for attenuation of the light source with distance";
     structureDict["quadraticAttenuation"] = d;
 
     d = py::dict(); //reset local dict
@@ -4344,7 +4344,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.shadow;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "in OpenGL renderer, the shadow parameter \\in [0 ... 1] prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source";
+    d["description"] = "in OpenGL renderer, the shadow parameter \\in [0 ... 1] prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx.\\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself";
     structureDict["shadow"] = d;
 
     d = py::dict(); //reset local dict
@@ -4352,7 +4352,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.specular;
     d["type"] = "float";
     d["size"] = std::vector<int>{1};
-    d["description"] = "specular value of GL_LIGHT[0,1,2,3]";
+    d["description"] = "specular value of this light";
     structureDict["specular"] = d;
 
     d = py::dict(); //reset local dict

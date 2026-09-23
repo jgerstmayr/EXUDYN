@@ -1216,3 +1216,78 @@ the same test, with the assertion turned around, which is why it was written tha
 `test_settingsDefaults.py` pins the ten material names and the marks that tell them apart, so an
 edit to those values is a decision rather than an accident.
 
+<a id="rg6-4"></a>
+### RG6.4 — the lights say what is true (2026-09-23, #2609)
+
+The descriptions in `definitions/structureDefsVisualizationSettings.py` are the documentation of
+the lights: the settings dialog shows them, the reference manual prints them, an editor completes
+them. Three faults, all the maintainer's, and the second is the one that misleads.
+
+**"of GL_LIGHT[0,1,2,3]" is gone.** Six members of `VSettingsLight` repeated it, which inside
+`light0` says nothing a reader can use. They read *"of this light"* now, and the mapping —
+`light0` to `light3` are OpenGL's `GL_LIGHT0` to `GL_LIGHT3— ` is stated **once**, at `enable`,
+where a reader meets the light first.
+
+**Every light casts a shadow.** `position` claimed *"light0 is also used for shadows, so you need
+to adjust this position"*, which was true when only one light could, and is a performance decision
+that no longer holds. The sentence is gone; `shadow` now says that every light can cast one and
+that the effects accumulate — which the raytracer half of the same description had said all
+along, so the page contradicted itself.
+
+**And no generated text quotes a number no generator produced.** *"approximates directional lights
+by enlarging the direction to 200 times maxSceneSize"* sat in `position`, where it described
+shadows rather than a light, and it named a factor that has already changed once. It is in
+`shadow` now, as *"a multiple of maxSceneSize"*. A documented constant that lives only in a
+description is wrong the day someone tunes it, and nothing tells them.
+
+**Two names in the hand-written manual** went with them: `introductionBasics.md` still recommended
+`openGL.enableLight1` and `openGL.light0position`, both deprecated — the reader who copies them
+gets a deprecation warning from the settings it tells them to use.
+
+<a id="rg4-4"></a>
+### RG4.4 — two lines of Python no longer segfault (2026-09-23, #2603)
+
+```python
+import exudyn as exu
+exu.VisualizationSettings().general.drawWorldBasis     #exit code 139
+```
+
+Not that member: **all 93 deprecated members**, on read and on write. Each forwards to its
+replacement through `backlink->view0.scene.drawWorldBasis`, and the backlinks are set by
+`VisualizationSettings::Init(&settings)`, which was called in **exactly one place** — for the
+settings that belong to a `SystemContainer`. A structure Python constructs never got it, so every
+backlink was `nullptr` and the first deprecated access dereferenced it.
+
+**The top class links itself.** `Init(this)` in the default constructor is the one line, and the
+step was right that it is not the whole answer: the implicit copy constructor copies the backlink
+of every sub-structure as well, so a copy would point at the **original** and writing a deprecated
+member of the copy would change the original's replacement. The generated top class therefore
+defines a copy constructor and a copy assignment that copy the members and then call `Init(this)`.
+That is the answer the step asked for, and it arrives before RG12.1 gives `simulationSettings`
+deprecated members for the first time: whatever class is the top of its file gets the same code
+from the same emitter.
+
+**And a missing link is now a sentence, not a crash.** Every deprecated forwarding starts with
+
+```cpp
+if (backlink == nullptr) { CHECKandTHROWstring("general.drawWorldBasis is deprecated and forwards
+    to view0.scene.drawWorldBasis, which needs the settings structure it belongs to; this one was
+    constructed on its own and is not linked"); }
+```
+
+which is what a standalone **sub**-structure still hits — `exu.VSettingsGeneral()` is bound and
+has no parent to link to. A guard is cheap and a segfault is not a diagnosis; the next missing
+`Init`, wherever it comes from, will say so.
+
+**The test is crude on purpose.** A segfault cannot be caught, so the only way to find one is to
+touch everything: `test_settingsBacklinks.py` reads **every** member of every sub-structure of a
+standalone structure and of a container's, counts how many raised a `DeprecationWarning— ` 314
+members read, **93** deprecated, zero problems — and fails if that count falls far enough that
+the walk would stop proving anything. If a future change brings the crash back, the test process
+dies, which is the report.
+
+**What is not tested**, and said rather than hidden: the copy constructor and the copy assignment
+cannot be reached from Python, because pybind exposes neither. What the tests show is that two
+standalone structures are independent. The copy operations matter on the C++ side, where a
+settings structure is assigned, and the generated code is the guarantee there.
+

@@ -1619,7 +1619,7 @@ class VSettingsRaytracerAdvanced:
     shadowScalingFactor: int
     """if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries."""
     shadowSmoothingSteps: int
-    """if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)."""
+    """if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)."""
     showText: bool
     """True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings."""
     tilesPerThread: int
@@ -1723,23 +1723,23 @@ class VSettingsOpenGLAdvanced:
 class VSettingsLight:
     """Settings for lights."""
     constantAttenuation: float
-    """constant attenuation coefficient of GL_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1."""
+    """constant attenuation coefficient of this light, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1."""
     diffuse: float
-    """diffuse value of GL_LIGHT[0,1,2,3]."""
+    """diffuse value of this light."""
     enable: bool
-    """turn on/off light."""
+    """turn this light on or off; the four lights light0 to light3 of visualizationSettings.openGL are OpenGL GL_LIGHT0 to GL_LIGHT3, and each of them can cast a shadow - see shadow below."""
     lightRadius: float
     """only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)."""
     linearAttenuation: float
-    """linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance."""
+    """linear attenuation coefficient of this light, this is a linear factor for attenuation of the light source with distance."""
     position: Tuple[float,float,float,float]
-    """4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals."""
+    """4D position vector of this light; the 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for the attenuation factor to be computed); if this light casts a shadow, its position decides where the shadow falls, so it has to be at a reasonable place for the scene; see opengl manuals."""
     quadraticAttenuation: float
-    """quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance."""
+    """quadratic attenuation coefficient of this light, this is a quadratic factor for attenuation of the light source with distance."""
     shadow: float
-    r"""in OpenGL renderer, the shadow parameter :math:`\in [0 ... 1]` prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx. 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source."""
+    r"""in OpenGL renderer, the shadow parameter :math:`\in [0 ... 1]` prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx. 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself."""
     specular: float
-    """specular value of GL_LIGHT[0,1,2,3]."""
+    """specular value of this light."""
     useCameraFrame: bool
     """set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174."""
     def GetDictionary(self) -> dict: ...
