@@ -333,6 +333,11 @@ pageHtml = r"""<!DOCTYPE html>
  #detailPane { flex: 1; overflow: auto; padding: 12px 16px; }
  table { border-collapse: collapse; width: 100%; }
  td { padding: 3px 6px; border-bottom: 1px solid #8882; vertical-align: top; }
+ /*the header of the list; sticky, because the pane scrolls and a column name that scrolls away
+   is a column name that is not there (revision2026b step RG10.2, #2600)*/
+ th { text-align: left; font-size: 11px; font-weight: 600; opacity: 0.75; white-space: nowrap;
+      padding: 5px 6px; border-bottom: 1px solid #8884; position: sticky; top: 0;
+      background: Canvas; cursor: help; }
  tr.issue:hover { background: #8882; cursor: pointer; }
  tr.selected { background: #4a90d922; }
  .nr { font-family: ui-monospace, Consolas, monospace; white-space: nowrap; }
@@ -372,7 +377,7 @@ pageHtml = r"""<!DOCTYPE html>
 </header>
 <div id="message"></div>
 <div id="panes">
- <div id="listPane"><table><tbody id="list"></tbody></table><div id="count" class="label"
+ <div id="listPane"><table><thead id="listHead"></thead><tbody id="list"></tbody></table><div id="count" class="label"
       style="padding:8px 12px"></div></div>
  <div id="detailPane"></div>
 </div>
@@ -445,7 +450,30 @@ async function LoadMeta() {
         FillSelect('type', meta.types, 'any type');
         FillSelect('effort', meta.efforts, 'any effort');
         FillSelect('priority', meta.priorities, 'any priority');
+        FillListHead();
     }
+}
+
+//the column names, and what the values in them mean. The vocabularies come from the tracker
+//(/api/meta), so the tooltips say "LOW: within 2 hours" without this page knowing it
+//(revision2026b step RG10.2, #2600)
+function Meanings(values, label) {
+    let text = label;
+    for (const name in values) text += '\n' + name + ': ' + values[name];
+    return text;
+}
+
+function FillListHead() {
+    const head = document.getElementById('listHead');
+    head.textContent = '';
+    head.appendChild(El('tr', {}, [
+        El('th', {text: '#', title: 'the issue number'}),
+        El('th', {text: 'status', title: Meanings(meta.statuses, 'where the issue stands')}),
+        El('th', {text: 'type', title: Meanings(meta.types, 'what kind of issue this is')}),
+        El('th', {text: 'effort', title: Meanings(meta.efforts,
+                                                  'how much work it is - the tag reads "... EFF"')}),
+        El('th', {text: 'priority', title: Meanings(meta.priorities, 'how urgent it is')}),
+        El('th', {text: 'title', title: 'click a row to open the issue'})]));
 }
 
 function Query() {
@@ -468,8 +496,14 @@ async function LoadList() {
             El('td', {class: 'nr', text: '#' + issue.number}),
             El('td', {}, [El('span', {class: 'tag ' + issue.status, text: issue.status})]),
             El('td', {}, [El('span', {class: 'tag', text: issue.type})]),
+            //"LOW EFF" and not "LOW": effort and priority share their spelling - LOW and HIGH are
+            //values of both - and two bare tags in one row cannot be told apart (#2600)
             El('td', {}, [issue.effort ? El('span', {class: 'tag ' + issue.effort,
-                                                     text: issue.effort}) : null]),
+                                                     title: meta ? meta.efforts[issue.effort] : '',
+                                                     text: issue.effort + ' EFF'}) : null]),
+            El('td', {}, [issue.priority ? El('span', {class: 'tag ' + issue.priority,
+                                                       title: meta ? meta.priorities[issue.priority] : '',
+                                                       text: issue.priority}) : null]),
             El('td', {text: issue.title})]);
         list.appendChild(row);
     }

@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 12 | 1.12.11 |
+| 1.12 | Metheney | 13 | 1.12.12 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.12** `IMPROVEMENT` the issue table of 'exudev issue serve' has unlabelled columns and no priority (#2600) - raised by Claude-JG
+  - The issue table has a header now, and the priority is in it. tools/issueTracker/issueServer.py: a sticky \<thead\> with the six columns - number, status, type, effort, priority, title - whose tooltips carry what the values mean, built from the tracker's own vocabularies through /api/meta, so that 'LOW: within 2 hours' is one hover away and this page does not know the list itself. The priority column is new: the API already sent it in every row and the filter bar already filtered on it, only the row renderer left it out. And because effort and priority share their spelling - LOW and HIGH are values of both - the effort tag now reads 'LOW EFF', 'MEDIUM EFF', 'HIGH EFF', 'HUGE EFF' while the priority tag stays plain; each tag also carries its meaning as a tooltip. Two tests: one that the page has named columns, an effort tag that says EFF and a priority in the row; and one that the page script PARSES, through quickjs (which arrives with mermaidx, and is skipped when it is absent) - defining a function parses its body without running it, which is the check that \#2574 needed and which the browser tests cannot give while the Edge of this machine prints no DOM. revision2026b step RG10.2.
 - **1.12.11** `DOCU` three corrections to the landing pages and the developer chapters (#2598) - raised by Claude-JG
   - (1) 'Since version 1.11.0, Exudyn is heavily developed with Anthropic's Claude Code: code, workflows, documentation, tests and examples' stands directly under the subtitle of README.rst - which is the GitHub landing page, the PyPI page and the first page of the html documentation at once - and under the subtitle of pdfIndex.md, the front page of the PDF. (2) pdfIndex.md no longer counts: '172 examples and 117 test models' and '500 pages of Python' became 'the examples and the test models' and 'a large body of Python'. A number that is not generated is wrong as soon as somebody adds an example; the measurements stay in the log, the plan and the issue, each with the date it was taken. (3) docs/dev/README.md carries a hidden toctree of the seven developer documents, placed before its first section so that they attach to the document and not to a paragraph, and index.md and pdfIndex.md list only docs/dev/README. In the PDF the seven are sections under one chapter instead of chapters beside it, and the html sidebar nests the same way. The visible table of documents on that page is unchanged: it is what a human reads, the toctree is what Sphinx reads. revision2026b step RG3.9.
 - **1.12.10** `TESTING` nothing tests the value layer of the settings dialog (#2596) - raised by Claude-JG

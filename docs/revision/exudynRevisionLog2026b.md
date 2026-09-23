@@ -412,3 +412,37 @@ what a human reads; the toctree is what Sphinx reads.
 
 In the PDF they are `\section` under one `\chapter` now, with their own headings one level
 deeper. The html sidebar nests the same way, which is the point: one structure, two renderings.
+
+<a id="rg10-2"></a>
+### RG10.2 — the issue table says what it shows (2026-09-23, #2600)
+
+Three small things in `tools/issueTracker/issueServer.py`, and one of them was a column that
+already existed everywhere except on the screen.
+
+**A header, and it sticks.** The list was `<table><tbody>` and nothing else: five columns of
+bare tags with no names anywhere on the page. It has a `<thead>` now — number, status, type,
+effort, priority, title — and the header row is `position: sticky`, because the pane scrolls
+and a column name that scrolls away is a column name that is not there.
+
+**What the values mean is one hover away, and this page does not know them.** Each column name
+carries a tooltip built from the tracker's own vocabularies, which `/api/meta` already sends:
+*effort — LOW: within 2 hours, MEDIUM: within 16 hours, HIGH: within 40 hours, HUGE: above 40
+hours*. If a vocabulary changes in `issueTracker.py`, the tooltip changes with it.
+
+**The priority was never missing from the data.** `/api/issues` sends it in every row and the
+filter bar filters on it; only the row renderer left it out. One `<td>`.
+
+**`LOW EFF` and not `LOW`.** Effort and priority share their spelling — `LOW` and `HIGH` are
+values of both — so two bare tags in one row cannot be told apart. The effort tag carries the
+word, the priority tag stays plain, as the maintainer asked.
+
+**Two tests, and the second one matters beyond this step.** The first checks that the columns
+have names, that the effort tag says `EFF` and that a priority is drawn. The second checks that
+the page script **parses**, through `quickjs— ` which arrives with `mermaidx` in the `pdf`
+dependency group, and which the test skips when it is absent. Defining a function parses its body
+without running it, so a missing `document` is not an error and a misplaced brace is. That is
+exactly the check #2574 needed — a syntax error kills the whole script, error handlers
+included, and the page shows a heading and nothing else — and the two headless browser tests
+cannot give it at the moment, because the Edge of this machine updated under itself and now
+prints no DOM for any address. Verified by breaking the script on purpose and watching the check
+catch it.

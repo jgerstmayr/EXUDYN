@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.11.dev1
+- Exudyn version = 1.12.12.dev1
 - last change = 2026-09-23
 - Number of issues = 2601
-- Number of resolved issues = 2325 (11 in current version)
+- Number of resolved issues = 2326 (12 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.12: resolved Issue 2600: the issue table of 'exudev issue serve' has unlabelled columns and no priority (improvement)
+  - issue author: Claude-JG
+  - description: Maintainer, 2026-09-23, on the local issue viewer of revision2026 step R8.5.1. (1) The table has no header at all: issueServer.py renders \<table\>\<tbody id='list'\> and fills it with rows of number, status, type, effort and title, so a reader has to guess what the second, third and fourth tag mean. It needs a header row, and the effort values need their meaning within reach - the vocabulary is LOW 'within 2 hours', MEDIUM 'within 16 hours', HIGH 'within 40 hours', HUGE 'above 40 hours'. (2) PRIORITY IS MISSING from the table although the API already sends it and the filter bar already filters on it: /api/issues returns priority in every row (issueServer.py line 68) and the row renderer simply does not use it. (3) Effort and priority share their spelling - LOW and HIGH are values of both - so two bare tags in one row cannot be told apart. The maintainer's rule: the effort tag carries the word, 'LOW EFF', 'MEDIUM EFF', 'HIGH EFF', 'HUGE EFF', and the priority tag stays plain, 'LOW', 'NORMAL', 'HIGH'. revision2026b step RG10.2.
+  - **notes:** The issue table has a header now, and the priority is in it. tools/issueTracker/issueServer.py: a sticky \<thead\> with the six columns - number, status, type, effort, priority, title - whose tooltips carry what the values mean, built from the tracker's own vocabularies through /api/meta, so that 'LOW: within 2 hours' is one hover away and this page does not know the list itself. The priority column is new: the API already sent it in every row and the filter bar already filtered on it, only the row renderer left it out. And because effort and priority share their spelling - LOW and HIGH are values of both - the effort tag now reads 'LOW EFF', 'MEDIUM EFF', 'HIGH EFF', 'HUGE EFF' while the priority tag stays plain; each tag also carries its meaning as a tooltip. Two tests: one that the page has named columns, an effort tag that says EFF and a priority in the row; and one that the page script PARSES, through quickjs (which arrives with mermaidx, and is skipped when it is absent) - defining a function parses its body without running it, which is the check that \#2574 needed and which the browser tests cannot give while the Edge of this machine prints no DOM. revision2026b step RG10.2.
+  - date resolved: **2026-09-23 09:24**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.11: resolved Issue 2598: three corrections to the landing pages and the developer chapters (docu)
   - issue author: Claude-JG
   - description: Maintainer, 2026-09-23. (1) The landing pages say nothing about how Exudyn is developed: since version 1.11.0 it is heavily developed with Anthropic's Claude Code - code, workflows, documentation, tests and examples - and that belongs at the very beginning of README.rst, which is the GitHub landing page and the first page of the HTML documentation, and of pdfIndex.md, which is the front page of the PDF. (2) pdfIndex.md counts the examples and the test models and the pages they would take. A number that is not generated is wrong the next day: published text must say it generically. (3) In the PDF the seven developer documents are chapters BESIDE 'Exudyn developer documentation' instead of under it, because index.md and pdfIndex.md list them as siblings; docs/dev/README.md should carry them, which nests them in the HTML sidebar as well. revision2026b step RG3.9.
@@ -7874,10 +7879,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- <span class="boldblue">open issue 2600:</span> the issue table of 'exudev issue serve' has unlabelled columns and no priority
-  - issue author: Claude-JG
-  - description: Maintainer, 2026-09-23, on the local issue viewer of revision2026 step R8.5.1. (1) The table has no header at all: issueServer.py renders \<table\>\<tbody id='list'\> and fills it with rows of number, status, type, effort and title, so a reader has to guess what the second, third and fourth tag mean. It needs a header row, and the effort values need their meaning within reach - the vocabulary is LOW 'within 2 hours', MEDIUM 'within 16 hours', HIGH 'within 40 hours', HUGE 'above 40 hours'. (2) PRIORITY IS MISSING from the table although the API already sends it and the filter bar already filters on it: /api/issues returns priority in every row (issueServer.py line 68) and the row renderer simply does not use it. (3) Effort and priority share their spelling - LOW and HIGH are values of both - so two bare tags in one row cannot be told apart. The maintainer's rule: the effort tag carries the word, 'LOW EFF', 'MEDIUM EFF', 'HIGH EFF', 'HUGE EFF', and the priority tag stays plain, 'LOW', 'NORMAL', 'HIGH'. revision2026b step RG10.2.
-  - date raised: 2026-09-23
 - <span class="boldblue">open issue 2599:</span> CHANGELOG.md and the issue tracker page hold the same list twice
   - issue author: Claude-JG
   - description: Maintainer, 2026-09-23. Both are written by issueTracker.py from the same store and both list every resolved issue per release, newest first: CHANGELOG.md is 2384 lines, the tracker page 8987, and about 2370 lines of the first are a shorter rendering of what the second says in full - the tracker page adds the author, the description, both dates, and it also carries the open issues and the known bugs, which the changelog does not. In the PDF that is roughly 35 duplicated pages. It also shows why releases 1.10 and older are one line per issue in the changelog while 1.11 and newer carry a paragraph: the old issues have a title and no release note, so there is nothing else to print. What has to be decided is what each of the two is FOR. Options, to be weighed by the maintainer: (a) CHANGELOG.md becomes the CURRENT release only - which is what a reader of the GitHub page or of PyPI wants to know - and the full history lives in the tracker page, which the documentation publishes; (b) CHANGELOG.md keeps every release but only as an index, one line per issue, and the release notes are printed only in the tracker page; (c) CHANGELOG.md is a repository artifact like README.md and leaves the documentation altogether, so that the published documentation has exactly one issue history; (d) leave both as they are. revision2026b step RG3.10.

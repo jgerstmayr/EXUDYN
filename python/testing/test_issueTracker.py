@@ -450,6 +450,21 @@ def testThePageIsOneSelfContainedFile(server):
         assert outside not in page, outside
 
 
+def testTheListHasNamedColumnsAndShowsThePriority(server):
+    """the table used to be five unnamed columns of tags, and the priority - which the API sends
+    and the filter bar filters on - was not one of them (#2600, revision2026b step RG10.2)"""
+    (status, page) = Call(server, 'GET', '/')
+    assert status == 200
+    assert '<thead id="listHead">' in page, 'the list has no header element'
+    for column in ['#', 'status', 'type', 'effort', 'priority', 'title']:
+        assert "text: '" + column + "'" in page, 'no column named ' + column
+    #effort and priority share their spelling, so the effort tag has to say which one it is
+    assert "text: issue.effort + ' EFF'" in page
+    assert 'issue.priority ? El(' in page, 'the priority is not drawn in a row'
+    #and the column names carry what the values mean, from the tracker's own vocabularies
+    assert 'function Meanings(' in page and 'Meanings(meta.efforts' in page
+
+
 def testTheListFiltersLikeTheCommandLine(server, tracker):
     """the same question as "exudev issue list --open --type FIX --effort LOW", through the page"""
     (status, data) = Call(server, 'GET', '/api/issues',
@@ -855,6 +870,22 @@ def Render(server, browser, tmp_path, fragment=''):
         httpd.shutdown()
         httpd.server_close()
         thread.join(timeout=5)
+
+
+def testThePageScriptParses(server):
+    """A syntax error in the page kills the WHOLE script, error handlers included, and the page
+    then shows a heading and nothing else - which is what #2574 was. The browser tests below
+    catch that too, but only on a machine whose browser works; this one needs no browser.
+
+    Defining a function PARSES its body without running it, so a missing 'document' is not an
+    error here and a misplaced brace is (revision2026b step RG10.2)."""
+    quickjs = pytest.importorskip('quickjs',
+                                  reason='quickjs comes with mermaidx, in the pdf dependency group')
+    (status, page) = Call(server, 'GET', '/')
+    assert status == 200
+    script = re.search(r'<script>(.*?)</script>', page, re.S)
+    assert script is not None, 'the page has no script'
+    quickjs.Context().eval('function __syntaxCheck__() {\n' + script.group(1) + '\n}')
 
 
 def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):

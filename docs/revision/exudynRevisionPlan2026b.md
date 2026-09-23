@@ -655,7 +655,7 @@ file, so an editor cannot complete them).
 
 
 <a id="rg10-2"></a>
-**RG10.2** *(group RG10; maintainer 2026-09-23)* **The issue table of `exudev issue serve` does
+**RG10.2** **DONE 2026-09-23** (#2600) — [log](exudynRevisionLog2026b.md#rg10-2) — *(group RG10; maintainer 2026-09-23)* **The issue table of `exudev issue serve` does
     not say what its columns are, and leaves out the priority** (#2600). Three things, all in
     `tools/issueTracker/issueServer.py`:
 
