@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.35.dev1
+- Exudyn version = 1.12.36.dev1
 - last change = 2026-09-23
-- Number of issues = 2627
-- Number of resolved issues = 2349 (35 in current version)
+- Number of issues = 2628
+- Number of resolved issues = 2350 (36 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.36: resolved Issue 2627: the settings dialog asks before reset and revert, and undo does not take them back (fix)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.21, maintainer 2026-09-23 after using the dialog. Two things about the second button row. (1) reset and revert each ask a yes/no question that was never asked for and is not needed: a wrong click is taken back by undo or by revert, so a question that is always answered with yes is only in the way. Both are gone. (2) undo went back ONE VALUE and was switched OFF by reset and revert, which are exactly the two clicks one would want to take back. The maintainers own proposal is the fix: undo goes back to the PREVIOUS STATE. The dialog now keeps a stack of whole states - about 470 short strings per entry, which costs nothing next to the redraw it triggers - pushed by a single edited value, by reset and by revert alike, so a chain of them is taken back one by one.
+  - **notes:** revision2026b step RG6.2.21. The settings dialog no longer asks before reset and before revert - a wrong click is taken back by undo or by revert, so a question that is always answered with yes was only in the way. And undo now goes back to the PREVIOUS STATE instead of one value: the dialog pushes the whole state (the ~470 value strings the tree shows) onto a stack before a single edit, a bool toggle, a reset and a revert alike, and undo pops one, so a chain of them comes back one by one and the button disables itself when the stack empties. ApplyValues gained one argument, pushUndo, false only for the undo itself.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 20:42**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.35: resolved Issue 2622: the item sources pay for pybind11 through the graphics helpers (improvement)
   - issue author: Claude-JG
   - description: revision2026b step RG9.1, proposed at the maintainers request 2026-09-23. src/Graphics/VisualizationItemHelpers.h is included by every C\<Item\>.cpp that draws something, and it includes Graphics/VisualizationSystemContainer.h, which includes pybind11 - the dependency the per-item split of revision2026 step R11.4.4 was meant to avoid. Measured: the py:: in that header is six free-function declarations called from two .cpp files, easily moved; but the header also includes Main/CSystem.h (its own "REMOVE: temporary" line), and CSystem.h includes Pymodules/PythonUserFunctions.h, which includes pybind11. An experiment with that include removed fails ONLY in Graphics/VisualizationSystem.h lines 33-34, which declare PostProcessData\* and CSystemData\* members without including their headers - and both of those headers are pybind-free. Acceptance is the build time before and after, which exudev prints since \#2617: 57.9 s today.
@@ -8009,7 +8015,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - <span class="textorange">open issue 2626:</span> the defaults of the lights and the raytracer materials are hidden in C++ constructors
   - issue author: Claude-JG
-  - description: revision2026b step RG6.2.20. exu.VisualizationSettings() is not the state a user starts from: VisualizationSystemContainer() overrides nine light settings in its constructor (light1-3 diffuse, specular, enable, light1.position) and MainGraphicsMaterialList::Reset() fills the ten raytracer materials, about 59 values in total. That is why the settings dialog cannot say what differs from the defaults without creating a SystemContainer - which it must not do (\#2625). The values belong in definitions/structureDefsVisualizationSettings.py as the defaultValue of the members, so that the generated structure carries them and the constructor is the truth; the C++ lines then go. Behaviour does not change, since the container sets the same values today.
+  - description: revision2026b step RG6.2.20. exu.VisualizationSettings() is not the state a user starts from: VisualizationSystemContainer() overrides nine light settings in its constructor (light1-3 diffuse, specular, enable, light1.position) and MainGraphicsMaterialList::Reset() fills the ten raytracer materials, about 59 values in total. That is why the settings dialog cannot say what differs from the defaults without creating a SystemContainer - which it must not do (\#2625). The values belong in definitions/structureDefsVisualizationSettings.py as the defaultValue of the members, so that the generated structure carries them and the constructor is the truth; the C++ lines then go. Behaviour does not change, since the container sets the same values today. \[2026-09-23, Claude-JG\]: MAINTAINER, 2026-09-23, after testing 'diff to default' in 1.12.34, and it sharpens what has to be fixed: the dialog compares against the defaults of the STRUCT TYPE - VSettingsMaterial and VSettingsLight - but a user never sees those. What the renderer uses are the defaults of material0, material1, ... and of light1, light2, light3, which are set LATER, in C++ constructors, and which differ from the struct defaults for diffuse, specular and enable. So 'diff to default' is not merely noisy, it compares against a state that does not exist. The maintainer asks for a SOLID fix, not a filter: the per-instance defaults must become the defaults, so that they can also be written in the documentation - which today cannot state what the default of light1.diffuse is, because the generated reference shows the struct default and the renderer uses another value. That means the defaultValue of the members of the light and material INSTANCES in definitions/structureDefsVisualizationSettings.py, after which the C++ lines in VisualizationSystemContainer() and MainGraphicsMaterialList::Reset() go, the generated docs are right, and exu.VisualizationSettings() is the state a user starts from.
   - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-23
 - <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well

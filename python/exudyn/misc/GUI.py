@@ -753,12 +753,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 (self.sessionButton, 'show changes since dialog opened'),
                 (self.resetButton, 'reset to default'),
                 (self.revertButton, 'revert to state when dialog opened'),
-                (self.undoButton, 'undo last change'),
+                (self.undoButton, 'undo the last change, a reset or a revert'),
                 (self.closeButton, 'close the dialog (same as ESCAPE)')]:
             self.buttonTooltip.Bind(button, description)
 
-        #one step back, which is all the undo of RG6.2.11 promises: (item, the value before)
-        self.lastChange = None
+        #one WHOLE state back per entry, so that undo takes a reset and a revert back too
+        self.undoStack = []
 
         #+++++++++++++++++++++++++++++++++++++++++
         #pre-select item
@@ -911,7 +911,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 if value=='True': value='False'
                 else: value='True'
 
-                self.RememberChange(item, self.tree.item(item,'values')[0])
+                self.PushUndoState()
                 self.tree.item(item, values=(value, self.typeStorage[item],
                                              self.descriptionStorage[item]))
                 self.MarkChangedValue(item)
@@ -1083,9 +1083,19 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                            self.ChangedCodeLines(self.openingValueStrings),
                            'what was changed since this dialog was opened')
 
-    def RememberChange(self, item, previousValueStr):
-        """the one step the undo goes back; it is armed by every value the dialog writes"""
-        self.lastChange = (item, previousValueStr)
+    def CurrentValueStrings(self):
+        """what every row of the tree shows now, as {path: valueString}"""
+        return {self.ItemPath(item): self.tree.item(item, 'values')[0]
+                for item in self.LeafItems()}
+
+    def PushUndoState(self):
+        """remember the WHOLE state before a change, which is what makes undo always work
+
+        A single edited value, a reset and a revert all go through this, so undo takes any of
+        them back, and a chain of them one by one (maintainer, 2026-09-23, RG6.2.21). The state
+        is ~470 short strings, which costs nothing next to the redraw it triggers.
+        """
+        self.undoStack.append(self.CurrentValueStrings())
         self.undoButton.configure(state=tk.NORMAL)
 
     def WriteValue(self, item, valueStr):
@@ -1094,59 +1104,56 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                      self.descriptionStorage[item]))
         self.MarkChangedValue(item)
 
-    def ApplyValues(self, valueStrings, remember=True):
+    def ApplyValues(self, valueStrings, pushUndo=True):
         """write a whole set of {path: valueString} into the tree and into the settings
 
         Args:
             valueStrings: what to write; a path the tree does not hold is ignored
-            remember: unused today, kept so that the caller reads as what it does
+            pushUndo: remember the state before, so that undo takes the whole set back;
+                False only for the undo itself, which must not push what it is popping
 
         Returns:
             the number of rows that changed
         """
         changed = 0
+        if pushUndo:
+            self.PushUndoState()
         for item in self.LeafItems():
             path = self.ItemPath(item)
             if path in valueStrings and valueStrings[path] != self.tree.item(item,'values')[0]:
                 self.WriteValue(item, valueStrings[path])
                 changed += 1
         if changed != 0:
-            self.lastChange = None                  #a whole set is not one step back
-            self.undoButton.configure(state=tk.DISABLED)
             self.modifiedDictionary = self.GetDictionary('')
             self.UpdateSettingsStructure()
             self.ShowInfo(self.tree.focus())
+        elif pushUndo:
+            self.undoStack.pop()                    #nothing changed, so there is nothing to undo
+            self.undoButton.configure(state=tk.NORMAL if self.undoStack != [] else tk.DISABLED)
         return changed
 
     def OnReset(self):
-        """every setting back to what a user starts with; it is asked for first, since it throws
-        away everything the model set as well"""
+        """every setting back to what a user starts with
+
+        It does NOT ask (maintainer, 2026-09-23): a wrong click is taken back by undo, or by
+        revert, and a question that is always answered with yes is only in the way.
+        """
         if self.defaultValueStrings == {}:
             tk.messagebox.showinfo('reset', 'the defaults are not available in this session')
             return
-        if tk.messagebox.askyesno('reset to default',
-                                  'Reset ALL settings to their default values?'):
-            self.ApplyValues(self.defaultValueStrings)
+        self.ApplyValues(self.defaultValueStrings)
 
     def OnRevert(self):
-        """back to the state the dialog opened with"""
-        if tk.messagebox.askyesno('revert',
-                                  'Revert all settings to the state when the dialog was opened?'):
-            self.ApplyValues(self.openingValueStrings)
+        """back to the state the dialog opened with; it does not ask either"""
+        self.ApplyValues(self.openingValueStrings)
 
     def OnUndo(self):
-        """the last single change, and only that one"""
-        if self.lastChange is None:
+        """one whole state back, whether that was one value, a reset or a revert"""
+        if self.undoStack == []:
             return
-        (item, previousValueStr) = self.lastChange
-        self.lastChange = None
-        self.undoButton.configure(state=tk.DISABLED)
-        self.WriteValue(item, previousValueStr)
-        self.tree.see(item)
-        self.tree.selection_set(item)
-        self.ShowInfo(item)
-        self.modifiedDictionary = self.GetDictionary('')
-        self.UpdateSettingsStructure()
+        previousState = self.undoStack.pop()
+        self.undoButton.configure(state=tk.NORMAL if self.undoStack != [] else tk.DISABLED)
+        self.ApplyValues(previousState, pushUndo=False)
 
     def ShowCodeLines(self, title, lines, description):
         """the changes as the code that makes them, in a window that shows AND copies: a dialog
@@ -1334,7 +1341,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             return
 
         self.CancelCellEdit()
-        self.RememberChange(item, self.tree.item(item,'values')[0])
+        self.PushUndoState()
         self.tree.item(item, values=(valueStr, vType, self.descriptionStorage[item]))
         self.MarkChangedValue(item)
         self.tree.focus_set()

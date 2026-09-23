@@ -1136,3 +1136,36 @@ sources that reach it to stay at or below 19. It is a structure test: it says no
 the code does, only about what a compiler has to read, which is exactly the property that decayed
 unnoticed for years.
 
+<a id="rg6-2-21"></a>
+### RG6.2.21 — the dialog stopped asking, and undo means undo (2026-09-23, #2627)
+
+Two small things from the maintainer using the second button row, and the second one is a design
+correction that makes the feature honest.
+
+**The questions are gone.** *"The reset button now has a 'reset all settings to their default
+values' question — I did not ask for it and it is not needed: we can always revert to initial
+settings and there is undo. So no worries about one wrong button click."* Right, and the same for
+revert. A confirmation that is always answered with yes teaches people to click through
+confirmations; the way to make a destructive button safe is to make it reversible, which these two
+already are.
+
+**And undo now means undo.** It went back one value and was *disabled* by reset and by revert —
+the two clicks a user would most want to take back. *"I thought that undo reverts to the previous
+state — this would then always work."* That is the fix, and it is simpler than what it replaces:
+instead of remembering one `(row, value before)` pair, the dialog pushes the **whole state** onto
+a stack before every change, and undo pops one. A state is the ~470 value strings the tree shows,
+which costs nothing beside the redraw each change triggers, and one implementation now serves a
+single edit, a `bool` toggle, a reset and a revert. `ApplyValues` grew one honest argument,
+`pushUndo`, which is false only for the undo itself.
+
+Measured with a **withdrawn** Tk root, which maps no window: open, edit one value, reset, then
+undo twice — `3.0 -> 9.0 -> 1.0 -> 9.0 -> 3.0`, with the stack at 0, 1, 2, 1, 0 and the button
+disabling itself when it empties.
+
+**A note on the probe, because it cost something.** The first run of it called `OnReset` against
+the **installed** package rather than the source, hit the old code, and a `tk.messagebox` opened
+— a window on the maintainer's screen, which CLAUDE.md rule 11 exists to prevent. The
+environment variables do not cover tkinter message boxes, only Exudyn's own windows. What a probe
+of a dialog must do is check that it is testing the code it just changed, and stay away from any
+handler that can open a modal box.
+

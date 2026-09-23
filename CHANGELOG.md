@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 35 | 1.12.35 |
+| 1.12 | Metheney | 36 | 1.12.36 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.36** `FIX` the settings dialog asks before reset and revert, and undo does not take them back (#2627) - raised by Claude-JG
+  - revision2026b step RG6.2.21. The settings dialog no longer asks before reset and before revert - a wrong click is taken back by undo or by revert, so a question that is always answered with yes was only in the way. And undo now goes back to the PREVIOUS STATE instead of one value: the dialog pushes the whole state (the ~470 value strings the tree shows) onto a stack before a single edit, a bool toggle, a reset and a revert alike, and undo pops one, so a chain of them comes back one by one and the button disables itself when the stack empties. ApplyValues gained one argument, pushUndo, false only for the undo itself.
 - **1.12.35** `IMPROVEMENT` the item sources pay for pybind11 through the graphics helpers (#2622) - raised by Claude-JG
   - revision2026b step RG9.1. The graphics headers no longer include pybind11: VisualizationSystem.h includes Main/CSystemData.h and Graphics/PostProcessData.h itself (in that order - PostProcessData.h uses CSystemState and includes nothing), VisualizationSystemContainer.h drops its temporary Main/CSystem.h, and the six Py...BodyGraphicsData... declarations move to the new Graphics/BodyGraphicsDataPython.h. Two generated headers were free-riding on the same include and now say what they need: the four VisuObject\*.h with a graphicsDataUserFunction include Pymodules/PythonUserFunctions.h, which only forward declares pybind11::object, and the eight MainObject\*.h with a BodyGraphicsData parameter include the new header; itemHeaderEmitter.py emits both. Measured on a clean build: of the 52 sources in src/ImplObjects/, 52 reached pybind11 before and 19 after, and those 19 for reasons of their own (user functions, PyMatrixContainer, pybind11/numpy.h, ExceptionsTemplates.h), none through the graphics headers. The build time did NOT change: 57.1 s before, 58.0 s after - the gain is structural, not in the clock. python/testing/test\_cppIncludes.py walks the include graph and holds both properties.
 - **1.12.34** `BUG` opening the settings dialog closes the render window (#2625) - raised by Claude-JG

@@ -763,8 +763,31 @@ This group is that revision and what has to happen before it can start.
     `definitions/structureDefsVisualizationSettings.py` as the `defaultValue` of those members, so
     that the **generated** structure carries them and the constructor is the truth; the C++ lines
     then go. Nothing changes for a user: the container sets the same values today. The test of
+    **Sharpened by the maintainer on 2026-09-23**, after testing *diff to default* in 1.12.34:
+    the dialog compares against the defaults of the **struct type**, `VSettingsMaterial` and
+    `VSettingsLight`, and a user never sees those. What the renderer uses are the defaults of
+    `material0`, `material1`, ... and of `light1` to `light3`, set later in C++ and different in
+    `diffuse`, `specular` and `enable`. So the comparison is not merely noisy: it is made against
+    **a state that never exists**. The fix must therefore be the solid one and not a filter —
+    the per-instance defaults become **the** defaults, so that the generated reference can state
+    them too, which today it cannot: it prints the struct default while the renderer uses another
+    value.
+
     RG6.2.19 says when this is done — it requires the difference to be **non-empty** and names
     the paths, so it fails the day the last one moves.
+
+<a id="rg6-2-21"></a>
+**RG6.2.21** **DONE 2026-09-23** (#2627) — [log](exudynRevisionLog2026b.md#rg6-2-21) —
+    **The dialog stopped asking, and undo goes back one whole state** *(maintainer,
+    2026-09-23)*. Two findings from using the second button row. **reset** and **revert** each
+    asked a yes/no question that was never asked for: *"we can always revert to initial settings
+    and there is undo, so no worries about one wrong button click"*. Both questions are gone.
+    And **undo did not take a reset or a revert back** — it went back one value and was
+    switched **off** by exactly the two clicks one would want to undo. The maintainer's own
+    proposal is the fix: undo goes back to the **previous state**. The dialog keeps a stack of
+    whole states — about 470 short strings per entry, nothing next to the redraw it triggers —
+    pushed by a single edited value, by reset and by revert alike, so a chain of them comes back
+    one by one.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
