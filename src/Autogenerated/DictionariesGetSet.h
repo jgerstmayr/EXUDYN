@@ -23,6 +23,7 @@
 inline py::dict GetDictionaryWithTypeInfo(const PyBeamSection& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which X represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\\ bending; Y and Z are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.";
     return structureDict;
 }
 
@@ -40,6 +41,7 @@ inline void SetDictionary(PyBeamSection& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const BeamSectionGeometry& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact.";
     return structureDict;
 }
 
@@ -57,6 +59,7 @@ inline void SetDictionary(BeamSectionGeometry& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "General settings for exporting the solution (results) of a simulation.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.appendToFile;
@@ -344,6 +347,7 @@ inline void SetDictionary(SolutionSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const NumericalDifferentiationSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.addReferenceCoordinatesToEpsilon;
@@ -441,6 +445,7 @@ inline void SetDictionary(NumericalDifferentiationSettings& data, const py::dict
 inline py::dict GetDictionaryWithTypeInfo(const DiscontinuousSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.ignoreMaxIterations;
@@ -498,6 +503,7 @@ inline void SetDictionary(DiscontinuousSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const NewtonSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for Newton method used in static or dynamic simulation.";
     structureDict["numericalDifferentiation"] = GetDictionaryWithTypeInfo(data.numericalDifferentiation);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -648,6 +654,7 @@ inline void SetDictionary(NewtonSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const GeneralizedAlphaSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.computeInitialAccelerations;
@@ -765,6 +772,7 @@ inline void SetDictionary(GeneralizedAlphaSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const ExplicitIntegrationSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and others. The settings may significantely influence performance.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.computeEndOfStepAccelerations;
@@ -832,6 +840,7 @@ inline void SetDictionary(ExplicitIntegrationSettings& data, const py::dict& d) 
 inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.";
     structureDict["discontinuous"] = GetDictionaryWithTypeInfo(data.discontinuous);
     structureDict["explicitIntegration"] = GetDictionaryWithTypeInfo(data.explicitIntegration);
     structureDict["generalizedAlpha"] = GetDictionaryWithTypeInfo(data.generalizedAlpha);
@@ -1091,6 +1100,7 @@ inline void SetDictionary(TimeIntegrationSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const StaticSolverSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for static solver linear or nonlinear (Newton).";
     structureDict["discontinuous"] = GetDictionaryWithTypeInfo(data.discontinuous);
     structureDict["newton"] = GetDictionaryWithTypeInfo(data.newton);
     d = py::dict(); //reset local dict
@@ -1294,6 +1304,7 @@ inline void SetDictionary(StaticSolverSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const LinearSolverSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for linear solver, both dense and sparse (Eigen).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.ignoreSingularJacobian;
@@ -1351,6 +1362,7 @@ inline void SetDictionary(LinearSolverSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const Parallel& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for linear solver, both dense and sparse (Eigen).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.multithreadedLLimitJacobians;
@@ -1448,6 +1460,7 @@ inline void SetDictionary(Parallel& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const SimulationSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "General Settings for simulation; according settings for solution and solvers are given in subitems of this structure";
     structureDict["linearSolverSettings"] = GetDictionaryWithTypeInfo(data.linearSolverSettings);
     structureDict["parallel"] = GetDictionaryWithTypeInfo(data.parallel);
     structureDict["solutionSettings"] = GetDictionaryWithTypeInfo(data.solutionSettings);
@@ -1550,6 +1563,7 @@ inline void SetDictionary(SimulationSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "General settings for visualization that influence all windows, default values, autofit, multithreading, etc.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.autoFitScene;
@@ -1897,6 +1911,7 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Advanced settings for contour plots.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.colorBarPrecision;
@@ -2014,6 +2029,7 @@ inline void SetDictionary(VSettingsContourAdvanced& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsContour& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.";
     structureDict["advanced"] = GetDictionaryWithTypeInfo(data.advanced);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -2124,6 +2140,7 @@ inline void SetDictionary(VSettingsContour& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsNodes& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for nodes.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.basisSize;
@@ -2231,6 +2248,7 @@ inline void SetDictionary(VSettingsNodes& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsBeams& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for beam finite elements.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.axialTiling;
@@ -2348,6 +2366,7 @@ inline void SetDictionary(VSettingsBeams& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsShells& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for plate/shell finite elements.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.drawSolid;
@@ -2385,6 +2404,7 @@ inline void SetDictionary(VSettingsShells& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsKinematicTree& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for kinematic trees.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.frameSize;
@@ -2442,6 +2462,7 @@ inline void SetDictionary(VSettingsKinematicTree& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsBodies& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for bodies.";
     structureDict["beams"] = GetDictionaryWithTypeInfo(data.beams);
     structureDict["kinematicTree"] = GetDictionaryWithTypeInfo(data.kinematicTree);
     structureDict["shells"] = GetDictionaryWithTypeInfo(data.shells);
@@ -2518,6 +2539,7 @@ inline void SetDictionary(VSettingsBodies& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsConnectors& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for connectors.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.contactPointsDefaultSize;
@@ -2635,6 +2657,7 @@ inline void SetDictionary(VSettingsConnectors& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsMarkers& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for markers.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
@@ -2702,6 +2725,7 @@ inline void SetDictionary(VSettingsMarkers& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsLoads& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for loads.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
@@ -2809,6 +2833,7 @@ inline void SetDictionary(VSettingsLoads& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsTraces& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.lineWidth;
@@ -3006,6 +3031,7 @@ inline void SetDictionary(VSettingsTraces& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsSensors& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Visualization settings for sensors.";
     structureDict["traces"] = GetDictionaryWithTypeInfo(data.traces);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -3076,6 +3102,7 @@ inline void SetDictionary(VSettingsSensors& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.colorBoundingBoxes);
@@ -3263,6 +3290,7 @@ inline void SetDictionary(VSettingsContact& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.cameraPosition);
@@ -3390,6 +3418,7 @@ inline void SetDictionary(VSettingsCamera& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsScene& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings change scene representation (show edges, show faces, global transparency), adding world basis, etc., in particular settings that are individual to each view. Note that some scene settings that are global to all views may be found in general and in openGL settings";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.drawCoordinateSystem;
@@ -3497,6 +3526,7 @@ inline void SetDictionary(VSettingsScene& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.alwaysOnTop;
@@ -3604,6 +3634,7 @@ inline void SetDictionary(VSettingsWindow& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsView& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for view including camera, scene, window, and advanced options to setup a view or view window.";
     structureDict["camera"] = GetDictionaryWithTypeInfo(data.camera);
     structureDict["scene"] = GetDictionaryWithTypeInfo(data.scene);
     structureDict["window"] = GetDictionaryWithTypeInfo(data.window);
@@ -3630,6 +3661,7 @@ inline void SetDictionary(VSettingsView& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindowDeprecated& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.";
     return structureDict;
 }
 
@@ -3647,6 +3679,7 @@ inline void SetDictionary(VSettingsWindowDeprecated& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsDialogs& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings related to dialogs (e.g., visualization settings dialog).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.alphaTransparency;
@@ -3714,6 +3747,7 @@ inline void SetDictionary(VSettingsDialogs& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsMaterial& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.alpha;
@@ -3811,6 +3845,7 @@ inline void SetDictionary(VSettingsMaterial& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Advanced settings for raytracer.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
@@ -3898,6 +3933,7 @@ inline void SetDictionary(VSettingsRaytracerAdvanced& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracer& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.";
     structureDict["advanced"] = GetDictionaryWithTypeInfo(data.advanced);
     structureDict["material0"] = GetDictionaryWithTypeInfo(data.material0);
     structureDict["material1"] = GetDictionaryWithTypeInfo(data.material1);
@@ -4048,6 +4084,7 @@ inline void SetDictionary(VSettingsRaytracer& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Advanced settings for openGL.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.clippingPlaneColor);
@@ -4245,6 +4282,7 @@ inline void SetDictionary(VSettingsOpenGLAdvanced& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Settings for lights.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.constantAttenuation;
@@ -4362,6 +4400,7 @@ inline void SetDictionary(VSettingsLight& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGL& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web.";
     structureDict["advanced"] = GetDictionaryWithTypeInfo(data.advanced);
     structureDict["light0"] = GetDictionaryWithTypeInfo(data.light0);
     structureDict["light1"] = GetDictionaryWithTypeInfo(data.light1);
@@ -4504,6 +4543,7 @@ inline void SetDictionary(VSettingsOpenGL& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsExportImages& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.heightAlignment;
@@ -4631,6 +4671,7 @@ inline void SetDictionary(VSettingsExportImages& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenVR& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.actionManifestFileName;
@@ -4688,6 +4729,7 @@ inline void SetDictionary(VSettingsOpenVR& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractiveAdvanced& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Advanced settings for interactive.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.highlightColor);
@@ -4845,6 +4887,7 @@ inline void SetDictionary(VSettingsInteractiveAdvanced& data, const py::dict& d)
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractive& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.";
     structureDict["advanced"] = GetDictionaryWithTypeInfo(data.advanced);
     structureDict["openVR"] = GetDictionaryWithTypeInfo(data.openVR);
     d = py::dict(); //reset local dict
@@ -4948,6 +4991,7 @@ inline void SetDictionary(VSettingsInteractive& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VisualizationSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Top structure for all visualization settings in Exudyn";
     structureDict["nodes"] = GetDictionaryWithTypeInfo(data.nodes);
     structureDict["bodies"] = GetDictionaryWithTypeInfo(data.bodies);
     structureDict["connectors"] = GetDictionaryWithTypeInfo(data.connectors);

@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.21.dev1
+- Exudyn version = 1.12.26.dev1
 - last change = 2026-09-23
-- Number of issues = 2612
-- Number of resolved issues = 2335 (21 in current version)
+- Number of issues = 2617
+- Number of resolved issues = 2340 (26 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,36 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.26: <span class="textred">resolved BUG 2616</span>: quitting the renderer BEFORE a simulation starts raises, quitting during it does not
+  - issue author: Claude-JG
+  - description: revision2026b step RG4.5. Closing the render window or pressing ESCAPE while a script waits - "Computation paused... press SPACE to continue / Q to quit" - sets forceQuitSimulation, and CSolverBase::SolveSystem then returns false before the solver ever starts. SolveDynamic reads false as a failure, prints the DYNAMIC SOLVER FAILED block and raises SolverError, so a user who simply quit gets a traceback. Stopping the SAME simulation one step later does not: SolveSteps returns !conv.stepReductionFailed, which is true when the user stopped it, and the script ends quietly. The two paths must agree, and the quiet one is the right one - a user stopping a run is not a solver failure. Reported by the maintainer 2026-09-23 from "python -m exudyn demo 2".
+  - **notes:** CSolverBase::SolveSystem returns true when the simulation was already stopped by the user before it started, instead of false: SolveDynamic and SolveStatic read false as a solver failure and raised SolverError, so closing the render window while a script waited ended in a traceback - while stopping the same simulation one step later has always been quiet. The note says that nothing was computed. NOT tested: forceQuitSimulation is set by GlfwClient.cpp alone and has no Python binding, so the state cannot be produced without a window; mbs.SetRenderEngineStopFlag sets the other flag, stopSimulation.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:06**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.25: resolved Issue 2615: a settings folder has a description in the definitions, and nothing shows it (extension)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.15. Every settings structure carries classDescription in definitions/ - "General settings for visualization that influence all windows, ..." - and it reaches the reference manual and the C++ header comment, but not GetDictionaryWithTypeInfo, so the dialog has nothing to show when the mouse is over a folder. Only the leaves have a description there. The emitter should put the class description into the dictionary with type info under a reserved key, the way itemIdentifier is reserved, and the tooltip of the dialog should show it for a folder. Maintainer, 2026-09-23.
+  - **notes:** GetDictionaryWithTypeInfo carries the class description of a settings structure under the reserved key structureDescription, so the settings dialog can show what a FOLDER is when the mouse rests on it; it had a description for the leaves only. GetDictionary is untouched, so nothing a script does changes.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-23 16:54**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.24: resolved Issue 2614: the settings dialog needs reset, revert, undo and close - and its windows must stay in front (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.14. Maintainer, 2026-09-23, after using the dialog. The bottom gets a second row: "diff to default" and "this session" on the left, and on the right "reset" (to the defaults), "revert" (to the state the dialog opened with), "undo" (the last change, one step, greyed when there is nothing to undo) and "close" (what ESCAPE does). Every button gets a tooltip saying what it does, including the two existing ones. The tooltips of the tree open after a delay of 0.5 seconds - they are annoying while the mouse crosses the tree, and the find of RG6.2.10 means nobody has to sweep through the settings any more. And the window that shows the changes appeared BEHIND the dialog the second time it was opened, because the dialog is topmost (which it has to be, since it blocks the render window).
+  - **notes:** The settings dialog has a second button row: diff to default and this session on the left, reset, revert, undo and close on the right. Reset and revert ask before they throw away what the model set; undo goes one step back and is greyed when there is nothing to undo. Every button has a tooltip saying what it does, and the tooltips open after 0.5 seconds instead of immediately. The window showing the changes is transient to the dialog and topmost, so it no longer appears behind it.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-23 16:54**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.23: resolved Issue 2613: the find bar of the settings dialog needs no button, and says nothing when idle (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.13. Maintainer, 2026-09-23, after using it: the search runs while the text is typed, so the "find" button is not needed and goes. The drop-down of the hits looks like something to click even when nothing has been searched for; it is greyed out until there is a search text.
+  - **notes:** The find bar of the settings dialog lost its button - the search runs while the text is typed - and the drop-down of the hits is greyed out until there is a search text.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 16:54**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.22: <span class="textred">resolved BUG 2612</span>: the settings dialog calls 59 untouched settings changed, and marks no folder
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.12. "diff to default" of RG6.2.9 compares against exu.VisualizationSettings(), a settings structure Python builds on its own - and a SystemContainer initialises 59 of them when it is created: the four lights and the ten raytracer materials. A user who changed nothing therefore sees all lights and all materials reported as changed, which the maintainer found in demo 2 (2026-09-23). The reference must be the state a user actually starts from, exu.SystemContainer().visualizationSettings. Second half of the same step: a changed value in a folded folder is invisible, so a folder whose subtree holds a changed value must be marked as well.
+  - **notes:** The difference is measured against exu.SystemContainer().visualizationSettings instead of exu.VisualizationSettings(): a SystemContainer initialises 59 settings when it is created - the four lights and the ten raytracer materials - so the dialog reported all of them as changed for a user who changed nothing. A folder whose subtree holds a changed value is now marked as well, so that a folded folder does not hide the change.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 16:54**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.21: resolved Issue 2591: the settings dialogs work but are hard to use, and GUI.py is hard to change (improvement)
   - issue author: Claude-JG
   - description: python/exudyn/GUI.py does its job with tkinter - it runs everywhere and needs no installation - but it is in bad shape, and the dialogs are called from rendererPythonInterface.cpp, which executes Python inside C++. What the maintainer names (2026-09-22): the table of the visualization settings is restricted; illegal input is caught but there are no type hints; the font size cannot be adjusted on Linux; the columns can hardly be adjusted; a description should appear in a pop-up rather than only with a special key; fields cannot be edited inline; combo boxes are unhandy. Two things changed the ground under it: revision2026 step R4.10 makes the parameter TYPES available to Python, and the interface is generic enough that a second front end (Qt6, or a form that takes Qt5 and Qt6) would be a small overhead on top. A snapshot of the dialog as it is: docs/theDoc/figures/visualizationSettings.png in the history.

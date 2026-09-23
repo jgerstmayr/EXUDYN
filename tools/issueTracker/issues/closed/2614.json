@@ -1,0 +1,17 @@
+{
+  "number": 2614,
+  "title": "the settings dialog needs reset, revert, undo and close - and its windows must stay in front",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.2.14. Maintainer, 2026-09-23, after using the dialog. The bottom gets a second row: \"diff to default\" and \"this session\" on the left, and on the right \"reset\" (to the defaults), \"revert\" (to the state the dialog opened with), \"undo\" (the last change, one step, greyed when there is nothing to undo) and \"close\" (what ESCAPE does). Every button gets a tooltip saying what it does, including the two existing ones. The tooltips of the tree open after a delay of 0.5 seconds - they are annoying while the mouse crosses the tree, and the find of RG6.2.10 means nobody has to sweep through the settings any more. And the window that shows the changes appeared BEHIND the dialog the second time it was opened, because the dialog is topmost (which it has to be, since it blocks the render window).",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 16:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The settings dialog has a second button row: diff to default and this session on the left, reset, revert, undo and close on the right. Reset and revert ask before they throw away what the model set; undo goes one step back and is greyed when there is nothing to undo. Every button has a tooltip saying what it does, and the tooltips open after 0.5 seconds instead of immediately. The window showing the changes is transient to the dialog and topmost, so it no longer appears behind it.",
+  "resolvedInVersion": "1.12.24"
+}

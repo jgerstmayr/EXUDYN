@@ -1,0 +1,17 @@
+{
+  "number": 2612,
+  "title": "the settings dialog calls 59 untouched settings changed, and marks no folder",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.12. \"diff to default\" of RG6.2.9 compares against exu.VisualizationSettings(), a settings structure Python builds on its own - and a SystemContainer initialises 59 of them when it is created: the four lights and the ten raytracer materials. A user who changed nothing therefore sees all lights and all materials reported as changed, which the maintainer found in demo 2 (2026-09-23). The reference must be the state a user actually starts from, exu.SystemContainer().visualizationSettings. Second half of the same step: a changed value in a folded folder is invisible, so a folder whose subtree holds a changed value must be marked as well.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 16:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The difference is measured against exu.SystemContainer().visualizationSettings instead of exu.VisualizationSettings(): a SystemContainer initialises 59 settings when it is created - the four lights and the ten raytracer materials - so the dialog reported all of them as changed for a user who changed nothing. A folder whose subtree holds a changed value is now marked as well, so that a folded folder does not hide the change.",
+  "resolvedInVersion": "1.12.22"
+}

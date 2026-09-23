@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 22 | 1.12.21 |
+| 1.12 | Metheney | 27 | 1.12.26 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,16 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.26** `BUG` quitting the renderer BEFORE a simulation starts raises, quitting during it does not (#2616) - raised by Claude-JG
+  - CSolverBase::SolveSystem returns true when the simulation was already stopped by the user before it started, instead of false: SolveDynamic and SolveStatic read false as a solver failure and raised SolverError, so closing the render window while a script waited ended in a traceback - while stopping the same simulation one step later has always been quiet. The note says that nothing was computed. NOT tested: forceQuitSimulation is set by GlfwClient.cpp alone and has no Python binding, so the state cannot be produced without a window; mbs.SetRenderEngineStopFlag sets the other flag, stopSimulation.
+- **1.12.25** `EXTENSION` a settings folder has a description in the definitions, and nothing shows it (#2615) - raised by Claude-JG
+  - GetDictionaryWithTypeInfo carries the class description of a settings structure under the reserved key structureDescription, so the settings dialog can show what a FOLDER is when the mouse rests on it; it had a description for the leaves only. GetDictionary is untouched, so nothing a script does changes.
+- **1.12.24** `IMPROVEMENT` the settings dialog needs reset, revert, undo and close - and its windows must stay in front (#2614) - raised by Claude-JG
+  - The settings dialog has a second button row: diff to default and this session on the left, reset, revert, undo and close on the right. Reset and revert ask before they throw away what the model set; undo goes one step back and is greyed when there is nothing to undo. Every button has a tooltip saying what it does, and the tooltips open after 0.5 seconds instead of immediately. The window showing the changes is transient to the dialog and topmost, so it no longer appears behind it.
+- **1.12.23** `IMPROVEMENT` the find bar of the settings dialog needs no button, and says nothing when idle (#2613) - raised by Claude-JG
+  - The find bar of the settings dialog lost its button - the search runs while the text is typed - and the drop-down of the hits is greyed out until there is a search text.
+- **1.12.22** `BUG` the settings dialog calls 59 untouched settings changed, and marks no folder (#2612) - raised by Claude-JG
+  - The difference is measured against exu.SystemContainer().visualizationSettings instead of exu.VisualizationSettings(): a SystemContainer initialises 59 settings when it is created - the four lights and the ten raytracer materials - so the dialog reported all of them as changed for a user who changed nothing. A folder whose subtree holds a changed value is now marked as well, so that a folded folder does not hide the change.
 - **1.12.21** `IMPROVEMENT` the settings dialogs work but are hard to use, and GUI.py is hard to change (#2591) - raised by Claude-JG
   - The settings dialogs and GUI.py, in ten sub-steps: the dialogs left rendererPythonInterface.cpp, the layer under the widgets got tests, the validator was made to agree with the settings, one dialogs.fontScaling replaced fontScalingMacOS, the value is edited in its cell, the bottom row is the line that sets it, a setting differing from the defaults is shown in colour and can be copied as code, and a find bar with CTRL+F searches names first and descriptions second. The key bindings of the render window come from ONE table in exudyn.misc.keyBindings: the help dialog and the tables of the manual are generated from it, and a test compares it with GlfwClient.cpp - which found five bindings documented nowhere (H, R, CTRL+R, CTRL+V, CTRL+7) and the keypad rotation keys named wrongly in both copies. GUI.py was cleaned up last: the dead EXAMPLE block and 32 lines of commented-out code removed, the bare prints turned into exudyn.Print with WARNING/ERROR and the name of the function, and the dialog no longer writes treeEditOpenItems, which is the user configuration - what was open is remembered in treeEditLastOpenItems. A second front end (RG6.2.5) was dropped by the maintainer.
 - **1.12.20** `EXTENSION` settings dialog: find a setting by name, with CTRL-F (#2607) - raised by Claude-JG

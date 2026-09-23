@@ -30,11 +30,11 @@ __all__ = [
     'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight', 'IsFloat', 'IsArrayInt', 'IsVector',
     'GetExudynDisplayScaling', 'GetGUIContentScaling', 'DialogScaling', 'GetComboBoxListsDict',
     'ConvertString2Value', 'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral',
-    'SettingsCodeLines', 'SettingsValueStrings', 'FindMatches', 'SettingsPrefix', 'Tooltip',
-    'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
-    'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
-    'pythonCommandExamples', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
-    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'SettingsCodeLines', 'DefaultSettingsDictionary', 'SettingsValueStrings', 'FindMatches',
+    'SettingsPrefix', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo',
+    'TkinterEditDictionary', 'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText',
+    'ShowHelpDialog', 'pythonCommandExamples', 'ShowPythonCommandDialog',
+    'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -432,6 +432,26 @@ def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTy
     return lines
 
 
+def DefaultSettingsDictionary(settingsStructure):
+    """the settings as a USER finds them, which is what a difference is measured against
+
+    Not what the constructor of the structure produces: a SystemContainer initialises 59 of the
+    visualization settings when it is created - the four lights and the ten raytracer materials,
+    which are synced with the renderer - so a standalone exu.VisualizationSettings() reports all
+    of them as changed for a user who changed nothing (#2612, found in demo 2).
+
+    Args:
+        settingsStructure: the structure being edited
+
+    Returns:
+        the dictionary with type info of a fresh structure of the same kind
+    """
+    if type(settingsStructure).__name__ == 'VisualizationSettings':
+        #a SystemContainer opens no window; it is the only way to the initialised state
+        return exudyn.SystemContainer().visualizationSettings.GetDictionaryWithTypeInfo()
+    return type(settingsStructure)().GetDictionaryWithTypeInfo()
+
+
 def SettingsValueStrings(dictionaryWithTypeInfo):
     """{path: valueString} of a settings structure - what SettingsCodeLines compares against"""
     return {path: valueStr
@@ -488,14 +508,44 @@ class Tooltip:
     dialog that is never hovered never builds one.
     """
 
-    def __init__(self, widget, wrapLength=520):
+    def __init__(self, widget, wrapLength=520, delay=500):
         self.widget = widget
         self.wrapLength = wrapLength
+        self.delay = delay          #ms before it appears; a tooltip that is instant is in the way
         self.window = None
         self.label = None
+        self.pending = None
 
     def Show(self, text, x, y):
+        """show the tooltip after the delay, at the screen position (x, y)
+
+        The delay is the maintainer's (#2614): a description that appears the moment the pointer
+        crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a
+        setting any more.
+        """
+        self.Cancel()
+        if self.delay > 0:
+            self.pending = self.widget.after(self.delay, lambda: self.Place(text, x, y))
+        else:
+            self.Place(text, x, y)
+
+    def Cancel(self):
+        """forget a tooltip that was scheduled and has not appeared yet"""
+        if self.pending is not None:
+            try:
+                self.widget.after_cancel(self.pending)
+            except (tk.TclError, ValueError):
+                pass
+            self.pending = None
+
+    def Bind(self, widget, text):
+        """let a widget - a button, say - show this tooltip while the pointer rests on it"""
+        widget.bind('<Enter>', lambda event: self.Show(text, event.x_root, event.y_root))
+        widget.bind('<Leave>', lambda event: self.Hide())
+
+    def Place(self, text, x, y):
         """place the tooltip at the screen position (x, y), a little below the pointer"""
+        self.pending = None
         if self.window is None:
             self.window = tk.Toplevel(self.widget)
             self.window.wm_overrideredirect(True)   #no title bar, no border
@@ -507,6 +557,7 @@ class Tooltip:
         self.window.deiconify()
 
     def Hide(self):
+        self.Cancel()
         if self.window is not None:
             self.window.withdraw()
 
@@ -561,11 +612,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.findEntry.bind('<Return>', self.OnFindNext)
         self.findEntry.bind('<Escape>', lambda event: self.tree.focus_set())
         self.findVar.trace_add('write', lambda *arguments: self.UpdateFindHits())
-        self.findCombo = ttk.Combobox(self.findFrame, state='readonly', values=())
+        #no find button: the search runs while the text is typed, which is enough (#2613);
+        #and the drop-down is disabled until there is something to pick, so that it does not
+        #look like a control that does nothing
+        self.findCombo = ttk.Combobox(self.findFrame, state='disabled', values=())
         self.findCombo.grid(row=0, column=2, sticky=tk.E+tk.W, padx=4)
         self.findCombo.bind('<<ComboboxSelected>>', self.OnFindPick)
-        self.findButton = tk.Button(self.findFrame, text='find', command=self.OnFindNext)
-        self.findButton.grid(row=0, column=3, padx=(0, 4))
         self.findHits = []
         self.findIndex = -1
 
@@ -653,16 +705,46 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
         self.copyButton = tk.Button(self.bottomFrame, text='copy line',
                                     command=self.OnCopyCodeLine)
-        self.copyButton.grid(row=0, column=1, padx=2)
+        self.copyButton.grid(row=0, column=1, padx=(2, 4))
 
-        #the two windows of revision2026b step RG6.2.9 (#2606): they SHOW the changes as the code
-        #that makes them, and copy it - which is what RG12.3 is to produce for a whole structure
-        self.diffButton = tk.Button(self.bottomFrame, text='diff to default',
+        #THE BUTTON ROW (revision2026b step RG6.2.14, #2614): the two windows of RG6.2.9 on the
+        #left, and what a user does with a dialog - take it back, or leave it - on the right.
+        #Every button says what it does in a tooltip; none of them fits in two words.
+        self.buttonFrame = tk.Frame(self)
+        self.buttonFrame.grid(row=3, column=0, columnspan=4, sticky=tk.E+tk.W)
+        self.buttonFrame.grid_columnconfigure(2, weight=1)      #the gap between the two groups
+        self.buttonTooltip = Tooltip(self, wrapLength=420)
+
+        self.diffButton = tk.Button(self.buttonFrame, text='diff to default',
                                     command=self.OnShowDiffToDefault)
-        self.diffButton.grid(row=0, column=2, padx=2)
-        self.sessionButton = tk.Button(self.bottomFrame, text='this session',
+        self.diffButton.grid(row=0, column=0, padx=(4, 2), pady=(0, 4))
+        self.sessionButton = tk.Button(self.buttonFrame, text='this session',
                                        command=self.OnShowSessionChanges)
-        self.sessionButton.grid(row=0, column=3, padx=(2, 4))
+        self.sessionButton.grid(row=0, column=1, padx=2, pady=(0, 4))
+
+        self.resetButton = tk.Button(self.buttonFrame, text='reset', command=self.OnReset)
+        self.resetButton.grid(row=0, column=3, padx=2, pady=(0, 4))
+        self.revertButton = tk.Button(self.buttonFrame, text='revert', command=self.OnRevert)
+        self.revertButton.grid(row=0, column=4, padx=2, pady=(0, 4))
+        self.undoButton = tk.Button(self.buttonFrame, text='undo', command=self.OnUndo,
+                                    state=tk.DISABLED)
+        self.undoButton.grid(row=0, column=5, padx=2, pady=(0, 4))
+        self.closeButton = tk.Button(self.buttonFrame, text='close',
+                                     command=lambda: self.parentFrame.destroy())
+        self.closeButton.grid(row=0, column=6, padx=(2, 4), pady=(0, 4))
+
+        for (button, description) in [
+                (self.copyButton, 'copy the line above, which sets the selected setting'),
+                (self.diffButton, 'show diffs to default'),
+                (self.sessionButton, 'show changes since dialog opened'),
+                (self.resetButton, 'reset to default'),
+                (self.revertButton, 'revert to state when dialog opened'),
+                (self.undoButton, 'undo last change'),
+                (self.closeButton, 'close the dialog (same as ESCAPE)')]:
+            self.buttonTooltip.Bind(button, description)
+
+        #one step back, which is all the undo of RG6.2.11 promises: (item, the value before)
+        self.lastChange = None
 
         #+++++++++++++++++++++++++++++++++++++++++
         #pre-select item
@@ -680,7 +762,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.defaultValueStrings = {}
         try:
             self.defaultValueStrings = SettingsValueStrings(
-                type(self.settingsStructure)().GetDictionaryWithTypeInfo())
+                DefaultSettingsDictionary(self.settingsStructure))
         except Exception as exception:                                       # noqa: BLE001
             exudyn.Print('WARNING: the settings defaults are not available, so nothing is'
                          ' marked as changed: ' + str(exception))
@@ -722,8 +804,13 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.sizeStorage[id] = value['size']
                 self.descriptionStorage[id] = value['description']
             else: #must be another dictionary:
+                #what the FOLDER is: the class description of the settings structure, which
+                #reaches the dictionary since revision2026b step RG6.2.15 (#2615) and is what the
+                #tooltip shows over a folder - it had nothing to show there at all
+                self.descriptionStorage[id] = str(value.get('structureDescription', ''))
                 for (key, value) in value.items():
-                    self.AddNodeFromDictionaryWithTypeInfo(value, id, key, level=level+1)
+                    if key != 'structureDescription':    #a description, not a settings value
+                        self.AddNodeFromDictionaryWithTypeInfo(value, id, key, level=level+1)
         else:
             exudyn.Print('ERROR: AddNodeFromDictionaryWithTypeInfo: item ' + str(value)
                          + ' (parent=' + str(parentNode) + ', key=' + str(key)
@@ -810,6 +897,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 if value=='True': value='False'
                 else: value='True'
 
+                self.RememberChange(item, self.tree.item(item,'values')[0])
                 self.tree.item(item, values=(value, self.typeStorage[item],
                                              self.descriptionStorage[item]))
                 self.MarkChangedValue(item)
@@ -919,20 +1007,45 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                  self.typeStorage[item], self.sizeStorage[item], self.descriptionStorage[item])
                 for item in self.LeafItems()]
 
-    def MarkChangedValues(self):
-        """colour every row that differs from the default; that is what the maintainer means by
-        a changed value, and it is true as the dialog opens, not only after an edit"""
+    def MarkChangedValues(self, item=''):
+        """colour every row that differs from the default - and every FOLDER that holds such a
+        row somewhere below it, because a folded folder hides the mark otherwise (#2612)
+
+        Returns:
+            True if anything below the given item differs from the defaults
+        """
         if self.defaultValueStrings == {}:
-            return
-        for item in self.LeafItems():
-            self.MarkChangedValue(item)
+            return False
+        anyChanged = False
+        for child in self.tree.get_children(item):
+            if self.tree.get_children(child):
+                isChanged = self.MarkChangedValues(child)
+            else:
+                isChanged = self.IsChangedValue(child)
+            self.SetChangedTag(child, isChanged)
+            anyChanged = anyChanged or isChanged
+        return anyChanged
+
+    def IsChangedValue(self, item):
+        """does this row differ from the value a user starts with"""
+        path = self.ItemPath(item)
+        return (path in self.defaultValueStrings
+                and self.defaultValueStrings[path] != self.tree.item(item,'values')[0])
+
+    def SetChangedTag(self, item, isChanged):
+        self.tree.item(item, tags=('changed',) if isChanged else ())
 
     def MarkChangedValue(self, item):
-        path = self.ItemPath(item)
-        valueStr = self.tree.item(item,'values')[0]
-        isChanged = (path in self.defaultValueStrings
-                     and self.defaultValueStrings[path] != valueStr)
-        self.tree.item(item, tags=('changed',) if isChanged else ())
+        """one row after it was edited, and the folders it sits in"""
+        if self.defaultValueStrings == {}:
+            return
+        self.SetChangedTag(item, self.IsChangedValue(item))
+        parent = self.tree.parent(item)
+        while parent != '':
+            childIsChanged = any('changed' in self.tree.item(child, 'tags')
+                                 for child in self.tree.get_children(parent))
+            self.SetChangedTag(parent, childIsChanged)
+            parent = self.tree.parent(parent)
 
     def ChangedCodeLines(self, referenceValueStrings):
         return SettingsCodeLines(self.TreeLeaves(), referenceValueStrings,
@@ -950,12 +1063,83 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                            self.ChangedCodeLines(self.openingValueStrings),
                            'what was changed since this dialog was opened')
 
+    def RememberChange(self, item, previousValueStr):
+        """the one step the undo goes back; it is armed by every value the dialog writes"""
+        self.lastChange = (item, previousValueStr)
+        self.undoButton.configure(state=tk.NORMAL)
+
+    def WriteValue(self, item, valueStr):
+        """put a value into a row and let everything that follows from it happen"""
+        self.tree.item(item, values=(valueStr, self.typeStorage[item],
+                                     self.descriptionStorage[item]))
+        self.MarkChangedValue(item)
+
+    def ApplyValues(self, valueStrings, remember=True):
+        """write a whole set of {path: valueString} into the tree and into the settings
+
+        Args:
+            valueStrings: what to write; a path the tree does not hold is ignored
+            remember: unused today, kept so that the caller reads as what it does
+
+        Returns:
+            the number of rows that changed
+        """
+        changed = 0
+        for item in self.LeafItems():
+            path = self.ItemPath(item)
+            if path in valueStrings and valueStrings[path] != self.tree.item(item,'values')[0]:
+                self.WriteValue(item, valueStrings[path])
+                changed += 1
+        if changed != 0:
+            self.lastChange = None                  #a whole set is not one step back
+            self.undoButton.configure(state=tk.DISABLED)
+            self.modifiedDictionary = self.GetDictionary('')
+            self.UpdateSettingsStructure()
+            self.ShowInfo(self.tree.focus())
+        return changed
+
+    def OnReset(self):
+        """every setting back to what a user starts with; it is asked for first, since it throws
+        away everything the model set as well"""
+        if self.defaultValueStrings == {}:
+            tk.messagebox.showinfo('reset', 'the defaults are not available in this session')
+            return
+        if tk.messagebox.askyesno('reset to default',
+                                  'Reset ALL settings to their default values?'):
+            self.ApplyValues(self.defaultValueStrings)
+
+    def OnRevert(self):
+        """back to the state the dialog opened with"""
+        if tk.messagebox.askyesno('revert',
+                                  'Revert all settings to the state when the dialog was opened?'):
+            self.ApplyValues(self.openingValueStrings)
+
+    def OnUndo(self):
+        """the last single change, and only that one"""
+        if self.lastChange is None:
+            return
+        (item, previousValueStr) = self.lastChange
+        self.lastChange = None
+        self.undoButton.configure(state=tk.DISABLED)
+        self.WriteValue(item, previousValueStr)
+        self.tree.see(item)
+        self.tree.selection_set(item)
+        self.ShowInfo(item)
+        self.modifiedDictionary = self.GetDictionary('')
+        self.UpdateSettingsStructure()
+
     def ShowCodeLines(self, title, lines, description):
         """the changes as the code that makes them, in a window that shows AND copies: a dialog
         session that can be pasted into a script (maintainer, 2026-09-23)"""
         window = tk.Toplevel(self)
         window.title(title)
-        ApplyDialogWindowSettings(window)
+        #the dialog itself is topmost - it has to be, it blocks the render window - so a plain
+        #Toplevel of it goes BEHIND it the second time it is opened (#2614). transient ties the
+        #window to the dialog, and topmost puts it in front of a topmost parent.
+        window.transient(self.parentFrame)
+        ApplyDialogWindowSettings(window, alwaysTopmost=True)
+        window.lift()
+        window.focus_force()
         window.grid_columnconfigure(0, weight=1)
         window.grid_rowconfigure(1, weight=1)
 
@@ -997,6 +1181,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.findHits = FindMatches(self.findLeaves, self.findVar.get())
         self.findIndex = -1
         self.findCombo['values'] = tuple(label for (_, label) in self.findHits)
+        self.findCombo.configure(state='readonly' if self.findHits else 'disabled')
         self.findCombo.set(str(len(self.findHits)) + ' found' if self.findHits
                            else ('nothing found' if self.findVar.get().strip() != '' else ''))
 
@@ -1099,6 +1284,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             return
 
         self.CancelCellEdit()
+        self.RememberChange(item, self.tree.item(item,'values')[0])
         self.tree.item(item, values=(valueStr, vType, self.descriptionStorage[item]))
         self.MarkChangedValue(item)
         self.tree.focus_set()

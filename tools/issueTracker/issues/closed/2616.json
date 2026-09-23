@@ -1,0 +1,18 @@
+{
+  "number": 2616,
+  "title": "quitting the renderer BEFORE a simulation starts raises, quitting during it does not",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "revision2026b step RG4.5. Closing the render window or pressing ESCAPE while a script waits - \"Computation paused... press SPACE to continue / Q to quit\" - sets forceQuitSimulation, and CSolverBase::SolveSystem then returns false before the solver ever starts. SolveDynamic reads false as a failure, prints the DYNAMIC SOLVER FAILED block and raises SolverError, so a user who simply quit gets a traceback. Stopping the SAME simulation one step later does not: SolveSteps returns !conv.stepReductionFailed, which is true when the user stopped it, and the script ends quietly. The two paths must agree, and the quiet one is the right one - a user stopping a run is not a solver failure. Reported by the maintainer 2026-09-23 from \"python -m exudyn demo 2\".",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:06",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/CSolverBase.cpp",
+  "line": "577",
+  "releaseNotes": "CSolverBase::SolveSystem returns true when the simulation was already stopped by the user before it started, instead of false: SolveDynamic and SolveStatic read false as a solver failure and raised SolverError, so closing the render window while a script waited ended in a traceback - while stopping the same simulation one step later has always been quiet. The note says that nothing was computed. NOT tested: forceQuitSimulation is set by GlfwClient.cpp alone and has no Python binding, so the state cannot be produced without a window; mbs.SetRenderEngineStopFlag sets the other flag, stopSimulation.",
+  "resolvedInVersion": "1.12.26"
+}

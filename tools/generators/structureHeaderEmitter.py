@@ -226,6 +226,14 @@ def StructureCppHeader(parseInfo):
     sDictGet += 'inline py::dict GetDictionaryWithTypeInfo(const ' + Header(parseInfo, 'class') + '& data) {\n'
     sDictGet += '    auto structureDict = py::dict();\n'
     sDictGet += '    auto d = py::dict(); //local dict\n'
+    #WHAT THE STRUCTURE IS, not what one of its values is: the settings dialog shows this
+    #when the mouse is over a folder, where it had nothing to show at all (revision2026b
+    #step RG6.2.15, #2615). 'structureDescription' is reserved like 'itemIdentifier' below.
+    classDescriptionStr = (str(Header(parseInfo, 'classDescription'))
+                           .replace('\\_', '_')
+                           .replace('\\', '\\\\')
+                           .replace('$', '').replace('"', "'"))
+    sDictGet += '    structureDict["structureDescription"] = "' + classDescriptionStr + '";\n'
 
     sDictGetPure = ''
     sDictGetPure += '//! AUTO: read access to structure; converting into dictionary without type info\n'
@@ -358,6 +366,8 @@ def StructureCppHeader(parseInfo):
 
                 if parameter['pythonName'] == 'itemIdentifier':
                     print("ERROR: pythonName may not be called 'itemIdentifier'") #this term needs to be reserved, as this is the key for a value object
+                if parameter['pythonName'] == 'structureDescription':
+                    print("ERROR: pythonName may not be called 'structureDescription'")  #reserved for the description of the structure itself (#2615)
                 #check if substructure (folder)
                 if IsStructureParameter(parameter):
                     if not IsDeprecatedParameter(parameter):

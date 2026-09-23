@@ -800,3 +800,109 @@ Two things it leaves open, both deliberate: **RG6.2.11** (#2608), the catalogue 
 features with **undo** at the top of it, and **RG12.3**, which is the *diff to default* of
 RG6.2.9 for a whole settings structure rather than for one dialog.
 
+<a id="rg6-2-12"></a>
+### RG6.2.12 — the difference is measured against what a user starts from (2026-09-23, #2612)
+
+The maintainer opened demo 2, pressed *diff to default*, and got **every light and every
+material** in the list of changes — 59 settings nobody had touched. The reference was
+`exu.VisualizationSettings()`, a settings structure Python builds on its own, and a
+**`SystemContainer` initialises those 59 when it is created**: the four lights, and the ten
+raytracer materials, which are synced with the renderer materials. The constructor's state is not
+the state a user starts from, and nothing in this repository could have said so without creating
+a `SystemContainer`: every test of RG6.2.9 built its reference the same way the defect did, so
+they agreed with each other and with nothing else.
+
+`DefaultSettingsDictionary()` takes the reference from `exu.SystemContainer().visualizationSettings`
+now — a container opens no window, and it is the only way to the initialised state — and falls
+back to the constructor for a structure that is not on a container, which is what
+`simulationSettings` is. Three tests came with it, and the second one is the one worth keeping:
+it asserts that the **constructor still differs**, and that every difference is a light or a
+material. If that test ever fails, the initialisation moved into the structure itself and this
+function can go.
+
+**And a folded folder no longer hides a change.** The colour of RG6.2.9 marked the leaf, which is
+invisible when its folder is closed — and the tree opens with four folders open out of some
+sixty. `MarkChangedValues` walks post-order and marks a **folder** whose subtree holds a changed
+value; after a single edit the folders above the row are recomputed instead of the whole tree.
+
+<a id="rg6-2-13"></a>
+### RG6.2.13 — the find bar loses its button (2026-09-23, #2613)
+
+The search runs while the text is typed, so the **find** button was a button for something that
+had already happened; it is gone. The drop-down of the hits is **disabled until there is a search
+text**, because a combo box that is enabled and empty looks like a control that does nothing. Both
+from the maintainer, after using it.
+
+<a id="rg6-2-14"></a>
+### RG6.2.14 — what a user does with a dialog (2026-09-23, #2614)
+
+A **second row** at the bottom: *diff to default* and *this session* on the left, and on the right
+the four things a dialog owes its user — **reset** (all settings to the defaults), **revert**
+(to the state the dialog opened with), **undo** (the last change, one step, **greyed** until there
+is one) and **close** (what ESCAPE does). Reset and revert ask first: they throw away everything
+the model set, which is not a click's worth of consequence. The undo is the one from the
+catalogue of RG6.2.11, and it is one step because that is what was asked for; every value the
+dialog writes arms it, and a whole set written at once disarms it, since "back" would not be one
+step any more.
+
+**Every button says what it does**, in a tooltip, including the two that were there before —
+*show diffs to default* and *show changes since dialog opened*, in the maintainer's own words.
+The `Tooltip` class gained a `Bind()` for that, and a **delay of 0.5 seconds** for all of them:
+a description that appears the moment the pointer crosses a row is in the way, and since RG6.2.10
+nobody has to sweep the tree to find a setting.
+
+**The window with the changes stayed behind the dialog** from the second time it was opened. The
+dialog is topmost — it must be, it blocks the render window — and a plain `Toplevel` of a
+topmost window is not. It is `transient` to the dialog and topmost itself now, lifted and
+focused when it opens.
+
+<a id="rg6-2-15"></a>
+### RG6.2.15 — a folder says what it is (2026-09-23, #2615)
+
+Every settings structure carries a `classDescription` in `definitions/— ` *"General settings
+for visualization that influence all windows, default values, autofit, multithreading, etc."* —
+and it reached the reference manual and the C++ header comment, but **not the dictionary the
+dialog reads**: only leaves had a description there, so the pop-up had nothing to show over a
+folder, which is where a user new to the settings looks first.
+
+`structureHeaderEmitter.py` writes it into `GetDictionaryWithTypeInfo` under the reserved key
+`structureDescription`, beside `itemIdentifier`, with the same guard against a settings member of
+that name. `GetDictionary— ` the plain one, which round trips through `SetDictionary— ` is
+untouched, so nothing a script does changes. The dialog stores it as the description of the
+folder node and steps over the key when it builds the tree, and a test walks both structures and
+requires that **every** folder of both has a non-empty description.
+
+<a id="rg4-5"></a>
+### RG4.5 — quitting is not failing (2026-09-23, #2616)
+
+`python -m exudyn demo 2`, close the render window at *"Computation paused... press SPACE to
+continue / Q to quit"*, and the script ends in a **traceback**: the *DYNAMIC SOLVER FAILED* block
+and `exudyn.SolverError: SolveDynamic terminated`. Wait one step longer and press Q, and the same
+quit ends the script quietly.
+
+The asymmetry is one line. `CSolverBase::SolveSystem` begins with
+
+```cpp
+if (computationalSystem.GetPostProcessData()->forceQuitSimulation) { ...; return false; }
+```
+
+and `false` is what `SolveDynamic` and `SolveStatic` read as *the solver failed*: they print the
+failure block and raise. The **mid-run** path never reaches that return — `SolveSteps` leaves
+its loop when `stopSimulation` is set and returns `!conv.stepReductionFailed`, which is `true`,
+so the script continues. It returns `true` now, with the note reworded to say that nothing was
+computed. A user who quits is not a solver failure, and both paths say so.
+
+**Two things this turned up that are worth knowing.**
+
+`output.simulationStoppedByUser` cannot be set on this path: the solver never initializes, and the
+`MainSolver` copy that Python reads is filled during initialization, so an assignment there reads
+back as `false— ` which is worse than not offering it. The line is a comment naming
+`mbs.GetRenderEngineStopFlag()` instead, and that is what a script asks.
+
+**And it has no test**, which is the honest part. `forceQuitSimulation` is set in
+`GlfwClient.cpp` and nowhere else, and it has no Python binding, so nothing but a real render
+window can produce the state this fixes. `mbs.SetRenderEngineStopFlag(True)` sets the **other**
+flag — `stopSimulation— ` which `InitializeSolver` clears when a solve starts; a test built on
+it passes for the wrong reason, which is how it was found here. Two flags with one name in the
+Python API is the deeper thing the maintainer suspected, and it stands in RG4.5 as the open half.
+

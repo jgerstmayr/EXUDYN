@@ -576,9 +576,19 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 
 	if (computationalSystem.GetPostProcessData()->forceQuitSimulation)
 	{
-		pout << "NOTE: Simulation stopped by user\n";
+		pout << "NOTE: Simulation stopped by user before it started; nothing was computed\n";
 		pout << "      (to deactivate stop flag, re-start renderer or SetRenderEngineStopFlag(False)\n";
-		return false; //no success because stopped
+		//NOTE: output.simulationStoppedByUser is NOT set here. The solver never initializes on
+		//this path, and the MainSolver copy Python reads is filled during initialization, so
+		//setting it here reads back as false - which is worse than not offering it. What a
+		//script asks on this path is mbs.GetRenderEngineStopFlag().
+		//A USER WHO QUITS IS NOT A SOLVER FAILURE (#2616, revision2026b step RG4.5). This used to
+		//return false, which SolveDynamic/SolveStatic read as a failure: they printed the
+		//"DYNAMIC SOLVER FAILED" block and raised SolverError, so closing the render window while
+		//a script waited ended in a traceback. Stopping the SAME simulation one step later has
+		//always been quiet - SolveSteps returns !conv.stepReductionFailed, which is true when the
+		//user stopped it - and that is the behaviour both paths have now.
+		return true;
 	}
 	bool success = true; //local success variable
 	try

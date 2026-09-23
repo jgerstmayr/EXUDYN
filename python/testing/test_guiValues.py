@@ -310,6 +310,68 @@ def testEveryDifferenceIsALineThatRuns(comboLists):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#WHAT a difference is measured against (revision2026b step RG6.2.12, #2612)
+
+def testTheSettingsOfAFreshContainerDifferInNothing(comboLists):
+    """the defect this test exists for: the dialog called 59 untouched settings changed, because
+    it compared against exu.VisualizationSettings() while a SystemContainer initialises the four
+    lights and the ten raytracer materials when it is created. A user who changed nothing must
+    see nothing."""
+    container = exudyn.SystemContainer()
+    leaves = gui.SettingsLeafList(container.visualizationSettings.GetDictionaryWithTypeInfo())
+    reference = gui.SettingsValueStrings(
+        gui.DefaultSettingsDictionary(container.visualizationSettings))
+    assert gui.SettingsCodeLines(leaves, reference, 'SC.visualizationSettings', comboLists) == []
+
+
+def testTheConstructorIsNotTheStateAUserStartsFrom(comboLists):
+    """why the function above exists at all; if this ever reports nothing, the initialisation
+    moved into the structure itself and DefaultSettingsDictionary can be simplified"""
+    container = exudyn.SystemContainer()
+    leaves = gui.SettingsLeafList(container.visualizationSettings.GetDictionaryWithTypeInfo())
+    plain = gui.SettingsValueStrings(exudyn.VisualizationSettings().GetDictionaryWithTypeInfo())
+    differences = gui.SettingsCodeLines(leaves, plain, 'SC.visualizationSettings', comboLists)
+    assert len(differences) > 20
+    assert all('light' in path or 'material' in path for (path, _) in differences), differences
+
+
+def testASettingsStructureThatIsNotOnTheContainerStillHasDefaults():
+    """simulationSettings has no SystemContainer to come from, and must not lose its reference"""
+    reference = gui.SettingsValueStrings(
+        gui.DefaultSettingsDictionary(exudyn.SimulationSettings()))
+    assert reference != {}
+    assert 'timeIntegration.endTime' in reference
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#what a FOLDER of the settings tree is (revision2026b step RG6.2.15, #2615)
+
+def testEverySettingsFolderSaysWhatItIs():
+    """the dialog shows this when the mouse rests on a folder; before #2615 the dictionary
+    carried a description for the leaves only"""
+    missing = []
+
+    def Walk(dictionary, path):
+        if 'structureDescription' not in dictionary:
+            missing.append(path + ' (no description at all)')
+        elif str(dictionary['structureDescription']).strip() == '':
+            missing.append(path + ' (empty description)')
+        for (key, value) in dictionary.items():
+            if isinstance(value, dict) and 'itemIdentifier' not in value:
+                Walk(value, path + '.' + key)
+
+    for (name, structure) in [('visualizationSettings', exudyn.VisualizationSettings()),
+                              ('simulationSettings', exudyn.SimulationSettings())]:
+        Walk(structure.GetDictionaryWithTypeInfo(), name)
+    assert missing == [], 'folders without a description: ' + ', '.join(missing)
+
+
+def testTheDescriptionOfAFolderIsNoSetting(leaves):
+    """it is a string beside the values, so everything that walks the tree must step over it"""
+    assert all(not path.endswith('structureDescription') for (path, _, _, _) in leaves)
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #find a setting (revision2026b step RG6.2.10): what the dialog offers when a user does not know
 #which folder a setting sits in
 

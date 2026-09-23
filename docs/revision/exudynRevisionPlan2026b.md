@@ -40,7 +40,7 @@ carries the same table from its side, so a citation from either direction resolv
 | **RG1** Release and publication | getting a release out and onto GitHub and PyPI | 4 |
 | **RG2** Testing and verification | what is not tested, and who tests it before a release | 3 |
 | **RG3** Docs | what the documentation still gets wrong or does not say | 11 |
-| **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 4 |
+| **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 5 |
 | **RG5** Performance | measurement first, then the code that is actually hot | 2 |
 | **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 4 |
 | **RG7** Python user items | items whose behaviour is written in Python | - |
@@ -381,6 +381,22 @@ find its file and line, on every raise).
     object would then carry a backlink to the original. The same question arrives at
     `simulationSettings` with RG12.1, which gives it deprecated members for the first time.
 
+<a id="rg4-5"></a>
+**RG4.5** **DONE 2026-09-23** (#2616) — [log](exudynRevisionLog2026b.md#rg4-5) — *(group RG4;
+    maintainer 2026-09-23)* **Quitting the renderer before a simulation starts raised, quitting
+    during it did not** (#2616). `CSolverBase::SolveSystem` returned `false` when
+    `forceQuitSimulation` was already set, and `SolveDynamic` reads `false` as a failure: the
+    *DYNAMIC SOLVER FAILED* block and a `SolverError` traceback, for a user who simply closed the
+    render window while the script waited. One step into the same simulation the stop is quiet,
+    because `SolveSteps` returns `!conv.stepReductionFailed`. It returns `true` now.
+
+    **What is left open here**, deliberately: `forceQuitSimulation` is set by `GlfwClient.cpp`
+    alone and has **no Python binding**, so this path cannot be reached without a window and has
+    no test — `mbs.SetRenderEngineStopFlag(True)` sets the *other* flag, `stopSimulation`, which
+    `InitializeSolver` clears when a solve starts. A binding, or a test hook, would make the
+    difference between "stopped" and "failed" testable at all; it is worth its own step if the
+    maintainer wants it.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -439,8 +455,10 @@ This group is that revision and what has to happen before it can start.
 
 
 <a id="rg6-2"></a>
-**RG6.2** **DONE 2026-09-23** (#2591) — every sub-step is done or dropped; the open work that came out of it stands in RG6.2.11
-    (#2608, the optional features) and in RG12.3. — *(group RG6; maintainer 2026-09-22)* **The settings dialogs, and the shape of
+**RG6.2** **DONE 2026-09-23** (#2591), **reopened and closed again the same day for RG6.2.12 to RG6.2.15**,
+    which is what the maintainer's first real use of the dialog produced — including a defect
+    that only a running renderer shows. The other open work stands in RG6.2.11 (#2608, the
+    optional features) and in RG12.3. — *(group RG6; maintainer 2026-09-22)* **The settings dialogs, and the shape of
     `GUI.py`** (#2591). It works, it runs everywhere and it needs no installation - tkinter -
     and that is the reason to keep it. What is wrong with it, in the maintainer's words: the
     table of the visualization settings is restricted; illegal input is caught but there are no
@@ -643,6 +661,48 @@ This group is that revision and what has to happen before it can start.
     Struck out by the maintainer on 2026-09-23, so that they are not proposed again: *apply while
     it is open* — changes **are** applied immediately today and that is to stay; and *a "changed
     only" view* — the two windows of RG6.2.9 are that view.
+
+<a id="rg6-2-12"></a>
+**RG6.2.12** **DONE 2026-09-23** (#2612) — [log](exudynRevisionLog2026b.md#rg6-2-12) — **59 untouched settings are called changed, and a folded folder hides a change**
+    (#2612) *(maintainer, 2026-09-23, from demo 2)*. Two halves of one thing:
+
+    - **the reference is wrong.** RG6.2.9 compares against `exu.VisualizationSettings()`, and a
+      `SystemContainer` initialises **59** of those settings when it is created: the four lights
+      and the ten raytracer materials, which are synced with the renderer. A user who changed
+      nothing sees every light and every material reported as changed, which is exactly what the
+      maintainer saw. The reference has to be the state a user **starts from**,
+      `exu.SystemContainer().visualizationSettings— ` and this is a case that no test without a
+      `SystemContainer` could have caught, which is the lesson worth keeping.
+    - **a folder says nothing about its subtree.** With the tree folded, a changed value is
+      invisible; a folder whose subtree holds a changed value is marked as well.
+
+<a id="rg6-2-13"></a>
+**RG6.2.13** **DONE 2026-09-23** (#2613) — [log](exudynRevisionLog2026b.md#rg6-2-13) — **The find bar needs no button, and says nothing when it is idle** (#2613)
+    *(maintainer, 2026-09-23)*. The search runs while the text is typed, so the **find** button is
+    removed; and the drop-down of the hits looks like something to click before anything has been
+    searched for, so it is **greyed out** until there is a search text.
+
+<a id="rg6-2-14"></a>
+**RG6.2.14** **DONE 2026-09-23** (#2614) — [log](exudynRevisionLog2026b.md#rg6-2-14) — **Reset, revert, undo, close — and the windows stay in front** (#2614)
+    *(maintainer, 2026-09-23)*. The bottom of the dialog gets a **second row**: *diff to default*
+    and *this session* on the left, and on the right **reset** (to the defaults), **revert** (to
+    the state the dialog opened with), **undo** (the last change, one step, greyed when there is
+    nothing to undo — which is the undo of RG6.2.11) and **close** (what ESCAPE does). Every
+    button says what it does in a **tooltip**, and the tooltips of the tree open after **0.5
+    seconds**: they are in the way while the mouse crosses the tree, and since RG6.2.10 nobody has
+    to sweep through the settings to find one. And the window showing the changes appeared
+    **behind** the dialog the second time it was opened, because the dialog is topmost — which
+    it must stay, since it blocks the render window.
+
+<a id="rg6-2-15"></a>
+**RG6.2.15** **DONE 2026-09-23** (#2615) — [log](exudynRevisionLog2026b.md#rg6-2-15) — **A settings folder has a description, and nothing shows it** (#2615)
+    *(maintainer, 2026-09-23)*. Every settings structure carries `classDescription` in
+    `definitions/— ` *"General settings for visualization that influence all windows, default
+    values, autofit, multithreading, etc."* — and it reaches the reference manual and the C++
+    header, but **not `GetDictionaryWithTypeInfo`**: only the leaves have a description there, so
+    the dialog has nothing to show when the mouse is over a folder. The emitter puts the class
+    description into the dictionary under a **reserved key**, the way `itemIdentifier` is
+    reserved, and the tooltip shows it for a folder.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
