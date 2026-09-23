@@ -889,7 +889,15 @@ revision (info document D15).
 
 
 <a id="rg9-1"></a>
-**RG9.1** *(group RG9; proposed 2026-09-23 at the maintainer's request, after RG6.2 and the item
+**RG9.1** **DONE 2026-09-23** (#2622) — [log](exudynRevisionLog2026b.md#rg9-1) —
+    **The item sources stop paying for pybind11.** **52 of 52** sources in `src/ImplObjects/`
+    reached pybind11 before, **19** after — and those 19 for a reason of their own, a user
+    function, a `PyMatrixContainer`, a numpy array or `ExceptionsTemplates.h`, not through the
+    graphics headers. **The build time did not change**: 57.1 s before, 58.0 s after, on a clean
+    build of the same machine, so the gain is in the structure and not in the clock. The original
+    text of the step follows.
+
+    *(group RG9; proposed 2026-09-23 at the maintainer's request, after RG6.2 and the item
     split of revision2026 step R11.4.4)* **The item sources stop paying for pybind11** (#2622).
     `src/Graphics/VisualizationItemHelpers.h` is included by the `C<Item>.cpp` files that draw
     something — and it includes `Graphics/VisualizationSystemContainer.h`, which includes

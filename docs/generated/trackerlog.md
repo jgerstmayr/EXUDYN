@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.34.dev1
+- Exudyn version = 1.12.35.dev1
 - last change = 2026-09-23
 - Number of issues = 2627
-- Number of resolved issues = 2348 (34 in current version)
+- Number of resolved issues = 2349 (35 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.35: resolved Issue 2622: the item sources pay for pybind11 through the graphics helpers (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG9.1, proposed at the maintainers request 2026-09-23. src/Graphics/VisualizationItemHelpers.h is included by every C\<Item\>.cpp that draws something, and it includes Graphics/VisualizationSystemContainer.h, which includes pybind11 - the dependency the per-item split of revision2026 step R11.4.4 was meant to avoid. Measured: the py:: in that header is six free-function declarations called from two .cpp files, easily moved; but the header also includes Main/CSystem.h (its own "REMOVE: temporary" line), and CSystem.h includes Pymodules/PythonUserFunctions.h, which includes pybind11. An experiment with that include removed fails ONLY in Graphics/VisualizationSystem.h lines 33-34, which declare PostProcessData\* and CSystemData\* members without including their headers - and both of those headers are pybind-free. Acceptance is the build time before and after, which exudev prints since \#2617: 57.9 s today.
+  - **notes:** revision2026b step RG9.1. The graphics headers no longer include pybind11: VisualizationSystem.h includes Main/CSystemData.h and Graphics/PostProcessData.h itself (in that order - PostProcessData.h uses CSystemState and includes nothing), VisualizationSystemContainer.h drops its temporary Main/CSystem.h, and the six Py...BodyGraphicsData... declarations move to the new Graphics/BodyGraphicsDataPython.h. Two generated headers were free-riding on the same include and now say what they need: the four VisuObject\*.h with a graphicsDataUserFunction include Pymodules/PythonUserFunctions.h, which only forward declares pybind11::object, and the eight MainObject\*.h with a BodyGraphicsData parameter include the new header; itemHeaderEmitter.py emits both. Measured on a clean build: of the 52 sources in src/ImplObjects/, 52 reached pybind11 before and 19 after, and those 19 for reasons of their own (user functions, PyMatrixContainer, pybind11/numpy.h, ExceptionsTemplates.h), none through the graphics headers. The build time did NOT change: 57.1 s before, 58.0 s after - the gain is structural, not in the clock. python/testing/test\_cppIncludes.py walks the include graph and holds both properties.
+  - effort: MEDIUM (within 16 hours)
+  - date resolved: **2026-09-23 20:18**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.34: <span class="textred">resolved BUG 2625</span>: opening the settings dialog closes the render window
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.19. Reported by the maintainer 2026-09-23 and traced in the C++: MainSystemContainer() calls AttachToRenderEngineInternal() in its CONSTRUCTOR, and its destructor calls Reset(), which calls visualizationSystems.DetachFromRenderEngine(). So a temporary SystemContainer created while a renderer runs takes the render window away from the real container and gives it back to nothing - the window closes. DefaultSettingsDictionary (\#2612) creates one to read the defaults every time the settings dialog opens. It must not: the reference goes back to exu.VisualizationSettings(), and the window that lists the differences says which settings a SystemContainer initialises and therefore always appear there.
@@ -8009,11 +8015,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.
-  - effort: MEDIUM (within 16 hours)
-  - date raised: 2026-09-23
-- <span class="textorange">open issue 2622:</span> the item sources pay for pybind11 through the graphics helpers
-  - issue author: Claude-JG
-  - description: revision2026b step RG9.1, proposed at the maintainers request 2026-09-23. src/Graphics/VisualizationItemHelpers.h is included by every C\<Item\>.cpp that draws something, and it includes Graphics/VisualizationSystemContainer.h, which includes pybind11 - the dependency the per-item split of revision2026 step R11.4.4 was meant to avoid. Measured: the py:: in that header is six free-function declarations called from two .cpp files, easily moved; but the header also includes Main/CSystem.h (its own "REMOVE: temporary" line), and CSystem.h includes Pymodules/PythonUserFunctions.h, which includes pybind11. An experiment with that include removed fails ONLY in Graphics/VisualizationSystem.h lines 33-34, which declare PostProcessData\* and CSystemData\* members without including their headers - and both of those headers are pybind-free. Acceptance is the build time before and after, which exudev prints since \#2617: 57.9 s today.
   - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-23
 - <span class="textorange">open issue 2610:</span> the results monitor must run beside the simulation, or it is redundant

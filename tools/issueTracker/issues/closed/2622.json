@@ -1,0 +1,17 @@
+{
+  "number": 2622,
+  "title": "the item sources pay for pybind11 through the graphics helpers",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG9.1, proposed at the maintainers request 2026-09-23. src/Graphics/VisualizationItemHelpers.h is included by every C<Item>.cpp that draws something, and it includes Graphics/VisualizationSystemContainer.h, which includes pybind11 - the dependency the per-item split of revision2026 step R11.4.4 was meant to avoid. Measured: the py:: in that header is six free-function declarations called from two .cpp files, easily moved; but the header also includes Main/CSystem.h (its own \"REMOVE: temporary\" line), and CSystem.h includes Pymodules/PythonUserFunctions.h, which includes pybind11. An experiment with that include removed fails ONLY in Graphics/VisualizationSystem.h lines 33-34, which declare PostProcessData* and CSystemData* members without including their headers - and both of those headers are pybind-free. Acceptance is the build time before and after, which exudev prints since #2617: 57.9 s today.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 20:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationSystemContainer.h",
+  "releaseNotes": "revision2026b step RG9.1. The graphics headers no longer include pybind11: VisualizationSystem.h includes Main/CSystemData.h and Graphics/PostProcessData.h itself (in that order - PostProcessData.h uses CSystemState and includes nothing), VisualizationSystemContainer.h drops its temporary Main/CSystem.h, and the six Py...BodyGraphicsData... declarations move to the new Graphics/BodyGraphicsDataPython.h. Two generated headers were free-riding on the same include and now say what they need: the four VisuObject*.h with a graphicsDataUserFunction include Pymodules/PythonUserFunctions.h, which only forward declares pybind11::object, and the eight MainObject*.h with a BodyGraphicsData parameter include the new header; itemHeaderEmitter.py emits both. Measured on a clean build: of the 52 sources in src/ImplObjects/, 52 reached pybind11 before and 19 after, and those 19 for reasons of their own (user functions, PyMatrixContainer, pybind11/numpy.h, ExceptionsTemplates.h), none through the graphics headers. The build time did NOT change: 57.1 s before, 58.0 s after - the gain is structural, not in the clock. python/testing/test_cppIncludes.py walks the include graph and holds both properties.",
+  "resolvedInVersion": "1.12.35"
+}

@@ -1087,3 +1087,52 @@ a value, and it is a handle on the render engine. Nothing in Python says so — 
 that attaches is fifteen lines of C++ in a header — but the question *"what does this object do
 to the session when it dies?"* is one to ask before creating one inside a running renderer.
 
+<a id="rg9-1"></a>
+### RG9.1 — the item sources stop paying for pybind11 (2026-09-23, #2622)
+
+The maintainer's question was concrete: every `C<Item>.cpp` that draws something includes
+`Graphics/VisualizationItemHelpers.h`, and that header pulled in pybind11 — *"could one omit the
+pybind11 dependency easily?"*. The answer is yes, in four moves, and the measurement at the end is
+not the one that was expected.
+
+**What was in the way.** `VisualizationItemHelpers.h` includes `VisualizationSystemContainer.h`,
+which had two reasons to reach pybind11: six free `Py...BodyGraphicsData...` declarations of its
+own, and `#include "Main/CSystem.h"— ` a line the maintainer had marked *"REMOVE: temporary"*
+years ago — which arrives at pybind11 through `Pymodules/PythonUserFunctions.h`.
+
+**What was done.**
+
+1. `Graphics/VisualizationSystem.h` includes `Main/CSystemData.h` and `Graphics/PostProcessData.h`
+   itself. It declares members of both types and had no includes at all, free-riding on whoever
+   included it. The order matters: `PostProcessData.h` includes nothing and uses `CSystemState`,
+   so `CSystemData.h` has to come first — which the build said, not a reading of the code.
+2. The six declarations moved to the new `Graphics/BodyGraphicsDataPython.h`, and with them the
+   four pybind11 includes and the `namespace py` alias.
+3. `VisualizationSystemContainer.h` dropped `Main/CSystem.h`.
+4. Two generated headers had been free-riding too, and that is what the build found:
+   - the four `VisuObject*.h` with a `graphicsDataUserFunction` name `py::object` in the member
+     type. They now include `Pymodules/PythonUserFunctions.h`, which only **forward declares**
+     `pybind11::object— ` so this costs no pybind11 either;
+   - the eight `MainObject*.h` with a `BodyGraphicsData` parameter **call** the six functions, so
+     they include the new header. `itemHeaderEmitter.py` emits both, from two flags read off the
+     member list; twelve generated files changed and nothing was edited by hand.
+
+**The measurement, and it is not the one the step expected.** The step said acceptance is the
+build time. **It did not move**: 57.1 s before, 58.0 s after, clean builds, same machine —
+within the noise of two runs. What did move is the dependency itself: of the 52 sources in
+`src/ImplObjects/`, **52 reached pybind11 before and 19 after**. The 19 reach it for reasons of
+their own — a user function, `Pymodules/PyMatrixContainer.h`, `pybind11/numpy.h` in the FFRF
+objects, `Utilities/ExceptionsTemplates.h— ` and not one of them through the graphics headers.
+That pybind11 is still compiled 19 times, and that the remaining sources share most of their other
+headers anyway, is the honest explanation for the clock.
+
+So the step delivered the structure and not the speed, and the plan now says so rather than
+claiming a saving. Whether the *next* 19 are worth chasing — `ExceptionsTemplates.h` alone
+accounts for eight of them — is a question for RG9, with the same measurement attached.
+
+**A test holds it.** `python/testing/test_cppIncludes.py` walks the include graph of the
+repository and requires the three graphics headers to be free of pybind11, and the count of item
+sources that reach it to stay at or below 19. It is a structure test: it says nothing about what
+the code does, only about what a compiler has to read, which is exactly the property that decayed
+unnoticed for years.
+

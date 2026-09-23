@@ -19,6 +19,12 @@
 #ifndef VISUALIZATIONSYSTEM__H
 #define VISUALIZATIONSYSTEM__H
 
+//the members postProcessData and systemData used to be free rides on the include list of
+//VisualizationSystemContainer.h, the only header that includes this one; neither of these two
+//headers includes pybind11 (revision2026b step RG9.1)
+#include "Main/CSystemData.h"       //for the member systemData; also for CSystemState, which
+#include "Graphics/PostProcessData.h" //  PostProcessData uses without including anything itself
+
 
 
 //class CSystem;

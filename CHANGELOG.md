@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 34 | 1.12.34 |
+| 1.12 | Metheney | 35 | 1.12.35 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.35** `IMPROVEMENT` the item sources pay for pybind11 through the graphics helpers (#2622) - raised by Claude-JG
+  - revision2026b step RG9.1. The graphics headers no longer include pybind11: VisualizationSystem.h includes Main/CSystemData.h and Graphics/PostProcessData.h itself (in that order - PostProcessData.h uses CSystemState and includes nothing), VisualizationSystemContainer.h drops its temporary Main/CSystem.h, and the six Py...BodyGraphicsData... declarations move to the new Graphics/BodyGraphicsDataPython.h. Two generated headers were free-riding on the same include and now say what they need: the four VisuObject\*.h with a graphicsDataUserFunction include Pymodules/PythonUserFunctions.h, which only forward declares pybind11::object, and the eight MainObject\*.h with a BodyGraphicsData parameter include the new header; itemHeaderEmitter.py emits both. Measured on a clean build: of the 52 sources in src/ImplObjects/, 52 reached pybind11 before and 19 after, and those 19 for reasons of their own (user functions, PyMatrixContainer, pybind11/numpy.h, ExceptionsTemplates.h), none through the graphics headers. The build time did NOT change: 57.1 s before, 58.0 s after - the gain is structural, not in the clock. python/testing/test\_cppIncludes.py walks the include graph and holds both properties.
 - **1.12.34** `BUG` opening the settings dialog closes the render window (#2625) - raised by Claude-JG
   - The settings dialog creates no SystemContainer any more: MainSystemContainer() attaches to the running render engine in its constructor and detaches in its destructor, so the temporary container that \#2612 created to read the defaults took the render window away from the container that owns it - opening the dialog closed the window. The reference is exu.VisualizationSettings() again, and the window listing the differences says which settings a SystemContainer initialises instead of reporting them as changed; \#2626 removes the need for that note. The dialog also gives up its -topmost while that window is open, so it no longer comes up behind it.
 - **1.12.32** `BUG` opening the settings dialog re-points exudyn.sys at a throw-away SystemContainer (#2623) - raised by Claude-JG
