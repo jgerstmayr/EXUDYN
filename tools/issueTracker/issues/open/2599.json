@@ -1,0 +1,11 @@
+{
+  "number": 2599,
+  "title": "CHANGELOG.md and the issue tracker page hold the same list twice",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "description": "Maintainer, 2026-09-23. Both are written by issueTracker.py from the same store and both list every resolved issue per release, newest first: CHANGELOG.md is 2384 lines, the tracker page 8987, and about 2370 lines of the first are a shorter rendering of what the second says in full - the tracker page adds the author, the description, both dates, and it also carries the open issues and the known bugs, which the changelog does not. In the PDF that is roughly 35 duplicated pages. It also shows why releases 1.10 and older are one line per issue in the changelog while 1.11 and newer carry a paragraph: the old issues have a title and no release note, so there is nothing else to print. What has to be decided is what each of the two is FOR. Options, to be weighed by the maintainer: (a) CHANGELOG.md becomes the CURRENT release only - which is what a reader of the GitHub page or of PyPI wants to know - and the full history lives in the tracker page, which the documentation publishes; (b) CHANGELOG.md keeps every release but only as an index, one line per issue, and the release notes are printed only in the tracker page; (c) CHANGELOG.md is a repository artifact like README.md and leaves the documentation altogether, so that the published documentation has exactly one issue history; (d) leave both as they are. revision2026b step RG3.10.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "workingRemarks": "DECIDED by the maintainer, 2026-09-23 (written into revision2026b step RG3.10): option (a). CHANGELOG.md becomes the CURRENT RELEASE only, which is what a reader of the GitHub page or of PyPI wants, and the full history lives in the tracker page, which the documentation publishes. In the documentation (Read the Docs and the PDF) the tracker page's section 'Resolved issues and resolved bugs' becomes 'Resolved issues and resolved bugs before version x.y.z' or similar and holds only the earlier releases - so nothing appears twice, and every issue is still there to search."
+}

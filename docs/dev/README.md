@@ -18,6 +18,19 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | how to contribute from outside |
 | [CLAUDE.md](https://github.com/jgerstmayr/EXUDYN/blob/master/CLAUDE.md) | the working contract for Claude Code sessions |
 
+```{toctree}
+:hidden:
+:maxdepth: 2
+
+/docs/dev/ARCHITECTURE
+/docs/dev/CODING_STYLE
+/docs/dev/WORKFLOW
+/definitions/README
+/tools/generators/README
+/tools/exudev/README
+/CONTRIBUTING
+```
+
 ## Repository layout
 
 ```

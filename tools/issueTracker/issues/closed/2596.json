@@ -1,0 +1,14 @@
+{
+  "number": 2596,
+  "title": "nothing tests the value layer of the settings dialog",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "description": "ConvertString2Value, ConvertValue2String, CheckType and GetComboBoxListsDict in exudyn.misc.GUI decide what a typed value becomes and what reaches the settings structure, and no test calls any of them: allExudynModulesTest.py imports the module because it imports every module of the package, and that is all the coverage there is. They need no window, unlike everything above them, so pytest can take them. The strongest available test is not invented data but the real settings: 622 values between simulationSettings and visualizationSettings, each of which must survive the round trip the dialog puts it through - ConvertValue2String on the way in, CheckType and ConvertString2Value on the way out. revision2026b step RG6.2.2, from the review of #2591.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 07:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "python/testing/test_guiValues.py: 41 tests for the four functions that decide what a typed value becomes - ConvertString2Value, ConvertValue2String, CheckType and GetComboBoxListsDict - which had none, and which are the only part of the dialog that can be tested without a window. The test that matters walks the REAL settings: 622 values between simulationSettings and visualizationSettings, each put through the round trip the dialog performs on it. Five of them do not survive, and each is a defect, raised as #2597 for RG6.2.3: CheckType has no branch for an enum type (so it rejects every enum value, hidden today because the combo box bypasses it), ':' is not one of its valid file name characters (so no absolute Windows path can be typed, including the shipped default C:/openVRactionsManifest.json), and a value that passes CheckType but fails ConvertString2Value is dropped with a print() to the console. The five are a list in the test file that is meant to shrink: taking one out while it still fails, or leaving one in after it works, fails the test - checked by removing an entry and watching it go red. A sixth gap, the enum types without a combo list, is an xfail that turns green by itself when RG6.2.3 builds the lists from the type name. revision2026b step RG6.2.2.",
+  "resolvedInVersion": "1.12.10"
+}

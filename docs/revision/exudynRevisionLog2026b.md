@@ -334,3 +334,81 @@ the layer under the widgets, which needs no window at all.
 knowledge — `GlfwClient.cpp` implements the keys, `docs/manual/GUI.md` tabulates them in 64
 rows — and moving it does not fix that. It is now a module constant rather than a string inside
 C++, which is the position a generator would need; RG6.2.6 records the rest.
+
+<a id="rg6-2-2"></a>
+### RG6.2.2 — the value layer gets tests, and the tests find three defects (2026-09-23, #2596)
+
+`python/testing/test_guiValues.py`, 41 tests. They cover the four functions that decide what a
+typed value becomes — `ConvertString2Value`, `ConvertValue2String`, `CheckType`,
+`GetComboBoxListsDict` — which had no test at all, and which are the only part of the dialog
+that can be tested, because everything above them opens a window.
+
+**The test that matters is not invented data.** It walks the real settings structures — 622
+values between `simulationSettings` and `visualizationSettings` — and puts each one through the
+round trip the dialog performs on it: `ConvertValue2String` on the way in, `CheckType` and
+`ConvertString2Value` on the way out. A value that does not survive is one a user cannot open the
+dialog on without changing it.
+
+**Five of the 622 do not survive**, and each is a defect (#2597, to be fixed in RG6.2.3):
+
+- **every enum value is rejected.** `CheckType` has no branch for an enum type, so
+  `LinearSolverType.EXUdense` falls through to its `exec()` fallback, raises `NameError` and
+  comes back as *"invalid array or matrix: check brackets and types"*. It does not show today
+  only because an enum is edited through the **combo box**, which calls `ConvertString2Value`
+  directly and never asks `CheckType`. The entry field and the combo box disagree about what is
+  valid, and nothing said so.
+- **a file name cannot be an absolute Windows path.** `:` is not in `validFileNameChar`, so
+  `C:/anything` is refused — including
+  `interactive.openVR.actionManifestFileName`, whose **shipped default** is
+  `C:/openVRactionsManifest.json`.
+- and, from reading rather than from the round trip: a value that passes `CheckType` but fails
+  `ConvertString2Value` — `-3` for a `UInt`, which `CheckType` does not range check — is dropped
+  by `GetDictionary` with a `print()` to the console. The dialog accepts the edit and the setting
+  never changes.
+
+**The five are a list in the test file, and it is meant to shrink.** A path that starts working
+fails the test until it is taken out of `knownRoundTripGaps`; a path that stops working is a new
+failure. That is the same shape as the stubtest baseline, and it was checked by removing one
+entry and watching the test go red.
+
+**One more gap is recorded as an `xfail`**: `GetComboBoxListsDict` names three enum types by
+hand, and `timeIntegration.explicitIntegration.dynamicSolverType` is not one of them, so it is
+edited as free text. The test turns green by itself when RG6.2.3 builds the lists from the type
+name.
+
+What the tests also pin down, so that RG6.2.3 and RG6.2.4 can change the dialog without guessing:
+`bool` is compared with the string `'True'` rather than parsed (so *anything else* is `False`),
+the range checks live in the type name (`PReal` > 0, `UReal` >= 0, ...) and their messages name
+it, floats are written through `float32` because the C++ side is single precision
+(`1/3` -> `0.33333334`), and an enum is read back by comparing `str(value)` with the text.
+
+<a id="rg3-9"></a>
+### RG3.9 — three corrections to the landing pages and the developer chapters (2026-09-23, #2598)
+
+**How Exudyn is developed is now on the first page.** Since version 1.11.0 it is developed
+heavily with Anthropic's Claude Code — code, workflows, documentation, tests and examples —
+and until today the documentation did not say so anywhere. The line stands directly under the
+subtitle of `README.rst`, which is three pages at once (the GitHub landing page, the PyPI page
+and the first page of the html documentation), and under the subtitle of `pdfIndex.md`, which is
+the front page of the PDF.
+
+**No hand-counted numbers in published text.** `pdfIndex.md` said the PDF leaves out *"the source
+text of the 172 examples and 117 test models"* and that this is *"500 pages of Python"*. All three
+numbers were right on the day they were written and are wrong as soon as somebody adds an example.
+The rule the maintainer states: **a number that is not generated does not belong in published
+text**. It now says "the examples and the test models" and "a large body of Python". The
+measurements stay where they belong — in this log, in the plan and in the issue, each with the
+date it was taken.
+
+**The developer documents were chapters beside their own index.** In the PDF, *Exudyn developer
+documentation* was a chapter and so were the seven documents it introduces —
+`ARCHITECTURE`, `CODING_STYLE`, `WORKFLOW`, the three generator READMEs and `CONTRIBUTING— `
+because `index.md` and `pdfIndex.md` listed all eight as siblings of one toctree. The fix is
+where RG3.1 found the same lesson: a document that introduces others has to **carry** them.
+`docs/dev/README.md` now holds a hidden toctree of the seven, placed **before its first section**
+so that they attach to the document and not to a paragraph, and both tables of contents list only
+`docs/dev/README`. The visible table of documents at the top of that page is unchanged — it is
+what a human reads; the toctree is what Sphinx reads.
+
+In the PDF they are `\section` under one `\chapter` now, with their own headings one level
+deeper. The html sidebar nests the same way, which is the point: one structure, two renderings.

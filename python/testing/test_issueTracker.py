@@ -467,8 +467,11 @@ def testSearchFindsTextAndANumber(server, tracker):
     number = OpenIssueNumber(tracker)
     (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all',
                                                          'search': '#' + str(number)})
-    assert status == 200 and data['matching'] == 1
-    assert data['issues'][0]['number'] == number
+    #NOT "matching == 1": issues reference each other in their text, so a search for "#2597"
+    #legitimately finds the issue AND whatever mentions it - which is what happened the first
+    #time an issue was raised out of another one (#2596 names #2597 in its release note)
+    assert status == 200 and data['matching'] >= 1
+    assert number in [issue['number'] for issue in data['issues']]
 
     word = tracker.GetIssue(number)['title'].split()[0]
     (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all', 'search': word})
@@ -813,29 +816,45 @@ def Browser():
     return None
 
 
+def DumpDom(browser, tmp_path, address, name):
+    """run the headless browser on one address and return (dom, console)"""
+    import subprocess                                                           # noqa: PLC0415
+
+    result = subprocess.run(
+        [browser, '--headless=new', '--disable-gpu', '--no-first-run',
+         '--user-data-dir=' + str(tmp_path / ('browser' + name)),
+         '--enable-logging=stderr', '--log-level=0',
+         '--virtual-time-budget=8000', '--dump-dom', address],
+        capture_output=True, text=True, timeout=180)
+    return (result.stdout, result.stderr)
+
+
+def BrowserCanDumpDom(browser, tmp_path):
+    """Whether --dump-dom works on this machine AT ALL, asked with a page that cannot fail.
+
+    It does not always: an Edge that updated itself while the old version was running exits with
+    code 0, prints nothing to stdout and nothing to stderr, for any address. Without this probe
+    that looks exactly like a page whose script died, and the two tests below would report a
+    defect in the issue page that is not there (2026-09-23)."""
+    (dom, _) = DumpDom(browser, tmp_path, 'data:text/html,<h1>probe</h1>', 'Probe')
+    return 'probe' in dom
+
+
 def Render(server, browser, tmp_path, fragment=''):
     """the page as a browser builds it: the DOM after the scripts have run, and what the console
     said while they ran"""
-    import subprocess
-    import threading
+    import threading                                                            # noqa: PLC0415
 
     httpd = server.MakeServer(0)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
     address = 'http://127.0.0.1:' + str(httpd.server_address[1]) + '/' + fragment
     try:
-        result = subprocess.run(
-            [browser, '--headless=new', '--disable-gpu', '--no-first-run',
-             '--user-data-dir=' + str(tmp_path / ('browser' + str(abs(hash(fragment))))),
-             '--enable-logging=stderr', '--log-level=0',
-             '--virtual-time-budget=8000', '--dump-dom', address],
-            capture_output=True, text=True, timeout=180)
+        return DumpDom(browser, tmp_path, address, str(abs(hash(fragment))))
     finally:
         httpd.shutdown()
         httpd.server_close()
         thread.join(timeout=5)
-
-    return (result.stdout, result.stderr)
 
 
 def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):
@@ -844,6 +863,8 @@ def testTheBrowserRendersTheIssuesAndReportsNothing(server, tmp_path):
     browser = Browser()
     if browser is None:
         pytest.skip('no Edge or Chrome on this machine')
+    if not BrowserCanDumpDom(browser, tmp_path):
+        pytest.skip('the browser of this machine prints no DOM at all; see BrowserCanDumpDom')
 
     (page, console) = Render(server, browser, tmp_path)
     class Result:
@@ -865,6 +886,8 @@ def testTheBrowserOpensOneIssue(server, tracker, tmp_path):
     browser = Browser()
     if browser is None:
         pytest.skip('no Edge or Chrome on this machine')
+    if not BrowserCanDumpDom(browser, tmp_path):
+        pytest.skip('the browser of this machine prints no DOM at all; see BrowserCanDumpDom')
 
     #one OPEN and one CLOSED issue: they take different halves of Show()
     for number in [OpenIssueNumber(tracker), ClosedIssueNumber(tracker)]:

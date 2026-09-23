@@ -1,0 +1,10 @@
+{
+  "number": 2597,
+  "title": "the settings dialog rejects values the settings themselves hold",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "description": "Found by the round trip test of revision2026b step RG6.2.2 (#2596), which puts all 622 current settings values through the dialog's own conversion and checking. Five of them do not survive, and each one is a defect of CheckType in exudyn.misc.GUI. (1) EVERY ENUM VALUE is rejected: CheckType has no branch for an enum type, so 'LinearSolverType.EXUdense' falls through to the exec() fallback, raises NameError and comes back as 'invalid array or matrix: check brackets and types'. It does not show today only because an enum is edited through the combo box, which calls ConvertString2Value directly and never asks CheckType - so the entry field and the combo box disagree about what is valid (affects linearSolverType, dynamicSolverType, contour.outputVariable, interactive.highlightItemType). (2) A FILE NAME CANNOT BE AN ABSOLUTE WINDOWS PATH: ':' is not in validFileNameChar, so 'C:/anything' is refused - including the shipped default of interactive.openVR.actionManifestFileName, which is 'C:/openVRactionsManifest.json'. (3) A value that passes CheckType but fails ConvertString2Value - '-3' for a UInt, for instance, which CheckType does not range check - is dropped by GetDictionary with a print() to the console, so the user sees the dialog accept an edit that never reaches the settings. Also worth fixing in the same pass: CheckType parses with exec() while ConvertString2Value uses ast.literal_eval for the same job.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22"
+}

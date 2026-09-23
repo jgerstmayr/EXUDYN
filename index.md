@@ -50,13 +50,6 @@ docs/generated/references
 :caption: Developer documentation
 
 docs/dev/README
-docs/dev/ARCHITECTURE
-docs/dev/CODING_STYLE
-docs/dev/WORKFLOW
-definitions/README
-tools/generators/README
-tools/exudev/README
-CONTRIBUTING
 ```
 
 ```{toctree}

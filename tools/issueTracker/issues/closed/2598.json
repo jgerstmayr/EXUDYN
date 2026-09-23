@@ -1,0 +1,14 @@
+{
+  "number": 2598,
+  "title": "three corrections to the landing pages and the developer chapters",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Maintainer, 2026-09-23. (1) The landing pages say nothing about how Exudyn is developed: since version 1.11.0 it is heavily developed with Anthropic's Claude Code - code, workflows, documentation, tests and examples - and that belongs at the very beginning of README.rst, which is the GitHub landing page and the first page of the HTML documentation, and of pdfIndex.md, which is the front page of the PDF. (2) pdfIndex.md counts the examples and the test models and the pages they would take. A number that is not generated is wrong the next day: published text must say it generically. (3) In the PDF the seven developer documents are chapters BESIDE 'Exudyn developer documentation' instead of under it, because index.md and pdfIndex.md list them as siblings; docs/dev/README.md should carry them, which nests them in the HTML sidebar as well. revision2026b step RG3.9.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 08:45",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "(1) 'Since version 1.11.0, Exudyn is heavily developed with Anthropic's Claude Code: code, workflows, documentation, tests and examples' stands directly under the subtitle of README.rst - which is the GitHub landing page, the PyPI page and the first page of the html documentation at once - and under the subtitle of pdfIndex.md, the front page of the PDF. (2) pdfIndex.md no longer counts: '172 examples and 117 test models' and '500 pages of Python' became 'the examples and the test models' and 'a large body of Python'. A number that is not generated is wrong as soon as somebody adds an example; the measurements stay in the log, the plan and the issue, each with the date it was taken. (3) docs/dev/README.md carries a hidden toctree of the seven developer documents, placed before its first section so that they attach to the document and not to a paragraph, and index.md and pdfIndex.md list only docs/dev/README. In the PDF the seven are sections under one chapter instead of chapters beside it, and the html sidebar nests the same way. The visible table of documents on that page is unchanged: it is what a human reads, the toctree is what Sphinx reads. revision2026b step RG3.9.",
+  "resolvedInVersion": "1.12.11"
+}

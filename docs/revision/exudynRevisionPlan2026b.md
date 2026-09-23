@@ -39,14 +39,14 @@ carries the same table from its side, so a citation from either direction resolv
 |---|---|---|
 | **RG1** Release and publication | getting a release out and onto GitHub and PyPI | 4 |
 | **RG2** Testing and verification | what is not tested, and who tests it before a release | 3 |
-| **RG3** Docs | what the documentation still gets wrong or does not say | 8 |
+| **RG3** Docs | what the documentation still gets wrong or does not say | 10 |
 | **RG4** Implementation problems and bugs | real, reproducible problems that need a plan rather than a fix | 3 |
 | **RG5** Performance | measurement first, then the code that is actually hot | 2 |
 | **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 3 |
 | **RG7** Python user items | items whose behaviour is written in Python | - |
 | **RG8** Compiled C++ user items | plugins: user items compiled against the shipped headers | 9 |
 | **RG9** Structural core improvements | the architecture of the core, where a change touches everything | - |
-| **RG10** Tooling and process | exudev, the issue tracker, the generators, CI | 1 |
+| **RG10** Tooling and process | exudev, the issue tracker, the generators, CI | 2 |
 | **RG11** Misc | what has no group yet; three of a kind become a group |  - |
 | **RG12** Python interface | the shape of the Python API itself: deprecation, settings, what a script sees | 3 |
 
@@ -224,11 +224,70 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     by the conversion of revision2026 step R7.1.5.
 
 <a id="rg3-8"></a>
-**RG3.8** *(group RG3; found in RG3.3)* **Fourteen figure files nothing references** (#2594).
-    Twelve `.pdf` and two `.eps` in `docs/figures/`, the vector originals of the LaTeX era, most
-    with a `.png` twin that is used. Copies are in `tmp/unusedFigures/` for the maintainer;
-    nothing has left version control. **Open**: delete them, or keep them as the editable source
-    of the twins and say so somewhere.
+**RG3.8** *(group RG3; found in RG3.3, extended by the maintainer 2026-09-23)* **The
+    unreferenced figures are the trace of figures the conversion lost** (#2594). Fourteen `.pdf`
+    and `.eps` files in `docs/figures/` are referenced by nothing; copies are in
+    `tmp/unusedFigures/` and nothing has left version control.
+
+    **The maintainer copied the 1.11.0 documentation to `tmp/docs`**, which answers where they
+    came from: **every one of the thirteen names appears in the old `.tex` chapters**
+    (`theory.tex`, `itemDefinition.tex`, `tutorial.tex`, `solver.tex`, `GUI.tex`). They are not
+    leftovers, they are figures the documentation used to show.
+
+    An audit of `tmp/docs/theDoc/*.tex` against the current sources: **60 figures in the old
+    chapters, 44 in the new ones.** Most of the difference is not a loss — the HCB and
+    free-free mode series are 29 single images that the Markdown replaced with four montages, and
+    the singles are still in `docs/figures/modesHinge/`. What IS lost is small and specific:
+
+    | figure | state |
+    |---|---|
+    | `generalContactANCF2Dcircle` | `.pdf` only, no png twin — the figure AND its caption are gone from the contact theory, where `theory.tex` explained the cable/circle intersection with it |
+    | `generalContactSpheres` | `.pdf` only — the only "references" in the current tree are a test model that happens to carry the same name |
+    | `ObjectJointALEmoving2D` | `.pdf` only — the item page of `ObjectJointALEMoving2D` has no figure |
+    | `intro2.jpg` | exists, referenced by nothing |
+
+    The other eleven `.pdf`/`.eps` are the **vector originals of png twins that the documentation
+    does use**. So two questions, and they are different:
+
+    - **the four lost figures** have to come back into the Markdown, with their captions;
+    - **the format**: the maintainer asks whether to convert them to SVG. What decides it is the
+      PDF of RG3.3: the LaTeX builder **cannot include SVG** — that is exactly the error the
+      README badges produced (*"a suitable image for latex builder not found:
+      ['image/svg+xml']"*). Sphinx solves it with image candidates: an image written as
+      `figures/name.*` picks `.svg` for the html build and `.pdf` for the LaTeX one. So the
+      answer is not one format but a pair — **SVG for the browser, PDF for the PDF, one name**
+      — and photographs and screenshots stay raster. The vector originals then stop being
+      unreferenced and become the source they always were.
+
+<a id="rg3-9"></a>
+**RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) —
+    *(group RG3; maintainer 2026-09-23)* **Three corrections to the landing pages and the
+    developer chapters.** (1) The landing pages say nothing about **how Exudyn is developed**:
+    since 1.11.0 that is heavily with Anthropic's Claude Code — code, workflows, documentation,
+    tests and examples — and it belongs at the top of `README.rst`, which is the GitHub landing
+    page and the first page of the documentation, and of `pdfIndex.md`. (2) **No hand-counted
+    numbers in published text**: `pdfIndex.md` counted the examples and the test models and the
+    pages they would take, and a number that is not generated is wrong the next day. (3) In the
+    PDF the seven **developer documents were chapters beside** *Exudyn developer documentation*
+    rather than under it, because both tables of contents listed them as siblings;
+    `docs/dev/README.md` carries them now, which nests them in the html sidebar as well.
+
+<a id="rg3-10"></a>
+**RG3.10** *(group RG3; maintainer 2026-09-23)* **`CHANGELOG.md` and the issue tracker page hold
+    the same list twice** (#2599). Both are written by `issueTracker.py` from the same store,
+    both list every resolved issue per release: the changelog is **2384 lines**, the tracker page
+    **8987**, and about 2370 lines of the first are a shorter rendering of what the second says
+    in full — the tracker page adds the author, the description and both dates, and it carries
+    the open issues and the known bugs as well. In the PDF that is roughly 35 duplicated pages.
+    It also explains what the maintainer noticed: releases 1.10 and older are one line per issue
+    because those issues have a title and no release note, so there is nothing else to print.
+
+    Decision: `CHANGELOG.md` becomes the **current release only** — which is what a reader of
+      the GitHub page or of PyPI wants — and the full history lives in the tracker page, which
+      the documentation publishes. In the docs (RTD, PDF) the current "Resolved issues and 
+      resolved bugs" section becomes "Resolved issues and resolved bugs before version x.y.z" 
+      or similar and contains only the earlier changes so there is no duplication - but still
+      containing all issues for searching.
 
 ## RG4 — Implementation problems and bugs
 
@@ -420,7 +479,7 @@ This group is that revision and what has to happen before it can start.
     editing them gets a syntax error instead of a runtime one.
 
 <a id="rg6-2-2"></a>
-**RG6.2.2** **The layer under the widgets gets tests.** `ConvertString2Value`,
+**RG6.2.2** **DONE 2026-09-23** (#2596) — [log](exudynRevisionLog2026b.md#rg6-2-2) — **The layer under the widgets gets tests.** `ConvertString2Value`,
     `ConvertValue2String`, `CheckType` and `GetComboBoxListsDict` decide what a typed value
     becomes, and no test calls them. They need no window, so pytest can: every type the settings
     structures actually use (20 of them, `bool` to `VectorFloat`), the round trip value -> string
@@ -432,6 +491,13 @@ This group is that revision and what has to happen before it can start.
     `fontScalingMacOS` deprecated (the mechanism of RG12.1), the enum lists built from the type
     name instead of the hard-coded three, the type shown in the table and named in the error
     message, and the description in a tooltip rather than behind the key `h`.
+
+    **And the three defects RG6.2.2 found** (#2597): `CheckType` has no branch for an enum type,
+    so it rejects every enum value and only the combo box hides it; `:` is not one of its valid
+    file name characters, so no absolute Windows path can be typed into a file name setting -
+    including the shipped default `C:/openVRactionsManifest.json`; and a value that passes
+    `CheckType` but fails `ConvertString2Value` is dropped with a `print()` to the console, so
+    the dialog accepts an edit that never arrives.
 
 <a id="rg6-2-4"></a>
 **RG6.2.4** **Inline editing** — the one real rewrite: the value is edited in the cell instead of
@@ -449,6 +515,17 @@ This group is that revision and what has to happen before it can start.
     table in Python — could feed both the dialog and a generated page, the way `definitions/`
     feeds the reference manual (rule 10). Raised here because RG6.2.1 moves the third copy
     without fixing the duplication.
+
+<a id="rg6-2-7"></a>
+**RG6.2.7** **`GUI.py` is cleaned up, last** *(maintainer, 2026-09-23)*. The module is the one
+    that every other sub-step edits, so the tidying belongs at the end, when the shape has
+    settled and RG6.2.2 can say whether the tidying broke anything. What is there to do today,
+    in 1315 lines: **55 lines of commented-out code**, the dead `#EXAMPLE` dictionary at the end,
+    10 bare `print()` calls where a dialog swallows an error and prints it, the ~30 lines of
+    font and scaling setup **duplicated** between `EditDictionaryWithTypeInfo` and
+    `EditDictionary`, and `treeEditOpenItems— ` module level mutable state that the tree edits
+    as a side effect, so which folders are open outlives the dialog and every SystemContainer in
+    the process shares it.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
@@ -576,6 +653,22 @@ file, so an editor cannot complete them).
     finds the places. Worth having before the 1.13 release (RG1.4), which is when users meet
     the changes.
 
+
+<a id="rg10-2"></a>
+**RG10.2** *(group RG10; maintainer 2026-09-23)* **The issue table of `exudev issue serve` does
+    not say what its columns are, and leaves out the priority** (#2600). Three things, all in
+    `tools/issueTracker/issueServer.py`:
+
+    - **no header row.** The list is `<table><tbody id="list">` and nothing else: the rows carry
+      number, status, type, effort and title as bare tags, and a reader has to guess which tag is
+      which. It needs a header — and the effort values need their meaning within reach, because
+      `LOW` means *within 2 hours* and `HUGE` means *above 40 hours*, which no tag says.
+    - **the priority is not shown**, although `/api/issues` already sends it in every row and the
+      filter bar already filters on it. Only the row renderer leaves it out.
+    - **effort and priority share their spelling**: `LOW` and `HIGH` are values of both, so two
+      bare tags in one row cannot be told apart. The rule the maintainer gives: the **effort** tag
+      carries the word — `LOW EFF`, `MEDIUM EFF`, `HIGH EFF`, `HUGE EFF` — and the **priority**
+      tag stays plain — `LOW`, `NORMAL`, `HIGH`.
 
 ## RG11 — Misc
 

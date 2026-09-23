@@ -10,6 +10,9 @@
 
 **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
+**Since version 1.11.0, Exudyn is heavily developed with Anthropic's Claude Code**: code,
+workflows, documentation, tests and examples.
+
 Exudyn is a C++ computational core exposed to Python: rigid and flexible multibody systems,
 solved efficiently, with the model built and varied from a Python script. It is free and open
 source, pre-built for Python 3.10 – 3.14 under Windows, Linux and macOS, and it links to whatever
@@ -38,9 +41,9 @@ item, the Python utility functions, the settings structures, the Python–C++ in
 developer documentation, and — at the end, and deliberately — the **complete issue history**, which
 is where the reason for most changes is written down.
 
-What it does **not** hold is the source text of the 172 examples and 117 test models. Those are
-500 pages of Python that belong next to an editor rather than in a book; they are in the HTML
-documentation, and they are in the repository under `python/Examples` and `python/TestModels`.
+What it does **not** hold is the source text of the examples and the test models. That is a large
+body of Python which belongs next to an editor rather than in a book; it is in the HTML
+documentation, and it is in the repository under `python/Examples` and `python/TestModels`.
 
 ```{note}
 Exudyn is an open source library developed largely in free time. Some models are simplifications
@@ -79,13 +82,6 @@ docs/generated/references
 :caption: Developer documentation
 
 docs/dev/README
-docs/dev/ARCHITECTURE
-docs/dev/CODING_STYLE
-docs/dev/WORKFLOW
-definitions/README
-tools/generators/README
-tools/exudev/README
-CONTRIBUTING
 ```
 
 ```{toctree}
