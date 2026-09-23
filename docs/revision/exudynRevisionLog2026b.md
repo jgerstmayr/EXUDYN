@@ -1291,3 +1291,46 @@ cannot be reached from Python, because pybind exposes neither. What the tests sh
 standalone structures are independent. The copy operations matter on the C++ side, where a
 settings structure is assigned, and the generated code is the guarantee there.
 
+<a id="rg9-2"></a>
+### RG9.2 — an include fourteen sources did not use (2026-09-23, #2628)
+
+RG9.1 left a clean target: after the graphics headers stopped carrying pybind11, **19** of the 52
+sources in `src/ImplObjects/` still reached it, and `Utilities/ExceptionsTemplates.h` was the only
+route for **eight** of them. The step that was proposed for it assumed a refactor. The measurement
+said otherwise.
+
+**The header is included by 17 item sources and used by one.** `CObjectANCFBeam.cpp:45` calls
+`GenericExceptionHandling`; `CObjectFFRF.cpp:423` and `CObjectFFRFreducedOrder.cpp:459` have their
+call commented out. The other fourteen refer to nothing in it at all — not a template, not
+`SetPendingExceptionCause`, nothing — and the header defines no macros that could hide a use.
+So the whole step is one deleted line per file, and the eight sources whose only route to pybind11
+it was now compile without it: **19 to 11**.
+
+**The build then found what the include had been hiding**, which is the part worth remembering.
+The generated header of every item with a user function — **24** of them, objects, loads and
+`CSensorUserFunction— ` names `py::object` in the type of that member and had been taking the
+`namespace py` alias from whatever happened to be included before it. Two failed the build the
+moment their source stopped including the exceptions header (`CObjectGenericODE1.h`,
+`CObjectConnectorCoordinateVector.h`); the other 22 were one include away from the same. That
+is the same defect RG9.1 found in the four `VisuObject*.h`, and it has the same fix:
+`itemHeaderEmitter.py` emits the alias beside the `Pymodules/PythonUserFunctions.h` it already
+emitted, and that header only **forward declares** `pybind11::object`, so the alias costs nothing.
+
+An unused include is not only waste: it is a **load-bearing accident**. Nobody wrote
+`CObjectGenericODE1.h` to depend on an exceptions header, and nobody could have known it did.
+
+**And a second latent defect fell out of the regeneration** (#2629). `itemHeaderEmitter.py`
+reads an existing generated header with `encoding='utf8'` and wrote it with a bare
+`open(fileName,'w')— ` the **locale** encoding, cp1252 on this machine. It could only bite when
+a header containing a non-ASCII character was rewritten, and two do: `CObjectFFRF.h` and
+`CObjectFFRFreducedOrder.h` carry *Zwölfer Andreas* in the author line. The moment this step
+changed every user-function header, those two were written as cp1252 and the **next** run of the
+generator died reading them — `UnicodeDecodeError`, byte `0xf6`. The write gets `encoding='utf8'`.
+A bug that needs two unrelated conditions to meet is exactly the kind that waits years, and this
+one waited for a step that touched every header at once.
+
+**The build time did not move again**: 56.4 s, against 58.0 s after RG9.1 and 57.1 s before it.
+Three measurements, one conclusion — on this machine the item sources are not what the compiler
+spends its minute on. The value of both steps is that the dependency is now what it claims to be,
+and `test_cppIncludes.py` holds the count at 11 so it cannot quietly climb back.
+

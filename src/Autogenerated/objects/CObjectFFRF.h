@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-21  21:23:29 (last modified)
+* @date         2026-09-23  22:53:53 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,6 +24,7 @@
 
 #include <functional> //! AUTO: needed for std::function
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
+namespace py = pybind11;            //! AUTO: "py" used throughout in code
 #include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>

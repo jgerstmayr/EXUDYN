@@ -13,9 +13,11 @@
 #           headers stay free of pybind11. They are a structure test, not a behaviour test: they
 #           say nothing about what the code does, only about what a compiler has to read.
 #
-#           A source that needs Python ITSELF is not a finding: 19 of the 52 reach pybind11
-#           through a user function, a PyMatrixContainer or ExceptionsTemplates.h, and that is
-#           what pybindFreeItemSources is measured against rather than a round number.
+#           A source that needs Python ITSELF is not a finding: 11 of the 52 reach pybind11
+#           through a user function, a PyMatrixContainer or a numpy array, and that is what
+#           maximumItemSourcesWithPybind is measured against rather than a round number. It was
+#           19 until revision2026b step RG9.2 (#2628) removed Utilities/ExceptionsTemplates.h
+#           from the fourteen sources that referred to nothing in it.
 #
 # Usage:    pytest python/testing/test_cppIncludes.py
 #
@@ -35,10 +37,11 @@ repositoryRoot = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(_
                                                '..', '..'))
 sourceRoot = os.path.join(repositoryRoot, 'src')
 
-#the sources that legitimately speak to Python themselves, measured on 2026-09-23 (RG9.1): a user
-#function, a PyMatrixContainer, a numpy array or ExceptionsTemplates.h. The number is allowed to
-#FALL without touching this file; it may not rise unnoticed.
-maximumItemSourcesWithPybind = 19
+#the sources that legitimately speak to Python themselves: a user function, a PyMatrixContainer
+#or a numpy array in their own generated header. Measured 2026-09-23: 52 of 52 before RG9.1, 19
+#after it, and 11 after RG9.2 removed an include fourteen sources did not use. The number is
+#allowed to FALL without touching this file; it may not rise unnoticed.
+maximumItemSourcesWithPybind = 11
 
 includePattern = re.compile(r'^[ \t]*#[ \t]*include[ \t]+[<"]([^>"]+)[>"]', re.M)
 

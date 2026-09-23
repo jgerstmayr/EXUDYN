@@ -1,0 +1,17 @@
+{
+  "number": 2629,
+  "title": "the item header emitter writes files in the locale encoding, not UTF-8",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG9.2, found while regenerating for #2628. tools/generators/itemHeaderEmitter.py reads an existing generated header with encoding='utf8' but writes it with a bare open(fileName,'w'), which uses the LOCALE encoding - cp1252 on this Windows machine. It only bites when a header that contains a non-ASCII character is rewritten: CObjectFFRF.h and CObjectFFRFreducedOrder.h carry the author name Zwoelfer with an o-umlaut, and the moment RG9.2 changed every user-function header, those two were written as cp1252 and the NEXT run of the generator could not read them back - UnicodeDecodeError, byte 0xf6, and the whole regeneration step failed. The committed files were valid UTF-8 before, so this had been latent for as long as those two headers did not change. The write gets encoding='utf8'.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 22:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemHeaderEmitter.py",
+  "releaseNotes": "revision2026b step RG9.2. tools/generators/itemHeaderEmitter.py now writes the generated item headers with encoding='utf8'; it read them with it already, and the bare open(fileName,'w') used the locale encoding, so a header with a non-ASCII author name was written as cp1252 on Windows and the next run of the generator failed to read it back (UnicodeDecodeError, byte 0xf6). Latent until RG9.2 changed every user-function header and rewrote CObjectFFRF.h and CObjectFFRFreducedOrder.h, whose author line carries an o-umlaut.",
+  "resolvedInVersion": "1.12.41"
+}

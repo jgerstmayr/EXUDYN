@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.39.dev1
+- Exudyn version = 1.12.41.dev1
 - last change = 2026-09-23
-- Number of issues = 2628
-- Number of resolved issues = 2353 (39 in current version)
+- Number of issues = 2630
+- Number of resolved issues = 2355 (41 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.41: <span class="textred">resolved BUG 2629</span>: the item header emitter writes files in the locale encoding, not UTF-8
+  - issue author: Claude-JG
+  - description: revision2026b step RG9.2, found while regenerating for \#2628. tools/generators/itemHeaderEmitter.py reads an existing generated header with encoding='utf8' but writes it with a bare open(fileName,'w'), which uses the LOCALE encoding - cp1252 on this Windows machine. It only bites when a header that contains a non-ASCII character is rewritten: CObjectFFRF.h and CObjectFFRFreducedOrder.h carry the author name Zwoelfer with an o-umlaut, and the moment RG9.2 changed every user-function header, those two were written as cp1252 and the NEXT run of the generator could not read them back - UnicodeDecodeError, byte 0xf6, and the whole regeneration step failed. The committed files were valid UTF-8 before, so this had been latent for as long as those two headers did not change. The write gets encoding='utf8'.
+  - **notes:** revision2026b step RG9.2. tools/generators/itemHeaderEmitter.py now writes the generated item headers with encoding='utf8'; it read them with it already, and the bare open(fileName,'w') used the locale encoding, so a header with a non-ASCII author name was written as cp1252 on Windows and the next run of the generator failed to read it back (UnicodeDecodeError, byte 0xf6). Latent until RG9.2 changed every user-function header and rewrote CObjectFFRF.h and CObjectFFRFreducedOrder.h, whose author line carries an o-umlaut.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 22:54**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.40: resolved Issue 2628: fourteen item sources include ExceptionsTemplates.h without using it, and pay pybind11 for it (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG9.2, from the measurement of RG9.1 (\#2622). src/Utilities/ExceptionsTemplates.h is included by 17 sources in src/ImplObjects/, and exactly ONE of them uses anything from it: CObjectANCFBeam.cpp:45 calls GenericExceptionHandling; CObjectFFRF.cpp:423 and CObjectFFRFreducedOrder.cpp:459 have their call commented out. The header defines no macros - it is four function templates - and it includes pybind11/pybind11.h at line 19, which is the ONLY route to pybind11 for eight of those sources: the seven CObjectConnectorCoordinate/CoordinateSpringDamper/CoordinateSpringDamperExt/CoordinateVector/Gravity/HydraulicActuatorSimple/SpringDamper and CObjectJointRollingDisc. So the fix is deletion, not restructuring: the include goes from the fourteen sources that refer to nothing in it. NOT part of this: hiding the py:: uses (the error\_already\_set and builtin\_exception catches at lines 59, 94, 111, 143, 155) behind a non-template helper - they sit in template bodies, and RG9.1 measured that decoupling 33 sources moved the build clock by nothing, so that complexity has no evidence behind it.
+  - **notes:** revision2026b step RG9.2. src/Utilities/ExceptionsTemplates.h was included by 17 sources in src/ImplObjects/ and used by exactly one (CObjectANCFBeam.cpp:45, GenericExceptionHandling); two more have their call commented out. The include is gone from the fourteen that referred to nothing in it, and the number of item sources reaching pybind11 fell from 19 to 11 - the eight whose only route it was now compile without it. The build then found what the include had been hiding: the generated header of every item with a user function (24 of them) names py::object and had been taking the namespace py alias from whatever happened to be included before it; two failed at once. itemHeaderEmitter.py emits the alias beside the Pymodules/PythonUserFunctions.h it already emitted, which only forward declares pybind11::object and costs no pybind11 - the same shape as the four VisuObject\*.h headers in RG9.1. Clean build 56.4 s against 58.0 s after RG9.1 and 57.1 s before it: the time did not move, the dependency did. Deliberately NOT done: hiding the py:: uses of the header behind a non-template helper - they sit in template bodies and there is no measurement supporting the complexity. test\_cppIncludes.py holds the count at 11.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 22:51**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.39: <span class="textred">resolved BUG 2603</span>: reading a deprecated visualization setting on a standalone VisualizationSettings segfaults
   - issue author: Claude-JG
   - description: Two lines of pure Python kill the process: 'import exudyn as exu; exu.VisualizationSettings().general.drawWorldBasis' exits with a segmentation fault (verified 2026-09-23, exit code 139). It is not that member: EVERY one of the 93 deprecated members of visualizationSettings does it, on read and on write. The cause is the backlink. A deprecated member forwards to its replacement through 'backlink-\>view0.scene.drawWorldBasis' (src/Autogenerated/VisualizationSettings.h), the backlink of every sub-structure is set by VisualizationSettings::Init(&settings), and that call happens in exactly ONE place - VisualizationSystemContainer.h line 153, i.e. for the settings that belong to a SystemContainer. A VisualizationSettings that Python constructs on its own never gets Init called, so every backlink stays nullptr and the first deprecated access dereferences it. Through SC.visualizationSettings everything works. The same will apply to SimulationSettings as soon as RG12.1 gives it deprecated members. A fix has to decide what a copy of a settings structure means - a constructor that calls Init(this) is one line, but a copied object would then carry a backlink to the original. Found while adding dialogs.fontScaling in revision2026b step RG6.2.3.1 (\#2602), whose deprecated fontScalingMacOS behaves exactly like the 93 others.

@@ -175,6 +175,11 @@ def ItemCppHeaders(definition):
         
         if useNewUserFunctions:
             sParamComp += '#include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11\n'
+            #the member type names py::object, and PythonUserFunctions.h only FORWARD
+            #declares pybind11::object; the alias used to come in through
+            #Utilities/ExceptionsTemplates.h, which the item sources no longer include
+            #(revision2026b step RG9.2)
+            sParamComp += 'namespace py = pybind11;            //! AUTO: "py" used throughout in code' + chr(10)
 
             
 
@@ -972,7 +977,10 @@ def WriteItemHeaders(directoryString):
             if os.path.isfile(fileName):
                 file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
             if not IsEqualIgnoringDateStrings(fileText, text):
-                file=open(fileName,'w')
+                #encoding: without it Python writes the LOCALE encoding, so a header
+                #with a non-ASCII author name is written as cp1252 on Windows and cannot be
+                #read back on the next run (#2629)
+                file=open(fileName,'w',encoding='utf8')
                 file.write(text)
                 file.close()
                 totalNumberOfFilesChanged += 1

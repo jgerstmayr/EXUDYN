@@ -1,0 +1,17 @@
+{
+  "number": 2628,
+  "title": "fourteen item sources include ExceptionsTemplates.h without using it, and pay pybind11 for it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG9.2, from the measurement of RG9.1 (#2622). src/Utilities/ExceptionsTemplates.h is included by 17 sources in src/ImplObjects/, and exactly ONE of them uses anything from it: CObjectANCFBeam.cpp:45 calls GenericExceptionHandling; CObjectFFRF.cpp:423 and CObjectFFRFreducedOrder.cpp:459 have their call commented out. The header defines no macros - it is four function templates - and it includes pybind11/pybind11.h at line 19, which is the ONLY route to pybind11 for eight of those sources: the seven CObjectConnectorCoordinate/CoordinateSpringDamper/CoordinateSpringDamperExt/CoordinateVector/Gravity/HydraulicActuatorSimple/SpringDamper and CObjectJointRollingDisc. So the fix is deletion, not restructuring: the include goes from the fourteen sources that refer to nothing in it. NOT part of this: hiding the py:: uses (the error_already_set and builtin_exception catches at lines 59, 94, 111, 143, 155) behind a non-template helper - they sit in template bodies, and RG9.1 measured that decoupling 33 sources moved the build clock by nothing, so that complexity has no evidence behind it.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 22:51",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/ExceptionsTemplates.h",
+  "releaseNotes": "revision2026b step RG9.2. src/Utilities/ExceptionsTemplates.h was included by 17 sources in src/ImplObjects/ and used by exactly one (CObjectANCFBeam.cpp:45, GenericExceptionHandling); two more have their call commented out. The include is gone from the fourteen that referred to nothing in it, and the number of item sources reaching pybind11 fell from 19 to 11 - the eight whose only route it was now compile without it. The build then found what the include had been hiding: the generated header of every item with a user function (24 of them) names py::object and had been taking the namespace py alias from whatever happened to be included before it; two failed at once. itemHeaderEmitter.py emits the alias beside the Pymodules/PythonUserFunctions.h it already emitted, which only forward declares pybind11::object and costs no pybind11 - the same shape as the four VisuObject*.h headers in RG9.1. Clean build 56.4 s against 58.0 s after RG9.1 and 57.1 s before it: the time did not move, the dependency did. Deliberately NOT done: hiding the py:: uses of the header behind a non-template helper - they sit in template bodies and there is no measurement supporting the complexity. test_cppIncludes.py holds the count at 11.",
+  "resolvedInVersion": "1.12.40"
+}

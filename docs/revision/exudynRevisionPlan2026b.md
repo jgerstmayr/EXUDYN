@@ -744,9 +744,17 @@ This group is that revision and what has to happen before it can start.
     `GetDictionaryWithTypeInfo()` is bound for `SimulationSettings` as well, `SettingsPrefix`
     already writes `simulationSettings....` into the code line, and `DefaultSettingsDictionary`
     falls back to the constructor for a structure that is not on a `SystemContainer`. What is
-    missing is a **way to open it** — a function in `exudyn.misc.GUI`, and the question whether
-    the renderer should offer a key for it while a solver is running, where changing a solver
-    setting mid-step is not the harmless thing that changing a colour is.
+    missing is a **way to open it**.
+
+    **Decided by the maintainer on 2026-09-23**, which settles the question this step carried:
+    the dialog is **not opened from the renderer**. It is called from the model code or from
+    IPython, so the objection — changing a solver setting mid-step is not the harmless thing
+    that changing a colour is — does not arise. The form worth having beside that is a
+    **command line**: `python -m exudyn settings`, so that a user can browse the solver settings
+    without writing a script at all. The machinery is there: `python/exudyn/__main__.py` has
+    `CommandTable()` with `monitor`, `plot`, `info` and `demo`, and a fifth entry is the whole
+    change. `docs/manual/commandLine.md` says *"There are four commands"* — a hand-counted
+    number that has to move with it.
 
 <a id="rg6-2-19"></a>
 **RG6.2.19** **DONE 2026-09-23** (#2625) — [log](exudynRevisionLog2026b.md#rg6-2-19) —
@@ -971,6 +979,39 @@ revision (info document D15).
     RG10.3 now prints — **57.9 s** for `exudyn build` on the maintainer's machine, 2026-09-23.
     `VisualizationSystem.h` is included widely enough that this deserves its own step rather than
     a drive-by edit.
+
+
+<a id="rg9-2"></a>
+**RG9.2** **DONE 2026-09-23** (#2628) — [log](exudynRevisionLog2026b.md#rg9-2) —
+    *(group RG9; from the measurement of RG9.1, 2026-09-23)* **Fourteen item sources included an
+    exception header they do not use, and paid pybind11 for it.**
+    `src/Utilities/ExceptionsTemplates.h` was included by **17** sources in `src/ImplObjects/`
+    and exactly **one** of them used anything from it (`CObjectANCFBeam.cpp:45`,
+    `GenericExceptionHandling`); two more have their call commented out. The header defines no
+    macros — four function templates — and includes `<pybind11/pybind11.h>`, which was the
+    **only** route to pybind11 for eight of those sources. The include is gone from the fourteen
+    that referred to nothing in it, which took the count of item sources reaching pybind11 from
+    **19 to 11**; the build time again did not move (56.4 s against RG9.1's 58.0 s).
+
+    The build then found what the include had been hiding: the **generated** headers of every
+    item with a user function — 24 of them — name `py::object` and had been free-riding on
+    that include for the `namespace py` alias; two failed the build at once
+    (`CObjectGenericODE1.h`, `CObjectConnectorCoordinateVector.h`) and the rest would have failed
+    the day their source lost another include. `itemHeaderEmitter.py` emits the alias beside the
+    `Pymodules/PythonUserFunctions.h` it already emitted, which forward declares
+    `pybind11::object` and costs no pybind11 — the same shape as the four `VisuObject*.h` in
+    RG9.1.
+
+    And a second latent defect fell out of it (**#2629**): `itemHeaderEmitter.py` read a
+    generated header with `encoding='utf8'` and wrote it with a bare `open(fileName,'w')`, which
+    uses the **locale** encoding. Rewriting the two FFRF headers, whose author line carries an
+    umlaut, produced cp1252 files that the next run could not read back.
+
+    **Deliberately not done:** hiding the `py::` uses of the header (the `error_already_set` and
+    `builtin_exception` catches) behind a non-template helper. They sit in template bodies, and
+    RG9.1 measured that decoupling 33 sources moved the build clock by nothing, so that
+    complexity has no evidence behind it.
+
 
 ## RG10 — Tooling and process
 
