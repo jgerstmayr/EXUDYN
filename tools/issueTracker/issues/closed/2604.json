@@ -1,0 +1,14 @@
+{
+  "number": 2604,
+  "title": "the settings dialog edits a value far away from the row it belongs to",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "description": "In TkinterEditDictionaryWithTypeInfo the value is not edited in the table: an Entry and a Combobox sit at the bottom of the window, occupy the same grid cell and swap places by z-order (lower()/lift()), so a user selects a row at the top and types at the bottom, and which of the two widgets is in front depends on the type of the selected item. Wanted (maintainer, 2026-09-22, refined 2026-09-23): edit IN THE CELL, and let the bottom row say what the selected item is instead - as the LINE THAT SETS IT, 'SC.visualizationSettings.general.textSize = 16.0', with a way to copy it, so that a session in the dialog can be pasted into a script. That is the same thing RG12.3 wants to produce for the whole settings structure. revision2026b step RG6.2.4.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 11:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The value is edited in the cell. An Entry - or a Combobox for bool and for every enum - is placed over the value cell of the selected row, commits on Return or when the focus leaves, and is taken away on Escape; the bool double click still toggles. The two widgets that used to sit at the bottom of the window and swap by z-order are gone, and with them four handlers. The bottom row is the LINE THAT SETS THE SELECTED ITEM, in a read-only field with a copy button beside it: 'SC.visualizationSettings.general.textSize = 16.0'. The value is written as a Python literal - a String and a FileName are quoted, an enum is prefixed with exu. - and the prefix follows the structure being edited, so the same dialog on simulationSettings writes 'simulationSettings....'. Under it stands the type, the size where it is not scalar, and the description. The validation is the one of #2597: CheckType with the combo lists, then ConvertString2Value for the range, and the error box names the path and the expected type. ItemPath() builds the dotted path once for both the code line and the error message, where the loop that built it stood inside the click handler. revision2026b step RG6.2.4.",
+  "resolvedInVersion": "1.12.16"
+}

@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 16 | 1.12.15 |
+| 1.12 | Metheney | 17 | 1.12.16 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.16** `IMPROVEMENT` the settings dialog edits a value far away from the row it belongs to (#2604) - raised by Claude-JG
+  - The value is edited in the cell. An Entry - or a Combobox for bool and for every enum - is placed over the value cell of the selected row, commits on Return or when the focus leaves, and is taken away on Escape; the bool double click still toggles. The two widgets that used to sit at the bottom of the window and swap by z-order are gone, and with them four handlers. The bottom row is the LINE THAT SETS THE SELECTED ITEM, in a read-only field with a copy button beside it: 'SC.visualizationSettings.general.textSize = 16.0'. The value is written as a Python literal - a String and a FileName are quoted, an enum is prefixed with exu. - and the prefix follows the structure being edited, so the same dialog on simulationSettings writes 'simulationSettings....'. Under it stands the type, the size where it is not scalar, and the description. The validation is the one of \#2597: CheckType with the combo lists, then ConvertString2Value for the range, and the error box names the path and the expected type. ItemPath() builds the dotted path once for both the code line and the error message, where the loop that built it stood inside the click handler. revision2026b step RG6.2.4.
 - **1.12.15** `IMPROVEMENT` the dialog font size cannot be changed off macOS (#2602) - raised by Claude-JG
   - dialogs.fontScaling replaces dialogs.fontScalingMacOS and works on every platform. It defaults to 0, and 0 means what each platform did before the setting existed - a fixed factor on MacOS, the system display scaling on Windows and Linux - so nothing changes for anybody who does not touch it. A value above 0 sets the font factor AND the row height on every platform, which is what makes the dialog readable on a Linux desktop, where 'if not IsApple(): fontFactor = 1' made it unchangeable. fontScalingMacOS is deprecated through the mechanism the visualizationSettings already have (SFDeprecated plus Deprecated('1.12.15', 2032)); the generated C++ forwards it to the new name and raises a DeprecationWarning, verified through a SystemContainer. The scaling logic itself lived TWICE in GUI.py - once in EditDictionaryWithTypeInfo, once in EditDictionary - and is one function now, DialogScaling(root), which is 30 lines less to keep in step and part of what RG6.2.7 would have had to clean up. The reference of parameterConversionTest changed in one line, as intended: the dictionary of VisualizationSettings.dialogs lists fontScaling where it listed fontScalingMacOS, because a deprecated member is not part of GetDictionary. The stubtest baseline gained exudyn.VSettingsDialogs.fontScalingMacOS, which is where every one of the 93 deprecated members is listed, and lost the stale exudyn.misc.resultsMonitor entry. revision2026b step RG6.2.3.1.
 - **1.12.14** `IMPROVEMENT` the settings dialog does not show the type, the columns are unusable and the description hides behind a key (#2601) - raised by Claude-JG

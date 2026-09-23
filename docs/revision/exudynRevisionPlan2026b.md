@@ -535,8 +535,10 @@ This group is that revision and what has to happen before it can start.
     headers, so it needs a build and it can break one.
 
 <a id="rg6-2-4"></a>
-**RG6.2.4** **Inline editing** — the one real rewrite: the value is edited in the cell instead of
-    in a separate field at the bottom of the window that swaps with a combo box by z-order.
+**RG6.2.4** **DONE 2026-09-23** (#2604) — [log](exudynRevisionLog2026b.md#rg6-2-4) — **Inline editing** — the one real rewrite: the value is edited in the cell
+    instead of in a separate field at the bottom of the window that swaps with a combo box by
+    z-order. The bottom row became the **line that sets the selected item**, with a copy button
+    (maintainer, 2026-09-23) — which is what RG12.3 produces for the whole structure.
 
 <a id="rg6-2-5"></a>
 **RG6.2.5** **A second front end**, if it is still wanted once RG6.2.1-RG6.2.4 have shown what

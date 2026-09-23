@@ -466,34 +466,35 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.bind("q", self.OnQuit) 
         
         #+++++++++++++++++++++++++++++++++++++++++
-        #create the entry field for editing the treeview value
-        self.selectedItem = '' #will change to valid item in order to change value
-        self.editItemName = tk.StringVar()
+        #THE EDITOR SITS IN THE CELL (revision2026b step RG6.2.4, #2604). It used to be an
+        #Entry and a Combobox at the bottom of the window that swapped places by z-order, so a
+        #value was typed far away from the row it belonged to. These two are children of the
+        #tree and are placed over the value cell while an edit is running.
+        self.selectedItem = ''          #the item being edited, '' when nothing is
         self.editItemVar = tk.StringVar()
+        self.cellEditor = tk.Entry(self.tree, textvariable=self.editItemVar)
+        self.cellEditor.bind('<Return>', self.OnCellCommit)
+        self.cellEditor.bind('<FocusOut>', self.OnCellCommit)
+        self.cellEditor.bind('<Escape>', self.OnCellCancel)
 
-        #self.editName = tk.Label(self, textvariable=self.editItemName) #label expands itself
-        self.editName = tk.Entry(self, textvariable=self.editItemName) #label expands itself
-        self.editName.configure(background='gray95', borderwidth=0)
-        self.editName.grid(row=1, column=0, columnspan=1, sticky=tk.N+tk.E+tk.S+tk.W)
-
-        self.editItem = tk.Entry(self, textvariable=self.editItemVar)
-        self.editItem.grid(row=1, column=1, columnspan=2, sticky=tk.N+tk.E+tk.S+tk.W)
-
-            
-        self.editItem.bind('<Return>', self.OnEditEntryItem)
-        self.editItem.bind('<FocusOut>', self.OnEditEntryItem)
-        self.editItem.bind('<Escape>', self.OnEscapeEntryItem)
+        self.cellCombo = ttk.Combobox(self.tree, values=['True','False'], state='readonly')
+        self.cellCombo.bind('<<ComboboxSelected>>', self.OnCellCommit)
+        self.cellCombo.bind('<Escape>', self.OnCellCancel)
 
         #+++++++++++++++++++++++++++++++++++++++++
-        #combo box for special items (bool, enums, ...)
-        self.comboItem = ttk.Combobox(self, values=['True','False'] )
-        self.comboItem.current(0)
-        self.comboItem.grid(row=1, column=1, columnspan=2, sticky=tk.N+tk.E+tk.S+tk.W)
-        self.comboItem.lower(self.editItem)
+        #the bottom row is not an editor any more: it says what the selected item IS, as the line
+        #that sets it - which is what the maintainer asked for, a line to copy into a script
+        self.codeLineVar = tk.StringVar()
+        self.codeLine = tk.Entry(self, textvariable=self.codeLineVar, state='readonly',
+                                 readonlybackground='gray95', borderwidth=0,
+                                 font='TkFixedFont')
+        self.codeLine.grid(row=1, column=0, columnspan=3, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.copyButton = tk.Button(self, text='copy', command=self.OnCopyCodeLine)
+        self.copyButton.grid(row=1, column=3, sticky=tk.N+tk.E+tk.S+tk.W)
 
-        #self.comboItem.bind('<Return>', self.OnEditComboItem)
-        self.comboItem.bind('<<ComboboxSelected>>', self.OnEditComboItem)
-        self.comboItem.bind('<Escape>', self.OnEscapeComboItem)
+        self.infoText = tk.Label(self, text='', justify=tk.LEFT, anchor=tk.W,
+                                 wraplength=int(treeEditDefaultWidth*0.95))
+        self.infoText.grid(row=2, column=0, columnspan=4, sticky=tk.N+tk.E+tk.S+tk.W)
 
         #+++++++++++++++++++++++++++++++++++++++++
         #pre-select item
@@ -623,46 +624,10 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
                 return
 
-            #+++++++++++++++++++                
-            s = self.tree.item(item,'text')
-            #print('text=',s)
-            i=0
-            pItem=self.tree.parent(item)
-            while i < 10 and pItem != '': #limits to 10 levels ...
-                i+=1
-                s = self.tree.item(pItem,'text') + '.' + s
-                pItem=self.tree.parent(pItem)
-            
-            self.editItemName.set(s)
-            self.selectedItem = item #now item can be modified
-            
-            if selectedType in self.dictionaryTypesT:
-                #print('type =',selectedType)
-                
-                value = self.tree.item(item,'values')[0]
-                valueTypes = []
-                for iType in self.dictionaryTypesT[selectedType]:
-                    valueTypes += [str(iType)]
-                valueTypes = tuple(valueTypes)
-
-                self.comboItem['values'] = valueTypes
-                #print(self.comboItem['values'])
-                #print(type(self.comboItem['values']))
-                
-                #find current index:
-                i = 0 #default value
-                if value in valueTypes:
-                    i = valueTypes.index(value)
-                self.comboItem.current(i)
-                
-                self.comboItem.focus_set()
-                self.editItem.lower(self.comboItem)
-                
-            else:
-                #print('general value')
-                self.editItemVar.set(self.tree.item(item,'values')[0])
-                self.editItem.focus_set()
-                self.comboItem.lower(self.editItem)
+            #the path of the item is built by ItemPath() now, which ShowInfo and the code line
+            #both need (revision2026b step RG6.2.4)
+            self.ShowInfo(item)
+            self.StartCellEdit(item)
         else: #folders (may be opened/closed)
             openState = self.tree.item(item, 'open')
             s = self.tree.item(item,'text')
@@ -676,11 +641,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def OnQuit(self,event): #new selection --> nothing to edit for now
         self.parentFrame.destroy()
         
-    def TreeviewSelect(self,event): #new selection --> nothing to edit for now
-        #print('select')
-        self.editItemVar.set('')
-        self.editItemName.set('')
-        self.comboItem.lower(self.editItem) #bring entry item to front
+    def TreeviewSelect(self,event):
+        """a new row is selected: the bottom row follows it, whether it is edited or not"""
+        self.CancelCellEdit()
+        selection = self.tree.selection()
+        if selection:
+            self.ShowInfo(selection[0])
         
     #if visualizationSettings are accordingly, the renderer will obtain an update signal
     def UpdateSettingsStructure(self):
@@ -696,88 +662,144 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #++++++++++++++++++++++++++++++++++++++++++++++++
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-    #user has now edited the Entry dialog and valid updates are copied to treeview
-    def OnEditEntryItem(self,event):
-        if self.selectedItem != '':
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #THE CELL EDITOR (revision2026b step RG6.2.4, #2604)
+
+    def ItemPath(self, item):
+        """the dotted path of a row, as a script writes it: general.textSize"""
+        path = self.tree.item(item,'text')
+        parent = self.tree.parent(item)
+        depth = 0
+        while depth < 10 and parent != '':      #limits to 10 levels ...
+            depth += 1
+            path = self.tree.item(parent,'text') + '.' + path
+            parent = self.tree.parent(parent)
+        return path
+
+    def CodeLine(self, item):
+        """the selected setting as the LINE THAT SETS IT, ready to paste into a script:
+
+            SC.visualizationSettings.general.textSize = 16.0
+
+        which is what makes a session in this dialog reusable (maintainer, 2026-09-23). The
+        prefix follows the structure being edited, the value is written as a Python literal."""
+        valueStr = self.tree.item(item,'values')[0]
+        vType = self.typeStorage.get(item, '')
+        if vType in ['String', 'FileName']:
+            literal = repr(valueStr)
+        elif vType != 'bool' and vType in self.dictionaryTypesT:
+            literal = 'exu.' + valueStr       #an enum needs the module it lives in
+        else:
+            literal = valueStr
+
+        structure = type(self.settingsStructure).__name__
+        if structure == 'VisualizationSettings':
+            prefix = 'SC.visualizationSettings'
+        elif structure == 'SimulationSettings':
+            prefix = 'simulationSettings'
+        else:
+            prefix = structure[:1].lower() + structure[1:]
+        return prefix + '.' + self.ItemPath(item) + ' = ' + literal
+
+    def ShowInfo(self, item):
+        """the bottom row: the line to copy, and what the item is"""
+        if item == '' or item not in self.typeStorage:
+            self.codeLineVar.set('')
+            self.infoText.configure(text='')
+            return
+        self.codeLineVar.set(self.CodeLine(item))
+        vType = self.typeStorage[item]
+        size = self.sizeStorage.get(item, '')
+        sizeText = '' if str(size) in ['[1]', '1', ''] else ', size ' + str(size)
+        self.infoText.configure(text=vType + sizeText + ' - '
+                                + self.descriptionStorage.get(item, ''))
+
+    def OnCopyCodeLine(self):
+        """the line into the clipboard; tkinter keeps it only while it runs, so it is flushed"""
+        line = self.codeLineVar.get()
+        if line == '':
+            return
+        self.clipboard_clear()
+        self.clipboard_append(line)
+        self.update()                         #without this the clipboard is empty after closing
+
+    def CellBox(self, item):
+        """where the value cell of a row is, in the coordinates of the tree"""
+        self.tree.see(item)                   #a row that is scrolled away has no box
+        box = self.tree.bbox(item, 'value')
+        return box if box != '' else None
+
+    def StartCellEdit(self, item):
+        """an Entry, or a Combobox for a type with a fixed set of values, over the value cell"""
+        self.CancelCellEdit()
+        box = self.CellBox(item)
+        if box is None:
+            return
+        (x, y, width, height) = box
+        self.selectedItem = item
+        vType = self.typeStorage[item]
+        value = self.tree.item(item,'values')[0]
+
+        if vType in self.dictionaryTypesT:    #bool and the enums: pick, do not type
+            values = tuple(str(entry) for entry in self.dictionaryTypesT[vType])
+            self.cellCombo['values'] = values
+            self.cellCombo.set(value if value in values else (values[0] if values else ''))
+            self.cellCombo.place(x=x, y=y, width=width, height=height)
+            self.cellCombo.focus_set()
+        else:
+            self.editItemVar.set(value)
+            self.cellEditor.place(x=x, y=y, width=width, height=height)
+            self.cellEditor.focus_set()
+            self.cellEditor.select_range(0, tk.END)
+
+    def CancelCellEdit(self, event=None):
+        """take the editor away without writing anything"""
+        self.selectedItem = ''
+        self.cellEditor.place_forget()
+        self.cellCombo.place_forget()
+
+    def OnCellCancel(self, event):
+        self.CancelCellEdit()
+        self.tree.focus_set()
+
+    def OnCellCommit(self, event=None):
+        """write the edited value back, if it is one the setting can take"""
+        item = self.selectedItem
+        if item == '':
+            return
+        vType = self.typeStorage[item]
+        vSize = self.sizeStorage[item]
+        if vType in self.dictionaryTypesT:
+            valueStr = self.cellCombo.get()
+        else:
             valueStr = self.editItemVar.get()
-            vType = self.typeStorage[self.selectedItem]
-            vSize = self.sizeStorage[self.selectedItem]
-            [rv, errorMSG] = CheckType(valueStr, vType, vSize, self.dictionaryTypesT)
-            if rv:
-                #CheckType says the SHAPE is right; the range lives in the type name (PReal > 0,
-                #UInt >= 0, ...) and only ConvertString2Value knows it. Without this the dialog
-                #accepted the edit, GetDictionary printed 'illegal value' to a console nobody is
-                #looking at, and the setting silently kept its old value (#2597)
-                try:
-                    [_, rangeMessage] = ConvertString2Value(valueStr, vType, vSize,
-                                                            self.dictionaryTypesT)
-                except (ValueError, SyntaxError) as exception:
-                    rangeMessage = str(exception)
-                if rangeMessage != '':
-                    (rv, errorMSG) = (False, rangeMessage)
-            if rv:
-                self.tree.item(self.selectedItem,
-                               values=(self.editItemVar.get(), vType,
-                                       self.descriptionStorage[self.selectedItem]))
-                currentItem = self.selectedItem
-                self.selectedItem = '' #modification finished
-                self.editItemVar.set('')
-                self.editItemName.set('')
-                self.tree.focus_set()
-                self.tree.focus(currentItem)
-            else:
-                self.editItem.unbind('<FocusOut>') #otherwise OnEditEntryItem called twice
-                #the expected TYPE is in the message: a user who is told "invalid float number"
-                #still has to guess what the field wants (#2601)
-                tk.messagebox.showerror("Error", self.editItemName.get() + ' expects ' + vType
-                                        + ':\n' + errorMSG
-                                        + '\npress ESCAPE to reset to original values')
-                self.editItem.bind('<FocusOut>', self.OnEditEntryItem) #bind again
-            
-            self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
-            self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
 
-    def OnEscapeEntryItem(self,event):
-        #print('escape')
-        if self.selectedItem != '':
-            self.editItemVar.set(self.tree.item(self.selectedItem,'values')[0])
-            self.selectedItem = '' #now item can be modified
-#            self.editItemVar.set('')
-#            self.editItemName.set('')
-            self.tree.focus_set()
+        [isValid, message] = CheckType(valueStr, vType, vSize, self.dictionaryTypesT)
+        if isValid:
+            #CheckType says the SHAPE is right; the range lives in the type name and only
+            #ConvertString2Value knows it (#2597)
+            try:
+                [_, rangeMessage] = ConvertString2Value(valueStr, vType, vSize,
+                                                        self.dictionaryTypesT)
+            except (ValueError, SyntaxError) as exception:
+                rangeMessage = str(exception)
+            if rangeMessage != '':
+                (isValid, message) = (False, rangeMessage)
 
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-    #user has now edited the Entry dialog and valid updates are copied to treeview
-    def OnEditComboItem(self,event):
-        if self.selectedItem != '':
-            
-            value = self.comboItem.current()
-            valueStr = self.comboItem['values'][value]
-            
-            self.tree.item(self.selectedItem,
-                           values=(valueStr, self.typeStorage[self.selectedItem],
-                                   self.descriptionStorage[self.selectedItem]))
-            currentItem = self.selectedItem
-            self.selectedItem = '' #modification finished
-            self.editItemVar.set('')
-            self.editItemName.set('')
-            self.comboItem.lower(self.editItem) #bring entry item to front
-            
-            self.tree.focus_set()
-            self.tree.focus(currentItem)
+        if not isValid:
+            self.cellEditor.unbind('<FocusOut>')    #otherwise OnCellCommit is called twice
+            tk.messagebox.showerror("Error", self.ItemPath(item) + ' expects ' + vType + ':\n'
+                                    + message + '\npress ESCAPE to keep the original value')
+            self.cellEditor.bind('<FocusOut>', self.OnCellCommit)
+            return
 
-            self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
-            self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
-
-    def OnEscapeComboItem(self,event):
-        #print('escape')
-        if self.selectedItem != '':
-            self.editItemVar.set(self.tree.item(self.selectedItem,'values')[0])
-            self.selectedItem = '' #now item can be modified
-#            self.editItemVar.set('')
-#            self.editItemName.set('')
-            self.tree.focus_set()
-            self.comboItem.lower(self.editItem) #bring entry item to front
+        self.CancelCellEdit()
+        self.tree.item(item, values=(valueStr, vType, self.descriptionStorage[item]))
+        self.tree.focus_set()
+        self.tree.focus(item)
+        self.ShowInfo(item)
+        self.modifiedDictionary = self.GetDictionary('')
+        self.UpdateSettingsStructure()      #only if according flag set in visualizationSettings
 
 
 def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit'):

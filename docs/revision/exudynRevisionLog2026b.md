@@ -546,3 +546,42 @@ backlink those members forward through is set in one place only, for the setting
 `SystemContainer`; a standalone object never gets it. My new member behaves exactly like the 93
 others, so nothing here caused it, and it is RG4.4 (#2603) because the fix has to decide what a
 copy of a settings structure means.
+
+<a id="rg6-2-4"></a>
+### RG6.2.4 — the value is edited where it stands (2026-09-23, #2604)
+
+The one real rewrite of this group. The value used to be edited at the **bottom of the window**,
+in an `Entry` and a `Combobox` that occupied the same grid cell and swapped by z-order
+(`lower()`/`lift()`): a user selected a row at the top and typed at the bottom, and which of the
+two widgets was in front depended on the type of the selected row. Both are gone, and four
+handlers with them.
+
+**The editor is placed over the value cell** of the selected row — `tree.bbox(item, 'value')`
+gives the rectangle, `place()` puts the widget there. An `Entry` for a typed value, a `Combobox`
+for `bool` and for every enum, committed on Return or when the focus leaves, taken away on
+Escape. The double click that toggles a `bool` still does.
+
+**The bottom row is now the line that sets the item**, in a read-only field with a **copy**
+button beside it:
+
+```
+SC.visualizationSettings.general.textSize = 16.0
+```
+
+That is the maintainer's own request, and it is the same thing RG12.3 is to produce for a whole
+settings structure: a dialog session that can be pasted into a script. The value is written as a
+**Python literal** — a `String` and a `FileName` are quoted, an enum is prefixed with `exu.—
+` and the prefix follows the structure being edited, so the same dialog opened on
+`simulationSettings` writes `simulationSettings....`. Under the line stands the type, the size
+where it is not scalar, and the description.
+
+The validation is the one of #2597, unchanged: `CheckType` with the combo lists, then
+`ConvertString2Value` for the range, and the error box names the path and the expected type.
+`ItemPath()` builds the dotted path once, for the code line and for that message; the loop that
+built it used to sit inside the click handler and was thrown away after each use.
+
+**What was verified and what was not.** The module parses, the whole suite passes, the nine
+checks pass — and nothing here can be seen without a window, which this session must not open
+(rule 11). Whether a click now opens the editor too eagerly, whether the combo box reads well in
+a cell, whether the copy button is where a hand expects it: that is the maintainer's to say, and
+it is why this went over as soon as it built.
