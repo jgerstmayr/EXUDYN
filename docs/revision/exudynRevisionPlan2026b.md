@@ -45,9 +45,9 @@ carries the same table from its side, so a citation from either direction resolv
 | **RG6** Graphics and rendering | the renderer, the settings dialogs, and the rendering revision it is heading for | 4 |
 | **RG7** Python user items | items whose behaviour is written in Python | - |
 | **RG8** Compiled C++ user items | plugins: user items compiled against the shipped headers | 9 |
-| **RG9** Structural core improvements | the architecture of the core, where a change touches everything | - |
-| **RG10** Tooling and process | exudev, the issue tracker, the generators, CI | 2 |
-| **RG11** Misc | what has no group yet; three of a kind become a group | 1 |
+| **RG9** Structural core improvements | the architecture of the core, where a change touches everything | 1 |
+| **RG10** Tooling and process | exudev, the issue tracker, the generators, CI | 5 |
+| **RG11** Misc | what has no group yet; three of a kind become a group | 2 |
 | **RG12** Python interface | the shape of the Python API itself: deprecation, settings, what a script sees | 3 |
 
 ## RG1 — Release and publication
@@ -639,28 +639,33 @@ This group is that revision and what has to happen before it can start.
     already has three).
 
 <a id="rg6-2-11"></a>
-**RG6.2.11** **The catalogue of optional features** (#2608) *(maintainer, 2026-09-23)*. A list to
-    pick from or to close, not a commitment, collected while RG6.2 is fresh:
+**RG6.2.11** **DONE 2026-09-23** (#2608) — [log](exudynRevisionLog2026b.md#rg6-2-11) —
+    **The catalogue of optional features, decided.** It was a list to pick from, and the
+    maintainer went through it on 2026-09-23. Nothing of it is left open except one low priority
+    step, which is why the catalogue closes:
 
-    - **a reset**: per row back to the default, and a reset of everything; the defaults are one
-      call away (`exu.VisualizationSettings()`) and the dialog already knows the paths;
-    - **load and save**: the whole structure to a `.json` (or the code of RG6.2.9) and back, so
-      that a set of settings survives the session;
-    - **remember the window**: size, position and which folders were open — today the open
-      folders are module-level state that outlives the dialog (RG6.2.7) and the geometry is not
-      kept at all;
-    - **the same dialog for `simulationSettings`**: `GetDictionaryWithTypeInfo()` is bound for it
-      too, and after RG6.2.4 the code line already names the right structure; what is missing is
-      a way to open it;
-    - **undo** *(maintainer, 2026-09-23)*: the dialog applies every change immediately, which is
-      the behaviour that is wanted and stays — and that is exactly why there is no way back from
-      a value one did not mean to type. What it would take: the list RG6.2.9 already keeps of what
-      the dialog opened with, and one step back per row;
-    - **units in the description**, where a value has one.
-
-    Struck out by the maintainer on 2026-09-23, so that they are not proposed again: *apply while
-    it is open* — changes **are** applied immediately today and that is to stay; and *a "changed
-    only" view* — the two windows of RG6.2.9 are that view.
+    - **done in the meantime**: the **reset** and the **undo** (RG6.2.14), and the *"changed
+      only" view*, which the two windows of RG6.2.9 are;
+    - **no**: *load and save* the settings to a file — the code of RG6.2.9 is what a user keeps,
+      and it goes into the script rather than into a second format nobody reads;
+    - **no**: *units in the description* — even a position has no unit that Exudyn could name:
+      the model's units are the user's implicit choice, so a unit in a description would be a
+      guess printed as a fact;
+    - **no** (already the behaviour): *apply while it is open* — every change is applied
+      immediately and that stays;
+    - **open, low priority: the same dialog for `simulationSettings`** — RG6.2.18;
+    - **undecided: remember the window.** How it would work, and why it is not simply done —
+      the geometry is one string (`tkWindow.geometry()` gives `WxH+X+Y`), and the three places it
+      could live are a module variable in `exudyn.misc.GUI` (this process only, the shape of
+      `treeEditLastOpenItems` from RG6.2.7), a member of `visualizationSettings.dialogs` (travels
+      with the model and can be saved by a user's own script), or a file next to the user's
+      configuration. **The danger is the position, not the size**: a window remembered on a second
+      screen that is no longer attached opens where nobody can see it, and the same happens with a
+      changed resolution or a docked laptop. What makes it safe is to restore the **size always**
+      and the **position only when it still lies inside a screen** —
+      `winfo_vrootwidth/height` give the whole virtual desktop, and a rectangle that is not fully
+      inside it is dropped back to the default position. If the maintainer wants it, it becomes a
+      step of its own with that rule written into it.
 
 <a id="rg6-2-12"></a>
 **RG6.2.12** **DONE 2026-09-23** (#2612) — [log](exudynRevisionLog2026b.md#rg6-2-12) — **59 untouched settings are called changed, and a folded folder hides a change**
@@ -703,6 +708,37 @@ This group is that revision and what has to happen before it can start.
     the dialog has nothing to show when the mouse is over a folder. The emitter puts the class
     description into the dictionary under a **reserved key**, the way `itemIdentifier` is
     reserved, and the tooltip shows it for a folder.
+
+<a id="rg6-2-16"></a>
+**RG6.2.16** **DONE 2026-09-23** (#2621) — [log](exudynRevisionLog2026b.md#rg6-2-16) —
+    **The window with the changes was invisible** *(maintainer, 2026-09-23)*. *"diff to default"
+    and "this session" show nothing.* The content was right — a probe that builds the dialog
+    without mapping a window finds the changes and raises nothing — so the window never became
+    visible: the dialog is topmost and the `Toplevel` opened at the same place behind it, which
+    looks exactly like a button that does nothing. Two more from the same message: *this session*
+    is called **changes since start**, and the rows at the top and the bottom span the columns of
+    the tree only, so that no button sits under its vertical scroll bar.
+
+<a id="rg6-2-17"></a>
+**RG6.2.17** **DONE 2026-09-23** (#2623) — [log](exudynRevisionLog2026b.md#rg6-2-17) —
+    **Opening the dialog re-pointed `exudyn.sys` at a throw-away container.** Found while
+    chasing RG6.2.16, and the cause of it: **constructing an `exudyn.SystemContainer()` replaces
+    `exudyn.sys['currentRendererSystemContainer']`**, and RG6.2.12 creates one to read the
+    defaults. From the moment the settings dialog opened, everything that asks for the renderer's
+    container got the throw-away one — the window settings were read from it, and
+    `UpdateSettingsStructure` sent the **redraw signal** to it instead of to the renderer. The
+    entry is saved and restored around the construction, and `GetRendererSystemContainer` also
+    catches the `RuntimeError` of a container that is gone.
+
+<a id="rg6-2-18"></a>
+**RG6.2.18** *(group RG6; maintainer 2026-09-23, from RG6.2.11)* **The same dialog for
+    `simulationSettings`** (#2624), **low priority**. Everything below the widgets is ready:
+    `GetDictionaryWithTypeInfo()` is bound for `SimulationSettings` as well, `SettingsPrefix`
+    already writes `simulationSettings....` into the code line, and `DefaultSettingsDictionary`
+    falls back to the constructor for a structure that is not on a `SystemContainer`. What is
+    missing is a **way to open it** — a function in `exudyn.misc.GUI`, and the question whether
+    the renderer should offer a key for it while a solver is running, where changing a solver
+    setting mid-step is not the harmless thing that changing a colour is.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
@@ -826,6 +862,35 @@ revision (info document D15).
 *No steps yet.*
 
 
+<a id="rg9-1"></a>
+**RG9.1** *(group RG9; proposed 2026-09-23 at the maintainer's request, after RG6.2 and the item
+    split of revision2026 step R11.4.4)* **The item sources stop paying for pybind11** (#2622).
+    `src/Graphics/VisualizationItemHelpers.h` is included by the `C<Item>.cpp` files that draw
+    something — and it includes `Graphics/VisualizationSystemContainer.h`, which includes
+    pybind11. That is the dependency the split into per-item graphics functions was meant to
+    avoid. **Measured on 2026-09-23**, not assumed:
+
+    - the `py::` in `VisualizationSystemContainer.h` is **six free-function declarations**
+      (`PyWriteBodyGraphicsDataList`, `PyGetBodyGraphicsDataList*`, ...), no class member and no
+      template, and exactly **two** `.cpp` files call them. Moving them to a header of their own
+      is small and carries no risk.
+    - that alone changes nothing, because the header also has
+      `#include "Main/CSystem.h"— ` the maintainer's own *"REMOVE: temporary"* line — and
+      `CSystem.h` includes `Pymodules/PythonUserFunctions.h`, which includes pybind11.
+    - **the experiment**: with that include commented out, the build fails **only** in
+      `Graphics/VisualizationSystem.h:33-34`, which declares two members whose headers it never
+      includes — `PostProcessData*` and `CSystemData*`. Both of those headers are **pybind-free**.
+
+    So the order is: `VisualizationSystem.h` includes `Graphics/PostProcessData.h` and
+    `Main/CSystemData.h` itself (it uses them as members and today free-rides on the container's
+    include), `VisualizationSystemContainer.h` drops `Main/CSystem.h`, and the six declarations
+    move to `Graphics/BodyGraphicsDataPython.h`. Then the item sources see no pybind11.
+
+    **Acceptance is a measurement, not an opinion**: the build time before and after, which
+    RG10.3 now prints — **57.9 s** for `exudyn build` on the maintainer's machine, 2026-09-23.
+    `VisualizationSystem.h` is included widely enough that this deserves its own step rather than
+    a drive-by edit.
+
 ## RG10 — Tooling and process
 
 The machinery a maintainer uses: `exudev` (revision2026 step R5.18), the issue tracker and its
@@ -866,6 +931,29 @@ file, so an editor cannot complete them).
       carries the word — `LOW EFF`, `MEDIUM EFF`, `HIGH EFF`, `HUGE EFF` — and the **priority**
       tag stays plain — `LOW`, `NORMAL`, `HIGH`.
 
+<a id="rg10-3"></a>
+**RG10.3** **DONE 2026-09-23** (#2617) — [log](exudynRevisionLog2026b.md#rg10-3) — *(group
+    RG10; maintainer 2026-09-23)* **`exudev` does not say how long a step took.** The batch
+    scripts it replaced printed the build time, and it is read: a build that suddenly takes twice
+    as long is the first sign that a header dependency grew. Every step is timed and the summary
+    prints it, with the total.
+
+<a id="rg10-4"></a>
+**RG10.4** **DONE 2026-09-23** (#2618) — [log](exudynRevisionLog2026b.md#rg10-4) — *(group
+    RG10; maintainer 2026-09-23)* **`src/pythonGenerator/` holds one file and should not exist.**
+    Everything of the old generator directory moved to `tools/generators/` in revision2026 step
+    R4.3 except `exudynVersion.py`, which locates the repository root and reads `version.txt`. It
+    moves to `tools/generators/`, where the other build-time helpers live and are already in
+    `MANIFEST.in`, and the directory is deleted.
+
+<a id="rg10-5"></a>
+**RG10.5** **DONE 2026-09-23** (#2619) — [log](exudynRevisionLog2026b.md#rg10-5) — *(group
+    RG10; maintainer 2026-09-23)* **VS Code cannot follow a C++ include.** *"include errors
+    detected - update your include paths"*, and *"cannot open source file ../Eigen/Sparse"*: the
+    vendored headers are reached through subdirectories of `include/`, and nothing tells the
+    C/C++ extension about them. `.vscode/` is git-ignored, so the fix is a committed template
+    that `tools/setupLocalWorkspace.py` copies, as for `exudyn.sln` and `python/pytest.py`.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
@@ -894,6 +982,15 @@ What belongs to no group yet. Three of a kind here are a reason to propose a gro
       it ties the monitor to a running renderer;
     - **drop the in-script call** and document the command line form, which is the honest outcome
       if none of the above is worth its complexity.
+
+<a id="rg11-2"></a>
+**RG11.2** **DONE 2026-09-23** (#2620) — [log](exudynRevisionLog2026b.md#rg11-2) — *(group
+    RG11; maintainer 2026-09-23)* **The demos wrote a `solution/` directory into whatever
+    directory they were started in.** `Demo1` and `Demo2` named `solution/demo1.txt` and
+    `solution/chain.txt`, so `python -m exudyn demo 2` created a directory beside the sources of
+    this repository — untracked, unignored, and nearly committed by accident. They write to
+    `tmp/solution/` now, which is created if it is missing, and `solution/` is in `.gitignore` so
+    that an older installed version cannot leave one lying around unnoticed.
 
 ## RG12 — Python interface
 

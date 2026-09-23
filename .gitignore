@@ -128,6 +128,9 @@ python/logs/tmp/
 # build byproducts from setup.py
 # compiler object files
 tmp/
+# the demos wrote a solution directory into the working directory until revision2026b step
+# RG11.2 (#2620); an older installed version still does, and it must not be committed
+solution/
 # stdout redirect when quietCompile is set
 setuppy.output.txt
 

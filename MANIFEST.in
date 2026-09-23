@@ -14,12 +14,13 @@ recursive-include include *
 # Windows and macOS link against these; on Linux glfw comes from the system
 recursive-include libs *
 
-# The parts of src/pythonGenerator/ and tools/generators/ the BUILD needs - not the generators.
+# The parts of tools/generators/ the BUILD needs - not the generators themselves.
 #
-# exudynVersion.py is exec()ed at import time, so an sdist without it fails immediately.
+# exudynVersion.py is exec()ed at import time, so an sdist without it fails immediately; it
+# lives with the other build-time helpers since revision2026b step RG10.4 (#2618).
 # createStubFiles.py and its five generated .pyi inputs produce the shipped __init__.pyi; that
 # step is allowed to fail, but without the inputs every sdist install ships an unmerged stub.
-include src/pythonGenerator/exudynVersion.py
+include tools/generators/exudynVersion.py
 include tools/generators/createStubFiles.py
 include tools/generators/generatorPaths.py
 include tools/generators/stubHeader.pyi

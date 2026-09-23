@@ -1,0 +1,41 @@
+// The include paths and defines VS Code needs to follow a C++ include (revision2026b step
+// RG10.5, #2619). tools/setupLocalWorkspace.py copies this file to .vscode/c_cpp_properties.json,
+// which is git-ignored - the same template/local pattern as exudynTemplate.sln and
+// python/pytestTemplate.py, so a machine-specific edit can never be committed.
+//
+// WHY the odd-looking list: the vendored headers are included RELATIVE to a subdirectory of
+// include/ - src/Linalg/LinearSolver.h says #include "../Eigen/Sparse", which the compiler
+// resolves as include/lest/../Eigen/Sparse. Every one of those subdirectories therefore has to be
+// on the path, and setup.py passes exactly the same set (-Iinclude/glfw/deps -Iinclude/glfw -Isrc
+// -Iinclude -Iinclude/lest).
+//
+// ${env:CONDA_PREFIX} is the active conda environment, which is where Python.h lives; start VS
+// Code from an activated environment, or replace it with the path of the environment you build
+// against. The defines are the ones setup.py compiles with (EXUDYN_RELEASE plus the Python
+// version macro); adjust __EXUDYN__PYTHON313 if you build for another version.
+{
+    "version": 4,
+    "configurations": [
+        {
+            "name": "Exudyn",
+            "includePath": [
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/lest",
+                "${workspaceFolder}/include/glfw",
+                "${workspaceFolder}/include/glfw/deps",
+                "${workspaceFolder}/include/pybind11local",
+                "${env:CONDA_PREFIX}/include"
+            ],
+            "defines": [
+                "EXUDYN_RELEASE",
+                "__EXUDYN__PYTHON313",
+                "_CRT_SECURE_NO_WARNINGS",
+                "_WINDLL"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "${default}"
+        }
+    ]
+}

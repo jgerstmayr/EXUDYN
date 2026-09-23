@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 27 | 1.12.26 |
+| 1.12 | Metheney | 33 | 1.12.32 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.32** `BUG` opening the settings dialog re-points exudyn.sys at a throw-away SystemContainer (#2623) - raised by Claude-JG
+  - DefaultSettingsDictionary saves and restores exudyn.sys\["currentRendererSystemContainer"\] around the SystemContainer it creates to read the defaults: constructing one replaces that entry, so since \#2612 the settings dialog handed the renderer a throw-away container - the redraw signal went to it, the window settings were read from it, and once it was collected, touching it was an access violation, which is what made the two change windows do nothing. GetRendererSystemContainer also catches RuntimeError now.
+- **1.12.31** `BUG` the window with the changes is invisible, and the buttons sit under the scroll bar (#2621) - raised by Claude-JG
+  - The window that shows the changes of the settings dialog is transient to the dialog, topmost, offset by 60 pixels and modal, so it can no longer open behind the dialog - which is why "diff to default" and "this session" appeared to do nothing although their content was right. The button is called "changes since start", and the rows at the top and the bottom span the columns of the tree only, so that no button sits under its vertical scroll bar.
+- **1.12.30** `CHANGE` the demos write a solution directory into whatever directory they are started in (#2620) - raised by Claude-JG
+  - The demos write to tmp/solution/ instead of solution/, through one function that creates the directory when it is missing, so "python -m exudyn demo 2" no longer leaves an untracked directory in whatever directory it was started in; solution/ is in .gitignore as well, because an installed older version still writes there.
+- **1.12.29** `IMPROVEMENT` VS Code cannot follow a C++ include, because it has no include paths (#2619) - raised by Claude-JG
+  - tools/vscodeCppPropertiesTemplate.json is copied to .vscode/c\_cpp\_properties.json by tools/setupLocalWorkspace.py, so VS Code can follow a C++ include: the vendored headers are reached through subdirectories of include/ - "../Eigen/Sparse" resolves as include/lest/../Eigen/Sparse - and the C/C++ extension knew none of those paths.
+- **1.12.28** `CHANGE` src/pythonGenerator holds one file and should not exist any more (#2618) - raised by Claude-JG
+  - exudynVersion.py moved to tools/generators/, where the other build-time helpers live, and src/pythonGenerator/ is gone - it had held that one file since revision2026 step R4.3. setup.py, conf.py, generatorPaths.py, MANIFEST.in and the developer documentation name the new path; the sys.path entry that existed for that single file is gone.
+- **1.12.27** `IMPROVEMENT` exudev does not say how long a step took (#2617) - raised by Claude-JG
+  - exudev times every step and prints the seconds in the summary table, with a total; the build time was visible in the batch scripts it replaced and is the first sign that a header dependency grew.
 - **1.12.26** `BUG` quitting the renderer BEFORE a simulation starts raises, quitting during it does not (#2616) - raised by Claude-JG
   - CSolverBase::SolveSystem returns true when the simulation was already stopped by the user before it started, instead of false: SolveDynamic and SolveStatic read false as a solver failure and raised SolverError, so closing the render window while a script waited ended in a traceback - while stopping the same simulation one step later has always been quiet. The note says that nothing was computed. NOT tested: forceQuitSimulation is set by GlfwClient.cpp alone and has no Python binding, so the state cannot be produced without a window; mbs.SetRenderEngineStopFlag sets the other flag, stopSimulation.
 - **1.12.25** `EXTENSION` a settings folder has a description in the definitions, and nothing shows it (#2615) - raised by Claude-JG

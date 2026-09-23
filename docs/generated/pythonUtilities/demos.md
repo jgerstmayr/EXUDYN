@@ -8,10 +8,20 @@ For advanced demos, see python/Examples and python/TestModels
 
 - **Date**: 2023-01-12
 
+(sec-demos-demosolutionfile)=
+## Function: DemoSolutionFile
+
+[`DemoSolutionFile(name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/demos.py#L30)
+
+- **function description**: The solution file of a demo, in a directory that is created if it does not exist.
+- **input**: name: the file name, e.g. 'demo1.txt'
+- **output**: the path the demo writes to
+
+
 (sec-demos-demo1)=
 ## Function: Demo1
 
-[`Demo1(showAll = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/demos.py#L31)
+[`Demo1(showAll = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/demos.py#L53)
 
 - **function description**: very simple demo to show that exudyn is correctly installed; does not require graphics; similar to Examples/myFirstExample.py
 
@@ -22,7 +32,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`xExudynConf
 (sec-demos-demo2)=
 ## Function: Demo2
 
-[`Demo2(showAll = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/demos.py#L60)
+[`Demo2(showAll = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/demos.py#L82)
 
 - **function description**: advanced demo, showing that graphics is available; similar to Examples/rigid3Dexample.py
 

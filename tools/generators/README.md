@@ -4,7 +4,8 @@ Maintainer tools around [`definitions/`](../../definitions/README.md), the input
 generation, and all code generators (revision2026 step R4.3): the driver `generate.py`, the emitters,
 their shared helpers (`autoGenerateHelper.py`, `generatorPaths.py`), `createStubFiles.py` with
 `stubHeader.pyi`, and `generated/`, the intermediate files handed from one stage to the next.
-`src/pythonGenerator/` keeps only `exudynVersion.py`, which the build reads; `doc2rst.py` and
+`src/pythonGenerator/` is gone since revision2026b step RG10.4; `exudynVersion.py`, which the
+build reads, lives here. `doc2rst.py` and
 `latexConverter.py` were deleted in revision2026 step R7.1.7. What stood here before:
 `makeAllBinariesScripts.py` (revision2026 step R7.1) and `exudynVersion.py` (read by `setup.py` and `conf.py`).
 

@@ -335,6 +335,21 @@ def testTheConstructorIsNotTheStateAUserStartsFrom(comboLists):
     assert all('light' in path or 'material' in path for (path, _) in differences), differences
 
 
+def testReadingTheDefaultsLeavesTheRendererItsContainer():
+    """creating a SystemContainer REPLACES exudyn.sys['currentRendererSystemContainer'], and the
+    defaults are read from a throw-away one - so without this the settings dialog handed the
+    renderer a different container: the redraw signal went to it, the dialog read its window
+    settings from it, and once it was collected, touching it was an access violation (#2623)"""
+    container = exudyn.SystemContainer()
+    exudyn.sys['currentRendererSystemContainer'] = container
+
+    gui.DefaultSettingsDictionary(container.visualizationSettings)
+
+    assert exudyn.sys['currentRendererSystemContainer'] is container
+    #and it must still be usable, which is what the access violation took away
+    assert exudyn.sys['currentRendererSystemContainer'].visualizationSettings.dialogs.        alphaTransparency >= 0.
+
+
 def testASettingsStructureThatIsNotOnTheContainerStillHasDefaults():
     """simulationSettings has no SystemContainer to come from, and must not lose its reference"""
     reference = gui.SettingsValueStrings(

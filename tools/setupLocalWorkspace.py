@@ -5,8 +5,9 @@
 #           after cloning; running it again is harmless, because an existing file is never
 #           overwritten.
 #
-#               exudynTemplate.sln        ->  exudyn.sln
-#               python/pytestTemplate.py  ->  python/pytest.py
+#               exudynTemplate.sln                   ->  exudyn.sln
+#               python/pytestTemplate.py             ->  python/pytest.py
+#               tools/vscodeCppPropertiesTemplate.json ->  .vscode/c_cpp_properties.json
 #
 #           WHY: both files are scratch space. The solution accumulates per-machine state, and
 #           pytest.py is the file used to try something out in Visual Studio with mixed
@@ -37,6 +38,8 @@ import sys
 localFiles = [
     ('exudynTemplate.sln', 'exudyn.sln'),
     ('python/pytestTemplate.py', 'python/pytest.py'),
+    #without this VS Code cannot follow a single #include of the C++ sources (#2619)
+    ('tools/vscodeCppPropertiesTemplate.json', '.vscode/c_cpp_properties.json'),
     ]
 
 
@@ -70,13 +73,17 @@ def Main():
             print('kept    ' + local + '   (already exists; --force overwrites)')
             continue
 
+        localDirectory = os.path.dirname(localPath)
+        if localDirectory != '' and not os.path.isdir(localDirectory):
+            os.makedirs(localDirectory)      #.vscode/ does not exist in a fresh clone
         shutil.copyfile(templatePath, localPath)
         print('created ' + local + '   from ' + template)
         created += 1
 
     print('')
-    print(str(created) + ' file(s) created. Both are in .gitignore, so anything you do in them')
-    print('stays local - open exudyn.sln in Visual Studio and experiment in python/pytest.py.')
+    print(str(created) + ' file(s) created. All of them are in .gitignore, so anything you do in')
+    print('them stays local - open exudyn.sln in Visual Studio, experiment in python/pytest.py,')
+    print('and VS Code follows the C++ includes.')
 
     return 0
 

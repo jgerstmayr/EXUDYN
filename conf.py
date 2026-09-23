@@ -12,7 +12,7 @@
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create exudynVersionString
 exudynVersionString=''
-file='src/pythonGenerator/exudynVersion.py'
+file='tools/generators/exudynVersion.py'
 exec(open(file).read(), globals())
 
 # print('version='+exudynVersionString)

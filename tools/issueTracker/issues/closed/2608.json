@@ -1,0 +1,17 @@
+{
+  "number": 2608,
+  "title": "settings dialog: the catalogue of optional features",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IDEA",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.11. A list, not a commitment: what else the settings dialog could do, collected while RG6.2 is fresh, for the maintainer to pick from or to close. Written in the plan step. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 18:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The catalogue of optional features for the settings dialog is decided: reset and undo were built (#2614) and the \"changed only\" view is the two windows of #2606; load and save to a file is rejected, because the code of #2606 is what a user keeps; units in the description are rejected, because the model units are the users implicit choice and a unit would be a guess printed as a fact; apply while the dialog is open was already the behaviour. What survives: the same dialog for simulationSettings (#2624, low priority), and remembering the window, which is undecided and now carries the rule that would make it safe - restore the size always, the position only when it still lies inside the virtual desktop.",
+  "resolvedInVersion": "1.12.33"
+}

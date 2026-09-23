@@ -1,0 +1,17 @@
+{
+  "number": 2620,
+  "title": "the demos write a solution directory into whatever directory they are started in",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG11.2. exudyn.demos.Demo1 and Demo2 write solution/demo1.txt and solution/chain.txt, so \"python -m exudyn demo 2\" creates a solution/ directory in the current directory - in the repository that is an untracked directory beside the sources, which was almost committed by accident. They write to tmp/solution/ instead, which is git-ignored here and is created if it is missing, and solution/ is added to .gitignore so that an older version cannot leave one lying around unnoticed. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:50",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/demos.py",
+  "releaseNotes": "The demos write to tmp/solution/ instead of solution/, through one function that creates the directory when it is missing, so \"python -m exudyn demo 2\" no longer leaves an untracked directory in whatever directory it was started in; solution/ is in .gitignore as well, because an installed older version still writes there.",
+  "resolvedInVersion": "1.12.30"
+}

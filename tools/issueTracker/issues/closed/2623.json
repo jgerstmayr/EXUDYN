@@ -1,0 +1,17 @@
+{
+  "number": 2623,
+  "title": "opening the settings dialog re-points exudyn.sys at a throw-away SystemContainer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.17. Constructing an exudyn.SystemContainer() REPLACES exudyn.sys[\"currentRendererSystemContainer\"] - measured 2026-09-23. DefaultSettingsDictionary (#2612) creates one to read the defaults, so from the moment the settings dialog opens, everything that asks for the renderers container gets the throw-away one: ApplyDialogWindowSettings reads topmost and alpha from it, and UpdateSettingsStructure sends the redraw signal to it, so a settings change stops reaching the renderer. Once the temporary is collected, reading a member of it is an access violation (\"no RTTI data\"), which is what made the two change windows do nothing at all. The entry is saved and restored around the construction, and GetRendererSystemContainer also catches RuntimeError, because a dangling container must not take the dialog down.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:56",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "DefaultSettingsDictionary saves and restores exudyn.sys[\"currentRendererSystemContainer\"] around the SystemContainer it creates to read the defaults: constructing one replaces that entry, so since #2612 the settings dialog handed the renderer a throw-away container - the redraw signal went to it, the window settings were read from it, and once it was collected, touching it was an access violation, which is what made the two change windows do nothing. GetRendererSystemContainer also catches RuntimeError now.",
+  "resolvedInVersion": "1.12.32"
+}

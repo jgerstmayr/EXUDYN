@@ -1,0 +1,17 @@
+{
+  "number": 2621,
+  "title": "the window with the changes is invisible, and the buttons sit under the scroll bar",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.16. Maintainer, 2026-09-23: \"diff to default\" and \"this session\" show nothing. The content is right - a probe that builds the dialog without mapping a window finds the changes and raises nothing - so the window itself never becomes visible: the settings dialog is topmost, and the Toplevel opens at the same position behind it. It is made modal (grab_set), lifted, focused and offset from the dialog, so that it cannot hide behind it. Two more from the same message: \"this session\" is called \"changes since start\", and the button rows at the top and the bottom span the columns of the tree only, so that the right-most button no longer sits under the vertical scroll bar of the tree.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:50",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The window that shows the changes of the settings dialog is transient to the dialog, topmost, offset by 60 pixels and modal, so it can no longer open behind the dialog - which is why \"diff to default\" and \"this session\" appeared to do nothing although their content was right. The button is called \"changes since start\", and the rows at the top and the bottom span the columns of the tree only, so that no button sits under its vertical scroll bar.",
+  "resolvedInVersion": "1.12.31"
+}

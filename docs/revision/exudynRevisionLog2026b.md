@@ -906,3 +906,142 @@ flag — `stopSimulation— ` which `InitializeSolver` clears when a solve start
 it passes for the wrong reason, which is how it was found here. Two flags with one name in the
 Python API is the deeper thing the maintainer suspected, and it stands in RG4.5 as the open half.
 
+<a id="rg10-3"></a>
+### RG10.3 — exudev says how long it took (2026-09-23, #2617)
+
+The batch scripts `exudev` replaced printed the build time; the driver of revision2026 step R5.18
+printed a verdict table and no time at all, and the maintainer misses it for a good reason — a
+build that suddenly takes twice as long is the first sign that a header dependency grew, which is
+exactly the question RG9 will ask about `pybind11`. Every step is timed, and the summary carries
+the seconds and a total:
+
+```
++++++ exudev summary +++++
+  regenerate (venvExuP313)   ok           13.8s
+  TOTAL                                   13.8s
+```
+
+Under 100 seconds it reads as `13.8s`, above it as `4m12s`, because nobody counts to 252.
+
+<a id="rg10-4"></a>
+### RG10.4 — the last file leaves src/pythonGenerator (2026-09-23, #2618)
+
+`src/pythonGenerator/` held **one file**: `exudynVersion.py`, which finds the repository root and
+reads `version.txt`. Everything else of the old generator directory moved to `tools/generators/`
+in revision2026 step R4.3, and this one stayed because three very different things read it —
+`setup.py` and `conf.py—exec()` it from the repository root, and `itemDocsEmitter.py` imports it
+through a `sys.path` entry that `generatorPaths.py` added **for that single file**.
+
+It lives in `tools/generators/` now, beside `createStubFiles.py` and `generatorPaths.py`, which
+the build already needs and `MANIFEST.in` already ships; the `sys.path` entry is gone with it, and
+so is the directory. Five files name the new path, and the ones that only remember the old one in
+a comment — *"moved out of `src/pythonGenerator/pythonAutoGenerateObjects.py`"* — keep it,
+because that is history and still true.
+
+<a id="rg10-5"></a>
+### RG10.5 — VS Code can follow an include (2026-09-23, #2619)
+
+*"include errors detected - update your include paths"*, and, from `Main/CSystem.h`, *"cannot open
+source file ../Eigen/Sparse"*. The reason is worth writing down, because it looks like a broken
+include and is not one: the vendored headers are reached **through a subdirectory of `include/`**.
+`src/Linalg/LinearSolver.h` says `#include "../Eigen/Sparse"`, and the compiler resolves that
+against every include directory in turn, so it finds `include/lest/../Eigen/Sparse`. The build
+passes `-Iinclude/lest -Iinclude/glfw -Iinclude/glfw/deps -Iinclude/pybind11local`; the C/C++
+extension of VS Code knew none of them, so it could not follow a single include of the C++ sources.
+
+`.vscode/` is git-ignored, so the fix follows the pattern the repository already has for
+`exudyn.sln` and `python/pytest.py` (revision2026 step R2.x): a **committed template**,
+`tools/vscodeCppPropertiesTemplate.json`, that `tools/setupLocalWorkspace.py` copies into
+`.vscode/c_cpp_properties.json— ` creating the directory, which a fresh clone does not have. A
+machine-specific edit therefore cannot be committed, and the template says why each path is in the
+list. `${env:CONDA_PREFIX}/include` finds `Python.h` of whatever environment VS Code was started
+from.
+
+<a id="rg6-2-16"></a>
+### RG6.2.16 — a window nobody could see (2026-09-23, #2621)
+
+*"The buttons 'diff to default' and 'this session' show nothing."* They did exactly what they were
+written to do, and that is the interesting part: a probe that builds the whole dialog **without
+ever mapping a window** — `tk.Tk()` and its `Toplevel` withdrawn before anything is drawn, which
+is how a session that must not open a window (rule 11) can still test one — found the two
+changed settings, produced their lines and raised nothing. The window was there; it was **behind
+the dialog**, at the same position, and the dialog is `-topmost` because it has to be.
+
+Four things together make it visible, and none of them alone was enough: `transient` ties it to
+the dialog, `-topmost` puts it in front of a topmost parent, an **offset** of 60 pixels means the
+dialog cannot cover it even if the stacking fails, and `grab_set` makes it **modal**, which is
+what no window manager puts behind. Modal is also the right behaviour: it is a window one reads,
+copies from and closes.
+
+Two more from the same message: *this session* is **changes since start**, which says what it
+shows; and the rows at the top and the bottom span the **three columns of the tree**, not four, so
+that the right-most button no longer sits under the vertical scroll bar.
+
+**What this cost, and what it bought:** three rounds of "it does not work" for a feature whose
+logic was right the first time. The probe is 40 lines and should have existed before RG6.2.9 —
+it cannot see whether a window looks right, but it can prove that a handler runs, and that is
+where two of the three defects of this evening were.
+
+<a id="rg11-2"></a>
+### RG11.2 — the demos stop writing into the current directory (2026-09-23, #2620)
+
+`python -m exudyn demo 2` wrote `solution/chain.txt— ` relative to wherever it was started, which
+in this repository is a directory beside the sources. It was untracked and unignored, and it was
+staged by accident in this very session and caught only by reading the file list before the commit.
+
+The demos write to **`tmp/solution/`** now, through one function that creates the directory when it
+is missing, so a demo still works from any directory and leaves its files where this repository
+already ignores them. `solution/` is in `.gitignore` as well, because an installed version of the
+package still writes there and the next clone should not have to notice.
+
+<a id="rg6-2-17"></a>
+### RG6.2.17 — the dialog gave the renderer a different container (2026-09-23, #2623)
+
+This is what RG6.2.16 was really about, and it is mine: **constructing an
+`exudyn.SystemContainer()` replaces `exudyn.sys['currentRendererSystemContainer']`**. RG6.2.12
+creates one to read the defaults — which was the right fix for the 59 false differences — so
+from the moment the settings dialog opened, every part of the package that asks for *the
+renderer's* container was handed the **throw-away** one:
+
+- `ApplyDialogWindowSettings` read *alwaysTopmost* and *alphaTransparency* from a default settings
+  object instead of the user's;
+- `UpdateSettingsStructure` sent the **redraw signal** to it, so a settings change stopped
+  reaching the renderer at all;
+- and once the temporary was collected, reading a member of it was an **access violation**
+  (*"no RTTI data"*), which is what made both change windows do nothing: the exception was raised
+  before the window could be shown, and a tkinter command handler swallows it into the console.
+
+The entry is saved and put back around the construction, and `GetRendererSystemContainer` now also
+catches `RuntimeError— ` a container that is gone must not take a dialog down with it. A test
+holds it: register a container, read the defaults, and require that the entry is **the same
+object** and still usable.
+
+**The lesson is the one about side effects at a distance.** The C++ side writes that entry in
+`MainSystemContainer::AttachToRenderEngineInternal`, which is the documented place; that a plain
+constructor also lands there is invisible from Python and was found only by printing object
+identities. Anything in this package that creates a `SystemContainer` for a moment has the same
+problem, and nothing warns about it.
+
+<a id="rg6-2-11"></a>
+### RG6.2.11 — the catalogue, decided (2026-09-23, #2608)
+
+A list is only useful if someone goes through it, and the maintainer did, the same day:
+
+- **reset** and **undo** were built into RG6.2.14, and the *"changed only" view* is what the two
+  windows of RG6.2.9 are;
+- **load and save to a file: no.** The code of RG6.2.9 is what a user keeps, and it belongs in the
+  script rather than in a second format that nothing else reads;
+- **units in the description: no**, and the reason is worth keeping: even a *position* has no unit
+  Exudyn could name. The model's units are the user's implicit choice, so a unit in a description
+  would be a guess printed as a fact — which is the same argument that keeps hand-counted
+  numbers out of the documentation;
+- **apply while it is open** was already the behaviour and stays;
+- **the same dialog for `simulationSettings`** survives as RG6.2.18 (#2624), low priority;
+- **remember the window** is undecided, and the step now says *how* it would work rather than only
+  that it could. The geometry is one string; it could live in a module variable (this process
+  only), in `visualizationSettings.dialogs` (travels with the model), or in a user configuration
+  file. The danger is the **position**, not the size: a window remembered on a screen that is no
+  longer attached opens where nobody can see it. The rule that makes it safe — restore the size
+  always, restore the position only when the rectangle still lies inside the virtual desktop —
+  is written down, so that the step, if it is ever taken, starts from it.
+

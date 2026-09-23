@@ -11,12 +11,34 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
+
 import exudyn
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'DemoInfo', 'Demo1', 'Demo2',
+    'demoSolutionDirectory', 'DemoSolutionFile', 'DemoInfo', 'Demo1', 'Demo2',
     ]
+
+#where a demo is allowed to leave files: a demo is run to see that Exudyn works, from whatever
+#directory the user happens to be in, and it used to create a solution/ directory there - inside
+#this repository that is an untracked directory beside the sources (revision2026b step RG11.2,
+##2620). tmp/ is what this repository ignores, and it says what the files are.
+demoSolutionDirectory = 'tmp/solution'
+
+
+def DemoSolutionFile(name):
+    """The solution file of a demo, in a directory that is created if it does not exist.
+
+    Args:
+        name: the file name, e.g. 'demo1.txt'
+
+    Returns:
+        the path the demo writes to
+    """
+    if not os.path.isdir(demoSolutionDirectory):
+        os.makedirs(demoSolutionDirectory)
+    return demoSolutionDirectory + '/' + name
 
 def DemoInfo():
     exudyn.Print('\n************************************')
@@ -46,11 +68,11 @@ def Demo1(showAll = True):
     mbs.Assemble()                     #assemble system and solve
     simulationSettings = exudyn.SimulationSettings()
     simulationSettings.timeIntegration.verboseMode=1 #provide some output
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
+    simulationSettings.solutionSettings.coordinatesSolutionFileName = DemoSolutionFile('demo1.txt')
 
     mbs.SolveDynamic(simulationSettings)
     if showAll:
-        exudyn.Print('results can be found in local directory: solution/demo1.txt')
+        exudyn.Print('results can be found in local directory: ' + DemoSolutionFile('demo1.txt'))
     
         DemoInfo()
     
@@ -117,7 +139,7 @@ def Demo2(showAll = True):
     simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
     simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact*20
     if showAll:
-        simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/chain.txt'
+        simulationSettings.solutionSettings.coordinatesSolutionFileName = DemoSolutionFile('chain.txt')
     simulationSettings.timeIntegration.verboseMode = int(showAll)
     simulationSettings.linearSolverType = exudyn.LinearSolverType.EigenSparse
 

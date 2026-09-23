@@ -70,7 +70,9 @@ def GetRendererSystemContainer():
             guiSC = exudyn.sys['currentRendererSystemContainer']
             if guiSC != 0 and type(guiSC) == exudyn.SystemContainer:
                 return guiSC
-    except (KeyError, AttributeError): 
+    #RuntimeError is the access violation of a container that was destroyed while the entry
+    #still names it (#2623); a dialog must not die of that
+    except (KeyError, AttributeError, RuntimeError): 
         pass
     return None
 
@@ -447,8 +449,20 @@ def DefaultSettingsDictionary(settingsStructure):
         the dictionary with type info of a fresh structure of the same kind
     """
     if type(settingsStructure).__name__ == 'VisualizationSettings':
-        #a SystemContainer opens no window; it is the only way to the initialised state
-        return exudyn.SystemContainer().visualizationSettings.GetDictionaryWithTypeInfo()
+        #A SystemContainer opens no window, and it is the only way to the initialised state - but
+        #CREATING ONE REPLACES exudyn.sys['currentRendererSystemContainer'] (#2623). Everything
+        #that asks for the renderer's container would get this throw-away one afterwards: the
+        #dialog would read its window settings from it, the redraw signal would go to it instead
+        #of to the renderer, and once it is collected, reading a member of it is an access
+        #violation. So the entry is put back exactly as it was.
+        previous = None
+        if 'currentRendererSystemContainer' in exudyn.sys:
+            previous = exudyn.sys['currentRendererSystemContainer']
+        try:
+            return exudyn.SystemContainer().visualizationSettings.GetDictionaryWithTypeInfo()
+        finally:
+            if previous is not None:
+                exudyn.sys['currentRendererSystemContainer'] = previous
     return type(settingsStructure)().GetDictionaryWithTypeInfo()
 
 
@@ -603,7 +617,9 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #where CTRL-F puts one. It searches the NAMES first and the descriptions second, and the
         #drop-down holds the hits, so that one can be picked instead of stepped to.
         self.findFrame = tk.Frame(self)
-        self.findFrame.grid(row=0, column=0, columnspan=4, sticky=tk.E+tk.W)
+        #columnspan 3, not 4: column 3 is the vertical scroll bar of the tree, and a button
+        #that reaches under it looks misplaced (#2621)
+        self.findFrame.grid(row=0, column=0, columnspan=3, sticky=tk.E+tk.W)
         self.findFrame.grid_columnconfigure(2, weight=1)
         tk.Label(self.findFrame, text='find:').grid(row=0, column=0, padx=(4, 2))
         self.findVar = tk.StringVar()
@@ -691,7 +707,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #it went with the same step - it repeated the description that the tooltip already shows,
         #and the size it also carried is in the tooltip now.
         self.bottomFrame = tk.Frame(self)
-        self.bottomFrame.grid(row=2, column=0, columnspan=4, sticky=tk.E+tk.W)
+        self.bottomFrame.grid(row=2, column=0, columnspan=3, sticky=tk.E+tk.W)
         self.bottomFrame.grid_columnconfigure(0, weight=1)
 
         codeBox = tk.Frame(self.bottomFrame, relief=tk.SOLID, borderwidth=1,
@@ -711,14 +727,14 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #left, and what a user does with a dialog - take it back, or leave it - on the right.
         #Every button says what it does in a tooltip; none of them fits in two words.
         self.buttonFrame = tk.Frame(self)
-        self.buttonFrame.grid(row=3, column=0, columnspan=4, sticky=tk.E+tk.W)
+        self.buttonFrame.grid(row=3, column=0, columnspan=3, sticky=tk.E+tk.W)
         self.buttonFrame.grid_columnconfigure(2, weight=1)      #the gap between the two groups
         self.buttonTooltip = Tooltip(self, wrapLength=420)
 
         self.diffButton = tk.Button(self.buttonFrame, text='diff to default',
                                     command=self.OnShowDiffToDefault)
         self.diffButton.grid(row=0, column=0, padx=(4, 2), pady=(0, 4))
-        self.sessionButton = tk.Button(self.buttonFrame, text='this session',
+        self.sessionButton = tk.Button(self.buttonFrame, text='changes since start',
                                        command=self.OnShowSessionChanges)
         self.sessionButton.grid(row=0, column=1, padx=2, pady=(0, 4))
 
@@ -1133,13 +1149,21 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         session that can be pasted into a script (maintainer, 2026-09-23)"""
         window = tk.Toplevel(self)
         window.title(title)
-        #the dialog itself is topmost - it has to be, it blocks the render window - so a plain
-        #Toplevel of it goes BEHIND it the second time it is opened (#2614). transient ties the
-        #window to the dialog, and topmost puts it in front of a topmost parent.
+        #THE WINDOW HAS TO BE SEEN (#2621). The settings dialog is topmost - it has to be, it
+        #blocks the render window - and a Toplevel of it opens at the same place BEHIND it, which
+        #looks exactly like a button that does nothing: the content was right all along. Four
+        #things together make it visible, and none of them alone was enough: transient ties it to
+        #the dialog, topmost puts it in front of a topmost parent, an offset means it cannot be
+        #hidden by the dialog even if the stacking fails, and grab_set makes it modal, which is
+        #what a window manager never puts behind.
         window.transient(self.parentFrame)
         ApplyDialogWindowSettings(window, alwaysTopmost=True)
+        self.parentFrame.update_idletasks()
+        window.geometry('+' + str(self.parentFrame.winfo_rootx() + 60) + '+'
+                        + str(self.parentFrame.winfo_rooty() + 60))
         window.lift()
         window.focus_force()
+        window.grab_set()               #released when the window is destroyed
         window.grid_columnconfigure(0, weight=1)
         window.grid_rowconfigure(1, weight=1)
 

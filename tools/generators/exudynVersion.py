@@ -8,9 +8,10 @@
 #           the only thing that has to know where it lives.
 #
 #           Used from very different working directories: setup.py exec()s it from the repository
-#           root, the six generators import it from src/pythonGenerator/, and conf.py exec()s it
-#           from the root as well. It therefore anchors on the REPOSITORY ROOT rather than on the
-#           current directory.
+#           root, the generators import it from tools/generators/, and conf.py exec()s it from the
+#           root as well. It therefore anchors on the REPOSITORY ROOT rather than on the current
+#           directory. It lived in src/pythonGenerator/ until revision2026b step RG10.4 (#2618),
+#           as the last file of the old generator directory, which is gone with it.
 #
 #           Previously this tried four relative paths in sequence (../../../, ../../, ../, ./) and
 #           fell back to the literal string 'unknown' when all four missed. That fallback is the

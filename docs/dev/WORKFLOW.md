@@ -321,10 +321,14 @@ anything but `master`, `release/*` and tags to the public GitHub repository. **G
 themselves version controlled** — `.git/hooks/` never travels with a clone — so this setting is
 per-clone and easy to forget. Without it there is no mechanical guard against publishing `v2-dev`.
 
-`setupLocalWorkspace.py` creates the two **untracked** working files from their committed
-templates — `exudynTemplate.sln` → `exudyn.sln` and `python/pytestTemplate.py` →
-`python/pytest.py`. Open `exudyn.sln` in Visual Studio, and use `python/pytest.py` as the scratch
-file for trying something out with mixed Python/C++ debugging. Both are in `.gitignore`, so an
+`setupLocalWorkspace.py` creates the **untracked** working files from their committed
+templates — `exudynTemplate.sln` → `exudyn.sln`, `python/pytestTemplate.py` → `python/pytest.py`,
+and `tools/vscodeCppPropertiesTemplate.json` → `.vscode/c_cpp_properties.json`. Open `exudyn.sln`
+in Visual Studio, and use `python/pytest.py` as the scratch file for trying something out with
+mixed Python/C++ debugging. The third one is what lets **VS Code follow a C++ include**: the
+vendored headers are reached through subdirectories of `include/` (`#include "../Eigen/Sparse"`
+resolves as `include/lest/../Eigen/Sparse`), and without those paths the C/C++ extension reports
+*"include errors detected"* and cannot navigate (revision2026b step RG10.5). Both are in `.gitignore`, so an
 experiment **cannot** be committed by accident; previously this relied on remembering to restore
 the default `pytest.py` before committing, and a forgotten restore is invisible in review. An
 existing file is never overwritten (`--force` does that deliberately).

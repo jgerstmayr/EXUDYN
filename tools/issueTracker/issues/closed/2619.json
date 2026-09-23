@@ -1,0 +1,17 @@
+{
+  "number": 2619,
+  "title": "VS Code cannot follow a C++ include, because it has no include paths",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG10.5. In VS Code the C/C++ extension reports \"include errors detected - update your include paths\" and \"cannot open source file ../Eigen/Sparse (dependency of Main/CSystem.h)\", so navigation to an included file does not work. The reason: the vendored headers are found through include/lest, include/glfw and include/pybind11local - a quoted include like \"../Eigen/Sparse\" resolves against those subdirectories - and nothing tells the extension about them. .vscode/ is git-ignored, so the fix follows the pattern of exudynTemplate.sln and pytestTemplate.py: a committed template that tools/setupLocalWorkspace.py copies into .vscode/. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:25",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/setupLocalWorkspace.py",
+  "releaseNotes": "tools/vscodeCppPropertiesTemplate.json is copied to .vscode/c_cpp_properties.json by tools/setupLocalWorkspace.py, so VS Code can follow a C++ include: the vendored headers are reached through subdirectories of include/ - \"../Eigen/Sparse\" resolves as include/lest/../Eigen/Sparse - and the C/C++ extension knew none of those paths.",
+  "resolvedInVersion": "1.12.29"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 2624,
+  "title": "the settings dialog could edit simulationSettings as well",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "LOW",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "file": "python/exudyn/misc/GUI.py"
+}

@@ -1,0 +1,17 @@
+{
+  "number": 2617,
+  "title": "exudev does not say how long a step took",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG10.3. The batch scripts exudev replaced printed the build time, and the maintainer reads it: a build that suddenly takes twice as long is the first sign that a header dependency grew. The summary table names each step and its verdict and says nothing about time. Every step is timed and the summary prints it, with the total. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:25",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/runner.py",
+  "releaseNotes": "exudev times every step and prints the seconds in the summary table, with a total; the build time was visible in the batch scripts it replaced and is the first sign that a header dependency grew.",
+  "resolvedInVersion": "1.12.27"
+}

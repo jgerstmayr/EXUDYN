@@ -63,8 +63,9 @@ Visual Studio 2022 is the primary development environment; mixed Python/native d
 capability and is protected by design.
 
 - **IDE**: run `python tools/setupLocalWorkspace.py` once, then open the `exudyn.sln` it
-  creates and build `Debug|x64` or `Release|x64`. That solution and `python/pytest.py` are
-  untracked scratch copies of committed templates, so experiments cannot be committed.
+  creates and build `Debug|x64` or `Release|x64`. That solution, `python/pytest.py` and
+  `.vscode/c_cpp_properties.json` are untracked copies of committed templates, so experiments
+  cannot be committed - and the third is what lets VS Code follow a C++ include.
 - **Wheel**: `main/setup.py`, about one minute. Also protected by design.
 - **Scripts**: one driver, `exudev` - `exudev --help`, and `exudev -n <command>` to see what a
   command would run. Its commands are listed in [`tools/exudev/README.md`](../../tools/exudev/README.md).

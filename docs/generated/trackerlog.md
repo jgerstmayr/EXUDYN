@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.26.dev1
+- Exudyn version = 1.12.33.dev1
 - last change = 2026-09-23
-- Number of issues = 2617
-- Number of resolved issues = 2340 (26 in current version)
+- Number of issues = 2625
+- Number of resolved issues = 2347 (33 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,42 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.32: <span class="textred">resolved BUG 2623</span>: opening the settings dialog re-points exudyn.sys at a throw-away SystemContainer
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.17. Constructing an exudyn.SystemContainer() REPLACES exudyn.sys\["currentRendererSystemContainer"\] - measured 2026-09-23. DefaultSettingsDictionary (\#2612) creates one to read the defaults, so from the moment the settings dialog opens, everything that asks for the renderers container gets the throw-away one: ApplyDialogWindowSettings reads topmost and alpha from it, and UpdateSettingsStructure sends the redraw signal to it, so a settings change stops reaching the renderer. Once the temporary is collected, reading a member of it is an access violation ("no RTTI data"), which is what made the two change windows do nothing at all. The entry is saved and restored around the construction, and GetRendererSystemContainer also catches RuntimeError, because a dangling container must not take the dialog down.
+  - **notes:** DefaultSettingsDictionary saves and restores exudyn.sys\["currentRendererSystemContainer"\] around the SystemContainer it creates to read the defaults: constructing one replaces that entry, so since \#2612 the settings dialog handed the renderer a throw-away container - the redraw signal went to it, the window settings were read from it, and once it was collected, touching it was an access violation, which is what made the two change windows do nothing. GetRendererSystemContainer also catches RuntimeError now.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:56**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.31: <span class="textred">resolved BUG 2621</span>: the window with the changes is invisible, and the buttons sit under the scroll bar
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.16. Maintainer, 2026-09-23: "diff to default" and "this session" show nothing. The content is right - a probe that builds the dialog without mapping a window finds the changes and raises nothing - so the window itself never becomes visible: the settings dialog is topmost, and the Toplevel opens at the same position behind it. It is made modal (grab\_set), lifted, focused and offset from the dialog, so that it cannot hide behind it. Two more from the same message: "this session" is called "changes since start", and the button rows at the top and the bottom span the columns of the tree only, so that the right-most button no longer sits under the vertical scroll bar of the tree.
+  - **notes:** The window that shows the changes of the settings dialog is transient to the dialog, topmost, offset by 60 pixels and modal, so it can no longer open behind the dialog - which is why "diff to default" and "this session" appeared to do nothing although their content was right. The button is called "changes since start", and the rows at the top and the bottom span the columns of the tree only, so that no button sits under its vertical scroll bar.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:50**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.30: resolved Issue 2620: the demos write a solution directory into whatever directory they are started in (change)
+  - issue author: Claude-JG
+  - description: revision2026b step RG11.2. exudyn.demos.Demo1 and Demo2 write solution/demo1.txt and solution/chain.txt, so "python -m exudyn demo 2" creates a solution/ directory in the current directory - in the repository that is an untracked directory beside the sources, which was almost committed by accident. They write to tmp/solution/ instead, which is git-ignored here and is created if it is missing, and solution/ is added to .gitignore so that an older version cannot leave one lying around unnoticed. Maintainer, 2026-09-23.
+  - **notes:** The demos write to tmp/solution/ instead of solution/, through one function that creates the directory when it is missing, so "python -m exudyn demo 2" no longer leaves an untracked directory in whatever directory it was started in; solution/ is in .gitignore as well, because an installed older version still writes there.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:50**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.29: resolved Issue 2619: VS Code cannot follow a C++ include, because it has no include paths (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG10.5. In VS Code the C/C++ extension reports "include errors detected - update your include paths" and "cannot open source file ../Eigen/Sparse (dependency of Main/CSystem.h)", so navigation to an included file does not work. The reason: the vendored headers are found through include/lest, include/glfw and include/pybind11local - a quoted include like "../Eigen/Sparse" resolves against those subdirectories - and nothing tells the extension about them. .vscode/ is git-ignored, so the fix follows the pattern of exudynTemplate.sln and pytestTemplate.py: a committed template that tools/setupLocalWorkspace.py copies into .vscode/. Maintainer, 2026-09-23.
+  - **notes:** tools/vscodeCppPropertiesTemplate.json is copied to .vscode/c\_cpp\_properties.json by tools/setupLocalWorkspace.py, so VS Code can follow a C++ include: the vendored headers are reached through subdirectories of include/ - "../Eigen/Sparse" resolves as include/lest/../Eigen/Sparse - and the C/C++ extension knew none of those paths.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:25**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.28: resolved Issue 2618: src/pythonGenerator holds one file and should not exist any more (change)
+  - issue author: Claude-JG
+  - description: revision2026b step RG10.4. Everything of the old generator directory moved to tools/generators/ in revision2026 step R4.3 except exudynVersion.py, which locates the repository root and reads version.txt. Three places use it: setup.py and conf.py exec() it, and itemDocsEmitter.py imports it through a sys.path entry that generatorPaths.py adds for that single file. It moves to tools/generators/, where the other build-time helpers already live and are already in MANIFEST.in, and src/pythonGenerator/ is deleted. Maintainer, 2026-09-23.
+  - **notes:** exudynVersion.py moved to tools/generators/, where the other build-time helpers live, and src/pythonGenerator/ is gone - it had held that one file since revision2026 step R4.3. setup.py, conf.py, generatorPaths.py, MANIFEST.in and the developer documentation name the new path; the sys.path entry that existed for that single file is gone.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:25**, date raised: 2026-09-23, resolved by: Claude-JG
+- Version 1.12.27: resolved Issue 2617: exudev does not say how long a step took (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG10.3. The batch scripts exudev replaced printed the build time, and the maintainer reads it: a build that suddenly takes twice as long is the first sign that a header dependency grew. The summary table names each step and its verdict and says nothing about time. Every step is timed and the summary prints it, with the total. Maintainer, 2026-09-23.
+  - **notes:** exudev times every step and prints the seconds in the summary table, with a total; the build time was visible in the batch scripts it replaced and is the first sign that a header dependency grew.
+  - effort: LOW (within 2 hours)
+  - date resolved: **2026-09-23 17:25**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.26: <span class="textred">resolved BUG 2616</span>: quitting the renderer BEFORE a simulation starts raises, quitting during it does not
   - issue author: Claude-JG
   - description: revision2026b step RG4.5. Closing the render window or pressing ESCAPE while a script waits - "Computation paused... press SPACE to continue / Q to quit" - sets forceQuitSimulation, and CSolverBase::SolveSystem then returns false before the solver ever starts. SolveDynamic reads false as a failure, prints the DYNAMIC SOLVER FAILED block and raises SolverError, so a user who simply quit gets a traceback. Stopping the SAME simulation one step later does not: SolveSteps returns !conv.stepReductionFailed, which is true when the user stopped it, and the script ends quietly. The two paths must agree, and the quiet one is the right one - a user stopping a run is not a solver failure. Reported by the maintainer 2026-09-23 from "python -m exudyn demo 2".
@@ -7959,6 +7995,16 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well
+  - issue author: Claude-JG
+  - description: revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
+- <span class="textorange">open issue 2622:</span> the item sources pay for pybind11 through the graphics helpers
+  - issue author: Claude-JG
+  - description: revision2026b step RG9.1, proposed at the maintainers request 2026-09-23. src/Graphics/VisualizationItemHelpers.h is included by every C\<Item\>.cpp that draws something, and it includes Graphics/VisualizationSystemContainer.h, which includes pybind11 - the dependency the per-item split of revision2026 step R11.4.4 was meant to avoid. Measured: the py:: in that header is six free-function declarations called from two .cpp files, easily moved; but the header also includes Main/CSystem.h (its own "REMOVE: temporary" line), and CSystem.h includes Pymodules/PythonUserFunctions.h, which includes pybind11. An experiment with that include removed fails ONLY in Graphics/VisualizationSystem.h lines 33-34, which declare PostProcessData\* and CSystemData\* members without including their headers - and both of those headers are pybind-free. Acceptance is the build time before and after, which exudev prints since \#2617: 57.9 s today.
+  - effort: MEDIUM (within 16 hours)
+  - date raised: 2026-09-23
 - <span class="textorange">open issue 2610:</span> the results monitor must run beside the simulation, or it is redundant
   - issue author: Claude-JG
   - description: revision2026b step RG11.1. The monitor was a command line tool: a second terminal watched a solution file while the simulation wrote it. It now also has MonitorResults(...), documented for use inside a script. If that call blocks until the window is closed, it does nothing that PlotSensor does not already do, and it should not exist as a second way to plot a file. What would make it worth having is that it runs BESIDE the simulation - a thread, a process, or the renderer event loop. This step evaluates those options, says what each costs (matplotlib is not thread safe, a process needs no shared state but needs a protocol), and recommends one. Maintainer, 2026-09-23.
@@ -7968,12 +8014,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - issue author: Claude-JG
   - description: revision2026b step RG6.4. Two things, both from the maintainer, 2026-09-23. First, every member of a light repeats "of GL\_LIGHT0" (1,2,3): within a light that is noise and it should read "of this light", with the mapping of light0..light3 to GL\_LIGHT0..GL\_LIGHT3 said once, at the enable flag of the light. Second, the remarks are out of date: they say light0 is the one used for shadows, which was a performance decision that no longer holds - every light can cast shadows now. And the sentence "approximates directional lights by enlarging the direction to 200 times maxSceneSize" belongs to the shadow settings, not to a light, and it should not name a factor that has already changed once and will change again.
   - effort: MEDIUM (within 16 hours)
-  - date raised: 2026-09-23
-- <span class="textblue">open issue 2608:</span> settings dialog: the catalogue of optional features
-  - issue author: Claude-JG
-  - description: revision2026b step RG6.2.11. A list, not a commitment: what else the settings dialog could do, collected while RG6.2 is fresh, for the maintainer to pick from or to close. Written in the plan step. Maintainer, 2026-09-23.
-  - **remarks:** Amended by the maintainer, 2026-09-23: UNDO joins the list - the dialog applies every change immediately, which stays, and that is why a wrong value cannot be taken back. Struck out: "apply while it is open" (changes ARE applied immediately and that is to stay) and the "changed only" view (the two windows of RG6.2.9 are that view).
-  - effort: LOW (within 2 hours)
   - date raised: 2026-09-23
 - <span class="boldblue">open issue 2599:</span> CHANGELOG.md and the issue tracker page hold the same list twice
   - issue author: Claude-JG

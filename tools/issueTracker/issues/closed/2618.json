@@ -1,0 +1,17 @@
+{
+  "number": 2618,
+  "title": "src/pythonGenerator holds one file and should not exist any more",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG10.4. Everything of the old generator directory moved to tools/generators/ in revision2026 step R4.3 except exudynVersion.py, which locates the repository root and reads version.txt. Three places use it: setup.py and conf.py exec() it, and itemDocsEmitter.py imports it through a sys.path entry that generatorPaths.py adds for that single file. It moves to tools/generators/, where the other build-time helpers already live and are already in MANIFEST.in, and src/pythonGenerator/ is deleted. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-23 17:25",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/pythonGenerator/exudynVersion.py",
+  "releaseNotes": "exudynVersion.py moved to tools/generators/, where the other build-time helpers live, and src/pythonGenerator/ is gone - it had held that one file since revision2026 step R4.3. setup.py, conf.py, generatorPaths.py, MANIFEST.in and the developer documentation name the new path; the sys.path entry that existed for that single file is gone.",
+  "resolvedInVersion": "1.12.28"
+}

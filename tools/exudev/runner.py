@@ -26,6 +26,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 #the conda environments, see docs/howTo/condaEnvironments.md
 allPythonVersions = ['P310', 'P311', 'P312', 'P313', 'P314']
@@ -305,6 +306,9 @@ def RunSteps(steps, options):
     for (index, step) in enumerate(steps):
         print('')
         print('+++ exudev ' + str(index + 1) + '/' + str(total) + ': ' + step.label + ' +++')
+        #the batch scripts this replaced printed the build time, and it is read: a build that
+        #suddenly takes twice as long is the first sign that a header dependency grew (#2617)
+        stepStart = time.time()
 
         if step.action is not None:      #not a process; done in this interpreter
             sys.stdout.flush()
@@ -312,10 +316,11 @@ def RunSteps(steps, options):
                 returnCode = step.action()
             except KeyboardInterrupt:
                 print('*** interrupted during: ' + step.label)
-                results += [(step.label, 'interrupted')]
+                results += [(step.label, 'interrupted', time.time() - stepStart)]
                 interrupted = True
                 break
-            results += [(step.label, 'ok' if returnCode == 0 else 'FAILED')]
+            results += [(step.label, 'ok' if returnCode == 0 else 'FAILED',
+                         time.time() - stepStart)]
             if returnCode != 0 and step.check:
                 break
             continue
@@ -325,7 +330,7 @@ def RunSteps(steps, options):
             argv = step.resolve()
             if argv is None:
                 print('(nothing to do)')
-                results += [(step.label, 'skipped')]
+                results += [(step.label, 'skipped', time.time() - stepStart)]
                 continue
 
         #the command is printed even in quiet mode: it is the answer to "what is it doing now",
@@ -346,7 +351,7 @@ def RunSteps(steps, options):
             print('')
             print('*** interrupted during: ' + step.label)
             interrupted = True
-            results += [(step.label, 'interrupted')]
+            results += [(step.label, 'interrupted', time.time() - stepStart)]
             break
         except OSError as error:
             print('*** could not start: ' + str(error))
@@ -356,7 +361,7 @@ def RunSteps(steps, options):
         if step.verdict is not None:
             verdict = step.verdict(step, returnCode)
 
-        results += [(step.label, verdict)]
+        results += [(step.label, verdict, time.time() - stepStart)]
 
         #a verdict that BEGINS with 'ok' is a success that has something to say - e.g.
         #'ok, TIER 1 DRIFT' (#2563): it is printed in the summary but does not stop the run
@@ -377,13 +382,25 @@ def RunSteps(steps, options):
 
 
 #%%******************************************************************************************************
+def Duration(seconds):
+    """a time a human reads at a glance: 0.8s, 63.4s, 4m12s"""
+    if seconds < 100:
+        return ('%.1f' % seconds) + 's'
+    return str(int(seconds // 60)) + 'm' + ('%02d' % int(seconds % 60)) + 's'
+
+
 def PrintSummary(results):
-    """The verdict table. 'unknown' is a real answer and is never rounded up to success, and a
-    verdict of the form 'ok, SOMETHING' says that the step passed and still has something to
-    report - the tier 1 drift of #2563 is the reason this exists."""
+    """The verdict table, with the time each step took (#2617). 'unknown' is a real answer and is
+    never rounded up to success, and a verdict of the form 'ok, SOMETHING' says that the step
+    passed and still has something to report - the tier 1 drift of #2563 is the reason this
+    exists."""
     print('')
     print('+++++ exudev summary +++++')
-    width = max([len(label) for (label, verdict) in results] + [10])
-    for (label, verdict) in results:
-        print('  ' + label.ljust(width) + '   ' + verdict)
+    width = max([len(label) for (label, _, _) in results] + [10])
+    verdictWidth = max([len(verdict) for (_, verdict, _) in results] + [8])
+    for (label, verdict, seconds) in results:
+        print('  ' + label.ljust(width) + '   ' + verdict.ljust(verdictWidth)
+              + '   ' + Duration(seconds).rjust(7))
+    print('  ' + 'TOTAL'.ljust(width) + '   ' + ''.ljust(verdictWidth) + '   '
+          + Duration(sum([seconds for (_, _, seconds) in results])).rjust(7))
     print('')

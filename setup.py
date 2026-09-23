@@ -13,8 +13,8 @@ import contextlib     #redirect_stdout for the quiet parallel compile (revision2
 import glob           #finding stale linked modules on a flag change (revision2026 step R2.17.1)
 
 
-#from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
-file='src/pythonGenerator/exudynVersion.py'
+#from tools.generators.exudynVersion import exudynVersionString #does not run under MacOS
+file='tools/generators/exudynVersion.py'
 exec(open(file).read(), globals())
 
 #create the single __init__.pyi file from its subfiles. This is OPTIONAL - a build without it
