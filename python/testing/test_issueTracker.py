@@ -1016,6 +1016,52 @@ def testTheChangelogHoldsTheCurrentReleaseOnly(tracker):
     assert keys == sorted(keys, reverse=True)
 
 
+def testBothPagesPrintOneEntryFormat(tracker):
+    """#2637: the changelog printed `FIX` and no dates, the tracker page "resolved Issue
+    2633: title (improvement)" and no type - for the same issue"""
+    IntoTheRelease(tracker)
+    current = tracker.CurrentRelease()['version']
+    resolved = [one for one in tracker.GetIssues()
+                if one['status'] == 'RESOLVED'
+                and one['type'] not in tracker.typesNotInReleaseNotes
+                and str(one.get('resolvedInVersion', '')).count('.') == 2]
+    release = lambda one: tracker.ReleaseOfVersionString(one['resolvedInVersion'])
+    inCurrent = [one for one in resolved if release(one) == current]
+    earlier = [one for one in resolved if release(one) != current]
+    assert inCurrent and earlier, 'the current release and an earlier one'
+
+    for (issue, text) in [(inCurrent[0], tracker.ChangelogText()),
+                          (earlier[0], tracker.MarkdownText())]:
+        entry = tracker.IssueEntry(issue, issue['resolvedInVersion'])
+        headline = entry.split(chr(10))[0]
+        assert headline in text, headline
+        assert headline.startswith('- **' + issue['resolvedInVersion'] + '** ')
+        assert '`' + issue['type'] + '`' in headline, 'the type as the changelog writes it'
+        assert '(#' + str(issue['number']) + ')' in headline, 'the number of the tracker'
+        assert '  - description: ' in entry, 'the sub-list of the tracker'
+        assert 'date raised: ' + issue['dateRaised'].strip() in entry
+        if issue['dateResolved'].strip() != '':    #the issues of 2019 carry no resolve date
+            assert 'date resolved: **' + issue['dateResolved'].strip() + '**' in entry
+
+
+def testAnIssueCarriesItsPriorityAndEffortAsBadges(tracker):
+    """the maintainer asked for them right after the type, in the same style (#2637)"""
+    issue = {'number': 42, 'title': 'a title', 'type': 'FIX', 'priority': 'HIGH',
+             'effort': 'LOW', 'author': 'Claude-JG', 'resolvedAuthor': 'JG',
+             'status': 'RESOLVED', 'description': 'd', 'releaseNotes': '',
+             'workingRemarks': '', 'dateRaised': '2026-09-24', 'dateResolved': '2026-09-24'}
+    badges = tracker.IssueBadges(issue)
+    assert badges == '`FIX` `HIGH` `LOW EFF` `raised by: Claude-JG`', badges
+
+    #JG is omitted on both sides, and the effort carries its word because LOW and HIGH are
+    #values of the priority as well (revision2026b step RG10.2)
+    issue['author'] = 'JG'
+    assert tracker.IssueBadges(issue) == '`FIX` `HIGH` `LOW EFF`'
+    issue['effort'] = ''
+    issue['priority'] = ''
+    assert tracker.IssueBadges(issue) == '`FIX`'
+
+
 def testTheTrackerPageHoldsEverythingBeforeTheCurrentRelease(tracker):
     """the other half of the split: no issue of the current release is on that page, and the
     heading says which version it stops before"""
@@ -1026,7 +1072,11 @@ def testTheTrackerPageHoldsEverythingBeforeTheCurrentRelease(tracker):
     assert ('## Resolved issues and resolved bugs before version ' + current['version']
             in text)
     assert '### Version ' + current['version'] + chr(10) not in text
-    assert '- Version ' + current['version'] + '.' not in text
+    #the entry of an issue is a LINE, and the descriptions quote every format this page ever
+    #had - searching the whole text finds the quotation (revision2026b step RG3.10.1, #2637)
+    entries = [line for line in text.split(chr(10))
+               if line.startswith('- **' + current['version'] + '.')]
+    assert entries == [], 'no issue of the current release is on this page'
     assert '### Version 1.10' in text, 'the earlier releases are still here, in full'
 
 

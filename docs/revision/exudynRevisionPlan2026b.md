@@ -296,6 +296,15 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       or similar and contains only the earlier changes so there is no duplication - but still
       containing all issues for searching.
 
+<a id="rg3-10-1"></a>
+**RG3.10.1** **DONE 2026-09-24** (#2637) — [log](exudynRevisionLog2026b.md#rg3-10-1) —
+    **The changelog and the tracker page printed the same issue in two formats**
+    *(maintainer, 2026-09-24)*. RG3.10 split the two lists but left the two renderings: the
+    changelog had a type badge and no dates, the tracker page had dates and no type. One
+    `IssueEntry()` prints both - the type, then the priority and the effort as badges, then
+    who raised and resolved it, then the sub-list of the tracker. The changelog sentence that
+    called the other page "the full issue tracker" was wrong and is gone.
+
 <a id="rg3-11"></a>
 **RG3.11** **DONE 2026-09-23** (#2611) — [log](exudynRevisionLog2026b.md#rg3-11) — *(group RG3; maintainer 2026-09-23)* **"The C++ core" points at the repository
     instead of at the documentation** (#2611). The section in *Advanced topics* stays — it is

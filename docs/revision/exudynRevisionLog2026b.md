@@ -1942,3 +1942,53 @@ so the cap did not shorten the list, it **deleted its older half**: nothing olde
 are **470 KB** of JSON, built in **0.06 s**, over a loopback socket. `listLimit = 0` now means
 no cap, and the page already said "N matching, M shown" when the two differ, so it needed no
 change beyond the placeholder of the search box, which now says *search any field*.
+
+<a id="rg3-10-1"></a>
+### RG3.10.1 - one entry, printed by one function (2026-09-24, #2637)
+
+RG3.10 stopped the two pages from holding the same issues. It did not stop them from printing
+an issue in two different shapes, which is what the maintainer asked about next: *"the
+Changelog and the issue tracker in the docs have a different format for the list of versions
+and issues. Why?"*
+
+There was no reason. The two renderers were written three months apart, for different
+purposes, and each grew its own line:
+
+```
+changelog     - **1.12.50** `FIX` the dialogs are larger and blurred (#2634) - raised by X
+tracker page  - Version 1.12.49: resolved Issue 2633: the dialogs are larger (fix)
+                - issue author: X
+                - description: ...
+                - effort: LOW (within 2 hours)
+                - date resolved: **2026-09-24 11:44**, date raised: 2026-09-24
+```
+
+So the changelog had no dates at all and the tracker page had no type badge, and the number
+was spelled `(#2634)` on one page and `Issue 2633` on the other.
+
+**`IssueEntry(issue, version, details=True)` is now the only thing that prints an issue**, and
+both pages call it. The headline follows the maintainer's instruction exactly: the type as the
+changelog wrote it, the **priority** and the **effort** in the same style right after it,
+then `raised by:` and `resolved by:`, then the title and the number. The sub-list is the
+tracker's, unchanged. Two decisions inside it:
+
+- the **effort** badge carries its word - `LOW EFF` - and the priority does not. That is not a
+  new rule: `LOW` and `HIGH` are values of **both** fields, and RG10.2 (#2600) had already met
+  the problem in the web view, where two bare badges in one row could not be told apart;
+- an **open** issue keeps the colour of its priority, which the page has always had and which
+  is the only thing a reader of 270 open issues sorts them by. It is the badge that carries it
+  now instead of a separate coloured prefix.
+
+What the badges mean is said **once** per page, by `BadgeLegend()`, instead of `effort: LOW
+(within 2 hours)` under each of 2,366 entries.
+
+**The wrong sentence** the maintainer also reported: the changelog called the other page *"the
+full issue tracker"* and told the reader that issues closed without being resolved are in
+neither list. The page is not the full tracker - it holds the issues resolved **before** the
+current release, plus the open issues and the known bugs - and the sentence about closed
+issues belongs with the sentence about version numbers, which is where it is now.
+
+**A test caught its own premise.** `testTheTrackerPageHoldsEverythingBeforeTheCurrentRelease`
+asserted `'- Version 1.12.' not in text` over the whole page - and failed, because the
+description of #2637 **quotes the old format**. It compares lines that start an entry now,
+which is what it meant.

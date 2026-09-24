@@ -616,6 +616,97 @@ def ConvertToHTML():
         file.write('</table>\n\n</body>\n</html>\n')
 
 
+#THE ENTRY OF ONE ISSUE (revision2026b step RG3.10.1, #2637). The changelog and the tracker
+#page are two renderings of one store and printed the same issue in two shapes: the changelog
+#as '- **1.12.50** `FIX` title (#2634) - raised by X' with no dates, the tracker page as
+#'- Version 1.12.49: resolved Issue 2633: title (improvement)' with no type badge. The
+#maintainer asked for one format (2026-09-24): the type as the changelog writes it, the
+#priority and the effort in the same style right after it, 'raised by' and 'resolved by' the
+#same again, and the sub-list of the tracker for the rest. Both pages call these three.
+def Colour(cssClass, text):
+    """a colour of docs/_static/custom.css, as the inline HTML that MyST passes through"""
+    return '<span class="' + cssClass + '">' + text + '</span>'
+
+
+def IssueBadges(issue):
+    """the classification of an issue in one style: the type, the priority, the effort and
+    the two authors, each in backticks. An empty field is not printed, and JG is not printed
+    either - the pages say once that the author is omitted when it was Johannes Gerstmayr.
+
+    The effort carries its word - `LOW EFF` - and the priority does not, because LOW and HIGH
+    are values of BOTH and two bare badges in one line cannot be told apart (revision2026b
+    step RG10.2, #2600, where the web view met the same problem)."""
+    badges = []
+    kind = issue['type'].strip()
+    if kind != '':
+        badges.append(Colour('textred', '`BUG`') if kind == 'BUG' else '`' + kind + '`')
+    if issue['priority'].strip() != '':
+        #an OPEN issue keeps the colour its priority had before revision2026b step RG3.10.1,
+        #which is the only thing a reader of 270 open issues sorts them by
+        badge = '`' + issue['priority'].strip() + '`'
+        if issue['status'] == 'RAISED':
+            badge = Colour({'HIGH': 'textred', 'NORMAL': 'textorange',
+                            'LOW': 'textblue'}.get(issue['priority'].strip().upper(),
+                                                   'boldblue'), badge)
+        badges.append(badge)
+    if issue['effort'].strip() != '':
+        badges.append('`' + issue['effort'].strip() + ' EFF`')
+    for (field, what) in [('author', 'raised by'), ('resolvedAuthor', 'resolved by')]:
+        name = str(issue.get(field, '')).strip()
+        if name not in ['', 'JG']:
+            badges.append('`' + what + ': ' + ToMarkdown(name) + '`')
+    return ' '.join(badges)
+
+
+def IssueDetails(issue):
+    """what stands under the entry of an issue: its text and its dates, as the tracker page
+    has always printed them. A CLOSED issue shows what its resolution says and an OPEN one
+    what the work on it knows so far; the two are different fields since revision2026 step
+    R8.5.3."""
+    details = '  - description: ' + ToMarkdown(issue['description']) + '\n'
+    if issue['releaseNotes'].strip(' ') != '':
+        details += '  - **notes:** ' + ToMarkdown(issue['releaseNotes']) + '\n'
+    if issue['workingRemarks'].strip(' ') != '':
+        details += '  - **remarks:** ' + ToMarkdown(issue['workingRemarks']) + '\n'
+
+    details += '  - '
+    if issue['dateResolved'].strip() != '':
+        details += 'date resolved: **' + issue['dateResolved'].strip() + '**, '
+    details += 'date raised: ' + issue['dateRaised'].strip() + '\n'
+    return details
+
+
+def IssueEntry(issue, version='', details=True):
+    """one issue as both pages print it: the version it produced, the badges, the title and
+    the issue number, and the sub-list below it.
+
+    Args:
+        issue: the issue dictionary
+        version: the version it resolved into, printed in front; empty for an open issue
+        details: False prints the headline alone
+
+    Returns:
+        the Markdown of the entry, ending in a newline
+    """
+    line = '- '
+    if str(version).strip() != '':
+        line += '**' + str(version).strip() + '** '
+    badges = IssueBadges(issue)
+    if badges != '':
+        line += badges + ' '
+    line += (ToMarkdown(issue['title'].strip(' ')) + ' (#' + str(issue['number']) + ')\n')
+    return line + (IssueDetails(issue) if details else '')
+
+
+def BadgeLegend():
+    """the one sentence that says what the badges of an entry mean, for both pages"""
+    return ('Every entry carries the **type** of the issue, then its **priority** and its '
+            '**effort** as badges (' + ', '.join('`' + name + ' EFF` is ' + issueEfforts[name]
+                                                 for name in issueEfforts) + '), then who '
+            'raised it and who resolved it - both omitted when that was Johannes Gerstmayr '
+            '(JG).\n\n')
+
+
 def ConvertToMarkdown():
     """write what MarkdownText() renders to docs/generated/trackerlog.md"""
     markdownFile = RepositoryPath('docs', 'generated', trackerFile + '.md')
@@ -639,26 +730,19 @@ def MarkdownText():
     lastChangeDate = ReadMeta()['lastChange']
     totalResolved = issueStore.ClosedCount()        #the count the current micro counts from
 
-    def IssueNumberString(issue):
-        #the number is an int in the store; the release notes print it as it was written
-        #in seven years of issue texts, four digits with leading zeros
-        return str(issue['number']).rjust(4, '0')
-
-    def Colour(cssClass, text):
-        return '<span class="' + cssClass + '">' + text + '</span>'
 
     text = ('<!-- GENERATED by tools/issueTracker/issueTracker.py from trackerlog.txt '
             '- do not edit -->\n'
             '(sec-issuetracker)=\n'
             '# Issue tracker\n\n')
     text += ('This section contains resolved issues per release and known bugs. Use this '
-             'information to understand changes compared to previous versions. The author field '
-             'is omitted if it was Johannes Gerstmayr (JG).\n'
+             'information to understand changes compared to previous versions. '
              'The extension `.dev1` is not added in the issues list (e.g., 1.2.2.dev1==1.2.2), '
              'as it only marks versions that will not be available in pypi with standard pip '
              'install, but only with the `--pre` option or by specifying the exact version name, '
-             'see versions on <https://pypi.org/project/exudyn/>.\n'
-             'BUG numbers refer to the according issue numbers.\n\n')
+             'see versions on <https://pypi.org/project/exudyn/>.\n\n')
+    #one entry format with the changelog since revision2026b step RG3.10.1 (#2637)
+    text += BadgeLegend()
     text += ('General information on current version:\n\n'
              '- Exudyn version = ' + releaseVersionDev + '\n'
              '- last change = ' + lastChangeDate + '\n'
@@ -701,52 +785,16 @@ def MarkdownText():
             resolved += '\n### Version '+str(rNew[0])+'.'+str(rNew[1])+'\n\n'
             previousRelease = rNew
 
-        #the details of one issue, as the sub-list of its entry
-        details = ''
-        if issue['author'] != 'JG':
-            details += '  - issue author: '+ToMarkdown(issue['author'])+'\n'
-        details += '  - description: '+ToMarkdown(issue['description'])+'\n'
-        #a CLOSED issue shows what its resolution says, an OPEN one what the work on it knows so
-        #far; the two are different fields since revision2026 step R8.5.3
-        if len(issue['releaseNotes'].strip(' ')) != 0:
-            details += '  - **notes:** '+ToMarkdown(issue['releaseNotes'])+'\n'
-        if len(issue['workingRemarks'].strip(' ')) != 0:
-            details += '  - **remarks:** '+ToMarkdown(issue['workingRemarks'])+'\n'
-        if len(issue['effort'].strip(' ')) != 0:
-            details += ('  - effort: ' + ToMarkdown(issue['effort'].strip())
-                        + ' (' + issueEfforts.get(issue['effort'].strip(), '') + ')\n')
-
-        details += '  - '
-        if len(issue['dateResolved']) != 0:
-            details += 'date resolved: **'+issue['dateResolved'].strip()+'**, '
-        details += 'date raised: '+issue['dateRaised'].strip()
-        if issue['resolvedAuthor'] != 'JG' and len(issue['resolvedAuthor']) != 0:
-            details += ', resolved by: '+ToMarkdown(issue['resolvedAuthor'])
-        details += '\n'
-
-        title = ToMarkdown(issue['title'].strip(' '))
 
         inCurrentRelease = (rNew == (majorCurrent, microCurrent))
         if (issue['status'] == 'RESOLVED' and issue['type'] not in typesNotInReleaseNotes
                 and not inCurrentRelease):
-            entry = ('- Version '+str(rNew[0])+'.'+str(rNew[1])+'.'+str(vIssueMicro)+': ')
-            if issue['type'] == 'BUG':
-                entry += Colour('textred', 'resolved BUG '+IssueNumberString(issue))+': '+title
-            else:
-                entry += ('resolved Issue '+IssueNumberString(issue)+': '+title
-                          + ' ('+issue['type'].lower()+')')
-            resolved += entry + '\n' + details
+            resolved += IssueEntry(issue, str(rNew[0]) + '.' + str(rNew[1]) + '.'
+                                   + str(vIssueMicro))
         elif issue['status'] == 'RAISED' and issue['type'] == 'BUG':
-            bugs += '- '+Colour('textred', 'open BUG '+IssueNumberString(issue)+':')+' '+title+'\n'
-            bugs += details
+            bugs += IssueEntry(issue)
         elif issue['status'] == 'RAISED':       #a CLOSED issue is not an open one
-            #one spelling per priority since revision2026 step R8.5.3; no priority is the
-            #normal case and gets the neutral colour
-            cssClass = {'HIGH': 'textred', 'NORMAL': 'textorange',
-                        'LOW': 'textblue'}.get(issue['priority'].strip().upper(), 'boldblue')
-            openIssues += ('- '+Colour(cssClass, 'open issue '+IssueNumberString(issue)+':')+' '
-                           + title+'\n')
-            openIssues += details
+            openIssues += IssueEntry(issue)
 
         #CLOSED, not resolved: the version a past issue is listed under is derived from this
         #counter, so counting only RESOLVED would renumber every historical entry as soon as
@@ -771,10 +819,12 @@ def MarkdownText():
 #WHAT IT IS NOT: docs/generated/trackerlog.md, which is the tracker itself - every resolved issue
 #with its description, its dates and its author, plus the OPEN issues and the known bugs, 119,000
 #words of it. A changelog that repeated all of that would double a megabyte for no new fact
-#(rule 10 of CLAUDE.md). So the current release is printed in full, with the release note of each
-#issue, and the earlier ones as one line per issue - which is what somebody upgrading reads.
+#(rule 10 of CLAUDE.md). So the current release is printed here and the earlier ones there -
+#in the SAME entry format since revision2026b step RG3.10.1 (#2637), which is IssueEntry().
 changelogFile = 'CHANGELOG.md'
-changelogDetailedReleases = 1   #how many releases are printed WITH their release notes
+changelogDetailedReleases = 1   #how many releases are printed with the sub-list of an entry -
+                                #the description, the notes and the dates - and not the headline
+                                #alone
 changelogReleases = 1           #how many releases are printed AT ALL (revision2026b step RG3.10,
                                 ##2599): the earlier ones are on the tracker page in full, and
                                 #2370 of the 2440 lines of this file were a shorter rendering of
@@ -822,19 +872,20 @@ def ChangelogText():
             'tools/issueTracker/issues/ - do not edit -->\n'
             '(sec-changelog)=\n'
             '# Changelog\n\n')
-    text += ('Every **resolved issue** of Exudyn, newest first, with the version it produced. The '
-             'micro version *is* the count of closed issues, so each line below is one version '
-             'number: 1.10.160 is the 160th issue closed in release 1.10.\n\n'
-             'The full issue tracker - these issues with their descriptions and dates, plus the '
-             'open issues and the known bugs - is the {ref}`issue tracker page '
-             '<sec-issuetracker>`. Issues that were closed without being resolved are in neither '
-             'list: they changed nothing - which is why a release can span more version '
-             'numbers than it has lines here.\n\n'
-             'This file is generated; it is written by the tracker whenever an issue closes.'
+    text += ('Every **resolved issue** of Exudyn, newest first, with the version it produced. '
+             'The micro version *is* the count of closed issues, so each line below is one '
+             'version number: 1.10.160 is the 160th issue closed in release 1.10. An issue '
+             'that was closed without being resolved is in no list: it changed nothing - '
+             'which is why a release can span more version numbers than it has lines here.'
+             '\n\n')
+    #one entry format with the tracker page since revision2026b step RG3.10.1 (#2637)
+    text += BadgeLegend()
+    text += ('This file is generated; it is written by the tracker whenever an issue closes.'
              '\n\n'
-             '**Only the current release is listed below.** Every earlier release is on the '
-             '{ref}`issue tracker page <sec-issuetracker>`, with more about each issue than this '
-             'file carries; the table above is the whole history at a glance.\n\n')
+             '**Only the current release is below.** The issues resolved before it, in the '
+             'same form, are in the {ref}`issue tracker <sec-issuetracker>` of the '
+             'documentation, which also lists the open issues and the known bugs; the '
+             'table that follows is the whole history at a glance.\n\n')
 
     #the overview: one row per release
     text += '| release | name | resolved issues | highest version |\n|---|---|---|---|\n'
@@ -852,16 +903,7 @@ def ChangelogText():
 
         detailed = position < changelogDetailedReleases
         for issue in perRelease[release]:
-            title = ToMarkdown(issue['title'].strip())
-            line = ('- **' + issue['resolvedInVersion'] + '** '
-                    + '`' + issue['type'] + '` ' + title
-                    + ' (#' + str(issue['number']) + ')')
-            if issue['author'] != 'JG':
-                line += ' - raised by ' + ToMarkdown(issue['author'])
-            text += line + '\n'
-            note = issue['releaseNotes'].strip()
-            if detailed and note:
-                text += '  - ' + ToMarkdown(note) + '\n'
+            text += IssueEntry(issue, issue['resolvedInVersion'], details=detailed)
         text += '\n'
 
     return text
