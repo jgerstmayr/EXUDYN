@@ -23,17 +23,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 import numpy as np
 from math import sin, cos, sqrt,pi
@@ -210,7 +200,7 @@ simulationSettings = exu.SimulationSettings()
 # simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.writeSolutionToFile = False
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
-simulationSettings.displayComputationTime = useGraphics
+simulationSettings.displayComputationTime = (not testIsActive)
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
 
 # simulationSettings.timeIntegration.simulateInRealtime = True
@@ -231,7 +221,7 @@ if False: #show bounding boxes
     SC.visualizationSettings.contact.showSearchTreeCells =True
     SC.visualizationSettings.contact.showBoundingBoxes = True
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene = False
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
@@ -243,7 +233,7 @@ mbs.SolveDynamic(simulationSettings,
                  solverType=exu.DynamicSolverType.RK44,
                  )
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -263,10 +253,10 @@ exu.Print('sensors=',s1,s2,s3,s4,s5,'\n')
 u = np.linalg.norm(s1) + np.linalg.norm(s2) + np.linalg.norm(s3) + np.linalg.norm(s4) + np.linalg.norm(s5)
 
 exu.Print('solution of distanceSensor=',u)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
         
 #%%
-if useGraphics:
+if not testIsActive:
     
     mbs.PlotSensor(closeAll=True)
     mbs.PlotSensor(sDistanceSphere, components=0, colorCodeOffset=0, labels=['y-axis'])

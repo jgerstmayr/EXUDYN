@@ -25,17 +25,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -163,7 +153,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 fact = 300
 simulationSettings.timeIntegration.numberOfSteps = fact
 simulationSettings.timeIntegration.endTime = 0.0005*fact
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
 #simulationSettings.solutionSettings.outputPrecision = 4
 #simulationSettings.displayComputationTime = True
@@ -194,8 +184,8 @@ SC.visualizationSettings.connectors.showContact = 1
 
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with rigid contact"
 
-# useGraphics=False
-if useGraphics: 
+# testIsActive = True
+if not testIsActive: 
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -231,11 +221,10 @@ else:
     exu.Print('static tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
 
 #put outside if
-exudynTestGlobals.testError = u - (-0.014187561328096003) #until 2022-03-09 (old ObjectContactFrictionCircleCable2D): -0.014188649931870346   #2019-12-26: -0.014188649931870346; 2019-12-16: (-0.01418281035370442);
-exudynTestGlobals.testResult = u
-exu.Print("test result=",exudynTestGlobals.testResult)
+exu.sys['testResult'] = u
+exu.Print("test result=",exu.sys['testResult'])
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 ```

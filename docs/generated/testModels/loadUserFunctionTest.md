@@ -27,18 +27,8 @@ from exudyn.itemInterface import *
 from exudyn.utilities import CreateSymbolicUserFunction
 from math import pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#useGraphics = False
+testIsActive = exu.sys.get('testIsActive', False)
+#testIsActive = True
 
 esym = exu.symbolic
 import numpy as np
@@ -106,19 +96,19 @@ for case in cases:
     #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
     simulationSettings.solutionSettings.writeSolutionToFile = False
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.timeIntegration.simulateInRealtime = useGraphics #for visualization to be viewed by user!
+    simulationSettings.timeIntegration.simulateInRealtime = (not testIsActive) #for visualization to be viewed by user!
     
     simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
     simulationSettings.timeIntegration.endTime = endTime
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.DoIdleTasks()
     
     mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Stop() #safely close rendering window!
     
     result += np.linalg.norm(mbs.GetSensorValues(sMass))
@@ -128,5 +118,5 @@ for case in cases:
 #evaluate final (=current) output values
 exu.Print('result of loadUserFunctionTest=',result)
 
-exudynTestGlobals.testResult = result  #1.8051173706570725
+exu.sys['testResult'] = result  #1.8051173706570725
 ```

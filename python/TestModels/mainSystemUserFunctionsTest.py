@@ -17,18 +17,8 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False
+testIsActive = exu.sys.get('testIsActive', False)
+testIsActive = True
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -188,14 +178,14 @@ for case in caseList:
     SC.visualizationSettings.view0.scene.drawWorldBasis = True
     
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()              #start graphics visualization
         SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
     
     #start solver:
     mbs.SolveDynamic(simulationSettings)
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
         SC.renderer.Stop()               #safely close rendering window!
     
@@ -214,15 +204,15 @@ for case in caseList:
     result += u0[0]+u0[1]+u1[0]
 
 exu.Print('mainSystemUserFunctionsTest solution=', result)
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 
-if useGraphics:
+if not testIsActive:
     mbs.SolutionViewer()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if useGraphics:
+if not testIsActive:
     mbs.PlotSensor(sPos0, components=[0], closeAll=True)
     mbs.PlotSensor(sPos1, components=[0], newFigure=False)
 

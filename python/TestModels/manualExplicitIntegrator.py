@@ -13,17 +13,7 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -111,7 +101,7 @@ simulationSettings.solutionSettings.solverInformationFileName = 'solution/solver
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6 #1e-5 works for 64 elements
 simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
     
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
 
 simulationSettings.staticSolver.numberOfLoadSteps = 10
@@ -205,10 +195,9 @@ dynamicSolver.SolveSystem(mbs, simulationSettings)
 uy=mbs.GetNodeOutput(nLast,exu.OutputVariableType.Position)[1] #y-coordinate of tip
 exu.Print("uy=", uy)
 exu.Print("testResult=", testRefVal + uy)
-exudynTestGlobals.testError = testRefVal + uy - (2.280183538481952-0.2204849087896498) #2020-01-16: 2.280183538481952-0.2204849087896498
-exudynTestGlobals.testResult = testRefVal + uy
+exu.sys['testResult'] = testRefVal + uy
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

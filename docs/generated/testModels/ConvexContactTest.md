@@ -25,17 +25,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -99,21 +89,21 @@ sims.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolutio
 # sims.timeIntegration.newton.absoluteTolerance = 1e-8
 # sims.timeIntegration.newton.relativeTolerance = 1e-6
 
-if useGraphics: 
+if not testIsActive: 
     sims.timeIntegration.verboseMode = 1
     sims.timeIntegration.stepInformation = 3+128+256
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 mbs.SolveDynamic(sims)
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 sol = mbs.systemData.GetODE2Coordinates()
-exudynTestGlobals.testResult = np.sum(sol[:2])
-exu.Print('result of ConvexContactTest=',exudynTestGlobals.testResult)
+exu.sys['testResult'] = np.sum(sol[:2])
+exu.Print('result of ConvexContactTest=',exu.sys['testResult'])
 # %% 
-if useGraphics: 
+if not testIsActive: 
     #pos = np.loadtxt('PosRoller.txt', delimiter=',', comments='#')
     pos = mbs.GetSensorStoredData(sBody)
     exu.Print('End Pos: {}'.format(pos[-1,:]))
@@ -122,7 +112,7 @@ if useGraphics:
     mbs.PlotSensor(sBody,[0,1,2])
     
     
-if useGraphics and False:
+if not testIsActive and False:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     

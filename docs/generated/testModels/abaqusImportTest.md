@@ -25,19 +25,9 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
-useGraphics=False
+testIsActive = True
 
 import numpy as np
 import time
@@ -99,7 +89,7 @@ for element in elements:
 
     boundaryList = [nodesLeftPlane] 
 
-    if useGraphics:
+    if not testIsActive:
         exu.Print("nNodes=",fem.NumberOfNodes())
         exu.Print("compute HCB modes... ")
     start_time = time.time()
@@ -108,7 +98,7 @@ for element in elements:
                                   useSparseSolver=False, #sparse solver gives non-repeatable results ...
                                   computationMode = HCBstaticModeSelection.RBE2)
 
-    if useGraphics:
+    if not testIsActive:
         exu.Print("HCB modes needed %.3f seconds" % (time.time() - start_time))
     
     cms = ObjectFFRFreducedOrderInterface(fem)
@@ -170,7 +160,7 @@ for element in elements:
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.solutionSettings.solutionWritePeriod = h
-    simulationSettings.timeIntegration.verboseMode = useGraphics
+    simulationSettings.timeIntegration.verboseMode = (not testIsActive)
     #simulationSettings.timeIntegration.verboseModeFile = 3
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
@@ -180,7 +170,7 @@ for element in elements:
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.RestoreSavedState() #load last model view
     
@@ -193,15 +183,14 @@ for element in elements:
     exu.Print('u-tip for '+element+' = ', data[-1,1:], ', nNodes=',fem.NumberOfNodes())
     result += abs(data[-1,1:]).sum()
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
         lastRenderState = SC.renderer.GetState() #store model view for next simulation
 
 exu.Print('solution of abaqusImportTest=',result)
 
-exudynTestGlobals.testError = (result - (0.0005885208722206333)) 
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 #for small meshes in TestModels:
 # u-tip for C3D4 =  [-1.39753280e-05 -8.83250776e-05  9.86454888e-07] , nNodes= 214

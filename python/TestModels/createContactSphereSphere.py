@@ -15,17 +15,7 @@ from exudyn.utilities import *
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -64,7 +54,7 @@ stepSize = 1e-5
 tEnd = 1
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 simulationSettings.solutionSettings.solutionWritePeriod = 0.02
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
@@ -87,6 +77,6 @@ nMass1 = mbs.GetObject(oMass1)['nodeNumber']
 uTotal = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.CoordinatesTotal).sum()
 exu.Print('uTotal=',uTotal)
 
-exudynTestGlobals.testResult = uTotal
+exu.sys['testResult'] = uTotal
 
 mbs.SolutionViewer()

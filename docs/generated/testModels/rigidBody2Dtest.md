@@ -24,17 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -142,13 +132,13 @@ simulationSettings.displayStatistics = True
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -166,5 +156,5 @@ exu.Print('coms=',comOut, comOut2, comOut3, ', err=', comOut3-comOut2)
 u = (phi+phi2+phi3+np.linalg.norm(comOut)+np.linalg.norm(comOut2)+np.linalg.norm(comOut3))
 
 exu.Print('solution of rigidBody2Dtest =', u)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 ```

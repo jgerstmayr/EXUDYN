@@ -17,17 +17,7 @@ from exudyn.utilities import *
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 SC = exu.SystemContainer()
@@ -150,11 +140,11 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
 #+++++++++++++++++++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()                 # start graphics visualization
     SC.renderer.DoIdleTasks()         # wait for pressing SPACE bar to continue
 mbs.SolveDynamic(simulationSettings)
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()    # wait for pressing 'Q' to quit
     SC.renderer.Stop()                  # safely close rendering window!
 
@@ -163,9 +153,9 @@ if useGraphics:
 uTotal = mbs.GetNodeOutput(nMassPoint, exu.OutputVariableType.CoordinatesTotal)
 exu.Print('uTotal=',uTotal[1])
 
-exudynTestGlobals.testResult = uTotal[1]
+exu.sys['testResult'] = uTotal[1]
 
-if useGraphics:
+if not testIsActive:
     #+++++++++++++++++++++++++++++++++++++++++++++
     # plot sensor data for different test cases
     import matplotlib.pyplot as plt

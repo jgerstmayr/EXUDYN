@@ -17,17 +17,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
@@ -37,13 +27,12 @@ from exudyn.robotics import *
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-useGraphics = False
+testIsActive = True
 performTest = True
 
 printSensors = True
-#useGraphics = False
-#exudynTestGlobals.testError = 0. #not filled, done via result
-exudynTestGlobals.testResult = 0. #values added up
+#testIsActive = True
+exu.sys['testResult'] = 0. #values added up
 
 useMBS = True
 useKinematicTree = True
@@ -308,7 +297,7 @@ if case == '3Dmechanism' or performTest:
     SC.visualizationSettings.openGL.multiSampling=4
     SC.visualizationSettings.nodes.showBasis = True
     SC.visualizationSettings.nodes.basisSize = 0.5
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.RestoreSavedState() #load last model view
     
@@ -317,18 +306,18 @@ if case == '3Dmechanism' or performTest:
     # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
     mbs.SolveDynamic(simulationSettings)
         
-    if useGraphics: #use this to reload the solution and use SolutionViewer
+    if not testIsActive: #use this to reload the solution and use SolutionViewer
         #sol = LoadSolutionFile('coordinatesSolution.txt')
         
         mbs.SolutionViewer() #can also be entered in IPython ...
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     
     
     if len(sMBS) == len(sKT):
-        if useGraphics:
+        if not testIsActive:
             
             mbs.PlotSensor(closeAll=True)
             
@@ -347,7 +336,7 @@ if case == '3Dmechanism' or performTest:
                 u += np.linalg.norm(v)
 
             exu.Print("solution of kinematicTreeAndMBStest 1=", u)
-            exudynTestGlobals.testResult += u
+            exu.sys['testResult'] += u
 
         if compareKT:
             CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
@@ -456,7 +445,7 @@ if case == 'invertedPendulum' or performTest:
     SC.visualizationSettings.openGL.multiSampling=4
     SC.visualizationSettings.nodes.showBasis = True
     SC.visualizationSettings.nodes.basisSize = 0.5
-    if useGraphics:
+    if not testIsActive:
 
         SC.renderer.Start()
         SC.renderer.RestoreSavedState() #load last model view
@@ -466,12 +455,12 @@ if case == 'invertedPendulum' or performTest:
     # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
     mbs.SolveDynamic(simulationSettings)
         
-    if useGraphics: #use this to reload the solution and use SolutionViewer
+    if not testIsActive: #use this to reload the solution and use SolutionViewer
         #sol = LoadSolutionFile('coordinatesSolution.txt')
         
         mbs.SolutionViewer() #can also be entered in IPython ...
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     else:
@@ -488,7 +477,7 @@ if case == 'invertedPendulum' or performTest:
             u += np.linalg.norm(v)
     
         exu.Print("solution of kinematicTreeAndMBStest 2=", u)
-        exudynTestGlobals.testResult += u
+        exu.sys['testResult'] += u
 
         if compareKT:
             # CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
@@ -614,7 +603,7 @@ if case == 'treeStructure' or performTest:
     SC.visualizationSettings.openGL.multiSampling=4
     SC.visualizationSettings.nodes.showBasis = True
     SC.visualizationSettings.nodes.basisSize = 0.5
-    if useGraphics:
+    if not testIsActive:
 
         SC.renderer.Start()
         SC.renderer.RestoreSavedState() #load last model view
@@ -624,12 +613,12 @@ if case == 'treeStructure' or performTest:
     # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
     mbs.SolveDynamic(simulationSettings)
         
-    if useGraphics: #use this to reload the solution and use SolutionViewer
+    if not testIsActive: #use this to reload the solution and use SolutionViewer
         #sol = LoadSolutionFile('coordinatesSolution.txt')
         
         mbs.SolutionViewer() #can also be entered in IPython ...
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     else:
@@ -646,11 +635,11 @@ if case == 'treeStructure' or performTest:
             u += np.linalg.norm(v)
     
         exu.Print("solution of kinematicTreeAndMBStest 3=", u)
-        exudynTestGlobals.testResult += u
+        exu.sys['testResult'] += u
         
             
         if compareKT:
             CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
 
-exudynTestGlobals.testResult *= 1e-7 #result is too sensitive to small (1e-15) disturbances, so different results for 32bits and linux
-exu.Print("solution of kinematicTreeAndMBStest all=", exudynTestGlobals.testResult)
+exu.sys['testResult'] *= 1e-7 #result is too sensitive to small (1e-15) disturbances, so different results for 32bits and linux
+exu.Print("solution of kinematicTreeAndMBStest all=", exu.sys['testResult'])

@@ -21,17 +21,7 @@ You can view and download this file on Github: [matrixContainerTest.py](https://
 
 import exudyn as exu
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -98,6 +88,5 @@ u+= mc.Convert2DenseMatrix()[1,1]
 result = u
 exu.Print('solution of matrixContainerTest=',result)
 
-exudynTestGlobals.testError = (result - (56.5))
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 ```

@@ -24,17 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -184,7 +174,7 @@ for iWheel in range(nWheels):
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)
-    if useGraphics:
+    if not testIsActive:
         sAngVels+=[mbs.AddSensor(SensorBody(bodyNumber=b0, #fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
                                  storeInternal=True,
                                  outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
@@ -220,7 +210,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 tEnd = 0.5 #40#1.2
 h=0.002 #no visual differences for step sizes smaller than 0.0005
 
-if useGraphics:
+if not testIsActive:
     tEnd = 4
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
@@ -240,7 +230,7 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -248,12 +238,11 @@ c=mbs.GetNodeOutput(n0, variableType=exu.OutputVariableType.Coordinates)
 u=sum(c)
 exu.Print("carRollingDiscTest u=",u)
 
-exudynTestGlobals.testError = u - (-0.23940048717113419) #2020-12-18: -0.23940048717113419
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor(sensorNumbers=sCarVel, components=[0,1,2], title='car velocitiy', closeAll=True)

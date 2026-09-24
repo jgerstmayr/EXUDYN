@@ -26,17 +26,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -142,7 +132,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.025
 dSize=0.01
 SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -182,7 +172,7 @@ if useGraphics: #only start graphics once, but after background is set
 #Lie group rotation vector:
 #RK44,n=400:    omegay = 149.88651478249065 NodeType.RotationRotationVector
 
-if useGraphics:
+if not testIsActive:
     simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
@@ -223,11 +213,9 @@ for method in methods:
 err *=1e-3 #avoid problems with 32/64 bits
 exu.Print("explicitLieGrouIntegratorTest result=",err)
 
-exudynTestGlobals.testError = err - (0.16164013319819076) #2021-01-26: 0.16164013319819076 
-exudynTestGlobals.testResult = err
-exu.Print("explicitLieGrouIntegratorTest error=",exudynTestGlobals.testError)
+exu.sys['testResult'] = err
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

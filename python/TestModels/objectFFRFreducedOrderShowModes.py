@@ -18,17 +18,7 @@ from exudyn.interactive import AnimateModes
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -38,7 +28,7 @@ mbs = SC.AddSystem()
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if useGraphics:
+#if not testIsActive:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')

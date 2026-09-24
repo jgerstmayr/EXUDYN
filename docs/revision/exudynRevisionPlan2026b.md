@@ -1178,9 +1178,17 @@ file, so an editor cannot complete them).
       in the parallel worker bootstrap and for the mini examples. `exudynTestGlobals` keeps
       working beside it, so that an unconverted model still runs.
     - **RG10.6.2** **DONE 2026-09-24** one model: `bricardMechanism.py`, and its number is **identical**, 4.172189649306508.
-    - **RG10.6.3** the remaining ~124 models, in batches, with the full suite after each; the
-      hard-coded `testError = result - <number>` line goes with them, since
-      `runTestSuiteRefSol.py` already holds that reference.
+    - **RG10.6.3** **DONE 2026-09-24** the remaining models: **all 129** files of
+      `python/TestModels/` are converted, the 98 hard-coded `testError = result - <number>` lines
+      are gone, and **every one of the 139 results is identical** to the run before the sweep.
+    - **RG10.6.7** *(added 2026-09-24, from RG10.6.3)* `kinematicTreeAndMBStest.py:655` still
+      has `testResult *= 1e-7`, with the comment *"result is too sensitive to small (1e-15)
+      disturbances, so different results for 32bits and linux"* — the one place that multiplies
+      a solution to make it fit a tolerance, which the maintainer asked to stop doing. It is
+      **deliberately untouched here**, because removing it changes the value by seven orders of
+      magnitude and therefore the reference in `runTestSuiteRefSol.py`. It becomes
+      `exu.sys['testTolerance']` in a step where that reference is changed on purpose, so that
+      the bar for the sweep — identical numbers — stays meaningful.
     - **RG10.6.4** the mini examples.
     - **RG10.6.5** `modelUnitTests.py` becomes ten files in `python/TestModels/` and is deleted,
       together with `TestInterface`, `ExudynTestStructure` and the `exudynTestGlobals` fallback

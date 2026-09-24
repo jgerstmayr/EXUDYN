@@ -26,18 +26,8 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#useGraphics = False #without test
+testIsActive = exu.sys.get('testIsActive', False)
+#testIsActive = True #without test
 
 
 import numpy as np
@@ -181,12 +171,12 @@ SC.visualizationSettings.openGL.lineWidth=2
     
 h=1e-2 #default: 5e-4
 tEnd = 0.1
-if useGraphics:
+if not testIsActive:
     tEnd = 10
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 simulationSettings.solutionSettings.solutionWritePeriod = 0.04
 simulationSettings.timeIntegration.verboseMode = 1
 # simulationSettings.timeIntegration.stepInformation = 255#8192-1
@@ -199,7 +189,7 @@ simulationSettings.displayComputationTime = True
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
  
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     #SC.renderer.DoIdleTasks() #press space to continueq
 
@@ -212,11 +202,10 @@ exu.Print('uTip=',list(sensorValues))
 result = np.linalg.norm(sensorValues)
 exu.Print('solution of linearFEMgenericODE2=',result)
 
-exudynTestGlobals.testError = (result - (0.3876719712975609)) 
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

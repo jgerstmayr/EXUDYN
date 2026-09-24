@@ -26,17 +26,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
@@ -46,7 +36,7 @@ from exudyn.robotics import *
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-# useGraphics = False
+# testIsActive = True
 
 useMBS = True
 useKinematicTree = True
@@ -176,7 +166,7 @@ SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.openGL.multiSampling=4
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.5
-if useGraphics:
+if not testIsActive:
 
     SC.renderer.Start()
     SC.renderer.RestoreSavedState() #load last model view
@@ -186,7 +176,7 @@ if useGraphics:
 # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
 mbs.SolveDynamic(simulationSettings)
 
-if not useGraphics or True:
+if testIsActive or True:
     #check results for test suite:
     u = 0.
     for i in range(len(sMBS)):
@@ -198,15 +188,15 @@ if not useGraphics or True:
         u += np.linalg.norm(v)
 
 exu.Print("solution of kinematicTreeConstraintTest=", u)
-exudynTestGlobals.testResult = u #1.8135975385993548 
+exu.sys['testResult'] = u #1.8135975385993548 
 
     
-if False and useGraphics: #use this to reload the solution and use SolutionViewer
+if False and (not testIsActive): #use this to reload the solution and use SolutionViewer
     #sol = LoadSolutionFile('coordinatesSolution.txt')
     
     mbs.SolutionViewer() #can also be entered in IPython ...
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 ```

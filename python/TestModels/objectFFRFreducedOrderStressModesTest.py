@@ -16,17 +16,7 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 import numpy as np
 
-useGraphics = True
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -69,7 +59,7 @@ def GenerateStressModesFromPyAnsys(rstFileName, outPutTxtFileName):
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'TestModels/testData/rotorAnsys' #runTestSuite.py is at another directory
-if useGraphics:
+if not testIsActive:
     inputFileName = 'testData/rotorAnsys'        #if executed in current directory
 
 fem.ReadMassMatrixFromAnsys(fileName=inputFileName + 'MassMatrixSparse.txt', 
@@ -250,7 +240,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     if 'lastRenderState' in vars():
         SC.renderer.SetState(lastRenderState) #load last model view
@@ -267,16 +257,16 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrder=',result)
 
 #currently not used test case!
-exudynTestGlobals.testResult = 0.1*result
+exu.sys['testResult'] = 0.1*result
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     lastRenderState = SC.renderer.GetState() #store model view for next simulation
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if useGraphics:
+if not testIsActive:
     mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
                components=1, closeAll=True)
 

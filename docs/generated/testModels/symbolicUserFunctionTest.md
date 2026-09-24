@@ -25,17 +25,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = False #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', True)
 
 esym = exu.symbolic
 import numpy as np
@@ -109,7 +99,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     # SC.renderer.DoIdleTasks()
 
@@ -119,7 +109,7 @@ exu.Print('start simulation')
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
 exu.Print('finished: ', time.time()-ts, 'seconds')
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop() #safely close rendering window!
 
 n = mbs.GetObject(oMassPoint)['nodeNumber']
@@ -130,8 +120,7 @@ exu.Print('u=',u)
 exu.Print('solution of symbolicUserFunctionTest=',u)
 
 # result for 10000 steps; identical for both UF cases
-exudynTestGlobals.testError = u - (0.10039884426884882) 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 #++++++++++++++++++++++++++++++
 #i7-1390, boost

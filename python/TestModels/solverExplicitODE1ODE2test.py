@@ -16,17 +16,7 @@ from exudyn.itemInterface import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -212,8 +202,7 @@ if True: #check orders:
 
 exu.Print("solverExplicitODE1ODE2 err=",err)
 
-exudynTestGlobals.testError = err - (3.3767933275918964) #2021-01-25: 3.3767933275918964 
-exudynTestGlobals.testResult = err
+exu.sys['testResult'] = err
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 if False:

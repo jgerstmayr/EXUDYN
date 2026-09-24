@@ -14,17 +14,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -197,7 +187,7 @@ SC.visualizationSettings.connectors.showContact = True
  
 
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.Start()
 
 #get initial velocities
@@ -253,7 +243,7 @@ if solveDynamic:
     mbs.SolveDynamic(simulationSettings)
     
 
-if useGraphics: 
+if not testIsActive: 
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -263,8 +253,6 @@ sol2 = mbs.systemData.GetODE2Coordinates();
 u2 = sol2[int(ncables/4)*4+1]; #y-displacement of node in first quater of rope
 exu.Print('static deflection  =',u)      #2020-03-05(corrected Cable2DshapeMarker): -0.06446474690480661    2019-12-17(new static solver): -0.06446474690512931;  2019-12-16: -0.06446474679809994
 exu.Print('dynamic deflection =',u2)       #2020-03-05(corrected Cable2DshapeMarker):0.06446627698400298; 2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
-#exudynTestGlobals.testError = u + u2 - (-0.06446474690480661-0.06446627698400298)
 exu.Print('ANCFmovingRigidBodyTest=',u+u2)       
-exudynTestGlobals.testError = u + u2 - (-0.06446474690612931 - 0.06446622244370685) #updated 2022-12-25
-exudynTestGlobals.testResult = u + u2
+exu.sys['testResult'] = u + u2
 

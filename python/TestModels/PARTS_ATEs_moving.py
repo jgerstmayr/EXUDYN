@@ -15,20 +15,10 @@ from exudyn.itemInterface import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 #plots
-if useGraphics: 
+if not testIsActive: 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
 
@@ -493,7 +483,7 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
 ##requires a subfolder 'images'
 #simulationSettings.solutionSettings.recordImagesInterval=endTime/200
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
     
     if displaySimulation:
@@ -528,7 +518,7 @@ if computeDynamic:
     mbs.SolveDynamic(simulationSettings)
 
     
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     if displaySimulation:
         SC.renderer.DoIdleTasks()
         
@@ -538,8 +528,7 @@ nLast = mbs.systemData.NumberOfNodes()-1#just take last node-1 (last node is gro
 
 uy=mbs.GetNodeOutput(nLast-1,exu.OutputVariableType.Position)[1] #y-coordinate of last node
 exu.Print("uy=", uy)
-exudynTestGlobals.testError = uy - (0.44656762760262225) #2020-01-16: 0.44656762760262225
-exudynTestGlobals.testResult = uy
+exu.sys['testResult'] = uy
 
 
 

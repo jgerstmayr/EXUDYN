@@ -21,17 +21,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -41,7 +31,7 @@ useGeometricallyExact = True
 nElements = 4*2*2
 
 
-useGraphics = True
+testIsActive = False
 verbose = 1
 
 useEP = True #for geometrically exact beam node
@@ -309,7 +299,7 @@ if True:
     SC.visualizationSettings.openGL.multiSampling = 4
     SC.visualizationSettings.openGL.lineWidth=2
 
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.DoIdleTasks()
 
@@ -320,7 +310,7 @@ if True:
     #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
 
     #%%+++++++++++++++++++++++++++++++++++    
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     
@@ -336,8 +326,7 @@ if True:
 
 
 exu.Print('Solution of rightAngleFrameTip=', testErrorSum)
-exudynTestGlobals.testError = testErrorSum - (0) 
-exudynTestGlobals.testResult = testErrorSum
+exu.sys['testResult'] = testErrorSum
 
 #%%+++++++++++++++++
 if True:

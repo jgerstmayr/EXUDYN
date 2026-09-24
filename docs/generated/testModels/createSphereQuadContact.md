@@ -25,18 +25,8 @@ from math import sin, cos
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#useGraphics = False
+testIsActive = exu.sys.get('testIsActive', False)
+#testIsActive = True
 
 testSolution = 0
 
@@ -175,7 +165,7 @@ for methodNum, method in enumerate(methodList):
     mbs.Assemble()
     
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+    simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
     simulationSettings.solutionSettings.solutionWritePeriod = 0.005
     simulationSettings.solutionSettings.sensorsWritePeriod = 0.001  #output interval
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
@@ -196,14 +186,14 @@ for methodNum, method in enumerate(methodList):
     SC.visualizationSettings.general.showSolverInformation = False
     
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()              #start graphics visualization
         if methodNum == 0:
             SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
     
     mbs.SolveDynamic(simulationSettings)
     
-    if useGraphics:
+    if not testIsActive:
         #SC.renderer.DoIdleTasks()
         SC.renderer.Stop()               #safely close rendering window!
     
@@ -224,10 +214,10 @@ for i, sol in enumerate(listSolutions):
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 exu.Print('solution of createSphereQuadContact=',testSolution) 
-exudynTestGlobals.testResult = testSolution
+exu.sys['testResult'] = testSolution
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-if useGraphics:
+if not testIsActive:
     mbs.SolutionViewer()
 ```

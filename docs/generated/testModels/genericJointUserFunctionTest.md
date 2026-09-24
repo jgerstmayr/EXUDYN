@@ -26,17 +26,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -130,7 +120,7 @@ simulationSettings.displayComputationTime = False
 
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -147,11 +137,10 @@ for i in range(3): #take sum of all coordinates
 
 exu.Print('solution of GenericJointTest=',u)
 
-exudynTestGlobals.testError = u - (1.1878327690760586) #2020-04-22: 1.1878327690760586
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 ```

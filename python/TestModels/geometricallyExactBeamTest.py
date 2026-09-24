@@ -19,17 +19,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -52,7 +42,7 @@ betaDegree = 45
 caseList = [0,1,2,3,4] #case 0 not working for Geometrically exact beam
 #case=2
 
-useGraphics = False
+testIsActive = True
 verbose = 1*0
 
 useEP = True #for geometrically exact beam node
@@ -306,7 +296,7 @@ for case in caseList:
     # [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)
     # exu.Print('M=',M.round(1))
 
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.DoIdleTasks()
 
@@ -325,7 +315,7 @@ for case in caseList:
         exu.Print((1e-6*J[:14,7:14]).round(3))
 
     #%%+++++++++++++++++++++++++++++++++++    
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     
@@ -352,8 +342,7 @@ for case in caseList:
 
 
 exu.Print('Solution of geometricallyExactBeamTest=', testErrorSum)
-exudynTestGlobals.testError = testErrorSum - (1.012822053539261) 
-exudynTestGlobals.testResult = testErrorSum
+exu.sys['testResult'] = testErrorSum
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

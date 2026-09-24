@@ -34,17 +34,7 @@ import os
 
 recordReference = False #True: write the reference file instead of comparing
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 #next to this file; runTestSuite.py executes the models from their own directory
 referenceFile = 'parameterConversionTestReference.txt'
@@ -297,5 +287,5 @@ else:
                 exu.Print('parameterConversionTest: ' + key + '\n  reference: ' + str(old.get(key)) + '\n  now:       ' + str(new.get(key)))
     exu.Print('parameterConversionTest: ' + str(len(new)) + ' parameter paths, ' + str(numberOfDifferences) + ' differences')
 
-exudynTestGlobals.testResult = numberOfDifferences
+exu.sys['testResult'] = numberOfDifferences
 ```

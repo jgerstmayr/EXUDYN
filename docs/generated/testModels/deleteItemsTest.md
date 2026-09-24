@@ -24,17 +24,7 @@ from exudyn.utilities import *
 import exudyn.graphics as graphics 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 SC = exu.SystemContainer()
@@ -123,13 +113,13 @@ SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.defaultSize=0.05
 SC.visualizationSettings.nodes.tiling = 8
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop()
 
@@ -137,10 +127,10 @@ if useGraphics:
 uTotal = sum(mbs.GetSensorValues(mbs.systemData.NumberOfSensors()-1))
 exu.Print('uTotal=',uTotal)
 
-exudynTestGlobals.testResult = uTotal
+exu.sys['testResult'] = uTotal
 #+++++++++++++++++++++++++++++++++++++++++++++
 
-if useGraphics:
+if not testIsActive:
     if len(sensorNumbers):
         mbs.PlotSensor(sensorNumbers[1],components=[0,1,2])
 ```

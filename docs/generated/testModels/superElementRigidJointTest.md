@@ -26,17 +26,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -227,7 +217,7 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-3
 tEnd = 0.005 #standard:0.005
-if not useGraphics:
+if testIsActive:
     #test suite:
     simulationSettings.solutionSettings.writeSolutionToFile = False
     tEnd = 0.005
@@ -255,7 +245,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     if 'lastRenderState' in vars():
         SC.renderer.SetState(lastRenderState) #load last model view
@@ -264,7 +254,7 @@ if useGraphics:
 
 mbs.SolveDynamic(simulationSettings)
     
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     lastRenderState = SC.renderer.GetState() #store model view for next simulation
@@ -276,12 +266,11 @@ result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of superElementRigidJointTest=',result)
 
-exudynTestGlobals.testError = result - (0.015217208913989071)
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor(sDisp, components=1, closeAll=True, labels=['uMid,linear'])

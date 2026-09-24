@@ -27,17 +27,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -48,7 +38,7 @@ mbs = SC.AddSystem()
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if useGraphics:
+#if not testIsActive:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
@@ -178,7 +168,7 @@ simulationSettings.solutionSettings.writeSolutionToFile=False
 
 h=1e-4
 tEnd = 0.0025
-if useGraphics:
+if not testIsActive:
     tEnd = 0.0025
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -200,7 +190,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     if 'lastRenderState' in vars():
         SC.renderer.SetState(lastRenderState) #load last model view
@@ -216,17 +206,16 @@ result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of ObjectFFRFtest2=',result)
 
-exudynTestGlobals.testError = result - (0.03552188069017914) #2022-02-20: changed to internal sensor storage; 2020-05-26 (tEnd=0.0025, h=1e-4): 0.03553746369388042 
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     lastRenderState = SC.renderer.GetState() #store model view for next simulation
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp], components=1, closeAll=True)

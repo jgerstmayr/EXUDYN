@@ -16,17 +16,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -121,8 +111,7 @@ u2 = mbs.GetNodeOutput(n2, exu.OutputVariableType.Coordinates)
 u=np.linalg.norm(u1) + np.linalg.norm(u2)
 exu.Print('solution of genericODE2test=',u)
 
-exudynTestGlobals.testError = u - (0.03604546349898683) #2020-04-22: 0.03604546349898683
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 

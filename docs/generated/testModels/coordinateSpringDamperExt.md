@@ -27,19 +27,9 @@ import numpy as np
 from math import sqrt
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 #from exudyn.physics import StribeckFunction, RegularizedFriction
-# useGraphics = False
+# testIsActive = True
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -265,7 +255,7 @@ simulationSettings.timeIntegration.verboseMode = 1 #turn off, because of lots of
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 
-if useGraphics: 
+if not testIsActive: 
     simulationSettings.timeIntegration.simulateInRealtime = True
     simulationSettings.timeIntegration.realtimeFactor = 2
 
@@ -274,19 +264,19 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SC.visualizationSettings.general.autoFitScene = False #otherwise, renderState not accepted for zoom
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 sol = mbs.systemData.GetODE2Coordinates()
-exudynTestGlobals.testResult = np.sum(abs(sol))
-exu.Print('result of coordinateSpringDamperExt=',exudynTestGlobals.testResult) #17.084935539925155
+exu.sys['testResult'] = np.sum(abs(sol))
+exu.Print('result of coordinateSpringDamperExt=',exu.sys['testResult']) #17.084935539925155
 
 
 if False:

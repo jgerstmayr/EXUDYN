@@ -25,17 +25,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -578,7 +568,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     if 'lastRenderState' in vars():
         SC.renderer.SetState(lastRenderState) #load last model view
@@ -593,11 +583,10 @@ result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of ObjectFFRF=',result)
 
-exudynTestGlobals.testError = result - (0.0064600108120842666) #2022-02-20 (changed to internal sensor data); 2020-05-17 (tEnd=0.001, h=1e-4): 0.006445369560936511
-exudynTestGlobals.testResult = result#0.006460010812070858 
+exu.sys['testResult'] = result#0.006460010812070858 
 
     
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     lastRenderState = SC.renderer.GetState() #store model view for next simulation
@@ -605,7 +594,7 @@ if useGraphics:
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor(sDisp, components=0, closeAll=True)

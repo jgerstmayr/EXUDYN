@@ -15,18 +15,8 @@ from exudyn.utilities import *
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#useGraphics = False
+testIsActive = exu.sys.get('testIsActive', False)
+#testIsActive = True
 
 testSolution = 0
 
@@ -161,7 +151,7 @@ for solverNum, solver in enumerate(solverList):
     mbs.Assemble()
     
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+    simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
     simulationSettings.solutionSettings.solutionWritePeriod = 0.005
     simulationSettings.solutionSettings.sensorsWritePeriod = 0.001  #output interval
 
@@ -232,7 +222,7 @@ for solverNum, solver in enumerate(solverList):
     SC.visualizationSettings.connectors.show = False
     #++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()              #start graphics visualization
         if solverNum == 0:
             SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
@@ -240,7 +230,7 @@ for solverNum, solver in enumerate(solverList):
     mbs.SolveDynamic(simulationSettings, 
                      solverType=solver)
     
-    if useGraphics:
+    if not testIsActive:
         #SC.renderer.DoIdleTasks()
         SC.renderer.Stop()               #safely close rendering window!
     
@@ -255,7 +245,7 @@ for solverNum, solver in enumerate(solverList):
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 exu.Print('solution of sphereTriangleTest2=',testSolution) 
-exudynTestGlobals.testResult = testSolution
+exu.sys['testResult'] = testSolution
 #dense:  4.356119232234876 (since V1.10.78)
 #sparse: 4.356119232231812 (since V1.10.78)
 #OLD
@@ -267,7 +257,7 @@ for i, sol in enumerate(listSolutions):
     exu.Print('solver=',str(solverList[i]),'\nsol=',sol[0:6])
 
 
-if useGraphics and False:
+if not testIsActive and False:
     mbs.SolutionViewer()
 
 #convergence analysis:

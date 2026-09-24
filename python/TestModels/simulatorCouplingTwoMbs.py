@@ -21,17 +21,7 @@ import numpy as np
 import sys
 import copy
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs0 = SC.AddSystem()
@@ -251,7 +241,7 @@ for iWheel in range(nWheels):
                                                     ))
 
     strNum = str(iWheel)
-    if useGraphics:
+    if not testIsActive:
         sAngVels+=[mbs0.AddSensor(SensorBody(bodyNumber=b0,
                                  storeInternal=True,
                                  outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
@@ -284,7 +274,7 @@ mbs0.Assemble()
 
 tEnd = 0.5 #40#1.2
 stepSize = 0.001 #for car only
-if useGraphics:
+if not testIsActive:
     tEnd = 4
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -504,7 +494,7 @@ if doSimulatorCoupling:
 
     #explicitSolver.InitializeSolverInitialConditions(mbs1, simulationSettings)
 
-    if useGraphics:
+    if not testIsActive:
         if False: #for testing only
             SC.renderer.Start()
             SC.renderer.RestoreSavedState()
@@ -543,7 +533,7 @@ if doSimulatorCoupling:
                 explicitSolver.FinalizeSolver(mbs1, simulationSettings)
                 exu.Print('time spent=',time.time()-start)
                 
-                if useGraphics:
+                if not testIsActive:
                     SC.renderer.DoIdleTasks()
                     SC.renderer.Stop() #safely close rendering window!
                 
@@ -631,7 +621,7 @@ mbs0.SetPreStepUserFunction(PreStepUserFunction)
 
 #++++++++++++++++++++++++++++++++++++++
 #start implicit solver which calls explicit solver in every preStepUserFunction
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     #mbs0.WaitForUserToContinue()
@@ -674,7 +664,7 @@ else:
 
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -690,12 +680,11 @@ c=mbs0.GetNodeOutput(n0, variableType=exu.OutputVariableType.Coordinates)
 u=sum(c)
 exu.Print("simulatorCouplingTwoMbs: u=",u)
 
-exudynTestGlobals.testError = u - 0.
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if useGraphics and False:
+if not testIsActive and False:
     
     
     mbs0.PlotSensor(sensorNumbers=sCarVel, components=[0,1,2], title='car velocitiy', closeAll=True)

@@ -22,17 +22,7 @@ You can view and download this file on Github: [allExudynModulesTest.py](https:/
 
 import exudyn as exu
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 from pathlib import Path
 import importlib.util
@@ -100,5 +90,5 @@ except Exception as e:
     
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 exu.Print('\nsolution of allExudynModulesTest (should be 1)=',testSolution) 
-exudynTestGlobals.testResult = testSolution
+exu.sys['testResult'] = testSolution
 ```

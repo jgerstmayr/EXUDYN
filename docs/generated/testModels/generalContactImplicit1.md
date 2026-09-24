@@ -26,17 +26,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -121,7 +111,7 @@ nNode0 = nMass
 mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
 
 gContact.AddSphereWithMarker(mNode, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
-if useGraphics:
+if not testIsActive:
     sNode0 = mbs.AddSensor(SensorNode(nodeNumber=nNode0, storeInternal=True, #fileName='solution/contactNode0.txt',
                                       outputVariableType=exu.OutputVariableType.Displacement))
     vNode0 = mbs.AddSensor(SensorNode(nodeNumber=nNode0, storeInternal=True, #fileName='solution/contactNode0Vel.txt',
@@ -144,7 +134,7 @@ h= 0.0002  #h= 0.0002 for test suite
 simulationSettings = exu.SimulationSettings()
 #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.writeSolutionToFile = False
-if useGraphics:
+if not testIsActive:
     simulationSettings.solutionSettings.solutionWritePeriod = 0.005
     simulationSettings.solutionSettings.writeSolutionToFile = True
     simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
@@ -183,7 +173,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.light0.shadow = 0.25
 SC.visualizationSettings.openGL.light0.position = [-3,3,10,0]
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene = False
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
@@ -205,12 +195,11 @@ for node in evalNodes:
 
 
 exu.Print('solution of generalContactImplicit1=',uSum)
-exudynTestGlobals.testError = uSum - (0) 
 
-exudynTestGlobals.testResult = uSum
+exu.sys['testResult'] = uSum
 
     
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
 
     if True:
@@ -221,7 +210,7 @@ if useGraphics:
 
     SC.renderer.Stop() #safely close rendering window!
 
-if useGraphics:
+if not testIsActive:
     mbs.PlotSensor([], closeAll=True)
     mbs.PlotSensor([sNode0]*3, [0,1,2], figureName='sphere position')
     mbs.PlotSensor([omegaNode0]*3, [0,1,2], figureName='sphere angular vel')

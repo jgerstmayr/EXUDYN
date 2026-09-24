@@ -16,24 +16,14 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-#useGraphics = False
+#testIsActive = True
 
 #%%+++++++++++++++++++++++++++++++++
 #sphere-sphere with coordinate constraints, prestressed; fixed torque on one side, linear increasing torque on other side
@@ -133,7 +123,7 @@ mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
 mbs.AddLoad(Force(markerNumber=mNode, loadVector= [0,0,-k*r*0.01])) #==> uz = 2*r*0.01
 exu.Print('expect u0z=',2*r*0.01)
 gContact.AddSphereWithMarker(mNode, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
-if useGraphics:
+if not testIsActive:
     sNode0 = mbs.AddSensor(SensorNode(nodeNumber=nNode0, storeInternal=True, #fileName='solution/contactNode0.txt',
                                       outputVariableType=exu.OutputVariableType.Displacement))
     vNode0 = mbs.AddSensor(SensorNode(nodeNumber=nNode0, storeInternal=True, #fileName='solution/contactNode0Vel.txt',
@@ -198,7 +188,7 @@ mNodeF = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMassF))
 mbs.AddLoad(Force(markerNumber=mNodeF, loadVector= [0,-k*r*0.1,0])) #==> u =  k*r*0.1/(0.5*k) = 2*r*0.1
 exu.Print('expect uFy=',2*r*0.1)
 gContact.AddSphereWithMarker(mNodeF, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
-if useGraphics:
+if not testIsActive:
     sNodeF = mbs.AddSensor(SensorNode(nodeNumber=nMassF, storeInternal=True, #fileName='solution/contactNodeF.txt',
                                       outputVariableType=exu.OutputVariableType.Displacement))
 evalNodes += [nMassF] 
@@ -248,7 +238,7 @@ mbs.AddLoad(Torque(markerNumber=mNodeR, loadVectorUserFunction=UFtorque,
                    loadVector= [1,0,0])) #==> u =  k*r*0.1/(0.5*k) = 2*r*0.1
 
 gContact.AddSphereWithMarker(mNodeR, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
-if useGraphics:
+if not testIsActive:
     sNodeR = mbs.AddSensor(SensorNode(nodeNumber=nMassR, storeInternal=True, #fileName='solution/contactNodeR.txt',
                                       outputVariableType=exu.OutputVariableType.Rotation))
     vNodeR = mbs.AddSensor(SensorNode(nodeNumber=nMassR, storeInternal=True, #fileName='solution/contactNodeRvel.txt',
@@ -280,7 +270,7 @@ nNode3 = nMassStair
 mNode3 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMassStair))
 gContact.AddSphereWithMarker(mNode3, radius=0.5*r, contactStiffness=k, contactDamping=20*d, frictionMaterialIndex=0)
 
-if useGraphics:
+if not testIsActive:
     sNode3 = mbs.AddSensor(SensorNode(nodeNumber=nNode3, storeInternal=True, #fileName='solution/contactNode3.txt',
                                       outputVariableType=exu.OutputVariableType.Displacement))
 evalNodes += [nMassStair] 
@@ -334,7 +324,7 @@ for p in meshPoints2:
     mPoint = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oMassCube0, localPosition=p))
     gContact.AddSphereWithMarker(mPoint, radius=tTrig, contactStiffness=k, contactDamping=d, frictionMaterialIndex=1)
 
-if useGraphics:
+if not testIsActive:
     sCube0 = mbs.AddSensor(SensorNode(nodeNumber=nCube0, storeInternal=True, #fileName='solution/contactCube0.txt',
                                       outputVariableType=exu.OutputVariableType.Displacement))
 
@@ -356,7 +346,7 @@ h= 0.0002  #h= 0.0002 for test suite
 simulationSettings = exu.SimulationSettings()
 #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.writeSolutionToFile = False
-if useGraphics:
+if not testIsActive:
     simulationSettings.solutionSettings.solutionWritePeriod = 0.001
     simulationSettings.solutionSettings.writeSolutionToFile = True
     simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
@@ -390,7 +380,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.light0.shadow = 0.25
 SC.visualizationSettings.openGL.light0.position = [-3,3,10,0]
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene = False
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
@@ -412,12 +402,11 @@ for node in evalNodes:
 
 
 exu.Print('solution of generalContactFrictionTest=',uSum)
-exudynTestGlobals.testError = uSum - (10.132106712933348 ) 
 
-exudynTestGlobals.testResult = uSum
+exu.sys['testResult'] = uSum
 
     
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
 
     if True:
@@ -430,7 +419,7 @@ if useGraphics:
 
     SC.renderer.Stop() #safely close rendering window!
 
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor([], closeAll=True)

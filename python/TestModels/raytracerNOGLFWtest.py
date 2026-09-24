@@ -18,18 +18,8 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from math import sin, cos
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False
+testIsActive = exu.sys.get('testIsActive', False)
+testIsActive = True
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -58,7 +48,7 @@ pqrstuvwxyz{|}~
 
 gText = graphics.Text(point=[0,-5,1], text=text, color=[0.2,0.2,0.2,1], fontSize=12)
 
-mbs.CreateGround(referencePosition=[0,0,-1], graphicsDataList=[gBack]+[gText]*(1-useGraphics) )
+mbs.CreateGround(referencePosition=[0,0,-1], graphicsDataList=[gBack]+[gText]*(1-(not testIsActive)) )
 
 gObjectsList = []
 
@@ -103,7 +93,7 @@ def PreStepUserFunction(mbs, t):
     if t > 0:
         rot = RotationMatrix2RotationVector(A@RotationMatrixZ(0.5*t*0.5*pi))
         SC.renderer.SetModelView(5.7,rot,[0,0,0])
-        if useGraphics:
+        if not testIsActive:
             image = SC.renderer.RedrawAndGetImage(True)
             imageCounter = mbs.variables['imageCounter']
             exu.Print(f'image: frame{imageCounter:05}.png:',image.shape)
@@ -127,7 +117,7 @@ mbs.SetPreStepUserFunction(PreStepUserFunction)
 #sizeFactor=1, nTiles=128, lightVariations=71, multisampling=1:
 #OLD: approx 0.7s / image
 windowSize = [1200,1000]
-if not useGraphics:
+if testIsActive:
     windowSize = [400,300] #3
 
 SC.visualizationSettings.view0.window.renderWindowSize = windowSize
@@ -146,12 +136,12 @@ SC.visualizationSettings.openGL.light1.position = [-3,-3,-10,1]
 SC.visualizationSettings.openGL.light1.diffuse = SC.visualizationSettings.openGL.light0.diffuse
 #SC.visualizationSettings.openGL.light1.specular = SC.visualizationSettings.openGL.light0.specular
 SC.visualizationSettings.openGL.light0.shadow = 0.2
-SC.visualizationSettings.raytracer.numberOfThreads = 8+32*useGraphics
+SC.visualizationSettings.raytracer.numberOfThreads = 8+32*(not testIsActive)
 SC.visualizationSettings.openGL.light0.lightRadius = 0.5
 SC.visualizationSettings.raytracer.lightRadiusVariations = 13
 SC.visualizationSettings.raytracer.advanced.shadowSmoothingSteps = 2
 SC.visualizationSettings.raytracer.advanced.shadowScalingFactor = 3
-SC.visualizationSettings.raytracer.verbose = useGraphics+1
+SC.visualizationSettings.raytracer.verbose = (not testIsActive)+1
 SC.visualizationSettings.raytracer.maxReflectionDepth = 2
 SC.visualizationSettings.raytracer.maxTransparencyDepth = 2
 #SC.visualizationSettings.view0.camera.useRaytracer = True
@@ -189,17 +179,17 @@ simulationSettings.solutionSettings.writeSolutionToFile = False
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.SetModelView(5.7,52/180*pi*np.array([-0.82,0.25,0.5149]),[0,0,0])
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop()
 
-if not useGraphics:
+if testIsActive:
     #this example shows how to retrieve a single image:
     import matplotlib.pyplot as plt
 
@@ -221,5 +211,5 @@ if not useGraphics:
     checksum = np.sum(flat_pixels * counters)/np.int64(1e14)
     exu.Print('raytracerNOGLFWtest: image checksum=', checksum)
 
-    exudynTestGlobals.testResult = checksum
+    exu.sys['testResult'] = checksum
 

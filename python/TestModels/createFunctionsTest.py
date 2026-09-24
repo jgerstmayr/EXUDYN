@@ -16,17 +16,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 #set up new multibody system to work with
@@ -209,7 +199,7 @@ mbs.CreateCartesianSpringDamper(
 mbs.Assemble()
 
 endTime = 0.5 #simulation time in seconds
-if useGraphics:
+if not testIsActive:
     endTime = 2.5
 
 stepSize = 0.002 #should be small enough to achieve sufficient accuracy
@@ -237,7 +227,7 @@ mbs.SolveDynamic(simulationSettings)
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.showBasis = True
 
-if useGraphics:
+if not testIsActive:
     mbs.SolutionViewer()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -246,7 +236,7 @@ ode2 = mbs.systemData.GetODE2Coordinates()
 u = 0.01*np.linalg.norm(ode2)
 exu.Print('solution of createFunctionsTest=',u) 
 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

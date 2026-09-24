@@ -17,17 +17,7 @@ import exudyn.graphics as graphics
 from math import sin, cos, pi
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -149,8 +139,8 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 SC.visualizationSettings.connectors.showJointAxes = True
  
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-#useGraphics = False
-if useGraphics:
+#testIsActive = True
+if not testIsActive:
     simulationSettings.displayComputationTime = True
     simulationSettings.displayStatistics = True
     SC.renderer.Start()
@@ -175,13 +165,12 @@ exu.Print('u0=',u0,', rot0=', rot0)
 result = (abs(u0)+abs(rot0)).sum()
 exu.Print('solution of revoluteJointprismaticJointTest=',result)
 
-exudynTestGlobals.testError = result - (1.2538806799246283) #2020-07-01: 1.2538806799246283
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 
 
 #%%+++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

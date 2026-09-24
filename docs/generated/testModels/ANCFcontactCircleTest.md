@@ -22,17 +22,7 @@ You can view and download this file on Github: [ANCFcontactCircleTest.py](https:
 import exudyn as exu
 from exudyn.itemInterface import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -157,7 +147,7 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
 #simulationSettings.solutionSettings.outputPrecision = 4
 simulationSettings.displayComputationTime = False
 
@@ -188,7 +178,7 @@ simulationSettings.staticSolver.newton.maxIterations = 30 #50 for bending into c
 simulationSettings.staticSolver.discontinuous.iterationTolerance = 1
 simulationSettings.staticSolver.stabilizerODE2term = 2 #may only act on position degrees of freedom
 
-if useGraphics: 
+if not testIsActive: 
     simulationSettings.staticSolver.verboseMode = 1 #otherwise, load steps are shown ...
     simulationSettings.staticSolver.verboseModeFile = 0 #otherwise, load steps are shown ...
     simulationSettings.displayStatistics = True
@@ -202,10 +192,9 @@ sol = mbs.systemData.GetODE2Coordinates()
 n = len(sol)
 exu.Print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-exudynTestGlobals.testError = sol[n-3] - (-0.4842698420787613) #-0.4842698420787613 ; 2021-05-07 (deactivated StaticSolveOldSolver):-0.4842656133238705  #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
-exudynTestGlobals.testResult = sol[n-3]
+exu.sys['testResult'] = sol[n-3]
 ```

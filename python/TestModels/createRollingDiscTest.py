@@ -16,17 +16,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -58,7 +48,7 @@ tEnd = 1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
@@ -70,7 +60,7 @@ SC.visualizationSettings.view0.camera.perspective = 1
 SC.visualizationSettings.openGL.light0.shadow=0.3
 SC.visualizationSettings.openGL.multiSampling=4
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -81,11 +71,10 @@ p0=mbs.GetObjectOutputBody(oDisc, exu.OutputVariableType.Position)
 u = np.linalg.norm(p0)
 exu.Print('solution of createRollingDisc=',u) 
 
-exudynTestGlobals.testError = u - (0) 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

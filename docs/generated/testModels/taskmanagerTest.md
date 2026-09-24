@@ -26,19 +26,9 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
-useGraphics = False
+testIsActive = True
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -169,7 +159,7 @@ for nMasses in [0, 1, 2, 4]:
                         SC.visualizationSettings.view0.window.alwaysOnTop = True
                         
                         #start solver:
-                        if useGraphics:
+                        if not testIsActive:
                             SC.renderer.Start()
                             SC.renderer.DoIdleTasks()
                         
@@ -186,7 +176,7 @@ for nMasses in [0, 1, 2, 4]:
                                 mbs.SolveDynamic(simulationSettings,
                                                  solverType=solverType)
                         
-                        if useGraphics:
+                        if not testIsActive:
                             SC.renderer.Stop()
                         
                         #+++++++++++++++++++++++++++++++++++++
@@ -212,7 +202,7 @@ resultTotal *= 0.001 #to avoid too large non-deterministic round-off errors due 
 exu.Print('\ntotal cases:', totalCases)
 exu.Print('result taskmanagerTest=', resultTotal)
 
-exudynTestGlobals.testResult = resultTotal #-0.17210771618100057 
+exu.sys['testResult'] = resultTotal #-0.17210771618100057 
 
 # mbs.SolutionViewer()
 

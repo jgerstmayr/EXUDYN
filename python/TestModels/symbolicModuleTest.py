@@ -13,17 +13,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = False #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', True)
 
 esym = exu.symbolic
 import numpy as np
@@ -569,6 +559,5 @@ exu.Print('u=',u)
 exu.Print('solution of symbolicModuleTest=',u)
 
 # result for 10000 steps; identical for both UF cases
-exudynTestGlobals.testError = u - (0.9480053738744615) 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 

@@ -30,19 +30,9 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
-if useGraphics: 
+if not testIsActive: 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
 
@@ -65,7 +55,7 @@ mbs = SC.AddSystem()
 solutionSliderCrankIndex2  = 0
 
 rangeTests = range(1,2) #(0,1): fixed frame, (1,2):floating frame
-if exudynTestGlobals.performTests: #consider shorter integration time
+if testIsActive: #consider shorter integration time
     rangeTests = range(0,2)
 
 for testCases in rangeTests:
@@ -208,7 +198,7 @@ for testCases in rangeTests:
     simulationSettings.timeIntegration.numberOfSteps = 50000 #1000 steps for test suite/error
     simulationSettings.timeIntegration.endTime = 3              #1s for test suite / error
 
-    if exudynTestGlobals.performTests: #consider shorter integration time
+    if testIsActive: #consider shorter integration time
         simulationSettings.timeIntegration.numberOfSteps = 5000 #1000 steps for test suite/error
         simulationSettings.timeIntegration.endTime = 0.3              #1s for test suite / error
 
@@ -242,12 +232,12 @@ for testCases in rangeTests:
     SC.visualizationSettings.general.autoFitScene = False
     #SC.renderer.DoIdleTasks()
     
-    if useGraphics: 
+    if not testIsActive: 
         SC.renderer.Start()
    
     mbs.SolveDynamic(simulationSettings)
         
-    if useGraphics: 
+    if not testIsActive: 
         #+++++++++++++++++++++++++++++++++++++
         #animate solution
 #        mbs.WaitForUserToContinue
@@ -265,12 +255,11 @@ for testCases in rangeTests:
 
 
 exu.Print('solutionSliderCrankIndex2=',solutionSliderCrankIndex2)
-exudynTestGlobals.testError = solutionSliderCrankIndex2 - 0.5916491633788333 #2020-01-15: 0.5916491633788333(corrected PrismaticJoint); 2019-12-26: 0.5916499441339551; 2019-12-15: 0.591689710999802 (absTol: 1e-8 now; 1e-2 before); before 2019-12-15: 0.5896009710727431
-exudynTestGlobals.testResult = solutionSliderCrankIndex2
+exu.sys['testResult'] = solutionSliderCrankIndex2
 
 
 #plotResults = True#constrainGroundBody #comparison only works in case of fixed ground
-plotResults = useGraphics#constrainGroundBody #comparison only works in case of fixed ground
+plotResults = (not testIsActive)#constrainGroundBody #comparison only works in case of fixed ground
 if plotResults:
     dataIndex2 = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     #dataMatlab = np.loadtxt('slidercrankRefSolM0.1_tol1e-4.txt', comments='#', delimiter=',') #this is quite inaccurate

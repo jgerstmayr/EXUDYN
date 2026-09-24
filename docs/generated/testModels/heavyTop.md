@@ -26,17 +26,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -113,7 +103,7 @@ for nodeType in nodeTypeList:
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC1]))
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
     
-    if useGraphics:
+    if not testIsActive:
         sAdd = ''
         if nodeType == exu.NodeType.RotationRxyz:
             sAdd = 'Rxyz' #avoid that both sensor file names are identical
@@ -145,13 +135,13 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -172,15 +162,14 @@ exu.Print('solution of heavy top =',u)
 
 #RotXYZ solution EXUDYN:           29.86975964,-0.7683481513,-1.002841906
 
-exudynTestGlobals.testError = u - (33.42312575174431) #2020-02-04 added RigidRxyz: (33.423125751773306) 2020-02-03: (1.7821760506326125)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute exact solution:
 
-if useGraphics:
+if not testIsActive:
     
     fileRef = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt'
     mbs.PlotSensor(sCoords[0], components=[3,4,5,6], labels=['theta 0','theta 1','theta 2','theta 3'], 

@@ -23,17 +23,7 @@ import exudyn.graphics as graphics
 import numpy as np
 from math import sin, cos, pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 ## setup system container and mbs
 SC = exu.SystemContainer()
@@ -143,7 +133,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.005
 SC.visualizationSettings.bodies.beams.crossSectionFilled = False
 
 ## start graphics
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -155,14 +145,13 @@ uLast = mbs.GetNodeOutput(nodeList[-1], exu.OutputVariableType.Coordinates)
 exu.Print("uTip =", uLast[0:2])
 
 ## stop graphics
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 exu.Print('solution of LShapeGeomExactBeam2D=',uLast[1]) #use y-coordinate
 
-exudynTestGlobals.testError = uLast[1] - (-2.2115028353806547) 
-exudynTestGlobals.testResult = uLast[1]
+exu.sys['testResult'] = uLast[1]
 
 
 

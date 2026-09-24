@@ -28,17 +28,7 @@ import exudyn.graphics as graphics
 from math import sin, cos
 import copy 
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 SC = exu.SystemContainer()
@@ -176,13 +166,13 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
 SC.visualizationSettings.view0.window.renderWindowSize = [2000,1600]
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     mbs2.WaitForUserToContinue()
 
 mbs2.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -191,6 +181,6 @@ if useGraphics:
 uTotal = 0.1 * sum(mbs2.GetSensorValues(sPos)) #sPos is still the correct index
 exu.Print('uTotal=',uTotal)
 
-exudynTestGlobals.testResult = uTotal
+exu.sys['testResult'] = uTotal
 #+++++++++++++++++++++++++++++++++++++++++++++
 ```

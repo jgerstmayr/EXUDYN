@@ -22,17 +22,7 @@ from exudyn.lieGroupIntegration import *
 import numpy as np
 from numpy import linalg as LA
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -300,14 +290,14 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
     #SC.renderer.DoIdleTasks()
     
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
 fact = 20 #200000
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     fact = 20
 
 simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
@@ -340,7 +330,7 @@ if True:
 dynamicSolver.SolveSystem(mbs, simulationSettings)
 #mbs.SolveDynamic(simulationSettings)
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -360,8 +350,7 @@ for i in range(2):
 result = mbs.GetNodeOutput(2,exu.OutputVariableType.Velocity)[1] #y-velocity of bar
 exu.Print('solution of stiffFlyballGovernor=',result)
 
-exudynTestGlobals.testError = result - (0.8962488779114738) #2021-01-04: 0.015213599619996604 (Python3.7)
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 
 plist=[]
@@ -390,7 +379,7 @@ exu.ConfigurationType.Current)]
 #v 2 = [-1.91975841e-16  5.60155553e+00 -4.90500111e-10]
 #v 3 = [ 1.91975841e-16 -5.60155553e+00 -4.90500111e-10]
 
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor(sPos, components=[0,1,2], closeAll=True)

@@ -21,17 +21,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -84,7 +74,7 @@ oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGr
 
 
 #sensor for trace of contact point:
-if useGraphics:
+if not testIsActive:
     sTrail=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
@@ -106,7 +96,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 0.5
-if useGraphics:
+if not testIsActive:
     tEnd = 0.5
 
 h=0.0001 
@@ -129,7 +119,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -138,11 +128,10 @@ mbs.SolveDynamic(simulationSettings)
 p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
 exu.Print('solution of rollingCoinPenaltyTest=',p0[0]) #use x-coordinate
 
-exudynTestGlobals.testError = p0[0] - (0.03489603106769764) #2020-06-20: 0.03489603106769764
-exudynTestGlobals.testResult = p0[0]
+exu.sys['testResult'] = p0[0]
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

@@ -19,17 +19,7 @@ from exudyn.lieGroupIntegration import *
 import numpy as np
 from numpy import linalg as LA
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -171,7 +161,7 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerCrankB, markerConrodB], constrai
 mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrainedAxes=[1,1,1,0,0,1], # xAxisMarker0=free, yAxisMarker1=free
                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
-if useGraphics:
+if not testIsActive:
     sCrankAngle=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngle.txt',
                              outputVariableType=exu.OutputVariableType.Rotation))
     sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngularVelocity.txt',
@@ -201,7 +191,7 @@ simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 0.2 #0.2 for testing
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
 simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -214,7 +204,7 @@ SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.connectors.jointAxesLength = 0.02
 SC.visualizationSettings.connectors.jointAxesRadius = 0.002
 
-if useGraphics:
+if not testIsActive:
     simulationSettings.timeIntegration.numberOfSteps = 20000
     simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
     
@@ -249,15 +239,14 @@ for i in range(14): #take coordinates of first two bodies
 
 exu.Print('solution of 3D slidercrank iftomm benchmark=',u)
 
-exudynTestGlobals.testError = u - (3.36427617809219) #2020-04-22(corrected GenericJoint): 3.36427617809219;2020-02-19: 3.3642838177004832
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-if useGraphics:
+if not testIsActive:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close("all")

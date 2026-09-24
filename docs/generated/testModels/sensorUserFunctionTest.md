@@ -24,17 +24,7 @@ from exudyn.itemInterface import *
 
 from math import pi, atan2
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -45,7 +35,7 @@ mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
 
 sNode = mbs.AddSensor(SensorNode(nodeNumber=node,
                                  fileName='solution/sensorTestPos.txt',
-                                 writeToFile = useGraphics, #no output needed
+                                 writeToFile = (not testIsActive), #no output needed
                                  outputVariableType=exu.OutputVariableType.Position))
 
 def UFsensor(mbs, t, sensorNumbers, factors, configuration):
@@ -57,7 +47,7 @@ def UFsensor(mbs, t, sensorNumbers, factors, configuration):
 
 sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
                                  storeInternal=True,#fileName='solution/sensorTestPhi.txt',
-                                 writeToFile = useGraphics,
+                                 writeToFile = (not testIsActive),
                                  sensorUserFunction=UFsensor))
 
 #assemble and solve system for default parameters
@@ -72,10 +62,10 @@ mbs.SolveDynamic(simulationSettings)
 u = mbs.GetSensorValues(sUser)
 exu.Print('sensor=',u)
 
-exudynTestGlobals.testResult = u #should be 45 degree finally
+exu.sys['testResult'] = u #should be 45 degree finally
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     
     mbs.PlotSensor([sNode, sNode, sUser], [0, 1, 0])
 ```

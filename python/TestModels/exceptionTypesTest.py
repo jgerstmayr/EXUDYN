@@ -28,17 +28,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the two switches this file exists for: with catchErrors=False the selected case is NOT caught, so
@@ -172,7 +162,7 @@ if not catchErrors:
     exu.Print('case ' + str(number) + ': ' + name + ' (' + whatTheUserDidWrong + ')')
     function()
     exu.Print('NOTHING WAS RAISED')
-    exudynTestGlobals.testResult = -1
+    exu.sys['testResult'] = -1
 else:
     results = []
     silent = 0
@@ -199,5 +189,5 @@ else:
 
     #the ONLY thing this model asserts: every case must raise something. Which class and which
     #message are printed above and are what R6.3.5 and R6.3.6 change
-    exudynTestGlobals.testResult = silent
+    exu.sys['testResult'] = silent
     exu.Print('exceptionTypesTest: cases that raised nothing = ' + str(silent))

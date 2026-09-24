@@ -18,18 +18,8 @@ import exudyn.graphics as graphics
 import numpy as np
 from math import sin, cos, pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = True
+testIsActive = exu.sys.get('testIsActive', False)
+testIsActive = False
 from exudyn.shells import ShellMesh
     
 totalTestResults = 0
@@ -188,10 +178,10 @@ for testCase, nFact in testCases.items():
     stepSize = 0.01
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.timeIntegration.verboseMode = useGraphics
-    simulationSettings.staticSolver.verboseMode = useGraphics
+    simulationSettings.timeIntegration.verboseMode = (not testIsActive)
+    simulationSettings.staticSolver.verboseMode = (not testIsActive)
     simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-    simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+    simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
     # simulationSettings.displayComputationTime = True
 
     simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
@@ -245,7 +235,7 @@ for testCase, nFact in testCases.items():
         SC.visualizationSettings.bodies.beams.axialTiling = 16 #32 does not run smooth!
         SC.visualizationSettings.openGL.multiSampling = 4
         SC.visualizationSettings.openGL.lineWidth = 3
-        if useGraphics:
+        if not testIsActive:
             from exudyn.interactive import AnimateModes
             AnimateModes(SC, mbs, nodeNumber=None, systemEigenVectors=systemEigenVectors, 
                          runOnStart=True,)
@@ -253,7 +243,7 @@ for testCase, nFact in testCases.items():
             # sys.exit()
     else:
     
-        if useGraphics:
+        if not testIsActive:
             SC.renderer.Start()
             SC.renderer.SetModelView(zoom=1.021832,rotationVector=[-0.1321511,-1.268006,-1.984913],centerPoint=[-0.1076974,-1.14091,0.635892])
             SC.renderer.DoIdleTasks()
@@ -267,7 +257,7 @@ for testCase, nFact in testCases.items():
         elif not isEigenmodes:
             raise ValueError('ANCFThinPlateTests: no valid mode')
             
-        if useGraphics:
+        if not testIsActive:
             SC.renderer.DoIdleTasks()
             SC.renderer.Stop()
     
@@ -287,8 +277,7 @@ for testCase, nFact in testCases.items():
 
 exu.Print('\nsolution of ANCFThinPlateTests =',totalTestResults )
 
-#exudynTestGlobals.testError = totalTestResults - (0.544141453130599) 
-exudynTestGlobals.testResult = totalTestResults
+exu.sys['testResult'] = totalTestResults
 
 
 

@@ -30,17 +30,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -309,7 +299,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 tEnd = 0.1
 h=1e-4
-if useGraphics:
+if not testIsActive:
     tEnd = 2
     
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -336,7 +326,7 @@ SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.view0.window.renderWindowSize = [1920,1080]
 SC.visualizationSettings.openGL.multiSampling = 4
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     if 'lastRenderState' in vars():
         SC.renderer.SetState(lastRenderState) #load last model view
@@ -354,10 +344,9 @@ exu.Print("phiCrank",phiCrank)
 exu.Print("phiFlyWheel",phiFlyWheel)
 u = phiCrank-phiFlyWheel
 exu.Print("solution of driveTrainTest=", u)
-exudynTestGlobals.testError = u - (0.8813172426357362 - 0.8813173353288565) #2020-05-28: 0.8813172426357362 - 0.8813173353288565
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -367,7 +356,7 @@ if useGraphics:
                components=[0], closeAll=True, offsets=-phiCrankData,
                labels=['crank angle - flywheel angle'])
 
-if useGraphics:
+if not testIsActive:
     mbs.PlotSensor(sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 
                components=[0,2,2,2,0], markerStyles=['^ ','o ','H ','x','v '],closeAll=True,markerSizes=12,
                labels=['crank position','crank angular velocity','crank angle','flywheel angular velocity', 'flywheel angle'])

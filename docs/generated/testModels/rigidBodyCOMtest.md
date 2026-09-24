@@ -26,17 +26,7 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -146,7 +136,7 @@ SC.visualizationSettings.nodes.showBasis = True
 #simulationSettings.displayStatistics = True
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -169,11 +159,10 @@ p1=mbs.GetObjectOutputBody(objectList[1], exu.OutputVariableType.Displacement, m
 u=np.linalg.norm(p0) + np.linalg.norm(p1)
 exu.Print('solution of rigidBodyCOMtest=',u)
 
-exudynTestGlobals.testError = u - (3.409431467726293) #2020-04-22: 3.409431467726293
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 ```

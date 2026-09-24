@@ -29,17 +29,7 @@ from exudyn.FEM import *
 import os   #the mesh file is checked for existence, not loaded speculatively (#2469)
 import time
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 SC = exu.SystemContainer()
@@ -256,7 +246,7 @@ SC.visualizationSettings.loads.drawSimplified = False
 
 h=1e-3
 tEnd = 0.1
-if useGraphics:
+if not testIsActive:
     tEnd = 4
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -275,7 +265,7 @@ simulationSettings.displayComputationTime = True
 SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
 SC.visualizationSettings.openGL.multiSampling = 4
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene=False
 
     SC.renderer.Start()
@@ -289,7 +279,7 @@ uTip = mbs.GetSensorValues(sensTipDispl)
 exu.Print("nModes=", nModes, ", tip displacement=", uTip)
 
     
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -298,8 +288,7 @@ exu.Print('solution of NGsolveCMStest=',result)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-exudynTestGlobals.testError = result - (0.06953224923173523  )   
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 
 #mbs.SolutionViewer()

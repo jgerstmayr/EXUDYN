@@ -28,18 +28,8 @@ from exudyn.robotics.utilities import AddLidar
 import numpy as np
 from math import sin, cos, tan
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#useGraphics=False
+testIsActive = exu.sys.get('testIsActive', False)
+#testIsActive = True
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -186,7 +176,7 @@ AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar1, minDistance=
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if useGraphics:
+if not testIsActive:
     sCarVel = mbs.AddSensor(SensorBody(bodyNumber=bCar, storeInternal=True, #fileName='solution/rollingDiscCarVel.txt', 
                                 outputVariableType = exu.OutputVariableType.Velocity))
 
@@ -273,7 +263,7 @@ for iWheel in range(nWheels):
     sAngularVelWheels += [mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
                                outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
 
-    if useGraphics:
+    if not testIsActive:
         sPos+=[mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscPos'+strNum+'.txt', 
                                    outputVariableType = exu.OutputVariableType.Position))]
     
@@ -360,7 +350,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 0.5
-if useGraphics:
+if not testIsActive:
     tEnd = 20#24
 
 h=0.002
@@ -398,9 +388,9 @@ SC.visualizationSettings.openGL.lineWidth = 2
 SC.visualizationSettings.openGL.light0.shadow = 0.3
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.view0.camera.perspective = 0.7
-# useGraphics=True
+# testIsActive = False
 #create animation:
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
 
@@ -409,7 +399,7 @@ if useGraphics:
         simulationSettings.solutionSettings.recordImagesInterval = 0.04
         SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -424,17 +414,16 @@ for s in sLidar+sLidarInc:
 u/=len(sLidar+sLidarInc)*10
 
 exu.Print('solution of mecanumWheelRollingDiscTest=',u)
-exudynTestGlobals.testError = u - (0.27142672383243405) #2020-06-20: 0.2714267238324345
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if useGraphics and False:
+if not testIsActive and False:
     
     
     mbs.PlotSensor(sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,

@@ -27,17 +27,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()         #container of systems
 mbs = SC.AddSystem()               #add a new system to work with
@@ -58,7 +48,7 @@ sMass = mbs.AddSensor(SensorBody(bodyNumber = mass, storeInternal=True,
 mbs.Assemble()                     #assemble system and solve
 simulationSettings = exu.SimulationSettings()
     
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -116,13 +106,11 @@ for i in range(4):
 
     #RK67:    p= [1.0332409398209816, 0.0, 0.0]
     #RK67/2:  p= [1.0332409398209812, 0.0, 0.0]
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Stop()
     mbs.PlotSensor(sMass,components=[0])
 
 exu.Print("velocityVerletTest result=",sumSol)
 
-exudynTestGlobals.testError = sumSol - (4.365184132226787) #2024-10-06
-exudynTestGlobals.testResult = sumSol
-exu.Print("velocityVerletTest error=", exudynTestGlobals.testError)
+exu.sys['testResult'] = sumSol
 ```

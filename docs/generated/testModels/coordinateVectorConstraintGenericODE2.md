@@ -24,17 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -144,10 +134,10 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
 
-#useGraphics=False
+#testIsActive = True
 tEnd = 1
 h = 1e-3
-if useGraphics:
+if not testIsActive:
     tEnd = 1
     simulationSettings.timeIntegration.simulateInRealtime = True
     simulationSettings.timeIntegration.realtimeFactor = 1
@@ -165,7 +155,7 @@ SC.visualizationSettings.nodes.showBasis=True
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.defaultSize=r
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -177,12 +167,11 @@ u=sum(p0)
 
 exu.Print('solution of coordinateVectorConstraint=',u)
 
-exudynTestGlobals.testError = u - (-1.0825265797698322)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 #%%++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

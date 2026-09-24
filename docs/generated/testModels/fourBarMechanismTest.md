@@ -22,17 +22,7 @@ You can view and download this file on Github: [fourBarMechanismTest.py](https:/
 import exudyn as exu
 from exudyn.itemInterface import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -100,7 +90,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 f = 2000
 simulationSettings.timeIntegration.numberOfSteps = 1*f
 simulationSettings.timeIntegration.endTime = 0.001*f
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/500
 simulationSettings.displayComputationTime = False
 simulationSettings.displayStatistics = False
@@ -124,14 +114,14 @@ SC.visualizationSettings.nodes.defaultSize = 0.05
 
 simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
 
-#useGraphics = True #uncomment this line to visualize the example!
-if useGraphics: 
+#testIsActive = False #uncomment this line to visualize the example!
+if not testIsActive: 
     SC.renderer.Start()
     #SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -140,6 +130,5 @@ sol = mbs.systemData.GetODE2Coordinates();
 u = sol[1]; #y-displacement of first node of four bar mechanism
 exu.Print('solution of fourbar mechanism =',u)
 
-exudynTestGlobals.testError = u - (-2.354666317492353) #2020-01-09: -2.354666317492353; 2019-12-15: (-2.3546596670554125); 2019-11-22:(-2.354659593986869);  previous: (-2.354659593986899)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 ```

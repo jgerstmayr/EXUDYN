@@ -29,17 +29,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 numberOfModes = 18
 useSparseSolverRoutine = False
@@ -47,7 +37,7 @@ useSparseSolverRoutine = False
 errorResult = 0
 
 testDataDir = "testData/"
-#if useGraphics:
+#if not testIsActive:
 #    testDataDir = "testData/"
 
 ###############################################################################
@@ -55,7 +45,7 @@ testDataDir = "testData/"
 ###############################################################################
 
 #read finite element model
-exudynTestGlobals.testResult = 0
+exu.sys['testResult'] = 0
 for testNumber in range(2):
     if testNumber == 1:
         useSparseSolverRoutine = True
@@ -70,7 +60,7 @@ for testNumber in range(2):
     #exu.Print("compute eigenmodes ...")
     fem.ComputeEigenmodes(numberOfModes, useSparseSolver = useSparseSolverRoutine)
     
-    if useGraphics:
+    if not testIsActive:
         exu.Print('natural frequencies from Ansys model (Lumped Mass Matrix, MMF-Format)', fem.GetEigenFrequenciesHz()[0:numberOfModes])
     
     if not useSparseSolverRoutine:
@@ -83,7 +73,7 @@ for testNumber in range(2):
     exu.Print('natural frequencies from Ansys model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
     errorResult += f6
 
-    exudynTestGlobals.testResult += 1e-6*fem.GetEigenFrequenciesHz()[6]
+    exu.sys['testResult'] += 1e-6*fem.GetEigenFrequenciesHz()[6]
 
     ###############################################################################
     # Abaqus
@@ -99,7 +89,7 @@ for testNumber in range(2):
     #exu.Print("compute eigenmodes ...")
     fem.ComputeEigenmodes(numberOfModes, useSparseSolver = useSparseSolverRoutine)
 
-    if useGraphics:
+    if not testIsActive:
         exu.Print('natural frequencies from Abaqus model (Lumped Mass Matrix)',fem.GetEigenFrequenciesHz()[0:numberOfModes])
     
     if not useSparseSolverRoutine:
@@ -111,13 +101,12 @@ for testNumber in range(2):
     f6*=1e-6 #use offset also for abaqus, as it gives non-reproducible results in dense case (32/64bit?)
     exu.Print('natural frequencies from Abaqus model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
     errorResult += f6
-    exudynTestGlobals.testResult += 1e-6*fem.GetEigenFrequenciesHz()[6]
+    exu.sys['testResult'] += 1e-6*fem.GetEigenFrequenciesHz()[6]
 
 exu.Print('error of compareAbaqusAnsysRotorEigenfrequencies (due to sparse solver)=',errorResult)
 if abs(errorResult) < 1e-15: #usually of size 1e-17
     errorResult = 0 #due to randomized sparse solver results, take this treshold!
     
 exu.Print('solution of compareAbaqusAnsysRotorEigenfrequencies (with treshold)=',errorResult)
-exudynTestGlobals.testError = errorResult #2020-05-22: 0
-#exudynTestGlobals.testResult computed above
+#exu.sys['testResult'] computed above
 ```

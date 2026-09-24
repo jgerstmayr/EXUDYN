@@ -17,17 +17,7 @@ from exudyn.lieGroupIntegration import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -135,7 +125,7 @@ if useBody2:
     mbs.AddObject(CartesianSpringDamper(markerNumbers=[mMassRB, mMassRB2], stiffness=[k,k,k]))
 
 
-if useGraphics:
+if not testIsActive:
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
     mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
@@ -155,7 +145,7 @@ dSize=0.01
 SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
     #SC.renderer.DoIdleTasks()
 
@@ -260,14 +250,13 @@ omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-compo
 exu.Print("omegay=", omegay)
 #pos=mbs.GetNodeOutput(nRB,exu.OutputVariableType.Position)[2] #z-component of pos
 #exu.Print("pos=", pos)
-exudynTestGlobals.testError = omegay - (0) #2020-02-11: 
-exudynTestGlobals.testResult = omegay
+exu.sys['testResult'] = omegay
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-if useGraphics:
+if not testIsActive:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close("all")

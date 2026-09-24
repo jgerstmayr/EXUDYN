@@ -16,17 +16,7 @@
 import exudyn as exu
 from exudyn.utilities import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 import os
 import numpy as np
@@ -195,4 +185,4 @@ plt.close('all') #the figures were never shown, but they must not pile up for th
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 exu.Print('\nsolution of resultsMonitorTest (should be 1)=',testSolution)
-exudynTestGlobals.testResult = testSolution
+exu.sys['testResult'] = testSolution

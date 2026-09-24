@@ -21,18 +21,8 @@ from exudyn.graphicsDataUtilities import *
 import numpy as np
 from math import pi, sin, cos, exp, sqrt
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False #without test
+testIsActive = exu.sys.get('testIsActive', False)
+testIsActive = True #without test
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -190,7 +180,7 @@ for mode in range(2):
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.timeIntegration.simulateInRealtime = useGraphics
+    simulationSettings.timeIntegration.simulateInRealtime = (not testIsActive)
     
     SC.visualizationSettings.connectors.showJointAxes = True
     SC.visualizationSettings.connectors.jointAxesLength = 0.3
@@ -203,7 +193,7 @@ for mode in range(2):
     simulationSettings.solutionSettings.solutionInformation = "Example Kollermill"
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.RestoreSavedState()
         SC.renderer.DoIdleTasks()
@@ -213,7 +203,7 @@ for mode in range(2):
                      #showHints=True
                      )
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     
@@ -224,11 +214,10 @@ for mode in range(2):
 
 exu.Print("rotatingTableTest=", uTest)
 
-exudynTestGlobals.testError = (uTest - 7.838680371309492) 
-exudynTestGlobals.testResult = uTest
+exu.sys['testResult'] = uTest
 
 #%%+++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     
     mbs.PlotSensor(closeAll=True) 
     mbs.PlotSensor(sensorNumbers=[sForce], components=[0,1,2]) 

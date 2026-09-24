@@ -25,17 +25,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -132,27 +122,27 @@ sBody3 = mbs.AddSensor(SensorBody(bodyNumber=oBody3a, storeInternal=True, output
 mbs.Assemble()
 
 endTime = 1 #for stepSize=0.002: non-intrinsic formulation gets unstable around 7.5 seconds for body3 and for body1/2 around 73 seconds
-if useGraphics:
+if not testIsActive:
     endTime = 100
 
 stepSize = 0.002
 simulationSettings = exu.SimulationSettings()
 #simulationSettings.displayComputationTime = True
-simulationSettings.timeIntegration.verboseMode = useGraphics
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.timeIntegration.verboseMode = (not testIsActive)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop() #safely close rendering window!
 
 
@@ -177,11 +167,10 @@ exu.Print("omega3=", omega3)
 u=np.linalg.norm(p1) + np.linalg.norm(p2) + np.linalg.norm(0.01*omega3)
 exu.Print('solution of rigidBodySpringDamperIntrinsic test=',u)
 
-exudynTestGlobals.testError = u - (0.5472368463500464)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 ```

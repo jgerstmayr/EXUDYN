@@ -23,17 +23,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -70,7 +60,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(1*f)
 simulationSettings.timeIntegration.endTime = 0.02*f #make small steps to see something during simulation
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
 
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 0
@@ -95,7 +85,7 @@ simulationSettings.displayComputationTime = False
 simulationSettings.displayStatistics = True
 
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
 #    SC.visualizationSettings.view0.window.alwaysOnTop = True #must be done before SC.renderer.Start() called
 #    SC.visualizationSettings.view0.window.maximize = True
 #    SC.visualizationSettings.view0.window.showWindow = False
@@ -199,7 +189,7 @@ for case in range(2):
     #exu.Print(mbs)
     mbs.Assemble()
     
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.ZoomAll()
         SC.renderer.DoIdleTasks()
     #solve
@@ -222,13 +212,12 @@ for case in range(2):
 
 
 #stop 3D visualization
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 #factor 1e-2: 32bit version shows larger differences ...
-exudynTestGlobals.testError = 1e-2*(resUy + resIt - (1.131033204186729+1.1246157002409096 + 1501+1217)) #2020-01-16: (1.131033204186729+1.1246157002409096 + 1501+1217)
-exudynTestGlobals.testResult = 1e-2*(resUy + resIt)
+exu.sys['testResult'] = 1e-2*(resUy + resIt)
 #+++++++++++++++++++++++++++++++++++
 #plot data:
 

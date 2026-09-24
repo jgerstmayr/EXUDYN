@@ -19,21 +19,11 @@ from exudyn.FEM import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-useGraphics = False #without test
+testIsActive = True #without test
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -41,7 +31,7 @@ useGraphics = False #without test
 fem = FEMinterface()
 #inputFileName = 'C:/DATA/cpp/EXUDYN_git/main/pythonDev/TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if useGraphics:
+#if not testIsActive:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
@@ -194,10 +184,10 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-4
 tEnd = 0.001
-#useGraphics = False
-if useGraphics:
+#testIsActive = True
+if not testIsActive:
     tEnd = 0.1
-    #if useGraphics:
+    #if not testIsActive:
 #    tEnd = 0.1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -219,7 +209,7 @@ simulationSettings.solutionSettings.writeSolutionToFile = False
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState() #load last model view
 
@@ -233,18 +223,17 @@ data=mbs.GetSensorStoredData(sCMSacc)
 result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrderAccelerations=',result)
 
-exudynTestGlobals.testError = (result - (61576.266114362006 ))/(2*result) #2021-01-03: added '/(2*result)' as error is too large (2e-10); 2020-12-19: (dense eigenvalue solver gives repeatable results!) 61576.266114362006 
-exudynTestGlobals.testResult = result/(10*61576.266114362006)
-exu.Print('ObjectFFRFreducedOrderAccelerations test result=',exudynTestGlobals.testResult)
+exu.sys['testResult'] = result/(10*61576.266114362006)
+exu.Print('ObjectFFRFreducedOrderAccelerations test result=',exu.sys['testResult'])
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #plot results
-if useGraphics:
+if not testIsActive:
         
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker

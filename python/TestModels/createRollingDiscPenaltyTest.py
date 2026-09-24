@@ -16,17 +16,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -99,7 +89,7 @@ oRolling1 = mbs.CreateRollingDiscPenalty(bodyNumbers=[oGround, oWheel1],
 
 
 #sensor for trace of contact point:
-if useGraphics:
+if not testIsActive:
     sTrail=mbs.AddSensor(SensorObject(objectNumber=oRolling0, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
@@ -118,7 +108,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 #simulationSettings.displayComputationTime = True
@@ -130,7 +120,7 @@ SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 SC.visualizationSettings.view0.camera.perspective = 1
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -141,11 +131,10 @@ p0=mbs.GetObjectOutput(oRolling0, exu.OutputVariableType.Position)
 u = np.linalg.norm(p0)
 exu.Print('solution of createRollingDiscPenalty=',u) 
 
-exudynTestGlobals.testError = u - (0) 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

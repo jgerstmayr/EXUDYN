@@ -20,17 +20,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -125,14 +115,13 @@ if sensorFromFile.shape != sensorInternal.shape or sensorDeviation > 1e-8: #file
 u=sum(abs(dataM[:,5]-dataF[:,5]))
 exu.Print("compareFullModifiedNewton u=",u)
 
-exudynTestGlobals.testError = u - (0.0001583478719999567 ) #2020-12-18: 0.0001583478719999567 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 os.remove(OutputFile('solution/modifiedNewton.txt'))
 os.remove(OutputFile('solution/fullNewton.txt'))
 os.remove(OutputFile('solution/endPointPosition.txt'))
 
-if useGraphics:
+if not testIsActive:
     # plt.plot(dataM[:,0], dataM[:,3+2], 'b-') #plot column i over column 0 (time)
     # plt.plot(dataF[:,0], dataF[:,3+2], 'r-') #plot column i over column 0 (time)
     plt.plot(dataF[:,0], dataF[:,5]-dataM[:,5], 'r-') 

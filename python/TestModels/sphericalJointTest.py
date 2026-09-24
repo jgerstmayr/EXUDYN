@@ -15,17 +15,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -105,7 +95,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.05
 #simulationSettings.displayComputationTime = True
 #simulationSettings.displayStatistics = True
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -121,11 +111,10 @@ for i in range(14): #take coordinates of first two bodies
 
 exu.Print('solution of sphericalJointTest=',u)
 
-exudynTestGlobals.testError = u - (4.409080446574593) #up to 2021-06-28: 4.409080446580333; 2020-04-04: 4.409004179180698
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

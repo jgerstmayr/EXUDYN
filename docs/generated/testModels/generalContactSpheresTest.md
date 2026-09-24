@@ -26,17 +26,7 @@ import exudyn.graphics as graphics
 import numpy as np
 import time
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -46,7 +36,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 np.random.seed(1) #always get same results
 
 
-# useGraphics = False
+# testIsActive = True
 
 L = 1
 n = 500
@@ -128,7 +118,7 @@ for i in range(n):
                                   visualization=VNodePoint(show=True,drawSize=2*gRad, color=color4node)))
     if i==row*int(row/4)-int(row/2):
         sNodeNum = nMass
-        if useGraphics:
+        if not testIsActive:
             sNode=mbs.AddSensor(SensorNode(nodeNumber=nMass, fileName='solution/generalContactSpheres.txt',
                                      outputVariableType=exu.OutputVariableType.Position))
         
@@ -211,7 +201,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 #improved OpenGL rendering
 
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene = False
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
@@ -231,16 +221,15 @@ uSum = u[0] + u[1] + u[2]
 exu.Print("u =", u)
 exu.Print('solution of generalContactSpheresTest=',uSum)
 
-exudynTestGlobals.testError = uSum - (-1.0947542400425323)
 
-exudynTestGlobals.testResult = uSum
+exu.sys['testResult'] = uSum
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-if useGraphics:
+if not testIsActive:
     
     # mbs.PlotSensor([sNode], [2])
     mbs.PlotSensor([sNode,sNode], [0,1])

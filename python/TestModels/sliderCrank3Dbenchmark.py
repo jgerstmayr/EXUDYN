@@ -21,17 +21,7 @@ from numpy import linalg as LA
 
 from math import pi, sin, cos
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -193,7 +183,7 @@ markerGroundA = mbs.AddMarker(MarkerBodyRigid(name='markerGroundA', bodyNumber=o
 markerCrankA = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0))
 
 
-if useGraphics:
+if not testIsActive:
     sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,fileName='solution/crankAngularVelocity.txt',
                              outputVariableType=exu.OutputVariableType.AngularVelocity))
     sSliderPos=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,fileName='solution/sliderPosition.txt',
@@ -239,7 +229,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd #0.2*5*4 #0.2 for testing
 simulationSettings.solutionSettings.solutionWritePeriod = writeStepSize*10
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayComputationTime = True
 simulationSettings.displayStatistics = True
@@ -260,7 +250,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.05
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
@@ -308,11 +298,10 @@ exu.Print('slider pos =', mbs.GetNodeOutput(n2, exu.OutputVariableType.Position)
 
 u = np.linalg.norm(p1) + np.linalg.norm(r1) + np.linalg.norm(v1) + np.linalg.norm(w1)
 exu.Print('error norm=', u)
-exudynTestGlobals.testError = u - (0)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -325,7 +314,7 @@ if False:
 
 
 #%%+++++++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close("all")

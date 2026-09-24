@@ -17,21 +17,11 @@ import exudyn.graphics as graphics
 from math import sin, cos, pi
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-# useGraphics=False
+# testIsActive = True
 
 #background
 color = [0.1,0.1,0.8,1]
@@ -107,8 +97,8 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 # SC.visualizationSettings.connectors.showJointAxes = True
  
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-#useGraphics = False
-if useGraphics:
+#testIsActive = True
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
@@ -119,18 +109,17 @@ else:
 mbs.SolveDynamic(simulationSettings, showHints=True)
 
 #%%+++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 
-exudynTestGlobals.testError = 0
-exudynTestGlobals.testResult = 1
+exu.sys['testResult'] = 1
 
 import matplotlib.pyplot as plt
 
 
-closeAll = not useGraphics
+closeAll = not (not testIsActive)
 mbs.PlotSensor(sensorNumbers=sLoad, components=[0,1,2], closeAll=closeAll)
 mbs.PlotSensor(sensorNumbers=sNode, components=[0,1,2,3,4,5,6], 
            yLabel='Coordinates with offset 1\nand scaled with $\\frac{1}{1000}$', 

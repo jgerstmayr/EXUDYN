@@ -17,17 +17,7 @@ import exudyn.graphics as graphics
 from math import sin, cos, pi
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -189,8 +179,8 @@ if True: #record animation frames:
     #simulationSettings.solutionSettings.recordImagesInterval = 0.01
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-#useGraphics = True
-if useGraphics:
+#testIsActive = False
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
@@ -198,7 +188,7 @@ if useGraphics:
 mbs.SolveDynamic(simulationSettings)
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -221,5 +211,4 @@ if addSensors:
     u = maxEnergyError + p0[0]
     
     exu.Print('fourBarMechanismIftomm result:', u)
-    exudynTestGlobals.testError = u - (0.1721665271840173) 
-    exudynTestGlobals.testResult = u
+    exu.sys['testResult'] = u

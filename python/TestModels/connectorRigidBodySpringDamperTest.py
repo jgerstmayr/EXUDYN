@@ -21,17 +21,7 @@ import exudyn.graphics as graphics
 from exudyn.graphicsDataUtilities import *
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -70,7 +60,7 @@ mbs.Assemble()
 
 tEnd = 0.1
 h=1e-3
-if useGraphics:
+if not testIsActive:
     tEnd = 1 #parameters sucht that we can see some motion
     h=1e-5
 
@@ -85,14 +75,14 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #no numer
 simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
 #start solver:
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
     SC.renderer.Stop()               #safely close rendering window!
 
@@ -101,7 +91,6 @@ p0=mbs.GetObjectOutputBody(oBody, localPosition=[0.1,0.1,0.1],
 result = p0[0]+p0[1]
 exu.Print('solution of connectorRigidBodySpringDamperTest=',result) #use x-coordinate
 
-exudynTestGlobals.testError = result - (0.18276224743714353) #2021-01-07: 
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 
 

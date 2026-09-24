@@ -15,17 +15,7 @@ from exudyn.utilities import *
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -117,14 +107,14 @@ simulationSettings.timeIntegration.verboseMode = 1
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,2000]
 SC.visualizationSettings.openGL.multiSampling=4
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
 #start solver:q
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
     SC.renderer.Stop()               #safely close rendering window!
 
@@ -137,13 +127,12 @@ exu.Print('uTotal=',uTotal[1])
 # mbs.SolutionViewer()
 
 #plot results:
-if useGraphics:
+if not testIsActive:
     mbs.PlotSensor([sPos,sVel], components=[1,1], closeAll=True)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-exudynTestGlobals.testError = uTotal[1] - (0.7092489359461815)
-exudynTestGlobals.testResult = uTotal[1]
+exu.sys['testResult'] = uTotal[1]
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++

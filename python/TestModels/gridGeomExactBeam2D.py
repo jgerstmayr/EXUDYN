@@ -22,17 +22,7 @@ import exudyn.graphics as graphics
 import numpy as np
 from math import sin, cos, pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 ## set up system and define parameters
 SC = exu.SystemContainer()
@@ -159,7 +149,7 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.ForceLo
 SC.visualizationSettings.contour.outputVariableComponent = 0
 
 ## start graphics
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -167,7 +157,7 @@ if useGraphics:
 mbs.SolveDynamic(simulationSettings)
 
 ## stop graphics        
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -177,8 +167,7 @@ exu.Print("grid =",nodeIndices.shape,", uTip =", uLast[0:2])
 
 exu.Print('solution of gridGeomExactBeam2D=',uLast[1]) #use y-coordinate
 
-exudynTestGlobals.testError = uLast[1] - (-2.2115028353806547) 
-exudynTestGlobals.testResult = uLast[1]
+exu.sys['testResult'] = uLast[1]
 
 
 

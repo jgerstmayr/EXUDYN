@@ -15,17 +15,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -155,7 +145,7 @@ SC.visualizationSettings.contact.showSpheres = True
 SC.visualizationSettings.contact.tilingSpheres = 4
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     # SC.renderer.DoIdleTasks()
@@ -165,7 +155,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -179,5 +169,4 @@ q += mbs.GetSensorValues(sRot)
 u = np.linalg.norm(q)
 exu.Print('solution of generalContactCylinderTest =',u)
 
-exudynTestGlobals.testError = u - (5.486908430912642) 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u

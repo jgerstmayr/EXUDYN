@@ -24,17 +24,7 @@ from exudyn.itemInterface import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -98,7 +88,7 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
                            load = load0, loadUserFunction=userLoad))
 
 writeSensorFile = False
-if useGraphics:
+if not testIsActive:
     writeSensorFile = True
 
 sLoad=mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, 
@@ -138,12 +128,11 @@ mbs.SolveDynamic(simulationSettings)
 uTotal = mbs.GetNodeOutput(n1, exu.OutputVariableType.CoordinatesTotal)
 exu.Print('uTotal=',uTotal[0])
 
-exudynTestGlobals.testError = uTotal[0] - (0.5062872273010898) #2019-12-18: 0.5062872273010898; #2019-12-15: 0.5062872272996835; 2019-12-13:0.5062872273014417; 2019-12-01: 0.5152217339585201
-exudynTestGlobals.testResult = uTotal[0]
+exu.sys['testResult'] = uTotal[0]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor(sCoords, components=[0], closeAll=True)

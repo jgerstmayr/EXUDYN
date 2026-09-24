@@ -26,23 +26,13 @@ from exudyn.beams import *
 import numpy as np
 from math import sin, cos, sqrt, pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 exu.Print('exudyn version=',exu.config.Version())
 
-# useGraphics=False
+# testIsActive = True
 #background
 rect = [-1,-1.5,3,1.5] #xmin,ymin,xmax,ymax
 background0 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
@@ -166,7 +156,7 @@ if True: #add ANCF cable elements
                                          )
     ancfList+=[ancf]
 
-if useGraphics: 
+if not testIsActive: 
     #add sensor for one node, showing moving coordinates
     sensorsNode = []
     for i, aList in enumerate(ancfList):
@@ -221,7 +211,7 @@ if useContact:
         gContact.AddSphereWithMarker(mNode, radius=r, contactStiffness=contactStiffness, 
                                      contactDamping=contactDamping, frictionMaterialIndex=frictionMaterialIndex)
         
-        if useGraphics: 
+        if not testIsActive: 
             sAngVel += [mbs.AddSensor(SensorNode(nodeNumber=nMass, #fileName='solution/wheel'+str(i)+'angVel.txt',
                                                  storeInternal=True, outputVariableType=exu.OutputVariableType.AngularVelocity))]
 
@@ -252,7 +242,7 @@ h = 1e-3
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
 
-if useGraphics:
+if not testIsActive:
     tEnd = 0.75
     simulationSettings.solutionSettings.writeSolutionToFile = True
     simulationSettings.solutionSettings.solutionWritePeriod = 0.005
@@ -286,14 +276,14 @@ if False:
     SC.visualizationSettings.contact.showSearchTreeCells =True
     SC.visualizationSettings.contact.showBoundingBoxes = True
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 
-if useGraphics and False:
+if not testIsActive and False:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     
@@ -302,7 +292,7 @@ if useGraphics and False:
     mbs.SolutionViewer(sol)
 
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     
@@ -318,6 +308,5 @@ exu.Print('node0 pos: ',posNode0) #[-0.0922746  -0.48937754  0.        ]
 sol = posNode0[0] + posNode0[1]
 exu.Print('ANCFgeneralContactCircle sol=',sol)
 
-exudynTestGlobals.testError = sol - (-0.5816521429557808) #2022-02-01
-exudynTestGlobals.testResult = sol
+exu.sys['testResult'] = sol
 ```

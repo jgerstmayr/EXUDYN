@@ -23,17 +23,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -225,7 +215,7 @@ SC.visualizationSettings.contact.contactPointsDefaultSize = .005
 SC.visualizationSettings.connectors.showContact = True
 
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.Start()
 
 #get initial velocities
@@ -242,8 +232,7 @@ exu.Print("select cable coordinate", nc)
 sol = mbs.systemData.GetODE2Coordinates(); 
 uStatic = sol[nc]; #y-displacement of first node of four bar mechanism
 exu.Print('static solution of cable1 =',uStatic)
-exudynTestGlobals.testError = uStatic - (-2.1973218891272532) #before 2023-05-01 (new loads jacobian): -2.1973218869310713 #before 2022-03-09 (old ObjectContactFrictionCircleCable2D): -2.197321886974786     2020-03-05(corrected Cable2DshapeMarker): -2.197321886974786 #2019-12-26:  2.1973218859908146
-exudynTestGlobals.testResult = uStatic 
+exu.sys['testResult'] = uStatic 
 
 #++++++++++++++++++++++++++++++++++++++++
 #store solution for next computation
@@ -290,7 +279,7 @@ if solveDynamic:
     
     mbs.SolveDynamic(simulationSettings)
     
-if useGraphics: 
+if not testIsActive: 
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -299,8 +288,7 @@ sol = mbs.systemData.GetODE2Coordinates();
 uDynamic = sol[nc]; #y-displacement of first node of four bar mechanism
 exu.Print('dynamic solution of cable1 =',uDynamic)
 
-exudynTestGlobals.testError += uDynamic - (-2.2290865056280076) #before 2023-05-01 (loads jacobian): -2.229086503625397 #before 2022-12-25(resolved BUG 1274): -2.229081157258582; before 2022-03-09 (old ObjectContactFrictionCircleCable2D) : (-2.2290811574753953)   #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627
-exudynTestGlobals.testResult += uDynamic
+exu.sys['testResult'] += uDynamic
 
-exu.Print('result of ANCFslidingAndALEjointTest=',exudynTestGlobals.testResult)
+exu.Print('result of ANCFslidingAndALEjointTest=',exu.sys['testResult'])
 ```

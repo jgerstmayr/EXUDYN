@@ -27,17 +27,7 @@ from math import cos
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 ## set up MainSystem mbs
 SC = exu.SystemContainer()
@@ -230,18 +220,18 @@ simulationSettings.displayComputationTime = True
 simulationSettings.displayStatistics = True
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop()
 
 
-if useGraphics:
+if not testIsActive:
     mbs.SolutionViewer()
 
     if len(sensorList):
@@ -253,6 +243,5 @@ exu.Print('solution of relativeRotationTranslationMechanism=',testError)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-exudynTestGlobals.testError = testError - (0.0)   #2023-06-12: 4.172189649307425
-exudynTestGlobals.testResult = testError
+exu.sys['testResult'] = testError
 ```

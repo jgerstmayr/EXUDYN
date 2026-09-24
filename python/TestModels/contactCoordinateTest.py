@@ -16,17 +16,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -145,7 +135,7 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
                            load = load0))
 
 
-if useGraphics:
+if not testIsActive:
     sPos = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Position, 
                                     storeInternal=True,fileName=sensorFileName
                                     ))
@@ -177,7 +167,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #for inde
 simulationSettings.displayStatistics = True
 #simulationSettings.timeIntegration.simulateInRealtime = True
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
@@ -185,18 +175,17 @@ if useGraphics:
 mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings) #chose index2, can handle adaptive steps
 #mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop()               #safely close rendering window!
 
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 exu.Print('contactCoordinateTest=',u[1])
 
-exudynTestGlobals.testError = u[1] - (0.055313199503736685) #2021-08-13: 0.055313199503736685 (may change significantly for other disc. solver strategies)
-exudynTestGlobals.testResult = u[1]
+exu.sys['testResult'] = u[1]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if useGraphics and True: #to run this, run model first with withUserFunction=True
+if not testIsActive and True: #to run this, run model first with withUserFunction=True
     
     mbs.PlotSensor(sensorNumbers=[sPos, 'solution/sensorPosUser.txt'], components=1, 
                labels=['internal contact','user function'])

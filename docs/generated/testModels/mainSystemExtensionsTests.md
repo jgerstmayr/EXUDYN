@@ -26,17 +26,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 testErrorTotal = 0
 
@@ -379,7 +369,7 @@ except:
 
 if testDrawSystemGraph:
     mbs.DrawSystemGraph(useItemTypes=True, tightLayout=False)
-    if not useGraphics:
+    if testIsActive:
         import matplotlib.pyplot as plt
         plt.close('all')
 
@@ -437,6 +427,5 @@ exu.Print('solution of mainSystemExtensions test DC=',testError)
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 exu.Print('solution of mainSystemExtensions TOTAL=',testErrorTotal)
-exudynTestGlobals.testError = testErrorTotal - (57.64639446941554)   #up to 2023-11-19:57.96750245606998 (added force/torque) #2023-05-19: 51.699269012604674 
-exudynTestGlobals.testResult = testErrorTotal
+exu.sys['testResult'] = testErrorTotal
 ```

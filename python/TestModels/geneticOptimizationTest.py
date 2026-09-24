@@ -21,17 +21,7 @@ import numpy as np #for postprocessing
 import os
 from time import sleep
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 dataRef = None
 #this is the function which is repeatedly called from ParameterVariation
@@ -152,10 +142,9 @@ if __name__ == '__main__': #include this to enable parallel processing
     exu.Print("[pOpt, vOpt]=", [pOpt, vOpt])
     u = vOpt
     exu.Print("optimum=",u)
-    exudynTestGlobals.testError = u - 0.0030262381366063158 #until 2022-02-20(changed to storeInternal): (0.0030262381385228617) #2020-12-18: (nElements=32) -2.7613614363986017e-05
-    exudynTestGlobals.testResult = u
+    exu.sys['testResult'] = u
 
-    if useGraphics and False:
+    if not testIsActive and False:
         # from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
         import matplotlib.pyplot as plt
 
@@ -171,8 +160,6 @@ if __name__ == '__main__': #include this to enable parallel processing
                        showProgress=False)
     #exu.Print("vList=", v)
     u=v[3]
-    exudynTestGlobals.testError += u - 0.09814894553165972 #until 2022-02-20(changed to storeInternal):(0.09814894553377107) #2020-12-18: (nElements=32) -2.7613614363986017e-05
-    exudynTestGlobals.testResult += u
-    exu.Print('geneticOptimizationTest testResult=', exudynTestGlobals.testResult)
-    exu.Print('geneticOptimizationTest error=', exudynTestGlobals.testError)
+    exu.sys['testResult'] += u
+    exu.Print('geneticOptimizationTest testResult=', exu.sys['testResult'])
 

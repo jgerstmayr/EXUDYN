@@ -24,17 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 SC = exu.SystemContainer()
@@ -153,17 +143,17 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 SC.visualizationSettings.nodes.showBasis=True
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop()
 
-# if useGraphics:
+# if not testIsActive:
 #     mbs.SolutionViewer()
 
 #+++++++++++++++++++++++++++++++++++++++++++++
@@ -171,6 +161,6 @@ uTotal = 0.1*sum(mbs.GetNodeOutput(n1, exu.OutputVariableType.CoordinatesTotal) 
 uTotal+= 0.1*sum(mbs.GetNodeOutput(n1B, exu.OutputVariableType.CoordinatesTotal) )
 exu.Print('uTotal=',uTotal)
 
-exudynTestGlobals.testResult = uTotal
+exu.sys['testResult'] = uTotal
 #+++++++++++++++++++++++++++++++++++++++++++++
 ```

@@ -367,9 +367,9 @@ SC.visualizationSettings.openGL.multiSampling = 4
 # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
 # SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component
 
-useGraphics=True
+testIsActive = exu.sys.get('testIsActive', False)
 if True:
-    if useGraphics:
+    if not testIsActive:
         SC.visualizationSettings.general.autoFitScene=False
 
         SC.renderer.Start()
@@ -387,7 +387,7 @@ if True:
     # uTip = mbs.GetSensorValues(sensTipDispl)[1]
     # print("nModes=", nModes, ", tip displacement=", uTip)
         
-    if useGraphics:
+    if not testIsActive:
         # SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
 

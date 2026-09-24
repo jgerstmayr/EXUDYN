@@ -23,17 +23,7 @@ import exudyn.graphics as graphics
 import numpy as np
 from math import sin, cos, pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 ## set up mbs
 SC = exu.SystemContainer()
@@ -145,7 +135,7 @@ if nElements > 64:
 SC.visualizationSettings.nodes.defaultSize = 0.005
 
 ## start graphics and solver   
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -167,14 +157,13 @@ for case in range(2):
 uTotal = 0.5*uTotal
 
 ## stop graphics and print solution
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
 exu.Print('solution of geometricallyExactBeam2Dtest=',uTotal[1]) #use y-coordinate
 
-exudynTestGlobals.testError = uTotal[1] - (-2.2115028353806547) 
-exudynTestGlobals.testResult = uTotal[1]
+exu.sys['testResult'] = uTotal[1]
 
 
 

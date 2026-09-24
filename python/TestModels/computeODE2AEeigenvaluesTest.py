@@ -17,17 +17,7 @@ import exudyn.graphics as graphics
 import numpy as np
 
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #rotating rigid body:
@@ -150,7 +140,7 @@ simulationSettings.timeIntegration.numberOfSteps=1000
 evNumerical = np.sqrt(eigenValues) / (2*np.pi)
 exu.Print('numerical eigenvalues in Hz:',evNumerical)
 
-if useGraphics:
+if not testIsActive:
     mbs.SolveDynamic(simulationSettings=simulationSettings)
     mbs.PlotSensor(sPos)
     period=0.521/20 #measured 20 peaks of oscillation in plot sensor
@@ -162,8 +152,7 @@ if useGraphics:
 u += evNumerical[0]/100
 exu.Print('result of computeODE2AEeigenvaluesTest:', u)
 
-exudynTestGlobals.testError = u - 0.38811732950413347 #should be zero
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 

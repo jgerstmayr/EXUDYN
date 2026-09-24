@@ -19,17 +19,7 @@ import exudyn.graphics as graphics
 from exudyn.beams import *
 from math import sin, cos, sqrt, pi
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -278,7 +268,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod = 0.005
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
 #simulationSettings.displayComputationTime = True
@@ -322,7 +312,7 @@ if False:
     SC.visualizationSettings.contact.showSearchTreeCells =True
     SC.visualizationSettings.contact.showBoundingBoxes = True
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -332,7 +322,7 @@ else:
     mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     
@@ -341,7 +331,7 @@ if useGraphics:
     mbs.SolutionViewer(sol)
 
 
-if useGraphics: 
+if not testIsActive: 
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     
@@ -358,7 +348,6 @@ exu.Print('solution of ANCFbeltDrive (sensor y-disp): ',measurePos[1])
 #updated 2026-09-17; the old value was not reproducible - missing simulation parameters.
 #Re-measured single-threaded (see numberOfThreads above), which IS reproducible bit for bit;
 #the 4-thread value was -0.0011715990134786858 (#2368)
-exudynTestGlobals.testError = measurePos[1] + 0.0011715885324992126
-exudynTestGlobals.testResult = measurePos[1] # use y-coordinate
+exu.sys['testResult'] = measurePos[1] # use y-coordinate
 
 

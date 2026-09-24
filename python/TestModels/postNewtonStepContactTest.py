@@ -15,17 +15,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -142,7 +132,7 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
                            load = load0))
 
 
-if useGraphics:
+if not testIsActive:
     sPos = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorPos.txt"
                              outputVariableType=exu.OutputVariableType.Position))
     sVel = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorVel.txt"
@@ -186,7 +176,7 @@ simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.simulateInRealtime = True
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     #SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
@@ -194,18 +184,17 @@ if useGraphics:
 mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings)
 #mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     #SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
     SC.renderer.Stop()               #safely close rendering window!
 
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 exu.Print('postNewtonStepContactTest=',u[1])
 
-exudynTestGlobals.testError = u[1] - (0.057286638346409235) 
-exudynTestGlobals.testResult = u[1]
+exu.sys['testResult'] = u[1]
 
 
-if useGraphics:
+if not testIsActive:
     
     import matplotlib.pyplot as plt
     plt.close('all')

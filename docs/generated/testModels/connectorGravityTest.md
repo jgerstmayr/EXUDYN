@@ -29,17 +29,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 #create an environment for mini example
 SC = exu.SystemContainer()
@@ -101,7 +91,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 # SC.visualizationSettings.nodes.drawNodesAsPoint = False
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
@@ -110,7 +100,7 @@ if useGraphics:
 #gives 7 digits of accuracy for tEnd=1e6, h=1e3:
 mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK67)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
     SC.renderer.Stop()               #safely close rendering window!
 
@@ -118,8 +108,8 @@ if useGraphics:
 #node1 is last node
 pos = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)
 
-exudynTestGlobals.testResult = pos[0] + pos[1] + pos[2]
+exu.sys['testResult'] = pos[0] + pos[1] + pos[2]
 
-exu.Print("result for ObjectConnectorGravity =", exudynTestGlobals.testResult)
-#exudynTestGlobals.testResult = 1014867.2330320379
+exu.Print("result for ObjectConnectorGravity =", exu.sys['testResult'])
+#exu.sys['testResult'] = 1014867.2330320379
 ```

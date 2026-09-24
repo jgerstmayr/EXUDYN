@@ -24,17 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -46,7 +36,7 @@ import numpy as np
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if useGraphics:
+#if not testIsActive:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
@@ -170,7 +160,7 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-4
 tEnd = 0.01
-#if useGraphics:
+#if not testIsActive:
 #    tEnd = 0.1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -192,7 +182,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState() #load last model view
 
@@ -208,17 +198,16 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrder=',result)
 
 #factor 0.05: make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
-exudynTestGlobals.testError = 0.01*(result - (0.5354530110580623)) #2020-05-26(added EP-constraint): 0.5354530110580623; 2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
-exudynTestGlobals.testResult = 0.01*result
+exu.sys['testResult'] = 0.01*result
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     lastRenderState = SC.renderer.GetState() #store model view for next simulation
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #plot results
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],

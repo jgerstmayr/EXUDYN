@@ -17,17 +17,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -110,13 +100,13 @@ SC.visualizationSettings.view0.scene.drawWorldBasis = True
 SC.visualizationSettings.view0.scene.worldBasisSize = 2
 SC.visualizationSettings.openGL.multiSampling = 4
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
 mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
     SC.renderer.Stop()               #safely close rendering window!
 
@@ -128,8 +118,7 @@ u=sum(q)
 exu.Print('solution of genericODE2test=',u)
 #solution converged to 14 digits (h=5e-5): -1.3093839514061
 
-exudynTestGlobals.testError = u - (-1.309383960216414 ) #2022-05-05: -1.309383960216414 (accurate to 8 digits)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 

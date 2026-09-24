@@ -14,17 +14,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 import numpy as np
 from math import sin, cos, sqrt,pi
@@ -153,7 +143,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 2
-if useGraphics:
+if not testIsActive:
     tEnd = 2 #200
 h=0.01  #use small step size to detext contact switching
 
@@ -174,8 +164,8 @@ SC.visualizationSettings.nodes.basisSize = 0.2
 SC.visualizationSettings.openGL.multiSampling = 4
 
 #SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-# useGraphics = True
-if useGraphics:
+# testIsActive = False
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
@@ -185,7 +175,7 @@ mbs.SolveDynamic(simulationSettings,
                  #solverType=exu.DynamicSolverType.TrapezoidalIndex2 #in this case, drift shows up significantly!
                  )
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -206,4 +196,4 @@ sol2 = mbs.systemData.GetODE2Coordinates();
 u = np.linalg.norm(sol2); 
 exu.Print('solution of ReevingSystemSprings=',u)
 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u

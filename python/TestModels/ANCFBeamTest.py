@@ -19,17 +19,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -52,7 +42,7 @@ betaDegree = 45
 caseList = [0,1,2,3,4]
 case=4
 
-useGraphics = False
+testIsActive = True
 verbose = False
 
 bodyFixedLoad = False
@@ -271,7 +261,7 @@ for case in caseList:
     # [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)
     # exu.Print('M=',M.round(1))
 
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.DoIdleTasks()
 
@@ -281,7 +271,7 @@ for case in caseList:
     #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
     
 
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     
@@ -308,8 +298,7 @@ for case in caseList:
 
 
 exu.Print('Solution of ANCFBeam3Dtest=', testErrorSum)
-exudynTestGlobals.testError = testErrorSum - (1.010486312300459 ) 
-exudynTestGlobals.testResult = testErrorSum
+exu.sys['testResult'] = testErrorSum
 
 
 

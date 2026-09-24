@@ -28,17 +28,7 @@ import numpy as np
 #import exudyn.rigidBodyUtilities as erb
 #from exudyn.rigidBodyUtilities import HT0, HT2rotationMatrix, HT2translation
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 
@@ -164,7 +154,7 @@ stepSize = 4e-3
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile=(not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod=0.004
 simulationSettings.timeIntegration.numberOfSteps = tEnd/stepSize
 simulationSettings.timeIntegration.endTime = tEnd
@@ -176,14 +166,14 @@ SC.visualizationSettings.openGL.light0.shadow = 0.25
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop()
     
     mbs.SolutionViewer()
@@ -194,6 +184,6 @@ ode2 = mbs.systemData.GetODE2Coordinates()
 u = np.linalg.norm(ode2)
 exu.Print('solution of createKinematicTreeTest=',u) 
 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ```

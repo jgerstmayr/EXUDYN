@@ -15,18 +15,8 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False #do test
+testIsActive = exu.sys.get('testIsActive', False)
+testIsActive = True #do test
 
 from exudyn.machines import GetBallBearingData, CreateBallBearing
 
@@ -139,7 +129,7 @@ oGround = mbs.CreateGround(graphicsDataList=[bearingGraphics['outerRingGraphics'
              
 #++++++++++++++++++++++++++++++++++
 
-timeStartBB = 2 if useGraphics else 0
+timeStartBB = 2 if not testIsActive else 0
 
 def UFforce(mbs, t, loadVector):
     global timeStartBB
@@ -171,13 +161,13 @@ mbs.CreateTorque(bodyNumber=bodyInner,
 mbs.Assemble()
 
 tEnd = 0.05
-if useGraphics:
+if not testIsActive:
     tEnd = 10
 
 stepSize = 1e-4
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod = 0.004
 simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
@@ -211,14 +201,14 @@ SC.visualizationSettings.sensors.traces.listOfPositionSensors = listContactSenso
 SC.visualizationSettings.sensors.traces.showPositionTrace = True if len(listContactSensors) else False
 SC.visualizationSettings.sensors.traces.timeSpan = 1.6
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
 #start solver:q
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Stop()               #safely close rendering window!
 
 #%%++++
@@ -226,10 +216,9 @@ testError = 0.01*np.linalg.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of ballBearingTest=',testError)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
-exudynTestGlobals.testError = testError - (0.0)   #2023-06-12: 4.172189649307425
-exudynTestGlobals.testResult = testError
+exu.sys['testResult'] = testError
 
-if useGraphics:
+if not testIsActive:
     #%%
     mbs.SolutionViewer()
 

@@ -31,22 +31,12 @@ from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
 import numpy as np
 from numpy import linalg as LA
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#useGraphics = False
+#testIsActive = True
 sensorWriteToFile = False
 
 jointWidth=0.1
@@ -230,7 +220,7 @@ SC.visualizationSettings.openGL.multiSampling=4
 tEnd = 0.2 #0.2 for testing
 h = 0.001
 
-if useGraphics:
+if not testIsActive:
     tEnd = 0.2
     #tEnd = 1 #shows exactly static torques ComputeMBSstaticRobotTorques(newRobot) and desired angles (q2) at end
 
@@ -241,7 +231,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.solutionWritePeriod = h
 simulationSettings.solutionSettings.sensorsWritePeriod = h
-simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
 # simulationSettings.timeIntegration.simulateInRealtime = True
 # simulationSettings.timeIntegration.realtimeFactor = 0.25
 
@@ -259,7 +249,7 @@ simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.visualizationSettings.general.autoFitScene=False
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
@@ -274,11 +264,11 @@ lastRenderState = SC.renderer.GetState() #store model view
 measuredTorques=[]
 
 for cnt, sensorNumber in enumerate(sJointTorque):
-    if useGraphics:
+    if not testIsActive:
         exu.Print('sensor torque',cnt, '=', mbs.GetSensorValues(sensorNumber))
     measuredTorques += [1e-2*mbs.GetSensorValues(sensorNumber)[2]]
 
-if useGraphics:
+if not testIsActive:
     for cnt, sensorNumber in enumerate(sJointRot):
         exu.Print('sensor rot ',cnt, '=', mbs.GetSensorValues(sensorNumber))
 
@@ -287,12 +277,10 @@ fact=0.005 #to reach desired accuracy; #2026-09-09: switch 0.01->0.005
 exu.Print("torques at tEnd=", fact*np.sum(measuredTorques))
 
 #add larger test tolerance for 32/64bits difference
-exudynTestGlobals.testError = (fact*np.sum(measuredTorques) - 0.007681798995944785)  #until 2026-01-28 (unphysical inertia) #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-exudynTestGlobals.testResult = fact*np.sum(measuredTorques)   
+exu.sys['testResult'] = fact*np.sum(measuredTorques)   
 
-#exu.Print('error=', exudynTestGlobals.testError)
 
-if useGraphics:
+if not testIsActive:
     
     
     mbs.PlotSensor(sJointTorque, components=2, closeAll=True, yLabel='joint torques (Nm)', title='joint torques')

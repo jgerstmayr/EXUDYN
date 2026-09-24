@@ -18,17 +18,7 @@ import exudyn.graphics as graphics
 import numpy as np
 import sys
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 u = 0
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -117,7 +107,7 @@ SC.visualizationSettings.nodes.defaultSize=0.1
 
 #start solver:
 
-if useGraphics:
+if not testIsActive:
     mbs.SolveDynamic(simulationSettings)
     mbs.PlotSensor(sPos, closeAll=True, title='linear mass-spring-damper')
 
@@ -217,7 +207,7 @@ simulationSettings.solutionSettings.sensorsWritePeriod = h  #output interval of 
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 
-if useGraphics:
+if not testIsActive:
     mbs.SolveDynamic(simulationSettings)
     mbs.PlotSensor(sPos,components=[1],title='bar with spring at tip')
 
@@ -304,15 +294,14 @@ exu.Print('numerical eigenvalues in Hz:',evNumerical)
 evNumerical = np.sqrt(eigenValues) / (2*np.pi)
 exu.Print('numerical eigenvalues GE:',evNumerical)
 
-if useGraphics:
+if not testIsActive:
     mbs.SolveDynamic(simulationSettings=simulationSettings)
     mbs.PlotSensor(sPos)
     
 u += evNumerical[0]/100
 exu.Print('result of computeODE2AEeigenvaluesTest2:', u)
 
-exudynTestGlobals.testError = u - 0.38811732950413347 #should be zero
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 

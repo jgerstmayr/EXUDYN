@@ -1535,3 +1535,60 @@ shut there. The fix belongs in the runner and not in 125 models, so `runTestSuit
 explicit `if not testIsActive:` anyway, because a test is worth running with and without graphics.
 A measurement of half the paths is not a measurement.
 
+<a id="rg10-6-3"></a>
+### RG10.6.3 — 129 test models stop importing the test suite (2026-09-24, #2632)
+
+Every model carried the same nine lines and an import of `modelUnitTests`. They are one line now:
+
+```python
+testIsActive = exu.sys.get('testIsActive', False)
+```
+
+**The survey came before the script**, and it is what made the sweep safe. The header block turned
+out to be uniform — 124 files, byte for byte the same `useGraphics = exudynTestGlobals.useGraphics`
+— but everything around it was not:
+
+- the standalone default is `useGraphics = True` in 122 files and **False** in two
+  (`symbolicModuleTest`, `symbolicUserFunctionTest`). Since `useGraphics` is exactly
+  `not testIsActive`, the converted line keeps each file's own default:
+  `exu.sys.get('testIsActive', False)` for the first, `..., True)` for the second, so standalone
+  behaviour is unchanged in all of them;
+- **16 models re-assign the flag** after the header (`useGraphics = False` to force the graphics
+  off for that model); those became `testIsActive = True`, which is the same statement;
+- `useGraphics` appears in expressions, not only in `if`: `0.3*useGraphics`,
+  `2 if useGraphics else 0`, `(1-useGraphics)`, `useGraphics+1`, `writeToFile = useGraphics`. The
+  script writes `(not testIsActive)` there, parenthesised, and the readable `if not testIsActive:`
+  where it is a plain condition;
+- `exudynTestGlobals.performTests` (2 uses) is the same flag under another name;
+- `testResult` is not always a plain assignment: seven `+=` and one `*=`. Every one of them has an
+  initialising `= 0` above it, which is why a mechanical rename was safe;
+- **`ACFtest.py` had its own `useGraphics=True`** and never used the suite at all, and
+  `computeODE2EigenvaluesTest.py` carried the whole block while **nothing in it ever read the
+  flag** — that one simply lost the block.
+
+**The script refuses rather than guesses.** A file whose header it does not recognise, that still
+mentions `exudynTestGlobals` afterwards, where `useGraphics` survives, or whose result does not
+`ast.parse`, is left untouched and reported. It reported four files on the first batch and three
+more later; each was read and handled, and one of those reports found the two files above.
+
+**What it got wrong, and what caught it**: a commented-out switch, `#useGraphics = False`, became
+`#(not testIsActive) = False`, which is not Python even in a comment. 30 of them in 27 files, put
+right afterwards — a replacement on an identifier does not know it is inside a comment, and a
+comment is what a reader copies when they want to turn the graphics on.
+
+**The bar was identical numbers, not a passing suite.** The results of all 139 models were captured
+before the sweep and compared after every batch. One difference appeared and was **not** the sweep:
+`taskmanagerTest.py` changes in its last digit from run to run, which two runs of the unchanged
+tree confirmed. At the end, **all 139 are identical**.
+
+**What went out with the boilerplate**: 98 lines of the form
+`exudynTestGlobals.testError = result - (4.172189649307425)`, a second copy of a reference solution
+that `runTestSuiteRefSol.py` has held all along, and the prints of that difference. The suite
+computes the error itself and always did.
+
+One thing is deliberately left: `kinematicTreeAndMBStest.py` multiplies its result by `1e-7` to
+make it fit the tolerance. That is the pattern the maintainer asked to stop, and removing it moves
+the value by seven orders of magnitude and with it the reference — so it becomes
+`exu.sys['testTolerance']` in RG10.6.7, where changing that number is the point rather than a side
+effect.
+

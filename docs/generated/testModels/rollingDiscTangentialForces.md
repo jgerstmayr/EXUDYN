@@ -25,17 +25,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -213,9 +203,9 @@ mbs.Assemble()
 
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-useGraphics=False
+testIsActive = True
 tEnd = 0.1
-if useGraphics:
+if not testIsActive:
     tEnd = 2
 
 h = 0.001
@@ -236,14 +226,14 @@ SC.visualizationSettings.openGL.lineWidth=2 #maximum
 SC.visualizationSettings.openGL.light0.shadow=0.2
 SC.visualizationSettings.openGL.multiSampling = 4
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
@@ -252,8 +242,7 @@ u = 1e-3*(abs(force[0]) + abs(force[1]) + abs(force[2]))
 exu.Print('rollingDiscTangentialForces: F=',force) #use x-coordinate
 exu.Print('solution of rollingDiscTangentialForces=',u) #use x-coordinate
 
-exudynTestGlobals.testError = u - (1.0342017388721547) 
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
 if True:

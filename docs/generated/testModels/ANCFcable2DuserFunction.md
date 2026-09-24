@@ -26,17 +26,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 from exudyn.beams import *
 from math import atan
@@ -109,13 +99,13 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()              #start graphics visualization
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
 
 mbs.SolveDynamic(simulationSettings)
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
     SC.renderer.Stop()               #safely close rendering window!
 
@@ -127,6 +117,5 @@ exu.Print('ANCFcable2DuserFunction test tip pos=',p)
 u=sum(p)
 exu.Print('solution of ANCFcable2DuserFunction test =',u)
 
-exudynTestGlobals.testError = u - (0.6015588367721232)
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 ```

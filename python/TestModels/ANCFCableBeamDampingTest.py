@@ -12,18 +12,8 @@ import numpy as np
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False
+testIsActive = exu.sys.get('testIsActive', False)
+testIsActive = True
 
 exu.Print('EXUDYN says hello with version', exu.config.Version())
 
@@ -43,7 +33,7 @@ E = 1e8                                             # [N/m^2] E modulus of cable
 nElementsANCF2D = 4                                 # number of elements the ANCF 2D cable is made out of
 nElementsANCFBeam = 8                               # number of elements the ANCF beam is made out of 
 
-if useGraphics: #more accurate results
+if not testIsActive: #more accurate results
     nElementsANCF2D *= 4
     nElementsANCFBeam *= 4
 
@@ -166,7 +156,7 @@ for loadCase, loadVector in enumerate(loadVectorList):
         stepSize = 0.5e-3
         tEnd = 0.25
         
-    if not useGraphics: #for test suite
+    if testIsActive: #for test suite
         tEnd = 0.1
 
     #tEnd = 0.1
@@ -177,20 +167,20 @@ for loadCase, loadVector in enumerate(loadVectorList):
     simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.Start()
         SC.renderer.DoIdleTasks()
     mbs.SolveDynamic(simulationSettings=simulationSettings)
-    if useGraphics:
+    if not testIsActive:
         SC.renderer.DoIdleTasks()
         SC.renderer.Stop() #safely close rendering window!
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++
-    if useSolutionViewer and useGraphics:
+    if useSolutionViewer and (not testIsActive):
         mbs.SolutionViewer()
 
     #%% plot displacement to compare results
-    if useGraphics:
+    if not testIsActive:
         [plt, fig, ax, line] = mbs.PlotSensor(sensorNumbers=[sCable2D, sBeam],
                        components=[1-loadCase]*2, 
                        title="Test Damping: load="+str(loadVector),
@@ -204,5 +194,5 @@ for loadCase, loadVector in enumerate(loadVectorList):
 
 exu.Print('ANCFCableBeamDampingTest: solution=', solution)
 
-exudynTestGlobals.testResult = solution
+exu.sys['testResult'] = solution
 

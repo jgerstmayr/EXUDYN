@@ -27,17 +27,7 @@ from exudyn.lieGroupIntegration import *
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 #mbs = exu.MainSystem()
@@ -111,7 +101,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC0]))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC1]))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 
-if useGraphics:
+if not testIsActive:
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
     sAngVelLoc=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True))#fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
@@ -135,7 +125,7 @@ dSize=0.01
 SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
     #SC.renderer.DoIdleTasks()
 
@@ -187,15 +177,14 @@ omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-compo
 exu.Print("explicitLieGroupIntegratorPythonTest=", omegay)
 #400 steps, tEnd=0.01, rotationVector, RK4 LieGroup integrator
 #solution is converged for 14 digits (compared to 800 steps)
-exudynTestGlobals.testError = omegay - (149.8473939540758) #2020-02-11: 149.8473939540758
-exudynTestGlobals.testResult = omegay
+exu.sys['testResult'] = omegay
 
 
-if useGraphics: #only start graphics once, but after background is set
+if not testIsActive: #only start graphics once, but after background is set
     #SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-if useGraphics:
+if not testIsActive:
 
     
 

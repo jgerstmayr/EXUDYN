@@ -29,17 +29,7 @@ import contextlib
 import inspect
 import io
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 errors = 0
 def Check(condition, text):
@@ -121,5 +111,5 @@ Check('LoadForceVector' in types.LoadsForMarker('MarkerBodyPosition') and
       'LoadTorqueVector' not in types.LoadsForMarker('MarkerBodyPosition'), 'LoadsForMarker(MarkerBodyPosition)')
 
 exu.Print('typeInformationTest: ' + str(len(types.ItemNames())) + ' items, ' + str(errors) + ' disagreements')
-exudynTestGlobals.testResult = errors
+exu.sys['testResult'] = errors
 ```

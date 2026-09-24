@@ -29,17 +29,7 @@ import exudyn.graphics as graphics
 
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -93,7 +83,7 @@ sForce=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fil
 
 
 #sensor for trace of contact point:
-if useGraphics:
+if not testIsActive:
     sTrail=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
@@ -107,7 +97,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 0.5
-if useGraphics:
+if not testIsActive:
     tEnd = 0.5
 
 h=0.0005 #no visual differences for step sizes smaller than 0.0005
@@ -131,7 +121,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.DoIdleTasks()
 
@@ -144,11 +134,10 @@ exu.Print('force in rollingCoinTest=',force) #use x-coordinate
 u = p0[0] + 0.1*(force[0]+force[1]+force[2])
 exu.Print('solution of rollingCoinTest=',u) #use x-coordinate
 
-exudynTestGlobals.testError = u - (1.0634381189385853) #2024-04-29: added force #2020-06-20: 0.002004099927340136; 2020-06-19: 0.002004099760845168 #4s looks visually similar to Rill, but not exactly ...
-exudynTestGlobals.testResult = u
+exu.sys['testResult'] = u
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
