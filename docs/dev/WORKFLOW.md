@@ -24,8 +24,8 @@ driver `exudev` selects the environment itself – `--py P310`…`P314`, `--py a
 > `version.txt`. The **base** Anaconda environment carries a stale **1.10.0**, so a
 > test suite run from it silently tests old binaries.
 
-Run the generators and the docs build from a Windows shell (PowerShell). Until revision2026 step R0.5 adds a
-`.gitattributes`, generating from a different shell can still produce spurious line-ending diffs.
+Run the generators and the docs build from a Windows shell (PowerShell): without a
+`.gitattributes`, generating from a different shell can produce spurious line-ending diffs.
 
 Documentation build, from the repository root:
 
@@ -35,8 +35,7 @@ sphinx-build -b html . _build -E
 
 The **printable documentation** is a separate thing and is built only for a release:
 `exudev docs --pdf` needs a LaTeX installation with `xelatex` and `latexmk`, writes
-`dist/exudynDocumentationV<version>.pdf`, and is in **no gate** — see revision2026b step RG3.3
-and decision D17.
+`dist/exudynDocumentationV<version>.pdf`, and is in **no gate** (decision D17).
 
 ### Dependencies
 
@@ -46,7 +45,7 @@ coupling — it is not a preference and should not grow.
 Advanced functionality legitimately needs more: scipy, networkx, Gym, stable-baselines, NGsolve
 and others. Those stay **optional**. Installing exudyn requires the minimum; a function that needs
 more raises at the point of use. Today those failures are not consistently `ImportError`, which is
-a known rough edge and a revision2026 phase R6 concern (revision2026 steps R6.1–R6.4) — not something to fix opportunistically.
+a known rough edge — not something to fix opportunistically.
 
 When adding code: a new *optional* dependency behind a clear failure is acceptable; a new
 *mandatory* one is not.
@@ -54,14 +53,14 @@ When adding code: a new *optional* dependency behind a clear failure is acceptab
 The **one-time setup of a clone** - `git config core.hooksPath tools/hooks` and
 `python tools/setupLocalWorkspace.py` - is step 4 of
 [GETTING_STARTED.md](GETTING_STARTED.md), where a reader meets it before the rules rather than
-after them (revision2026b step RG3.12.5). Without it there is no mechanical guard against
+after them. Without it there is no mechanical guard against
 pushing the working branch to the public repository.
 
 ## 2. The issue tracker
 
 `tools/issueTracker/issueTracker.py` is both the issue tracker **and the source of truth for the
 version number**; `exudev issue <verb>` is its command line. The issues live in
-`tools/issueTracker/issues/` as JSON since revision2026 step R8.5 (2,568 issues, 270 open as of
+`tools/issueTracker/issues/` as JSON (2,568 issues, 270 open as of
 1.11.225):
 
 ```
@@ -72,8 +71,7 @@ issues/meta.json             the date of the last change and the version it prod
 releases.json                the releases, their names, and the closed-issue count each began at
 ```
 
-**The version a closed issue produced is stored in it** (`resolvedInVersion`, revision2026 step
-R8.4): the micro version is a running count, so recomputing every number on every run made a
+**The version a closed issue produced is stored in it** (`resolvedInVersion`): the micro version is a running count, so recomputing every number on every run made a
 published version depend on a sort by `dateResolved` — one corrected date renumbered history
 and nothing said so. `python tools/checkIssues.py` recomputes and compares, and that is a check
 only because the number was written down once.
@@ -90,7 +88,7 @@ cd tools/issueTracker
 
 ### API
 
-**From the command line** (revision2026 step R8.3), which is the way to use it:
+**From the command line**, which is the way to use it:
 
 ```powershell
 exudev issue list --open --type FIX --effort LOW    #the list a triage pass works from
@@ -134,7 +132,7 @@ anything that touches the version.
 Fields: `number, issue, author, status, description, type, priority, date raised, deadline,
 date resolved, resolved author, file, line, releaseNotes, workingRemarks, effort`.
 
-> **Two kinds of note, two fields** (revision2026 step R8.5.3). `releaseNotes` is written when
+> **Two kinds of note, two fields**. `releaseNotes` is written when
 > the issue **closes** and is **published** — in `docs/generated/trackerlog.md` and, later, in
 > `CHANGELOG.md`. `workingRemarks` is what the work knows meanwhile: *duplicate of #2134*,
 > *marked for deprecation*, *check whether this still happens*, *part A solved, B open*. It is
@@ -159,7 +157,7 @@ date resolved, resolved author, file, line, releaseNotes, workingRemarks, effort
 The value lists live in `issueTracker.py` (`issueStatuses`, `issueTypes`, `issuePriorities`,
 `issueEfforts`) and nowhere else — this used to be a second list here and the two disagreed:
 
-- `status`: `RAISED`, `RESOLVED`, `CLOSED` — `CLOSED` means everything except resolved (obsolete, won't fix, duplicate, superseded, not reproducible, abandoned), with the kind in the mandatory reason (revision2026 step R8.3.4)
+- `status`: `RAISED`, `RESOLVED`, `CLOSED` — `CLOSED` means everything except resolved (obsolete, won't fix, duplicate, superseded, not reproducible, abandoned), with the kind in the mandatory reason
 - `type`: `BUG, FIX, CHANGE, EXTENSION, IMPROVEMENT, TESTING, DOCU, EXAMPLE, CHECK, IDEA`
 - `priority`: `''` (none), `LOW`, `NORMAL`, `HIGH`
 - `effort`: `''` (not classified), `LOW`, `MEDIUM`, `HIGH`, `HUGE`
@@ -196,7 +194,7 @@ the version, because the micro version is the count of closed issues.
 | `tools/issueTracker/issues/meta.json` | every verb (date and version of the last change) | yes |
 | `tools/issueTracker/trackerlog.html` | every verb (`ConvertToHTML`) | **no** — a local overview |
 | `docs/generated/trackerlog.md` | every verb (`ConvertToMarkdown`) | yes — the published issue list, every release **before** the current one, in full |
-| `CHANGELOG.md` (repository root) | every verb (`ConvertToChangelog`) | yes — the **current** release for users, with a table of all of them (revision2026 step R7.4, split in revision2026b step RG3.10) |
+| `CHANGELOG.md` (repository root) | every verb (`ConvertToChangelog`) | yes — the **current** release for users, with a table of all of them |
 | `version.txt` | `resolve`, `close`, `bump`, `mode` | yes |
 | `src/Autogenerated/versionCpp.cpp` | the same | yes |
 | `tools/issueTracker/versionName.txt` | the same | yes |
@@ -222,13 +220,13 @@ version and its number stands in a released changelog.
 ### Known inconsistencies (raise as issues; do not fix inline)
 
 - ~~The header documents `priority` values `NO, LOW, NORMAL, HIGH`, but `ConvertToHTML` colours
-  on `high` / `med` / `low`~~ — settled in revision2026 step R8.5.3: one enum, normalized in the
+  on `high` / `med` / `low`~~ — settled: one enum, normalized in the
   data and enforced on write.
 - ~~Historical `type` values include typos and variants outside the documented set~~ — settled in
   R8.7 (#2519): 39 spellings became 10 types, checked where an issue is born.
 - The batch scripts that used to live in `tools/buildAndGenerate/` carried several such
   leftovers, among them a `cd` into a directory removed years ago. They were replaced by
-  `exudev` in revision2026 step R5.18 and moved out of the repository.
+  `exudev` and moved out of the repository.
 
 
 ### What next?
@@ -291,8 +289,7 @@ modes. Both are kept; this is not a leftover switch.
 | **release** | `''` | `1.11.14` | `exudynCPP` **+** `exudynCPPfast` (both platforms) | **86 s** (2026-09-16, two modules; was 168.9 s with three) |
 | **development** | `'.dev1'` | `1.11.14.dev1` | one `exudynCPP`; `exudynCPPfast` only on Python 3.13 | **58.1 s** |
 
-Switch by editing the line and running `UpdateFiles()` from `tools/issueTracker/`. revision2026 step R8.3 turns
-this into `--release` / `--dev`.
+Switch by editing the line and running `UpdateFiles()` from `tools/issueTracker/`.
 
 Two things follow from a switch:
 
@@ -304,8 +301,7 @@ Two things follow from a switch:
 Use development mode for ordinary work: outside Python 3.13 it builds one module instead of two
 and is roughly 2× faster. Switch to release only when producing a release.
 
-**Starting a release is the maintainer's decision**, and it is one command since revision2026
-step R8.4:
+**Starting a release is the maintainer's decision**, and it is one command:
 
 ```powershell
 exudev issue bump --minor              #1.11 → 1.12
@@ -363,13 +359,12 @@ both by `--fast` and by the pytest markers, so the two runners always skip the s
 `pytest` additionally marks `sensitive` and `unresolvedOnLinux` from the same file.
 
 **The models are not the slow part of a nightly run**: the whole suite is 26 seconds, while the
-171 examples and the performance tests dominate. Those are addressed by revision2026 steps R5.15
-and R5.16, not by this split.
+171 examples and the performance tests dominate. Those are the slow part, not this split.
 
 ### What a test model looks like
 
 A test model is an ordinary Exudyn script that says **one** thing about itself and reports **one**
-number. Since revision2026b step RG10.6 (#2632) that is three lines, and nothing is imported from
+number. Since #2632 that is three lines, and nothing is imported from
 `python/testing/`:
 
 ```python
@@ -406,7 +401,7 @@ exu.sys['testResult'] = testResult
 
   This is an absolute tolerance and it replaces the default for that model, in the suite, in
   `pytest` and in the parallel path alike. Multiplying the result instead - which one model did
-  until revision2026b step RG10.6.7 - hides the tolerance inside the number the test compares,
+  - hides the tolerance inside the number the test compares,
   and the reference solution then has to be a scaled number nobody recognises.
 
 A **mini example** is generated from `definitions/` and only writes `exu.sys['testResult']`; a
@@ -442,7 +437,7 @@ named log, the coverage report and the overview table, and its exit code is what
 number of workers (default: half the cores, at least 2, at most 8). Measured on a 32-thread
 machine: **22 s serial, 11 s with 8 workers, 9 s with 16**; the limit is the interpreter start of
 each model, not the models themselves. It is possible because every model writes into its own
-output directory (`exudyn.config.outputDirectory`, revision2026 step R5.13).
+output directory (`exudyn.config.outputDirectory`).
 
 The log reports the models in the order of the reference list, whatever order they finish in, so
 log and exit code do not depend on scheduling. **The gating run stays serial by default**: models
@@ -454,7 +449,7 @@ inside their tolerance). Use `--parallel` while developing, and the serial run f
 
 **All three runners take `--exit-code`** and return non-zero when something fails - CI depends on
 it, and without it CI cannot fail at all. `runTestExamples.py` and `runPerformanceTests.py` got
-theirs in revision2026 step R5.18.1 (#2504); until then they always returned 0 and a caller had
+theirs in #2504; until then they always returned 0 and a caller had
 to read the summary out of the log. The `exudev` driver passes the flag always, with no way to
 turn it off.
 
@@ -489,7 +484,7 @@ still pass, since that is where the reference values come from. Marked `L` in th
 against `*` for sensitive.
 
 The distinction matters: sensitive tests are non-deterministic and can never be pinned down;
-these have a cause and are scheduled for investigation in revision plan **phase R10, revision2026 step R10.1**. The
+these have a cause and are scheduled for investigation. The
 list should shrink, and every entry removed is a real fix — treat it as a debt register, not an
 exemption.
 
@@ -527,7 +522,7 @@ build time. Ordinary test runs do not exercise that binary. **Release builds mus
 ### The sanitizer job
 
 `sanitizers_linux` builds Exudyn with **AddressSanitizer and UndefinedBehaviorSanitizer** and runs
-the test suite against it (revision2026 step R5.6). For a library that calls arbitrary user
+the test suite against it. For a library that calls arbitrary user
 callbacks from C++ and hands out references into its own storage, this is the job that turns
 *"it crashed with no message"* into a file and a line.
 
@@ -669,8 +664,8 @@ still has to be kept in sync with the C++ `#ifdef`s by hand.
 Regenerate with `python tools/regenerate.py` (add `--check` to fail on Tier 1 drift). It validates
 `definitions/`, runs every generator and emitter in the required order from any directory, and
 reports Tier 1 (plan §4.2) and Tier 2 (plan §4.3) differences. The order lives in one place, its
-`generatorScripts` list — do not run the scripts by hand: revision2026 step R4.3 is moving outputs from the old
-generators to separate emitters in `tools/generators/` (all item outputs already are).
+`generatorScripts` list — do not run the scripts by hand: the order in that list is
+the one that works.
 `makeAllBinariesScripts.py` is not part of it; it writes only a volatile build date.
 
 Two measured caveats (2026-09-09, plan §3 facts 11 and 13):
@@ -695,13 +690,12 @@ never as a subset**. Record the failed-test count and compare it against the run
 Two things that will otherwise look like breakage:
 
 - **Pin scipy to 1.15.2.** scipy 1.18.0 slows the suite from ~22 s to over 10 minutes, apparently
-  in the eigensolver path (revision2026 fact 19). If a run suddenly takes minutes, check the scipy version
+  in the eigensolver path. If a run suddenly takes minutes, check the scipy version
   before looking for a regression in Exudyn.
 - **The global tolerance is 5e-14 and some models sit close to it.** A failure just above it — for
   example `movingGroundRobotTest.py` at `5.0688e-14`, with result and reference agreeing to ~13
   significant digits — is floating-point noise from a different numpy/BLAS build, not a real
-  break (revision2026 fact 20). Compare the reported `RESULT` and `refsol` before treating it as one.
-  Per-model tolerances are revision2026 step R5.1.
+  break. Compare the reported `RESULT` and `refsol` before treating it as one.
 
 **Committed logs are protected — the runner diverts rather than overwriting.** All three runners
 (`runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py`) write a release-named log into a
@@ -794,8 +788,8 @@ After the gates pass:
 2. Present the maintainer with an overview: files changed, gate results (build, drift, test count),
    the issue resolved, and the proposed commit message.
 3. **Wait for explicit approval.** Claude commits only on a clear go-ahead.
-4. **Claude never pushes, to any remote, ever.** revision2026 step R1.5 adds a `pre-push` hook refusing
-   pushes to `github` from any ref but `master` / `release/*`; until then the rule is social.
+4. **Claude never pushes, to any remote, ever.** The `pre-push` hook in `tools/hooks/` refuses
+   a push to `github` from any ref but `master` / `release/*`.
 
 Commit message convention — reuse the tracker's own vocabulary so commits and issues speak the same
 language:
@@ -813,7 +807,7 @@ Example: `BUG #2107: fix 32-byte alignment of VectorBase under AVX2`
 ## 10. Build and release scripts
 
 One driver, `exudev` (`exudev.bat` in the repository root; `python tools/exudev` elsewhere). It
-replaced the sixteen batch files of `tools/buildAndGenerate/` in revision2026 step R5.18. Every
+replaced the sixteen batch files of `tools/buildAndGenerate/` Every
 command has a `--help`, quiet is the default and `-v/--verbose` turns the tools' output back on;
 **`exudev -n <command>` prints the command lines it would run and runs nothing**, which is the
 quickest way to see how a step actually works. The commands are listed in

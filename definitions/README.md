@@ -1,9 +1,8 @@
 # definitions/ — the item and structure definitions as Python
 
-**The input of the code generators** (revision2026 steps R4.1 and R4.3). It replaced the line-based
-tables `objectDefinition.py` and `systemStructuresDefinition.py`, which were removed; the detail
-and the measurements behind every decision are in
-[exudynRevisionLog2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md), revision2026 steps R4.1-R4.3.
+**The input of the code generators.** Every item, every settings structure and every pybind
+binding is defined here as Python, and `tools/regenerate.py` writes the C++, the Python interface
+and the reference manual from it.
 
 To change an item or a structure, edit the file here and run `python tools/regenerate.py --check`
 (in `venvExuP313`): it validates the definitions and regenerates everything. The generators read

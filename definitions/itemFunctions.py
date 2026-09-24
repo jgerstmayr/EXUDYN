@@ -23,7 +23,7 @@
 #           NOT derived from the C++ base headers: 1067 of 1507 computational item functions
 #           match a base signature exactly, but 169 differ in the PARAMETER NAMES alone
 #           (ComputeMassMatrix takes massMatrixC here and massMatrix there), so deriving would
-#           change the generated headers. The base header is a CHECK instead - see revision2026 step R4.2.
+#           change the generated headers. The base header is a CHECK instead - see the CHECK it raises.
 #
 # Author:   Johannes Gerstmayr
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'

@@ -101,8 +101,8 @@ needs them:
 | [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
 
 The other five are **maintainer notes**: they are in the repository, and they are linked here to
-GitHub rather than to a page, because they are not published (revision2026b step RG3.2,
-#2585 — `exclude_patterns` in `conf.py`).
+GitHub rather than to a page, because they are not published (#2585 — `exclude_patterns` in
+`conf.py`).
 
 | file | what it is for |
 |---|---|
@@ -121,7 +121,7 @@ These are differentiators, not technical debt. Every restructuring step preserve
 (plan §7):
 
 - Mixed Python/native debugging in VS2022 - the capability, not which editor is primary;
-  the everyday work happens in VS Code (revision2026b step RG3.12.6).
+  the everyday work happens in VS Code.
 - The setuptools-based fast build.
 - No heavy C++ dependencies; vendored headers.
 - The hard C++/Python split with dict-based validated interfaces.

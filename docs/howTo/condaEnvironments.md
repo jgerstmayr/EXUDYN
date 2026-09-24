@@ -48,10 +48,10 @@ pip install --pre --find-links=dist "exudyn[tests]"   #the local wheel plus what
 | group | contains | used by |
 |---|---|---|
 | `docs` | sphinx and its theme and extensions | `sphinx-build`, the CI `docs` jobs, readthedocs |
-| `pdf` | `mermaidx`, which renders the flow charts without Node | `exudev docs --pdf`, which also needs a LaTeX installation (revision2026b step RG3.3) |
+| `pdf` | `mermaidx`, which renders the flow charts without Node | `exudev docs --pdf`, which also needs a LaTeX installation |
 | `lint` | `pydoclint` (pinned; the baseline holds its messages) | CI `check_docstrings` |
 | `build` | `setuptools>=77`, `wheel`, `pybind11<3.0`, `tomli`, `cibuildwheel` | a direct `python setup.py bdist_wheel`, which has no build isolation; a local CI-identical wheel |
-| `test` | `pytest`, `pytest-xdist` | `pytest -n 8` (revision2026 step R5.1); the suite itself runs without them |
+| `test` | `pytest`, `pytest-xdist` | `pytest -n 8`; the suite itself runs without them |
 | `ide` | `spyder-kernels`, `ipykernel`, `ipywidgets` | Spyder and Jupyter |
 | `dev` | all of the above, plus `scipy==1.15.2`, `jinja2`, `griffe` | the development environment |
 
@@ -64,7 +64,7 @@ users see. A single group can be installed alone, e.g. `pip install --group docs
 > the environment.
 
 > **Why scipy 1.15.2?** scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
-> apparently in the eigensolver path (measured 2026-09-09, revision2026 fact 19). The pin is in
+> apparently in the eigensolver path. The pin is in
 > the `dev` group; `exudyn[tests]` itself does not pin scipy.
 
 > **spyder-kernels** in the `ide` group is `3.*`, matching Spyder 6; for an older Spyder see the

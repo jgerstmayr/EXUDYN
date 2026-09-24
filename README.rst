@@ -44,7 +44,7 @@ workflows, documentation, tests and examples.
 
 
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
-.. file is hand-written since revision2026 step R7.1.7 (decision D11)
+.. file is hand-written (decision D11)
 
 +  Exudyn version = 1.12.63.dev1 (Metheney)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria

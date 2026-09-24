@@ -33,7 +33,7 @@ is what `EXUexception` is:
 #define EXUexception std::runtime_error
 ```
 
-(Since revision2026 step R6.3 there are typed exception classes; see `docs/dev/CODING_STYLE.md`
+(There are typed exception classes; see `docs/dev/CODING_STYLE.md`
 §10 for which one a new check should raise.)
 
 ## Reserved names

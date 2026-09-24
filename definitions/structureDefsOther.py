@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Other definitions
 #
-# Details:  2 definitions; the input of the generators (revision2026 step R4.3).
+# Details:  2 definitions; the input of the generators.
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,

@@ -2,7 +2,7 @@
 
 > **Source of truth.** This file. It began as a transcription of the *Code style and conventions*
 > sections of the LaTeX introduction, which was converted to
-> [docs/manual/introduction.md](../manual/introduction.md) in revision2026 step R7.1.5 and no
+> [docs/manual/introduction.md](../manual/introduction.md) and no
 > longer carries them; the abbreviation table is generated into
 > `docs/generated/abbreviations.md`. There is one place for a rule again.
 
@@ -210,15 +210,15 @@ Do not enforce them retroactively, and do not introduce them into files that lac
 | rule | status |
 |---|---|
 | Doxygen comment style (`//!`, `@todo`, `@test`, `@bug`) | **deprecated, and the toolchain is gone.** `docs/doxygen/` was removed 2026-09-10 — it broke on project size, the PDF path never worked, and graph generation had already been switched off. So nothing consumes these comments any more. New code need not adopt the style; existing blocks stay until a dedicated cleanup step. For the architectural overview doxygen was once expected to give, see [ARCHITECTURE.md](ARCHITECTURE.md). |
-| "Add a complete unit test to every function" (LEST) | not obeyed. The LEST tests are gated on `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they run nowhere. revision2026 step R5.3 wires them into the VS `Debug` configuration. |
-| The `#**` doc-comment convention in `python/exudyn/` | **replaced 2026-09-15** (revision2026 step R4.6) by Google-style docstrings: summary, then `Args:`, `Returns:`, `Note:`, `Example:`, each section's text indented by four spaces. `author`, `date`, `status` and `public=False` go into `@docmeta(...)` (`exudyn/docmeta.py`), a MainSystem method is marked `@extends(exudyn.MainSystem)`. Every module in `python/exudyn` has an `__all__` listing its public names (top-level functions, classes and assigned names not starting with `_`, except `@docmeta(public=False)`); `python tools/checkAll.py --write` updates it after adding a function, and CI fails if it is incomplete (revision2026 step R4.22.3). The text is Markdown (revision2026 step R4.6.4): `code` in backquotes, `$...$` math, `[Key]` for a citation, `[text](#label)` for a reference (`[Section](#sec:...)`, an abbreviation as `[HT](#HT)`), `**bold**`, `*italics*`, UTF-8 characters instead of LaTeX accents; no LaTeX macros outside math. |
+| "Add a complete unit test to every function" (LEST) | not obeyed. The LEST tests are gated on `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they run nowhere. |
+| The `#**` doc-comment convention in `python/exudyn/` | **replaced 2026-09-15** by Google-style docstrings: summary, then `Args:`, `Returns:`, `Note:`, `Example:`, each section's text indented by four spaces. `author`, `date`, `status` and `public=False` go into `@docmeta(...)` (`exudyn/docmeta.py`), a MainSystem method is marked `@extends(exudyn.MainSystem)`. Every module in `python/exudyn` has an `__all__` listing its public names (top-level functions, classes and assigned names not starting with `_`, except `@docmeta(public=False)`); `python tools/checkAll.py --write` updates it after adding a function, and CI fails if it is incomplete. The text is Markdown: `code` in backquotes, `$...$` math, `[Key]` for a citation, `[text](#label)` for a reference (`[Section](#sec:...)`, an abbreviation as `[HT](#HT)`), `**bold**`, `*italics*`, UTF-8 characters instead of LaTeX accents; no LaTeX macros outside math. |
 
 **The operative rule when editing an existing file: follow that file's local style.** A consistent
 file beats a globally consistent repository during a migration.
 
 ## 9. Adding a new item (node, object, marker, load, sensor)
 
-*(The two cases below came from the user manual in revision2026b step RG3.1; the file names are
+*(The two cases below came from the user manual; the file names are
 the ones of the current layout.)*
 
 **Write it in Python first.** `NodeGeneric...`, `ObjectGeneric...` with user functions,
@@ -258,7 +258,7 @@ spring-damper-like connector, then:
 ## 10. Reporting an error from C++
 
 > Not a transcription of `introduction.tex`: this section is written here and nowhere else
-> (revision2026 step R6.3). The C++ side of it lives in the comments of
+>. The C++ side of it lives in the comments of
 > `src/Utilities/ReleaseAssert.h` and `src/Main/Stdoutput.h`, which say the same thing to
 > someone reading the code; this is the version for someone about to write a check.
 
@@ -285,8 +285,8 @@ not in a macro. A macro is for a check that protects the computation and may cos
 per element.
 
 **The helper does not decide the type.** The same macro states a user's index mistake in one
-place and an Exudyn invariant in the next; that is measured, not assumed (`tools/errorTriage.py`,
-revision2026 step R6.3.2). Choose the type from what the check *means*.
+place and an Exudyn invariant in the next; that is measured, not assumed (`tools/errorTriage.py`).
+Choose the type from what the check *means*.
 
 ### 10.2 Which type
 
@@ -320,9 +320,8 @@ Three of these earn their place by what they save a user:
 ### 10.3 When to write no type at all
 
 Leave a `CHECKandTHROW*` **untyped** when the honest answer is `ExudynInternalError`. The
-untyped form is the default form, and the last move of revision2026 step R6.3.6 turns that
-default into `ExudynInternalError` for every macro site at once. Writing it out by hand adds a
-diff and changes nothing. The same holds for `SysError`, which already defaults to it.
+untyped form is the default form and means `ExudynInternalError` at every macro site, so
+writing it out by hand adds a diff and changes nothing. The same holds for `SysError`, which already defaults to it.
 
 This does **not** hold for `PyError`, whose default is `runtimeError`. A `PyError` without a type
 is a site not yet decided.
@@ -349,12 +348,12 @@ be registered first: pybind11 tries translators in reverse order of registration
 
 Use `PyDeprecated(message)`, never `PyWarning`. It raises a real Python `DeprecationWarning`, so
 `-W error::DeprecationWarning` finds every use before a release removes the old name, and Python
-shows it once per call site instead of once per call (revision2026 step R6.3.4).
+shows it once per call site instead of once per call.
 
 ### 10.6 Writing the message
 
 - Say what is wrong and what to change, not that something is wrong.
-- Put the information **into the exception**. Since revision2026 step R6.3.10 the exception is
+- Put the information **into the exception**, which is
   the **only** thing the console shows: `PyError` and `SysError` write their block to the log
   file and never to the console, because the exception already carries the same message and the
   same location, and because a *caught* exception must not flood the terminal of a GUI or a
@@ -364,7 +363,7 @@ shows it once per call site instead of once per call (revision2026 step R6.3.4).
 
 ### 10.7 Which channel gets what
 
-There are three channels and one rule per kind of message (revision2026 steps R6.3.10 and R6.8).
+There are three channels and one rule per kind of message.
 All of them write the same text, from `ErrorMessageBlock` — do not add a sentence to one of
 them.
 

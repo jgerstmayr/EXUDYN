@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # VisualizationSettings definitions
 #
-# Details:  31 definitions; the input of the generators (revision2026 step R4.3).
+# Details:  31 definitions; the input of the generators.
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,
@@ -1171,7 +1171,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tfloat(minimum=0),
             pythonName='fontScaling',
             defaultValue=0.,
-            description=r'scaling of the font in dialogs; 0 = automatic, which is what every platform did before this setting existed: the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop (revision2026b step RG6.2.3.1)'),
+            description=r'scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop'),
         StructureParameter(type=Tfloat(minimum=0), cFlags=SFDeprecated,
             pythonName='fontScalingMacOS',
             deprecated=Deprecated('1.12.15', 2032),
