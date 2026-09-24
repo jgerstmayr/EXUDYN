@@ -75,8 +75,8 @@ def MatchingIssues(query):
 
     The search reads EVERY field of an issue and not four of them, so the authors are
     searchable - both of them, who raised it and who resolved it - and so are the file, the
-    plan step, the version it was resolved in and the dates (#2636). The number is searched
-    separately and exactly, so both "#2600" and "2600" find that issue.
+    plan step, the version it was resolved in and the dates (#2636), and the number as a
+    substring, so that "249" finds #2497 as well as #249 (#2641).
     """
     issues = list(reversed(issueTracker.GetIssues()))
 
@@ -93,8 +93,14 @@ def MatchingIssues(query):
 
     search = (query.get('search') or '').strip().lower()
     if search:
+        number = search.lstrip('#')
+
         def Matches(issue):
-            if search.lstrip('#').isdigit() and str(issue['number']) == search.lstrip('#'):
+            #THE NUMBER IS A FIELD TOO (#2641). It was an exact test, so a search for '249'
+            #found issue 249 and every issue whose TEXT says 249 - including two whose
+            #resolvedInVersion is 0.1.249 - but not #2497, which is what one is looking for
+            #when one types three digits. A leading '#' is allowed and means nothing else.
+            if number.isdigit() and number in str(issue['number']):
                 return True
             return any(search in str(value).lower()
                        for (name, value) in issue.items() if name != 'number')

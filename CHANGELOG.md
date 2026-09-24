@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 55 | 1.12.56 |
+| 1.12 | Metheney | 56 | 1.12.57 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.57** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` issue serve: a search for digits finds every field except the issue number (#2641)
+  - description: Searching for '249' with status=all lists \#2377, \#1988 and \#1142, which name it in their text, and \#244 and \#694, which carry it in resolvedInVersion (0.1.249 and 1.0.249) - but it MISSES \#2497 and every other \#249x, which is what the maintainer was searching for. The number is the one field the substring search skips: \#2636 made it a separate exact test, so '249' finds issue 249 and no other. It shall be searched as a substring like every other field, so that a partial number finds the issues that start with it.
+  - **notes:** The web view searches the issue number as a substring like every other field, so '249' finds \#249 and \#2490 to \#2499, and not only the issues whose text mentions it. revision2026b step RG10.2.2.
+  - date resolved: **2026-09-24 13:34**, date raised: 2026-09-24
 - **1.12.56** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the value cell of an enum still shows the type name, so the selected value cannot be read (#2640)
   - description: \#2635 shortened the list of the combo box, and the maintainer reports what is left: the moment the box collapses, the cell shows 'OutputVariableType.Torque' again, which is the same problem one step later - the value column is as wide as the box was. The short name shall be THE value string: ConvertValue2String produces it, so the cell, the marking of a changed value and the comparison of ChangedSettings all use it, and ValueLiteral puts the type back, because that is the only place where Python needs the full name.
   - **notes:** The short name is the value string of an enum: ConvertValue2String produces it, so the cell of the dialog, the marking of a changed value and the comparison of ChangedSettings all speak it, and ValueLiteral puts the type back because the generated Python is the only place that needs the full name. CheckType and ConvertString2Value accept both spellings. revision2026b step RG6.2.25.1.

@@ -510,6 +510,23 @@ def testEveryMatchingIssueIsSentAndNotTheFirst400(server, tracker):
         'the oldest issue of the store is in the list'
 
 
+def testANumberIsSearchedAsASubstring(server, tracker):
+    """#2641: "249" found #249 and two issues whose resolvedInVersion is 0.1.249, but not
+    #2497 - the number was the one field the substring search skipped"""
+    numbers = sorted(issue['number'] for issue in tracker.GetIssues())
+    wanted = [number for number in numbers if str(number).startswith('249') and number > 249]
+    assert wanted, 'the store has issues in the 249x range'
+
+    (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all', 'search': '249'})
+    found = [issue['number'] for issue in data['issues']]
+    assert set(wanted) <= set(found), 'every #249x is found'
+
+    #a leading '#' means nothing else, and an exact number still finds itself
+    for text in ['#249', '249']:
+        (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all', 'search': text})
+        assert 249 in [issue['number'] for issue in data['issues']]
+
+
 def testTheSearchReadsEveryFieldOfAnIssue(server, tracker):
     """the authors above all: an issue names who raised it and who resolved it (#2636)"""
     issue = [one for one in tracker.GetIssues() if one['author'].strip() != ''][-1]

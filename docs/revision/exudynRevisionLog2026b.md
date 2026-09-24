@@ -2137,3 +2137,20 @@ Measured on the structures themselves: `visualizationSettings` has **two** enum 
 `simulationSettings` **two** (`linearSolverType` and the `dynamicSolverType` that #2597 found
 being edited as free text), and all four now read as `Displacement`, `_None`, `EXUdense`,
 `DOPRI5` while their code lines carry the type.
+
+<a id="rg10-2-2"></a>
+### RG10.2.2 — the number is a field too (2026-09-24, #2641)
+
+The maintainer typed `249` with status=all and got a result that looks arbitrary until one
+knows the code: #2377, #1988 and #1142, which say 249 somewhere in their text, and **#244 and
+#694, which say it nowhere a reader can see** - their `resolvedInVersion` is `0.1.249` and
+`1.0.249`. And not #2497, which is what the three digits were typed for.
+
+Both halves are one cause. RG10.2.1 made every field searchable **except** the number, which
+kept the exact test it had always had, so a numeric search answered a question nobody asks:
+*"is there an issue with exactly this number, or an issue whose text mentions it?"* The number
+is now a substring like everything else, and `249` finds **#249 and #2490 to #2499**.
+
+The two version hits stay, and they are not a defect: searching for `1.11.240` is a good reason
+to have made the field searchable. They only looked arbitrary because the hit one expected was
+missing.

@@ -843,6 +843,14 @@ file, so an editor cannot complete them).
     everything older than about #2240 out of reach. The search reads every field; the listing sends
     what matched.
 
+<a id="rg10-2-2"></a>
+**RG10.2.2** **DONE 2026-09-24** (#2641) — [log](exudynRevisionLog2026b.md#rg10-2-2) —
+    **A search for digits found every field except the issue number** *(maintainer,
+    2026-09-24)*: `249` listed the issues that name it in their text and two whose
+    `resolvedInVersion` is `0.1.249`, and missed **#2497**, which is what it was typed for.
+    RG10.2.1 had left the number as a separate exact test. It is a substring like every other
+    field now, so `249` finds #249 and #2490 to #2499.
+
 <a id="rg10-3"></a>
 **RG10.3** **DONE 2026-09-23** (#2617) — [log](exudynRevisionLog2026b.md#rg10-3) — *(group
     RG10; maintainer 2026-09-23)* **`exudev` does not say how long a step took.** The batch
