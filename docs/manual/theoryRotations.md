@@ -278,7 +278,7 @@ $$
 As an example, we consider in Figure {ref}`fig-theory-rotations-successive` the different order of rotations of a block.
 
 (fig-theory-rotations-successive)=
-```{figure} /docs/figures/RotationsSequences.png
+```{figure} /docs/figures/RotationsSequences.*
 :width: 500
 
 Successive rotations are not commutative.

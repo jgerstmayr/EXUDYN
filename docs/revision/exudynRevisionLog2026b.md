@@ -2558,3 +2558,53 @@ near source code.
 
 **235 mentions are left**, none of them in a published page, and each needs a sentence written
 for it. That is RG3.13.1 (#2649).
+
+<a id="rg3-8-2"></a>
+### RG3.8.2 — the figures, and what a screenshot of an algorithm was hiding (2026-09-25, #2594)
+
+The maintainer drew three more SVGs and answered the rest of the list from RG3.8.1.
+
+**Three more are `.*` candidates**: `pendulum`, `pendulumConstraint`, `RotationsSequences` - the
+three line drawings under 640 pixels that the measurement had put first. They have **no `.pdf`**,
+so the LaTeX builder falls back to the `.png`, which therefore stays; the html uses the SVG.
+
+**Two of them were never figures at all.** `kinematicTreeRNEA.png` and
+`kinematicTreeCRBmass.png` are **screenshots of a typeset LaTeX algorithm**: the old
+`itemDefinition.tex` had both as `algorithm` environments, the RST conversion could not carry
+them, and somebody photographed the output. They are the algorithms again, written out of the
+old `.tex` as two numbered lists with the math inline - Featherstone's recursive Newton-Euler and
+the composite-rigid-body algorithm - so the equations are now text a reader can select, search
+and zoom.
+
+Writing them took two attempts, and the reason is worth keeping: the `\onlyRST{}` block of a
+definition is converted to Markdown, and the converter **strips the leading indentation of a
+continuation line**. An RST `#.` auto-numbered list came through as the literal characters `#.`,
+and a nested list lost its nesting. So the algorithms are **flat numbered lists** whose loop
+bodies are one item each - which reads well and cannot be broken by the converter.
+
+**`intro2.jpg` is the title picture of the PDF again.** It was the title page of the old LaTeX
+document, and nothing had replaced it: `pdfIndex.md` is the root of the PDF build and is excluded
+from the html one, so an image there appears in the printed documentation and nowhere else.
+
+**Eight files left the tree**: the three contact-friction `.png` (the `.svg` and the `.pdf` cover
+both builders), the two kinematic-tree screenshots, `intro1.png`, which nothing referenced, and
+the two `.eps`, which no builder can choose.
+
+**Both builders were checked this time**, which RG3.8.1 could not claim: the html references
+`.svg` for all six candidate figures, and a LaTeX build - `sphinx -b latex -t pdf`, which needs
+no LaTeX installation to resolve images - copies `ContactFrictionCircleCable2D*.pdf`,
+`pendulum.png`, `pendulumConstraint.png`, `RotationsSequences.png` and `intro2.jpg`. That is the
+proof that deleting the three PNGs was safe and that keeping the other three was necessary.
+
+**Found on the way, and not acted on**: seven `.png` that no page references -
+`ObjectRigidBody`, `PrismaticJointX`, `RevoluteJointZ`, `RevoluteJointZ2`, `SphericalJoint`,
+`TutorialRigidBody1`, `UniversalJoint` - and `ExudynLOGO1.7.jpg`, an older logo. The seven are
+the same kind of loss as the four `.pdf` that RG3.8 is about, so they belong to that step and not
+to a deletion.
+
+<a id="rg3-8-2-toctree"></a>
+**And the tutorials** (#2650): the toctree of `tutorial.md` stood at the end of the page, inside
+its only section, so the four sub-tutorials appeared **below** *Mass-Spring-Damper tutorial*
+instead of beside it - the same cause as the installation instructions of #2646. It is at the top
+level now, and a check of every toctree in the hand-written pages says this was the last nested
+one.

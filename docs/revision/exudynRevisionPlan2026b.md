@@ -258,6 +258,15 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     the browser and the PDF for the LaTeX build** from one name - the pair the step asked for.
     Which further figures are worth an SVG is measured in the log.
 
+<a id="rg3-8-2"></a>
+**RG3.8.2** **DONE 2026-09-25** (#2594, #2650) — [log](exudynRevisionLog2026b.md#rg3-8-2) —
+    **Three more figures are vector, two became text, and what they replaced is out of the tree**
+    *(maintainer, 2026-09-25, who drew the SVGs)*. `pendulum`, `pendulumConstraint` and
+    `RotationsSequences` are `.*` candidates; the two `kinematicTree` images were **screenshots of
+    a LaTeX algorithm** and are the algorithms themselves now, written out from the old `.tex`;
+    `intro2.jpg` is the title picture of the PDF again. Eight obsolete files left the tree, and
+    the four sub-tutorials are no longer nested under the first one (#2650).
+
 <a id="rg3-9"></a>
 **RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) —
     **Three corrections to the landing pages and the developer chapters.** That Exudyn is

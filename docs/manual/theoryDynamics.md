@@ -207,7 +207,7 @@ $$
 leading to one $2^\mathrm{nd}$ order ordinary differential equation (ODE2), using the minimal coordinate $\varphi$.
 
 (fig-theory-formulations-pendulum)=
-```{figure} /docs/figures/pendulum.png
+```{figure} /docs/figures/pendulum.*
 :width: 200
 
 Mathematical pendulum with minimal coordinate $\varphi$.
@@ -228,7 +228,7 @@ $$
 $$ (eq-theory-pendulum-redundantconstraint)
 
 (fig-theory-formulations-pendulumconstraint)=
-```{figure} /docs/figures/pendulumConstraint.png
+```{figure} /docs/figures/pendulumConstraint.*
 :width: 200
 
 Mathematical pendulum with redundant coordinates ($x$, $y$).

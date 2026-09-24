@@ -1928,16 +1928,35 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     } %ignoreRST
     \onlyRST{
 
-    .. figure:: docs/figures/kinematicTreeRNEA.png
-       :width: 750
+    **Recursive Newton-Euler algorithm** (acc.\ to Featherstone). It returns the joint forces
+    $\tau$ for given $\qv$, $\dot \qv$, $\mathrm{MotionSubspace}(i)$, $\Xm_{L}$ and
+    $\LU{\mathrm{-1}}{\fv}^a_i$, assuming $\dot\tPhi_i=0$:
 
-       Recursive Newton-Euler algorithm
+    1. start with $\vv_{\mathrm{-1}} = \Null$ and $\av_{\mathrm{-1}} = -\gv$, the gravity vector.
+    2. **Forward pass** over the $N_B$ bodies, $i=0$ to $N_B-1$: the transformations
+       $\Xm_J(i) = \Xm_{JT}(i, q_i)$, $\LU{i,p(i)}{\Xm} = \Xm_J(i) \, \Xm_{L}(i)$ and
+       $\tPhi_i = \mathrm{MotionSubspace}(i)$, with
+       $\LU{i,\mathrm{-1}}{\Xm} = \LU{i,p(i)}{\Xm} \cdot \LU{p(i),\mathrm{-1}}{\Xm}$ if
+       $p(i) \neq \mathrm{-1}$; then the kinematics
+       $\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i$ and
+       $\av_i = \av_{p(i)} + \vv_i \times \tPhi_i \, \dot q_i$, where $\tPhi_i \, \ddot q_i$ is put
+       on the right hand side; then the forces
+       $\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a_i$.
+    3. **Backward pass**, $i=N_B-1$ down to $0$: the joint force (torque)
+       $\tau_i = \tPhi_i\tp \cdot \fv_i$, and
+       $\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i$ if $p(i) \neq \mathrm{-1}$.
 
-      
-    .. figure:: docs/figures/kinematicTreeCRBmass.png
-       :width: 750
-       
-       Composite-rigid-body algorithm
+    **Composite-rigid-body algorithm** (acc.\ to Featherstone). It returns the mass matrix $\Mm$
+    for given $\tPhi_i$, $\LU{i,p(i)}{\Xm}$ and $\Im_i$:
+
+    1. start with $\Mm_0 = \Null$ and the 6D inertia tensors $\Im_i^C = \Im_i$ for every body.
+    2. **Recursively update the inertias**, $i=N_B-1$ down to $0$: project the inertia into the
+       motion subspace, $\Fm = \Im_i^C \, \tPhi_i$ and $\Mm_{ii} = \tPhi_i\tp \, \Fm$; add it to
+       the parent, $\Im_{p(i)}^C \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \cdot \Im_i^C \cdot \LU{i,p(i)}{\Xm}$,
+       if $p(i) \neq \mathrm{-1}$.
+    3. **The mass matrix terms** of the same pass: with $j=i$, while $p(j) \neq \mathrm{-1}$, set
+       $\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm$, $j = p(j)$, $\Mm_{ij} = \Fm\tp \, \tPhi_i$ and
+       $\Mm_{ji} = \Mm_{ij}$.
 
     }
 

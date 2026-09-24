@@ -1,0 +1,17 @@
+{
+  "number": 2650,
+  "title": "the four sub-tutorials are nested under the Mass-Spring-Damper tutorial",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Same cause as the installation instructions of #2646: a toctree places its entries where the directive stands, and the one in docs/manual/tutorial.md stands at the end of the page, which is inside its only section. So the rigid body, flexible beams, symbolic and FFRF tutorials appear one level below 'Mass-Spring-Damper tutorial' in the sidebar instead of beside it. The toctree belongs at the top level of the page. Checked at the same time: of the four toctrees in the hand-written pages this was the last one that was nested.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "dateResolved": "2026-09-25 00:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/tutorial.md",
+  "releaseNotes": "The toctree of docs/manual/tutorial.md is at the top level of the page, so the rigid body, flexible beams, symbolic and FFRF tutorials stand beside 'Mass-Spring-Damper tutorial' instead of below it. Same cause as the installation instructions of #2646; a check of every toctree in the hand-written pages says this was the last nested one. revision2026b step RG3.8.2.",
+  "resolvedInVersion": "1.12.65"
+}

@@ -6,6 +6,11 @@
 :align: center
 ```
 
+```{image} /docs/figures/intro2.jpg
+:width: 400px
+:align: center
+```
+
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
 **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria

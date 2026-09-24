@@ -11,6 +11,15 @@ A large number of examples, some of them quite advanced, can be found in:
 - `python/Examples`
 - `python/TestModels`
 
+```{toctree}
+:maxdepth: 2
+
+tutorialRigidBody
+tutorialFlexibleBeams
+tutorialSymbolic
+tutorialFFRF
+```
+
 ## Mass-Spring-Damper tutorial
 
 The Python source code of the first tutorial can be found in the file:
@@ -279,13 +288,4 @@ The matplotlib output should look as shown in {ref}`fig-tutorial-springdamper`.
 :width: 400
 
 Output of spring-damper tutorial.
-```
-
-```{toctree}
-:maxdepth: 2
-
-tutorialRigidBody
-tutorialFlexibleBeams
-tutorialSymbolic
-tutorialFFRF
 ```
