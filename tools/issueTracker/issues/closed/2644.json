@@ -1,0 +1,17 @@
+{
+  "number": 2644,
+  "title": "exudev has three Windows-only spots, and it is needed on linux and macOS too",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Measured on 2026-09-24 by running every exudev command with --dry-run --no-conda under WSL: generate, build, test, docs, perf, examples, issue and env plan the same steps there as on Windows - the conda lookup already tries bin/conda, the wheel lookup carries no platform tag and the stale package copy is found through build/lib.*. Three places are Windows-only and wrong elsewhere. 'exudev clean' matches build/lib.win-amd64-*, build/temp.win-amd64-*, build/bdist.win32 and build/bdist.win-amd64, so on linux and macOS it removes nothing. 'exudev docs --open' calls xdg-open, which macOS does not have; it wants 'open'. 'exudev linux' drives the manylinux container through 'wsl -e bash -lc', which on linux itself has no wsl to go through and on macOS cannot build an x86_64 manylinux wheel at all.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 18:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev plans the same steps on Windows, linux and macOS. The three Windows-only places are the platform's own now: clean builds its patterns from sys.platform, docs --open calls cmd/open/xdg-open, and the manylinux container runs through WSL only on Windows and is refused on macOS with the reason. python/testing/test_exudev.py pins the three by pretending to be each platform. revision2026b step RG10.8.",
+  "resolvedInVersion": "1.12.60"
+}

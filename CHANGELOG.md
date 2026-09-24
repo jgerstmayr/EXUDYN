@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 58 | 1.12.59 |
+| 1.12 | Metheney | 59 | 1.12.60 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.60** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev has three Windows-only spots, and it is needed on linux and macOS too (#2644)
+  - description: Measured on 2026-09-24 by running every exudev command with --dry-run --no-conda under WSL: generate, build, test, docs, perf, examples, issue and env plan the same steps there as on Windows - the conda lookup already tries bin/conda, the wheel lookup carries no platform tag and the stale package copy is found through build/lib.\*. Three places are Windows-only and wrong elsewhere. 'exudev clean' matches build/lib.win-amd64-\*, build/temp.win-amd64-\*, build/bdist.win32 and build/bdist.win-amd64, so on linux and macOS it removes nothing. 'exudev docs --open' calls xdg-open, which macOS does not have; it wants 'open'. 'exudev linux' drives the manylinux container through 'wsl -e bash -lc', which on linux itself has no wsl to go through and on macOS cannot build an x86\_64 manylinux wheel at all.
+  - **notes:** exudev plans the same steps on Windows, linux and macOS. The three Windows-only places are the platform's own now: clean builds its patterns from sys.platform, docs --open calls cmd/open/xdg-open, and the manylinux container runs through WSL only on Windows and is refused on macOS with the reason. python/testing/test\_exudev.py pins the three by pretending to be each platform. revision2026b step RG10.8.
+  - date resolved: **2026-09-24 18:54**, date raised: 2026-09-24
 - **1.12.59** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS: the settings dialog crashes the process through a re-entrant DoIdleTasks (#2643)
   - description: Fatal Python error in PyEval\_RestoreThread, SIGABRT, macOS 14.5 arm64, Python 3.13, after interacting with the visualization dialog of an interactive example (maintainer, 2026-09-24, tmp/MacOS/mactest.txt). The 103 frames of the crashed thread show DoIdleTasks entered TWICE: a tkinter after-callback of interactive.py calls SC.renderer.DoIdleTasks(0); its PyProcessExecuteQueue runs the queued Python that opens the settings dialog; the dialog's wait\_window pumps Tcl events; a Tk binding calls GUI.py UpdateSettingsStructure, which calls SC.renderer.DoIdleTasks(0) again when dialogs.multiThreadedDialogs is set - and that inner call reaches \_glfwPlatformPollEvents, which on macOS runs the SHARED Cocoa run loop, redraws the Tk window and calls back into Python at a point where the GIL bookkeeping of \_tkinter is inconsistent. Windows survives it because polling GLFW events there does not pump the Tk event loop. The renderer idle loop must not be re-entrant; the workaround is dialogs.multiThreadedDialogs=False, whose description already says it may cause problems on some platforms.
   - **notes:** GlfwRenderer::idleOperationDepth counts the idle operations on the stack, and only the outermost polls events and runs the queued Python. A nested one - the settings dialog calling DoIdleTasks(0) on every change - still renders, so the live update keeps working, but it no longer starts a second event pump inside the first, which on macOS runs the shared Cocoa run loop and aborts the process in PyEval\_RestoreThread. Both guarded blocks are in the single-threaded path, which is what macOS always uses and what Windows and Linux only reach if multithreaded rendering is turned off. revision2026b step RG6.6.

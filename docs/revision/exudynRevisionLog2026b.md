@@ -2240,3 +2240,36 @@ would have started the **next** queued Python while the previous one was still o
 The workaround, if the guard is not enough: `dialogs.multiThreadedDialogs = False`, which
 removes the nested call entirely. Its own description has said *"may cause problems on some
 platforms"* since long before this.
+
+<a id="rg10-8"></a>
+### RG10.8 — exudev on three platforms (2026-09-24, #2644)
+
+*"regarding exudev: this tool is also needed for linux and MacOS"* (maintainer, 2026-09-24).
+
+The first thing was to find out how much was actually wrong, and the driver makes that easy: it
+**plans** its steps before it runs them, so `--dry-run` prints the argv of every step without
+touching anything. Every command was planned under WSL with `--dry-run --no-conda`, and the
+answer is that most of it was portable already - the conda lookup tries `bin/conda` before
+`Scripts\conda.exe`, the wheel lookup carries no platform tag, and the stale package copy of
+#2560 is found through `build/lib.*`, which is the glob and not the Windows name. `generate`,
+`build`, `test`, `docs`, `perf`, `examples`, `issue` and `env` plan the same steps there as here.
+
+**Three places were Windows-only**, and each is wrong in its own way elsewhere:
+
+- **`clean`** matched `build/lib.win-amd64-*`, `build/temp.win-amd64-*`, `build/bdist.win32` and
+  `build/bdist.win-amd64`. setuptools names those directories after the platform that built
+  them, so on linux and macOS the command removed **nothing** and said so cheerfully. The
+  patterns are built from `sys.platform` now. On linux the native directories are then found
+  twice - by the platform glob and by `--linux` - so the target lists are deduplicated;
+- **`docs --open`** called `xdg-open`, which **macOS does not have**. One opener per platform:
+  `cmd /c start`, `open`, `xdg-open`;
+- **`linux`** wrapped the manylinux docker command in `wsl -e bash -lc`. On linux there is no WSL
+  to go through - the command itself is identical, so `InWslIfNeeded()` decides the wrapper and
+  `LinuxBuildRoot()` decides whether the path has to be translated. On **macOS it is refused**
+  with the reason: the image is x86_64 and an ARM Mac would emulate it, which is not what a
+  release wheel should be built with.
+
+**And it is tested, which needs no second machine.** Because the driver plans before it runs, a
+test can pretend to be any platform and read the steps back: `python/testing/test_exudev.py`
+sets `sys.platform` and `runner.onWindows`, then asserts the clean patterns, the opener and the
+argv of the container - nine cases, from whichever platform happens to run pytest.

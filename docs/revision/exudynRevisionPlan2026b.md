@@ -916,6 +916,16 @@ file, so an editor cannot complete them).
     - **RG10.6.8** — [log](exudynRevisionLog2026b.md#rg10-6-8) — the seven performance models,
       `AddTiming` into `exu.sys['testTimings']`, and `ExudynTestStructure` deleted.
 
+<a id="rg10-8"></a>
+**RG10.8** **DONE 2026-09-24** (#2644) — [log](exudynRevisionLog2026b.md#rg10-8) —
+    **`exudev` is needed on linux and macOS too** *(maintainer, 2026-09-24)*. Measured by
+    planning every command under WSL: most of it was already portable, and **three** places were
+    not - `clean` matched only the Windows build directories, `docs --open` called `xdg-open`,
+    which macOS does not have, and `linux` drove the manylinux container through `wsl -e`, which
+    on linux there is nothing to go through. All three are the platform's own now, the macOS
+    case of the manylinux image is refused with a reason, and `test_exudev.py` pins the three
+    from any platform.
+
 <a id="rg10-7"></a>
 **RG10.7** **DONE 2026-09-24** (#2638) — [log](exudynRevisionLog2026b.md#rg10-7) —
     **The plan carried the full text of the steps that are finished** *(maintainer,

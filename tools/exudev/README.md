@@ -12,6 +12,11 @@ exudev -n <command>         print the commands it would run, and run nothing
 On Windows type `exudev` from anywhere in the tree (`exudev.bat` sits in the repository root);
 everywhere else — WSL, linux, macOS — type `python tools/exudev`.
 
+Every command plans the same steps on the three platforms since #2644 (revision2026b step
+RG10.8); what differs is the build directories `clean` removes, the program `docs --open` calls,
+and the shell that starts the manylinux container. `python/testing/test_exudev.py` pins those
+three from any platform.
+
 **Quiet is the default**; `-v/--verbose` turns the tools' own output back on.
 
 ## Commands
@@ -24,7 +29,7 @@ everywhere else — WSL, linux, macOS — type `python tools/exudev`.
 | `exudev examples [--py] [--timeout S]` | `runTestExamples.py` (slow; default `venvP312`) |
 | `exudev perf [--py] [--fast]` | `runPerformanceTests.py` |
 | `exudev docs [--keep-cache] [--open] [--pdf]` | `sphinx-build -b html . _build -E`; `--pdf` adds the printable documentation in `dist/` (LaTeX needed, release only) |
-| `exudev linux [--manylinux \| --wsl-conda]` | the linux wheels through WSL; manylinux in docker is the release path |
+| `exudev linux [--manylinux \| --wsl-conda]` | the linux wheels: through WSL on Windows, in this shell on linux; refused on macOS |
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
 | `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |
 | `exudev env [--py]` | python, exudyn, numpy, scipy and matplotlib per environment |

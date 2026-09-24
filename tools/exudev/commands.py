@@ -792,10 +792,42 @@ def Docs(options):
 
     if options.open:
         indexFile = os.path.join(root, '_build', 'index.html')
-        opener = ['cmd', '/c', 'start', '', indexFile] if runner.onWindows else ['xdg-open', indexFile]
+        #one opener per platform: macOS has no xdg-open (#2644)
+        if runner.onWindows:
+            opener = ['cmd', '/c', 'start', '', indexFile]
+        elif sys.platform == 'darwin':
+            opener = ['open', indexFile]
+        else:
+            opener = ['xdg-open', indexFile]
         steps += [Step('open the documentation', argv=opener, cwd=root, check=False)]
 
     return steps
+
+
+def InWslIfNeeded(bashCommand):
+    """the argv that runs one bash command where the manylinux container can be started
+
+    On Windows that is WSL; on linux it is this shell. The command itself is identical, which
+    is why it is built as one opaque string (#2644, and the quoting of two shells that
+    makeUbuntuManyLinuxWheels.bat already had).
+
+    Args:
+        bashCommand: the command line as bash reads it
+
+    Returns:
+        the argv list to run
+    """
+    if runner.onWindows:
+        return ['wsl', '-e', 'bash', '-lc', bashCommand]
+    return ['bash', '-lc', bashCommand]
+
+
+def LinuxBuildRoot():
+    """the repository as the shell that runs docker sees it: /mnt/c/... through WSL, and the
+    ordinary path on linux"""
+    if runner.onWindows:
+        return WslRepositoryRoot()
+    return runner.RepositoryRoot()
 
 
 #%%******************************************************************************************************
@@ -811,9 +843,22 @@ def WslRepositoryRoot():
 
 
 #%%******************************************************************************************************
+def WslPathNote():
+    """the second line of the note: where the wsl path in it comes from"""
+    return chr(10) + "the wsl path is asked from 'wsl wslpath -a' at run time"
+
+
 def Linux(options):
-    """The linux wheels, through WSL. The commands are quoted for two shells (cmd and bash) and are
-    therefore built as ONE opaque string, exactly as makeUbuntuManyLinuxWheels.bat had them."""
+    """The manylinux wheels in docker: through WSL on Windows, in this shell on linux (#2644).
+    The command is quoted for two shells and is therefore built as ONE opaque string, exactly as
+    makeUbuntuManyLinuxWheels.bat had it."""
+    #macOS cannot do this at all: the manylinux image is x86_64 and an ARM Mac would emulate
+    #it, which is neither fast nor what a release wheel should be built with (#2644)
+    if sys.platform == 'darwin':
+        raise SystemExit('exudev: the manylinux wheels cannot be built on macOS - the image is'
+                         ' x86_64. Build them on linux or on Windows through WSL;'
+                         ' the macOS wheels are built by the CI.')
+
     if options.wsl_conda:
         return LinuxWslConda(options)
 
@@ -821,25 +866,28 @@ def Linux(options):
     noFast = '' if options.fast else '-e EXUDYN_NOFAST=1 '
 
     def ResolveClean():
-        return ['wsl', '-e', 'bash', '-lc',
-                "cd '" + WslRepositoryRoot() + "' && rm -rf build/*linux* dist/manylinux/*linux*.whl"]
+        return InWslIfNeeded(
+            "cd '" + LinuxBuildRoot() + "' && rm -rf build/*linux* dist/manylinux/*linux*.whl")
 
     def ResolveBuild():
-        return ['wsl', '-e', 'bash', '-lc',
-                "docker run --rm -e PLAT=manylinux_2_28_x86_64 " + noFast
-                + "-v '" + WslRepositoryRoot() + ":/work' -w /work "
-                + "quay.io/pypa/manylinux_2_28_x86_64 bash /work/tools/ci/manylinuxBuild.sh"]
+        return InWslIfNeeded(
+            "docker run --rm -e PLAT=manylinux_2_28_x86_64 " + noFast
+            + "-v '" + LinuxBuildRoot() + ":/work' -w /work "
+            + "quay.io/pypa/manylinux_2_28_x86_64 bash /work/tools/ci/manylinuxBuild.sh")
+
+    shell = 'wsl -e bash -lc' if runner.onWindows else 'bash -lc'
+    where = '<wsl path of the repository>' if runner.onWindows else runner.RepositoryRoot()
 
     return [Step('remove previous linux build output',
                  resolve=ResolveClean,
-                 note=("wsl -e bash -lc \"cd '<wsl path of the repository>' && "
-                       "rm -rf build/*linux* dist/manylinux/*linux*.whl\"\n"
-                       "the wsl path is asked from 'wsl wslpath -a' at run time")),
+                 note=(shell + " \"cd '" + where + "' && "
+                       "rm -rf build/*linux* dist/manylinux/*linux*.whl\""
+                       + (WslPathNote() if runner.onWindows else ''))),
             Step('manylinux wheels in docker'
                  + ('' if options.fast else ' (without the fast module)'),
                  resolve=ResolveBuild,
-                 note=('wsl -e bash -lc "docker run --rm -e PLAT=manylinux_2_28_x86_64 ' + noFast
-                       + "-v '<wsl path of the repository>:/work' -w /work "
+                 note=(shell + ' "docker run --rm -e PLAT=manylinux_2_28_x86_64 ' + noFast
+                       + "-v '" + where + ":/work' -w /work "
                        + 'quay.io/pypa/manylinux_2_28_x86_64 bash /work/tools/ci/manylinuxBuild.sh"'))]
 
 
@@ -885,13 +933,20 @@ def Clean(options):
     unless asked for: removing the linux directories used to break the linux build."""
     root = runner.RepositoryRoot()
 
-    patterns = ['build/lib.win-amd64-*', 'build/temp.win-amd64-*',
-                'build/bdist.win32', 'build/bdist.win-amd64',
+    #setuptools names its build directories after the platform - build/lib.win-amd64-*,
+    #build/lib.linux-x86_64-*, build/lib.macosx-* - so a list of the Windows ones cleaned
+    #nothing on the other two (#2644). The glob is the platform's own; the linux directories
+    #stay behind --linux, as they always did, because removing them used to break the linux
+    #build (revision2026 step R5.18)
+    platform = 'linux' if sys.platform.startswith('linux') else (
+        'macosx' if sys.platform == 'darwin' else 'win')
+    patterns = ['build/lib.' + platform + '*', 'build/temp.' + platform + '*',
+                'build/bdist.' + platform + '*',
                 '.eggs', 'exudyn.egg-info', 'python/exudyn.egg-info']
     filePatterns = ['dist/*.egg']
 
     if options.linux or options.all:
-        patterns += ['build/*linux*']
+        patterns += ['build/*linux*']    #the WSL/manylinux output, which is not this platform's
     if options.dist or options.all:
         filePatterns += ['dist/*.whl']
 
@@ -904,7 +959,8 @@ def Clean(options):
         for pattern in filePatterns:
             files += [path for path in glob.glob(os.path.join(root, pattern))
                       if os.path.isfile(path)]
-        return (directories, files)
+        #sorted(set(...)): on linux the platform glob and --linux name the same directories
+        return (sorted(set(directories)), sorted(set(files)))
 
     def Action():
         (directories, files) = Targets()
