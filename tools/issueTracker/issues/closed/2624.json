@@ -1,0 +1,17 @@
+{
+  "number": 2624,
+  "title": "the settings dialog could edit simulationSettings as well",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "LOW",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-24 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "revision2026b step RG6.2.18. The settings dialog is reachable from a shell: python -m exudyn dialogs vis | sim | help, the form the maintainer proposed on 2026-09-24 - not from the renderer, where changing a solver setting mid-step is not the harmless thing that changing a colour is. Everything below the widgets was ready since RG6.2, so the step is a command of 40 lines in python/exudyn/__main__.py, added to the CommandTable that already held monitor, plot, info and demo. It builds its own settings structure and never a SystemContainer (creating one attaches it to the render engine, #2625), and since RG6.2.20 a plain structure carries the values a user really starts from. When the dialog closes, the command prints ChangedSettingsCode(settings) from RG12.3 - the lines that set what was changed, ready to paste - because browsing 470 settings is only useful if something can be taken away from it. The command dialog is deliberately not among them: a window that executes Python in the scope of a running model means nothing without one. The command asks UIWindowSuppressed('Dialogs', ...) first and returns quietly in an automated run, which is what makes it testable; python/testing/test_commandLine.py calls every form of it.",
+  "resolvedInVersion": "1.12.49"
+}

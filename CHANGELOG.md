@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 47 | 1.12.47 |
+| 1.12 | Metheney | 48 | 1.12.49 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.49** `EXTENSION` the settings dialog could edit simulationSettings as well (#2624) - raised by Claude-JG
+  - revision2026b step RG6.2.18. The settings dialog is reachable from a shell: python -m exudyn dialogs vis \| sim \| help, the form the maintainer proposed on 2026-09-24 - not from the renderer, where changing a solver setting mid-step is not the harmless thing that changing a colour is. Everything below the widgets was ready since RG6.2, so the step is a command of 40 lines in python/exudyn/\_\_main\_\_.py, added to the CommandTable that already held monitor, plot, info and demo. It builds its own settings structure and never a SystemContainer (creating one attaches it to the render engine, \#2625), and since RG6.2.20 a plain structure carries the values a user really starts from. When the dialog closes, the command prints ChangedSettingsCode(settings) from RG12.3 - the lines that set what was changed, ready to paste - because browsing 470 settings is only useful if something can be taken away from it. The command dialog is deliberately not among them: a window that executes Python in the scope of a running model means nothing without one. The command asks UIWindowSuppressed('Dialogs', ...) first and returns quietly in an automated run, which is what makes it testable; python/testing/test\_commandLine.py calls every form of it.
 - **1.12.47** `DOCU` CHANGELOG.md and the issue tracker page hold the same list twice (#2599) - raised by Claude-JG
   - revision2026b step RG3.10. CHANGELOG.md and docs/generated/trackerlog.md are both written by issueTracker.py from the same store and both listed every resolved issue of every release - 2440 and 9153 lines, of which about 2370 were a shorter rendering of what the other says in full, roughly 35 duplicated pages in the PDF. CHANGELOG.md is now the CURRENT release with its release notes, and the table of all releases stays above it: 124 lines. The tracker page is everything BEFORE it, under the heading 'Resolved issues and resolved bugs before version 1.12', with a line pointing at the changelog for the current one: 8923 lines. Every issue is published and searchable, none twice. The pointer to the tracker page sits in the intro prose ABOVE the release block, because exudev release cuts RELEASE\_NOTES.md from the first '\#\# Version ' heading to the next one or to the end of the file, and with one block there is no next one. trackerlog.html keeps every issue and needed nothing: it is untracked and git-ignored. One existing test asserted the old property and now asserts the new one; a second says it from the tracker page's side; a third covers the cut boundary, a changelog with a single '\#\# Version' block.
 - **1.12.46** `IMPROVEMENT` the TestModels import the test suite to find out whether they are being tested (#2632) - raised by Claude-JG

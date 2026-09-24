@@ -746,7 +746,13 @@ This group is that revision and what has to happen before it can start.
     catches the `RuntimeError` of a container that is gone.
 
 <a id="rg6-2-18"></a>
-**RG6.2.18** *(group RG6; maintainer 2026-09-23, from RG6.2.11)* **The same dialog for
+**RG6.2.18** **DONE 2026-09-24** (#2624) — [log](exudynRevisionLog2026b.md#rg6-2-18) —
+    **The same dialog for `simulationSettings`** — and for the visualization settings and the
+    key bindings, from the command line the maintainer proposed:
+    **`python -m exudyn dialogs vis | sim | help`**. The command dialog is deliberately not among
+    them. The original text follows.
+
+    *(group RG6; maintainer 2026-09-23, from RG6.2.11)* **The same dialog for
     `simulationSettings`** (#2624), **low priority**. Everything below the widgets is ready:
     `GetDictionaryWithTypeInfo()` is bound for `SimulationSettings` as well, `SettingsPrefix`
     already writes `simulationSettings....` into the code line, and `DefaultSettingsDictionary`

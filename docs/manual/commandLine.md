@@ -9,7 +9,7 @@ them directly:
 python -m exudyn <command> [options]
 ```
 
-There are four commands. Each one parses its own options, so `python -m exudyn <command> --help`
+There are five commands. Each one parses its own options, so `python -m exudyn <command> --help`
 is the authoritative list — this page describes what the commands are *for*, not every flag they
 take.
 
@@ -19,6 +19,7 @@ take.
 | `plot` | one static plot of sensor or solution files, then exit |
 | `info` | version, location and environment of this installation |
 | `demo` | run a built-in demo model |
+| `dialogs` | browse the settings, or the key bindings, in a dialog |
 
 `python -m exudyn --version` prints the version string alone, which is convenient in scripts.
 
@@ -55,6 +56,25 @@ python -m exudyn demo 2
 
 The two demos of `exudyn.demos`. If these run, the compiled module, numpy, matplotlib and the
 renderer are in order — which is the first thing to establish when something else does not work.
+
+## `dialogs` — look a setting up before writing the model
+
+```
+python -m exudyn dialogs vis      #the visualization settings
+python -m exudyn dialogs sim      #the simulation settings
+python -m exudyn dialogs help     #the keyboard and mouse commands of the renderer
+```
+
+The settings dialog used to be reachable only by pressing **V** in the render window, which is no
+help to somebody who has not written the model yet. It is the same dialog: the tree of every
+setting with its type and its description, **CTRL-F** to find one by name, and *copy line* to take
+the Python statement that sets it. `vis` and `sim` are the short forms of `visualizationSettings`
+and `simulationSettings`.
+
+The structures it shows are fresh ones, so what you see are the defaults a model starts from —
+nothing here is attached to a renderer, and closing the dialog changes no file. What the browsing
+is *for* is printed when you close it: the settings you changed, as the lines that set them, ready
+to paste into a script.
 
 ## `monitor` — the results monitor
 

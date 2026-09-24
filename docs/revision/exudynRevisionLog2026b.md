@@ -1829,3 +1829,41 @@ where blocking is what the user wants.
 Not built here, because the maintainer asked for the evaluation alone. It is proposed as
 **RG11.3**.
 
+<a id="rg6-2-18"></a>
+### RG6.2.18 — the dialogs, from a shell (2026-09-24, #2624)
+
+The step asked for the settings dialog on `simulationSettings` and left the question of **how to
+open it** unanswered; the maintainer answered it on 2026-09-24: not from the renderer, where
+changing a solver setting mid-step is not the harmless thing that changing a colour is, but from
+model code or a shell — **`python -m exudyn dialogs xxx`**.
+
+```
+python -m exudyn dialogs vis      #the visualization settings
+python -m exudyn dialogs sim      #the simulation settings
+python -m exudyn dialogs help     #the keyboard and mouse commands of the renderer
+```
+
+Everything below the widgets was ready since RG6.2: `GetDictionaryWithTypeInfo()` is bound for
+`SimulationSettings` too, `SettingsPrefix` writes the right name into the code line, and
+`DefaultSettingsDictionary` falls back to the constructor for a structure that belongs to no
+`SystemContainer`. So the step is a **command**, 40 lines in `python/exudyn/__main__.py`, added
+to the `CommandTable()` that already held `monitor`, `plot`, `info` and `demo`.
+
+Three decisions worth keeping:
+
+- **it builds its own structure**, `exu.VisualizationSettings()` or `exu.SimulationSettings()`,
+  and never a `SystemContainer— ` creating one attaches it to the render engine (#2625), and
+  there is no model here anyway. Since RG6.2.20 a plain structure carries the values a user
+  really starts from, which is what makes this honest;
+- **it prints what the browsing was for.** The dialog writes into the structure, so when it
+  closes, the command prints `ChangedSettingsCode(settings)` from RG12.3: the lines that set what
+  you changed, ready to paste. Browsing a tree of 470 settings is only useful if you can take
+  something away from it;
+- **the command dialog is not among them**, as the maintainer said: a window that executes
+  Python in the scope of a *running* model means nothing without a running model.
+
+**And it opens no window in an automated run.** The command asks
+`UIWindowSuppressed('Dialogs', ...)` first and returns 0 quietly — which is what makes it
+testable at all, and what CLAUDE.md rule 11 is about. `test_commandLine.py` calls every form of
+it, and the five commands of the table are checked against the list the usage prints.
+

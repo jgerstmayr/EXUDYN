@@ -11,6 +11,7 @@
 #               python -m exudyn monitor --last     live view of the newest results file
 #               python -m exudyn plot s.txt         static plot of a sensor or solution file
 #               python -m exudyn demo               does this installation work?
+#               python -m exudyn dialogs vis       browse the visualization settings
 #
 #           Every command is looked up in the dictionary CommandTable() and imports what it
 #           needs when it is called, so an unused command costs nothing. A command's own
@@ -28,7 +29,7 @@ import sys
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'CommandTable', 'Main',
+    'dialogNames', 'CommandTable', 'Main',
     ]
 
 
@@ -148,6 +149,67 @@ def _CommandDemo(argumentList):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the dialogs a user may want without a render window (revision2026b step RG6.2.18, #2624). The
+#settings dialog was reachable only by pressing V in the renderer, which is no help to somebody
+#who wants to look up what a setting is called before writing the model
+dialogNames = {
+    'vis':  'visualizationSettings', 'visualizationSettings': 'visualizationSettings',
+    'sim':  'simulationSettings',    'simulationSettings':    'simulationSettings',
+    'help': 'help',
+    }
+
+
+def _CommandDialogs(argumentList):
+    """browse the settings, or the key bindings, in the dialogs of the renderer"""
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog='python -m exudyn dialogs',
+        description='open one of the renderer dialogs without a render window: browse the '
+                    'settings, find one by name with CTRL-F, and copy the line that sets it.',
+        epilog='examples:\n'
+               '  python -m exudyn dialogs vis      the visualization settings\n'
+               '  python -m exudyn dialogs sim      the simulation settings\n'
+               '  python -m exudyn dialogs help     the keyboard and mouse commands\n',
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('what', nargs='?', default='vis', choices=sorted(dialogNames),
+                        metavar='WHAT',
+                        help='vis | visualizationSettings, sim | simulationSettings, help '
+                             '(default: vis)')
+    args = parser.parse_args(argumentList)
+    what = dialogNames[args.what]
+
+    import exudyn as exu
+    from exudyn.basicUtilities import UIWindowSuppressed                    # noqa: PLC0415
+    if UIWindowSuppressed('Dialogs', 'python -m exudyn dialogs'):
+        return 0
+
+    try:
+        import exudyn.misc.GUI as gui                                       # noqa: PLC0415
+    except ImportError:
+        print('this command needs tkinter, which is not installed with this Python')
+        return 1
+
+    if what == 'help':
+        gui.ShowHelpDialog()
+        return 0
+
+    #a structure of its own, not a SystemContainer's: creating a container attaches it to the
+    #render engine (#2625), and there is no model here anyway. Since revision2026b step RG6.2.20
+    #this carries the same defaults a user really starts from
+    settings = exu.VisualizationSettings() if what == 'visualizationSettings' \
+        else exu.SimulationSettings()
+    gui.EditDictionaryWithTypeInfo(settings, exu, what)
+
+    #what the browsing was for: the code that reproduces it (revision2026b step RG12.3)
+    from exudyn.misc.settingsUtilities import ChangedSettings, ChangedSettingsCode  # noqa: PLC0415
+    changes = ChangedSettings(settings)
+    if changes:
+        print('')
+        print(ChangedSettingsCode(settings))
+    return 0
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def CommandTable():
     """The commands of `python -m exudyn`, as `{name: [function, one line description]}`. The
     function takes the remaining command line arguments and returns the process return code.
@@ -160,6 +222,7 @@ def CommandTable():
         'plot':    [_CommandPlot,    'plot sensor or solution files and exit'],
         'info':    [_CommandInfo,    'version, location and environment of this installation'],
         'demo':    [_CommandDemo,    'run a built-in demo model'],
+        'dialogs': [_CommandDialogs, 'browse the settings or the key bindings in a dialog'],
         }
 
 
