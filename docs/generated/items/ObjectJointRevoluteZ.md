@@ -10,6 +10,10 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
 :width: 400
 ```
 
+```{image} /docs/figures/RevoluteJointZ2.png
+:width: 400
+```
+
 **Additional information for ObjectJointRevoluteZ**:
 - This `Object` has/provides the following types = `Connector`, `Constraint`
 - Requested `Marker` type = `Position` + `Orientation`

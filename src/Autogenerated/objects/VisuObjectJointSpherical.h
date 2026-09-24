@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectJointSpherical
-* @brief        A spherical joint, which constrains the relative translation between two position based markers.
+* @brief        A spherical joint, which constrains the relative translation between two position based markers. \addExampleImage{SphericalJoint}
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  00:53:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

@@ -2608,3 +2608,36 @@ its only section, so the four sub-tutorials appeared **below** *Mass-Spring-Damp
 instead of beside it - the same cause as the installation instructions of #2646. It is at the top
 level now, and a check of every toctree in the hand-written pages says this was the last nested
 one.
+
+<a id="rg3-8-3"></a>
+### RG3.8.3 — a reference form the audit did not know (2026-09-25, #2651)
+
+RG3.8.2 reported seven unreferenced `.png` and left them for the maintainer, who answered that
+**six of them are pictures of an item** and one is an old tutorial figure. He also found what the
+audit had got wrong: `ObjectRigidBody` **is** shown, through
+`\addExampleImage{ObjectRigidBody}` in the `classDescription` - a command that names the file
+**without its extension**, which a search for `figures/<name>.png` cannot find.
+
+So three of the six were already on their page and three were not. They are now:
+
+| picture | item | why there |
+|---|---|---|
+| `RevoluteJointZ2` | `ObjectJointRevoluteZ` | the page showed one picture of a single link; this one shows the **two bodies** the joint connects, with the axes labelled |
+| `SphericalJoint` | `ObjectJointSpherical` | the item, drawn |
+| `UniversalJoint` | `ObjectJointGeneric` | there is no universal joint item: the generic joint **is** one when a single rotation axis is constrained, which its description already explains |
+
+`TutorialRigidBody1.png` is the figure of a tutorial that no longer exists, and is gone.
+
+**The audit is corrected**, and with it the count: of the 13 files in `docs/figures/` that no
+page can reach, **ten are the vector originals** of PNGs that are in use - the group that RG3.8
+wants to become `.svg` candidates - `ExudynLOGO1.7.jpg` is an older logo, and two are the figures
+that are still lost, `generalContactANCF2Dcircle.pdf` and `generalContactSpheres.pdf`.
+
+**A correction to RG3.8 while looking**: the third lost figure, `ObjectJointALEmoving2D.pdf`, is
+not unreferenced at all - it sits in an `\ignoreRST{}` block, so it is in the **PDF and not in
+the html**. That is a different fault from the other two and needs an `\onlyRST{}` twin rather
+than a new figure.
+
+**What this says about the method**: an audit is only as good as the reference forms it knows,
+and this one knew two of three. A check in the gate would have said so on the day the third form
+was introduced; that is worth proposing rather than doing in this step.

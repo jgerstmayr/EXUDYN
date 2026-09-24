@@ -3,5 +3,5 @@
 // AUTO:  last modified = 2026-09-25
 // AUTO:  ++++++++++++++++++++++
 namespace EXUstd {
- const char* exudynVersion = "1.12.65.dev1";
+ const char* exudynVersion = "1.12.66.dev1";
 }

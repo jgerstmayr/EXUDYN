@@ -267,6 +267,14 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     `intro2.jpg` is the title picture of the PDF again. Eight obsolete files left the tree, and
     the four sub-tutorials are no longer nested under the first one (#2650).
 
+<a id="rg3-8-3"></a>
+**RG3.8.3** **DONE 2026-09-25** (#2651) — [log](exudynRevisionLog2026b.md#rg3-8-3) —
+    **Three item pictures were in the repository and on no page** *(maintainer, 2026-09-25)*.
+    `RevoluteJointZ2`, `SphericalJoint` and `UniversalJoint` show exactly one item each and are
+    now in the descriptions of `ObjectJointRevoluteZ`, `ObjectJointSpherical` and
+    `ObjectJointGeneric`. `TutorialRigidBody1.png` belonged to a tutorial that no longer exists
+    and is gone.
+
 <a id="rg3-9"></a>
 **RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) —
     **Three corrections to the landing pages and the developer chapters.** That Exudyn is

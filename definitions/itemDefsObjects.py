@@ -10209,7 +10209,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 6;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.',
+    classDescription=r'A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. \addExampleImage{UniversalJoint}',
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointGeneric:DefinitionOfQuantities}
     \startTable{intermediate variables}{symbol}{description}
@@ -10475,7 +10475,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), \refSection{sec:rigidBodyUtilities:AddRevoluteJoint}, for two rigid bodies (or ground). \addExampleImage{RevoluteJointZ}""",
+    classDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), \refSection{sec:rigidBodyUtilities:AddRevoluteJoint}, for two rigid bodies (or ground). \addExampleImage{RevoluteJointZ} \addExampleImage{RevoluteJointZ2}""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}
     \startTable{intermediate variables}{symbol}{description}
@@ -10807,7 +10807,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 3;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A spherical joint, which constrains the relative translation between two position based markers.',
+    classDescription=r'A spherical joint, which constrains the relative translation between two position based markers. \addExampleImage{SphericalJoint}',
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}

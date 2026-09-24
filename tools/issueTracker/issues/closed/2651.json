@@ -1,0 +1,17 @@
+{
+  "number": 2651,
+  "title": "three item pictures are in the repository and on no item page",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "RevoluteJointZ2.png, SphericalJoint.png and UniversalJoint.png show exactly one item each - a revolute joint between two bodies, a spherical joint, a universal joint - and no page shows them; the old itemDefinition.tex did not either. Three sibling pictures ARE shown, through \\addExampleImage{X} in the classDescription, which names the file WITHOUT its extension: that is why a search for 'figures/X.png' does not find them, and why they were reported as unreferenced in #2594. They belong to ObjectJointRevoluteZ (which already shows one picture and gains the one with both bodies), ObjectJointSpherical and ObjectJointGeneric, whose description explains the universal joint as its one-constrained-axis case. TutorialRigidBody1.png is the figure of a tutorial that no longer exists and goes.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "dateResolved": "2026-09-25 00:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "The item pages of ObjectJointRevoluteZ, ObjectJointSpherical and ObjectJointGeneric show the picture of their item: the revolute joint between two bodies with the axes labelled, the spherical joint, and the universal joint - which is what the generic joint is when a single rotation axis is constrained. The pictures were in docs/figures/ and on no page. TutorialRigidBody1.png, the figure of a tutorial that no longer exists, is removed. revision2026b step RG3.8.3.",
+  "resolvedInVersion": "1.12.66"
+}
