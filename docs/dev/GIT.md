@@ -69,7 +69,7 @@ the same language:
 
 `<TYPE>` is one of the issue types — `BUG`, `FIX`, `CHANGE`, `EXTENSION`, `IMPROVEMENT`, `TESTING`,
 `DOCU`, `EXAMPLE`, `CHECK`, `IDEA` — and the number is the issue the change resolves. A change
-worth committing is worth an issue; that is the loop in [WORKFLOW.md](WORKFLOW.md) §1.
+worth committing is worth an issue; that is the loop in [WORKFLOW.md](WORKFLOW.md) §2.
 
 ```
 BUG #2107: fix 32-byte alignment of VectorBase under AVX2
@@ -122,7 +122,7 @@ agreed, this is what it has to arrive as:
 4. the **test suite passing**: `python -m exudev test`, and `pytest python/testing` if you touched
    Python;
 5. whatever documentation the change makes wrong, corrected in the same commit — the four gates in
-   [WORKFLOW.md](WORKFLOW.md) §4 are what a pull request is checked against.
+   [WORKFLOW.md](WORKFLOW.md) §8 are what a pull request is checked against.
 
 What is *not* expected: that you bump a version, edit `CHANGELOG.md` or close an issue. The micro
 version is derived from the count of resolved issues and is written by the tracker; a contribution

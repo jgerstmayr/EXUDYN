@@ -18,9 +18,10 @@ Instructions for Claude Code sessions on this repository. Humans: see
 
 Exudyn is a flexible multibody dynamics simulation code: a C++ computational core exposed to
 Python through pybind11. The C++/Python boundary is hard and deliberate — items are created from
-validated Python dicts dispatched on a type string, not from per-class bindings. Visual Studio
-2022 with mixed Python/native debugging is the primary development environment; the wheel is built
-by `setup.py` in about a minute. Both are features, not debt.
+validated Python dicts dispatched on a type string, not from per-class bindings. **VS Code**
+is where the everyday work happens - Python, the definition files, the documentation - and
+**Visual Studio 2022** is the debugger for stepping from a Python script into the C++; the
+wheel is built by `setup.py` in about a minute. Both are features, not debt.
 
 ## Orientation
 
@@ -118,8 +119,8 @@ version.txt                               version — an OUTPUT of issueTracker.
 
 ## Invariants — preserve these (plan §7)
 
-- VS2022 as primary IDE on C++ side, with mixed Python/native debugging, Visual Studio Code and
-  Spyder for Python development and usage.
+- Mixed Python/native debugging in VS2022, which is the capability rather than the IDE;
+  VS Code for the everyday work and Spyder for using Exudyn.
 - The setuptools fast build (~1 min to a wheel).
 - No heavy C++ dependencies; vendored headers.
 - The hard C++/Python split with dict-based validated interfaces.

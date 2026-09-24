@@ -3,7 +3,7 @@
 How work is done on this repository: issue tracker, versioning, and the gates a commit must pass.
 Written for Claude Code sessions, but it describes the human workflow too.
 
-## 0. Environments
+## 1. Environments
 
 Python is **not** on `PATH` under a plain shell. Use the named conda environments:
 
@@ -51,7 +51,13 @@ a known rough edge and a revision2026 phase R6 concern (revision2026 steps R6.1�
 When adding code: a new *optional* dependency behind a clear failure is acceptable; a new
 *mandatory* one is not.
 
-## 1. The issue tracker
+The **one-time setup of a clone** - `git config core.hooksPath tools/hooks` and
+`python tools/setupLocalWorkspace.py` - is step 4 of
+[GETTING_STARTED.md](GETTING_STARTED.md), where a reader meets it before the rules rather than
+after them (revision2026b step RG3.12.5). Without it there is no mechanical guard against
+pushing the working branch to the public repository.
+
+## 2. The issue tracker
 
 `tools/issueTracker/issueTracker.py` is both the issue tracker **and the source of truth for the
 version number**; `exudev issue <verb>` is its command line. The issues live in
@@ -238,7 +244,7 @@ cd tools/issueTracker
 $env:USERPROFILE/Anaconda/envs/venvP312/python.exe -c "import issueTracker as it; [print(i['number'], i['priority'], i['type'], i['issue']) for i in it.GetIssues() if i['status'].strip()!='RESOLVED' and i['priority'].strip().lower()=='high']"
 ```
 
-## 2. Versioning
+## 3. Versioning
 
 **The micro version is derived, not written.** `GetMajorMinorMicroVersion()` counts `RESOLVED`
 issues and subtracts the baseline for the current minor version, so **resolving an issue *is* the
@@ -291,7 +297,7 @@ this into `--release` / `--dev`.
 Two things follow from a switch:
 
 - **The version string changes**, so the version line of `README.rst` picks up (or loses) the
-  `.dev1` suffix when the tracker stamps it — see §4 gate 2 on ordering.
+  `.dev1` suffix when the tracker stamps it — see §8 gate 2 on ordering.
 - **A `.dev1` version is not installed by a plain `pip install exudyn`** — only with `--pre` or an
   exact version. A development build therefore cannot reach users by accident.
 
@@ -309,36 +315,7 @@ exudev issue bump --major --name ...   #1.11 → 2.0
 It appends the release to `tools/issueTracker/releases.json` with the current count of closed
 issues as its baseline, and the micro version restarts at 0. Claude asks first, every time.
 
-## 0a. One-time setup per clone
-
-```bash
-git config core.hooksPath tools/hooks
-python tools/setupLocalWorkspace.py
-```
-
-This activates the tracked hooks in `tools/hooks/`, currently `pre-push`, which refuses to push
-anything but `master`, `release/*` and tags to the public GitHub repository. **Git hooks are not
-themselves version controlled** — `.git/hooks/` never travels with a clone — so this setting is
-per-clone and easy to forget. Without it there is no mechanical guard against publishing `v2-dev`.
-
-`setupLocalWorkspace.py` creates the **untracked** working files from their committed
-templates — `exudynTemplate.sln` → `exudyn.sln`, `python/pytestTemplate.py` → `python/pytest.py`,
-and `tools/vscodeCppPropertiesTemplate.json` → `.vscode/c_cpp_properties.json`. Open `exudyn.sln`
-in Visual Studio, and use `python/pytest.py` as the scratch file for trying something out with
-mixed Python/C++ debugging. The third one is what lets **VS Code follow a C++ include**: the
-vendored headers are reached through subdirectories of `include/` (`#include "../Eigen/Sparse"`
-resolves as `include/lest/../Eigen/Sparse`), and without those paths the C/C++ extension reports
-*"include errors detected"* and cannot navigate (revision2026b step RG10.5). Both are in `.gitignore`, so an
-experiment **cannot** be committed by accident; previously this relied on remembering to restore
-the default `pytest.py` before committing, and a forgotten restore is invisible in review. An
-existing file is never overwritten (`--force` does that deliberately).
-
-Also set `receive.shallowUpdate true` on the *internal server* repository. This clone is a
-`--depth 1` shallow clone, and a push from a shallow clone is rejected by default with
-`shallow update not allowed`. With that setting the push succeeds and the result is sound —
-verified with `git fsck` on both the bare repository and a fresh clone.
-
-## 2a. Branches and remotes
+## 4. Branches and remotes
 
 Full picture in plan §2a. The short version, which is what matters day to day:
 
@@ -362,67 +339,13 @@ and the normal thing to do. The internal repository carries **full history**; th
 - **Nothing reaches GitHub before the 1.13 release.** 1.12 marks the completion of the 2026
   revision and stays internal: no PyPI wheels, no GitHub release, no promotion (decision D16).
   `tools/hooks/pre-push` enforces this, but
-  only where `core.hooksPath` is set — see §0a, and tell anyone you add to the server.
+  only where `core.hooksPath` is set — see [GETTING_STARTED.md](GETTING_STARTED.md), and tell anyone you add to the server.
 - Claude never pushes to any remote, under any circumstances, and announces network access first.
 
-## 2b. Continuous integration
+## 5. Testing
 
-GitHub Actions only fire on pushes to `master` and on pull requests, so **while `master` is frozen
-at 1.11.0 nothing runs there**. `.gitlab-ci.yml` covers the gap.
-
-| leg | how it is covered |
-|---|---|
-| **Linux x86_64, cp310–314** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
-| **Windows x64** | this development machine; `exudev release` (or `exudev build --complete`) weekly |
-| **macOS** | a real Mac, at milestones |
-| **Linux aarch64** | not covered until GitHub CI resumes — accepted gap |
-| **docs** | `docs` job builds sphinx with `-W`; it does **not** deploy |
-
-**Nothing is triggered by an ordinary push.** Pipelines start from the weekly schedule, the
-*Run pipeline* button, or a tag. The schedule itself lives in the GitLab UI, not in the file:
-**Settings → CI/CD → Schedules**, target branch `v2-dev`. If that schedule is deleted, CI silently
-stops and the repository looks exactly the same — worth checking if the pipeline list goes quiet.
-
-The Linux job runs `tools/ci/buildManylinux.sh <pyTag>` **inside** the manylinux image, which is
-also what the local docker path uses, so a CI failure reproduces locally with one command:
-
-```bash
-exudev linux            # all five, via docker + WSL; exudev -n linux prints the docker command
-```
-
-Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
-build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
-
-### The sanitizer job
-
-`sanitizers_linux` builds Exudyn with **AddressSanitizer and UndefinedBehaviorSanitizer** and runs
-the test suite against it (revision2026 step R5.6). For a library that calls arbitrary user
-callbacks from C++ and hands out references into its own storage, this is the job that turns
-*"it crashed with no message"* into a file and a line.
-
-```bash
-bash tools/ci/buildSanitizers.sh python3          # also runs locally, in WSL
-```
-
-Four things about it are worth knowing before reading a red run:
-
-- **No `setup.py` change was needed.** The flags travel in `EXUDYN_EXTRA_COMPILE_ARGS` and
-  `EXUDYN_EXTRA_LINK_ARGS`, which `setup.py` already appends to every extension. `CFLAGS` does not
-  work there.
-- **`-O1`, not `-O3`.** That alone found #2506 on the first build, before a single sanitizer check
-  ran: `RaytracingSettings::maxNThreads` had no out-of-class definition, which `-O3` hid by folding
-  the constant and `-O1` turned into a module that would not load.
-- **`LD_PRELOAD` carries libasan *and* the compiler's libstdc++.** Python is not instrumented, so
-  the ASan runtime has to come first; and if the interpreter brings its own C++ runtime - every
-  conda python does - ASan intercepts `__cxa_throw` against the wrong libstdc++ and aborts with
-  `CHECK failed: ... real___cxa_throw != 0`, which looks like a finding and is only a mismatch.
-- **`detect_leaks=0`.** CPython and numpy hold allocations until exit by design; memory *errors*
-  are still caught, only the exit-time leak report is off.
-
-The job is `allow_failure: true` **on purpose and temporarily**: a first sanitizer pass over 107k
-lines of C++ finds things, and a job that stays red trains people to ignore it. It flips to `false`
-when the findings are triaged (step R5.6.1). The run log is kept as an artifact whether the job
-passes or fails - the log *is* the result.
+What the suites are, which of them a change has to run, and what a test model looks like.
+The gates that require them are §8.
 
 ### Which tests run when
 
@@ -573,15 +496,74 @@ exemption.
 `sphereTriangleTest.py` is in that list but is not like the others: reference 3.8226, Linux
 59370.97. Four orders of magnitude is a divergence, not an accuracy difference.
 
-## 3. Commit tiers
+## 6. Continuous integration
+
+GitHub Actions only fire on pushes to `master` and on pull requests, so **while `master` is frozen
+at 1.11.0 nothing runs there**. `.gitlab-ci.yml` covers the gap.
+
+| leg | how it is covered |
+|---|---|
+| **Linux x86_64, cp310–314** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
+| **Windows x64** | this development machine; `exudev release` (or `exudev build --complete`) weekly |
+| **macOS** | a real Mac, at milestones |
+| **Linux aarch64** | not covered until GitHub CI resumes — accepted gap |
+| **docs** | `docs` job builds sphinx with `-W`; it does **not** deploy |
+
+**Nothing is triggered by an ordinary push.** Pipelines start from the weekly schedule, the
+*Run pipeline* button, or a tag. The schedule itself lives in the GitLab UI, not in the file:
+**Settings → CI/CD → Schedules**, target branch `v2-dev`. If that schedule is deleted, CI silently
+stops and the repository looks exactly the same — worth checking if the pipeline list goes quiet.
+
+The Linux job runs `tools/ci/buildManylinux.sh <pyTag>` **inside** the manylinux image, which is
+also what the local docker path uses, so a CI failure reproduces locally with one command:
+
+```bash
+exudev linux            # all five, via docker + WSL; exudev -n linux prints the docker command
+```
+
+Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
+build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
+
+### The sanitizer job
+
+`sanitizers_linux` builds Exudyn with **AddressSanitizer and UndefinedBehaviorSanitizer** and runs
+the test suite against it (revision2026 step R5.6). For a library that calls arbitrary user
+callbacks from C++ and hands out references into its own storage, this is the job that turns
+*"it crashed with no message"* into a file and a line.
+
+```bash
+bash tools/ci/buildSanitizers.sh python3          # also runs locally, in WSL
+```
+
+Four things about it are worth knowing before reading a red run:
+
+- **No `setup.py` change was needed.** The flags travel in `EXUDYN_EXTRA_COMPILE_ARGS` and
+  `EXUDYN_EXTRA_LINK_ARGS`, which `setup.py` already appends to every extension. `CFLAGS` does not
+  work there.
+- **`-O1`, not `-O3`.** That alone found #2506 on the first build, before a single sanitizer check
+  ran: `RaytracingSettings::maxNThreads` had no out-of-class definition, which `-O3` hid by folding
+  the constant and `-O1` turned into a module that would not load.
+- **`LD_PRELOAD` carries libasan *and* the compiler's libstdc++.** Python is not instrumented, so
+  the ASan runtime has to come first; and if the interpreter brings its own C++ runtime - every
+  conda python does - ASan intercepts `__cxa_throw` against the wrong libstdc++ and aborts with
+  `CHECK failed: ... real___cxa_throw != 0`, which looks like a finding and is only a mismatch.
+- **`detect_leaks=0`.** CPython and numpy hold allocations until exit by design; memory *errors*
+  are still caught, only the exit-time leak report is off.
+
+The job is `allow_failure: true` **on purpose and temporarily**: a first sanitizer pass over 107k
+lines of C++ finds things, and a job that stays red trains people to ignore it. It flips to `false`
+when the findings are triaged (step R5.6.1). The run log is kept as an artifact whether the job
+passes or fails - the log *is* the result.
+
+## 7. Commit tiers
 
 | tier | when | gates |
 |---|---|---|
 | **sync** | `v2-dev` only, knowingly non-working, to move work between machines | none — but the message must be prefixed `WIP:` and say what is broken |
-| **normal** | the default for every real change | all four gates in §4 |
-| **release** | a minor version advance, i.e. an Exudyn *Release* | §4 plus the full `Examples` run, the wheel matrix across P310–P314, and maintainer sign-off |
+| **normal** | the default for every real change | all four gates in §8 |
+| **release** | a minor version advance, i.e. an Exudyn *Release* | §8 plus the full `Examples` run, the wheel matrix across P310–P314, and maintainer sign-off |
 
-## 4. The four gates for a normal commit
+## 8. The four gates for a normal commit
 
 Run in this order; stop at the first failure.
 
@@ -802,12 +784,12 @@ with `exudev examples` for releases and large steps only.
 - The step status in `docs/revision/exudynRevisionPlan2026.md`. If a fact in info document §3 turned out to
   be wrong, correct it there rather than working around it.
 
-## 5. Committing
+## 9. Committing
 
 After the gates pass:
 
 1. `ResolveIssue(issueNumber, notes='...')` — this bumps the micro version and rewrites the
-   version files listed in §2. **Then re-run the generators and build the wheel**, because the
+   version files listed in §3. **Then re-run the generators and build the wheel**, because the
    documentation and the installed module carry the version string — see gate 2.
 2. Present the maintainer with an overview: files changed, gate results (build, drift, test count),
    the issue resolved, and the proposed commit message.
@@ -828,7 +810,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 
 Example: `BUG #2107: fix 32-byte alignment of VectorBase under AVX2`
 
-## 6. Build and release scripts
+## 10. Build and release scripts
 
 One driver, `exudev` (`exudev.bat` in the repository root; `python tools/exudev` elsewhere). It
 replaced the sixteen batch files of `tools/buildAndGenerate/` in revision2026 step R5.18. Every

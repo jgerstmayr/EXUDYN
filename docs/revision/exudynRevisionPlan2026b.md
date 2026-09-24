@@ -283,7 +283,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     understanding of the core there is no way around the GitHub project itself.
 
 <a id="rg3-12"></a>
-**RG3.12** *(group RG3; maintainer 2026-09-24)* **Building from source and the development
+**RG3.12** **DONE 2026-09-24** (#2646) — [log](exudynRevisionLog2026b.md#rg3-12-1) — *(group RG3; maintainer 2026-09-24)* **Building from source and the development
     workflow are told three times and never from the start** (#2646). The maintainer read the
     two chapters end to end and the faults are structural, not wording. Measured:
 
@@ -328,11 +328,10 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     - **RG3.12.2** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-2) — `docs/dev/BUILD.md`: one build reference, the how-to note deleted, the manual reduced to a pointer;
     - **RG3.12.3** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-3) — `docs/dev/GETTING_STARTED.md`: clone, environment, workspace, first build, first test run;
     - **RG3.12.4** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-4) — `docs/dev/GIT.md`: the git workflow, for co-developers and for contributors;
-    - **RG3.12.5** `WORKFLOW.md` restructured into the order the work is done, and shortened by
-      what moved out;
-    - **RG3.12.6** the editors: VS Code for the everyday work, Visual Studio 2022 for mixed
-      Python/native debugging - in `docs/dev/README.md`, in the invariants and in
-      `CLAUDE.md`.
+    - **RG3.12.5** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-5) — `WORKFLOW.md` restructured into the order the work is done, and shortened by what moved out;
+    - **RG3.12.6** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-6) — the editors: VS Code for the everyday work, Visual Studio 2022 for mixed
+      Python/native debugging, in the invariants of the info document, in `CLAUDE.md`, in the
+      developer README and in the user manual.
 
 
 ## RG4 — Implementation problems and bugs

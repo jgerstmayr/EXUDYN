@@ -2387,3 +2387,48 @@ them. It is the mechanics only: what a change must pass stays in `WORKFLOW.md`.
 And `docs/dev/README.md` stops being the third build description: its *Building and running*
 section is a table pointing at the three pages, plus the paragraph on editors that RG3.12.6 will
 extend.
+
+<a id="rg3-12-5"></a>
+### RG3.12.5 — WORKFLOW.md in the order the work is done (2026-09-24, #2646)
+
+Its ten sections were numbered **0, 1, 2, 0a, 2a, 2b, 3, 4, 5, 6**: the letters are what a
+section gets when it is added after the numbering is fixed, and the result was that the one-time
+setup of a clone (§0a) stood **after** versioning, and the branches and the CI (§2a, §2b) between
+versioning and the commit tiers.
+
+They are **1 to 10** now, in the order the work is actually done: environments, the issue
+tracker, versioning, branches and remotes, testing, continuous integration, commit tiers, the
+four gates, committing, the build and release scripts. Two changes beyond renumbering:
+
+- **§0a is gone**, because it is step 4 of `GETTING_STARTED.md` now, where a reader meets it
+  before the rules rather than after them. What is left here is a pointer;
+- **testing is its own section.** *Which tests run when*, *what a test model looks like*,
+  *pytest*, *running the suite in parallel*, *reproducible vs sensitive tests* and the platform
+  differences were sub-sections of **continuous integration**, which is not where a developer
+  looks for them: CI is where the tests also run, not what they are.
+
+Every reference to a number that moved was rewritten - `§4` to `§8` for the gates in three
+places and in `GIT.md`, `§2` to `§3` for the version files, `§2a` to `§4` in
+`GETTING_STARTED.md`, `§1` to `§2` in `GIT.md` - and the references to the *plan* and to the
+info document, which use the same `§` sign, were left alone.
+
+<a id="rg3-12-6"></a>
+### RG3.12.6 — which editor, said correctly (2026-09-24, #2646)
+
+The maintainer: *"It says that Microsoft Visual Studio 2022 is the main development platform:
+this is only partly true. I use it for debugging, but the Claude Code integration motivates me to
+work much more in VS Code, also for the Python side, working with definition files, etc. Most
+co-developers will work from VS Code."*
+
+Four places said the old thing, and the invariant is the one that matters, because every
+restructuring step is checked against it. What it says now is that **the capability is the
+invariant, not which editor is primary**: stepping from a Python script into a C++ item with one
+debugger is what must be preserved, and that is VS2022. The everyday work - the Python package,
+the definition files, the documentation - happens in VS Code, and
+`tools/setupLocalWorkspace.py` has been preparing both for some time: it writes the Visual Studio
+solution **and** the `c_cpp_properties.json` without which VS Code cannot follow a C++ include.
+
+Changed: the invariant in the shared info document §7 (with the date and who decided it), the two
+places in `CLAUDE.md`, the invariant list of the developer README, and the sentence of the user
+manual that tells a reader which editor to install - which now says that VS2022 is what compiles
+and debugs the C++ on Windows, and that the development itself happens in VS Code.

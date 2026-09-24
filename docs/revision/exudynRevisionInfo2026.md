@@ -706,7 +706,12 @@ Moved to [`exudynRevisionPlan2026.md`](exudynRevisionPlan2026.md) on 2026-09-15.
 
 These are the differentiators, not technical debt. Every step above preserves them.
 
-- **VS2022 as the primary development environment**, with mixed Python/native debugging.
+- **Mixed Python/native debugging in VS2022** - stepping from a Python script into a C++
+  item with one debugger. It is the *capability* that is the invariant, not which editor is
+  primary: since the Claude Code integration the everyday work (Python, the definition files,
+  the documentation) happens in **VS Code**, and most co-developers will be there
+  (maintainer, 2026-09-24, revision2026b step RG3.12.6). Both are supported and
+  `tools/setupLocalWorkspace.py` prepares both.
 - **The setuptools-based fast build.** ~1 minute to a wheel is a feature; protect it by
   measurement (step R0.4), not assumption.
 - **No heavy C++ dependencies.** Jinja2 (step R4.4) and numpydoc/griffe (step R4.8) are dev-only;

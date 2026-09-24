@@ -120,7 +120,8 @@ not here.
 These are differentiators, not technical debt. Every restructuring step preserves them
 (plan §7):
 
-- VS2022 as primary development environment, with mixed Python/native debugging.
+- Mixed Python/native debugging in VS2022 - the capability, not which editor is primary;
+  the everyday work happens in VS Code (revision2026b step RG3.12.6).
 - The setuptools-based fast build.
 - No heavy C++ dependencies; vendored headers.
 - The hard C++/Python split with dict-based validated interfaces.

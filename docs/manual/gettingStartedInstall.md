@@ -18,10 +18,12 @@ about matching 32-bit and 64-bit installations, it is out of date.
 - **Spyder** (any recent version), **Visual Studio Code** and **Jupyter** all work with default settings. Spyder works with all virtual environments.
 - The Python running your script and the Python Exudyn was installed into must be the same one. In an environment that is automatic; outside one it is the usual source of `import exudyn` failing, see {ref}`sec-install-troubleshootingfaq`.
 
- If you plan to extend the C++ code, use **Microsoft Visual Studio 2022**, which is
-the primary development environment of the project and supports mixed Python/C++
-debugging (VS2019 has problems with the library 'Eigen' and leads to erroneous results
-with the sparse solver; it is not supported.).
+ If you plan to extend the **C++ code**, you need **Microsoft Visual Studio 2022** on
+Windows: it is what compiles the sources, and it is the one debugger that steps from a Python
+script into the C++ (VS2019 has problems with the library 'Eigen' and leads to erroneous results
+with the sparse solver; it is not supported). The everyday development of Exudyn itself happens in
+**Visual Studio Code**, which is also what most co-developers use; {ref}`sec-dev-gettingstarted`
+sets both up.
 
 ### Run without Anaconda
 
