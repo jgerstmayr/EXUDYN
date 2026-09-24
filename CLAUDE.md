@@ -118,7 +118,7 @@ version.txt                               version — an OUTPUT of issueTracker.
    need nothing. Details in `exudyn.special.userInterface` and revision2026 step R5.17.
    A third variable exists but is **not** for routine use: `EXUDYN_MODULE=fast` loads
    `exudynCPPfast` (no range checks, AVX2) instead of the default module. It belongs to release
-   testing — `runTestSuite.py --fast-module`, revision2026 step R5.11 — so set it only when the
+   testing — `runTestSuite.py --fast-module` — so set it only when the
    question is specifically about that module, and never while chasing an ordinary bug: without
    range checks a wrong index is undefined behaviour instead of an exception.
    

@@ -1,5 +1,5 @@
 #Baseline of tools/checkPython.py - the ruff findings that were present when the check
-#was introduced (revision2026 step R5.5). A NEW finding fails the check; these do not.
+#was introduced. A NEW finding fails the check; these do not.
 #The list is meant to SHRINK: regenerate with "python tools/checkPython.py --write"
 #after fixing findings. Format: count, file, rule, message - tab separated, no line
 #numbers, so that an edit elsewhere in a file does not invalidate the entry.

@@ -42,7 +42,7 @@ import tomllib
 
 #the three source trees, with the extra that has to cover each.
 #  TestModels, PerformanceModels, MiniExamples and testing -> [tests]: exactly what is needed to
-#                         run the test suite (one directory per kind since revision2026 step R3.9).
+#                         run the test suite (one directory per kind).
 #  exudyn/    -> [all]  : the shipped package has optional imports BY DESIGN (CLAUDE.md invariant
 #                         6 - optional dependencies behind a clear failure at the point of use),
 #                         so requiring [tests] to install mpi4py or dispy would be wrong. [all] is
@@ -83,7 +83,7 @@ exemptImports = {
     'std_msgs':      'ROS message package, not on PyPI',
     'std_srvs':      'ROS service package, not on PyPI; imported by the ROS node '
                      'python/Examples/testData/ROS/ROSControlMobileManipulator.py, which came into '
-                     'the repository with the supplementary files of revision2026 step R5.18.4',
+                     'the repository with the supplementary files.4',
     'exudynCPP':     'the compiled extension itself, built by setup.py',
     'pyansys':       'imported inside GenerateStressModesFromPyAnsys() only, behind a flag that '
                      'is False; the distribution was renamed to ansys-mapdl-reader and pulling '
@@ -99,7 +99,7 @@ exemptImports = {
 
 #imports of modules that exist NOWHERE - neither on PyPI nor in this repository. These are real
 #broken imports in the files listed, not packaging gaps, so they are reported as a warning rather
-#than treated as an uncovered dependency. Raised as an issue; see revision2026 step R2.12.
+#than treated as an uncovered dependency. Raised as an issue
 knownMissingLocalModules = {
     'RL_Spot': 'Examples/FurtherExamples/spotReinforcementLearning.py imports it, but no such '
                'file is in the repository - the model module was never committed',
@@ -201,7 +201,7 @@ def LocalModuleNames(repositoryRoot, scanDirectory):
     shipped packages under python/, the sibling modules of the scanned directory
     (TestModels and Examples import their own helpers by bare name), and the runners in
     python/testing/, which every runner puts on sys.path before it executes a model
-    (testRunnerTools.WorkInModelsDirectory, revision2026 step R3.9).
+    (testRunnerTools.WorkInModelsDirectory).
 
     Only TRACKED files count - see TrackedFiles().
     """
@@ -218,7 +218,7 @@ def LocalModuleNames(repositoryRoot, scanDirectory):
             localNames.add(parts[1])            #a package directory in python/
 
     #the runners and their helpers are importable from every models directory, because the
-    #runner puts python/testing/ on sys.path before it executes anything (revision2026 step R3.9)
+    #runner puts python/testing/ on sys.path before it executes anything
     for path in tracked:
         if path.startswith('python/testing/') and path.endswith('.py'):
             localNames.add(path.split('/')[-1][:-3])

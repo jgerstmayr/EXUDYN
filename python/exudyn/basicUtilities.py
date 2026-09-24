@@ -211,7 +211,7 @@ def LobattoIntegrate(functionOfX, integrationOrder, a, b):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#model helpers, sensor recorder, solution files and restart (moved from utilities.py, revision2026 step R4.22.2)
+#model helpers, sensor recorder, solution files and restart (moved from utilities.py)
 
 def GetOtherMarker(mbs, bodyNumber, existingMarker, show=True):
     """creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition

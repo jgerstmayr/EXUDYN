@@ -863,7 +863,7 @@ class VSettingsDialogs:
     alwaysTopmost: bool
     """True: dialogs are always topmost (otherwise, they are sometimes hidden)."""
     fontScaling: float
-    """scaling of the font in dialogs; 0 = automatic, which is what every platform did before this setting existed: the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop (revision2026b step RG6.2.3.1)."""
+    """scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop."""
     multiThreadedDialogs: bool
     """True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed."""
     openTreeView: bool

@@ -43,7 +43,7 @@ def WriteMiniExample(className, miniExample, outputDir):
     s+= '# \n'
     s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n'
 
-    #nothing from python/testing/ is imported since revision2026b step RG10.6.4 (#2632): the
+    #nothing from python/testing/ is imported (#2632): the
     #result goes into exu.sys, so a mini example runs anywhere, in the suite and on its own
     s+= 'import exudyn as exu\n'
 

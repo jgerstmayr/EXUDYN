@@ -3,7 +3,7 @@
 #
 # Details:  The layer under the settings dialog: the four functions of exudyn.misc.GUI that decide
 #           what a typed value becomes. They need no window, which is why they can be tested at
-#           all - everything above them opens one (revision2026b step RG6.2.2, #2596).
+#           all - everything above them opens one (#2596).
 #
 #           The strongest test here is not invented data: it walks the REAL settings structures,
 #           622 values between simulationSettings and visualizationSettings, and requires that
@@ -29,7 +29,7 @@ import exudyn.misc.GUI as gui
 def Leaves(dictionary, path=''):
     """every editable value of a settings structure, as (path, value, type, size)
 
-    The walk itself is gui.SettingsLeafList since revision2026b step RG6.2.8 (#2605), where the
+    The walk itself is gui.SettingsLeafList (#2605), where the
     dialog began to need it as well; this keeps the four fields the tests below read."""
     return [(leafPath, value, leafType, size)
             for (leafPath, value, _, leafType, size, _)
@@ -201,7 +201,7 @@ def testCheckTypeRejectsWithAMessageThatSaysWhy(text, valueType, size, inMessage
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the line that sets a setting (revision2026b steps RG6.2.4 and RG6.2.8): what the dialog offers to
+#the line that sets a setting: what the dialog offers to
 #copy into a script
 
 def testValueLiteralWritesWhatPythonReadsBack(comboLists):
@@ -252,7 +252,7 @@ def testTheLeafListCoversTheWholeStructure():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#what differs from a reference (revision2026b step RG6.2.9): the coloured rows of the dialog and
+#what differs from a reference: the coloured rows of the dialog and
 #the two windows it copies from are this one comparison
 
 @pytest.fixture(scope='module')
@@ -310,7 +310,7 @@ def testEveryDifferenceIsALineThatRuns(comboLists):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHAT a difference is measured against (revision2026b step RG6.2.12, #2612)
+#WHAT a difference is measured against (#2612)
 
 def testTheDialogNeverCreatesASystemContainer():
     """the defect this test exists for (#2625): MainSystemContainer() ATTACHES to the running
@@ -327,7 +327,7 @@ def testTheDialogNeverCreatesASystemContainer():
 
 
 def testASystemContainerInitialisesNothingBeyondTheDefaults(comboLists):
-    """the point of revision2026b step RG6.2.20: a fresh SystemContainer must show NO difference
+    """the point: a fresh SystemContainer must show NO difference
     to a plain exu.VisualizationSettings(). Until then a container dimmed three lights and filled
     ten raytracer materials after construction, so the dialog reported 59 settings as changed that
     nobody had touched, and the documentation printed defaults the renderer did not use. The
@@ -346,7 +346,7 @@ def testASystemContainerInitialisesNothingBeyondTheDefaults(comboLists):
                               + ', '.join(unexpected) + ' - they belong in'
                               ' definitions/structureDefsVisualizationSettings.py')
     assert gui.containerInitialisedSettings == [], (
-        'nothing should need this list any more (revision2026b step RG6.2.20)')
+        'nothing should need this list any more')
 
 
 def testReadingTheDefaultsLeavesTheRendererItsContainer():
@@ -373,7 +373,7 @@ def testASettingsStructureThatIsNotOnTheContainerStillHasDefaults():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#what a FOLDER of the settings tree is (revision2026b step RG6.2.15, #2615)
+#what a FOLDER of the settings tree is (#2615)
 
 def testEverySettingsFolderSaysWhatItIs():
     """the dialog shows this when the mouse rests on a folder; before #2615 the dictionary
@@ -401,7 +401,7 @@ def testTheDescriptionOfAFolderIsNoSetting(leaves):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#find a setting (revision2026b step RG6.2.10): what the dialog offers when a user does not know
+#find a setting: what the dialog offers when a user does not know
 #which folder a setting sits in
 
 def testFindPutsTheNameHitsFirst(visualizationLeaves):
@@ -443,7 +443,7 @@ def testEveryFindHitNamesASettingThatExists(visualizationLeaves):
 
 def testEveryEnumSettingCouldBePickedFromAList(leaves, comboLists):
     """an enum that has no list is edited as free text, where a typo is a silent wrong value.
-    GetComboBoxListsDict named three enum types by hand until revision2026b step RG6.2.3, and
+    GetComboBoxListsDict named three enum types by hand, and
     timeIntegration.explicitIntegration.dynamicSolverType was not one of them; it builds the
     lists from the module now, so a new enum arrives here by itself"""
     missing = sorted({leafType + ' (' + path + ')' for (path, _, leafType, _) in leaves
@@ -462,7 +462,7 @@ def testTheListsHoldTheValuesTheyOfferAsStrings(comboLists):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#how large a row is (revision2026b step RG6.2.23, #2631): dialogs.fontScaling only worked at 0,
+#how large a row is (#2631): dialogs.fontScaling only worked at 0,
 #because the row height and the column width were computed from systemScaling instead of from the
 #font that is really drawn - 13 pixels for a font with a linespace of 16 to 18, and an INTEGER
 #column factor that stayed at 1 for every value below 1.5
@@ -508,7 +508,7 @@ def testTheRowHeightAndTheColumnsFollowTheFont():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#how large the dialogs come out when no renderer is running (revision2026b step RG6.2.24, #2634):
+#how large the dialogs come out when no renderer is running (#2634):
 #'python -m exudyn dialogs' opens the same windows as the render window does, and they were
 #bigger and blurred, because the process was not DPI aware and the display scaling was read as 1
 

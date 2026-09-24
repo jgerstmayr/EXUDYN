@@ -20,7 +20,7 @@ import sys
 import exudyn
 from exudyn.misc.keyBindings import RendererHelpText
 
-#the settings layer moved to its own module in revision2026b step RG12.3 (#2590): it works on
+#the settings layer moved to its own module (#2590): it works on
 #dictionaries and needs no window, and this module imports tkinter at module scope, so a model
 #script could not have used it from here. The names stay importable from HERE, because they were
 #the public API of this module; checkAll keeps an imported name out of __all__, so each of them
@@ -53,10 +53,10 @@ useRenderWindowDisplayScaling = True #using this, scaling will change with rende
 
 treeviewDefaultFontSize = 9 #this is then scaled; but it could be changed to make fonts smaller
 rowHeightFactor = 1.15  #the factor between the MEASURED linespace of the font and the row height
-                        #(revision2026b step RG6.2.23); 1.15 reproduces the 18 pixels the dialog
+                        #; 1.15 reproduces the 18 pixels the dialog
                         #had at the default font, and follows the font at any other scaling
 boolDoubleClickDelay = 220 #ms a bool row waits before it opens its editor, so that a double
-                        #click can cancel it and toggle instead (revision2026b step RG6.2.22)
+                        #click can cancel it and toggle instead
 textHeightFactor = 1.45 #this is the factor between font size and text height; larger values leading to more space between lines
 
 treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
@@ -239,7 +239,7 @@ def DialogScaling(root):
     existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value
     > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux
     desktop - off MacOS the font factor used to be forced to 1 and nothing could change it
-    (#2602, revision2026b step RG6.2.3.1).
+    (#2602).
 
     Args:
         root: the tkinter root window, which knows the display scaling
@@ -270,7 +270,7 @@ class Tooltip:
     """The small yellow window that shows the description of the row under the mouse.
 
     tkinter has none, and the description used to be behind the key 'h' and a modal message box -
-    which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a
+    which is not where a reader looks for it (#2601). It is a
     borderless Toplevel that is created when it is first needed and hidden afterwards, so a
     dialog that is never hovered never builds one.
 
@@ -362,12 +362,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #DialogRowMetrics, because an integer factor was 1 for every fontScaling below 1.5 (#2631)
         self.columnScale = columnScale
         #the code line is read, not edited: one size below the cells, which is what the
-        #maintainer asked for after using it (revision2026b step RG6.2.8, #2605)
+        #maintainer asked for after using it (#2605)
         self.codeFontSize = max(6, DialogFontSize(fontFactor) - 1)
 
         self.dictionaryData = settingsStructure.GetDictionaryWithTypeInfo()
         #the folders this dialog opens with: the configuration, or what was open when a dialog
-        #was last used in this process (revision2026b step RG6.2.7, #2591)
+        #was last used in this process (#2591)
         self.openItems = list(treeEditOpenItems if treeEditLastOpenItems is None
                               else treeEditLastOpenItems)
 
@@ -382,7 +382,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.vertivalScrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.vertivalScrollbar.set)
 
-        #THE FIND BAR (revision2026b step RG6.2.10, #2607) stands above the tree, which is
+        #THE FIND BAR (#2607) stands above the tree, which is
         #where CTRL-F puts one. It searches the NAMES first and the descriptions second, and the
         #drop-down holds the hits, so that one can be picked instead of stepped to.
         self.findFrame = tk.Frame(self)
@@ -422,7 +422,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.heading("type",text="Type",anchor=tk.W)
         self.tree.heading("description",text="Description",anchor=tk.W)
 
-        #the columns had no width at all until revision2026b step RG6.2.3 (#2601): tree.column()
+        #the columns had no width at all (#2601): tree.column()
         #was never called, so every one of them kept tkinter's 200 px default - the name was cut,
         #the description was unreadable, and dragging one moved the others. Only the description
         #stretches with the window; the rest keep what they are given.
@@ -455,7 +455,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.bind("q", self.OnQuit) 
         
         #+++++++++++++++++++++++++++++++++++++++++
-        #THE EDITOR SITS IN THE CELL (revision2026b step RG6.2.4, #2604). It used to be an
+        #THE EDITOR SITS IN THE CELL (#2604). It used to be an
         #Entry and a Combobox at the bottom of the window that swapped places by z-order, so a
         #value was typed far away from the row it belonged to. These two are children of the
         #tree and are placed over the value cell while an edit is running.
@@ -473,7 +473,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #+++++++++++++++++++++++++++++++++++++++++
         #the bottom row is not an editor any more: it says what the selected item IS, as the line
         #that sets it - which is what the maintainer asked for, a line to copy into a script.
-        #It sits in a BOX of its own since revision2026b step RG6.2.8 (#2605): the plain entry on
+        #It sits in a BOX of its own (#2605): the plain entry on
         #the window background did not look like something one copies. The label that stood under
         #it went with the same step - it repeated the description that the tooltip already shows,
         #and the size it also carried is in the tooltip now.
@@ -494,7 +494,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                     command=self.OnCopyCodeLine)
         self.copyButton.grid(row=0, column=1, padx=(2, 4))
 
-        #THE BUTTON ROW (revision2026b step RG6.2.14, #2614): the two windows of RG6.2.9 on the
+        #THE BUTTON ROW (#2614): the two windows of RG6.2.9 on the
         #left, and what a user does with a dialog - take it back, or leave it - on the right.
         #Every button says what it does in a tooltip; none of them fits in two words.
         self.buttonFrame = tk.Frame(self)
@@ -544,7 +544,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         
         self.modifiedDictionary = self.GetDictionary('')
 
-        #WHAT DIFFERS FROM THE DEFAULTS IS MARKED (revision2026b step RG6.2.9, #2606). The
+        #WHAT DIFFERS FROM THE DEFAULTS IS MARKED (#2606). The
         #defaults are one constructor call away, and a settings structure Python builds on its own
         #is safe to read as long as no DEPRECATED member is touched, which none of this does
         #(#2603). If it ever fails, the marking stays off rather than the dialog.
@@ -560,7 +560,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                     for (path, _, valueStr, _, _, _) in self.TreeLeaves()}
         self.MarkChangedValues()
 
-        #what the find searches and where it jumps to (revision2026b step RG6.2.10, #2607); the
+        #what the find searches and where it jumps to (#2607); the
         #names and descriptions do not change while the dialog is open, so this is built once
         self.findLeaves = self.TreeLeaves()
         self.itemByPath = {self.ItemPath(item): item for item in self.LeafItems()}
@@ -594,7 +594,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.descriptionStorage[id] = value['description']
             else: #must be another dictionary:
                 #what the FOLDER is: the class description of the settings structure, which
-                #reaches the dictionary since revision2026b step RG6.2.15 (#2615) and is what the
+                #reaches the dictionary (#2615) and is what the
                 #tooltip shows over a folder - it had nothing to show there at all
                 self.descriptionStorage[id] = str(value.get('structureDescription', ''))
                 for (key, value) in value.items():
@@ -651,7 +651,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         if description.strip() != '':
             name = self.tree.item(row,'text')
             vType = self.typeStorage.get(row, '')
-            #the size stands here since revision2026b step RG6.2.8 (#2605): it was the only fact
+            #the size stands here (#2605): it was the only fact
             #of the label under the tree that nothing else said
             size = self.sizeStorage.get(row, '')
             if str(size) not in ['[1]', '1', '']:
@@ -720,7 +720,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 return
 
             #the path of the item is built by ItemPath() now, which ShowInfo and the code line
-            #both need (revision2026b step RG6.2.4)
+            #both need
             self.ShowInfo(item)
             self.StartCellEdit(item)
         else: #folders (may be opened/closed)
@@ -760,7 +760,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #THE CELL EDITOR (revision2026b step RG6.2.4, #2604)
+    #THE CELL EDITOR (#2604)
 
     def ItemPath(self, item):
         """the dotted path of a row, as a script writes it: openGL.lineWidth"""
@@ -801,7 +801,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.update()                         #without this the clipboard is empty after closing
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #WHAT DIFFERS, AND FROM WHAT (revision2026b step RG6.2.9, #2606)
+    #WHAT DIFFERS, AND FROM WHAT (#2606)
 
     def LeafItems(self, item=''):
         """the rows that hold a value, in tree order - folders are not settings"""
@@ -1023,7 +1023,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         window.bind('<Escape>', lambda event: window.destroy())
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #FIND A SETTING (revision2026b step RG6.2.10, #2607)
+    #FIND A SETTING (#2607)
 
     def OnFindFocus(self, event=None):
         """CTRL-F: the find entry takes the focus and its text is selected, ready to be replaced"""
@@ -1477,7 +1477,7 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#THE DIALOGS THE RENDERER OPENS (revision2026b step RG6.2.1, #2595)
+#THE DIALOGS THE RENDERER OPENS (#2595)
 #
 #They were written as Python inside src/Main/rendererPythonInterface.cpp - 220 of its 775 lines were
 #raw string literals holding tkinter code, where no syntax check, no ruff and no import test ever
@@ -1510,7 +1510,7 @@ def ApplyDialogWindowSettings(tkWindow, alwaysTopmost=None, alphaTransparency=No
 
 #the keyboard and mouse commands of the renderer, from the ONE table that also feeds the
 #tables of docs/manual/GUI.md through tools/generators/keyBindingsEmitter.py. This text
-#was a third copy of them, and it had drifted (revision2026b step RG6.2.6, #2591).
+#was a third copy of them, and it had drifted (#2591).
 rendererHelpText = RendererHelpText()
 
 

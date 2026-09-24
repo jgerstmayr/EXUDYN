@@ -126,7 +126,7 @@
 #ifdef __AVX2__				//enabled by compiler; will also create many intrinsics automatically (e.g. for SlimVector<4>)
 	#define use_AVX2		//!< this is used for specific vector operations, e.g., in Vector.AddLarge(...)
 	//AVX-512 follows the same rule: the compiler flag decides, not a hand-edited line here. The
-	//build switch is useAVX512 in pyproject.toml (revision2026 step R2.10, #2466); it exists to be
+	//build switch is useAVX512 in pyproject.toml (#2466); it exists to be
 	//measured, since no gain was found on Zen 5 (fact 27).
 	#ifdef __AVX512F__
 		#define use_AVX512

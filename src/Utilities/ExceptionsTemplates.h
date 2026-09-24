@@ -19,7 +19,7 @@
 #include <pybind11/pybind11.h>
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
-//THE CAUSE OF AN EXUDYN EXCEPTION (#2537, revision2026 step R6.3.8).
+//THE CAUSE OF AN EXUDYN EXCEPTION (#2537).
 //When a user's Python function raises, the handlers below report it as an Exudyn exception and the
 //original used to survive only as words inside the message. These three carry it as an OBJECT from
 //the handler that caught it to the pybind boundary, where the translator chains it with
@@ -148,7 +148,7 @@ void GenericExceptionHandling(Tfunction&& f, const char* placeOfException)
 	}
 
 	//a parameter error that named its Python exception type keeps it; its message was
-	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//already printed where it was raised (#2432).
 	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
 	//otherwise catch it first (ReleaseAssert.h:30) - and the same holds for the Exudyn exception
 	//classes, which derive from EXUexception for exactly that reason (#2516)

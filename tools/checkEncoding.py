@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Every tracked text file must be UTF-8 (revision2026 step R3.11, #2533). Twelve were not:
+# Details:  Every tracked text file must be UTF-8 (#2533). Twelve were not:
 #           eleven C++ sources and one example carried cp1252 bytes - a degree sign, a micro sign,
 #           an en dash, German umlauts - and docs/theDoc/trackerlog.tex was written by a plain
 #           open(..., 'w'), which on Windows takes the code page.
@@ -18,7 +18,7 @@
 #           python tools/checkEncoding.py --write    convert the offenders from cp1252 to UTF-8
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created, revision2026 step R3.11)
+# Date:     2026-09-18 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

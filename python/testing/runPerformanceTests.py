@@ -27,7 +27,7 @@ import testRunnerTools
 
 #the performance suite drives python/PerformanceModels/ and runs IN it; the log goes to
 #../logs/performance/ next to it. Where it was STARTED from does not matter
-#(revision2026 steps R3.8, R3.9; #2512, #2513)
+#(#2512, #2513)
 testRunnerTools.WorkInModelsDirectory(testRunnerTools.performanceModelsDir)
 
 #--fast-module measures exudynCPPfast; without it, the regular module. Until revision2026 step
@@ -118,7 +118,7 @@ elif not isWindows: #add linux, to distinguish linux tests from windows tests!
 
 #exu.config.Version() is the same string for both modules, so without this marker a --fast-module
 #run would collide with the regular log - and comparing the two is the whole point of measuring
-#them (revision2026 step R5.11). Derived from what was loaded, not from what was asked, and from
+#them. Derived from what was loaded, not from what was asked, and from
 #WHICH MODULE it is rather than from its instruction set (#2496).
 if not testRunnerTools.ModuleIsRegular():
     platformString += '_fast'
@@ -172,7 +172,7 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Tests are grouped by what they actually measure, because the two groups answer different
-#questions and mixing them hides both (revision2026 step R2.10, issue #2397):
+#questions and mixing them hides both (#2397):
 #
 #  'small'  few coordinates, ~1e6 steps -> measures PER-STEP OVERHEAD. The system vectors are
 #           3-20 elements long, so vectorized linear algebra (AVX2) cannot show up here at all.
@@ -205,7 +205,7 @@ for groupName in ['small', 'large']:
 
 totalTests = len(testFileList)
 testsFailed = [] #list of numbers containing the test numbers of failed tests
-#the channel a model uses since revision2026b step RG10.6.8 is exu.sys, as for the test models
+#the channel a model uses is exu.sys, as for the test models
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -215,14 +215,14 @@ examplesTestErrorList={}
 invalidResult = 1234567890123456 #should not happen occasionally
 totalTime = 0
 testTimings = {}    #file name -> CPU time, for the grouped summary at the end
-allRuns = []        #every single simulation run of every model (revision2026 step R5.15, #2460)
+allRuns = []        #every single simulation run of every model (#2460)
 
 from runTestSuiteRefSol import PerformanceTestsReferenceSolution
 performanceTestRefSol = PerformanceTestsReferenceSolution()
 
 #the reference list IS the run manifest here too, so check it against the folder before
 #running anything - the same check runTestSuite.py makes over TestModels/, made possible for
-#the performance models by giving them a directory of their own (revision2026 step R3.9).
+#the performance models by giving them a directory of their own.
 #PerformanceTestsReferenceSolution() also holds values for the SINGLE RUNS of a model that
 #solves several sizes or thread counts ('...:nt8'); those are not file names (issue #2460).
 coverageText, coverageFailed = testRunnerTools.CheckTestCoverage(
@@ -287,7 +287,7 @@ if psutilExists:
     exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the single simulation runs (revision2026 step R5.15, issue #2460). A model may solve several
+#the single simulation runs (#2460). A model may solve several
 #sizes or thread counts, and each of those is a measurement of its own: the time here is the
 #SOLVER time (solver.timer.total), without model build, assembly and Python overhead, so it is
 #the number to compare between machines and between builds. The wall-clock table above still
@@ -359,13 +359,13 @@ exu.Print('****************************************************')
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the exit code (#2504; revision2026 step R5.18.1). Until this existed the runner ALWAYS returned 0,
+#the exit code (#2504). Until this existed the runner ALWAYS returned 0,
 #so a failed performance test was invisible to anything that called it. There is no known-failure
 #list here: unlike the examples, every performance test passes today, and one that does not is a
 #result worth going red for.
 if useExitCode:
     #a coverage failure is a real failure: a performance model in no reference list is never
-    #measured and nobody would notice (revision2026 step R3.9)
+    #measured and nobody would notice
     sys.exit(1 if (len(testsFailed) != 0 or coverageFailed) else 0)
 
 

@@ -2514,3 +2514,47 @@ Three changes, and the third is the one that matters for next time:
 `generate.py` makes `regenerate.py` print the same error the GitLab job printed, with the
 spelling named. A comparison of all 37 declared single-file outputs against `git ls-files` with
 exact case finds this one and **no other**.
+
+<a id="rg3-13"></a>
+### RG3.13 — what the thing is, not when it changed (2026-09-24, #2648)
+
+The maintainer, on the header of a test model: *"the reader is interested about what the model
+does, not how it was called before and when it was changed."* The rule went into `CLAUDE.md` 6a
+and `CODING_STYLE.md` §6 with #2646; this step applied it to the **887 mentions of
+`revision2026` in 257 files** outside `docs/revision/`.
+
+**Tier 1, the models** - which are documentation pages. Ten of them opened with *"one of the ten
+small tests that lived in `python/testing/modelUnitTests.py` from 2019 until revision2026b step
+RG10.6.5 ..."*. Each now says what it computes, **read out of the model itself**: a cantilever of
+`ANCFCable2D` elements solved once dynamically and twice statically, a slider-crank solved as an
+index 3 **and** an index 2 system, constraints switched on and off through `activeConnector`, and
+so on. The one sentence of history that stayed is a fact about the model - it compares against a
+reference written into it, so its reference solution is 0.
+
+**Tier 2, the definitions** - the reference manual. One **published** description named a plan
+step (`dialogs.fontScaling`); `definitions/README.md` opened with what it replaced; 25 file
+headers carried *"(revision2026 step R4.3)"*.
+
+**Tier 3, the manual and the developer pages.** About fifty. Two references stayed, because they
+are *about* the plan: `CODING_STYLE.md` stating the citation convention, and the developer index
+linking to the revision logs. Where a sentence only made sense as a promise - *"step R5.3 wires
+the LEST tests into the Debug configuration"*, *"step R1.5 adds a pre-push hook"* - it now says
+what is true today.
+
+**Tier 4, the comments of `src/`, `tools/` and `python/`.** 652 of the 887 were parentheticals or
+appended clauses, and a rule could take them: a parenthetical carrying an issue keeps the issue,
+one carrying only a step goes, and a prepositional phrase goes with its preposition.
+
+**And this is where the automation stopped, after breaking something.** A reference is often
+wrapped across two comment lines, which no line-based pattern sees, so a third pass allowed a
+line break inside the phrase. One of its matches began on a **code** line and ended on a comment
+line: it removed the newline between them and merged prose into code -
+`examplesDir = pythonDir + 'Examples/' each of these holds one kind of file (#2513)`, which is a
+syntax error and was caught by the next `regenerate`. Every file was then **rebuilt from its
+committed content** with the line-based rules only, and the check that says it is sound is that
+**every changed file has the same number of added and removed lines** - no newline was removed
+anywhere. The lesson is small and general: a pattern that may cross a line break must not be let
+near source code.
+
+**235 mentions are left**, none of them in a published page, and each needs a sentence written
+for it. That is RG3.13.1 (#2649).

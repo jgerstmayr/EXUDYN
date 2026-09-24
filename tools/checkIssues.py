@@ -3,7 +3,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # checkIssues - the issue store is consistent, and the version follows from it
 #
-# Why this check exists (revision2026 step R8.5): the issues are 2,568 JSON files now, and the
+# Why this check exists: the issues are 2,568 JSON files now, and the
 # micro version of Exudyn is the COUNT OF CLOSED ISSUES among them. A file that is missing, an
 # issue that lies in open/ although it is resolved, a number that exists twice, or an archive
 # whose stated closedCount does not match its content would all move version.txt without anyone
@@ -28,7 +28,7 @@ import issueTracker                                                           # 
 
 def CheckGeneratedPages():
     """The two pages the tracker publishes are renderings of the issues, so they have to BE the
-    rendering (revision2026 step R7.4): docs/generated/trackerlog.md and CHANGELOG.md.
+    rendering: docs/generated/trackerlog.md and CHANGELOG.md.
 
     They go stale in one ordinary way - an issue file is added, edited or deleted by hand, which
     the tracker is allowed to permit (a wrongly raised issue is deleted, not tracked forever) but
@@ -135,7 +135,7 @@ def main():
         if written != issueTracker.VersionString():
             messages += ['version.txt says ' + written + ', the store says '
                          + issueTracker.VersionString()
-                         + ' - run the tracker after resolving (revision2026 fact 21)']
+                         + ' - run the tracker after resolving']
 
     if messages:
         print('THE ISSUE STORE IS NOT CONSISTENT:')

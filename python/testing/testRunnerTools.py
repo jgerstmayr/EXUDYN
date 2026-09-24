@@ -18,7 +18,7 @@ import platform
 import time
 
 #%%******************************************************************************************************
-#The directories the runners work in. Since revision2026 step R3.9 (#2513) the runners live in
+#The directories the runners work in. (#2513) the runners live in
 #python/testing/ and the models they run live in sibling directories next to it. The models
 #themselves are written relative to a working directory of python/TestModels/ - 'testData/...',
 #'solution/...', '../Examples/testData/...' - so every runner CHANGES INTO the directory of the
@@ -49,7 +49,7 @@ def WorkInModelsDirectory(directory):
 
 
 #shared temporary log directory for all runners; a single directory is easy to delete.
-#relative to the runner's working directory, which is the models directory (revision2026 step R3.8)
+#relative to the runner's working directory, which is the models directory
 tmpLogDir = '../logs/tmp/'
 
 #packages whose version can change test results; taken from what the TestModels and Examples
@@ -64,7 +64,7 @@ def ModuleUsesAVX2():
     """
     True if the loaded C++ module carries the AVX2 (or AVX-512) vector extensions, which move
     results in the last digits and therefore need their own reference values
-    (AVX2ReferenceSolutionUpdate(), revision2026 step R2.10.3). Since step R2.10 only
+    (AVX2ReferenceSolutionUpdate()). Since step R2.10 only
     exudynCPPfast is built with them, but ASK THE MODULE rather than its name: a build with
     --no-avx2 has a fast module without them, and one with --avx512 reports AVX512.
 
@@ -86,7 +86,7 @@ def LoadedCppModule():
 
     Do NOT import exudyn.exudynCPP to find this out: __init__.py may have selected exudynCPPfast,
     and naming the default module would load a SECOND C++ binary into the process and then report
-    the wrong one as the module under test. Two candidates since revision2026 step R2.10 (#2466).
+    the wrong one as the module under test. Two candidates (#2466).
 
     Returns:
         tuple: (name, module), e.g. ('exudynCPPfast', <module>); ('', None) if neither is loaded,
@@ -107,7 +107,7 @@ def RequireFastModule(optionName='--fast-module'):
     Asking is not getting: __init__.py declines a fast request when the CPU reports no AVX2 or the
     import fails, and then prints a line and carries on with the regular module. For a release run
     that is the worst outcome - the log looks like a fast-module log and is not - so the runners
-    check what they really have (revision2026 step R5.11).
+    check what they really have.
 
     The question here is "is this the fast module", answered by ModuleIsRegular(), NOT "does it
     have AVX2". The two are not the same: setup.py compiles exudynCPPfast with
@@ -289,7 +289,7 @@ def AddTiming(name, mbs, result, solverName='dynamicSolver'):
         solverName (str): the key in mbs.sys, 'dynamicSolver' or 'staticSolver'
     """
     #exu.sys['testTimings'] is the list the runner puts there; a model started on its own has
-    #none, and then nothing is recorded (revision2026b step RG10.6.8). exudyn is imported here
+    #none, and then nothing is recorded. exudyn is imported here
     #rather than at module scope, as everything else in this file does it: importing it costs a
     #second and the module is also used by tools that never touch exudyn
     import exudyn as exu
@@ -315,9 +315,9 @@ def CheckTestCoverage(modelsDir, refSolNames, deliberatelyNotRun):
     runTestSuite.py builds its run list purely from the keys of TestExamplesReferenceSolution():
     there is no listdir anywhere in the suite. A model which exists but is in no list is
     therefore never executed, and is indistinguishable from a file which does not exist. That
-    is how 19 models came to be silently unrun (revision2026 fact 14, revision2026 step R5.9).
+    is how 19 models came to be silently unrun (revision2026 fact 14).
 
-    modelsDir holds MODELS ONLY since revision2026 step R3.9 (#2513), so every .py in it is a
+    modelsDir holds MODELS ONLY (#2513), so every .py in it is a
     test. The list of files which are not tests - needed while the runners and the performance
     models lived in the same directory as the test models - is gone with them.
 
@@ -392,7 +392,7 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
 
     Fixed width so that the table greps and diffs cleanly across machines - comparing per-test
     errors between platforms is how the sensitive-test list in runTestSuiteRefSol.py has to be
-    populated (revision2026 fact 24), and that is impractical while the numbers are only
+    populated, and that is impractical while the numbers are only
     embedded in prose.
     """
     failedNames = failedNames if failedNames is not None else set()
@@ -438,7 +438,7 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
 #examples that cannot be tested at all, with the reason. An example is a script written for a human,
 #not a test, so some of them can only fail here: they wait for input, need a service (ROS, MATLAB)
 #or a package that is not part of the test environment, or are incompatible with being exec'd.
-#Moved here from runTestExamples.py in revision2026 step R5.16, so that the runner and the worker
+#Moved here from runTestExamples.py, so that the runner and the worker
 #process apply exactly the same rules.
 #the optional packages an Example may import, as import name -> distribution name. The examples run
 #in whatever environment the maintainer has, and that environment legitimately differs from the next
@@ -584,7 +584,7 @@ def ExampleSkipReason(exampleFileName, fileString):
         'URDF': 'needs URDF model files that are not in the repository',
         #these two read solution/paramVarDisplacementRef.txt, which parameterVariationExample.py
         #writes: they only ever worked because that file was left over in the shared solution
-        #directory from an earlier run (found by revision2026 step R5.16)
+        #directory from an earlier run (found)
         'minimizeExample': 'needs the output of parameterVariationExample.py',
         'dispyParameterVariationExample': 'needs the output of parameterVariationExample.py',
         #the same class - a file that is not in the repository and that no run produces
@@ -654,7 +654,7 @@ def KnownExampleFailures():
 #%%******************************************************************************************************
 def PrepareExampleSource(fileString, quietMode=True):
     """
-    Turn an example into something that can run unattended (revision2026 step R5.16).
+    Turn an example into something that can run unattended.
 
     The examples are written to be looked at: they open the renderer, show plots, wait in dialogs
     and print progress. This removes exactly that, and nothing else - what is left is the model and
@@ -677,7 +677,7 @@ def PrepareExampleSource(fileString, quietMode=True):
 
     #NOTE: the six substitutions that used to neutralise the renderer, the solution viewer, the
     #dialogs and plt.show() are gone: exudyn.special.userInterface, set once in the bootstrap, does
-    #that from inside Exudyn now (revision2026 step R5.17, #2477). What is left here cuts WORK or
+    #that from inside Exudyn now (#2477). What is left here cuts WORK or
     #output, which no flag can do.
     for old, new in [
         ('useRenderer=True', 'useRenderer=False'),
@@ -714,20 +714,20 @@ def PrepareExampleSource(fileString, quietMode=True):
 #%%******************************************************************************************************
 #the marker the example bootstrap prints as soon as a solver is entered. From that moment on, the
 #example has built its model, assembled it and reached the solver, which is what the examples run
-#checks; a timeout after it therefore counts as a PASS (revision2026 step R5.16).
+#checks; a timeout after it therefore counts as a PASS.
 exampleSolvingMarker = '#__EXUDYN_EXAMPLE_SOLVING__'
 
 runExampleBootstrap = """
 import sys, time
 sys.argv = [{exampleFileName!r}]
-#the runners and modelUnitTests live in python/testing/ since revision2026 step R3.9, while the
+#the runners and modelUnitTests live in python/testing/, while the
 #worker runs with the models directory as its working directory (#2513)
 sys.path.insert(0, {testingDirectory!r})
 import matplotlib
 matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
 #no renderer, no solution viewer, no dialog: a window that waits for a human would hang the worker
-#(revision2026 step R5.17). This replaces six source substitutions that did the same by rewriting.
+#. This replaces six source substitutions that did the same by rewriting.
 exu.special.userInterface.SuppressAll(True)
 #the serial runner exec'd all examples into ONE namespace, so an example could use a name that an
 #earlier one had star-imported; several do. The worker provides the same namespace explicitly,
@@ -737,7 +737,7 @@ import exudyn.graphics as graphics
 #every example writes into its OWN directory, so that the 13 examples writing
 #'solution/coordinatesSolution.txt' cannot overwrite each other while running in parallel. An
 #example that reads its own output back says so with OutputFilePath(...), which follows the same
-#setting - by the rule of revision2026 step R5.13 a plain user path is never redirected.
+#setting - by the rule a plain user path is never redirected.
 import os
 os.makedirs({outputDirectory!r}+'/solution', exist_ok=True)
 exu.config.outputDirectory = {outputDirectory!r}
@@ -770,7 +770,7 @@ exec(testRunnerTools.PrepareExampleSource(_source, {quietMode!r}), globals())
 def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', timeout=60,
                         solverTimeout=1, quietMode=True, pythonExecutable=None):
     """
-    Run ONE example in a fresh interpreter (revision2026 step R5.16).
+    Run ONE example in a fresh interpreter.
 
     An example is an API check, not a numerical one: it has served its purpose once it has built
     its model and reached the solver - the solver itself stops after solverTimeout seconds. The
@@ -831,7 +831,7 @@ def RunExamplesInParallel(exampleFileNames, examplesDirectory, outputDirectory,
                           numberOfProcesses=0, printProgress=True, timeout=60, solverTimeout=1,
                           quietMode=True):
     """
-    Run the examples in parallel, each in its own interpreter (revision2026 step R5.16).
+    Run the examples in parallel, each in its own interpreter.
 
     Args:
         exampleFileNames (list): the examples, in the order the log should report them
@@ -881,7 +881,7 @@ resultMarker = '#__EXUDYN_TEST_RESULT__'
 #bootstrap executed by 'python -c' in the worker process: one model, one fresh interpreter.
 #It must set the same globals the in-process runner sets before exec'ing a model, and it must set
 #exudyn.config.outputDirectory BEFORE the model runs, so that the model writes into its own
-#directory (#2418) and two models cannot collide on a file name (revision2026 step R5.8).
+#directory (#2418) and two models cannot collide on a file name.
 runModelBootstrap = """
 import sys, time
 sys.argv = [{fileName!r}]
@@ -902,7 +902,7 @@ finally:
         _testResult = float(exu.sys.get('testResult', {invalidResult!r}))
     except Exception:
         _testResult = float('nan')
-    #a model may state a tolerance of its own (revision2026b step RG10.6); 0 means it did not
+    #a model may state a tolerance of its own; 0 means it did not
     print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start),
           repr(float(exu.sys.get('testTolerance', 0.))))
 """
@@ -974,7 +974,7 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
 def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfProcesses=0,
                         printProgress=True, timeout=1800):
     """
-    Run the test models in parallel, each in its own interpreter (revision2026 step R5.8).
+    Run the test models in parallel, each in its own interpreter.
 
     The models write into separate directories (step R5.13), which is what makes this safe; the
     order of the RESULTS is the order of fileNames, independent of the order they finish in, so the

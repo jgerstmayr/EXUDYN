@@ -179,7 +179,7 @@ const lest::test avxVector_specific_test[] =
 			//NOTE: the AVX branch uses a fused multiply-add and the remainder loop does not, so
 			//the two branches can differ in the last bit. The values above are chosen so that
 			//a + scalar*b is exact in both, which is what makes an exact comparison legitimate
-			//here; see revision2026 fact 27 on FMA contraction.
+			//here on FMA contraction.
 			Vector result(n);
 			for (Index i = 0; i < n; i++) { result[i] = v[i]; }
 			EXPECT(AVXVectorsEqual(result, reference));

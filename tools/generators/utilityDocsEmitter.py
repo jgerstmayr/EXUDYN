@@ -4,7 +4,7 @@
 # Details:  Emits the reference documentation of the utility modules from their docstrings:
 #           docs/theDoc/pythonUtilitiesDescription.tex, docs/RST/pythonUtilities/*.rst and
 #           docs/RST/confHelperPyUtilities.py. Moved out of utilitiesDocuGenerator.py (revision plan
-#           revision2026 step R4.3, part 2e); re-pointed at Google-style docstrings via griffe by revision2026 steps R4.6 and R4.8.
+#           revision2026 step R4.3, part 2e); re-pointed at Google-style docstrings via griffe
 #
 # Usage:    python tools/generators/utilityDocsEmitter.py
 #
@@ -99,7 +99,7 @@ def main():
 
                 if belongsTo:
                     #the function is documented with the class it is added to; this note existed
-                    #only in the LaTeX and RST branches until revision2026 step R7.1.7
+                    #only in the LaTeX and RST branches
                     mseLabel = ('sec:mainsystemextensions:'
                                 + funcDict['functionName'].replace(chr(92) + '_', '_'))
                     sMarkdown += ('- **NOTE**: this function is directly available in MainSystem '
@@ -150,7 +150,7 @@ def main():
 
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #MARKDOWN, revision2026 step R7.1.6. This emitter wrote
+    #MARKDOWN This emitter wrote
     #docs/theDoc/pythonUtilitiesDescription.tex and docs/RST/pythonUtilities/*.rst until
     #2026-09-20; the pages are in docs/generated/, where emitter output belongs (D10).
     markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'pythonUtilities')

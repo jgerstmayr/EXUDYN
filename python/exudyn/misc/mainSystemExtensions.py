@@ -58,7 +58,7 @@ __all__ = [
     ]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHY THESE TWO EXIST (#2502, revision2026 step R5.9.2). Every Create*Joint below converts the joint
+#WHY THESE TWO EXIST (#2502). Every Create*Joint below converts the joint
 #position and orientation into body coordinates with a 3x3 product. numpy does not guarantee the
 #summation order of a small matrix product, and it CHANGED between releases: for a component that
 #is analytically zero, numpy 2.2.4 returns exactly 0.0 while numpy 2.4.6 returns -2.9e-19. Those
@@ -3197,7 +3197,7 @@ def MainSystemCreateTorque(mbs,
 
      
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#distance sensor and system graph (moved from utilities.py, revision2026 step R4.22.2)
+#distance sensor and system graph (moved from utilities.py)
 
 def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
     """internal function used for CreateDistanceSensor

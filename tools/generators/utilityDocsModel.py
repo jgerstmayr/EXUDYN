@@ -4,7 +4,7 @@
 # Details:  The reader of the docstrings (and @docmeta/@extends decorators) of the utility modules
 #           of python/exudyn/, and the text helpers shared by mainSystemExtensionDocsEmitter.py
 #           and utilityDocsEmitter.py. Moved out of src/pythonGenerator/utilitiesDocuGenerator.py
-#           (revision2026 step R4.3, part 2e); reads docstrings instead of #** comments since revision2026 step R4.6.
+#           (revision2026 step R4.3, part 2e); reads docstrings instead of #** comments
 #
 # Usage:    import utilityDocsModel
 #
@@ -305,7 +305,7 @@ def _ParseModuleHeader(fileName):
 
 
 #*****************************************************
-#the reader of the Google-style docstrings (revision2026 step R4.6): it hands the emitters the
+#the reader of the Google-style docstrings: it hands the emitters the
 #dictionaries the former #** comment parser produced.
 #Documented are the module-level functions and classes, and the functions of those classes, that
 #have a docstring and are not marked @docmeta(public=False); author, date and status come from
@@ -319,7 +319,7 @@ def _TagValue(lines):
 _citeKeys = r'[A-Za-z]+\d{4}[a-z]?(?:,\s*[A-Za-z]+\d{4}[a-z]?)*'
 
 def Markdown2Latex(s):
-    """the Markdown of the docstrings (revision2026 step R4.6.4) in the LaTeX flavour the emitters convert to
+    """the Markdown of the docstrings in the LaTeX flavour the emitters convert to
     .tex and RST: `code`, [Key] citations, [text](#label) references (an abbreviation if the
     label has no ':'), **bold**, *italics*, and _ escaped outside $math$ and code"""
     parts = re.split(r'(\$[^$]*\$|`[^`]*`)', s)
@@ -467,7 +467,7 @@ def FunctionStub(functionDict):
 
 
 def Tags2Markdown(itemDict, tags):
-    """the documented tags of a function or of a class, as Markdown (revision2026 step R7.1.6);
+    """the documented tags of a function or of a class, as Markdown;
     an example is a fenced code block, everything else a bullet"""
     text = ''
     for tag in tags:
@@ -496,7 +496,7 @@ def Tags2Markdown(itemDict, tags):
 def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
                                 isClassFunction=False, className='', headingLevel=3,
                                 labelModule=''):
-    """The documentation of one function or class method, as Markdown (revision2026 step R7.1.6).
+    """The documentation of one function or class method, as Markdown.
 
     Written from the parsed dictionary rather than from the LaTeX, so that it says what it means:
     a heading with the signature, the source link, and one section per documented tag."""
@@ -517,7 +517,7 @@ def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
     signature = functionName + '(' + ', '.join(arguments) + ')'
 
     #the MainSystem extensions are documented under the class they are added to, not under the
-    #module they live in, and their labels say so (revision2026 step R7.1.6)
+    #module they live in, and their labels say so
     label = 'sec:' + (labelModule if labelModule != '' else moduleNamePython) + ':' \
         + (className + ':' if isClassFunction else '') + functionName
     text = '\n' + MarkdownLabel(label) + '\n'

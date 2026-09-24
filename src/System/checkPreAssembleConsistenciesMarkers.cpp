@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2020-12-09 (generated)
-* @date         2026-09-20 (one file per item kind, revision2026 step R11.4.3)
+* @date         2026-09-20 (one file per item kind)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

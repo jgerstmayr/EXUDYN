@@ -10,7 +10,7 @@
 #           Used from very different working directories: setup.py exec()s it from the repository
 #           root, the generators import it from tools/generators/, and conf.py exec()s it from the
 #           root as well. It therefore anchors on the REPOSITORY ROOT rather than on the current
-#           directory. It lived in src/pythonGenerator/ until revision2026b step RG10.4 (#2618),
+#           directory. It lived in src/pythonGenerator/ (#2618),
 #           as the last file of the old generator directory, which is gone with it.
 #
 #           Previously this tried four relative paths in sequence (../../../, ../../, ../, ./) and
@@ -18,7 +18,7 @@
 #           real defect: 'unknown' is not a version, setuptools rejects it much later with an
 #           InvalidVersion whose message names neither this file nor version.txt, and a generator
 #           run would happily stamp 'unknown' into generated sources. Missing the version file is
-#           now a hard, named error (revision2026 step R3.4).
+#           now a hard, named error.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-12 (rewritten)

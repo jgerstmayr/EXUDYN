@@ -8,7 +8,7 @@
 * 				  Real vectors and matrices become numpy arrays
 * 				- item indices carry their kind as template argument (NodeIndex, ObjectIndex, ...),
 * 				  so an ObjectIndex is rejected where a NodeIndex is expected
-* 				- every error here names its Python exception type (revision2026 step R6.7, #2432):
+* 				- every error here names its Python exception type (#2432):
 * 				  TypeError when the object cannot be this parameter at all, ValueError when the
 * 				  kind is right and the value or the size is not
 * 				- revision2026 step R4.4.3: introduced in 34c2 with the behaviour of the helpers in
@@ -110,7 +110,7 @@ namespace EPyUtils {
 
 		//! py::cast, but a failure raises a TypeError naming the parameter instead of a pybind11
 		//! cast_error, which reaches Python as a RuntimeError about C++ types the user cannot see
-		//! (revision2026 step R6.7, #2432). context may be nullptr where the caller has no name.
+		//! (#2432). context may be nullptr where the caller has no name.
 		template<class T>
 		inline T CastOrRaise(const py::object& value, const char* expected, const char* context)
 		{
@@ -393,7 +393,7 @@ namespace EPyUtils {
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//structure members (SimulationSettings, VisualizationSettings, ...): the same conversion with a context
-	//"Class.member" for the message (revision2026 step R4.4.3.5); declared after all FromPython overloads,
+	//"Class.member" for the message; declared after all FromPython overloads,
 	//because MemberSetter must see them
 
 	//! a string member; None and other types raise

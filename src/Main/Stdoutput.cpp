@@ -301,7 +301,7 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 
 
 //! the directory of the shipped exudyn package, asked once; used to decide which Python frame is
-//! the USER's (#2524, revision2026 step R6.3.5)
+//! the USER's (#2524)
 const std::string& ExudynPackageDirectory()
 {
 	static std::string directory = []() -> std::string
@@ -367,7 +367,7 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	}
 }
 
-//! the ONE place that turns a PyErrorType into a throw (#2521, revision2026 step R6.3.3). The
+//! the ONE place that turns a PyErrorType into a throw (#2521). The
 //! Exudyn classes are in ReleaseAssert.h and reach Python as the classes registered in
 //! PybindModule.cpp; py::type_error and py::value_error are pybind11 builtins and become the plain
 //! Python TypeError/ValueError. [[noreturn]] so that every caller of it ends the same way.
@@ -392,7 +392,7 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	}
 }
 
-//! THE CAUSE OF AN EXUDYN EXCEPTION (#2537, revision2026 step R6.3.8); declared in
+//! THE CAUSE OF AN EXUDYN EXCEPTION (#2537); declared in
 //! ExceptionsTemplates.h next to the handlers that fill it. thread_local because two threads can be
 //! inside Exudyn at once (the renderer calls Python of its own), and a raw PyObject* rather than a
 //! py::object because a thread_local py::object destructor would need the GIL at thread exit.
@@ -419,7 +419,7 @@ PyObject* PendingExceptionCause()
 //! The renderer reads globalPyRuntimeErrorFlag in five places (GlfwClient.cpp): it stops the render
 //! loop and, more importantly, keeps the render thread from calling into Python while Python is in
 //! an error state. This is the ONE place that knows the rule, so that every site which decides
-//! "this error ends the run" says so the same way (#2531, revision2026 step R6.3.11).
+//! "this error ends the run" says so the same way (#2531).
 //! deactivateGlobalPyRuntimeErrorFlag is set by rendererPythonInterface.cpp around calls the
 //! renderer itself makes into Python, where an error may not take the window down.
 void StopRendererOnError()
@@ -450,7 +450,7 @@ std::string ErrorMessageBlock(const char* heading, const std::string& message,
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
-//! There is no ofstream overload any more (#2538, revision2026 step R6.8). It wrote the block to
+//! There is no ofstream overload any more (#2538). It wrote the block to
 //! the solver file for twelve call sites, while the 1100+ CHECKandTHROW sites could not pass a file
 //! at all - so the rule depended on which helper a check happened to be written with.
 //! CSolverBase::SolveSystem now catches what ends a run where the file is known and writes it
@@ -462,14 +462,14 @@ void PyError(std::string error_msg, PyErrorType errorType)
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
-	//NOT to the console (#2530, revision2026 step R6.3.10): the exception thrown below carries the
+	//NOT to the console (#2530): the exception thrown below carries the
 	//same message and the same location, so the console would say it twice - and a CAUGHT exception
 	//would still say it, which is what floods the terminal of a GUI or a parameter variation that
 	//handles its own errors. The log file is a different matter: on a long unattended run nothing
 	//else records that this happened.
 	outputBuffer.WriteToFileOnly(ErrorMessageBlock("User ERROR", error_msg, fileName, lineNumber));
 
-	//WHAT IS THROWN CARRIES THE DETAIL (#2527, revision2026 step R6.3.5). Until now it was the fixed
+	//WHAT IS THROWN CARRIES THE DETAIL (#2527). Until now it was the fixed
 	//sentence "Exudyn: parsing of Python file terminated due to Python (user) error", identical for
 	//a bad item number, a string written into a number and a missing marker; the explanation was
 	//printed above and then dropped, so str(exception) told a user nothing and an except block that
@@ -505,7 +505,7 @@ void PyWarning(std::string warning_msg)
 }
 
 //! a deprecation is neither an error nor a line of output: it is a statement about the user's code
-//! that the user must be able to act on (#2522, revision2026 step R6.3.4). Python has the machinery
+//! that the user must be able to act on (#2522). Python has the machinery
 //! for it, and a printed line has none of it:
 //!   - "-W error::DeprecationWarning" turns every one of them into an exception, which is how a
 //!     user finds them all before an Exudyn release removes the old name;

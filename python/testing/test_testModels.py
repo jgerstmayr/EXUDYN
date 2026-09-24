@@ -1,9 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test infrastructure file
 #
-# Details:  pytest collector for the test models (revision2026 step R5.1). Every model and every
+# Details:  pytest collector for the test models. Every model and every
 #           mini example becomes one parametrized test case, runs in its own interpreter
-#           (testRunnerTools.RunModelInProcess, revision2026 step R5.8) and is compared against the
+#           (testRunnerTools.RunModelInProcess) and is compared against the
 #           reference value in runTestSuiteRefSol.py with the tolerance runTestSuite.py uses - the
 #           reference values, the per-test tolerance factors and the sensitive/unresolved lists
 #           have exactly one definition, so the two runners cannot judge a model differently.
@@ -61,12 +61,12 @@ onlyRegularModule = (set() if testRunnerTools.ModuleIsRegular()
                      else set(NotJudgedOutsideRegularModule().keys()))
 
 #the reference values are the BASELINE module's; a module with vector extensions is judged by the
-#second set, which holds only the models that move (revision2026 step R2.10.3)
+#second set, which holds only the models that move
 referenceUpdate = AVX2ReferenceSolutionUpdate() if testRunnerTools.ModuleUsesAVX2() else {}
 
 
 #markers come from the data in runTestSuiteRefSol.py, not from decorators in 137 model files
-#(revision2026 step R5.2): 'pytest -m "not slow and not optionalPackage"' is the pull-request set,
+#: 'pytest -m "not slow and not optionalPackage"' is the pull-request set,
 #a plain 'pytest' the nightly one
 def Markers(modelName):
     marks = []
@@ -109,7 +109,7 @@ def CheckRun(fileName, run, referenceValue, tolerance, judgeValue=True):
                                             "exu.sys['testResult']")
     if not judgeValue:
         return
-    #a model may state a tolerance of its own (revision2026b step RG10.6); the ten former unit
+    #a model may state a tolerance of its own; the ten former unit
     #tests do, because the default 5e-14 is tighter than the 4e-13 they were judged against
     if run.get('tolerance', 0.) > 0.:
         tolerance = run['tolerance']

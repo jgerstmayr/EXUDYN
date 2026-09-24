@@ -3701,7 +3701,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsDialogs& data) {
     d["value"] = data.fontScaling;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "scaling of the font in dialogs; 0 = automatic, which is what every platform did before this setting existed: the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop (revision2026b step RG6.2.3.1)";
+    d["description"] = "scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop";
     structureDict["fontScaling"] = d;
 
     d = py::dict(); //reset local dict

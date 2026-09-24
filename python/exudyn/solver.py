@@ -193,7 +193,7 @@ def SolveStatic(mbs, simulationSettings = None,
         #the exception that reaches here EXPLAINS the failure: an ExudynModelError, an
         #ExudynSolverError for a singular matrix, or the user's own error from a user function.
         #It used to be swallowed by 'except: pass' and replaced by a fixed ValueError, which threw
-        #away both the type and the traceback (#2534, revision2026 step R6.3.13)
+        #away both the type and the traceback (#2534)
         exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems,
                                  showCausingNodes=showCausingItems, showHints=showHints))
         raise

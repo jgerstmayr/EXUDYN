@@ -34,7 +34,7 @@ def InstanceDefaultsText(className, pythonName):
 
     Without this the reference printed the defaults of the sub-structure's own class, which for
     the ten raytracer materials and the dimmed lights are values the renderer never uses - the
-    documentation could not say what light1.diffuse defaults to (revision2026b step RG6.2.20).
+    documentation could not say what light1.diffuse defaults to.
     """
     definition = StructureDefinitionByName(className)
     if definition is None:
@@ -88,11 +88,11 @@ def StructureDocs(parseInfo, parameterList):
                     parseInfo['class'] + ' has the following items:\n', 
                     section=parseInfo['class'], sectionLevel=3, 
                     sectionLabel='sec:' + parseInfo['class'].replace(' ',''))
-        #the table of the structure's items (revision2026 step R7.1.6). The header is written
+        #the table of the structure's items. The header is written
         #before the rows and the loop below can skip every parameter of a structure - all of them
         #deprecated, or none with a pybind interface - which leaves a table with five headings and
         #nothing under them: an empty box in the HTML, and a hard failure of the LaTeX builder,
-        #which looks for a tbody that is not there (#2592, revision2026b step RG3.6). So the
+        #which looks for a tbody that is not there (#2592). So the
         #position is remembered and the header is taken back again if no row followed.
         tableStart = len(plr.sMarkdown)
         plr.sMarkdown += ('\n| Name | type / function return type | size | default value / function '
@@ -113,7 +113,7 @@ def StructureDocs(parseInfo, parameterList):
                 defaultValueStr = parameter['defaultValue']
                 paramDescriptionStr = parameter['parameterDescription'].replace('_','\\_')
                 #a sub-structure instance with values of its own says so, because the table of
-                #its class shows the class defaults (revision2026b step RG6.2.20)
+                #its class shows the class defaults
                 instanceDefaults = InstanceDefaultsText(parseInfo['class'],
                                                         parameter['pythonName'])
                 if instanceDefaults != '':
@@ -210,7 +210,7 @@ The data is auto-generated from the according interfaces in order to keep fully 
 """
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #MARKDOWN, revision2026 step R7.1.6. This emitter wrote docs/theDoc/interfaces.tex and
+    #MARKDOWN This emitter wrote docs/theDoc/interfaces.tex and
     #docs/RST/structures/*.rst until 2026-09-20; both are gone. The pages live in
     #docs/generated/, which is where emitter output belongs (decision D10), and every file says
     #in its first line that it is generated.

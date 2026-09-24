@@ -5,7 +5,7 @@
  				- the six functions that read a BodyGraphicsData from a Python dictionary or object
  				  and write it back; they are here and no longer in VisualizationSystemContainer.h,
  				  so that the item sources, which need BodyGraphicsData but no Python, do not have
- 				  to include pybind11 (revision2026b step RG9.1)
+ 				  to include pybind11
 *
 * @author		Gerstmayr Johannes
 * @date			2026-09-23

@@ -3,7 +3,7 @@
 #
 # Details:  exudyn.misc.settingsUtilities: what a settings structure looks like as Python, and
 #           which of its values a model changed. The functions were the lower half of
-#           exudyn.misc.GUI until revision2026b step RG12.3 (#2590); the dialog is no longer
+#           exudyn.misc.GUI (#2590); the dialog is no longer
 #           their only caller, and a model script must be able to use them WITHOUT tkinter,
 #           which GUI.py imports at module scope.
 #

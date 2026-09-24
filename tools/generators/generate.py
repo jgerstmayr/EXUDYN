@@ -58,7 +58,7 @@ stages = [
           writesOnlyWhenChanged=True),
     Stage('tools/generators/miniExampleEmitter.py', ['definitions'], ['python/MiniExamples']),
     Stage('tools/generators/itemDocsEmitter.py', ['definitions'],
-          #Markdown since revision2026 step R7.1.6; confHelperItems.py is not documentation but
+          #Markdown; confHelperItems.py is not documentation but
           #data for conf.py, and lives with the other generator data since R7.1.7
           ['docs/generated/items', G + 'confHelperItems.py']),
     Stage('tools/generators/structureHeaderEmitter.py', ['definitions'],
@@ -67,20 +67,20 @@ stages = [
            A + 'DictionariesGetSet.h', A + 'Pybind_modules.h'], writesOnlyWhenChanged=True),
     Stage('tools/generators/structureStubEmitter.py', ['definitions'], [G + 'stubSystemStructures.pyi']),
     Stage('tools/generators/structureDocsEmitter.py', ['definitions'],
-          ['docs/generated/structures']),   #Markdown since revision2026 step R7.1.6
+          ['docs/generated/structures']),   #Markdown
     #the *Ext fragments are inputs of pybindEmitter, not documentation of their own; Markdown
     #since revision2026 step R7.1.6
     Stage('tools/generators/mainSystemExtensionDocsEmitter.py', ['python/exudyn/*.py'],
           [G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
-          #Markdown since revision2026 step R7.1.6; confHelperPyUtilities.py is not documentation
+          #Markdown; confHelperPyUtilities.py is not documentation
           #but data for conf.py, and lives with the other generator data since R7.1.7
           ['docs/generated/pythonUtilities', G + 'confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
           ['definitions', G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
            G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
-           #Markdown since revision2026 step R7.1.6; confHelper.py is not documentation but data
+           #Markdown; confHelper.py is not documentation but data
            #for conf.py, and lives with the other generator data since R7.1.7
            'docs/generated/cInterface', G + 'confHelper.py']),
     Stage('tools/generators/createStubFiles.py',
@@ -88,13 +88,13 @@ stages = [
            G + 'stubAutoBindings.pyi', G + 'stubAutoBindingsExt.pyi', G + 'stubSymbolic.pyi'],
           ['python/exudyn/__init__.pyi', 'python/exudyn/symbolic.pyi']),
     #the example and test model pages, and the abbreviations: what doc2rst.py did besides
-    #converting LaTeX, which is why it outlived it (revision2026 step R7.1.7)
+    #converting LaTeX, which is why it outlived it
     #the references page and the citation keys conf.py needs to turn [Key2021] into a link
-    #(revision2026b step RG3.5, #2550); its only input is the bibliography
+    #(#2550); its only input is the bibliography
     Stage('tools/generators/referencesDocsEmitter.py', ['docs/bibliographyDoc.bib'],
           ['docs/generated/references.md', G + 'confHelperCitations.py']),
     #the mouse and keyboard tables of the manual, from the one table the help dialog also uses
-    #(revision2026b step RG6.2.6, #2591)
+    #(#2591)
     Stage('tools/generators/keyBindingsEmitter.py', ['python/exudyn/misc/keyBindings.py'],
           ['docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md']),
     Stage('tools/generators/examplesDocsEmitter.py',
@@ -104,7 +104,7 @@ stages = [
     ]
 
 #deliberately NOT stages:
-#  makeAllBinariesScripts.py  writes only docs/theDoc/buildDate.tex, a volatile timestamp (revision2026 step R7.1)
+#  makeAllBinariesScripts.py  writes only docs/theDoc/buildDate.tex, a volatile timestamp
 #  tools/issueTracker/issueTracker.py  a different tool on a different trigger; it owns the
 #                                      version files, trackerlog.html and trackerlog.md
 

@@ -81,7 +81,7 @@ def testGeneratedPageIsThere():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#ExtendIssue and the triage notes (revision2026 steps R8.3.3 and R8.5.2)
+#ExtendIssue and the triage notes
 
 @pytest.fixture
 def tracker(tmp_path, monkeypatch):
@@ -90,12 +90,12 @@ def tracker(tmp_path, monkeypatch):
     (the version files, the HTML and the Markdown page) live outside it"""
     import shutil
     module = IssueTracker()
-    #the issues are a directory of JSON files since revision2026 step R8.5; the tests work on a
+    #the issues are a directory of JSON files; the tests work on a
     #copy of it and point both modules at the copy, so that a test run can never write into the
     #real tracker (it also owns version.txt)
     shutil.copytree(os.path.join(trackerDirectory, 'issues'),
                     os.path.join(str(tmp_path), 'issues'))
-    #the releases and their baselines are data since revision2026 step R8.4, and a bump writes
+    #the releases and their baselines are data, and a bump writes
     #this file - so the copy gets its own
     shutil.copy(os.path.join(trackerDirectory, 'releases.json'),
                 os.path.join(str(tmp_path), 'releases.json'))
@@ -250,7 +250,7 @@ def testEveryFieldOfAnIssueIsKnown(tracker):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the version arithmetic (revision2026 step R8.3). These two functions are the ONLY definition of
+#the version arithmetic. These two functions are the ONLY definition of
 #what version.txt says - the micro number is the count of closed issues - and nothing covered them.
 
 def testTheMicroVersionIsTheCountOfClosedIssues(tracker):
@@ -342,7 +342,7 @@ def testVersionStringFollowsTheBuildMode(tracker, monkeypatch):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the command line: exudev issue <verb> (revision2026 step R8.3)
+#the command line: exudev issue <verb>
 
 def ExudevCommands():
     """tools/exudev/commands.py, loaded by path like the tracker above - a plain "import commands"
@@ -412,7 +412,7 @@ def testShowPrintsTheFieldsThatAreFilled(tracker, capsys):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the local viewer: exudev issue serve (revision2026 step R8.5.1). The request layer of
+#the local viewer: exudev issue serve. The request layer of
 #issueServer.py takes a method, a path, a query and a payload and returns a response, which is
 #why these tests need no port, no browser and no thread.
 
@@ -452,7 +452,7 @@ def testThePageIsOneSelfContainedFile(server):
 
 def testTheListHasNamedColumnsAndShowsThePriority(server):
     """the table used to be five unnamed columns of tags, and the priority - which the API sends
-    and the filter bar filters on - was not one of them (#2600, revision2026b step RG10.2)"""
+    and the filter bar filters on - was not one of them (#2600)"""
     (status, page) = Call(server, 'GET', '/')
     assert status == 200
     assert '<thead id="listHead">' in page, 'the list has no header element'
@@ -610,7 +610,7 @@ def testAnUnknownPathOrMethodIsAMessage(server):
     (status, data) = Call(server, 'GET', '/api/nonsense')
     assert status == 404 and 'unknown path' in data['error']
     (status, data) = Call(server, 'DELETE', '/api/issue')
-    #deleting an issue stays a file operation with a commit behind it (revision2026 step R8.5.1)
+    #deleting an issue stays a file operation with a commit behind it
     assert status == 405
 
 
@@ -916,7 +916,7 @@ def testThePageScriptParses(server):
     catch that too, but only on a machine whose browser works; this one needs no browser.
 
     Defining a function PARSES its body without running it, so a missing 'document' is not an
-    error here and a misplaced brace is (revision2026b step RG10.2)."""
+    error here and a misplaced brace is."""
     quickjs = pytest.importorskip('quickjs',
                                   reason='quickjs comes with mermaidx, in the pdf dependency group')
     (status, page) = Call(server, 'GET', '/')
@@ -979,7 +979,7 @@ def testThePageTextIsARawString():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#CHANGELOG.md (revision2026 step R7.4): a rendering of the issues, not a second place where
+#CHANGELOG.md: a rendering of the issues, not a second place where
 #changes are written down
 
 def testTheChangelogListsAResolvedIssueUnderTheVersionItProduced(tracker):
@@ -1071,7 +1071,7 @@ def testAnIssueCarriesItsPriorityAndEffortAsBadges(tracker):
     assert badges == '`FIX` `HIGH` `LOW EFF` `raised by: Claude-JG`', badges
 
     #JG is omitted on both sides, and the effort carries its word because LOW and HIGH are
-    #values of the priority as well (revision2026b step RG10.2)
+    #values of the priority as well
     issue['author'] = 'JG'
     assert tracker.IssueBadges(issue) == '`FIX` `HIGH` `LOW EFF`'
     issue['effort'] = ''
@@ -1090,7 +1090,7 @@ def testTheTrackerPageHoldsEverythingBeforeTheCurrentRelease(tracker):
             in text)
     assert '### Version ' + current['version'] + chr(10) not in text
     #the entry of an issue is a LINE, and the descriptions quote every format this page ever
-    #had - searching the whole text finds the quotation (revision2026b step RG3.10.1, #2637)
+    #had - searching the whole text finds the quotation (#2637)
     entries = [line for line in text.split(chr(10))
                if line.startswith('- **' + current['version'] + '.')]
     assert entries == [], 'no issue of the current release is on this page'
@@ -1115,7 +1115,7 @@ def testTheGeneratedPagesAreCheckedAgainstTheStore(tracker, tmp_path):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the release path (revision2026 step R8.2). The notes of a release are CUT from CHANGELOG.md, so
+#the release path. The notes of a release are CUT from CHANGELOG.md, so
 #that the release notes of each issue live in the tracker and nowhere else.
 
 def testTheReleaseNotesAreTheCurrentSectionOfTheChangelog(tmp_path, monkeypatch):
@@ -1142,7 +1142,7 @@ def testTheReleaseNotesAreTheCurrentSectionOfTheChangelog(tmp_path, monkeypatch)
 
 
 def testTheReleaseNotesRunToTheEndOfAChangelogWithOneRelease(tmp_path, monkeypatch):
-    """the boundary the cut always hits since revision2026b step RG3.10: CHANGELOG.md holds
+    """the boundary the cut always hits: CHANGELOG.md holds
     the current release and nothing after it, so there is no second '## Version ' to stop at
     """
     commands = ExudevCommands()

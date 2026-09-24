@@ -8,7 +8,7 @@
 #           Read this file to find out what a command actually does; it is meant to be read.
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created; revision2026 step R5.18)
+# Date:     2026-09-18 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -30,7 +30,7 @@ from runner import Step
 #%%******************************************************************************************************
 def ModelsDirectory():
     """Where the three runners live. Each of them changes into the directory of the models it
-    drives, so this is simply where they are started (revision2026 step R3.9)."""
+    drives, so this is simply where they are started."""
     return os.path.join(runner.RepositoryRoot(), 'python', 'testing')
 
 
@@ -168,7 +168,7 @@ def RegenerationVerdict(environment, options):
         print('')
         print('*** TIER 1 DRIFT: the generated API surface differs from the commit.')
         print('    Intended? Commit the regenerated files. Not intended? A generator or its')
-        print('    input changed unexpectedly - see the list above (revision2026 step R5.18.10).')
+        print('    input changed unexpectedly - see the list above.')
         return 'ok, TIER 1 DRIFT'
 
     return Verdict
@@ -385,7 +385,7 @@ def Complete(options):
     if not options.no_docs:
         #the pdf is built for a RELEASE and only there: it is an artifact to attach, it needs a
         #LaTeX installation, and it must not be able to fail an ordinary --complete run
-        #(revision2026b step RG3.3, #2586)
+        #(#2586)
         steps += Docs(OptionsWith(options, env=None, keep_cache=False, open=False,
                                   pdf=getattr(options, 'release_checks', False)))
 
@@ -421,7 +421,7 @@ def Complete(options):
 #%%******************************************************************************************************
 def FastModuleVersions(versions):
     """Which versions get a fast-module test run: the oldest and the second newest, as decided for
-    the release matrix in revision2026 step R5.11.1."""
+    the release matrix."""
     if len(versions) < 2:
         return list(versions)
 
@@ -439,7 +439,7 @@ def IssueTrackerScript():
 
 def WorkingTreeIsClean():
     """no uncommitted change to a TRACKED file. A wheel built from a dirty tree corresponds to no
-    commit, so nobody can ever rebuild it (revision2026 step R8.2)."""
+    commit, so nobody can ever rebuild it."""
     result = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no'],
                             cwd=runner.RepositoryRoot(), capture_output=True, text=True)
     return (result.returncode == 0 and result.stdout.strip() == '', result.stdout.strip())
@@ -451,7 +451,7 @@ def ReleaseTagName():
 
 def CheckReleaseReady(options):
     """What has to hold before a release is built, in one step that says everything that is wrong
-    rather than the first thing (revision2026 step R8.2).
+    rather than the first thing.
 
     None of it is new work for the release: the issue store is checked by the commit gate, the
     pages are rendered by the tracker, the release is named by "exudev issue bump". This is the
@@ -504,7 +504,7 @@ def WriteReleaseNotes():
     """The section of CHANGELOG.md that belongs to the current release, as its own file: that is
     what goes into the body of a GitHub release and into an announcement. It is CUT from the
     changelog rather than written again - the release notes of each issue are in the tracker and
-    nowhere else (revision2026 steps R7.4 and R8.2)."""
+    nowhere else."""
     changelog = os.path.join(runner.RepositoryRoot(), 'CHANGELOG.md')
     if not os.path.isfile(changelog):
         raise SystemExit('exudev release: no CHANGELOG.md; any tracker verb writes it')
@@ -566,7 +566,7 @@ def Release(options):
     """The release path: the guards, 'build --complete' over all versions, the linux wheels, the
     release notes and the tag - the old makeAndTestAllBinaries.bat, minus the separate windows.
 
-    The version itself is NOT bumped here (revision2026 step R8.2): starting a release is a
+    The version itself is NOT bumped here: starting a release is a
     decision about the product and belongs to "exudev issue bump", which is one command and one
     line in releases.json. What this path does is refuse to build a version that is not ready."""
     if runner.IsDevelopmentVersion() and not options.dev:
@@ -763,7 +763,7 @@ def Docs(options):
         #TWO steps rather than sphinx's own "-M latexpdf": that shortcut runs make, and on Windows
         #it calls a make.bat that needs a make which MiKTeX does not bring. Doing it in the open
         #also puts the LaTeX run in the summary as what it is - the part that needs an
-        #installation outside python (revision2026b step RG3.3, #2586).
+        #installation outside python (#2586).
         #"-t pdf" sets the tag that conf.py branches on. NOT strict: the pdf is a release
         #artifact, not a gate, and a LaTeX warning must not fail a release build.
         pdfArgv = ['python', '-m', 'sphinx', '-b', 'latex', '.', pdfBuildDirectory + '/latex',
@@ -937,7 +937,7 @@ def Clean(options):
     #build/lib.linux-x86_64-*, build/lib.macosx-* - so a list of the Windows ones cleaned
     #nothing on the other two (#2644). The glob is the platform's own; the linux directories
     #stay behind --linux, as they always did, because removing them used to break the linux
-    #build (revision2026 step R5.18)
+    #build
     platform = 'linux' if sys.platform.startswith('linux') else (
         'macosx' if sys.platform == 'darwin' else 'win')
     patterns = ['build/lib.' + platform + '*', 'build/temp.' + platform + '*',
@@ -1028,7 +1028,7 @@ class OptionsWith:
 
 #%%******************************************************************************************************
 #%%******************************************************************************************************
-#THE ISSUE TRACKER (revision2026 step R8.3). The tracker was driven by importing the module from
+#THE ISSUE TRACKER. The tracker was driven by importing the module from
 #its own directory and calling functions; every issue of this revision was raised with a four-line
 #"python -c". The maintainer placed the command line here rather than in a second entry point
 #(2026-09-21), so that one driver does the build, the tests, the documentation and the tracker.
@@ -1047,7 +1047,7 @@ def IssueTracker():
 
 
 def IssueServer():
-    """the local web page of revision2026 step R8.5.1; imported only when "serve" is called, so
+    """the local web page; imported only when "serve" is called, so
     that the other verbs never pay for http.server"""
     IssueTracker()                                     #it puts tools/issueTracker/ on sys.path
     import issueServer                                                        #noqa: E402
@@ -1109,7 +1109,7 @@ def ListIssues(tracker, options):
 
 def TriageReport(tracker):
     """the open backlog as a table of type against effort, and what is not classified yet
-    (revision2026 step R8.5.2). The question it answers is "what can be done in an afternoon",
+. The question it answers is "what can be done in an afternoon",
     which 270 issues in one list cannot."""
     issues = [issue for issue in tracker.GetIssues()
               if issue['status'].strip() not in tracker.closedStatuses]

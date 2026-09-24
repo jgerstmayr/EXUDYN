@@ -239,7 +239,7 @@ bool VisualizationSystemContainer::DoSingleIdleOperation()
 	if (!stopSimulationFlagSC && RendererIsRunning())
 	{
 		//the dialogs this queue opens can call DoIdleTasks() again, and the queue may not be
-		//entered from inside itself (#2643, revision2026b step RG6.6)
+		//entered from inside itself (#2643)
 		ScopedIdleOperation idleOperation;
 		if (GlfwRenderer::idleOperationDepth <= 1)
 		{

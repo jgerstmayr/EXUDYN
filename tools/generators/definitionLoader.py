@@ -16,7 +16,7 @@
 #
 #           Since revision2026 step R4.4.1 only the two documentation emitters (itemDocsEmitter.py,
 #           structureDocsEmitter.py) consume the old representation; this adapter is deleted with
-#           them in revision2026 step R7.1.
+#           them
 #
 # Usage:    import definitionLoader
 #           for parseInfo, parameterList in definitionLoader.LoadItemDefinitions(template): ...

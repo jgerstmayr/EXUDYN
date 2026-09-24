@@ -7,7 +7,7 @@
 #
 #           IMPORTANT: run this AFTER issueTracker.ResolveIssue(), never before: ResolveIssue
 #           rewrites the version files and the pages that embed the version string, so
-#           regenerating first leaves them one version behind (revision2026 fact 21).
+#           regenerating first leaves them one version behind.
 #
 #           Before running the generators it validates definitions/ (definitionValidator.py)
 #           and stops with exit code 3 if they are inconsistent.
@@ -52,7 +52,7 @@ tier1Paths = [
 
 #Tier 2: documentation. Differences warn but do not fail.
 tier2Paths = [
-    #the emitter output of revision2026 step R7.1.6; the .tex and .rst pages it replaces are gone,
+    #the emitter output; the .tex and .rst pages it replaces are gone,
     #and until this line was written nothing compared the Markdown against the commit
     'docs/generated',
     ]
@@ -200,7 +200,7 @@ def Main():
               + ' file(s) modified outside the tiers; ignored as unrelated work')
 
     if not args.no_run:
-        #the definitions are validated BEFORE anything is generated from them (revision2026 step R4.2)
+        #the definitions are validated BEFORE anything is generated from them
         sys.path.insert(0, os.path.join(repositoryRoot, 'tools', 'generators'))
         import definitionValidator
         if definitionValidator.ValidateDefinitions(verbose=verbose):

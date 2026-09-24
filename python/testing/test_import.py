@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test infrastructure file
 #
-# Details:  Which compiled module was imported, and why (revision2026 step R6.2, #2540). The
+# Details:  Which compiled module was imported, and why (#2540). The
 #           selection used to be a nest of four try/except blocks: whichever one succeeded, nothing
 #           recorded the decision, and a total failure raised a sentence about 32/64 bits that named
 #           neither the candidates nor the reasons.
@@ -14,7 +14,7 @@
 # Usage:    pytest test_import.py
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-19 (created, revision2026 step R6.2)
+# Date:     2026-09-19 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  One type model for all generators (revision2026 step R4.4.3.3): how a type name of
+# Details:  One type model for all generators: how a type name of
 #           definitions/ is spelled in each destination. It replaces eight hand-written tables
 #           (typeConversion and typeCasts for items and for structures, convertToDict,
 #           typeConversionStub, type2PyTyping, cppTypeNames) that overlapped and disagreed.
@@ -70,7 +70,7 @@ def SizedName(typeName):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#named spellings, the same for items and structures (revision2026 step R4.19): destination -> {typeName: spelling}
+#named spellings, the same for items and structures: destination -> {typeName: spelling}
 names = {
     'cppStorage': {
         'Int': 'Index',                             #C++ uses Index for every integer
@@ -147,7 +147,7 @@ def _CppStorage(typeName, context):
 
 
 def _CppExchange(typeName, context):
-    """the same for items and structures since revision2026 step R4.19: variable sizes are std::vector, fixed sizes std::array"""
+    """the same for items and structures: variable sizes are std::vector, fixed sizes std::array"""
     scalar = _Scalar(typeName, _scalarCpp)
     if scalar is not None and typeName not in itemIndexKinds:
         return scalar

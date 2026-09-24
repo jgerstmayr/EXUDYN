@@ -3,7 +3,7 @@
 #
 # Details:  Emits the mouse and keyboard tables of the documentation,
 #           docs/generated/mouseBindings.md and docs/generated/keyBindings.md, from the one table
-#           in python/exudyn/misc/keyBindings.py (revision2026b step RG6.2.6, #2591).
+#           in python/exudyn/misc/keyBindings.py (#2591).
 #
 #           WHY: what the render window does when a key is pressed was written down three times -
 #           src/Graphics/GlfwClient.cpp implements it, docs/manual/GUI.md tabulated it, and the

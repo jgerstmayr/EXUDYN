@@ -31,7 +31,7 @@ from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, 
 #MainSystem extensions that were defined here before revision2026 step R4.22.2:
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
 
-#the exported names are those of the imported modules (revision2026 step R4.22.3); helper imports such as np or sqrt
+#the exported names are those of the imported modules; helper imports such as np or sqrt
 #are not part of it - import them explicitly
 __all__ = (_basicUtilities.__all__ + _advancedUtilities.__all__ + _rigidBodyUtilities.__all__
            + _graphicsDataUtilities.__all__ + _itemInterface.__all__

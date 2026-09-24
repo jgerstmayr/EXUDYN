@@ -5,7 +5,7 @@
 #           abbreviations: docs/generated/examples/*.md, docs/generated/testModels/*.md with their
 #           index pages, and docs/generated/abbreviations.md. These three were the last things
 #           src/pythonGenerator/doc2rst.py did besides converting LaTeX, and they moved here when
-#           that converter was deleted (revision2026 step R7.1.7).
+#           that converter was deleted.
 #
 #           The test models are listed in the order of the reference solution of the test suite,
 #           the examples in the order of the folder, so that a page is where the reader of the
@@ -31,7 +31,7 @@ import generatorPaths as paths                                                  
 from autoGenerateHelper import MarkdownLabel                                    # noqa: E402
 
 #the abbreviations of the documentation; each one is a target, because the \acs{..} macros of the
-#chapters point at it (they became {ref}`ODE2 <ODE2>` in the Markdown of revision2026 step R7.1.5)
+#chapters point at it (they became {ref}`ODE2 <ODE2>` in the Markdown)
 abbreviations = {
     '2D': 'two dimensions or planar',
     '3D': 'three dimensions or spatial',

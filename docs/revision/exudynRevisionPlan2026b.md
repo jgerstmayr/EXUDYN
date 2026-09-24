@@ -343,7 +343,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 
 
 <a id="rg3-13"></a>
-**RG3.13** *(group RG3; maintainer 2026-09-24)* **The tree tells the reader about the revision
+**RG3.13** **DONE 2026-09-24** (#2648) — [log](exudynRevisionLog2026b.md#rg3-13) — *(group RG3; maintainer 2026-09-24)* **The tree told the reader about the revision
     instead of about itself** (#2646). The rule is now written down - `CLAUDE.md` 6a and
     `CODING_STYLE.md` §6, *documentation says what IS, not what it was* - and this step applies it
     to what is already there. The maintainer's example, `python/TestModels/GraphicsDataTest.py`:
@@ -377,6 +377,15 @@ fix needs a plan of its own.
 
 Open in the tracker for this group: **#2423** (every C++ user error inspects the Python source to
 find its file and line, on every raise).
+
+<a id="rg3-13-1"></a>
+**RG3.13.1** *(group RG3; from RG3.13, 2026-09-24)* **235 references to the plan are left in
+    comments, each inside a sentence** (#2649). 652 of the 887 were parentheticals or appended
+    clauses and went by rule, keeping the issue number where there was one. The rest read like
+    *"step R4.3 is moving outputs from the old generators to separate emitters"* - a sentence has
+    to be written for each, which a pattern cannot do. **None is in a published page**: they are
+    comments in `src/`, `tools/` and `python/`, so this is tidiness rather than a defect, and it
+    is work for a session with nothing better to do.
 
 <a id="rg4-1"></a>
 **RG4.1** *(group RG4; revision2026 step R10.1)* **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
@@ -1127,7 +1136,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8 | #2594 | place or drop the figures that no page references |
-| RG3.13 | #2646 | take the revision out of the pages and the models, and say what each thing is |
+| RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |

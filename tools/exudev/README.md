@@ -1,7 +1,7 @@
 # `exudev` — the Exudyn maintainer driver
 
 One command for building, testing and documenting the repository. It replaces the sixteen batch
-files that used to live in `tools/buildAndGenerate/` (issue #2503, revision2026 step R5.18).
+files that used to live in `tools/buildAndGenerate/` (issue #2503).
 
 ```
 exudev --help               the commands
@@ -33,9 +33,9 @@ three from any platform.
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
 | `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |
 | `exudev env [--py]` | python, exudyn, numpy, scipy and matplotlib per environment |
-| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `close`, `show`, `list`, `modify`, `triage`, `serve`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files (revision2026 step R8.3) |
-| `exudev issue bump` | start a new release: `--minor` (1.11 → 1.12), `--major` (1.11 → 2.0) or `--to <version>`; appends it to `releases.json` and restarts the micro version (revision2026 step R8.4) |
-| `exudev issue serve` | the same tracker as a local web page, for a backlog pass: list, search, filter, and raise/extend/remark/resolve through the same API (revision2026 step R8.5.1) |
+| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `close`, `show`, `list`, `modify`, `triage`, `serve`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files |
+| `exudev issue bump` | start a new release: `--minor` (1.11 → 1.12), `--major` (1.11 → 2.0) or `--to <version>`; appends it to `releases.json` and restarts the micro version |
+| `exudev issue serve` | the same tracker as a local web page, for a backlog pass: list, search, filter, and raise/extend/remark/resolve through the same API |
 
 ## The three things worth knowing
 

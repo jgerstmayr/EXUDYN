@@ -7,7 +7,7 @@
 #           install() is called at the end of mainSystemExtensions.py.
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-15 (created; revision2026 step R4.5)
+# Date:     2026-09-15 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #

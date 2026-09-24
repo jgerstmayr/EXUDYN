@@ -135,7 +135,7 @@ def DropLatexFigures(text):
     half is the RST/Markdown one in the \\onlyRST branch - in introduction.tex the tikz pictures
     are written bare rather than inside \\ignoreRST. They are dropped, and each dropped caption is
     PRINTED, because a figure that vanishes without a word is exactly the failure this tool must
-    not have (revision2026 step R7.1.5). The tikz sources themselves go with step R7.1.9, which
+    not have. The tikz sources themselves go with step R7.1.9, which
     replaces them by mermaid."""
     def Drop(match):
         caption = re.search(r'\\caption\{(.{0,60})', match.group(0), flags=re.S)
@@ -295,7 +295,7 @@ def ConvertListings(text):
             language = ''                 #a listing that says it is something else
         body = match.group(3).strip(chr(10))
         #the listings of the item definitions are indented like the Python source they sit in;
-        #that common indentation is not the code's own (revision2026 step R7.1.6)
+        #that common indentation is not the code's own
         indents = [len(line) - len(line.lstrip()) for line in body.split(chr(10))
                    if line.strip() != '']
         if len(indents) != 0 and min(indents) != 0:
@@ -361,7 +361,7 @@ def ConvertRSTFigures(text):
 def ConvertRSTImages(text):
     """The caption-less twin of ".. figure::"; one item description uses it of ".. figure::" and one item description uses it
     (ObjectConnectorRollingDiscPenalty). Without this it stayed in the page as RST text, which
-    renders as literal ".. image:: docs/figures/..." (revision2026 step R7.2.3)."""
+    renders as literal ".. image:: docs/figures/..."."""
     def Block(match):
         (image, options) = match.groups()
         lines = ['', '```{figure} ' + ImagePath(image)]
@@ -505,7 +505,7 @@ def ReportUnknown(text):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def DedentOutsideCode(text):
     """the .tex sources indent their prose, and that indentation means nothing in Markdown - but
-    inside a fenced block it is the Python code's own (revision2026 step R7.1.6)"""
+    inside a fenced block it is the Python code's own"""
     lines = []
     inCode = False
     for line in text.split(chr(10)):
@@ -520,7 +520,7 @@ def DedentOutsideCode(text):
 def ConvertText(text):
     """One piece of running text, not a file: the description of a parameter, a class or a
     function as `definitions/` and the docstrings write it. Used by the documentation emitters
-    of revision2026 step R7.1.6, which have the same LaTeX to convert as the chapters did - so
+, which have the same LaTeX to convert as the chapters did - so
     they call this rather than growing a second converter.
 
     Math is left alone (conf.py declares the macros to MathJax); everything else that the

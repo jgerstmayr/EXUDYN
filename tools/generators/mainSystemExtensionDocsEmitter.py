@@ -6,7 +6,7 @@
 #           tools/generators/generated/ (read by pybindEmitter.py, so this runs first), and
 #           stubAutoBindingsExt.pyi (read by createStubFiles.py). Moved out of
 #           utilitiesDocuGenerator.py (revision plan revision2026 step R4.3, part 2e); the .tex
-#           files went in revision2026 step R7.1.6 and the .rst ones in R7.1.7.
+#           files went and the .rst ones in R7.1.7.
 #
 # Usage:    python tools/generators/mainSystemExtensionDocsEmitter.py
 #
@@ -55,7 +55,7 @@ def main():
             
             sPyi = FunctionStub(funcDict)
             
-            #written from the parsed dictionary (revision2026 step R7.1.6); the heading is one
+            #written from the parsed dictionary; the heading is one
             #level below the class section that pybindEmitter puts it into
             markdownTemp = FunctionDescription2Markdown(funcDict, moduleNamePython, fileName,
                                                         headingLevel=3,

@@ -5,7 +5,7 @@
 #           src/Graphics/GlfwClient.cpp implements it, docs/manual/GUI.md tabulated it, and the
 #           help dialog printed its own text. Two of the three were prose that nothing kept in
 #           step with the first, and they had drifted - keys that exist were in neither, and the
-#           keypad rotation keys were named wrongly in both (revision2026b step RG6.2.6, #2591).
+#           keypad rotation keys were named wrongly in both (#2591).
 #
 #           This table is the one source of the two prose copies: the help dialog builds its text
 #           from it (RendererHelpText), and tools/generators/keyBindingsEmitter.py writes the

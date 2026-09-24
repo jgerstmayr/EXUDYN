@@ -41,7 +41,7 @@ exec(open(file).read(), globals())
 file='tools/generators/generated/confHelperPyUtilities.py'
 exec(open(file).read(), globals())
 #the citation keys of docs/bibliographyDoc.bib, for AppendCitationDefinitions() at the end
-#of this file (revision2026b step RG3.5)
+#of this file
 citationKeys=[]
 file='tools/generators/generated/confHelperCitations.py'
 exec(open(file).read(), globals())
@@ -85,7 +85,7 @@ numfig = True #uses numbers for figures, see https://www.sphinx-doc.org/en/maste
 templates_path = ['_templates']
 #everything that is not documentation; before the flatten a single 'main/*' covered src,
 #include, libs, obj and pythonDev, so each of them has to be named individually now
-#NOTE README.rst is NOT excluded: since revision2026 step R7.1.5 it is a document of the
+#NOTE README.rst is NOT excluded: it is a document of the
 #documentation itself (the first page of the user manual) as well as the GitHub and PyPI
 #landing page. One file, three places - and its image paths stay relative to the repository
 #root, which is what GitHub and PyPI need.
@@ -95,16 +95,16 @@ exclude_patterns = ['rotorAnsys.rst',
                     '_build/*','build/*','dist/*','tmp/*','.pytest_cache/*',
                     'README.md',                      #the GitHub landing page, like README.rst
                     'docs/generated/README.md',       #what the directory is, for humans in git
-                    #Markdown that is NOT documentation (revision2026 step R7.1.4). Sphinx reads .md
+                    #Markdown that is NOT documentation. Sphinx reads .md
                     #since myst_parser was added, and everything it can read must either be in a
                     #toctree or excluded - a page in neither fails the strict build (step R7.1.2).
                     'docs/revision/*',   #the revision plan, log and info: a working record
                     'CLAUDE.md',         #the working contract for Claude Code sessions
                     '.github/*',         #issue and pull request templates: GitHub reads them,
-                                         #Sphinx must not (revision2026 step R8.1)
+                                         #Sphinx must not
                     #maintainer notes: they stay in the repository and are linked from the
                     #how-to section of the documentation, but they are not pages of the manual
-                    #(revision2026b step RG3.2, #2585)
+                    #(#2585)
                     'docs/howTo/buildQuirks.md',
                     'docs/howTo/convertVideosFfmpeg.md',
                     'docs/howTo/gccVsMsvcTraps.md',
@@ -113,12 +113,12 @@ exclude_patterns = ['rotorAnsys.rst',
                     #the mouse and keyboard tables, generated from
                     #python/exudyn/misc/keyBindings.py and INCLUDED by docs/manual/GUI.md;
                     #as documents of their own they would be orphans and fail the strict
-                    #build (revision2026b step RG6.2.6, #2591)
+                    #build (#2591)
                     'docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md',
                     'docs/demo/*', 'docs/userTools/*', 'docs/verification/*']
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#THE PDF (revision2026b step RG3.3, #2586). "sphinx -M latexpdf . _buildpdf -t pdf" sets the tag,
+#THE PDF (#2586). "sphinx -M latexpdf . _buildpdf -t pdf" sets the tag,
 #and only then is pdfIndex.md a document: it is the root of the PDF, its landing page and the
 #only place the order of the PDF is written down. The html build never sees it, and this branch is
 #the only difference between the two builds.
@@ -153,9 +153,9 @@ html_theme = "sphinx_rtd_theme"
 extensions = [
    'sphinx_search.extension', #pip install readthedocs-sphinx-search
    'sphinx_copybutton',
-   'myst_parser',             #Markdown sources (revision2026 step R7.1.4, #2546); the migration of
+   'myst_parser',             #Markdown sources (#2546); the migration of
                               #step R7.1 converts the .tex chapters into this format
-   'sphinxcontrib.mermaid',   #the flow charts of the manual (revision2026 step R7.1.9):
+   'sphinxcontrib.mermaid',   #the flow charts of the manual:
                               #text rather than a hand-made PNG beside a tikz source that
                               #only the PDF ever rendered
 ]
@@ -236,7 +236,7 @@ mathjax3_config = {
         },
         'macros': { #write defs without '\' at beginning; use [,n] with n arguments
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the rest of the document's macros, revision2026 step R7.1.5 (#2549).
+#the rest of the document's macros (#2549).
 #Until the chapters became Markdown, the .tex -> .rst converter EXPANDED these
 #(\qv was written into the .rst as \mathbf{q}), so MathJax never saw them and conf.py
 #carried only the ones that survived expansion. The Markdown keeps the macro, so every
@@ -422,7 +422,7 @@ mathjax3_config = {
             'termC': [r'{\color{green}{#1}}',1],
 #solver:
             #braces around the argument: MathJax reads \ddot \mathbf{q} as intended, LaTeX reads
-            #it as \ddot{\mathbf} and stops (revision2026b step RG3.3)
+            #it as \ddot{\mathbf} and stops
             'acc': r'{\ddot{\mathbf{q}}}',
             'GA': r'{G\alpha}',
             'Hm': r'{\mathbf{H}}',
@@ -448,7 +448,7 @@ mathjax3_config = {
     }
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#THE LATEX BUILD (revision2026b step RG3.3, #2586)
+#THE LATEX BUILD (#2586)
 #Everything below is read by "sphinx -M latexpdf", which "exudev docs --pdf" runs, and by nothing
 #else; the html build ignores it.
 #
@@ -504,7 +504,7 @@ latex_documents = [('pdfIndex', 'exudynDocumentation.tex',
 mermaid_cmd = 'mermaidx'
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#CITATIONS (revision2026b step RG3.5, #2550)
+#CITATIONS (#2550)
 #The chapters cite in running text - "see Zwoelfer and Gerstmayr [ZwoelferGerstmayr2021]" - which
 #the LaTeX build resolved and nothing resolved after it: the keys were printed and pointed
 #nowhere. docs/generated/references.md gives every entry of the bibliography a target, and the
@@ -525,7 +525,7 @@ def AppendCitationDefinitions(app, docname, source):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#LINE BREAKS INSIDE TABLE CELLS, FOR LATEX ONLY (revision2026b step RG3.3, #2586)
+#LINE BREAKS INSIDE TABLE CELLS, FOR LATEX ONLY (#2586)
 #The name cell of a settings table stacks the access paths of one item - the short name and the
 #full visualizationSettings.general.xxx path - and the emitters separate them with a raw <br>
 #(tools/generators/autoGenerateHelper.py). There are about 470 of them in SimulationSettings.md

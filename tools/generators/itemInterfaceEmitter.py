@@ -180,7 +180,7 @@ def ItemClasses(definition):
             else:
                 tempVPythonDict += "None"
 
-            #range checks are done in C++ on every write path (revision2026 step R4.4.3.4b)
+            #range checks are done in C++ on every write path
             parameterWithCheck = pythonName
             if (IsAVector(typeName)
                 or IsASimpleMatrix(typeName)
@@ -264,7 +264,7 @@ def EmitItemInterface(definitions):
             if definition.get('classType', '') == classType:
                 s += ItemClasses(definition)
 
-    #__all__ after the imports, from the same rule tools/checkAll.py checks (revision2026 step R4.22.3)
+    #__all__ after the imports, from the same rule tools/checkAll.py checks
     marker = '\n\n#helper function for level-1 copy of dicts'
     s = s.replace(marker, '\n\n' + publicApi.AllText(publicApi.PublicNames(s)) + marker, 1)
     return s

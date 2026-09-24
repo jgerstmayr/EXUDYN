@@ -16,7 +16,7 @@
 #           A source that needs Python ITSELF is not a finding: 11 of the 52 reach pybind11
 #           through a user function, a PyMatrixContainer or a numpy array, and that is what
 #           maximumItemSourcesWithPybind is measured against rather than a round number. It was
-#           19 until revision2026b step RG9.2 (#2628) removed Utilities/ExceptionsTemplates.h
+#           19 (#2628) removed Utilities/ExceptionsTemplates.h
 #           from the fourteen sources that referred to nothing in it.
 #
 # Usage:    pytest python/testing/test_cppIncludes.py

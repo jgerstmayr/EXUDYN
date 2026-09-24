@@ -4,7 +4,7 @@
 # Details:  Emits the C++ structure headers (SimulationSettings.h, VisualizationSettings.h, ...),
 #           DictionariesGetSet.h and Pybind_modules.h from definitions/ (revision2026 step R4.3,
 #           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py. Reads the
-#           members directly through the predicates of structureModel.py (revision2026 step R4.4.1).
+#           members directly through the predicates of structureModel.py.
 #
 # Usage:    python tools/generators/structureHeaderEmitter.py
 #
@@ -27,14 +27,14 @@ from structureModel import *                                            # noqa: 
 import typeModel as tm                                                  # noqa: E402
 
 
-#scalar types written through EPyUtils::FromPython (revision2026 step R4.4.3.5a): None and item
+#scalar types written through EPyUtils::FromPython: None and item
 #indices raise as for items; the U.../P... forms carry their range check
 scalarRangeForms = {'bool': None, 'float': None, 'Real': None, 'Index': None, 'Int': None,
                     'UReal': 'nonNegative', 'UFloat': 'nonNegative', 'UInt': 'nonNegative',
                     'PReal': 'positive', 'PFloat': 'positive', 'PInt': 'positive'}
 
 
-#further member types with a FromPython overload and a context (revision2026 step R4.4.3.5b); vectors and index
+#further member types with a FromPython overload and a context; vectors and index
 #arrays are returned as lists through EPyUtils::ToPythonMember
 convertedMemberTypes = list(scalarRangeForms) + ['String', 'FileName', 'Float3', 'Float4', 'Index2', 'ArrayIndex',
                                                  'LinearSolverType', 'DynamicSolverType', 'OutputVariableType',
@@ -60,7 +60,7 @@ def MemberDefaultLines(parameter):
 
     The values in memberDefaults are written as the sub-member's defaultValue would be, so the
     sub-structure's definition is looked up to know the sub-member's type - a String is the one
-    that has to be quoted, exactly as the ordinary defaults are (revision2026b step RG6.2.20).
+    that has to be quoted, exactly as the ordinary defaults are.
     """
     memberDefaults = MemberDefaults(parameter)
     if memberDefaults == {}:
@@ -252,12 +252,12 @@ def StructureCppHeader(parseInfo):
                     s+='    ' + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'
         for parameter in parameterListSorted:
             #a sub-structure that starts from other values than its own defaults
-            #(revision2026b step RG6.2.20); these values used to be set in C++ constructors
+            #; these values used to be set in C++ constructors
             #elsewhere, where neither the documentation nor the settings dialog could see them
             for line in MemberDefaultLines(parameter):
                 s += '    ' + line + chr(10)
         if classInitBackLink and not classHasBackLink:
-            #THE TOP CLASS LINKS ITSELF (#2603, revision2026b step RG4.4): Init was called in
+            #THE TOP CLASS LINKS ITSELF (#2603): Init was called in
             #exactly one place, for the settings of a SystemContainer, so a VisualizationSettings
             #that Python constructs had every backlink at nullptr and the first deprecated member
             #- all 93 of them forward through the backlink - dereferenced it: a segfault from two
@@ -484,7 +484,7 @@ def StructureCppHeader(parseInfo):
                         sDictGet += '    d = py::dict(); //reset local dict\n'
                         sDictGet += '    d["itemIdentifier"] = std::string(""); //identifier for item\n'
                         valueStr = 'data.' + cValueStr
-                        if IsDirectScalar(parameter) and parameter['type'] in listMemberTypes: #lists, as the attribute (revision2026 step R4.4.3.5b)
+                        if IsDirectScalar(parameter) and parameter['type'] in listMemberTypes: #lists, as the attribute
                             valueStr = 'EPyUtils::ToPythonMember(data.' + parameter['cplusplusName'] + ')'
                         sDictGet += '    d["value"] = ' + valueStr + ';\n'
                         sDictGet += '    d["type"] = "' + pType + '";\n'

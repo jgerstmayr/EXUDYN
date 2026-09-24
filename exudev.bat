@@ -13,7 +13,7 @@ REM is the Microsoft Store stub, which prints an advertisement and exits 9009 - 
 REM "python ..." here would look like the driver had run and done nothing.
 REM
 REM Author: Johannes Gerstmayr
-REM Date: 2026-09-18 (created; revision2026 step R5.18)
+REM Date: 2026-09-18 (created)
 
 setlocal
 set "exudevPython="

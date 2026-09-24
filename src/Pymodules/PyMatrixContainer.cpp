@@ -188,7 +188,7 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 
 				if (numberOfRowsInit == EXUstd::InvalidIndex || numberOfColumnsInit == EXUstd::InvalidIndex) 
 				{ 
-					//the ONE site converted in revision2026 step R6.3.1 (#2516), to prove that a C++ throw
+					//the ONE site converted (#2516), to prove that a C++ throw
 					//arrives in Python as the class it names and not as its base; the triage of step R6.3.2
 					//decides the other 2248. A user passing one of the two is not making an Exudyn bug happen.
 					if (numberOfRowsInit != numberOfColumnsInit)
@@ -203,7 +203,7 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 				else
 				{ 
 					//the kind of value is right and the value is not: the third argument is what the
-					//typed form of the macro adds (#2521, revision2026 step R6.3.3)
+					//typed form of the macro adds (#2521)
 					CHECKandTHROW(numberOfRowsInit >= numRows && numberOfColumnsInit >= numColumns,
 						"SetWithSparseMatrix: numberOfRows and numberOfColumns must be either default values (invalid index), or >= the dimensions of sparseMatrix",
 						ExudynValueError);
@@ -271,7 +271,7 @@ void PyMatrixContainer::SetOrAddSparseMatrixCSRBase(Index numberOfRowsInit, Inde
 		}
 		//what was handed over is not a sparse matrix in any accepted form: the OBJECT is wrong
 		//and not its value - the second argument is what the typed form of the macro adds
-		//(#2521, revision2026 step R6.3.3)
+		//(#2521)
 		else { CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrix: illegal array format!", ExudynTypeError); }
 	}
 	else 

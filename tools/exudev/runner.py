@@ -17,7 +17,7 @@
 #           the standard library only, with syntax that works on Python 3.8.
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created; revision2026 step R5.18)
+# Date:     2026-09-18 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

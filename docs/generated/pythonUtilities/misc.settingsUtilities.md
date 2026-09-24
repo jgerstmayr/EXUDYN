@@ -16,7 +16,7 @@ every function here runs without a window and can be tested without one.
 
 [`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L65)
 
-- **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: until revision2026b step RG6.2.3 this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
+- **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
 - **input**: exu: the exudyn module
 - **output**: the dictionary the dialog picks its combo box entries from
 
@@ -94,7 +94,7 @@ every function here runs without a window and can be tested without one.
 
 [`FindMatches(leaves, searchText)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L395)
 
-- **function description**: the settings a search text finds: the NAMES first, the descriptions second Several hundred values in a tree of folders, and until revision2026b step RG6.2.10 the only way to a setting was knowing which folder it sits in.
+- **function description**: the settings a search text finds: the NAMES first, the descriptions second Several hundred values in a tree of folders, and the only way to a setting was knowing which folder it sits in.
 - **input**: leaves: SettingsLeafList(...) of the settings being searched searchText: what the user typed; case does not matter
 - **output**: list of (path, label), name hits first, then hits in the path, then hits that are only in the description - those labelled with the part of the description that matched
 

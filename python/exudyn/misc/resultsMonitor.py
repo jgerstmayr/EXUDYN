@@ -965,7 +965,7 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
     settings['title'] = title
     settings['useSettingsFile'] = useSettingsFile
 
-    #a run without windows draws once and saves; it must never wait for a human (revision2026 R5.17)
+    #a run without windows draws once and saves; it must never wait for a human
     suppressed = (matplotlib.get_backend().lower() == 'agg'
                   or UIWindowSuppressed('Plots', 'MonitorResults'))
     settings['once'] = once or suppressed

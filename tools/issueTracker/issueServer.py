@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  A local web page over the issue store (revision2026 step R8.5.1), started with
+# Details:  A local web page over the issue store, started with
 #           "exudev issue serve". Reading 270 open issues, searching them and writing one is
 #           done here instead of in a command line, because that is what a backlog pass is:
 #           look, decide, write, look again.
@@ -26,7 +26,7 @@
 # Usage:    exudev issue serve [--port 8099] [--no-browser] [--author NAME]
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-21 (revision2026 step R8.5.1)
+# Date:     2026-09-21
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -349,7 +349,7 @@ pageHtml = r"""<!DOCTYPE html>
  table { border-collapse: collapse; width: 100%; }
  td { padding: 3px 6px; border-bottom: 1px solid #8882; vertical-align: top; }
  /*the header of the list; sticky, because the pane scrolls and a column name that scrolls away
-   is a column name that is not there (revision2026b step RG10.2, #2600)*/
+   is a column name that is not there (#2600)*/
  th { text-align: left; font-size: 11px; font-weight: 600; opacity: 0.75; white-space: nowrap;
       padding: 5px 6px; border-bottom: 1px solid #8884; position: sticky; top: 0;
       background: Canvas; cursor: help; }
@@ -476,7 +476,7 @@ async function LoadMeta() {
 
 //the column names, and what the values in them mean. The vocabularies come from the tracker
 //(/api/meta), so the tooltips say "LOW: within 2 hours" without this page knowing it
-//(revision2026b step RG10.2, #2600)
+//(#2600)
 function Meanings(values, label) {
     let text = label;
     for (const name in values) text += '\n' + name + ': ' + values[name];

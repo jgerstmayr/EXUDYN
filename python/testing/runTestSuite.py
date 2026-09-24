@@ -29,11 +29,11 @@ if platform.processor().find('arm') != -1:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #--fast-module: run the whole suite against exudynCPPfast instead of the default module, which
-#otherwise ships untested (revision2026 step R5.11). This has to happen HERE, before exudyn is
+#otherwise ships untested. This has to happen HERE, before exudyn is
 #imported below - once the C++ module is loaded the choice is made. The environment variable is
 #what the model WORKERS see: --parallel and pytest run every model in its own interpreter, and a
 #child inherits the variable but not sys.exudynFast.
-#NOTE '--fast' is something else entirely: the pull-request subset (revision2026 step R5.2).
+#NOTE '--fast' is something else entirely: the pull-request subset.
 useFastModule = '--fast-module' in sys.argv
 if useFastModule:
     import os
@@ -47,7 +47,7 @@ import testRunnerTools
 
 #the suite drives python/TestModels/ and runs IN it: every model is written relative to that
 #directory and the log goes to ../logs/ next to it. Where the suite was STARTED from does not
-#matter (revision2026 steps R3.8, R3.9; #2512, #2513)
+#matter (#2512, #2513)
 testRunnerTools.WorkInModelsDirectory(testRunnerTools.testModelsDir)
 
 import exudyn as exu
@@ -62,8 +62,8 @@ try:
 except:
     exu.Print('import matplotlib failed ... using standard plot engine')
 
-#NO WINDOW, IN EITHER PATH (revision2026b step RG10.6, #2632): the two worker bootstraps in
-#testRunnerTools.py have called this since revision2026 step R5.17, but the SERIAL path of this
+#NO WINDOW, IN EITHER PATH (#2632): the two worker bootstraps in
+#testRunnerTools.py have called this, but the SERIAL path of this
 #runner did not - the models' own 'if useGraphics:' was the only thing keeping windows shut, and
 #a model that drops that branch opens one on the screen of whoever runs the suite. The suite
 #never wants a window: it sets useGraphics=False for every model a few lines below.
@@ -83,12 +83,12 @@ overwriteLog = False    #--overwrite-log: replace an existing log instead of div
 #copyLog = False         #copy log to final logs/testmodels
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
-#--fast: the pull-request subset (revision2026 step R5.2) - without the models that take
+#--fast: the pull-request subset - without the models that take
 #noticeably longer and without those needing an optional package. Both lists are data in
 #runTestSuiteRefSol.py, shared with the pytest markers.
 TSScope.fastSubset = False
 
-#--parallel: run the models in separate interpreters (revision2026 step R5.8); serial by default,
+#--parallel: run the models in separate interpreters; serial by default,
 #so that the gating run stays exactly what it has always been
 TSScope.parallel = False
 TSScope.numberOfProcesses = 0 #0: chosen by testRunnerTools.RunModelsInParallel
@@ -108,7 +108,7 @@ if len(sys.argv) > 1:
             pass #already acted upon, before the exudyn import; listed so it is not "unknown"
         elif sys.argv[i+1].startswith('--parallel'):
             #--parallel runs every model in its own interpreter, the number of workers after '='
-            #(revision2026 step R5.8); possible since each model writes into its own directory
+            #; possible since each model writes into its own directory
             TSScope.parallel = True
             if '=' in sys.argv[i+1]:
                 TSScope.numberOfProcesses = int(sys.argv[i+1].split('=')[1])
@@ -133,7 +133,7 @@ TSScope.solutionDirectory = 'solution'
 
 TSScope.printTestResults = False #print list, which can be imported for new reference values
 #the platform-dependent base tolerance lives in testRunnerTools, so that the suite and the
-#pytest collector of revision2026 step R5.1 cannot drift apart
+#pytest collector cannot drift apart
 TSScope.testTolerance = testRunnerTools.BaseTolerance()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -189,7 +189,7 @@ pythonVersionMain = str(sys.version_info.major)+'.'+str(sys.version_info.minor)
 platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersionMain
 #exu.config.Version() is the SAME string for both modules, so without this marker the fast run
 #would collide with the default log and be diverted to tmp/ with a misleading message about
-#another machine. Derived from what was loaded, not from what was asked (revision2026 step R5.11);
+#another machine. Derived from what was loaded, not from what was asked;
 #and from WHICH MODULE it is, not from whether it has AVX2 - the fast module carries no vector
 #extensions on macOS or in a --no-avx2 build, and its log still has to be told apart (#2496).
 if not testRunnerTools.ModuleIsRegular():
@@ -237,7 +237,7 @@ TSScope.timeStart = -time.time()
 
 #the ten 'model unit tests' were functions of python/testing/modelUnitTests.py, run from here
 #through a TestInterface object - and NOT run: runUnitTests was False "at least since V1.6".
-#They are ordinary test models since revision2026b step RG10.6.5 (#2632), so they are in the
+#They are ordinary test models (#2632), so they are in the
 #list below with everything else, and they run.
 SC.Reset()
 
@@ -265,11 +265,11 @@ if TSScope.runTestExamples:
                                            in TSScope.avx2Update.items()
                                            if name in TSScope.examplesTestRefSol})
         exu.Print('module has vector extensions: ' + str(len(TSScope.avx2Update))
-                  + ' AVX2 reference values applied (revision2026 step R2.10.3)')
+                  + ' AVX2 reference values applied')
     TSScope.testTolFactors = TestExamplesToleranceFactors()
     TSScope.sensitiveTests = SensitiveTests()
     #known Windows/Linux differences are excluded from the exit code ON LINUX ONLY: the
-    #reference values are the Windows ones, so Windows must still pass them (revision2026 phase R10)
+    #reference values are the Windows ones, so Windows must still pass them
     TSScope.unresolvedTests = set()
     if not isWindows and not isMacOS:
         TSScope.unresolvedTests = UnresolvedOnLinux()
@@ -278,7 +278,7 @@ if TSScope.runTestExamples:
     
     #the reference lists ARE the run manifest, so a model missing from them is never executed.
     #Check that against the folder before running anything, and report it in the log where the
-    #next reader will see it (revision2026 step R5.9).
+    #next reader will see it.
     #since revision2026 step R3.9 this directory holds test models and nothing else, so the
     #check is simply 'every .py is either referenced or explicitly excluded' (#2513).
     #raytracerNOGLFWtest.py is added back because TestExamplesReferenceSolution() pops it on
@@ -313,7 +313,7 @@ if TSScope.runTestExamples:
     
     #in parallel mode every model runs in its own interpreter FIRST, and the loop below then
     #reports the results in the order of testFileList, so log and exit code do not depend on the
-    #order in which the models finished (revision2026 step R5.8)
+    #order in which the models finished
     TSScope.parallelResults = {}
     if TSScope.parallel:
         exu.Print('running ' + str(TSScope.totalTests) + ' test models in parallel')
@@ -337,7 +337,7 @@ if TSScope.runTestExamples:
         exu.config.outputDirectory = TSScope.solutionDirectory + '/' + TSScope.file[:-3]
         TSScope.testError = -1 #default value !=-1, if there is an error in the calculation
         TSScope.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
-        #the channel a model uses since revision2026b step RG10.6 (#2632): exu.sys instead of an
+        #the channel a model uses (#2632): exu.sys instead of an
         #import of this module. It is cleared for every model, because exu.sys lives as long as
         #the interpreter and a value left over from the previous model would be read as this
         #model's result
@@ -367,7 +367,7 @@ if TSScope.runTestExamples:
                                                           if TSScope.parallel else
                                                           time.perf_counter() - TSScope.testTimeStart)
             #a converted model writes exu.sys['testResult']; one that has not been converted
-            #yet still writes into the suite's own variable (revision2026b step RG10.6)
+            #yet still writes into the suite's own variable
             if exu.sys.get('testResult', TSScope.invalidResult) != TSScope.invalidResult:
                 TSScope.testResult = exu.sys['testResult']
             exu.sys['testIsActive'] = False
@@ -392,7 +392,7 @@ if TSScope.runTestExamples:
                 exu.Print("refsol=",TSScope.examplesTestRefSol[TSScope.name])
                 exu.Print("tol=", TSScope.testTolerance*TSScope.testTolFact)
     
-            #a model may state an absolute tolerance of its own (revision2026b step RG10.6);
+            #a model may state an absolute tolerance of its own;
             #it replaces multiplying the result by a factor to make it fit, which hid the
             #tolerance inside the number the test compares
             TSScope.testModelTolerance = TSScope.testTolerance*TSScope.testTolFact
@@ -501,7 +501,7 @@ if TSScope.runMiniExamples:
 if TSScope.runCppUnitTests:
     #the binding is on exu.special, not exu.solver - checking the wrong module made the tests LOOK
     #skipped even in a build that has them (#2458). It exists only when the module was compiled
-    #with PERFORM_UNIT_TESTS, which is the performUnitTests build switch (revision2026 step R5.3).
+    #with PERFORM_UNIT_TESTS, which is the performUnitTests build switch.
     if hasattr(exu.special, 'RunCppUnitTests'):
         exu.Print('\n******************************************')
         exu.Print('RUN CPP UNIT TESTS:')
@@ -578,7 +578,7 @@ if TSScope.runCppUnitTests:
     totalFails+=numberOfCppUnitTestsFailed #RunCppUnitTests returns a COUNT, not a list (#2458)
 else:
     exu.Print('CPP UNIT TESTS SKIPPED: this build has no lest unit tests; rebuild with the '
-              'performUnitTests switch (revision2026 step R5.3)')
+              'performUnitTests switch')
     # localFileName += '-nocpp'
 
 #per-test overview at the end of the log: value, error, effective tolerance and runtime, one

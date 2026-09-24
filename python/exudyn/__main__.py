@@ -149,7 +149,7 @@ def _CommandDemo(argumentList):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the dialogs a user may want without a render window (revision2026b step RG6.2.18, #2624). The
+#the dialogs a user may want without a render window (#2624). The
 #settings dialog was reachable only by pressing V in the renderer, which is no help to somebody
 #who wants to look up what a setting is called before writing the model
 dialogNames = {
@@ -200,7 +200,7 @@ def _CommandDialogs(argumentList):
         else exu.SimulationSettings()
     gui.EditDictionaryWithTypeInfo(settings, exu, what)
 
-    #what the browsing was for: the code that reproduces it (revision2026b step RG12.3)
+    #what the browsing was for: the code that reproduces it
     from exudyn.misc.settingsUtilities import ChangedSettings, ChangedSettingsCode  # noqa: PLC0415
     changes = ChangedSettings(settings)
     if changes:

@@ -60,7 +60,7 @@ class Replay:
             elif name == 'StubCode':
                 plr.sPyi += args[0]
             elif name == 'ResetMarkdown':
-                plr.sMarkdown = ''   #the chapter title lives in the index (revision2026 R7.1.6)
+                plr.sMarkdown = ''   #the chapter title lives in the index
             elif name == 'BeginCppWrittenByHand':
                 assert self.savedCpp is None, 'BeginCppWrittenByHand is not closed'
                 self.savedCpp = plr.sPy
@@ -106,7 +106,7 @@ markdownPageTitles = {
 
 def WriteMarkdownPages(plr):
     """docs/generated/cInterface/: one page per file of the RST split, plus the chapter index
-    which carries the chapter label (revision2026 step R7.1.6)"""
+    which carries the chapter label"""
     markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'cInterface')
     os.makedirs(markdownDir, exist_ok=True)
 
@@ -210,7 +210,7 @@ def main():
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #MARKDOWN, revision2026 step R7.1.6: the same pages, in docs/generated/ where emitter output
+    #MARKDOWN: the same pages, in docs/generated/ where emitter output
     #belongs (decision D10). docs/theDoc/manual_interfaces.tex and docs/RST/cInterface/ go away
     #with this step; the LaTeX and RST branches above go in R7.1.7.
     WriteMarkdownPages(plr)

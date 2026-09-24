@@ -3,7 +3,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # checkMathMacros - every macro used in the documentation's math is declared to MathJax
 #
-# Why this check exists (revision2026 step R7.1.5, #2549): the math of the manual is written with
+# Why this check exists (#2549): the math of the manual is written with
 # the project's own macros - $\qv\cConfig$, $\LU{0b}{\Rot}$, $\diffmOI{f_c}$ - and MathJax only
 # resolves what conf.py declares in mathjax3_config. A macro that is NOT declared renders as raw
 # LaTeX source in the browser, and NOTHING reports it: Sphinx does not read math, MathJax runs in
@@ -72,7 +72,7 @@ def main():
     args = parser.parse_args()
 
     declared = DeclaredMacros('conf.py')
-    #the hand-written chapters and, since revision2026 step R7.1.6, the emitter output: the item
+    #the hand-written chapters and,, the emitter output: the item
     #reference manual carries most of the document's math
     used = UsedMacros(sorted(glob.glob('docs/manual/*.md')
                              + glob.glob('docs/generated/**/*.md', recursive=True)))
@@ -89,7 +89,7 @@ def main():
         files = sorted(set(missing[name]))
         print('   \\' + name + '  x' + str(len(missing[name])) + '  ' +
               ', '.join(file.split('/')[-1] for file in files[:3]))
-    print('\nAdd them to the macros dict in conf.py; see revision2026 step R7.1.5.')
+    print('\nAdd them to the macros dict in conf.py.')
     return 1 if args.check else 0
 
 

@@ -2,7 +2,7 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Every place where the C++ side reports an error, sorted by WHO the message is for
-#           (revision2026 step R6.3.2). The five helpers - CHECKandTHROW, CHECKandTHROWstring,
+#. The five helpers - CHECKandTHROW, CHECKandTHROWstring,
 #           PyError, SysError, PyWarning - all end up as RuntimeError in Python today, and the
 #           helper a check is written with says nothing about what the check means: the same macro
 #           states a user's index mistake in one place and an Exudyn invariant in the next.
@@ -27,7 +27,7 @@
 #           python tools/errorTriage.py --csv FILE     one row per site
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created, revision2026 step R6.3.2)
+# Date:     2026-09-18 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

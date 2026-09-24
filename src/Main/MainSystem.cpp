@@ -408,7 +408,7 @@ NodeIndex MainSystem::AddMainNodePyClass(const py::object& pyObject)
 		itemIndex = AddMainNode(dictObject);
 	}
 	//a parameter error that named its Python exception type keeps it; its message was
-	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//already printed where it was raised (#2432).
 	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
 	//otherwise catch it first (ReleaseAssert.h:30) - and the same holds for the Exudyn exception
 	//classes, which derive from EXUexception for exactly that reason (#2516)
@@ -835,7 +835,7 @@ ObjectIndex MainSystem::AddMainObjectPyClass(const py::object& pyObject)
 		itemIndex = AddMainObject(dictObject);
 	}
 	//a parameter error that named its Python exception type keeps it; its message was
-	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//already printed where it was raised (#2432).
 	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
 	//otherwise catch it first (ReleaseAssert.h:30) - and the same holds for the Exudyn exception
 	//classes, which derive from EXUexception for exactly that reason (#2516)
@@ -1233,7 +1233,7 @@ MarkerIndex MainSystem::AddMainMarkerPyClass(const py::object& pyObject)
 		itemIndex = AddMainMarker(dictObject);
 	}
 	//a parameter error that named its Python exception type keeps it; its message was
-	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//already printed where it was raised (#2432).
 	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
 	//otherwise catch it first (ReleaseAssert.h:30) - and the same holds for the Exudyn exception
 	//classes, which derive from EXUexception for exactly that reason (#2516)
@@ -1552,7 +1552,7 @@ LoadIndex MainSystem::AddMainLoadPyClass(const py::object& pyObject)
 		itemIndex = AddMainLoad(dictObject);
 	}
 	//a parameter error that named its Python exception type keeps it; its message was
-	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//already printed where it was raised (#2432).
 	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
 	//otherwise catch it first (ReleaseAssert.h:30) - and the same holds for the Exudyn exception
 	//classes, which derive from EXUexception for exactly that reason (#2516)
@@ -1824,7 +1824,7 @@ SensorIndex MainSystem::AddMainSensorPyClass(const py::object& pyObject)
 		itemIndex = AddMainSensor(dictObject);
 	}
 	//a parameter error that named its Python exception type keeps it; its message was
-	//already printed where it was raised (revision2026 step R6.7, #2432).
+	//already printed where it was raised (#2432).
 	//NOTE: this MUST come before catch(EXUexception), which is std::runtime_error and would
 	//otherwise catch it first (ReleaseAssert.h:30) - and the same holds for the Exudyn exception
 	//classes, which derive from EXUexception for exactly that reason (#2516)

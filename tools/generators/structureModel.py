@@ -6,8 +6,8 @@
 #           sorted parameter list, typical paths and the old string records of every structure,
 #           rendered from definitions/ by definitionLoader. Moved out of
 #           src/pythonGenerator/pythonAutoGenerateSystemStructures.py (revision2026 step R4.3, part 2c).
-#           The header and stub emitters read the members directly (revision2026 step R4.4.1); only
-#           structureDocsEmitter.py still reads the string records, until revision2026 step R7.1 replaces it.
+#           The header and stub emitters read the members directly; only
+#           structureDocsEmitter.py still reads the string records, replaces it.
 #
 # Usage:    import structureModel as sm
 #
@@ -109,9 +109,9 @@ def HasTopClass(className):
     return TopClassName(className) != className
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#direct member access (revision2026 step R4.4.1): the header and structure-stub emitters read the
+#direct member access: the header and structure-stub emitters read the
 #definitions/ members through these functions. The predicates shared with structureDocsEmitter.py
-#also accept the old string records it still reads; that second form goes with revision2026 step R7.1.
+#also accept the old string records it still reads; that second form goes
 import itemModel as _im                                                 # noqa: E402
 
 #generation order: structures appended to one file (appendToFile) depend on it
@@ -176,7 +176,7 @@ def IsVirtualFunction(member):
 
 def HasFlag(member, letter):
     """a flag of cFlags: SFConst 'C', SFPybindArgs 'G', SFReturnCopy 'V', SFNoDictType 'D', SFDeprecated
-    'X'; 'P' (in the Python interface) is the absence of SFNoPybind 'N' (revision2026 step R4.25)"""
+    'X'; 'P' (in the Python interface) is the absence of SFNoPybind 'N'"""
     flags = member.get('cFlags', '') or ''
     if letter == 'P':
         return 'N' not in flags
@@ -205,7 +205,7 @@ def MemberDefaults(member):
     """what THIS instance of a sub-structure starts from, {subMemberName: value}, or {}
 
     The values are written as the sub-member's own defaultValue would be; the emitter looks the
-    sub-member up to know whether it is a string (revision2026b step RG6.2.20).
+    sub-member up to know whether it is a string.
     """
     if _IsRecord(member):
         return {}
@@ -276,7 +276,7 @@ def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
 
 
 def ParameterChanges2Markdown(parameterChangesList):
-    """the deprecated parameters of a structure, as a Markdown list (revision2026 step R7.1.6)"""
+    """the deprecated parameters of a structure, as a Markdown list"""
     if len(parameterChangesList) == 0:
         return ''
     text = '\nThe following parameter changes have been made:\n\n'

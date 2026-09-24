@@ -118,7 +118,7 @@ public: using ExudynError::ExudynError;
 	//    CHECKandTHROW(index < n, "...")                       ExudynInternalError: an EXUDYN BUG
 	//    CHECKandTHROW(index < n, "...", ExudynIndexError)     a user's index mistake, IndexError in Python
 	//
-	//THE DEFAULT SAYS SOMETHING (#2528, revision2026 step R6.3.6, the last move of the mapping).
+	//THE DEFAULT SAYS SOMETHING (#2528, the last move of the mapping).
 	//Until every user-facing call site had been read and given a class, the untyped form threw a
 	//bare EXUexception, which is std::runtime_error and means nothing. It now throws
 	//ExudynInternalError, whose whole meaning is "please report this" - so a check WITHOUT a class

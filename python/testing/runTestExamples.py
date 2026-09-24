@@ -32,7 +32,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
 
     #the examples reach sideways with '../Examples/testData/...', so the working directory has
     #to be a SIBLING of Examples/ - python/TestModels/, exactly as before the runners moved out
-    #of it (revision2026 steps R3.8, R3.9; #2512, #2513)
+    #of it (#2512, #2513)
     testRunnerTools.WorkInModelsDirectory(testRunnerTools.testModelsDir)
 
     import exudyn as exu
@@ -63,7 +63,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     overwriteLog = False    #--overwrite-log: replace an existing log instead of diverting to tmp
     useExitCode = False     #--exit-code: exit non-zero on an UNEXPECTED failure (#2504)
     #the examples are an API check, not a numerical one, so they run in parallel processes with a
-    #short timeout (revision2026 step R5.16); --serial restores the old in-process run
+    #short timeout; --serial restores the old in-process run
     runParallel = True
     numberOfProcesses = 0   #0: testRunnerTools picks it from the number of cores
     exampleTimeout = 60     #seconds per example; a timeout after the solver was reached is a pass
@@ -200,7 +200,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     examplesTestErrorList={}
     
     #a few examples write with a plain path into 'solution/', as a user would; everything an
-    #example writes THROUGH exudyn goes into its own directory (revision2026 step R5.16)
+    #example writes THROUGH exudyn goes into its own directory
     os.makedirs('solution', exist_ok=True)
 
     timeStart= -time.time()
@@ -230,7 +230,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     #reached the solver, and the solver inside it stops after solverTimeout seconds anyway. The
     #process timeout is therefore short ON PURPOSE, and a timeout after the solver was reached
     #counts as a pass - only a timeout BEFORE it means the example hung while building
-    #(revision2026 step R5.16). Each example runs in its own interpreter, which is what allows
+    #. Each example runs in its own interpreter, which is what allows
     #them to run in parallel and keeps a crashing example from taking the runner with it.
     exampleTimings = {}
     if runParallel:
@@ -323,7 +323,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     exu.Print('******************************************')
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #the exit code (#2504; revision2026 step R5.18.1). Until this existed the runner ALWAYS
+    #the exit code (#2504). Until this existed the runner ALWAYS
     #returned 0, so nothing calling it - CI, a shell script, the exudev driver - could see a
     #failure without parsing the log. Known failures are excluded, the way the test suite excludes
     #UnresolvedOnLinux(), because an exit code that is red on every run says nothing.

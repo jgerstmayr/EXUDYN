@@ -329,7 +329,7 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 	failCounter += lest::run(basic_linalg_poly_test, arglist_lest, stringStream);
 
 	//the vectorized vector classes; every case runs a range of lengths around the AVX packet
-	//boundary and, for the linked one, offset sub-ranges (revision2026 step R5.4, #2465)
+	//boundary and, for the linked one, offset sub-ranges (#2465)
 	failCounter += lest::run(avxVector_specific_test, arglist_lest, stringStream);
 
 	//the matrix classes the solver uses - ResizableMatrix, ConstSizeMatrix, LinkedDataMatrix and

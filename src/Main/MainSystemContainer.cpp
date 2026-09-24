@@ -586,7 +586,7 @@ py::dict MainRenderer::GetState(Index viewID) const
 	return mainSystemContainer->RenderState2PyDict(mainSystemContainer->GetVisualizationSystemContainer().GetRenderViewData(viewID).renderState);
 }
 
-//! restore the render state that exudyn.sys holds (revision2026b step RG6.5)
+//! restore the render state that exudyn.sys holds
 bool MainRenderer::RestoreSavedState(Index viewID)
 {
 	//the key is the one PyStopOpenGLRenderer writes when the renderer stops: the main
@@ -856,7 +856,7 @@ void MainGraphicsMaterialList::Reset()
 
 	//the ten default materials are defined in
 	//definitions/structureDefsVisualizationSettings.py and are carried by the
-	//constructor of VSettingsRaytracer since revision2026b step RG6.2.20, so that the
+	//constructor of VSettingsRaytracer, so that the
 	//documentation and the settings dialog show the same values the renderer uses
 	VSettingsRaytracer defaultRaytracer;
 	data[0] = defaultRaytracer.material0;

@@ -582,7 +582,7 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 		//this path, and the MainSolver copy Python reads is filled during initialization, so
 		//setting it here reads back as false - which is worse than not offering it. What a
 		//script asks on this path is mbs.GetRenderEngineStopFlag().
-		//A USER WHO QUITS IS NOT A SOLVER FAILURE (#2616, revision2026b step RG4.5). This used to
+		//A USER WHO QUITS IS NOT A SOLVER FAILURE (#2616). This used to
 		//return false, which SolveDynamic/SolveStatic read as a failure: they printed the
 		//"DYNAMIC SOLVER FAILED" block and raised SolverError, so closing the render window while
 		//a script waited ended in a traceback. Stopping the SAME simulation one step later has

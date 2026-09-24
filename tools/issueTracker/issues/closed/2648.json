@@ -1,0 +1,17 @@
+{
+  "number": 2648,
+  "title": "the published pages tell the reader about the revision instead of about themselves",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The rule of CLAUDE.md 6a and CODING_STYLE.md section 6 - documentation says what IS, not what it was - applied to what is already there. Measured 2026-09-24: 887 mentions of revision2026 in 257 files outside docs/revision/. The maintainer's example is the header of python/TestModels/GraphicsDataTest.py, which opens with 'one of the ten small tests that lived in python/testing/modelUnitTests.py from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test model' - the test models are documentation pages, and a reader of that page wants to know what the model computes. Tier by tier: the published model headers and the definitions, which are the reference manual, then the manual and the developer pages, then the comments in src/ and tools/, where the older rule already says that a comment cites the issue and not the plan step. What must survive is the issue number, which a reader of the documentation can follow, and any sentence carrying a measurement or a decision; what goes is the name a thing had before, when it changed, and which plan step changed it. revision2026b step RG3.13.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 23:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/GraphicsDataTest.py",
+  "releaseNotes": "The published pages say what the thing is. The ten converted test models describe what they compute, read out of the model itself, instead of what they were called before; the one published settings description and the 25 definition file headers lose the plan step; the manual and the developer pages keep only the two references that are ABOUT the plan, and where a sentence was a promise about a step it now states what is true today. In the comments of src/, tools/ and python/, 652 of the 887 mentions were parentheticals or appended clauses and went by rule, keeping the issue number where there was one. 235 remain, each inside a sentence and none of them published, which is #2649. revision2026b step RG3.13.",
+  "resolvedInVersion": "1.12.64"
+}

@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  ONE-SHOT migration of trackerlog.txt into the JSON store of revision2026 step R8.5:
+# Details:  ONE-SHOT migration of trackerlog.txt into the JSON store:
 #           tools/issueTracker/issues/{open,closed,archive}/. The flat file is deleted with the
 #           commit that lands this - not kept in parallel, or its comma-escaping trap survives.
 #
@@ -20,7 +20,7 @@
 # Usage:    python migrateToJson.py [--dry-run]     (from anywhere)
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-21 (revision2026 step R8.5)
+# Date:     2026-09-21
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

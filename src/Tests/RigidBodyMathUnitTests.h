@@ -5,7 +5,7 @@
 *				- these four headers carry the geometry every rigid body and every contact model
 *				  runs through, and none of them had a unit test. A defect here does not crash: it
 *				  moves a result, which is exactly the class of difference the revision spent days
-*				  chasing (revision2026 steps R2.10, R2.10.3).
+*				  chasing.
 *				- the rotation tests are PROPERTY tests, not value tables: a conversion composed
 *				  with its inverse is the identity, a rotation matrix is orthonormal with
 *				  determinant +1, and Skew is the cross product. Such a test states what the

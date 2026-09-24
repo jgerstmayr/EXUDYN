@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.63.dev1
+- Exudyn version = 1.12.64.dev1
 - last change = 2026-09-24
-- Number of issues = 2649
-- Number of resolved issues = 2377 (63 in current version)
+- Number of issues = 2650
+- Number of resolved issues = 2378 (64 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,8 +7568,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the published pages tell the reader about the revision instead of about themselves (#2648)
-  - description: The rule of CLAUDE.md 6a and CODING\_STYLE.md section 6 - documentation says what IS, not what it was - applied to what is already there. Measured 2026-09-24: 887 mentions of revision2026 in 257 files outside docs/revision/. The maintainer's example is the header of python/TestModels/GraphicsDataTest.py, which opens with 'one of the ten small tests that lived in python/testing/modelUnitTests.py from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test model' - the test models are documentation pages, and a reader of that page wants to know what the model computes. Tier by tier: the published model headers and the definitions, which are the reference manual, then the manual and the developer pages, then the comments in src/ and tools/, where the older rule already says that a comment cites the issue and not the plan step. What must survive is the issue number, which a reader of the documentation can follow, and any sentence carrying a measurement or a decision; what goes is the name a thing had before, when it changed, and which plan step changed it. revision2026b step RG3.13.
+- `DOCU` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` 235 references to the revision plan are left in comments, each inside a sentence (#2649)
+  - description: What RG3.13 could not do mechanically. Of the 887 mentions of revision2026 outside docs/revision, 652 were parentheticals or appended clauses and could be removed by rule, keeping the issue number where there was one. The remaining 235 in 149 files are inside a sentence - 'step R4.3 is moving outputs from the old generators to separate emitters', 'the name the function had between steps R8.7 and R8.3.4' - and each needs a sentence written for it, which a pattern cannot do: an attempt that allowed the phrase to wrap across two comment lines matched from a code line into a comment and merged prose into code (tools/generators/generatorPaths.py:35), so that pass was withdrawn and every file rebuilt from its committed content with the line-based rules only. None of the 235 is in a published page; they are comments in src/, tools/ and python/, where the rule is the older one of CODING\_STYLE 6.1 - a comment cites the issue - so this is tidiness rather than a defect.
   - date raised: 2026-09-24
 - `CHECK` `raised by: Claude-JG` fourteen figure files in docs/figures are referenced by nothing (#2594)
   - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.

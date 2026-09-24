@@ -20,7 +20,7 @@
 #           baseline is meant to shrink, and a stale entry hides the next regression.
 #
 #           The second half (--stubs) compares the generated stub files against the module that is
-#           actually imported, with mypy's stubtest (revision2026 step R5.5.4). Two allowlists:
+#           actually imported, with mypy's stubtest. Two allowlists:
 #           tools/ci/stubtestNoise.txt is curated (pybind dunders, stub-only typing helpers) and
 #           tools/ci/stubtestBaseline.txt is the generated backlog, which is meant to shrink.
 #           Which allowlist entries are USED depends on the wheel - a build without the fast module
@@ -37,7 +37,7 @@
 #           python tools/checkPython.py --stubs --write     regenerate the stubtest backlog
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-17 (created, revision2026 step R5.5)
+# Date:     2026-09-17 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -107,7 +107,7 @@ def ReadBaseline():
 
 def WriteBaseline(counted):
     lines = ['#Baseline of tools/checkPython.py - the ruff findings that were present when the check',
-             '#was introduced (revision2026 step R5.5). A NEW finding fails the check; these do not.',
+             '#was introduced. A NEW finding fails the check; these do not.',
              '#The list is meant to SHRINK: regenerate with "python tools/checkPython.py --write"',
              '#after fixing findings. Format: count, file, rule, message - tab separated, no line',
              '#numbers, so that an edit elsewhere in a file does not invalidate the entry.',
@@ -213,7 +213,7 @@ def CheckStubs(args):
     RefuseAStaleWheel()                  #before anything else: #2517
     if args.write:
         entries = GeneratedEntries(RunStubtest(generate=True))
-        header = ['#Backlog of tools/checkPython.py --stubs (revision2026 step R5.5.4): the stub-vs-module',
+        header = ['#Backlog of tools/checkPython.py --stubs: the stub-vs-module',
                   '#disagreements that existed when the check was introduced. GENERATED - regenerate with',
                   "#'python tools/checkPython.py --stubs --write'. A disagreement that is NOT in here fails the",
                   '#check. This list is meant to SHRINK; curated noise belongs in stubtestNoise.txt instead.',

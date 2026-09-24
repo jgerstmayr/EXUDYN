@@ -6,7 +6,7 @@
 #           the defaults. It works on the dictionary GetDictionaryWithTypeInfo() returns, so
 #           every function here runs without a window and can be tested without one.
 #
-#           It was the lower half of exudyn.misc.GUI until revision2026b step RG12.3 (#2590),
+#           It was the lower half of exudyn.misc.GUI (#2590),
 #           where the settings dialog is its only caller. GUI.py imports tkinter at module
 #           scope, so a model script could not use any of it without tkinter installed - which
 #           is exactly what a model on a cluster does not have. The dialog imports from here
@@ -65,7 +65,7 @@ def IsVector(v):
 def GetComboBoxListsDict(exu = None):
     """The values a settings item of an enum type may take, as {typeName: [values]}.
 
-    EVERY enum of the module, not a hand-written list of three: until revision2026b step RG6.2.3
+    EVERY enum of the module, not a hand-written list of three:
     this named OutputVariableType, LinearSolverType and ItemType, and
     timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore
     edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is
@@ -177,7 +177,7 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
 #    print('str=',valueStr)
 
     #':' belongs in a file name: C:/models/gear.stl is what a Windows user types, and without it
-    #the dialog refused even its own default (#2597, revision2026b step RG6.2.3)
+    #the dialog refused even its own default (#2597)
     validFileNameChar = " `'{}()%&-@#$~!_^./\\:"
 
     #an enum is a value of a fixed list and nothing else. Without this branch the string
@@ -245,7 +245,7 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
     return [True, '']
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHAT THE DIALOG SHOWS, WITHOUT A WINDOW (revision2026b steps RG6.2.8 to RG6.2.10).
+#WHAT THE DIALOG SHOWS, WITHOUT A WINDOW.
 #The tree, the code line, the marking of a changed value and the find ask the same questions -
 #which leaves are there, and what does a leaf look like as Python - so they are asked here, on
 #dictionaries, where a test can reach them without opening anything.
@@ -358,7 +358,7 @@ def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTy
 
 
 #the settings a SystemContainer initialises beyond the defaults of the structure itself - and
-#since revision2026b step RG6.2.20 (#2626) there are NONE: the three dimmed lights and the ten
+#(#2626) there are NONE: the three dimmed lights and the ten
 #raytracer materials are defaults of the structure now, written in
 #definitions/structureDefsVisualizationSettings.py, so the constructor is the truth and a
 #difference shown by the dialog is a difference a user made. The list stays as the place to name
@@ -395,7 +395,7 @@ def SettingsValueStrings(dictionaryWithTypeInfo):
 def FindMatches(leaves, searchText):
     """the settings a search text finds: the NAMES first, the descriptions second
 
-    Several hundred values in a tree of folders, and until revision2026b step RG6.2.10 the only
+    Several hundred values in a tree of folders, and the only
     way to a setting was knowing which folder it sits in.
 
     Args:
@@ -433,7 +433,7 @@ def SettingsPrefix(settingsStructure):
     return structure[:1].lower() + structure[1:]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHAT A MODEL CHANGED (revision2026b step RG12.3, #2590). The dialog could always show it for
+#WHAT A MODEL CHANGED (#2590). The dialog could always show it for
 #one session; these three say it for a whole script, which is what makes a set of settings
 #reproducible - the answer is the code that produces them.
 

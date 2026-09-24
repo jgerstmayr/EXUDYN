@@ -17,7 +17,7 @@
 #           has to run in any interpreter. Standard library only, Python 3.8 syntax.
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created; revision2026 step R5.18)
+# Date:     2026-09-18 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -120,7 +120,7 @@ def BuildParser(subParsers, parents):
 #%%******************************************************************************************************
 def IssueParser(subParsers, globalParser):
     """exudev issue <verb>: the issue tracker, which was driven by importing its module from its
-    own directory until revision2026 step R8.3. One driver for the build, the tests, the
+    own directory One driver for the build, the tests, the
     documentation and the tracker (maintainer 2026-09-21).
 
     Every verb that WRITES is a step with an action, so "exudev -n issue resolve 42 ..." prints
@@ -229,7 +229,7 @@ def IssueParser(subParsers, globalParser):
         description='The deliberate maintainer action: it appends one release to '
                     'tools/issueTracker/releases.json - the version, the count of closed issues '
                     'it begins at, and its name - and rewrites the version files. The micro '
-                    'version restarts at 0. A MAJOR bump works since revision2026 step R8.4; '
+                    'version restarts at 0. A MAJOR bump works; '
                     'before it, the major number was written as 1 in the tracker.')
     bumpWhat = bump.add_mutually_exclusive_group(required=True)
     bumpWhat.add_argument('--minor', action='store_true', help='1.11 -> 1.12')
@@ -336,7 +336,7 @@ def BuildParsers():
         help='build the html documentation with sphinx',
         description='sphinx-build -b html . _build -E, from the repository root. With --pdf it '
                     'also builds the printable documentation, which is a release artifact and not '
-                    'part of any gate (revision2026b step RG3.3).')
+                    'part of any gate.')
     docs.add_argument('--keep-cache', action='store_true',
                       help='incremental build (drop -E); faster, but stale pages are possible')
     docs.add_argument('--no-strict', action='store_true',

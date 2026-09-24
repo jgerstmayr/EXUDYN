@@ -7,7 +7,7 @@
 *				  through exudyn.symbolic and its test models; this file is the C++ side, which has
 *				  no other documentation.
 *				- WHAT THIS IS NOT: it is not a test and it checks nothing. The tests are in
-*				  src/Tests/SymbolicUnitTests.h (revision2026 step R5.4.2), and the numeric
+*				  src/Tests/SymbolicUnitTests.h, and the numeric
 *				  comparison against Python lives in python/TestModels/symbolicModuleTest.py.
 *				- NOTHING CALLS IT, deliberately. It is included by Symbolic.cpp so that it keeps
 *				  COMPILING - a demo that no longer compiles is worse than no demo - but the
@@ -15,7 +15,7 @@
 *				  SymbolicDemoAll() from a debugger or a scratch main() to watch the output.
 *				- HISTORY: this was PyTest_unused() at the end of Symbolic.cpp, a single function of
 *				  six 'if (false)' blocks that had not been run in a long time. Reshaped into named
-*				  functions on maintainer request (revision2026 step R5.4.12, #2485).
+*				  functions on maintainer request (#2485).
 *
 * @author		Gerstmayr Johannes
 * @date			2026-09-17 (reshaped from PyTest_unused in Symbolic.cpp)

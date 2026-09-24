@@ -268,7 +268,7 @@ private:
 
 	//static Raytracer raytracer;
 public:
-	//! HOW MANY IDLE OPERATIONS ARE ON THE STACK (#2643, revision2026b step RG6.6). The
+	//! HOW MANY IDLE OPERATIONS ARE ON THE STACK (#2643). The
 	//! single-threaded renderer - which is what macOS always is - polls events and runs the
 	//! queued Python from inside DoIdleTasks(). A dialog opened by that queue can call
 	//! DoIdleTasks() again, and a second event pump inside the first is fatal on macOS:

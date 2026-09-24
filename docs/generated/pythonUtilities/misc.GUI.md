@@ -69,7 +69,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 [`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L235)
 
-- **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602, revision2026b step RG6.2.3.1).
+- **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602).
 - **input**: root: the tkinter root window, which knows the display scaling
 - **output**: [systemScaling, fontFactor]
 
@@ -142,7 +142,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-module-misc.gui-class-tooltip)=
 ## CLASS Tooltip (in module misc.GUI)
 
-**class description**: The small yellow window that shows the description of the row under the mouse. tkinter has none, and the description used to be behind the key 'h' and a modal message box - which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a borderless Toplevel that is created when it is first needed and hidden afterwards, so a dialog that is never hovered never builds one. It is **topmost**, and that is not decoration: the dialog itself is topmost - it has to be, it blocks the render window - and on Windows a topmost window is always above one that is not, so a tooltip without the flag opens BEHIND the dialog and looks like a tooltip that never comes (#2639). The same mechanism hid the window of the changes in #2621. Turning `dialogs.alwaysTopmost` off made the tooltips work, which is what named the cause.
+**class description**: The small yellow window that shows the description of the row under the mouse. tkinter has none, and the description used to be behind the key 'h' and a modal message box - which is not where a reader looks for it (#2601). It is a borderless Toplevel that is created when it is first needed and hidden afterwards, so a dialog that is never hovered never builds one. It is **topmost**, and that is not decoration: the dialog itself is topmost - it has to be, it blocks the render window - and on Windows a topmost window is always above one that is not, so a tooltip without the flag opens BEHIND the dialog and looks like a tooltip that never comes (#2639). The same mechanism hid the window of the changes in #2621. Turning `dialogs.alwaysTopmost` off made the tooltips work, which is what named the cause.
 
 
 (sec-gui-tooltip-show)=

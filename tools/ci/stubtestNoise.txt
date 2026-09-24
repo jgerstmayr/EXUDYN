@@ -1,4 +1,4 @@
-#Allowlist of tools/checkPython.py --stubs (revision2026 step R5.5.4): findings that are NOISE,
+#Allowlist of tools/checkPython.py --stubs: findings that are NOISE,
 #not gaps. Entries are regular expressions matched against the whole stubtest error name.
 #Keep this file curated and short; everything that is a real gap belongs in the generated
 #backlog file stubtestBaseline.txt instead, which is meant to shrink.
@@ -29,5 +29,5 @@ exudyn\.exudynCPPfast
 #a tkinter widget carries the attributes of the Tk instance it belongs to, and "tk" exists only
 #once a Tk root has been created - so whether stubtest sees it depends on import order and on a
 #display being there. It made the gate fail about one run in three with nothing changed in
-#between (#2551, revision2026 step R5.18.7); the control panel itself is a private class.
+#between (#2551); the control panel itself is a private class.
 exudyn\.misc\.resultsMonitor\._ControlPanel\..*

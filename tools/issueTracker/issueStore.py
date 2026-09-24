@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Where the issues are kept (revision2026 step R8.5): one JSON file per open or recently
+# Details:  Where the issues are kept: one JSON file per open or recently
 #           closed issue, and one file per year for the older ones.
 #
 #               tools/issueTracker/issues/open/2567.json      one file per OPEN issue
@@ -27,7 +27,7 @@
 # Usage:    import issueStore   (through issueTracker.py, which is the API)
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-21 (revision2026 step R8.5)
+# Date:     2026-09-21
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -48,7 +48,7 @@ issueFields = [
     'status',           #RAISED, RESOLVED, CLOSED
     'type',             #see issueTypes in issueTracker.py
     'priority',         #LOW, NORMAL, HIGH or absent
-    'effort',           #LOW, MEDIUM, HIGH, HUGE or absent (revision2026 step R8.5.3)
+    'effort',           #LOW, MEDIUM, HIGH, HUGE or absent
     'description',      #what it is about
     'dateRaised',
     'deadline',
@@ -258,7 +258,7 @@ def WriteArchive(year, issues):
 
 #%%******************************************************************************************************
 def CheckStore():
-    """everything that can be wrong with the files, as a list of messages (revision2026 step R8.5):
+    """everything that can be wrong with the files, as a list of messages:
     a number twice, a file whose name and content disagree, a missing required field, an issue in
     the wrong directory, and the count the version depends on."""
     messages = []
@@ -282,7 +282,7 @@ def CheckStore():
                 messages.append('issue ' + str(number) + ' (' + where + '): unknown field "'
                                 + name + '"')
         #the status decides the directory an issue lies in and whether it counts for the micro
-        #version, so an unknown one is not a cosmetic problem (revision2026 step R8.3.4)
+        #version, so an unknown one is not a cosmetic problem
         if issue.get('status') not in knownStatuses:
             messages.append('issue ' + str(number) + ' (' + where + '): unknown status "'
                             + str(issue.get('status')) + '"')

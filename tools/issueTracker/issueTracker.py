@@ -10,13 +10,13 @@
 #
 # - the fields of an issue: issueStore.issueFields
 # - type, status, priority and effort: issueTypes, issueStatuses, issuePriorities, issueEfforts
-#   below - that is the ONLY list of them (revision2026 steps R8.7 and R8.5.3)
+#   below - that is the ONLY list of them
 # - releaseNotes is written when the issue is CLOSED and is published in the release notes;
 #   workingRemarks is what the work knows meanwhile and is cleared when the issue closes
 # - THIS TOOL OWNS THE VERSION: the micro number is the count of closed issues, so ResolveIssue
 #   and CloseIssue rewrite version.txt, versionCpp.cpp and the version line of README.rst
 #
-# The command line is 'exudev issue <verb>' (revision2026 step R8.3); this module is its API.
+# The command line is 'exudev issue <verb>'; this module is its API.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import datetime # for current date
@@ -28,7 +28,7 @@ import sys
 
 #import os
 
-#WHERE THE FILES ARE (revision2026 step R8.3). Until this step every path was relative to the
+#WHERE THE FILES ARE. Until this step every path was relative to the
 #CURRENT directory, so the tracker could only be driven from tools/issueTracker/ - and a command
 #line, which is started from wherever the user stands, was impossible. The two directories are
 #module globals rather than constants inside the functions, so that the tests can point the
@@ -55,7 +55,7 @@ sys.path.append(helperPath)
 #autoGenerateHelper is not needed any more: the tracker wrote LaTeX and RST until
 #revision2026 step R7.1.6 and writes Markdown now, which needs no conversion helper
 
-#the issues themselves live in issues/ as JSON since revision2026 step R8.5; issueStore owns the
+#the issues themselves live in issues/ as JSON; issueStore owns the
 #files, this module owns the rules
 sys.path.insert(0, trackerDirectory)
 import issueStore                                                             # noqa: E402
@@ -67,7 +67,7 @@ trackerFile = 'trackerlog'
 trackerDateLine =    2 #line at which the date is given
 trackerReleaseLine = 3 
 trackerVersionLine = 4
-#THE RELEASES ARE DATA (revision2026 step R8.4). Until this step the baselines stood here as
+#THE RELEASES ARE DATA. Until this step the baselines stood here as
 #twelve module constants and the names in a dict beside them, so a minor bump was a hand edit of
 #this file - and a MAJOR bump (1.11 -> 2.0) was not expressible at all: the major number was
 #written as 1 in GetMajorMinorMicroVersion and the minor was the LENGTH of the list.
@@ -139,11 +139,11 @@ def ReleaseName(version):
 versionDev = '.dev1' #(development version, get with pip install exudyn --pre)
 
 #the release names - jazz legends, alphabetically - moved into releases.json with the baselines
-#(revision2026 step R8.4); ReleaseName() reads them. doc2rst.py held a second copy until R7.1.7.
+#; ReleaseName() reads them. doc2rst.py held a second copy until R7.1.7.
 #https://www.britannica.com/topic/list-of-jazz-musicians-2030466
 
 #+++++++++++++++++++++++++++++++++++++++++++++
-#THE ISSUE TYPES, in one place (revision2026 step R8.7, #2519). Before this there were three lists -
+#THE ISSUE TYPES, in one place (#2519). Before this there were three lists -
 #the header of this file, the header of trackerlog.txt and what people actually typed - and all
 #three disagreed: 39 distinct spellings in 2519 issues, 20 of them typos or singletons, and the
 #same meaning under both 'NEW FEATURE' (used until #342) and 'EXTENSION' (used ever since).
@@ -214,7 +214,7 @@ issuePriorities = {
     'HIGH':   'do this first',
 }
 
-#the fields of an issue are issueStore.issueFields since revision2026 step R8.5; what stood here
+#the fields of an issue are issueStore.issueFields; what stood here
 #was the column order of trackerlog.txt with the indices that went with it - 'notes' was the last
 #column, the status was padded to 8 characters, and every reader had to know both.
 
@@ -223,7 +223,7 @@ def ResolvedIssues2Version(resolvedIssues, totalResolvedIssues):
     """[minor, micro] of an issue that is resolvedIssues places below the newest closed one.
 
     Kept for callers that counted backwards from the current version; VersionOfClosedIndex() is
-    the direct form and the one the stored version uses (revision2026 step R8.4)."""
+    the direct form and the one the stored version uses."""
     version = VersionOfClosedIndex(totalResolvedIssues - resolvedIssues)
     parts = version.split('.')
     return [int(parts[1]), int(parts[2])]
@@ -240,7 +240,7 @@ def UpdateFiles():
 def ToMarkdown(s):
     """Every Markdown special character in issue text becomes literal text (#2545).
 
-    The same rule as ToLatex above, for the format that replaces it in revision2026 step R7.1.6:
+    The same rule as ToLatex above, for the format that replaces it:
     an author writes text into the tracker, not markup, and the writer knows the output format -
     so the writer escapes. The characters are different (a backtick opens code, an underscore or
     a star opens emphasis, a pipe splits a table cell, a '<' opens an HTML tag), the rule is not.
@@ -337,7 +337,7 @@ def GetDateTimeStr():
 
 
 #%%******************************************************************************************************
-#THE DATA LAYER (revision2026 step R8.5). The issues live in tools/issueTracker/issues/ as one
+#THE DATA LAYER. The issues live in tools/issueTracker/issues/ as one
 #JSON file per open or recently closed issue and one file per year for the older ones; issueStore
 #owns the files, this module owns the rules. What went with trackerlog.txt: the ',' escaping, the
 #column padding, the whole-file rewrite on every change, and IssueTrackerBackup() - a copy of the
@@ -433,16 +433,16 @@ def GetMajorMinorMicroVersion():
     """the version, derived from the count of CLOSED issues - resolved and closed-not-resolved
     alike (#2519). The count comes from the store, which adds the closed files it can see to the
     closedCount each archive file states; an archive that is missing is reported by
-    issueStore.CheckStore() rather than silently lowering the version (revision2026 step R8.5).
+    issueStore.CheckStore() rather than silently lowering the version.
 
-    The major number comes from the current release since revision2026 step R8.4; it was written
+    The major number comes from the current release; it was written
     as 1 here, which is why 2.0 could not be expressed."""
     release = CurrentRelease()
     [major, minor] = [int(part) for part in release['version'].split('.')]
 
     #max(0, ...): a release begins at the count of the issue that will carry micro 0, so between
     #the bump and the first closed issue of the new release the difference is -1. That release has
-    #closed nothing yet, and X.Y.0 is what that means (revision2026 step R8.4)
+    #closed nothing yet, and X.Y.0 is what that means
     micro = max(0, issueStore.ClosedCount() - release['baseline'])
 
     return [major, minor, micro]
@@ -457,20 +457,20 @@ def VersionString():
 #write date and version to tracker file; also update version in src/Autogenerated/version.h
 def UpdateDateAndVersion(updateVersion = True):
     #the date and the version stood in the header lines of trackerlog.txt; they are meta.json
-    #beside the issues since revision2026 step R8.5
+    #beside the issues
     WriteMeta()
 
     #update version in Python module versionPybind.h ==> this is shown in the module with python command version()
-    #no main/ level since the flatten (revision2026 step R3.1); version.txt is at the
+    #no main/ level since the flatten; version.txt is at the
     #repository ROOT since R3.4, and versionName.txt sits next to this tool since R7.1.7,
     #when docs/theDoc/ was deleted with the LaTeX build (decision D8)
     #versionFile = directoryString + 'version.h' #not used anymore
     cppVersionFile = RepositoryPath('src', 'Autogenerated', 'versionCpp.cpp')
     texVersionFile = RepositoryPath('version.txt')
-    #versionName.txt sits next to this tool since revision2026 step R7.1.7, when
+    #versionName.txt sits next to this tool, when
     #docs/theDoc/ was deleted with the LaTeX build (decision D8)
     texVersionNameFile = TrackerPath('versionName.txt')
-    #hand-written since revision2026 step R7.1.5, except for its version line
+    #hand-written, except for its version line
     readmeFile = RepositoryPath('README.rst')
 
     #pyVersionFile = '..\\..\\src\\pythonGenerator\\exudynVersion.py'
@@ -555,13 +555,13 @@ def UpdateDateAndVersion(updateVersion = True):
 
 #%%******************************************************************************************************
 #the escaping of the tracker's free-text fields is ToMarkdown above (#2545); the RST escaper
-#that stood here went with docs/RST/trackerlog.rst in revision2026 step R7.1.6
+#that stood here went with docs/RST/trackerlog.rst
 
 
 #%%******************************************************************************************************
 def ConvertToHTML():
     """tools/issueTracker/trackerlog.html: the overview a maintainer scrolls through, open issues
-    first and coloured by priority. Written from the store since revision2026 step R8.5; it was a
+    first and coloured by priority. Written from the store; it was a
     loop over the lines of trackerlog.txt with column indices, and the indices had to be kept in
     step with the columns by hand."""
     issues = GetIssues()
@@ -616,7 +616,7 @@ def ConvertToHTML():
         file.write('</table>\n\n</body>\n</html>\n')
 
 
-#THE ENTRY OF ONE ISSUE (revision2026b step RG3.10.1, #2637). The changelog and the tracker
+#THE ENTRY OF ONE ISSUE (#2637). The changelog and the tracker
 #page are two renderings of one store and printed the same issue in two shapes: the changelog
 #as '- **1.12.50** `FIX` title (#2634) - raised by X' with no dates, the tracker page as
 #'- Version 1.12.49: resolved Issue 2633: title (improvement)' with no type badge. The
@@ -717,7 +717,7 @@ def ConvertToMarkdown():
 
 def MarkdownText():
     """docs/generated/trackerlog.md: the resolved issues per release, the open issues and the
-    known bugs. Markdown since revision2026 step R7.1.6; it wrote docs/theDoc/trackerlog.tex and
+    known bugs. Markdown; it wrote docs/theDoc/trackerlog.tex and
     docs/RST/trackerlog.rst until then, and the colours of the open issues, which were RST roles,
     are the CSS classes of docs/_static/custom.css written as inline HTML."""
     [releaseString,versionString] = GetReleaseAndVersionString()
@@ -741,7 +741,7 @@ def MarkdownText():
              'as it only marks versions that will not be available in pypi with standard pip '
              'install, but only with the `--pre` option or by specifying the exact version name, '
              'see versions on <https://pypi.org/project/exudyn/>.\n\n')
-    #one entry format with the changelog since revision2026b step RG3.10.1 (#2637)
+    #one entry format with the changelog (#2637)
     text += BadgeLegend()
     text += ('General information on current version:\n\n'
              '- Exudyn version = ' + releaseVersionDev + '\n'
@@ -751,7 +751,7 @@ def MarkdownText():
              + ' (' + str(numberOfResolved) + ' in current version)\n\n')
 
     #the current release is in CHANGELOG.md, in full and with its release notes; this page
-    #carries everything before it, so that no issue is printed twice (revision2026b step RG3.10)
+    #carries everything before it, so that no issue is printed twice
     text += ('## Resolved issues and resolved bugs before version ' + releaseString + '\n\n'
              'The following list contains the issues which have been **RESOLVED** in the '
              'according version. The issues of the current release, ' + releaseString + ', are '
@@ -811,7 +811,7 @@ def MarkdownText():
 #%%******************************************************************************************************
 #%%******************************************************************************************************
 #%%******************************************************************************************************
-#THE CHANGELOG (revision2026 step R7.4). CHANGELOG.md in the repository root is where a user of a
+#THE CHANGELOG. CHANGELOG.md in the repository root is where a user of a
 #released package looks, and it is a RENDERING of the issues - not a second place where changes
 #are written down. That was the point of storing 'resolvedInVersion' in step R8.4: the version of
 #every resolved issue is data now, so this file only has to group and print.
@@ -820,7 +820,7 @@ def MarkdownText():
 #with its description, its dates and its author, plus the OPEN issues and the known bugs, 119,000
 #words of it. A changelog that repeated all of that would double a megabyte for no new fact
 #(rule 10 of CLAUDE.md). So the current release is printed here and the earlier ones there -
-#in the SAME entry format since revision2026b step RG3.10.1 (#2637), which is IssueEntry().
+#in the SAME entry format (#2637), which is IssueEntry().
 changelogFile = 'CHANGELOG.md'
 changelogDetailedReleases = 1   #how many releases are printed with the sub-list of an entry -
                                 #the description, the notes and the dates - and not the headline
@@ -878,7 +878,7 @@ def ChangelogText():
              'that was closed without being resolved is in no list: it changed nothing - '
              'which is why a release can span more version numbers than it has lines here.'
              '\n\n')
-    #one entry format with the tracker page since revision2026b step RG3.10.1 (#2637)
+    #one entry format with the tracker page (#2637)
     text += BadgeLegend()
     text += ('This file is generated; it is written by the tracker whenever an issue closes.'
              '\n\n'
@@ -959,7 +959,7 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
                                        for name in issueTypes))
 
     #the effort and the priority are checked at the same place and for the same reason; both may
-    #be empty, which means "not classified" (revision2026 step R8.5.3)
+    #be empty, which means "not classified"
     issueDict['effort'] = CheckedEnumValue('effort', issueDict.get('effort', ''), issueEfforts)
     issueDict['priority'] = CheckedEnumValue('priority', issueDict.get('priority', ''),
                                              issuePriorities)
@@ -1022,7 +1022,7 @@ def ChangeIssue(issueNumber, key, value, force=False): #raise a new issue into l
             '  To record something new about it, raise a new issue instead.')
 
     #this function writes any field, which is why the enums have to be checked here as well as in
-    #RaiseIssueDict - otherwise the one list of values is a comment again (revision2026 R8.5.3)
+    #RaiseIssueDict - otherwise the one list of values is a comment again
     if key == 'effort':
         value = CheckedEnumValue('effort', value, issueEfforts)
     elif key == 'priority':
@@ -1056,7 +1056,7 @@ def ChangeIssue(issueNumber, key, value, force=False): #raise a new issue into l
 #%%******************************************************************************************************
 #use this when the analysis of an issue turns up more than the issue says
 def ExtendIssue(issueNumber, text, author='JG'):
-    """Append a dated paragraph to the description of an OPEN issue (revision2026 step R8.3.3).
+    """Append a dated paragraph to the description of an OPEN issue.
 
     The first analysis of a problem regularly turns up more than the person who raised it knew,
     and that belongs with the issue: not in a second issue, and not by overwriting a description
@@ -1095,7 +1095,7 @@ def ExtendIssue(issueNumber, text, author='JG'):
 #%%******************************************************************************************************
 #use this to record what is known while the work on an issue goes on
 def RemarkIssue(issueNumber, text, author='JG', replace=False):
-    """Write the working remarks of an OPEN issue (revision2026 step R8.5.3).
+    """Write the working remarks of an OPEN issue.
 
     This is the scratchpad of an issue: "duplicate of #2134", "marked for deprecation", "check
     whether this still happens", "part A solved, B open". It is worth having while the issue is
@@ -1143,7 +1143,7 @@ def NextReleaseVersion(kind):
 
 
 def BumpRelease(kind=None, version=None, name=None):
-    """Start a new release (revision2026 step R8.4). THE explicit maintainer action: it is never
+    """Start a new release. THE explicit maintainer action: it is never
     a side effect of resolving an issue, because it is a decision about the product.
 
     It appends one entry to releases.json - the version, the count of closed issues at which it
@@ -1235,7 +1235,7 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
 
     #what is written here is PUBLISHED - it is the release note of this issue. The remarks that
     #were useful while the work went on ("duplicate of #2134", "part A solved") are not, so they
-    #are dropped here rather than carried into the release notes (revision2026 step R8.5.3)
+    #are dropped here rather than carried into the release notes
     StampVersion(d)                 #before the status changes: it counts the issue itself
     d['status'] = 'RESOLVED'
     d['dateResolved'] = GetDateTimeStr()
@@ -1279,7 +1279,7 @@ def CloseIssue(issueNumber, reason, author='JG'):
     d = GetIssue(issueNumber)
 
     #as in ResolveIssue: the reason is the published record of the decision, the working remarks
-    #are not and are dropped (revision2026 step R8.5.3)
+    #are not and are dropped
     StampVersion(d)                 #a closed issue counts for the version like a resolved one
     d['status'] = 'CLOSED'
     d['dateResolved'] = GetDateTimeStr()
@@ -1302,7 +1302,7 @@ def CloseIssue(issueNumber, reason, author='JG'):
 #the name this function had between revision2026 steps R8.7 and R8.3.4; scripts outside this
 #repository may still call it, and it costs one line to keep them working
 def AbandonIssue(issueNumber, reason, author='JG'):
-    """deprecated spelling of CloseIssue (revision2026 step R8.3.4)"""
+    """deprecated spelling of CloseIssue"""
     return CloseIssue(issueNumber, reason, author=author)
 
 
@@ -1329,7 +1329,7 @@ def RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineN
        'deadline': deadline,
        'priority': priority}
     return RaiseIssueDict(d) #the assigned issue number
-    #the fields are issueStore.issueFields (revision2026 step R8.5)
+    #the fields are issueStore.issueFields
 
     print(GetIssue(NumberOfIssues()-1))
     

@@ -2,7 +2,7 @@
 # This is an EXUDYN test file
 #
 # Details:  SC.renderer.RestoreSavedState(), which brings back the view that SC.renderer.Stop()
-#           saved in exudyn.sys (revision2026b step RG6.5). It replaces two lines that stood in
+#           saved in exudyn.sys. It replaces two lines that stood in
 #           82 places:
 #
 #               if 'renderState' in exu.sys:
@@ -85,7 +85,7 @@ def testABadValueRaisesAsSetStateDoes(container):
 
 
 def testTheOldIdiomIsGoneEverywhere():
-    """crude on purpose: the replacement of revision2026b step RG6.5 touched 85 files, and a
+    """crude on purpose: the replacement touched 85 files, and a
     single one left behind would keep teaching the form this function replaces"""
     left = []
     for directory in ['python/TestModels', 'python/Examples', 'python/Examples/FurtherExamples',

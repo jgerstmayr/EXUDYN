@@ -1,4 +1,4 @@
-#Backlog of tools/checkPython.py --stubs (revision2026 step R5.5.4): the stub-vs-module
+#Backlog of tools/checkPython.py --stubs: the stub-vs-module
 #disagreements that existed when the check was introduced. GENERATED - regenerate with
 #'python tools/checkPython.py --stubs --write'. A disagreement that is NOT in here fails the
 #check. This list is meant to SHRINK; curated noise belongs in stubtestNoise.txt instead.

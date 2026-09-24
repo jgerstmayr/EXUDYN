@@ -923,7 +923,7 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#TCP/IP functionality (moved from utilities.py, revision2026 step R4.22.2)
+#TCP/IP functionality (moved from utilities.py)
 
 #TCP/IP functionality
 class TCPIPdata:

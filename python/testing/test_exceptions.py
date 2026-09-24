@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test infrastructure file
 #
-# Details:  The exception classes Exudyn raises from C++ (revision2026 step R6.3.1, #2516). Three
+# Details:  The exception classes Exudyn raises from C++ (#2516). Three
 #           things are checked, and each of them has broken silently before:
 #             1. the class hierarchy - every class derives from ExudynError AND from the built-in
 #                that fits, which rests on PyErr_NewException accepting a TUPLE of bases;
@@ -14,7 +14,7 @@
 # Usage:    pytest test_exceptions.py
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created, revision2026 step R6.3.1)
+# Date:     2026-09-18 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -80,7 +80,7 @@ def test_aCppThrowKeepsItsType():
 
 
 def test_typedCheckMacros():
-    """the two typed forms of the macros (revision2026 step R6.3.3, #2521). Both go through
+    """the two typed forms of the macros (#2521). Both go through
     GenericExceptionHandling on the way out, which is where the type used to be lost"""
     scipySparse = pytest.importorskip('scipy.sparse')
     import numpy as np
@@ -131,7 +131,7 @@ def test_anUntypedCheckIsAnInternalError():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the exception that CAUSED an Exudyn exception travels with it (revision2026 step R6.3.8, #2537)
+#the exception that CAUSED an Exudyn exception travels with it (#2537)
 
 def _SystemWithAFailingUserFunction():
     """a load whose user function divides by zero; returns (mbs, simulationSettings)"""
@@ -198,7 +198,7 @@ def test_anErrorWithoutAPythonCauseIsNotChained():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#deprecations are Python warnings, not printed lines (revision2026 step R6.3.4, #2522)
+#deprecations are Python warnings, not printed lines (#2522)
 
 def test_deprecationIsAWarning():
     """a deprecated setting and a deprecated function both raise a real DeprecationWarning"""

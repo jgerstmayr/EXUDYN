@@ -41,7 +41,7 @@ else:
     #which CHILD PROCESSES INHERIT - that is the point: the test suite runs every model in its own
     #interpreter (runTestSuite.py --parallel, pytest -n), and a sys attribute does not survive
     #that while a variable does. Release testing uses it to cover exudynCPPfast, which otherwise
-    #ships untested (revision2026 step R5.11). An explicit sys.exudynFast always wins, including
+    #ships untested. An explicit sys.exudynFast always wins, including
     #sys.exudynFast=False; the variable only decides when nothing was said in code.
     #Read here and not in _ApplyEnvironmentSettings() below: THAT runs after the C++ module has
     #been imported, which is too late to choose which one.
@@ -54,7 +54,7 @@ else:
         __useExudynFast = False #a failed environment read must never stop the import
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#SINCE revision2026 step R2.10 (#2466) there are exactly TWO modules, with the same meaning on
+#(#2466) there are exactly TWO modules, with the same meaning on
 #every platform: exudynCPP is built for the BASELINE instruction set and runs on any 64-bit CPU,
 #and exudynCPPfast has no range checks and carries the vector extensions (AVX2). The third module
 #exudynCPPnoAVX is gone, together with the sys.exudynCPUhasAVX2 switch that selected it: the
@@ -89,7 +89,7 @@ def _CpuHasAVX2():
         pass
     return False #unknown platform or a failed check: use the module that always works
 
-#ONE FUNCTION DECIDES AND IMPORTS (#2540, revision2026 step R6.2). It used to be a nest of four
+#ONE FUNCTION DECIDES AND IMPORTS (#2540). It used to be a nest of four
 #try/except blocks whose failure message named neither what was tried nor why, and whose decisions
 #were printed unconditionally or not at all. Two properties matter here and are the reason this is
 #a function and not a script:
@@ -211,7 +211,7 @@ def _ApplyEnvironmentSettings():
         print('NOTE: EXUDYN_SUPPRESS_UI_WINDOW_OPEN is set; Exudyn opens no renderer, solution '
               'viewer, plot or dialog window')
         try: #a script may call plt.show() itself, which no flag inside Exudyn can intercept; the
-             #non-interactive backend is the only thing that reaches those (see revision2026 R5.17)
+             #non-interactive backend is the only thing that reaches those
             import matplotlib
             matplotlib.use('Agg')
         except Exception: #matplotlib is optional, and a backend may be fixed already

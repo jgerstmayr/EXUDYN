@@ -1,6 +1,6 @@
 /** ***********************************************************************************************
 * @brief        Implementation of VisualizationObjectSuperElement::UpdateGraphics, moved here
-*               from src/Objects/VisuNodePoint.cpp in revision2026 step R11.4.4 (#2555). The
+*               from src/Objects/VisuNodePoint.cpp (#2555). The
 *               object is a base class and had no .cpp of its own until now.
 *
 * @author       Gerstmayr Johannes
@@ -16,7 +16,7 @@
 #include "Main/CSystemData.h"
 
 //for the UpdateGraphics of this item, moved here from VisuNodePoint.cpp
-//in revision2026 step R11.4.4 (#2555):
+//(#2555):
 #include "Graphics/VisualizationItemHelpers.h" //revision2026 step R11.4.4 (#2555)
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
