@@ -29,7 +29,6 @@ mbs = SC.AddSystem()
 
 print('EXUDYN version='+exu.config.Version())
 
-#testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
 #RunAllModelUnitTests(mbs, testInterface)
 
 

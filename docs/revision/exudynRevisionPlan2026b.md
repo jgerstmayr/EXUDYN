@@ -1114,7 +1114,14 @@ file, so an editor cannot complete them).
     that `tools/setupLocalWorkspace.py` copies, as for `exudyn.sln` and `python/pytest.py`.
 
 <a id="rg10-6"></a>
-**RG10.6** *(group RG10; maintainer 2026-09-23)* **The TestModels import the test suite to find
+**RG10.6** **DONE 2026-09-24** (#2632) — [log](exudynRevisionLog2026b.md#rg10-6-3) —
+    **The TestModels import the test suite to find out whether they are being tested.** All eight
+    sub-steps are done: the channel is `exu.sys`, 129 test models, 24 mini examples and 7
+    performance models are converted, `modelUnitTests.py`, `runUnitTests.py` and
+    `ExudynTestStructure` are deleted, the one hidden tolerance is a stated one, and the pattern
+    is written down for the first time. The original text follows.
+
+    *(group RG10; maintainer 2026-09-23)* **The TestModels import the test suite to find
     out whether they are being tested** (#2632). Every model carries the same nine lines:
 
     ```python
@@ -1212,8 +1219,12 @@ file, so an editor cannot complete them).
       `runPerformanceTests.py` are the last users of `ExudynTestStructure`, because
       `testRunnerTools.AddTiming` collects a `timings` list on it (#2460). That list has to move
       into `exu.sys` before the class can go.
-    - **RG10.6.6** the documentation of the test suite, and `python/pytestTemplate.py` and
-      `docs/dev/` wherever they describe the old pattern.
+    - **RG10.6.6** **DONE 2026-09-24** the documentation — which turned out to be a **gap**,
+      not a correction: no hand-written page named `exudynTestGlobals`, `modelUnitTests` or
+      `TestInterface`, because there never was a recipe. `docs/dev/WORKFLOW.md` has one now,
+      *What a test model looks like*, including the instruction not to scale a result to fit a
+      tolerance; `CONTRIBUTING.md` points at it; three stale counts and two dead comments naming
+      deleted things are gone.
 
     **Options that remain open.**
 

@@ -1699,3 +1699,47 @@ the runner's own state lives.
 All 13 single runs and all 7 performance tests pass, every test-suite result is identical, and
 `exudynTestGlobals` appears nowhere in `python/` or `tools/` any more.
 
+<a id="rg10-6-6"></a>
+### RG10.6.6 — the recipe that never existed (2026-09-24, #2632)
+
+This step was planned as *"update the documentation of the old pattern"*. The survey found that
+**there is none**: not one hand-written page in `docs/dev/`, `docs/manual/`, `docs/howTo/`,
+`CONTRIBUTING.md`, `CLAUDE.md` or `README.rst` ever named `exudynTestGlobals`, `modelUnitTests`,
+`runUnitTests` or `TestInterface`. The nine lines of boilerplate propagated for seven years by
+**copy-paste from the file next door**, and that is why every one of the 129 models had them and
+why two of them had a version that differed.
+
+So the step is not a correction but the recipe itself: `docs/dev/WORKFLOW.md` gains *What a test
+model looks like* — the three lines, why the renderer calls keep their `if not testIsActive:`,
+that the reference solution lives in `runTestSuiteRefSol.py` and not in the model, and the
+instruction that RG10.6.7 exists to justify: **never scale a result to make it fit the
+tolerance**, say `exu.sys['testTolerance']` instead. `CONTRIBUTING.md`, whose rule 3 is *"new
+behaviour has a test"*, points at it.
+
+Three counts were stale and are **measured**, not arithmetic'd: 139 test models (was 127), 171
+examples (was 177, wrong before this work), and `pytest` collects 149 cases in 71 s, or 12 s with
+`-n 8`. Two dead comments naming things that no longer exist are gone, one of which
+(`#testInterface = TestInterface(...)`) was published on an example page.
+
+<a id="rg10-6"></a>
+### RG10.6 — closed (2026-09-24, #2632)
+
+Eight sub-steps, seven commits, and the shape of the thing at the end:
+
+| | before | after |
+|---|---|---|
+| lines a test model needs to say it is a test | **9 + an import** | **1** |
+| reference solutions inside models | 98 + 1 performance | **0** |
+| ways a runner learns a result | 2 (`exudynTestGlobals`, then `exu.sys`) | **1** |
+| kinds of test file | 3 (unit test functions, models, mini examples) | **1** |
+| tolerances hidden by scaling a result | 1 | **0** |
+
+What it cost to be sure: the results of all 139 models were captured before the sweep and compared
+after every batch. **One reference solution moved**, deliberately, in RG10.6.7. Everything else is
+identical, in the serial suite, in the parallel suite, in `pytest` and in the performance runner.
+
+Three defects fell out of the work that were nobody's plan: a window opened on the maintainer's
+screen because the serial runner never called `SuppressAll`, the ten "unit tests" turned out not
+to have been running since V1.6, and `itemHeaderEmitter.py` was writing files in the locale
+encoding. None of them was found by reading.
+

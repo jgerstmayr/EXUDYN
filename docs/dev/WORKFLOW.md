@@ -439,9 +439,56 @@ above 0.6 s) and `OptionalPackageTests()` (needs ngsolve, stable-baselines3, ...
 both by `--fast` and by the pytest markers, so the two runners always skip the same models.
 `pytest` additionally marks `sensitive` and `unresolvedOnLinux` from the same file.
 
-**The models are not the slow part of a nightly run**: the whole suite is 22 seconds, while the
-177 examples and the performance tests dominate. Those are addressed by revision2026 steps R5.15
+**The models are not the slow part of a nightly run**: the whole suite is 26 seconds, while the
+171 examples and the performance tests dominate. Those are addressed by revision2026 steps R5.15
 and R5.16, not by this split.
+
+### What a test model looks like
+
+A test model is an ordinary Exudyn script that says **one** thing about itself and reports **one**
+number. Since revision2026b step RG10.6 (#2632) that is three lines, and nothing is imported from
+`python/testing/`:
+
+```python
+testIsActive = exu.sys.get('testIsActive', False)   #True only while a runner runs this file
+...
+simulationSettings.solutionSettings.writeSolutionToFile = not testIsActive
+...
+if not testIsActive:
+    SC.renderer.Start()
+    SC.renderer.RestoreSavedState()
+    SC.renderer.DoIdleTasks()
+    ...
+    SC.renderer.Stop()
+...
+exu.Print('solution of myTest=', testResult)
+exu.sys['testResult'] = testResult
+```
+
+- **`exu.sys` is the channel.** It is a dictionary the C++ side owns and Python can read, it lives
+  as long as the interpreter, and it is reserved for the system, so no model can collide with
+  another. Before RG10.6 a model imported `exudynTestGlobals` from the test suite inside a
+  `try/except`, nine lines of it, which is why a model could not be run from anywhere else.
+- **The renderer calls stay behind `if not testIsActive:`.** The runners suppress windows anyway
+  (`exu.special.userInterface.SuppressAll(True)`), but a test is worth running **with** graphics
+  by hand, and the branch is what makes that possible.
+- **The result is the model's own number, and the reference lives in
+  `python/testing/runTestSuiteRefSol.py`** - not in the model. Print it with a name: that is what
+  lets a reference be recomputed without running the suite.
+- **Never scale a result to make it fit the tolerance.** If a model needs a wider one, say so:
+
+  ```python
+  exu.sys['testTolerance'] = 5e-7   #with the reason, in a comment
+  ```
+
+  This is an absolute tolerance and it replaces the default for that model, in the suite, in
+  `pytest` and in the parallel path alike. Multiplying the result instead - which one model did
+  until revision2026b step RG10.6.7 - hides the tolerance inside the number the test compares,
+  and the reference solution then has to be a scaled number nobody recognises.
+
+A **mini example** is generated from `definitions/` and only writes `exu.sys['testResult']`; a
+**performance model** additionally calls `testRunnerTools.AddTiming(name, mbs, result)` once per
+simulation run.
 
 ### pytest
 
@@ -452,9 +499,9 @@ sensitive/unresolved lists as `runTestSuite.py` - those have one definition in
 `runTestSuiteRefSol.py` and `testRunnerTools.BaseTolerance()`.
 
 ```
-pytest                       all models and mini examples (137 cases, ~65 s)
+pytest                       all models and mini examples (149 cases, ~71 s)
 pytest -k ANCF               a subset by name
-pytest -n 8                  with pytest-xdist: ~11 s
+pytest -n 8                  with pytest-xdist: ~12 s
 pytest -k plotSensorTest -s  one model with its output
 ```
 

@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.45.dev1
+- Exudyn version = 1.12.46.dev1
 - last change = 2026-09-24
 - Number of issues = 2634
-- Number of resolved issues = 2359 (45 in current version)
+- Number of resolved issues = 2360 (46 in current version)
 
 ## Resolved issues and resolved bugs
 
@@ -19,6 +19,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ### Version 1.12
 
+- Version 1.12.46: resolved Issue 2632: the TestModels import the test suite to find out whether they are being tested (improvement)
+  - issue author: Claude-JG
+  - description: revision2026b step RG10.6, maintainer 2026-09-23. 125 of the 129 files in python/TestModels/ carry the same nine-line try/except block that imports exudynTestGlobals from modelUnitTests, and 90 of them also hard-code a reference solution that runTestSuite already holds. The step replaces both with exudyn.sys, which did not exist when the tests were written. The details, the recommendation and the options are in the plan step.
+  - **notes:** revision2026b step RG10.6, eight sub-steps. A test model said it was being tested in nine lines and an import of modelUnitTests; it says it in one: testIsActive = exu.sys.get('testIsActive', False). The runners write exu.sys\['testIsActive'\] and read exu.sys\['testResult'\], a model may state exu.sys\['testTolerance'\] instead of scaling its result, and the performance models add exu.sys\['testTimings'\] through AddTiming. 129 test models, 24 generated mini examples and 7 performance models are converted; modelUnitTests.py, runUnitTests.py and ExudynTestStructure are deleted; the ten 'model unit tests' are ordinary test models, which also revealed that they had not been running since V1.6; 99 hard-coded reference solutions went out of the models, since runTestSuiteRefSol.py holds them; and docs/dev/WORKFLOW.md documents the pattern for the first time - the old one had propagated by copy-paste for seven years without ever being written down. One reference solution moved on purpose (kinematicTreeAndMBStest, whose \*= 1e-7 hid its tolerance inside its result); every other result is identical in the serial suite, the parallel suite, pytest and the performance runner.
+  - effort: HIGH (within 40 hours)
+  - date resolved: **2026-09-24 09:16**, date raised: 2026-09-23, resolved by: Claude-JG
 - Version 1.12.45: resolved Issue 2633: restoring the saved render state takes two lines in 82 places (improvement)
   - issue author: Claude-JG
   - description: revision2026b step RG6.5, maintainer 2026-09-24. SC.renderer.Stop() saves the render state of every open view in exudyn.sys, and every model and example that wants the previous view back writes the same two lines: if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys\['renderState'\]). Measured: 82 occurrences in 85 files, in five spelling variants, four of them still using the deprecated SC.SetRenderState. exudyn.sys lives on the C++ side, so C++ can read it: SC.renderer.RestoreSavedState() does the whole thing and returns False when nothing has been saved yet, which is the ordinary case on the first run of a script and is why the two lines had a guard at all.
@@ -8066,11 +8072,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- <span class="textorange">open issue 2632:</span> the TestModels import the test suite to find out whether they are being tested
-  - issue author: Claude-JG
-  - description: revision2026b step RG10.6, maintainer 2026-09-23. 125 of the 129 files in python/TestModels/ carry the same nine-line try/except block that imports exudynTestGlobals from modelUnitTests, and 90 of them also hard-code a reference solution that runTestSuite already holds. The step replaces both with exudyn.sys, which did not exist when the tests were written. The details, the recommendation and the options are in the plan step.
-  - effort: HIGH (within 40 hours)
-  - date raised: 2026-09-23
 - <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.

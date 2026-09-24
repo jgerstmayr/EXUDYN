@@ -1,0 +1,17 @@
+{
+  "number": 2632,
+  "title": "the TestModels import the test suite to find out whether they are being tested",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "revision2026b step RG10.6, maintainer 2026-09-23. 125 of the 129 files in python/TestModels/ carry the same nine-line try/except block that imports exudynTestGlobals from modelUnitTests, and 90 of them also hard-code a reference solution that runTestSuite already holds. The step replaces both with exudyn.sys, which did not exist when the tests were written. The details, the recommendation and the options are in the plan step.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-24 09:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/",
+  "releaseNotes": "revision2026b step RG10.6, eight sub-steps. A test model said it was being tested in nine lines and an import of modelUnitTests; it says it in one: testIsActive = exu.sys.get('testIsActive', False). The runners write exu.sys['testIsActive'] and read exu.sys['testResult'], a model may state exu.sys['testTolerance'] instead of scaling its result, and the performance models add exu.sys['testTimings'] through AddTiming. 129 test models, 24 generated mini examples and 7 performance models are converted; modelUnitTests.py, runUnitTests.py and ExudynTestStructure are deleted; the ten 'model unit tests' are ordinary test models, which also revealed that they had not been running since V1.6; 99 hard-coded reference solutions went out of the models, since runTestSuiteRefSol.py holds them; and docs/dev/WORKFLOW.md documents the pattern for the first time - the old one had propagated by copy-paste for seven years without ever being written down. One reference solution moved on purpose (kinematicTreeAndMBStest, whose *= 1e-7 hid its tolerance inside its result); every other result is identical in the serial suite, the parallel suite, pytest and the performance runner.",
+  "resolvedInVersion": "1.12.46"
+}

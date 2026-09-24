@@ -63,6 +63,8 @@ The short form of those gates, which is what a pull request is checked against:
 2. **The test suite passes in full**: `python python/testing/runTestSuite.py` (about 20 seconds)
    and `pytest`.
 3. **New behaviour has a test**, and a fixed bug has the test that would have caught it.
+   A test model is three lines of boilerplate; `docs/dev/WORKFLOW.md`, *What a test model
+   looks like*, says which three.
 4. **The documentation is updated** where it describes what changed.
 5. **The style of the file you are editing is followed**, even where it differs from your own.
 

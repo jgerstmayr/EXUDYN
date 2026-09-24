@@ -10,7 +10,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 45 | 1.12.45 |
+| 1.12 | Metheney | 46 | 1.12.46 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -27,6 +27,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.46** `IMPROVEMENT` the TestModels import the test suite to find out whether they are being tested (#2632) - raised by Claude-JG
+  - revision2026b step RG10.6, eight sub-steps. A test model said it was being tested in nine lines and an import of modelUnitTests; it says it in one: testIsActive = exu.sys.get('testIsActive', False). The runners write exu.sys\['testIsActive'\] and read exu.sys\['testResult'\], a model may state exu.sys\['testTolerance'\] instead of scaling its result, and the performance models add exu.sys\['testTimings'\] through AddTiming. 129 test models, 24 generated mini examples and 7 performance models are converted; modelUnitTests.py, runUnitTests.py and ExudynTestStructure are deleted; the ten 'model unit tests' are ordinary test models, which also revealed that they had not been running since V1.6; 99 hard-coded reference solutions went out of the models, since runTestSuiteRefSol.py holds them; and docs/dev/WORKFLOW.md documents the pattern for the first time - the old one had propagated by copy-paste for seven years without ever being written down. One reference solution moved on purpose (kinematicTreeAndMBStest, whose \*= 1e-7 hid its tolerance inside its result); every other result is identical in the serial suite, the parallel suite, pytest and the performance runner.
 - **1.12.45** `IMPROVEMENT` restoring the saved render state takes two lines in 82 places (#2633) - raised by Claude-JG
   - revision2026b step RG6.5. SC.renderer.RestoreSavedState() restores the render state that SC.renderer.Stop() saved in exudyn.sys, and returns False when nothing has been saved yet - the first run of a script, which is what the old guard was for. It is C++ because the dictionary is C++: MainRenderer::RestoreSavedState(viewID) reads the key PyStopOpenGLRenderer writes (renderState for the main view, renderState\<N\> for the others) and hands it to the existing SetState; the binding comes from definitions/pybindRenderer.py, so the pybind header, the stub and docs/generated/cInterface/Renderer.md follow from one regeneration. The two-line idiom is gone from 85 files: 82 occurrences in five variants, of which four still used the deprecated SC.SetRenderState, with indentation of 0 to 12 spaces, two bracket spellings and one call on SC2 rather than SC. docs/manual/introductionBasics.md, tutorialRigidBody.md and GUI.md say the new form. python/testing/test\_rendererState.py covers nothing-saved, a state that comes back, an unknown key, a bad value that raises as SetState does, and that no source file carries the old idiom any more.
 - **1.12.44** `EXTENSION` there is no way to see which settings differ from the defaults (#2590) - raised by Claude-JG

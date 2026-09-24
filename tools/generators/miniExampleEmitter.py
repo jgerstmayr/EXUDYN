@@ -67,7 +67,6 @@ def WriteMiniExample(className, miniExample, outputDir):
     #s+= 'except BaseException as e:\n'
     #s+= space4+'exu.Print("An error occured in test example for ' + className + ':", e)\n'
     #s+= 'else:\n'
-    #s+= space4+'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
     s+= 'exu.Print("example for ' + className + ' completed, test result =", exu.sys[\'testResult\'])\n'
     s+= '\n'
     
