@@ -1181,7 +1181,13 @@ file, so an editor cannot complete them).
     - **RG10.6.3** **DONE 2026-09-24** the remaining models: **all 129** files of
       `python/TestModels/` are converted, the 98 hard-coded `testError = result - <number>` lines
       are gone, and **every one of the 139 results is identical** to the run before the sweep.
-    - **RG10.6.7** *(added 2026-09-24, from RG10.6.3)* `kinematicTreeAndMBStest.py:655` still
+    - **RG10.6.7** **DONE 2026-09-24** `kinematicTreeAndMBStest.py` states
+      `exu.sys['testTolerance'] = 5e-7` and its reference is the raw value, measured:
+      **263.88120463802585**. The comparison is arithmetically the one it always was —
+      `|raw*1e-7 - 2.6388...e-05| < 5e-14` is `|raw - reference| < 5e-7— ` and the tolerance is
+      now where a reader can see it. The original text follows.
+
+    - *(added 2026-09-24, from RG10.6.3)* `kinematicTreeAndMBStest.py:655` still
       has `testResult *= 1e-7`, with the comment *"result is too sensitive to small (1e-15)
       disturbances, so different results for 32bits and linux"* — the one place that multiplies
       a solution to make it fit a tolerance, which the maintainer asked to stop doing. It is

@@ -1636,3 +1636,29 @@ feature, three runners — and the third was found by a test failing, not by thi
 
 **Nothing else moved**: all 139 previous results are identical, and the ten are new.
 
+<a id="rg10-6-7"></a>
+### RG10.6.7 — a tolerance that was hiding inside a result (2026-09-24, #2632)
+
+One model in the tree multiplied its own solution to make it fit the tolerance:
+
+```python
+exu.sys['testResult'] *= 1e-7  #result is too sensitive to small (1e-15) disturbances, so
+                               #different results for 32bits and linux
+```
+
+The sentence is true and the mechanism was wrong: it states a tolerance by changing the number the
+test compares, so the reference solution in `runTestSuiteRefSol.py` was `2.6388120463802584e-05`
+for a model whose result is 263.88, and the comment beside it had to say *"original but too
+sensitive to disturbances: 263.88120463802767"*. The model was in **no** other list —
+`SensitiveTests`, `UnresolvedOnLinux`, `TestExamplesToleranceFactors`, the AVX2 update all pass it
+by — so this was the only expression of the intent.
+
+**The arithmetic is exact, which is what made the change safe.** `|raw*1e-7 - 2.6388...e-05| <
+5e-14` is `|raw - reference| < 5e-7`. So the model states `exu.sys['testTolerance'] = 5e-7`, the
+sentence that was in the comment stays as the reason, and the reference is the raw value —
+**measured** on this machine, 263.88120463802585, which agrees with the old scaled reference to
+its last digit. The test is neither stricter nor looser than it was yesterday.
+
+This is the only model whose reference solution moved in the whole of RG10.6, and the old value
+stands beside the new one in `runTestSuiteRefSol.py`, as the other entries carry their history.
+

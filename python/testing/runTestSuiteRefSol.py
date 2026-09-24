@@ -97,7 +97,10 @@ def TestExamplesReferenceSolution():
         'heavyTop.py':33.423125751743804,                            #new 2022-07-11 (CState Parallel); 
         'hydraulicActuatorSimpleTest.py':7.130440021870289,
         'jointArgsTest.py':0.00426904955009082,                    #2025-05-10
-        'kinematicTreeAndMBStest.py':2.6388120463802584e-05,        #original but too sensitive to disturbances: 263.88120463802767,
+        'kinematicTreeAndMBStest.py':263.88120463802585,           #the raw value since 2026-09-24 (revision2026b step RG10.6.7): the model used
+                                                                 #to multiply it by 1e-7, which hid its tolerance inside the
+                                                                 #number; it states exu.sys['testTolerance'] = 5e-7 instead,
+                                                                 #which is the same comparison. Until then: 2.6388120463802584e-05
         'kinematicTreeConstraintTest.py':1.8135975384620298 ,
         'kinematicTreeTest.py':-1.3093839602164064,
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29

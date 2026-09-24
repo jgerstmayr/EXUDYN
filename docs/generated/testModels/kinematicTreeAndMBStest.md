@@ -27,6 +27,11 @@ from exudyn.FEM import *
 import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
+#the result is too sensitive to small (1e-15) disturbances to be judged
+#against the default tolerance: it differs on 32 bits and on linux. Until
+#2026-09-24 that was said by multiplying the result by 1e-7, which hid the
+#tolerance inside the number the test compares (revision2026b step RG10.6.7)
+exu.sys['testTolerance'] = 5e-7
 
 from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
@@ -650,6 +655,5 @@ if case == 'treeStructure' or performTest:
         if compareKT:
             CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
 
-exu.sys['testResult'] *= 1e-7 #result is too sensitive to small (1e-15) disturbances, so different results for 32bits and linux
 exu.Print("solution of kinematicTreeAndMBStest all=", exu.sys['testResult'])
 ```
