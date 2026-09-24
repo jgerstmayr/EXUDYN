@@ -57,7 +57,7 @@ workflows, documentation, tests and examples.
 **Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices.
 
 +  **Exudyn** is *free, open source* and with plenty of *documentation*, *examples*, and *test models*
-+  **pre-built** for Python 3.10 - 3.14 under **Windows** , **Linux** and **MacOS** available ( older versions available for Python >= 3.6); to build wheels yourself, see `docs/howTo/buildFromSource.md <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildFromSource.md>`_
++  **pre-built** for Python 3.10 - 3.14 under **Windows** , **Linux** and **MacOS** available ( older versions available for Python >= 3.6); to build wheels yourself, see `docs/dev/BUILD.md <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/dev/BUILD.md>`_
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif

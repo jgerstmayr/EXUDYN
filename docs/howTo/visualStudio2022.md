@@ -48,6 +48,6 @@ python -m exudyn info
 
 ## See also
 
-- [buildFromSource.md](buildFromSource.md) — building the wheel without Visual Studio
+- [BUILD.md](../dev/BUILD.md) — building the wheel without Visual Studio
 - [buildQuirks.md](buildQuirks.md) — what goes wrong on Windows and why
 - [gccVsMsvcTraps.md](gccVsMsvcTraps.md) — what MSVC accepts and GCC does not

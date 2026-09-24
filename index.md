@@ -55,7 +55,6 @@ docs/dev/README
 ```{toctree}
 :caption: How-to notes
 
-docs/howTo/buildFromSource
 docs/howTo/condaEnvironments
 docs/howTo/sphinxDocs
 ```

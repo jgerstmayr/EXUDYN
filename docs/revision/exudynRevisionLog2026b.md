@@ -2344,3 +2344,46 @@ dash. The conversion of revision2026 step R7.1.5 has a rule for it (`autoGenerat
 maps `-{}-` to `--`) and these three were converted before that rule existed. A reader who
 copied the line got `pip install exudyn -{}-pre`, which pip refuses. No other hand-written page
 has one.
+
+<a id="rg3-12-2"></a>
+<a id="rg3-12-3"></a>
+<a id="rg3-12-4"></a>
+### RG3.12.2 to RG3.12.4 — three pages where there were three copies (2026-09-24, #2646)
+
+One entry for three sub-steps, because they are one piece of work: the new pages cross-reference
+each other, so a commit that adds only one of them fails the strict documentation build.
+
+**RG3.12.2, `docs/dev/BUILD.md`.** The build was described in three places that disagreed. The
+user manual had *Build and install under Windows / Mac OS X / Ubuntu* - about 170 lines that
+still said *"go to `main` of your cloned github folder"* (the `main/` level went in revision2026
+step R3.1), still described Ubuntu 18.04 with Python 3.6, and still offered
+`python setup.py bdist_wheel`, which current setuptools does not have. `docs/howTo/
+buildFromSource.md` was the accurate one and nobody found it. `docs/dev/README.md` had a third,
+short version.
+
+The new page is the how-to note **plus** what was only in the manual (the macOS section, the
+RaspberryPi, the WSLg software-OpenGL flag), reorganised the way the maintainer asked: a
+**platform-independent part first** - what you need everywhere, and the two commands that are
+the same on every platform - and then Windows, Linux, macOS. `docs/howTo/buildFromSource.md` is
+deleted; the user manual keeps **one** section, *Build Exudyn from source*, which says when a
+user needs it at all and links here. `gettingStartedInstall.md` went from **317 to 153 lines**,
+and the stale *How to install Exudyn and use the C++ source code (advanced)* section - Visual
+Studio 2017 and a `main_sln.sln` that has not existed for years - went with it.
+
+**RG3.12.3, `docs/dev/GETTING_STARTED.md`.** *"It starts with Environments, it starts already
+with the existing environment - but where does it come from?"* Now it comes from step 3 of seven:
+install git, a Python and a compiler; **get the code**; create the environment; set up the clone;
+build once; run the tests once; where to go next. It is the first page in the documentation that
+contains a `git clone` at all - over **https or ssh**, with the sentence that says which to
+choose and that https asking for a password wants a token. `WORKFLOW.md` §0a, the one-time setup
+per clone, moved here, where a reader meets it before the versioning rules rather than after.
+
+**RG3.12.4, `docs/dev/GIT.md`.** The branches, the everyday loop (`status`, `pull`, `add`,
+`commit`, `push`), what a commit message looks like and why, branching for a larger change,
+what a contribution from outside has to provide, and a table of *things that go wrong and the
+way back*. Written for the **command line**, because that is what a VS Code user has in front of
+them. It is the mechanics only: what a change must pass stays in `WORKFLOW.md`.
+
+And `docs/dev/README.md` stops being the third build description: its *Building and running*
+section is a table pointing at the three pages, plus the paragraph on editors that RG3.12.6 will
+extend.

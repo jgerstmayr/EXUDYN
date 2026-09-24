@@ -123,6 +123,6 @@ static constexpr Index maxNumberOfSegments = 12;
 
 ## See also
 
-- [buildFromSource.md](buildFromSource.md) — building on Linux
+- [BUILD.md](../dev/BUILD.md) — building on Linux
 - [buildQuirks.md](buildQuirks.md) — the Windows side
 - `docs/dev/CODING_STYLE.md` — the conventions these traps live under

@@ -22,6 +22,9 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 :hidden:
 :maxdepth: 2
 
+/docs/dev/GETTING_STARTED
+/docs/dev/BUILD
+/docs/dev/GIT
 /docs/dev/ARCHITECTURE
 /docs/dev/CODING_STYLE
 /docs/dev/WORKFLOW
@@ -58,18 +61,23 @@ tools/exudev/                             the dev driver: build, test, docs, rel
 
 ## Building and running
 
-Visual Studio 2022 is the primary development environment; mixed Python/native debugging
-(stepping from a Python script into a C++ item's `ComputeODE2LHS`) is the project's most valuable
-capability and is protected by design.
+Three pages, in the order a new developer needs them:
 
-- **IDE**: run `python tools/setupLocalWorkspace.py` once, then open the `exudyn.sln` it
-  creates and build `Debug|x64` or `Release|x64`. That solution, `python/pytest.py` and
-  `.vscode/c_cpp_properties.json` are untracked copies of committed templates, so experiments
-  cannot be committed - and the third is what lets VS Code follow a C++ include.
-- **Wheel**: `main/setup.py`, about one minute. Also protected by design.
-- **Scripts**: one driver, `exudev` - `exudev --help`, and `exudev -n <command>` to see what a
-  command would run. Its commands are listed in [`tools/exudev/README.md`](../../tools/exudev/README.md).
-- **Tests**: `runTestSuite.py` from `python/testing/`, about 20 s. Run it in full.
+| | |
+|---|---|
+| [GETTING_STARTED.md](GETTING_STARTED.md) | from nothing: clone, environment, `setupLocalWorkspace.py`, first build, first test run |
+| [BUILD.md](BUILD.md) | the build itself, per platform, and what to do when it does not work |
+| [GIT.md](GIT.md) | branches, commit messages, pull, push, merge, and what a contribution provides |
+
+**Editors.** The everyday work happens in **VS Code** - the Python package, the definition
+files, the documentation, and Claude Code. **Visual Studio 2022** is the debugger: stepping from
+a Python script into a C++ item's `ComputeODE2LHS` with one debugger is the project's most
+valuable development capability and is protected by design. `tools/setupLocalWorkspace.py`
+prepares both.
+
+**The driver**: one command, `exudev` - `exudev --help`, and `exudev -n <command>` to see what a
+command would run without running it. Its commands are in
+[`tools/exudev/README.md`](../../tools/exudev/README.md).
 
 Entry points worth knowing:
 
@@ -90,7 +98,6 @@ needs them:
 | file | what it is for |
 |---|---|
 | [condaEnvironments.md](../howTo/condaEnvironments.md) | environment recipes, the package→feature map, the scipy pin |
-| [buildFromSource.md](../howTo/buildFromSource.md) | the canonical build reference, Windows and Linux |
 | [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
 
 The other five are **maintainer notes**: they are in the repository, and they are linked here to

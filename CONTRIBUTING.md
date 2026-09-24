@@ -70,7 +70,7 @@ The short form of those gates, which is what a pull request is checked against:
 
 Building from source, the environments and the developer driver `exudev` are described in
 [`docs/dev/README.md`](docs/dev/README.md) and
-[`docs/howTo/buildFromSource.md`](docs/howTo/buildFromSource.md).
+[`docs/dev/BUILD.md`](docs/dev/BUILD.md).
 
 ## Licence
 

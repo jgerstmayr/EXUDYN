@@ -325,11 +325,9 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     Sub-steps:
 
     - **RG3.12.1** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-1) — the order in the user manual, and the LaTeX relicts;
-    - **RG3.12.2** `docs/dev/BUILD.md`: one build reference, the how-to note deleted, the manual
-      reduced to a pointer;
-    - **RG3.12.3** `docs/dev/GETTING_STARTED.md`: clone, environment, workspace, first build,
-      first test run - starting from nothing;
-    - **RG3.12.4** `docs/dev/GIT.md`: the git workflow, for co-developers and for contributors;
+    - **RG3.12.2** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-2) — `docs/dev/BUILD.md`: one build reference, the how-to note deleted, the manual reduced to a pointer;
+    - **RG3.12.3** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-3) — `docs/dev/GETTING_STARTED.md`: clone, environment, workspace, first build, first test run;
+    - **RG3.12.4** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-4) — `docs/dev/GIT.md`: the git workflow, for co-developers and for contributors;
     - **RG3.12.5** `WORKFLOW.md` restructured into the order the work is done, and shortened by
       what moved out;
     - **RG3.12.6** the editors: VS Code for the everyday work, Visual Studio 2022 for mixed
