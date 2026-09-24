@@ -1992,3 +1992,80 @@ issues belongs with the sentence about version numbers, which is where it is now
 asserted `'- Version 1.12.' not in text` over the whole page - and failed, because the
 description of #2637 **quotes the old format**. It compares lines that start an entry now,
 which is what it meant.
+
+<a id="rg10-7"></a>
+### RG10.7 — the plan holds the open work again (2026-09-24, #2638)
+
+The plan says in its own header what a finished step keeps: *"a done step keeps one line here
+- status, date, outcome, link to the log; an open step keeps its full text"*. It was not
+following it. Measured before the cleanup: **971 of 1391 lines** were steps that are done,
+and the longest of them - RG10.6 at 129 lines, RG6.2 at 67, RG9.2 at 41 - carried the problem
+as it was first stated, the options that were weighed and how the work went. The maintainer
+asked for it on 2026-09-24, naming RG3 and RG6.
+
+Two rules did it, and both are about **where a fact already lives**:
+
+- a step that ended in *"The original text follows"* is cut there, with the sentence. That
+  text is the issue as it was raised, and `tools/issueTracker/issues/` has it, searchable by
+  every field since RG10.2.1;
+- the rest were rewritten to the outcome and the link. Nothing was dropped that is not in the
+  log: **every one of the 52 done steps has a log entry**, which was checked before a line
+was removed.
+
+**1391 lines to 939.** No anchor, no step number and no group heading was lost - the check
+that says so compares the sets before and after, and it caught a first attempt that had
+deleted seven group headings, because a step block ran to the next anchor and a heading with
+its introduction stands between two steps.
+
+One piece of analysis lived **only** in the plan and is moved here rather than summarised:
+the review of `GUI.py` of 2026-09-22, which is what the sub-steps RG6.2.1 to RG6.2.10 were
+cut from. It follows as its own entry.
+
+<a id="rg6-2-review"></a>
+### RG6.2 — the review of `GUI.py` (2026-09-22, #2591)
+
+*Moved out of the plan on 2026-09-24 by RG10.7 (#2638), unchanged. It is the reading of the
+module that the sub-steps were cut from.*
+
+**REVIEWED 2026-09-22.** `python/exudyn/misc/GUI.py`, 1017 lines, two dialog classes:
+`TkinterEditDictionaryWithTypeInfo` (the settings tree) and `TkinterEditDictionary` (a plain
+dictionary, used by right-mouse edit). Each of the seven complaints has a cause in the code,
+and most of them are small:
+
+| the complaint | what the code does | what it needs |
+|---|---|---|
+| the table is restricted | the tree has three columns, `Name`, `value`, `description`; **type and size are read and stored but never shown** (`self.typeStorage`, `self.sizeStorage`) | a type column, and the unit/range where the definition has one |
+| illegal input is caught, no type hints | `CheckType()` validates on commit and opens a `messagebox.showerror`; the type is known at that moment and is not in the message | show the expected type before the input, in the edit row and in the error |
+| the font cannot be adjusted on Linux | `if not IsApple(): fontFactor = 1` — the font factor is **forced to 1** off macOS and only the row height follows the display scaling; the setting is called `dialogs.fontScalingMacOS` | one `dialogs.fontScaling` for every platform, with `fontScalingMacOS` kept as a deprecated name (the mechanism of RG12.1) |
+| the columns can hardly be adjusted | **`tree.column(...)` is never called** — no width, no minwidth, no stretch, so every column keeps the tkinter default of 200 px and the description is cut | set the widths, let the description take the rest, remember what the user drags |
+| the description needs a key press | bound to the literal key `h`, shown in a modal `messagebox`; the column heading reads *"Description (press H to show)"* | a hover tooltip, and the full text in a wrapped area below the tree |
+| fields cannot be edited inline | the value is edited in a **separate `Entry`/`Combobox` at the bottom of the window**, and the two swap by z-order (`lower()`/`lift()`) | edit in the cell; the bottom row can stay as the place for the long description |
+| combo boxes are unhandy | one `Combobox` reused for every enum, values from `GetComboBoxListsDict()`, which **hard-codes three enum types** | build the list from the type name through `exu`, so that every enum gets a list |
+
+**The hard-coded three are a real gap, not only a smell**: `OutputVariableType`,
+`LinearSolverType` and `ItemType` are in the dict, and
+`timeIntegration.explicitIntegration.dynamicSolverType` is a `DynamicSolverType` — so it is
+edited as free text, where a typo is a silent wrong value.
+
+**The finding that changes the step**: the dialog is **not specific to
+`visualizationSettings`**. `GetDictionaryWithTypeInfo()` is generated for 100 structures and
+bound for `SimulationSettings` as well, with name, value, type, size and description for
+every leaf: **470 editable values in `visualizationSettings`, 152 in `simulationSettings`, and
+not one of them without a description**. `EditDictionaryWithTypeInfo(SC.simulationSettings)`
+is a call that nothing offers today. So "a settings dialog for the solver" is not a new
+dialog, and a second front end is a second *renderer* of the same data.
+
+**`rendererPythonInterface.cpp` is worse than "it executes Python inside C++"**: **220 of its
+775 lines ARE Python**, in six raw string literals. Only the settings dialog is a one-line
+call into `exudyn.misc.GUI`; the **help dialog (69 lines) and the command window (93 lines)
+are written in full inside the C++ file**, where ruff never sees them, the stub check never
+sees them, no test imports them, and one of them carries a leftover `\n";` inside a Python
+comment — which is what code looks like when nothing reads it. Moving those two into
+`exudyn.misc.GUI` beside the third, and leaving one call each in the C++, is the part of this
+step with the clearest boundary.
+
+**What no test touches**: `allExudynModulesTest.py` imports `GUI.py` because it imports every
+module of the package, and **nothing calls a single function of it**. A dialog needs a window,
+so the suite cannot; what *can* be tested without one is the layer underneath —
+`ConvertString2Value`, `ConvertValue2String`, `CheckType`, `GetComboBoxListsDict` — and that
+is worth doing first, because it is where a wrong value comes from.

@@ -1,0 +1,17 @@
+{
+  "number": 2638,
+  "title": "the revision plan carries the full text of the steps that are finished",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The plan states its own rule - a done step keeps one line here: status, date, outcome, link to the log; an open step keeps its full text - and does not follow it: 971 of its 1391 lines are steps that are done, several of them 30 to 130 lines of how the work was done, why, and which options were weighed. That belongs in the log, which has an entry for every one of them, and the problem as it was first stated belongs to the issue. The plan is where the OPEN work is read, and it is unreadable when four fifths of it is finished work.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 12:57",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/revision/exudynRevisionPlan2026b.md",
+  "releaseNotes": "The revision plan holds the open work again: a finished step keeps its status, date, outcome and the link to its log entry, which is the rule the plan states in its own header. 1391 lines to 939, no anchor, step number or group heading lost, and no open step touched. The review of GUI.py, the one piece of analysis that lived only in the plan, is a log entry now. revision2026b step RG10.7.",
+  "resolvedInVersion": "1.12.54"
+}

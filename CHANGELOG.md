@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 52 | 1.12.53 |
+| 1.12 | Metheney | 53 | 1.12.54 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.54** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the revision plan carries the full text of the steps that are finished (#2638)
+  - description: The plan states its own rule - a done step keeps one line here: status, date, outcome, link to the log; an open step keeps its full text - and does not follow it: 971 of its 1391 lines are steps that are done, several of them 30 to 130 lines of how the work was done, why, and which options were weighed. That belongs in the log, which has an entry for every one of them, and the problem as it was first stated belongs to the issue. The plan is where the OPEN work is read, and it is unreadable when four fifths of it is finished work.
+  - **notes:** The revision plan holds the open work again: a finished step keeps its status, date, outcome and the link to its log entry, which is the rule the plan states in its own header. 1391 lines to 939, no anchor, step number or group heading lost, and no open step touched. The review of GUI.py, the one piece of analysis that lived only in the plan, is a log entry now. revision2026b step RG10.7.
+  - date resolved: **2026-09-24 12:57**, date raised: 2026-09-24
 - **1.12.53** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` changelog and tracker page print the same issue in two different formats (#2637)
   - description: The two pages are renderings of one store, but a resolved issue looks different in each: the changelog prints '- \*\*1.12.50\*\* \`FIX\` title (\#2634) - raised by X' and the tracker page prints '- Version 1.12.49: resolved Issue 2633: title (improvement)' with a sub-list. So the changelog has no issue number in the tracker's spelling, no date raised and no date and time resolved, and the tracker page has no type badge. One entry format for both: the type as the changelog writes it, the priority and the effort as badges right after it, 'raised by' and 'resolved by' in the same style, and the sub-list of the tracker for the rest. The changelog also claims to point at 'the full issue tracker', which is wrong - the page holds the issues resolved before the current release.
   - **notes:** The changelog and the issue tracker page print an issue in one format: the type, then the priority and the effort as badges, then who raised and who resolved it, then the title with its number, and the description, the notes and the dates below it. One function, IssueEntry(), writes both pages. The changelog no longer claims to point at 'the full issue tracker'. revision2026b step RG3.10.1.
