@@ -696,6 +696,16 @@ This group is that revision and what has to happen before it can start.
     82 occurrences in 85 files, in five variants of which four still used the deprecated
     `SC.SetRenderState`, are one call each.
 
+<a id="rg6-6"></a>
+**RG6.6** **DONE 2026-09-24** (#2643) — [log](exudynRevisionLog2026b.md#rg6-6) —
+    **macOS: the settings dialog aborted the process** *(maintainer, 2026-09-24, first
+    graphics test on macOS)*. The single-threaded renderer - which macOS always is - polls
+    events and runs the queued Python inside `DoIdleTasks()`, and the settings dialog calls
+    `DoIdleTasks(0)` on every change. A second event pump inside the first is fatal there,
+    because `glfwPollEvents()` runs the **shared** Cocoa run loop, which redraws the tkinter
+    dialog and calls back into Python. `GlfwRenderer::idleOperationDepth` counts the idle
+    operations on the stack and only the outermost pumps; a nested one renders and returns.
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -

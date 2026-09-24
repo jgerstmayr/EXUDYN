@@ -238,8 +238,13 @@ bool VisualizationSystemContainer::DoSingleIdleOperation()
 #ifdef USE_GLFW_GRAPHICS
 	if (!stopSimulationFlagSC && RendererIsRunning())
 	{
-		//std::this_thread::sleep_for(std::chrono::milliseconds(50));
-		PyProcessExecuteQueue(); //use time to execute incoming python tasks
+		//the dialogs this queue opens can call DoIdleTasks() again, and the queue may not be
+		//entered from inside itself (#2643, revision2026b step RG6.6)
+		ScopedIdleOperation idleOperation;
+		if (GlfwRenderer::idleOperationDepth <= 1)
+		{
+			PyProcessExecuteQueue(); //use time to execute incoming python tasks
+		}
 		for (auto item : visualizationSystems)
 		{
 			item->postProcessData->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations

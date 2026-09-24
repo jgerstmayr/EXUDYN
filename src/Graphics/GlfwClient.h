@@ -270,6 +270,15 @@ private:
 
 	//static Raytracer raytracer;
 public:
+	//! HOW MANY IDLE OPERATIONS ARE ON THE STACK (#2643, revision2026b step RG6.6). The
+	//! single-threaded renderer - which is what macOS always is - polls events and runs the
+	//! queued Python from inside DoIdleTasks(). A dialog opened by that queue can call
+	//! DoIdleTasks() again, and a second event pump inside the first is fatal on macOS:
+	//! glfwPollEvents() runs the shared Cocoa run loop, which redraws the tkinter dialog and
+	//! calls back into Python where the GIL bookkeeping of _tkinter no longer holds. Only
+	//! depth 1 pumps; a nested operation renders and returns.
+	static Index idleOperationDepth;
+
 	GlfwRenderer();
 	~GlfwRenderer() 
 	{	
@@ -753,6 +762,15 @@ public:
 };
 
 extern GlfwRenderer glfwRenderer; //this is the (static) location of the renderer class; could also be made dynamic
+
+//! count one idle operation for the length of a scope; a counter that is decremented by hand
+//! would stay up when the queued Python throws, and the renderer would stop polling (#2643)
+class ScopedIdleOperation
+{
+public:
+	ScopedIdleOperation() { GlfwRenderer::idleOperationDepth++; }
+	~ScopedIdleOperation() { GlfwRenderer::idleOperationDepth--; }
+};
 
 
 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 57 | 1.12.58 |
+| 1.12 | Metheney | 58 | 1.12.59 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.59** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS: the settings dialog crashes the process through a re-entrant DoIdleTasks (#2643)
+  - description: Fatal Python error in PyEval\_RestoreThread, SIGABRT, macOS 14.5 arm64, Python 3.13, after interacting with the visualization dialog of an interactive example (maintainer, 2026-09-24, tmp/MacOS/mactest.txt). The 103 frames of the crashed thread show DoIdleTasks entered TWICE: a tkinter after-callback of interactive.py calls SC.renderer.DoIdleTasks(0); its PyProcessExecuteQueue runs the queued Python that opens the settings dialog; the dialog's wait\_window pumps Tcl events; a Tk binding calls GUI.py UpdateSettingsStructure, which calls SC.renderer.DoIdleTasks(0) again when dialogs.multiThreadedDialogs is set - and that inner call reaches \_glfwPlatformPollEvents, which on macOS runs the SHARED Cocoa run loop, redraws the Tk window and calls back into Python at a point where the GIL bookkeeping of \_tkinter is inconsistent. Windows survives it because polling GLFW events there does not pump the Tk event loop. The renderer idle loop must not be re-entrant; the workaround is dialogs.multiThreadedDialogs=False, whose description already says it may cause problems on some platforms.
+  - **notes:** GlfwRenderer::idleOperationDepth counts the idle operations on the stack, and only the outermost polls events and runs the queued Python. A nested one - the settings dialog calling DoIdleTasks(0) on every change - still renders, so the live update keeps working, but it no longer starts a second event pump inside the first, which on macOS runs the shared Cocoa run loop and aborts the process in PyEval\_RestoreThread. Both guarded blocks are in the single-threaded path, which is what macOS always uses and what Windows and Linux only reach if multithreaded rendering is turned off. revision2026b step RG6.6.
+  - date resolved: **2026-09-24 18:46**, date raised: 2026-09-24
 - **1.12.58** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the plan does not say what to do next (#2642)
   - description: RG10.7 made the plan hold the open work again, and the question it does not answer is the one a reader opens it for: what now. The open steps are spread over twelve groups and are read by scrolling past the finished ones. The maintainer asked on 2026-09-24 for a final section, updated from time to time: what is still open or was raised during the current work, and what is recommended next - each line with its issue number and its RG number and a short title, never a second copy of the step.
   - **notes:** The revision plan ends in a section 'Next steps recommended': the open steps with their issue and a short title, what the current work raised without making it a step, and a recommended order with the reason for it. It copies nothing - a step keeps its full text in its group - and is updated from time to time. revision2026b step RG10.7.1.

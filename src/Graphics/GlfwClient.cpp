@@ -94,6 +94,7 @@ GlfwRenderer glfwRenderer;
 bool GlfwRenderer::rendererActive = false;
 bool GlfwRenderer::stopRenderer = false;
 bool GlfwRenderer::useMultiThreadedRendering = false;
+Index GlfwRenderer::idleOperationDepth = 0;
 Real GlfwRenderer::lastGraphicsUpdate = 0.;
 Real GlfwRenderer::lastEventUpdate = 0.;	
 Real GlfwRenderer::rendererStartTime = 0.;
@@ -2015,7 +2016,11 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 
 	if (!useMultiThreadedRendering) //do this before rendering ...
 	{
-		if (time >= lastEventUpdate + 0.01) //should be very responsive - 100Hz is ok
+		//ONLY THE OUTERMOST IDLE OPERATION PUMPS (#2643): a nested one would run a second
+		//event loop inside the first - fatal on macOS - and would start the next queued Python
+		//while the previous one is still on the stack. It renders instead, which is what the
+		//settings dialog wants from it when dialogs.multiThreadedDialogs is set.
+		if (idleOperationDepth <= 1 && time >= lastEventUpdate + 0.01) //should be very responsive - 100Hz is ok
 		{
 			glfwPollEvents(); //do not wait, just do tasks if they are there
 			lastEventUpdate = time;

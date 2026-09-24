@@ -1,0 +1,17 @@
+{
+  "number": 2643,
+  "title": "macOS: the settings dialog crashes the process through a re-entrant DoIdleTasks",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "Fatal Python error in PyEval_RestoreThread, SIGABRT, macOS 14.5 arm64, Python 3.13, after interacting with the visualization dialog of an interactive example (maintainer, 2026-09-24, tmp/MacOS/mactest.txt). The 103 frames of the crashed thread show DoIdleTasks entered TWICE: a tkinter after-callback of interactive.py calls SC.renderer.DoIdleTasks(0); its PyProcessExecuteQueue runs the queued Python that opens the settings dialog; the dialog's wait_window pumps Tcl events; a Tk binding calls GUI.py UpdateSettingsStructure, which calls SC.renderer.DoIdleTasks(0) again when dialogs.multiThreadedDialogs is set - and that inner call reaches _glfwPlatformPollEvents, which on macOS runs the SHARED Cocoa run loop, redraws the Tk window and calls back into Python at a point where the GIL bookkeeping of _tkinter is inconsistent. Windows survives it because polling GLFW events there does not pump the Tk event loop. The renderer idle loop must not be re-entrant; the workaround is dialogs.multiThreadedDialogs=False, whose description already says it may cause problems on some platforms.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 18:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationSystemContainer.cpp",
+  "releaseNotes": "GlfwRenderer::idleOperationDepth counts the idle operations on the stack, and only the outermost polls events and runs the queued Python. A nested one - the settings dialog calling DoIdleTasks(0) on every change - still renders, so the live update keeps working, but it no longer starts a second event pump inside the first, which on macOS runs the shared Cocoa run loop and aborts the process in PyEval_RestoreThread. Both guarded blocks are in the single-threaded path, which is what macOS always uses and what Windows and Linux only reach if multithreaded rendering is turned off. revision2026b step RG6.6.",
+  "resolvedInVersion": "1.12.59"
+}

@@ -2180,3 +2180,63 @@ title, and the step keeps its full text in its group - the same rule RG10.7 appl
 finished steps. The open issues that are not steps are not listed at all: there are hundreds of
 them and they belong to `exudev issue serve`, which since RG10.2.1 and RG10.2.2 can actually
 find one.
+
+<a id="rg6-6"></a>
+### RG6.6 — only the outermost idle operation pumps (2026-09-24, #2643)
+
+The first test of Exudyn **with graphics on macOS** (maintainer, 2026-09-24): *"Basically
+works. ... after some steps crashed."* `SIGABRT`, a fatal Python error in
+`PyEval_RestoreThread`, macOS 14.5 on arm64, Python 3.13, after interacting with the
+visualization dialog.
+
+The crash report has **103 frames of the crashed thread**, and they say the whole thing. Read
+from the bottom, the boundary between Python, Tcl and C++ is crossed **four** times:
+
+```
+tk.mainloop()                          the interactive dialog of interactive.py
+  after() timer -> PythonCmd
+    SC.renderer.DoIdleTasks(0)         <- idle operation 1
+      PyProcessExecuteQueue()          the queued Python of the V key:
+        pybind11::exec -> the settings dialog
+          wait_window -> Tk_TkwaitObjCmd
+            a Tk binding -> PythonCmd
+              UpdateSettingsStructure
+                SC.renderer.DoIdleTasks(0)   <- idle operation 2, and the defect
+                  glfwPollEvents()
+                    NSApplication nextEventMatchingEventMask
+                      the Cocoa run loop redraws the TKContentView
+                        Tcl_DoOneEvent -> PythonCmd
+                          PyEval_RestoreThread -> fatal error -> abort()
+```
+
+**Why macOS and not Windows.** GLFW cannot render from a second thread on macOS, so the
+renderer is always single-threaded there: the event pump lives inside `DoIdleTasks()` instead
+of in a thread of its own. And `glfwPollEvents()` on macOS runs the **same** Cocoa run loop
+that tkinter draws on - so polling events redraws the dialog and calls back into Python, at a
+point where `_tkinter` has already handed the GIL to Tcl. On Windows polling GLFW events does
+not touch the Tk event loop, and the default renderer is multithreaded, so neither half of
+the mechanism exists.
+
+**The fix is a depth, not a platform test.** `GlfwRenderer::idleOperationDepth` counts the
+idle operations on the stack, held by a `ScopedIdleOperation` so that it comes back down when
+the queued Python throws. Two places ask it, and both are in the **single-threaded** path:
+`VisualizationSystemContainer::DoSingleIdleOperation` runs `PyProcessExecuteQueue()` only at
+depth 1, and `GlfwRenderer::DoRendererTasks` polls and runs the queue only at depth 1. A
+nested operation still **renders**, which is what the dialog wanted from it: the live update
+of `dialogs.multiThreadedDialogs` keeps working.
+
+**What this does to the other platforms: nothing, by construction.** Both guarded blocks sit
+inside `if (!useMultiThreadedRendering)`, and Windows and Linux render multithreaded by
+default - the block does not execute there at all. A user who turns multithreaded rendering
+off gets the guard, and the same re-entrancy is latent for them, so that is a fix rather than
+a change. This is what the maintainer asked for: *"Keep the other platforms unchanged, only
+adapt for MacOS. The fix ... under the assumption that it is single-threaded."*
+
+**Not verified by me**: there is no macOS here, and the Windows suite cannot reach the defect
+- 126 models, 23 mini examples and the pytest suite pass, which shows only that nothing else
+moved. The second event pump also had a second, platform-independent fault worth naming: it
+would have started the **next** queued Python while the previous one was still on the stack.
+
+The workaround, if the guard is not enough: `dialogs.multiThreadedDialogs = False`, which
+removes the nested call entirely. Its own description has said *"may cause problems on some
+platforms"* since long before this.
