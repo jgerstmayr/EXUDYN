@@ -2154,3 +2154,29 @@ is now a substring like everything else, and `249` finds **#249 and #2490 to #24
 The two version hits stay, and they are not a defect: searching for `1.11.240` is a good reason
 to have made the field searchable. They only looked arbitrary because the hit one expected was
 missing.
+
+<a id="rg10-7-1"></a>
+### RG10.7.1 — what now (2026-09-24, #2642)
+
+RG10.7 made the plan hold the open work again. The question it still did not answer is the one
+the plan is opened for, and the maintainer asked for the answer to be written down: *what now*.
+
+The section has three parts, which is one more than was asked for and is the shape the material
+took:
+
+- **Still open** - the 28 open steps, one line each, with the issue number where the step has
+  one and a title short enough to scan. Nine of them are the plugin ABI, so they are one row;
+- **Raised by the current work, and not yet a step** - the GitLab `regenerated_files` failure
+  that cannot be reproduced here, the documentation of the finished steps, and four things that
+  earlier steps deliberately left open (#2608 remember the window, #2616 a hook for
+  `forceQuitSimulation`, #2423, #2541, #2497). **None of them is planned**: they are written
+  where they were found, and the section only makes them visible in one place;
+- **Recommended next** - five items in an order, each with the reason, because an order without
+  one is an opinion. The first is the 1.13 release, and the argument for it is not that it is
+  most important: it is the only item on the page that needs **other people's time**.
+
+What the section must not become is a second backlog. It carries a number, an issue and a short
+title, and the step keeps its full text in its group - the same rule RG10.7 applied to the
+finished steps. The open issues that are not steps are not listed at all: there are hundreds of
+them and they belong to `exudev issue serve`, which since RG10.2.1 and RG10.2.2 can actually
+find one.

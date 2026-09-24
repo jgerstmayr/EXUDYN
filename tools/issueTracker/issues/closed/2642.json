@@ -1,0 +1,17 @@
+{
+  "number": 2642,
+  "title": "the plan does not say what to do next",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "RG10.7 made the plan hold the open work again, and the question it does not answer is the one a reader opens it for: what now. The open steps are spread over twelve groups and are read by scrolling past the finished ones. The maintainer asked on 2026-09-24 for a final section, updated from time to time: what is still open or was raised during the current work, and what is recommended next - each line with its issue number and its RG number and a short title, never a second copy of the step.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 13:40",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/revision/exudynRevisionPlan2026b.md",
+  "releaseNotes": "The revision plan ends in a section 'Next steps recommended': the open steps with their issue and a short title, what the current work raised without making it a step, and a recommended order with the reason for it. It copies nothing - a step keeps its full text in its group - and is updated from time to time. revision2026b step RG10.7.1.",
+  "resolvedInVersion": "1.12.58"
+}

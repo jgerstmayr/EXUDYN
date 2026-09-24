@@ -30,6 +30,11 @@ this plan is organised by group.
 - **A new group or a new top-level step is proposed to the maintainer before it is written down**;
   sub-steps may be added directly.
 
+The last section, **Next steps recommended**, is the answer to *what now*: the open steps and
+what the current work raised, with the numbers to look them up by. It is updated from time to
+time and copies nothing.
+
+
 Each step that came from the first plan says so: *(revision2026 step R9.1)*. The finished plan
 carries the same table from its side, so a citation from either direction resolves.
 
@@ -915,6 +920,14 @@ file, so an editor cannot complete them).
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
 
+<a id="rg10-7-1"></a>
+**RG10.7.1** **DONE 2026-09-24** (#2642) — [log](exudynRevisionLog2026b.md#rg10-7-1) —
+    **The plan did not say what to do next** *(maintainer, 2026-09-24)*. The open steps are
+    spread over twelve groups and were read by scrolling. The last section, **Next steps
+    recommended**, names them with their issue and a short title, lists what the current work
+    raised without making it a step, and recommends an order with the reason for it. It copies
+    nothing and is updated from time to time.
+
 <a id="rg11-1"></a>
 **RG11.1** **DONE 2026-09-24** (#2610) — [log](exudynRevisionLog2026b.md#rg11-1) —
     **The results monitor runs beside the simulation, or it is redundant.** Evaluated, and the
@@ -979,3 +992,65 @@ find out about the settings of a model. It is the group a user notices most and 
 
 Open in the tracker for this group: **#2497** (59 bare `except:` remain in the shipped
 package).
+
+## Next steps recommended
+
+*A reading of the groups above, updated from time to time. It is **not** a second place where
+work is planned: a step keeps its full text in its group, and this section carries its number, its
+issue and a short title only. The open issues that are not steps are in the tracker, which
+`exudev issue serve` reads.*
+
+### Still open
+
+| step | issue | what it is |
+|---|---|---|
+| RG1.1 | - | at 1.13: fast-forward `master`, push once with tags |
+| RG1.2 | - | retroactive tags for the past releases whose commits can be identified |
+| RG1.3 | - | a second internal repository for development-only Python |
+| RG1.4 | - | **the 1.13 release** - the first public one after the revision |
+| RG2.1 | #2562 | the drawing code is exercised by exactly one test model |
+| RG2.2 | - | the integration round of the institute before 1.13 |
+| RG2.3 | #2582 | a graphics regression suite |
+| RG3.8 | #2594 | the unreferenced figures the conversion lost |
+| RG4.1 | - | the Windows/Linux differences in contact and friction |
+| RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
+| RG4.3 | #2398, #2400 | the cost of an explicit integration step |
+| RG5.1 | #2397 | a micro-benchmark that is maintained rather than written once |
+| RG5.2 | - | make the hot linear algebra vectorizable |
+| RG6.1 | - | remove OpenVR - it blocks the rendering revision |
+| RG6.3 | #2583 | the renderer extraction functions, shaped for testing |
+| RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
+| RG10.1 | - | a checker for user scripts after the 1.12 API changes |
+| RG11.3 | - | the results monitor beside a running simulation (proposed by RG11.1) |
+| RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
+| RG12.2 | #2589 | item parameters can be deprecated |
+
+### Raised by the current work, and not yet a step
+
+Each of these is written down where it was found; none is planned, and the maintainer decides
+whether it becomes a step.
+
+| where | issue | what it is |
+|---|---|---|
+| CI of 1.12.48 | - | **`regenerated_files` fails on GitLab** and cannot be reproduced here: `regenerate.py --check` is clean on Windows, every generated file is UTF-8 with LF in the index, and this WSL has no pip. It needs the job log. |
+| maintainer, 2026-09-24 | - | the documentation of the steps that are done, where a page still describes the state before one of them |
+| RG6.2.11 | #2608 | **remember the window** - undecided; the rule that makes it safe is in the log |
+| RG4.5 | #2616 | a binding or a test hook for `forceQuitSimulation`, which no test can reach today |
+| RG4 | #2423 | every C++ user error inspects the Python source to find its file and line |
+| RG10 | #2541 | `exudyn.config` and `exudyn.special` are in no stub file |
+| RG12 | #2497 | 59 bare `except:` remain in the shipped package |
+
+### Recommended next
+
+1. **RG2.2 and RG1.4** - the 1.13 release. The integration round is the only item on this page
+   that needs **other people's time**, so it is the one that has to start before the rest is
+   ready, not after.
+2. **RG12.1** (#2588) - the deprecation mechanism for `simulationSettings`. RG6.2.3.1 already
+   needed the mechanism for the rename of `fontScalingMacOS` and could use the one
+   `visualizationSettings` has; RG12.2 (#2589) cannot start until `simulationSettings` has
+   it too.
+3. **RG2.3** (#2582) **with RG6.3** (#2583) - they are one piece of work: a graphics test needs
+   the headless call and the resolution argument that RG6.3 defines, and RG6.3 has no reason to
+   exist without the suite.
+4. **RG6.1** - remove OpenVR before the rendering revision rather than porting it.
+5. **RG3.8** (#2594) - small, and it is published documentation that is visibly wrong.
