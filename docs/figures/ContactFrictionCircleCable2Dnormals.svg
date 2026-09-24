@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2021.5 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="109.401mm" height="31.3761mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 11884.6 3408.49"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str1 {stroke:#2B2A29;stroke-width:27.16;stroke-miterlimit:22.9256}
+    .str4 {stroke:#2B2A29;stroke-width:21.73;stroke-miterlimit:22.9256}
+    .str3 {stroke:#E63C24;stroke-width:21.73;stroke-miterlimit:22.9256}
+    .str2 {stroke:#2B2A29;stroke-width:10.86;stroke-miterlimit:22.9256}
+    .str5 {stroke:#2B2A29;stroke-width:10.86;stroke-miterlimit:22.9256;stroke-dasharray:54.316698 54.316698}
+    .str0 {stroke:#999999;stroke-width:10.86;stroke-miterlimit:22.9256;stroke-dasharray:108.633396 54.316698}
+    .fil0 {fill:none}
+    .fil1 {fill:#FEFEFE}
+    .fil2 {fill:#2B2A29}
+    .fil3 {fill:#2B2A29;fill-rule:nonzero}
+    .fnt0 {font-weight:normal;font-size:306.59px;font-family:'Times New Roman'}
+    .fnt3 {font-weight:normal;font-size:344.9px;font-family:'Symbol'}
+    .fnt1 {font-weight:normal;font-size:344.9px;font-family:'Times New Roman'}
+    .fnt2 {font-weight:normal;font-size:172.46px;font-family:'Times New Roman';baseline-shift:sub}
+   ]]>
+  </style>
+ </defs>
+ <g id="Ebene_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0 str0" d="M255.65 275.15c678.49,-108.49 1868.98,-123.08 2971.47,143.92 1084.12,262.55 2102.08,749.07 2348.57,1530.49"/>
+  <circle class="fil0 str1" cx="2894.07" cy="1743.82" r="1086.33"/>
+  <g id="_2985239808480">
+   <line class="fil0 str2" x1="2894.07" y1="1526.55" x2="2894.07" y2= "1961.08" />
+   <line class="fil0 str2" x1="2676.8" y1="1743.82" x2="3111.34" y2= "1743.82" />
+  </g>
+  <path class="fil0 str1" d="M283.55 532c1342.61,-200.42 4311.15,-35.31 5071.06,1490.14"/>
+  <g id="_2985239809152">
+   <line class="fil0 str3" x1="2119.42" y1="495.34" x2="3914.17" y2= "883.36" />
+   <line class="fil0 str3" x1="3914.17" y1="883.36" x2="5354.63" y2= "2022.13" />
+   <line class="fil0 str3" x1="283.55" y1="532" x2="2119.42" y2= "495.34" />
+  </g>
+  <circle class="fil1 str4" cx="2119.42" cy="495.34" r="38.02"/>
+  <circle class="fil1 str4" cx="2119.42" cy="495.34" r="38.02"/>
+  <circle class="fil1 str4" cx="283.55" cy="532" r="38.02"/>
+  <circle class="fil1 str4" cx="5354.62" cy="2022.13" r="38.02"/>
+  <text x="201.36" y="3357.6"  class="fil2 fnt0">case: contact, usePointWiseNormals=False </text>
+  <text x="1654.78" y="1011.51"  class="fil2 fnt1">f</text>
+  <text x="1735.14" y="1080.49"  class="fil2 fnt2"> n1</text>
+  <text x="3392.91" y="1536.77"  class="fil2 fnt1">f</text>
+  <text x="3473.27" y="1605.75"  class="fil2 fnt2"> n2</text>
+  <text x="1.38" y="341.8"  class="fil2 fnt1">p</text>
+  <text x="173.84" y="410.79"  class="fil2 fnt2">0</text>
+  <text x="5056" y="2281.72"  class="fil2 fnt1">p</text>
+  <text x="5228.46" y="2350.71"  class="fil2 fnt2">3</text>
+  <g>
+   <path class="fil3" d="M1106.55 256.92l1016.85 219.84 -8.04 37.15 -1016.85 -219.84 8.04 -37.15zm-9.8 120.64l-158.08 -137.49 200.77 -59.91 -42.68 197.4z"/>
+  </g>
+  <g>
+   <path class="fil3" d="M3131.98 694.81l786.21 169.98 -8.04 37.15 -786.21 -169.98 8.04 -37.15zm-9.8 120.64l-158.08 -137.49 200.77 -59.91 -42.68 197.4z"/>
+  </g>
+  <circle class="fil1 str4" cx="2119.42" cy="495.34" r="38.02"/>
+  <circle class="fil1 str4" cx="3914.17" cy="883.36" r="38.02"/>
+  <text x="1418.7" y="239.02"  class="fil2 fnt1">f</text>
+  <text x="1499.05" y="308"  class="fil2 fnt2"> t1</text>
+  <text x="3309.29" y="587.29"  class="fil2 fnt1">f</text>
+  <text x="3389.64" y="656.28"  class="fil2 fnt2"> t2</text>
+  <path class="fil0 str0" d="M6559.38 269.3c678.49,-108.49 1868.98,-123.08 2971.47,143.92 1084.12,262.55 2102.08,749.07 2348.57,1530.49"/>
+  <circle class="fil0 str1" cx="9197.8" cy="1737.97" r="1086.33"/>
+  <g id="_2985558157200">
+   <line class="fil0 str2" x1="9197.8" y1="1520.7" x2="9197.8" y2= "1955.24" />
+   <line class="fil0 str2" x1="8980.54" y1="1737.97" x2="9415.07" y2= "1737.97" />
+  </g>
+  <path class="fil0 str1" d="M6587.29 526.15c1342.61,-200.42 4311.15,-35.31 5071.06,1490.14"/>
+  <g id="_2985558157248">
+   <line class="fil0 str3" x1="8423.15" y1="489.49" x2="10217.91" y2= "877.52" />
+   <line class="fil0 str3" x1="10217.91" y1="877.52" x2="11658.36" y2= "2016.29" />
+   <line class="fil0 str3" x1="6587.29" y1="526.15" x2="8423.15" y2= "489.49" />
+  </g>
+  <circle class="fil1 str4" cx="8423.15" cy="489.49" r="38.02"/>
+  <circle class="fil1 str4" cx="8423.15" cy="489.49" r="38.02"/>
+  <circle class="fil1 str4" cx="6587.29" cy="526.15" r="38.02"/>
+  <circle class="fil1 str4" cx="11658.35" cy="2016.29" r="38.02"/>
+  <text x="6505.1" y="3351.75"  class="fil2 fnt0">case: contact, usePointWiseNormals=True </text>
+  <text x="8824.58" y="1102.24"  class="fil2 fnt1">f</text>
+  <text x="8904.94" y="1171.22"  class="fil2 fnt2"> n1</text>
+  <text x="9802.28" y="1536.77"  class="fil2 fnt1">f</text>
+  <text x="9882.64" y="1605.75"  class="fil2 fnt2"> n2</text>
+  <text x="6305.11" y="335.96"  class="fil2 fnt1">p</text>
+  <text x="6477.57" y="404.94"  class="fil2 fnt2">0</text>
+  <text x="11359.74" y="2275.88"  class="fil2 fnt1">p</text>
+  <text x="11532.2" y="2344.86"  class="fil2 fnt2">3</text>
+  <text x="8147.82" y="318.01"  class="fil2 fnt1">p</text>
+  <text x="8406.51" y="318.01"  class="fil2 fnt1">, </text>
+  <text x="8320.28" y="387"  class="fil2 fnt2">1</text>
+  <text x="8578.95" y="318.01"  class="fil2 fnt3">r</text>
+  <text x="8768.25" y="318.01"  class="fil2 fnt1">=0</text>
+  <text x="10282.3" y="770.47"  class="fil2 fnt1">p</text>
+  <text x="10540.99" y="770.47"  class="fil2 fnt1">, </text>
+  <text x="10902.73" y="770.47"  class="fil2 fnt1">=1</text>
+  <text x="10454.76" y="839.45"  class="fil2 fnt2">2</text>
+  <text x="10713.44" y="770.47"  class="fil2 fnt3">r</text>
+  <g>
+   <path class="fil3" d="M7609.74 931.5l803.96 -458.52 18.84 33.02 -803.96 458.52 -18.84 -33.02zm73.27 96.34l-209.49 3.23 109.44 -178.66 100.05 175.43z"/>
+  </g>
+  <g>
+   <path class="fil3" d="M9817.56 367.83l414.95 497.51 -29.2 24.36 -414.95 -497.51 29.2 -24.36zm-81.95 89.09l-40.03 -205.65 195.13 76.29 -155.1 129.36z"/>
+  </g>
+  <circle class="fil1 str4" cx="8423.15" cy="489.49" r="38.02"/>
+  <circle class="fil1 str4" cx="10217.91" cy="877.52" r="38.02"/>
+  <text x="7261.36" y="852.27"  class="fil2 fnt1">f</text>
+  <text x="7341.72" y="921.25"  class="fil2 fnt2"> t1</text>
+  <text x="9930.37" y="391.73"  class="fil2 fnt1">f</text>
+  <text x="10010.73" y="460.71"  class="fil2 fnt2"> t2</text>
+  <line class="fil0 str5" x1="9197.82" y1="1737.97" x2="8423.12" y2= "489.5" />
+  <line class="fil0 str5" x1="9197.82" y1="1737.97" x2="10217.91" y2= "877.52" />
+  <g>
+   <path class="fil3" d="M3897.71 1051.28l-185.88 869.3 -37.17 -7.95 185.88 -869.3 37.17 7.95zm-120.67 -9.52l137.13 -158.4 60.37 200.62 -197.5 -42.23z"/>
+  </g>
+  <g>
+   <path class="fil3" d="M2102.96 663.25l-180.72 845.17 -37.17 -7.95 180.72 -845.17 37.17 7.95zm-120.67 -9.52l137.13 -158.4 60.37 200.62 -197.5 -42.23z"/>
+  </g>
+  <g>
+   <path class="fil3" d="M10102.02 1000.14l-507.67 428.2 -24.51 -29.07 507.67 -428.2 24.51 29.07zm-89.54 -81.45l205.43 -41.17 -75.22 195.54 -130.21 -154.37z"/>
+  </g>
+  <g>
+   <path class="fil3" d="M8527.67 621.92l420.79 678.14 -32.31 20.05 -420.79 -678.14 32.31 -20.05zm-93.57 76.79l-10.98 -209.22 182.59 102.73 -171.61 106.48z"/>
+  </g>
+  <text x="2102.41" y="320.06"  class="fil2 fnt1">p</text>
+  <text x="2361.1" y="320.06"  class="fil2 fnt1">, </text>
+  <text x="2274.87" y="389.04"  class="fil2 fnt2">1</text>
+  <text x="2533.55" y="320.06"  class="fil2 fnt3">r</text>
+  <text x="2722.84" y="320.06"  class="fil2 fnt1">=0</text>
+  <text x="3894.66" y="734.41"  class="fil2 fnt1">p</text>
+  <text x="4153.35" y="734.41"  class="fil2 fnt1">, </text>
+  <text x="4515.09" y="734.41"  class="fil2 fnt1">=1</text>
+  <text x="4067.11" y="803.39"  class="fil2 fnt2">2</text>
+  <text x="4325.79" y="734.41"  class="fil2 fnt3">r</text>
+ </g>
+</svg>

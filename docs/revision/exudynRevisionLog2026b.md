@@ -2432,3 +2432,48 @@ Changed: the invariant in the shared info document §7 (with the date and who de
 places in `CLAUDE.md`, the invariant list of the developer README, and the sentence of the user
 manual that tells a reader which editor to install - which now says that VS2022 is what compiles
 and debugs the C++ on Windows, and that the development itself happens in VS Code.
+
+<a id="rg3-8-1"></a>
+### RG3.8.1 — one name, two formats (2026-09-24, #2594)
+
+The maintainer drew the three missing SVGs of the contact-friction figures, so the pair that
+RG3.8 asked for could be tried for the first time: **SVG for the browser, PDF for the PDF, one
+name**. In `definitions/itemDefsObjects.py` the three `.. figure::` directives read
+`docs/figures/<name>.*`, and Sphinx picks the candidate the builder supports - `image/svg+xml`
+first for html, `application/pdf` first for LaTeX. Verified in the built html: all three
+`<img>` elements point at `.svg`. The LaTeX side is **not** verified here, because the PDF is
+built only for a release and is in no gate (RG3.3, decision D17); the `.pdf` files exist, which
+is what that builder needs.
+
+The widths stay as the old `.tex` had them, which is what the maintainer asked for: 600 for the
+sketch, 600 for the sticking position, 700 for the normals.
+
+**Which figures are worth an SVG next**, measured rather than guessed. Of the 40 figures the
+documentation references, **17 are shown as `.png` although a vector original (`.pdf`, two of
+them also `.eps`) is already in `docs/figures/`** - for those the SVG is a conversion, not a
+drawing, and nothing else has to change but `.png` to `.*`:
+
+> `CommonTangents3D`, `ConvexRolling`, `DrawSystemGraphExample`, `MarkerSuperElementRigid`,
+> `ObjectFFRFsketch`, `ObjectJointRollingDiscSketch`, `RotationAxisAngle`,
+> `RotationAxisAngleDerivation`, `SphereHollowsphereContact`, `SphereSphereContact`,
+> `degrees_of_freedom`, `elementaryRotationX`, `elementaryRotationY`, `open_closed_loop`,
+> `plotSpringDamper`, `spectralRadiusZeta0`, `triangleNormal`
+
+The remaining 20 have **no** vector original, and there the question is what the image is. Counted
+the distinct colours of each (a drawing has hundreds, a rendering or a screenshot has thousands):
+**eight are drawings** and would have to be redrawn, **twelve are renderings, screenshots or
+photographs** and stay raster, because an SVG of a screenshot is a PNG in an XML wrapper.
+
+| drawings, no vector original | current size |
+|---|---|
+| `pendulum` | 598x629 |
+| `pendulumConstraint` | 593x632 |
+| `theoryRotationsHTchangeOfFrame` | 521x566 |
+| `kinematicTreeCRBmass` | 1138x1075 |
+| `kinematicTreeRNEA` | 1147x1090 |
+| `theoryRotationsTaitBryanAngles` | 1010x958 |
+| `RotationsSequences` | 1524x1288 |
+| `TutorialBeams` | 2280x1550 |
+
+The first three are where it pays most: they are **line drawings under 640 pixels wide**, which
+is the case where a reader who zooms sees the pixels.

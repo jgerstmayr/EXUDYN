@@ -250,6 +250,14 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       — and photographs and screenshots stay raster. The vector originals then stop being
       unreferenced and become the source they always were.
 
+<a id="rg3-8-1"></a>
+**RG3.8.1** **DONE 2026-09-24** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-1) —
+    **The three contact-friction figures are vector** *(maintainer, 2026-09-24, who drew the
+    SVGs)*. `ContactFrictionCircleCable2D`, `...stickingPos` and `...normals` are written as
+    `docs/figures/<name>.*` in `definitions/itemDefsObjects.py`, so Sphinx picks the **SVG for
+    the browser and the PDF for the LaTeX build** from one name - the pair the step asked for.
+    Which further figures are worth an SVG is measured in the log.
+
 <a id="rg3-9"></a>
 **RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) —
     **Three corrections to the landing pages and the developer chapters.** That Exudyn is

@@ -62,7 +62,7 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:
 | shortest distance to segment $s_i$ | $\dv_{g,i}$ | shortest distance of center of circle to contact segment, considering the endpoint of the segment |
 
 (fig-objectcontactfrictioncirclecable2d-sketch)=
-```{figure} /docs/figures/ContactFrictionCircleCable2D.png
+```{figure} /docs/figures/ContactFrictionCircleCable2D.*
 :width: 600
 
 Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
@@ -177,7 +177,7 @@ For a simple 1D example using this position based approach for friction, see `Ex
 which compares the traditional LuGre friction model [CanudasDeWitEtAl1993] with the position based model with tangential stiffness.
 
 (fig-objectcontactfrictioncirclecable2d-stickingpos)=
-```{figure} /docs/figures/ContactFrictionCircleCable2DstickingPos.png
+```{figure} /docs/figures/ContactFrictionCircleCable2DstickingPos.*
 :width: 600
 
 Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.
@@ -351,7 +351,7 @@ We distinguish two cases SN and PWN. If `useSegmentNormals==True`, we use the SN
 compare {ref}`fig-objectcontactfrictioncirclecable2d-normals`.
 
 (fig-objectcontactfrictioncirclecable2d-normals)=
-```{figure} /docs/figures/ContactFrictionCircleCable2Dnormals.png
+```{figure} /docs/figures/ContactFrictionCircleCable2Dnormals.*
 :width: 700
 
 Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the `useSegmentNormals=False` is not appropriate for this setup and would produce highly erroneous forces.

@@ -8872,7 +8872,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectcontactfrictioncirclecable2d-sketch:
-    .. figure:: docs/figures/ContactFrictionCircleCable2D.png
+    .. figure:: docs/figures/ContactFrictionCircleCable2D.*
        :width: 600
 
        Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
@@ -8979,7 +8979,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectcontactfrictioncirclecable2d-stickingpos:
-    .. figure:: docs/figures/ContactFrictionCircleCable2DstickingPos.png
+    .. figure:: docs/figures/ContactFrictionCircleCable2DstickingPos.*
        :width: 600
 
        Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.
@@ -9165,7 +9165,7 @@ definitions.append(ItemDefinition(
     }
     \onlyRST{
     .. _fig-objectcontactfrictioncirclecable2d-normals:
-    .. figure:: docs/figures/ContactFrictionCircleCable2Dnormals.png
+    .. figure:: docs/figures/ContactFrictionCircleCable2Dnormals.*
        :width: 700
 
        Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.
