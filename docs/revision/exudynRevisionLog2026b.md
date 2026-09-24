@@ -2671,3 +2671,36 @@ rather than something the file can announce.
 `legacyItemHeaderKeys` and `legacyLineDefinition`. Nothing has called it since the item emitters
 stopped using the old form - the two documentation emitters build their own template. Removed,
 and the regeneration is byte-identical.
+
+<a id="rg6-2-27"></a>
+### RG6.2.27 — the command window is in the model again (2026-09-25, #2654)
+
+The maintainer: *"I press X in the renderer, and usually I have the context (like mbs, SC, ...)
+and can edit something, print something ... Right now, it seems that the context is gone, but it
+worked with earlier exudyn versions."*
+
+It did, and the history says exactly why. Until RG6.2.1 (#2595) the command window was a Python
+string inside `rendererPythonInterface.cpp`, and **every** such string was executed by
+
+```cpp
+py::object scope = py::module::import("__main__").attr("__dict__");
+```
+
+whose own comment reads *"use this to enable access to mbs and other variables of global scope"*.
+The dialog code therefore ran **inside `__main__`**, so its `exec(commandString, globals(), ...)`
+saw the model. RG6.2.1 moved the dialog into `exudyn.misc.GUI`, where `globals()` is the module -
+and a module has no `mbs`. The C++ still executes its one-line wrapper in `__main__`, which is
+why the window opens and only the commands fail.
+
+`ModelScope()` returns `vars(__main__)` and the command runs in it. **One dictionary, not two**:
+the old line passed `globals()` and `locals()`, so `k = 5000` landed in the locals of the button
+handler and was gone when it returned - in a window whose label offers to *change* a running
+model. Now an assignment stays in `__main__`, which is where the model is.
+
+**Tested without opening a window**, which is the point of making the scope a function: three
+tests in `test_guiValues.py` - the scope IS `vars(__main__)`, a command sees a variable of the
+model and writes one back, and the module namespace is not the model namespace.
+
+`tools/checkExtras.py` had to learn one thing for it: `__main__` is not in
+`sys.stdlib_module_names`, because that lists the modules that come as files, so `import
+__main__` looked like a package to install.

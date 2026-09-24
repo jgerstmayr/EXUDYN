@@ -265,7 +265,10 @@ def ScanDirectory(repositoryRoot, relativeDirectory):
     """
     scanDirectory = os.path.join(repositoryRoot, relativeDirectory)
     localNames = LocalModuleNames(repositoryRoot, scanDirectory)
-    standardLibrary = sys.stdlib_module_names
+    #__main__ is the module the interpreter creates for the program it runs; it is not in
+    #sys.stdlib_module_names, because that lists the modules that come as FILES, and it can
+    #never be a distribution to install (#2654)
+    standardLibrary = set(sys.stdlib_module_names) | {'__main__'}
 
     found = {}
     unparsableFiles = []

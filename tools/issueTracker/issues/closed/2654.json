@@ -1,0 +1,17 @@
+{
+  "number": 2654,
+  "title": "the command window of the renderer lost the model scope",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "Pressing X in the render window opens a command window whose label says it 'operates in global scope of you Python model' - mbs, SC and everything else the script defined. It does not any more: the command runs in the namespace of exudyn.misc.GUI, so 'mbs' is a NameError. Cause, found in the history: until revision2026b step RG6.2.1 (#2595) the dialog was a Python string inside src/Main/rendererPythonInterface.cpp, and the C++ executed every such string with py::object scope = py::module::import('__main__').attr('__dict__') - a line whose own comment says 'use this to enable access to mbs and other variables of global scope'. The dialog's exec(commandString, globals(), locals()) therefore saw __main__. Now the dialog is a function of a module, the C++ still executes its one-line wrapper in __main__, and globals() inside that function is the module's namespace. Second, smaller fault in the same line: exec(..., globals(), locals()) puts an assignment into the local scope of the nested handler, so 'k = 5000' is forgotten as soon as it returns - the command window is meant for changing a running model.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "dateResolved": "2026-09-25 01:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The command window of the render window runs in the scope of the model again: exudyn.misc.GUI.ModelScope() returns vars(__main__) and the command is executed in it, so mbs, SC and everything the script defined are there. One dictionary and not two, so an assignment survives the command - the window offers to change a running model. Until revision2026b step RG6.2.1 the dialog was a Python string that the C++ executed in __main__; as a function of a module, globals() was the module. Three tests pin it without opening a window. revision2026b step RG6.2.27.",
+  "resolvedInVersion": "1.12.68"
+}

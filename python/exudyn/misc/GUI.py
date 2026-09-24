@@ -45,7 +45,7 @@ __all__ = [
     'GetGUIContentScaling', 'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
     'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary',
     'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
-    'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
+    'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
     'AskQuitDialog',
     ]
 
@@ -1568,6 +1568,22 @@ pythonCommandExamples = ('helpful examples:\n'
                          '\n#==>BUT changing simulationSettings is dangerous!')
 
 
+def ModelScope():
+    """the namespace a command of the command window runs in: the one the MODEL lives in
+
+    `__main__` is the script the user started, or the console they are typing in, so this is
+    where `mbs`, `SC` and everything else the model defined are. The command window used to
+    be a Python string that the C++ executed in exactly this namespace; as a function of this
+    module it would otherwise see the module's own globals, where there is no `mbs` (#2654).
+
+    Returns:
+        the dictionary of `__main__`, which is written to as well as read: an assignment in
+        the command window has to survive the command
+    """
+    import __main__                                                          # noqa: PLC0415
+    return vars(__main__)
+
+
 def ShowPythonCommandDialog():
     """A window that executes a Python command in the global scope of the running model; opened
     with X in the render window. CTRL+RETURN runs what is in the text area.
@@ -1609,7 +1625,10 @@ def ShowPythonCommandDialog():
         commandString = commandString.replace('\t', ' '*4)  #tabs may cause problems
 
         try:
-            exec(commandString, globals(), locals())        # noqa: S102 - this IS the feature
+            #ONE dictionary, not globals() and locals(): with two, an assignment lands in the
+            #locals of this handler and is gone when it returns - and the label of this window
+            #promises that a model can be CHANGED from here (#2654)
+            exec(commandString, ModelScope())               # noqa: S102 - this IS the feature
         except Exception:                    #whatever the user typed; it must not kill the dialog
             print("Execution of command failed; error:")
             for line in traceback.format_exc().split('\n'):

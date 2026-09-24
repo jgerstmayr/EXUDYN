@@ -779,6 +779,14 @@ This group is that revision and what has to happen before it can start.
     the mechanism that hid the window of the changes in #2621. The tooltip window carries the
     flag now, so the dialog keeps the topmost it needs to block the render window.
 
+<a id="rg6-2-27"></a>
+**RG6.2.27** **DONE 2026-09-25** (#2654) — [log](exudynRevisionLog2026b.md#rg6-2-27) —
+    **The command window lost the scope of the model** *(maintainer, 2026-09-25)*. Pressing X in
+    the render window opens a window whose label promises the *"global scope of you Python
+    model"*, and `mbs` was a `NameError` there: the dialog became a function of
+    `exudyn.misc.GUI` in RG6.2.1, and `globals()` inside a module function is the module. It
+    runs in `vars(__main__)` again - one dictionary, so an assignment also survives the command.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a

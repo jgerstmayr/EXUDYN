@@ -532,3 +532,31 @@ def testTheDisplayScalingIsAskedOfTkinterWhenNoRendererCanBeAsked():
         root.destroy()
         if registered is not None:
             exudyn.sys['currentRendererSystemContainer'] = registered
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE COMMAND WINDOW (#2654). It opens a window, so the suite cannot run it - but what it does
+#with a command is one function, and that is where the fault was.
+def testTheCommandWindowRunsInTheScopeOfTheModel():
+    """it says "operates in global scope of you Python model", and for a while it did not"""
+    import __main__
+    assert gui.ModelScope() is vars(__main__)
+
+
+def testACommandOfTheWindowSeesTheModelAndItsAssignmentSurvives():
+    """exec(code, globals(), locals()) put an assignment into the handler and lost it"""
+    import __main__
+    scope = gui.ModelScope()
+    scope['exudynTestModelVariable'] = 17
+    try:
+        exec('exudynTestModelResult = exudynTestModelVariable * 2', gui.ModelScope())
+        assert getattr(__main__, 'exudynTestModelResult', None) == 34, \
+            'the command sees the model AND writes back into it'
+    finally:
+        for name in ['exudynTestModelVariable', 'exudynTestModelResult']:
+            scope.pop(name, None)
+
+
+def testTheModuleNamespaceIsNotTheModelNamespace():
+    """the fault itself: globals() inside exudyn.misc.GUI is not where a model lives"""
+    assert gui.ModelScope() is not vars(gui)
