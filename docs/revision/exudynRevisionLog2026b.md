@@ -2641,3 +2641,33 @@ than a new figure.
 **What this says about the method**: an audit is only as good as the reference forms it knows,
 and this one knew two of three. A check in the gate would have said so on the day the third form
 was introduced; that is worth proposing rather than doing in this step.
+
+<a id="rg10-10"></a>
+### RG10.10 — a live file that reads like a dead one (2026-09-25, #2653)
+
+The maintainer read the header of `tools/generators/definitionLoader.py` and asked: *"is
+definitionLoader still used and needed? Or if it is a code that was used to convert old
+definitions - why not just say that this function is not used, but kept like as a backup?"*
+
+**It is used.** Measured by following the imports:
+
+| user | what it takes |
+|---|---|
+| `itemDocsEmitter.py` | `LoadItemDefinitions` - the item pages of the reference manual |
+| `structureDocsEmitter.py` | `LoadStructureDefinitions`, through `structureModel.LegacyStructures()` - the settings pages |
+| `structureModel.py` | `structureModules`, the **list of definition modules** - so the structure header, docs and stub emitters all depend on this file for that alone |
+
+Remove it and three generators stop.
+
+**Why it reads as dead** is the interesting part, and it is the fault `CLAUDE.md` 6a is about,
+in a file header. The old text opened with *"hands them to the generators in the form their old
+line parser produced"* - history before subject - and closed with two promises:
+*"Removed once the generators read definitions/ directly"* and *"this adapter is deleted with
+them"*. A promise in a header ages into a claim that the file is obsolete. The header now names
+the three users, says what the conversion does, and states that the removal is work of its own
+rather than something the file can announce.
+
+**And one thing really was dead**: `itemModel.LegacyItems()` with its two tables
+`legacyItemHeaderKeys` and `legacyLineDefinition`. Nothing has called it since the item emitters
+stopped using the old form - the two documentation emitters build their own template. Removed,
+and the regeneration is byte-identical.

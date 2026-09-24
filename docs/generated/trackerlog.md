@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.66.dev1
+- Exudyn version = 1.12.67.dev1
 - last change = 2026-09-25
-- Number of issues = 2652
-- Number of resolved issues = 2380 (66 in current version)
+- Number of issues = 2654
+- Number of resolved issues = 2381 (67 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` the item docstrings show addExampleImage{X} to a user of help() (#2652)
+  - description: The classDescription of an item is the docstring of its class in python/exudyn/itemInterface.py, and the emitter drops the backslash of a LaTeX command instead of the command: help(ObjectJointRevoluteZ) ends with 'addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}'. It affects the six items that carry a picture (\#2651 added three of them, so the count went from three to six) and it is the same for any other command that is not translated. The emitter should drop the whole command - there is no image in a terminal - the way latexToMarkdown turns it into an image directive for the page.
+  - date raised: 2026-09-25
 - `DOCU` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` 235 references to the revision plan are left in comments, each inside a sentence (#2649)
   - description: What RG3.13 could not do mechanically. Of the 887 mentions of revision2026 outside docs/revision, 652 were parentheticals or appended clauses and could be removed by rule, keeping the issue number where there was one. The remaining 235 in 149 files are inside a sentence - 'step R4.3 is moving outputs from the old generators to separate emitters', 'the name the function had between steps R8.7 and R8.3.4' - and each needs a sentence written for it, which a pattern cannot do: an attempt that allowed the phrase to wrap across two comment lines matched from a code line into a comment and merged prose into code (tools/generators/generatorPaths.py:35), so that pass was withdrawn and every file rebuilt from its committed content with the line-based rules only. None of the 235 is in a published page; they are comments in src/, tools/ and python/, where the rule is the older one of CODING\_STYLE 6.1 - a comment cites the issue - so this is tidiness rather than a defect.
   - date raised: 2026-09-24

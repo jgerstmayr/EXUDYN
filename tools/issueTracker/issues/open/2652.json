@@ -1,0 +1,13 @@
+{
+  "number": 2652,
+  "title": "the item docstrings show addExampleImage{X} to a user of help()",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "The classDescription of an item is the docstring of its class in python/exudyn/itemInterface.py, and the emitter drops the backslash of a LaTeX command instead of the command: help(ObjectJointRevoluteZ) ends with 'addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}'. It affects the six items that carry a picture (#2651 added three of them, so the count went from three to six) and it is the same for any other command that is not translated. The emitter should drop the whole command - there is no image in a terminal - the way latexToMarkdown turns it into an image directive for the page.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "file": "tools/generators/itemInterfaceEmitter.py"
+}

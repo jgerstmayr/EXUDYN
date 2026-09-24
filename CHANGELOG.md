@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 65 | 1.12.66 |
+| 1.12 | Metheney | 66 | 1.12.67 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.67** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the header of definitionLoader.py reads like the file is dead (#2653)
+  - description: The maintainer read it and asked whether the file is still used or a backup of the conversion. It is live: itemDocsEmitter.py calls LoadItemDefinitions for the item pages, structureDocsEmitter.py calls LoadStructureDefinitions through structureModel.py for the settings pages, and structureModel.py takes the LIST of definition modules from it, so every structure emitter needs the file for that alone - without it three generators do not run. What made it look dead is its header, which opens with what the old line parser produced and ends with two promises: 'Removed once the generators read definitions/ directly' and 'this adapter is deleted with them'. That is the fault CLAUDE.md 6a is about, in a file header. Found while checking: itemModel.LegacyItems() with its two tables is genuinely dead - nothing has called it since the item emitters stopped using the old form.
+  - **notes:** definitionLoader.py says what it is and who uses it: itemDocsEmitter for the item pages, structureDocsEmitter for the settings pages through structureModel, and structureModel itself for the list of definition modules - so three generators stop without it. It is not a backup, and the header no longer opens with what the old parser produced or promises its own removal, which is what made it look dead. itemModel.LegacyItems() with its two tables was genuinely dead and is removed; the regeneration is byte-identical. revision2026b step RG10.10.
+  - date resolved: **2026-09-25 01:03**, date raised: 2026-09-25
 - **1.12.66** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` three item pictures are in the repository and on no item page (#2651)
   - description: RevoluteJointZ2.png, SphericalJoint.png and UniversalJoint.png show exactly one item each - a revolute joint between two bodies, a spherical joint, a universal joint - and no page shows them; the old itemDefinition.tex did not either. Three sibling pictures ARE shown, through \\addExampleImage{X} in the classDescription, which names the file WITHOUT its extension: that is why a search for 'figures/X.png' does not find them, and why they were reported as unreferenced in \#2594. They belong to ObjectJointRevoluteZ (which already shows one picture and gains the one with both bodies), ObjectJointSpherical and ObjectJointGeneric, whose description explains the universal joint as its one-constrained-axis case. TutorialRigidBody1.png is the figure of a tutorial that no longer exists and goes.
   - **notes:** The item pages of ObjectJointRevoluteZ, ObjectJointSpherical and ObjectJointGeneric show the picture of their item: the revolute joint between two bodies with the axes labelled, the spherical joint, and the universal joint - which is what the generic joint is when a single rotation axis is constrained. The pictures were in docs/figures/ and on no page. TutorialRigidBody1.png, the figure of a tutorial that no longer exists, is removed. revision2026b step RG3.8.3.

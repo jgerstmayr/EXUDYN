@@ -1,22 +1,24 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Loads the definitions in definitions/ and hands them to the generators in the form
-#           their old line parser produced: one (parseInfo, parameterList) pair per class, every
-#           value a string, exactly as SplitString used to deliver it. The generators' per-class
-#           code is therefore unchanged - only its input moved (revision2026 step R4.3, part 1).
+# Details:  Reads the classes of definitions/ and hands each one to a generator as the pair
+#           (parseInfo, parameterList) of plain strings that the line-based parser of the old
+#           definition files produced. Three generators still want that form:
 #
-#           The conversion is the inverse of what revision2026 step R4.1 folded into the new format: flags that
-#           became derived (declaration-only, interface, substructure) are put back as letters,
-#           values that became Python values are rendered back to their C++ spelling, the shape
-#           a type now carries becomes 'size' again, and the output variables become the dict
-#           literal the generators eval(). It was proven lossless against the old parser field
-#           by field before the old definition files were removed; tools/regenerate.py --check
-#           is the gate that keeps it so.
+#             itemDocsEmitter.py     the item pages of the reference manual
+#             structureDocsEmitter.py  the settings pages, through structureModel.py
+#             structureModel.py      takes the LIST of definition modules from here, so every
+#                                    structure emitter depends on this file for that alone
 #
-#           Since revision2026 step R4.4.1 only the two documentation emitters (itemDocsEmitter.py,
-#           structureDocsEmitter.py) consume the old representation; this adapter is deleted with
-#           them
+#           The conversion puts back what the current format derives: the flags that became
+#           predicates are letters again, a Python value is rendered in its C++ spelling, the
+#           shape of a type becomes 'size', and the output variables become the dict literal
+#           the emitters eval(). It was proven lossless against the old parser field by field,
+#           and `tools/regenerate.py --check` is what keeps it so.
+#
+#           It is NOT a leftover kept as a backup: without it three generators do not run
+#           (#2653). It disappears when those two documentation emitters read the definitions
+#           directly, which is work of its own and not a promise this file can make.
 #
 # Usage:    import definitionLoader
 #           for parseInfo, parameterList in definitionLoader.LoadItemDefinitions(template): ...

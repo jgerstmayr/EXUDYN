@@ -479,21 +479,3 @@ def OutputVariableNames(definition):
         if entry['outputVariable'].name not in names:
             names.append(entry['outputVariable'].name)
     return names
-
-
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the old string representation, for code moved from the old generator that still tests its fields
-legacyItemHeaderKeys = ['class', 'writeFile', 'excludeFromTheDoc', 'cParentClass', 'cBaseClass',
-                        'mainParentClass', 'visuParentClass', 'pythonShortName', 'addProtectedC',
-                        'addPublicC', 'addProtectedMain', 'addPublicMain', 'addIncludesC', 'author',
-                        'addIncludesMain', 'classType', 'objectType', 'outputVariables',
-                        'miniExample', 'equations', 'classDescription']
-legacyLineDefinition = ['lineType', 'destination', 'pythonName', 'cplusplusName', 'size', 'type',
-                        'defaultValue', 'args', 'cFlags', 'parameterDescription']
-
-
-def LegacyItems():
-    """(parseInfo, parameterList) per item, rendered from definitions/ as the old parser built them"""
-    import definitionLoader
-    template = {key: '' for key in legacyItemHeaderKeys}
-    return definitionLoader.LoadItemDefinitions(template, legacyLineDefinition)

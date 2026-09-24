@@ -1,0 +1,17 @@
+{
+  "number": 2653,
+  "title": "the header of definitionLoader.py reads like the file is dead",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer read it and asked whether the file is still used or a backup of the conversion. It is live: itemDocsEmitter.py calls LoadItemDefinitions for the item pages, structureDocsEmitter.py calls LoadStructureDefinitions through structureModel.py for the settings pages, and structureModel.py takes the LIST of definition modules from it, so every structure emitter needs the file for that alone - without it three generators do not run. What made it look dead is its header, which opens with what the old line parser produced and ends with two promises: 'Removed once the generators read definitions/ directly' and 'this adapter is deleted with them'. That is the fault CLAUDE.md 6a is about, in a file header. Found while checking: itemModel.LegacyItems() with its two tables is genuinely dead - nothing has called it since the item emitters stopped using the old form.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "dateResolved": "2026-09-25 01:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/definitionLoader.py",
+  "releaseNotes": "definitionLoader.py says what it is and who uses it: itemDocsEmitter for the item pages, structureDocsEmitter for the settings pages through structureModel, and structureModel itself for the list of definition modules - so three generators stop without it. It is not a backup, and the header no longer opens with what the old parser produced or promises its own removal, which is what made it look dead. itemModel.LegacyItems() with its two tables was genuinely dead and is removed; the regeneration is byte-identical. revision2026b step RG10.10.",
+  "resolvedInVersion": "1.12.67"
+}

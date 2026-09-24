@@ -953,6 +953,14 @@ file, so an editor cannot complete them).
     the changes.
 
 
+<a id="rg10-10"></a>
+**RG10.10** **DONE 2026-09-25** (#2653) — [log](exudynRevisionLog2026b.md#rg10-10) —
+    **The header of `definitionLoader.py` read like the file was dead** *(maintainer question,
+    2026-09-25)*. It is live - three generators stop working without it - and what made it look
+    dead was a header that opened with what the old parser produced and ended with two promises
+    about its own removal. It says what it is and who uses it. `itemModel.LegacyItems()`, found
+    while checking, really was dead and is gone.
+
 <a id="rg10-2"></a>
 **RG10.2** **DONE 2026-09-23** (#2600) — [log](exudynRevisionLog2026b.md#rg10-2) —
     **The issue table of `exudev issue serve` did not say what its columns are, and left out
