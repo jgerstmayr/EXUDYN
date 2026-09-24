@@ -15,18 +15,7 @@ import testRunnerTools
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from testRunnerTools import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False #without test
+testIsActive = exu.sys.get('testIsActive', True)
 
 
 from math import sin, cos, pi
@@ -134,7 +123,7 @@ SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
 SC.visualizationSettings.view0.scene.drawWorldBasis=True
 
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
@@ -151,16 +140,16 @@ exu.Print('u0=',u0,', rot0=', rot0)
 result = (abs(u0)+abs(rot0)).sum()
 exu.Print('solution of perf3DRigidBodies=',result)
 
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 #one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
 #without model build and Python overhead (issue #2460)
-testRunnerTools.AddTiming(exudynTestGlobals, 'perf3DRigidBodies.py', mbs, result)
+testRunnerTools.AddTiming('perf3DRigidBodies.py', mbs, result)
 
 
 
 
 #%%+++++++++++++++++++++++++++++
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

@@ -1202,7 +1202,13 @@ file, so an editor cannot complete them).
       moved to `testRunnerTools.py`, which is where the seven **performance** models still take
       it from — converting those needs the `timings` list of #2460 to move as well, which is
       RG10.6.8.
-    - **RG10.6.8** *(added 2026-09-24, from RG10.6.5)* the seven **performance** models and
+    - **RG10.6.8** **DONE 2026-09-24** the seven **performance** models write `exu.sys` like
+      everything else, `AddTiming(name, mbs, result)` appends to `exu.sys['testTimings']`, and
+      **`ExudynTestStructure` is deleted** — with it the last `testTolFact` (in
+      `perfRigidPendulum`, now `exu.sys['testTolerance'] = 1e-5`) and the last reference solution
+      living inside a model (`generalContactSpheresPerf`). The original text follows.
+
+    - *(added 2026-09-24, from RG10.6.5)* the seven **performance** models and
       `runPerformanceTests.py` are the last users of `ExudynTestStructure`, because
       `testRunnerTools.AddTiming` collects a `timings` list on it (#2460). That list has to move
       into `exu.sys` before the class can go.

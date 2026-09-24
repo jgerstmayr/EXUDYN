@@ -16,17 +16,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from testRunnerTools import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 
 SC = exu.SystemContainer()
@@ -164,7 +154,7 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-4
 tEnd = 2
-#if useGraphics:
+#if not testIsActive:
 #    tEnd = 0.1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -186,7 +176,7 @@ simulationSettings.displayComputationTime = True
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
     SC.renderer.RestoreSavedState() #load last model view
 
@@ -202,13 +192,13 @@ result = abs(data).sum()
 exu.Print('solution of perfObjectFFRFreducedOrder=',result)
 
 #factor 0.05: make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 #one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
 #without model build and Python overhead (issue #2460)
-testRunnerTools.AddTiming(exudynTestGlobals, 'perfObjectFFRFreducedOrder.py', mbs, result)
+testRunnerTools.AddTiming('perfObjectFFRFreducedOrder.py', mbs, result)
 
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
     lastRenderState = SC.renderer.GetState() #store model view for next simulation

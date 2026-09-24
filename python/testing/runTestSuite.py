@@ -54,7 +54,6 @@ import exudyn as exu
 
 if useFastModule: #asking is not getting; stop rather than write a log that claims the wrong module
     testRunnerTools.RequireFastModule('--fast-module')
-from testRunnerTools import ExudynTestStructure, exudynTestGlobals
 import time
 
 try:
@@ -233,8 +232,6 @@ exu.config.printToConsole = writeToConsole #stop output from now on
 #TSScope.testFileList = ['Examples/fourBarMechanism.py']
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 testsFailedSensitive = [] #subset of testsFailed which are known to be machine-sensitive
-exudynTestGlobals.useGraphics = False
-exudynTestGlobals.performTests = True
 
 TSScope.timeStart = -time.time()
 
@@ -338,8 +335,8 @@ if TSScope.runTestExamples:
         #such as solution/coordinatesSolution.txt - the prerequisite for running the suite in
         #parallel (#2418). Models keep their own relative file names; only the root moves.
         exu.config.outputDirectory = TSScope.solutionDirectory + '/' + TSScope.file[:-3]
-        exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
-        exudynTestGlobals.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
+        TSScope.testError = -1 #default value !=-1, if there is an error in the calculation
+        TSScope.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
         #the channel a model uses since revision2026b step RG10.6 (#2632): exu.sys instead of an
         #import of this module. It is cleared for every model, because exu.sys lives as long as
         #the interpreter and a value left over from the previous model would be read as this
@@ -353,7 +350,7 @@ if TSScope.runTestExamples:
                 #already run in its own interpreter; reproduce its output in the log here
                 TSScope.modelRun = TSScope.parallelResults[TSScope.file]
                 exu.Print(TSScope.modelRun['output'])
-                exudynTestGlobals.testResult = TSScope.modelRun['result']
+                TSScope.testResult = TSScope.modelRun['result']
                 #the model ran in another interpreter, so its tolerance comes back with it
                 if TSScope.modelRun.get('tolerance', 0.) > 0.:
                     exu.sys['testTolerance'] = TSScope.modelRun['tolerance']
@@ -370,13 +367,13 @@ if TSScope.runTestExamples:
                                                           if TSScope.parallel else
                                                           time.perf_counter() - TSScope.testTimeStart)
             #a converted model writes exu.sys['testResult']; one that has not been converted
-            #yet still writes exudynTestGlobals.testResult (revision2026b step RG10.6)
+            #yet still writes into the suite's own variable (revision2026b step RG10.6)
             if exu.sys.get('testResult', TSScope.invalidResult) != TSScope.invalidResult:
-                exudynTestGlobals.testResult = exu.sys['testResult']
+                TSScope.testResult = exu.sys['testResult']
             exu.sys['testIsActive'] = False
 
-            TSScope.examplesTestErrorList[TSScope.name] = exudynTestGlobals.testError
-            TSScope.examplesTestSolList[TSScope.name] = exudynTestGlobals.testResult
+            TSScope.examplesTestErrorList[TSScope.name] = TSScope.testError
+            TSScope.examplesTestSolList[TSScope.name] = TSScope.testResult
             
             #special factor for some examples which make problems, e.g., due to sparse
             #eigenvalue solver; maintained as data in runTestSuiteRefSol.py
@@ -391,7 +388,7 @@ if TSScope.runTestExamples:
     
             #compute error from reference solution
             if TSScope.examplesTestRefSol[TSScope.name] != TSScope.invalidResult:
-                exudynTestGlobals.testError = exudynTestGlobals.testResult - TSScope.examplesTestRefSol[TSScope.name]
+                TSScope.testError = TSScope.testResult - TSScope.examplesTestRefSol[TSScope.name]
                 exu.Print("refsol=",TSScope.examplesTestRefSol[TSScope.name])
                 exu.Print("tol=", TSScope.testTolerance*TSScope.testTolFact)
     
@@ -407,19 +404,19 @@ if TSScope.runTestExamples:
             #NOTE: examplesTestErrorList above is captured BEFORE the error is recomputed from
             #the reference solution, so for most models it holds the default -1 rather than the
             #comparison error. Keep that dictionary as it was, and record the final error here.
-            TSScope.examplesTestFinalErrorList[TSScope.name] = exudynTestGlobals.testError
+            TSScope.examplesTestFinalErrorList[TSScope.name] = TSScope.testError
 
-            if abs(exudynTestGlobals.testError) < TSScope.testModelTolerance:
+            if abs(TSScope.testError) < TSScope.testModelTolerance:
                 exu.Print('******************************************')
                 exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") FINISHED SUCCESSFUL')
-                exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
-                exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
+                exu.Print('  RESULT = ' + str(TSScope.testResult))
+                exu.Print('  ERROR = ' + str(TSScope.testError))
                 exu.Print('******************************************')
             else:
                 exu.Print('******************************************')
                 exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") *FAILED*')
-                exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
-                exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
+                exu.Print('  RESULT = ' + str(TSScope.testResult))
+                exu.Print('  ERROR = ' + str(TSScope.testError))
                 if TSScope.file in TSScope.sensitiveTests:
                     exu.Print('  NOTE: this test is marked SENSITIVE (chaotic or unseeded);')
                     exu.Print('        it is reported but does not affect the exit code')
@@ -477,23 +474,23 @@ if TSScope.runMiniExamples:
             exu.Print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
             print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)
         finally:
-            exudynTestGlobals.testResult = exu.sys.get('testResult', TSScope.invalidResult)
+            TSScope.testResult = exu.sys.get('testResult', TSScope.invalidResult)
             exu.sys['testIsActive'] = False
-            exudynTestGlobals.testError = exudynTestGlobals.testResult-miniExamplesRefSol[name]
-            if abs(exudynTestGlobals.testError) < TSScope.testTolerance:
+            TSScope.testError = TSScope.testResult-miniExamplesRefSol[name]
+            if abs(TSScope.testError) < TSScope.testTolerance:
                 exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
-                exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
-                exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
+                exu.Print('  RESULT = ' + str(TSScope.testResult))
+                exu.Print('  ERROR  = ' + str(TSScope.testError))
             else:
                 exu.Print('******************************************')
                 exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
-                exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
-                exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
+                exu.Print('  RESULT = ' + str(TSScope.testResult))
+                exu.Print('  ERROR  = ' + str(TSScope.testError))
                 exu.Print('******************************************')
                 miniExamplesFailed += [testExamplesCnt]
                 miniExamplesFailedNames.add(name)
-            miniExamplesTestSolList[name] = exudynTestGlobals.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
-            miniExamplesTestErrorList[name] = exudynTestGlobals.testError #this list contains errors
+            miniExamplesTestSolList[name] = TSScope.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
+            miniExamplesTestErrorList[name] = TSScope.testError #this list contains errors
             miniExamplesTestTimeList[name] = time.perf_counter() - miniTimeStart
             miniExamplesTestTolList[name] = TSScope.testTolerance
             testExamplesCnt+=1

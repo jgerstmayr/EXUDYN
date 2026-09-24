@@ -1662,3 +1662,40 @@ its last digit. The test is neither stricter nor looser than it was yesterday.
 This is the only model whose reference solution moved in the whole of RG10.6, and the old value
 stands beside the new one in `runTestSuiteRefSol.py`, as the other entries carry their history.
 
+<a id="rg10-6-8"></a>
+### RG10.6.8 — the performance models, and the end of ExudynTestStructure (2026-09-24, #2632)
+
+`AddTiming` read exactly one thing from the object it was handed — `timings`, through
+`getattr— ` so the channel moved and the class went. `AddTiming(name, mbs, result)` appends to
+`exu.sys['testTimings']`, which `runPerformanceTests.py` puts there before each model, and the
+seven models begin with the same line as every test model.
+
+Two things came out with the boilerplate, and both are the patterns this step exists to remove:
+
+- **the last `testTolFact`.** `perfRigidPendulum.py` set `exudynTestGlobals.testTolFact = 1e5`
+  against a runner tolerance of `1e-10`; it says `exu.sys['testTolerance'] = 1e-5` now, which is
+  the same number without the multiplication;
+- **the last reference solution inside a model**, `generalContactSpheresPerf.py`'s
+  `testError = uSum - (-1.779402864432934)`, a copy of what
+  `PerformanceTestsReferenceSolution()` holds.
+
+`ExudynTestStructure` and `exudynTestGlobals` are **deleted**. Two users had to go first: the
+worker bootstrap in `testRunnerTools.py`, whose fallback said *"until every model is converted"*,
+and `runTestSuite.py`, which kept the instance as a **runner-internal accumulator** although the
+value had come from `exu.sys` since RG10.6.1. Those are `TSScope` fields now, where the rest of
+the runner's own state lives.
+
+**Three things the run caught that reading had not.**
+
+- `AddTiming` referenced `exu.sys` while `testRunnerTools.py` has **no module-level import of
+  exudyn** — every other function in it imports exudyn inside the body, deliberately, because
+  the module is also used by tools that never touch it. `AddTiming` does the same now.
+- `perf3DRigidBodies.py` keeps its `useGraphics = False` default **below** the try/except block
+  rather than above it, so the generic rename turned it into `(not testIsActive) = False`, which
+  is not Python. Python said so at once.
+- and that model's default was **False**, like `perfLargeMassSpringChain`'s: both default to
+  `exu.sys.get('testIsActive', True)`, so that a standalone run behaves as it did.
+
+All 13 single runs and all 7 performance tests pass, every test-suite result is identical, and
+`exudynTestGlobals` appears nowhere in `python/` or `tools/` any more.
+

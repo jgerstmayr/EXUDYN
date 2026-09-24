@@ -15,17 +15,7 @@ import testRunnerTools
 from exudyn.itemInterface import *
 import numpy as np
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from testRunnerTools import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -105,9 +95,9 @@ mbs.SolveDynamic(simulationSettings)
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 exu.Print('result perfSpringDamperUserFunction=',u[0])
 
-exudynTestGlobals.testResult = u[0]
+exu.sys['testResult'] = u[0]
 #one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
 #without model build and Python overhead (issue #2460)
-testRunnerTools.AddTiming(exudynTestGlobals, 'perfSpringDamperUserFunction.py', mbs, u[0])
+testRunnerTools.AddTiming('perfSpringDamperUserFunction.py', mbs, u[0])
 
 

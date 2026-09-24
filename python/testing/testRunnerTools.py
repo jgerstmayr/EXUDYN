@@ -265,33 +265,10 @@ def CpuInfoString():
 
 
 #%%******************************************************************************************************
-#what a performance model is handed, and what AddTiming below fills. It was in
-#python/testing/modelUnitTests.py until revision2026b step RG10.6.5 dissolved that module; the
-#test models and the mini examples use exu.sys now, and the seven performance models are the last
-#callers of this (#2632).
-#this class is for interaction of test suite with examples given as (autonomous) .py file
-class ExudynTestStructure:
-    def __init__(self, useGraphics = True, performTests = False, testError = 0, 
-                 testResult = 0, testTolFact = 1):
-        self.useGraphics = useGraphics
-        self.testError = testError      #for regular test models (store reference solution inside)
-        self.testResult = testResult    #the value a model computes; was a duplicate testError line
-        self.testTolFact = testTolFact  #additional factor to raise tolerance
-        self.performTests = performTests #this variable is only used for testing if example is calculated outside test mode
-
-        #one dict per simulation run, appended by testRunnerTools.AddTiming (issue #2460):
-        #{'name':..., 'time': solver.timer.total, 'result':...}. A performance model may run
-        #several sizes or thread counts, and runPerformanceTests.py reports every single one.
-        self.timings = []
-
-        self.useCorrectedAccGenAlpha = True  #always corrected
-        self.useNewGenAlphaSolver = True    #active by default
-        
-exudynTestGlobals = ExudynTestStructure() #variable used as global variable during testing
 
 
 #%%******************************************************************************************************
-def AddTiming(testGlobals, name, mbs, result, solverName='dynamicSolver'):
+def AddTiming(name, mbs, result, solverName='dynamicSolver'):
     """
     Record one simulation run of a performance model (issue #2460).
 
@@ -306,15 +283,19 @@ def AddTiming(testGlobals, name, mbs, result, solverName='dynamicSolver'):
     also valid in the exudynFast build, where the sub-timers are compiled away.
 
     Args:
-        testGlobals: the exudynTestGlobals instance of the model; a model run standalone has no
-            timings list and then nothing is recorded
         name (str): what distinguishes this run, e.g. 'perfLargeMassSpringChain:rigid-n5000-implicit'
         mbs: the MainSystem that was solved; the solver is taken from mbs.sys[solverName]
         result (float): the test result of this run, compared against its reference value
         solverName (str): the key in mbs.sys, 'dynamicSolver' or 'staticSolver'
     """
-    timings = getattr(testGlobals, 'timings', None)
-    if timings is None:     #model started standalone, not through runPerformanceTests.py
+    #exu.sys['testTimings'] is the list the runner puts there; a model started on its own has
+    #none, and then nothing is recorded (revision2026b step RG10.6.8). exudyn is imported here
+    #rather than at module scope, as everything else in this file does it: importing it costs a
+    #second and the module is also used by tools that never touch exudyn
+    import exudyn as exu
+
+    timings = exu.sys.get('testTimings', None)
+    if timings is None:
         return
 
     solverTime = -1.0       #says 'not measured', never silently a wrong time
@@ -913,20 +894,12 @@ exu.special.userInterface.SuppressAll(True)  #revision2026 step R5.17
 exu.config.outputDirectory = {outputDirectory!r}
 exu.sys['testIsActive'] = True          #revision2026b step RG10.6: the channel is exu.sys
 exu.sys['testResult'] = {invalidResult!r}
-from testRunnerTools import exudynTestGlobals   #until the performance models are converted
-exudynTestGlobals.useGraphics = False
-exudynTestGlobals.performTests = True
-exudynTestGlobals.testResult = {invalidResult!r}
-exudynTestGlobals.testError = -1
 start = time.perf_counter()
 try:
     exec(open({fileName!r}, encoding='utf8').read(), globals())
 finally:
-    _result = exu.sys.get('testResult', {invalidResult!r})
-    if _result == {invalidResult!r}:            #not converted yet
-        _result = exudynTestGlobals.testResult
     try: #models return numpy scalars; the parent parses plain text, so convert here
-        _testResult = float(_result)
+        _testResult = float(exu.sys.get('testResult', {invalidResult!r}))
     except Exception:
         _testResult = float('nan')
     #a model may state a tolerance of its own (revision2026b step RG10.6); 0 means it did not

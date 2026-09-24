@@ -14,17 +14,7 @@ import exudyn as exu
 import testRunnerTools
 from exudyn.itemInterface import *
 
-useGraphics = True #without test
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
-try: #only if called from test suite
-    from testRunnerTools import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+testIsActive = exu.sys.get('testIsActive', False)
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -74,7 +64,7 @@ simulationSettings.displayComputationTime = True
 
 simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum"
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.Start()
 
 
@@ -84,14 +74,14 @@ pos = mbs.GetNodeOutput(nRigid, variableType = exu.OutputVariableType.Position)
 result = abs(pos).sum()
 exu.Print('solution of perfRigidPendulum=',result)
 
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result
 #one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
 #without model build and Python overhead (issue #2460)
-testRunnerTools.AddTiming(exudynTestGlobals, 'perfRigidPendulum.py', mbs, result)
+testRunnerTools.AddTiming('perfRigidPendulum.py', mbs, result)
 
-exudynTestGlobals.testTolFact = 1e5 #larger error due to many implicit steps?
+exu.sys['testTolerance'] = 1e-5 #1e5 times the 1e-10 of the runner #larger error due to many implicit steps?
 
-if useGraphics:
+if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 

@@ -34,16 +34,7 @@ import numpy as np
 
 import testRunnerTools
 
-useGraphics = False #without test
-#the following is used to always get the same results, independent of the test suite
-try:
-    from testRunnerTools import exudynTestGlobals #for globally storing test results
-    useGraphics = exudynTestGlobals.useGraphics
-except:
-    class ExudynTestGlobals:
-        pass
-    exudynTestGlobals = ExudynTestGlobals()
-    exudynTestGlobals.useGraphics = False
+testIsActive = exu.sys.get('testIsActive', True)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 useRigidBodies = True   #False: the original mass point chain, 3 coordinates per body
@@ -155,7 +146,6 @@ for run in runList:
     runName = ('perfLargeMassSpringChain:' + ('rigid' if useRigidBodies else 'mass')
                + '-n' + str(nBodies) + ('-implicit' if run['implicit'] else '-explicit'))
     exu.Print('result ' + runName + '=', result)
-    testRunnerTools.AddTiming(exudynTestGlobals, runName, mbs, result)
+    testRunnerTools.AddTiming(runName, mbs, result)
 
-exudynTestGlobals.testError = 0     #filled by the performance suite against its reference
-exudynTestGlobals.testResult = result
+exu.sys['testResult'] = result

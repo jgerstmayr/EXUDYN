@@ -50,7 +50,6 @@ if useFastModule: #asking is not getting - a declined request would mismeasure t
 
 (exuCPPname, exuCPP) = testRunnerTools.LoadedCppModule() #never names the module itself (#2466)
 
-from testRunnerTools import ExudynTestStructure, exudynTestGlobals
 import time
 
 psutilExists = False
@@ -206,8 +205,7 @@ for groupName in ['small', 'large']:
 
 totalTests = len(testFileList)
 testsFailed = [] #list of numbers containing the test numbers of failed tests
-exudynTestGlobals.useGraphics = False
-exudynTestGlobals.performTests = True
+#the channel a model uses since revision2026b step RG10.6.8 is exu.sys, as for the test models
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -240,11 +238,12 @@ for file in testFileList:
     exu.Print('  START PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '"):')
     exu.Print('****************************************************')
     SC.Reset()
-    exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
-    exudynTestGlobals.testResult = invalidResult #strange default value to see if there is a missing testResult
+    exu.sys['testIsActive'] = True
+    exu.sys['testTimings'] = [] #filled by the model, one dict per simulation run
+    exu.sys.pop('testTolerance', None) #a model may state one of its own
+    testError = -1
+    exu.sys['testResult'] = invalidResult #a value that says 'the model set none'
     timeStart= -time.time()
-    exudynTestGlobals.testTolFact = 1 #special factor for some examples which make problems, e.g., due to sparse eigenvalue solver
-    exudynTestGlobals.timings = [] #filled by the model, one dict per simulation run
     try:
         exec(open(file).read(), globals())
     except Exception as e:
@@ -254,12 +253,16 @@ for file in testFileList:
     timeStart += time.time()
     totalTime += timeStart
 
-    examplesTestErrorList[name] = exudynTestGlobals.testError
-    examplesTestSolList[name] = exudynTestGlobals.testResult
+    testResult = exu.sys.get('testResult', invalidResult)
+    modelTolerance = float(exu.sys.get('testTolerance', testTolerance))
+    exu.sys['testIsActive'] = False
+
+    examplesTestErrorList[name] = testError
+    examplesTestSolList[name] = testResult
     
     #compute error from reference solution
-    exudynTestGlobals.testError = exudynTestGlobals.testResult - performanceTestRefSol[name]
-    if abs(exudynTestGlobals.testError) < testTolerance*exudynTestGlobals.testTolFact:
+    testError = testResult - performanceTestRefSol[name]
+    if abs(testError) < modelTolerance:
         exu.Print('****************************************************')
         exu.Print('  PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
     else:
@@ -267,13 +270,13 @@ for file in testFileList:
         exu.Print('  PERFORMANCE TEST ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
         testsFailed = testsFailed + [testExamplesCnt]
 
-    exu.Print('  RESULT   = ' + str(exudynTestGlobals.testResult))
-    exu.Print('  ERROR    = ' + str(exudynTestGlobals.testError))
+    exu.Print('  RESULT   = ' + str(testResult))
+    exu.Print('  ERROR    = ' + str(testError))
     exu.Print('  CPU TIME = ' + str(timeStart))
     exu.Print('****************************************************')
 
     testTimings[name] = timeStart
-    allRuns += exudynTestGlobals.timings
+    allRuns += exu.sys['testTimings']
     testExamplesCnt += 1
 
 exu.Print('\n')
