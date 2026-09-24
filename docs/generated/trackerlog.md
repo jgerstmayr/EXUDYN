@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.62.dev1
+- Exudyn version = 1.12.63.dev1
 - last change = 2026-09-24
-- Number of issues = 2647
-- Number of resolved issues = 2376 (62 in current version)
+- Number of issues = 2648
+- Number of resolved issues = 2377 (63 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 

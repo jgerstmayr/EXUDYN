@@ -3,7 +3,7 @@
 
 The overview of what Exudyn is and what it can do is the page before this one, `README.rst` -
 the landing page of the repository and of the PyPI package, which is part of this documentation
-rather than a second copy of it (revision2026 step R7.1.5).
+rather than a second copy of it.
 
 
  Exudyn is hosted on [GitHub](https://github.com) [EXUDYNgit]:
@@ -20,6 +20,18 @@ For any comments, requests, issues, bug reports, send an email to:
 - email: `reply.exudyn@gmail.com`
 
 Thanks for your contribution!
+
+<!-- the toctree stands here, at the top level of the page: a toctree places its entries
+     where the directive is, and at the end of the document that is INSIDE the last
+     section - which is how the installation instructions ended up under "Further
+     notes" in the sidebar (#2646) -->
+```{toctree}
+:maxdepth: 2
+
+gettingStartedInstall
+gettingStartedExample
+gettingStartedFAQ
+```
 
 ## Getting started
 
@@ -124,11 +136,3 @@ Future goals (2024-2026) are:
 
 For solved issues (and new features), see section 'Issues and Bugs', {ref}`sec-issuetracker`.
 The open issues are in the same section, and every resolved issue of every release is in the [changelog](../../CHANGELOG.md).
-
-```{toctree}
-:maxdepth: 2
-
-gettingStartedInstall
-gettingStartedExample
-gettingStartedFAQ
-```

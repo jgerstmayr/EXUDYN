@@ -185,10 +185,15 @@ def WriteTextIfDifferent(fileName, text, ignoreDateStrings):
         fileText = file.read()
         file.close()
     else:
-        print('WriteTextIfDifferent: illegal file: '+fileName)
-        return False
+        #A FILE THAT DOES NOT EXIST IS WRITTEN, not refused (#2647). This used to print 'illegal
+        #file' and return, which is how a generator could silently write nothing for years: on
+        #linux the output of structureHeaderEmitter differed from the tracked file by one capital
+        #letter, so it took this branch on every run. A generator that declares an output has to
+        #be able to create it - generate.py checks afterwards that every declared output is there.
+        fileText = None
 
-    if ( (ignoreDateStrings and not IsEqualIgnoringDateStrings(fileText, text)) or
+    if (fileText is None or
+        (ignoreDateStrings and not IsEqualIgnoringDateStrings(fileText, text)) or
           not ignoreDateStrings and (fileText.strip() != text.strip())):
         #write file because main part has been changed
         file=open(fileName, 'w',encoding='utf8')

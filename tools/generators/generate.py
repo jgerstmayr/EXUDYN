@@ -64,7 +64,7 @@ stages = [
     Stage('tools/generators/structureHeaderEmitter.py', ['definitions'],
           [A + 'SimulationSettings.h', A + 'VisualizationSettings.h', A + 'CSolverStructures.h',
            A + 'MainSolver.h', A + 'PyStructuralElementsDataStructures.h', A + 'BeamSectionGeometry.h',
-           A + 'DictionariesGetSet.h', A + 'pybind_modules.h'], writesOnlyWhenChanged=True),
+           A + 'DictionariesGetSet.h', A + 'Pybind_modules.h'], writesOnlyWhenChanged=True),
     Stage('tools/generators/structureStubEmitter.py', ['definitions'], [G + 'stubSystemStructures.pyi']),
     Stage('tools/generators/structureDocsEmitter.py', ['definitions'],
           ['docs/generated/structures']),   #Markdown since revision2026 step R7.1.6
@@ -141,6 +141,41 @@ def RunOrder(stageList=None):
     return ordered
 
 
+def _SpelledExactly(pattern):
+    """is a declared output spelled exactly as the file on disk is?
+
+    glob() is case-insensitive on Windows, so a generator that writes 'pybind_modules.h' next to a
+    'Pybind_modules.h' looks correct here and writes a SECOND file on linux, where the real one is
+    then never regenerated (#2647). The directory listing is case-exact on every platform, which is
+    what makes the fault visible before it reaches the linux CI.
+
+    Args:
+        pattern: a declared output, relative to the repository root; a glob pattern is skipped
+
+    Returns:
+        True if the name appears with this spelling, or if the check does not apply
+    """
+    if any(character in pattern for character in '*?['):
+        return True
+    full = os.path.join(repositoryRoot, pattern)
+    directory = os.path.dirname(full)
+    if not os.path.isdir(directory):
+        return False
+    return os.path.basename(full) in os.listdir(directory)
+
+
+def _WhyMissing(pattern):
+    """why a declared output is not there: absent, or spelled differently on disk (#2647)"""
+    full = os.path.join(repositoryRoot, pattern)
+    directory = os.path.dirname(full)
+    name = os.path.basename(full)
+    if os.path.isdir(directory):
+        for entry in os.listdir(directory):
+            if entry.lower() == name.lower() and entry != name:
+                return '  (the file on disk is "' + entry + '")'
+    return '  (does not exist)'
+
+
 def _WriteTimes(stage):
     """modification time of every declared output that exists, keyed by path; a directory counts as
     the newest file below it"""
@@ -189,14 +224,15 @@ def RunStages(pythonExecutable=sys.executable, only=None, verbose=True):
         #writes none of them, which is the failure that hides.
         after = _WriteTimes(stage)
         missing = [pattern for pattern in stage.writes
-                   if not glob.glob(os.path.join(repositoryRoot, pattern))]
+                   if not glob.glob(os.path.join(repositoryRoot, pattern))
+                   or not _SpelledExactly(pattern)]
         touched = [path for path in after if after[path] != before.get(path)]
 
         if missing or (stage.writes and not touched and not stage.writesOnlyWhenChanged):
             failed.append(stage.name)
             print('  ERROR: ' + stage.script + ' exited 0 but produced no output:')
             for pattern in (missing if missing else stage.writes):
-                print('    | ' + pattern + ('  (does not exist)' if missing else ''))
+                print('    | ' + pattern + (_WhyMissing(pattern) if missing else ''))
             print('    | a generator that writes nothing always agrees with the commit, so the')
             print('    | regeneration check cannot see this - hence the check here')
     return failed

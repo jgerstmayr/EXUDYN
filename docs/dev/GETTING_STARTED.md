@@ -108,8 +108,8 @@ The second line creates the **untracked** working files from their committed tem
 
 All three are in `.gitignore`, so an experiment cannot be committed by accident. An existing file
 is never overwritten (`--force` does that deliberately). Without the third one the C/C++ extension
-reports *"include errors detected"*: the vendored headers are reached through subdirectories of
-`include/` (revision2026b step RG10.5).
+reports *"include errors detected"* and cannot navigate, because the vendored headers are reached
+through subdirectories of `include/` (#2619).
 
 ## Build once
 

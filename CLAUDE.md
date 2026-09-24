@@ -91,6 +91,12 @@ version.txt                               version — an OUTPUT of issueTracker.
    (scipy, networkx, Gym, stable-baselines, NGsolve) are fine behind a clear failure at the point
    of use; a new mandatory one is not. Dev-only tools (Jinja2,
    griffe, ruff, pytest) are fine. No heavy C++ dependencies; headers stay vendored.
+6a. **Documentation says what IS, not what it was.** Every text a reader meets — a manual page,
+   a docstring, the `Details:` header of a model, a figure caption — describes the thing, not its
+   history, and never opens with a change. Cite the **issue** (`#2646`), not the plan step; a
+   reason for a change goes **last** and stays to one clause. What changed between releases is
+   said once, for users, in `docs/manual/revisions.md`. (Maintainer, 2026-09-24, #2646;
+   `CODING_STYLE.md` §6.)
 7. **Match the local style of the file you are editing** — see `CODING_STYLE.md`. Parts of the
    documented convention (Doxygen, the `#**` doc comments) are deprecated or mid-migration; do not
    propagate them into files that do not already use them, and do not migrate them outside a

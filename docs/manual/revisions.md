@@ -88,12 +88,16 @@ items, the Python utilities, the examples and the test models — is written by 
 the definitions and the docstrings. There is no PDF any more: the same content is the HTML
 documentation.
 
+**Installing and building are told once each.** The installation instructions come before the
+first example, and building from source - which used to be described in three places that
+disagreed - is one page of the developer documentation, together with a page that takes a new
+developer from cloning the repository to a passing test run and one on the git workflow (#2646).
+
 **`CHANGELOG.md`** is new: every resolved issue of the **current** release, newest first, with
 a table of every release above it. The version number says where an issue landed — the micro
 version *is* the count of issues closed in a release, so 1.10.160 is the 160th issue closed in
 release 1.10. The earlier releases are on the issue tracker page, which carries more about each
-issue than the changelog does; since revision2026b step RG3.10 the two do not print the same list
-twice.
+issue than the changelog does, and the two no longer print the same list twice (#2599).
 
 ### What changed behind the scenes
 

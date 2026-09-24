@@ -1,13 +1,9 @@
 (sec-dev-build)=
 # Building Exudyn from source
 
-This is the **one** description of building Exudyn. Until revision2026b step RG3.12.2 (#2646) there
-were three — two sections of the user manual, a how-to note and a paragraph in the developer
-README — and they disagreed with each other and with the repository.
-
-You need this page if you want to **change the C++ core**, or if there is **no wheel for your
-platform**. To *use* Exudyn, `pip install exudyn` is enough; see
-{ref}`sec-install-installinstructions`.
+This is the one description of building Exudyn from source. You need it if you want to **change
+the C++ core**, or if there is **no wheel for your platform**. To *use* Exudyn,
+`pip install exudyn` is enough; see {ref}`sec-install-installinstructions`.
 
 If you have not cloned the repository yet, start at
 [GETTING_STARTED.md](GETTING_STARTED.md), which goes from *nothing* to a build and a passing test
@@ -36,7 +32,7 @@ of this page is what that driver does, and what to do when it does not work.
 
 | | |
 |---|---|
-| **Python** | 3.10 – 3.14, **64 bit**. 32-bit builds no longer exist (revision2026 step R2.6). |
+| **Python** | 3.10 – 3.14, **64 bit**. There is no 32-bit build. |
 | **A C++17 compiler** | Visual Studio 2022 on Windows, GCC on Linux, clang (Xcode command line tools) on macOS. |
 | **numpy** | in the environment you build into; `wheel` as well if you build wheels by hand. |
 | **The repository** | see [GETTING_STARTED.md](GETTING_STARTED.md). |
@@ -221,6 +217,6 @@ or by hand:
 rm -r build dist exudyn.egg-info .eggs
 ```
 
-The package tree under `build/lib.*` is removed **before every build** since revision2026 step
-R5.18.8: a module deleted from `python/exudyn` used to survive there and be copied into the wheel,
-which shipped a file the source did not have.
+The package tree under `build/lib.*` is removed **before every build**: setuptools copies the
+wheel from it, and a module deleted from `python/exudyn` would otherwise survive there and be
+packed into the wheel (#2560).

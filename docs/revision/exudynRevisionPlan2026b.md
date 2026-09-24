@@ -342,6 +342,32 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       developer README and in the user manual.
 
 
+<a id="rg3-13"></a>
+**RG3.13** *(group RG3; maintainer 2026-09-24)* **The tree tells the reader about the revision
+    instead of about itself** (#2646). The rule is now written down - `CLAUDE.md` 6a and
+    `CODING_STYLE.md` §6, *documentation says what IS, not what it was* - and this step applies it
+    to what is already there. The maintainer's example, `python/TestModels/GraphicsDataTest.py`:
+
+    > *"GraphicsDataTest, one of the ten small tests that lived in `python/testing/modelUnitTests.py`
+    > from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test model."*
+
+    A reader of that page - the test models **are** documentation pages - wants to know what the
+    model computes. Measured 2026-09-24: **887 mentions of `revision2026` in 257 files** outside
+    `docs/revision/`, which is where they belong. Not all of them are wrong, so the step is a
+    sweep with a rule, not a replace:
+
+    | where | mentions | what to do |
+    |---|---|---|
+    | `python/TestModels` (24 files), `python/PerformanceModels` (3) | 36 | **published pages**: rewrite the `Details:` header to say what the model does; the issue number stays, the step number goes |
+    | `definitions/` (27 files) | 39 | **published**: the item and settings descriptions are the reference manual |
+    | `docs/manual` (2 files left), `docs/dev` (6) | ~60 | `docs/dev` may keep a step reference where it is about the plan itself; a manual page may not |
+    | `src/`, `tools/`, `setup.py`, `conf.py` | ~750 | **not published**: the rule there is the older one - a comment cites the issue, not the step - so this is a cheaper pass, and a comment that explains a measurement may keep its step |
+
+    What must not be lost: the **issue number**, which is a link a reader can follow, and any
+    sentence that carries a *measurement* or a *decision*. What goes: the name a thing had before,
+    when it changed, and which plan step changed it.
+
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
@@ -985,6 +1011,16 @@ file, so an editor cannot complete them).
     case of the manylinux image is refused with a reason, and `test_exudev.py` pins the three
     from any platform.
 
+<a id="rg10-9"></a>
+**RG10.9** **DONE 2026-09-24** (#2647) — [log](exudynRevisionLog2026b.md#rg10-9) —
+    **`regenerated_files` failed on linux and could not fail on Windows** *(maintainer supplied
+    the GitLab log of 1.12.61)*. The generator wrote `pybind_modules.h` while the repository has
+    `Pybind_modules.h`: one file on Windows, two on linux, where the real header was **never
+    regenerated**. The name is one spelling now, a declared output is checked **case-exactly** on
+    every platform, and a generator may create a file it declares instead of printing
+    *"illegal file"* and writing nothing.
+
+
 <a id="rg10-7"></a>
 **RG10.7** **DONE 2026-09-24** (#2638) — [log](exudynRevisionLog2026b.md#rg10-7) —
     **The plan carried the full text of the steps that are finished** *(maintainer,
@@ -1091,6 +1127,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8 | #2594 | place or drop the figures that no page references |
+| RG3.13 | #2646 | take the revision out of the pages and the models, and say what each thing is |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
@@ -1110,7 +1147,6 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| CI of 1.12.48 | - | **`regenerated_files` fails on GitLab** and cannot be reproduced here: `regenerate.py --check` is clean on Windows, every generated file is UTF-8 with LF in the index, and this WSL has no pip. It needs the job log. |
 | maintainer, 2026-09-24 | - | the documentation of the steps that are done, where a page still describes the state before one of them |
 | RG6.2.11 | #2608 | **remember the window** - undecided; the rule that makes it safe is in the log |
 | RG4.5 | #2616 | a binding or a test hook for `forceQuitSimulation`, which no test can reach today |

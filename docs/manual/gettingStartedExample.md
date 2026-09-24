@@ -1,7 +1,3 @@
-<!-- moved out of gettingStarted.md by revision2026b step RG3.12.1 (#2646): the toctree at
-     the end of that page nested the installation instructions BELOW this section, so a
-     reader met the example before being told how to install anything -->
-
 (sec-install-simpleexample)=
 # Run a simple example in Python
 

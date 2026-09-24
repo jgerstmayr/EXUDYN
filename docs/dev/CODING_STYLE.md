@@ -145,6 +145,24 @@ revision plan: comments stay for years, issue numbers are stable and the issue n
 Plan steps are cited in issues and commit messages as "revision2026 step R4.10.3" (see
 [`exudynRevisionInfo2026.md`](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) §1).
 
+### Documentation says what IS, not what it was
+
+This holds for every text a reader meets — a manual page, a docstring, the `Details:` header of a
+model or an example, a figure caption — and it is the rule the maintainer gave on 2026-09-24
+(#2646):
+
+- **describe the thing, not its history.** A reader of *Building Exudyn from source* wants to know
+  how to build, not that it used to be described in three places. A reader of a test model wants
+  to know **what the model computes**, not what the file was called before.
+- **never open a section with history.** If the first sentence is about a change, the reader has to
+  read past it to reach the subject.
+- **cite the issue, not the plan step**, for the same reason as in a comment — and the issue number
+  is a link a reader of the documentation can actually follow, which is why it stays.
+- **a reason for a change, where it helps, goes last and stays short** — one clause after the
+  informative text, not before it.
+- What changed between releases is said **once**, for users, in
+  {ref}`sec-revisions`. That is where a restructuring belongs, not in the pages it restructured.
+
 ## 7. File headers
 
 **C++** — Doxygen-style block at the top of the file:

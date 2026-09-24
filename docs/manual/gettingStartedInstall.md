@@ -10,9 +10,8 @@ Exudyn is a Python package with a compiled core, so what you need is a Python it
 MacOS. Newer Python versions are usually added in line with the Python release cycle (every
 October).
 
-**64-bit only.** Exudyn has not been built for 32-bit systems for years, and since
-revision2026 step R2.6 the 32-bit build configurations no longer exist. If you still read advice
-about matching 32-bit and 64-bit installations, it is out of date.
+**64-bit only.** Exudyn is not built for 32-bit systems. If you still read advice about
+matching 32-bit and 64-bit installations, it is out of date.
 
 - **conda environments** are what the developers use and what is tested most; the environment decides which Python you get, and `pip install exudyn` inside it installs the matching wheel.
 - **Spyder** (any recent version), **Visual Studio Code** and **Jupyter** all work with default settings. Spyder works with all virtual environments.
@@ -125,9 +124,8 @@ You need this only in two cases:
 - you want to **change the C++ core** itself.
 
 Everything about it - what a build needs on each platform, the commands, what to do when the
-build works and the import does not, and how to debug the C++ from a Python run - is in one
-page of the developer documentation: {ref}`sec-dev-build`. It is one page because it used to
-be three that disagreed with each other (revision2026b step RG3.12.2).
+build works and the import does not, and how to debug the C++ from a Python run - is in
+{ref}`sec-dev-build`.
 
 The short form, from the root of the cloned repository, with the environment you want to
 install into active:

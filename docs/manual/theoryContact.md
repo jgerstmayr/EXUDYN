@@ -11,7 +11,7 @@ Note that there are currently only simplistic contact models, such as linear con
 
 (fig-available-contact)=
 ```{mermaid}
-:caption: Contact: possible coupling of geometrical objects in Exudyn. The diagram existed only as a tikz picture and therefore only in the PDF; it reaches the HTML documentation for the first time with revision2026 step R7.1.9.
+:caption: Contact: possible coupling of geometrical objects in Exudyn.
 
 flowchart TD
     available([<b>available contacts</b>]) --> spherical["sphere - sphere, circle - circle"]
