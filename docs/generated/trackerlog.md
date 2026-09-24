@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.61.dev1
 - last change = 2026-09-24
-- Number of issues = 2646
+- Number of issues = 2647
 - Number of resolved issues = 2375 (61 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,10 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textred">`HIGH`</span> `HIGH EFF` `raised by: Claude-JG` building from source and the development workflow are told three times and never from the start (#2646)
+  - description: Measured 2026-09-24 at the maintainer's request. THE ORDER IS WRONG: gettingStarted.md ends with the toctree that nests Installation instructions, so a reader meets 'Run a simple example in Python' before being told how to install. THREE PLACES DESCRIBE THE BUILD and disagree: gettingStartedInstall.md has Build under Windows / Mac OS X / Ubuntu (about 170 lines, still saying 'go to main of your cloned github folder' although the main/ level went in revision2026 step R3.1, still Ubuntu 18.04 with Python 3.6 and a USE\_GLFW\_GRAPHICS define in BasicDefinitions.h that no longer exists), docs/howTo/buildFromSource.md is the current reference at 151 lines, and docs/dev/README.md has a third short version. NOTHING SAYS HOW TO GET THE CODE: there is no git clone anywhere, no choice between ssh and https, and no page on branches, commit messages, pull, push and merge - which an external contributor needs and which keeps the internal workflow consistent. WORKFLOW.md is 845 lines whose sections run 0, 1, 2, 0a, 2a, 2b, 3, so the one-time setup of a clone stands after versioning; section 0 starts from an environment that exists without saying where it came from. And the developer documentation calls Visual Studio 2022 the primary development environment, which is only half true: it is the mixed Python/native debugger, while the everyday work - Python, definitions, documentation, Claude Code - happens in VS Code, which is where the co-developers will be, so the command line git commands belong in the documentation.
+  - **remarks:** RG3.12.1 is done: the example moved into gettingStartedExample.md so that the toctree can list the installation instructions before it, and the three -{}- LaTeX relicts in gettingStartedInstall.md are ordinary double dashes. The other five sub-steps are open.
+  - date raised: 2026-09-24
 - `CHECK` `raised by: Claude-JG` fourteen figure files in docs/figures are referenced by nothing (#2594)
   - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.
   - **remarks:** Copies are in tmp/unusedFigures/ with a README naming the issue; the originals are untouched in docs/figures/ and still in git, because tmp/ is git-ignored and a move would have taken them out of version control. Waiting for the maintainer to look at them (revision2026b step RG3.8).

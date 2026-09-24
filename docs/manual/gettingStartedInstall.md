@@ -61,9 +61,9 @@ Depending on installation the command may read `pip3` or `pip`:
 
 - `pip3 install exudyn`
 
-For pre-releases (use with care!), add `-{}-pre` flag:
+For pre-releases (use with care!), add `--pre` flag:
 
-- `pip install exudyn -{}-pre -U`
+- `pip install exudyn --pre -U`
 
 The `-U` (identical to `--upgrade`) flag ensures that the current installed version is also updated in case of a change of the micro version (e.g., from version 1.6.119 to version 1.6.164), otherwise, it will only update if you switch to a newer minor version.
 
@@ -98,7 +98,7 @@ and the last part names the platform.
 
  Check which Python you are about to install into:
 
-- `python -{}-version`
+- `python --version`
 
  and then install the matching wheel (the version number `1.11.0` below is an
 example):

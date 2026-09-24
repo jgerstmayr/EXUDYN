@@ -1,0 +1,14 @@
+{
+  "number": 2646,
+  "title": "building from source and the development workflow are told three times and never from the start",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "effort": "HIGH",
+  "description": "Measured 2026-09-24 at the maintainer's request. THE ORDER IS WRONG: gettingStarted.md ends with the toctree that nests Installation instructions, so a reader meets 'Run a simple example in Python' before being told how to install. THREE PLACES DESCRIBE THE BUILD and disagree: gettingStartedInstall.md has Build under Windows / Mac OS X / Ubuntu (about 170 lines, still saying 'go to main of your cloned github folder' although the main/ level went in revision2026 step R3.1, still Ubuntu 18.04 with Python 3.6 and a USE_GLFW_GRAPHICS define in BasicDefinitions.h that no longer exists), docs/howTo/buildFromSource.md is the current reference at 151 lines, and docs/dev/README.md has a third short version. NOTHING SAYS HOW TO GET THE CODE: there is no git clone anywhere, no choice between ssh and https, and no page on branches, commit messages, pull, push and merge - which an external contributor needs and which keeps the internal workflow consistent. WORKFLOW.md is 845 lines whose sections run 0, 1, 2, 0a, 2a, 2b, 3, so the one-time setup of a clone stands after versioning; section 0 starts from an environment that exists without saying where it came from. And the developer documentation calls Visual Studio 2022 the primary development environment, which is only half true: it is the mixed Python/native debugger, while the everyday work - Python, definitions, documentation, Claude Code - happens in VS Code, which is where the co-developers will be, so the command line git commands belong in the documentation.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "file": "docs/manual/gettingStartedInstall.md",
+  "workingRemarks": "RG3.12.1 is done: the example moved into gettingStartedExample.md so that the toctree can list the installation instructions before it, and the three -{}- LaTeX relicts in gettingStartedInstall.md are ordinary double dashes. The other five sub-steps are open."
+}

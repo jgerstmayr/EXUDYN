@@ -2320,3 +2320,27 @@ rows differ**.
 Users are told rather than left to find out, which is what the step asked for: the release
 note of #2645 says it, and `docs/manual/revisions.md` has a paragraph under *What can break a
 script* saying that a script which needs OpenVR stays on Exudyn 1.11.
+
+<a id="rg3-12-1"></a>
+### RG3.12.1 — install first, then run something (2026-09-24, #2646)
+
+The first of the six sub-steps of RG3.12, and the smallest: *"Installation instructions are
+after Run a simple example in Python. Should be switched."*
+
+The cause is a **toctree at the end of a page**. `gettingStarted.md` lists its sub-pages -
+the installation instructions and the FAQ - in a toctree after its last section, and a toctree
+places the pages it lists at the position it stands in. The last section of that page is *Run a
+simple example in Python*, so the sub-pages came after it. Moving the toctree up would have
+nested the installation under *Further notes*, which is where it would then sit in the sidebar.
+
+So the **example became a page of its own**, `gettingStartedExample.md`, and the toctree lists
+the three in the order a reader needs them: install, run something, then the questions. Its
+first sentence used to say *"After performing the steps of the previous section"*, which was
+wrong in the old order and is right in the new one - it now names the installation.
+
+**And three LaTeX relicts**: `-{}-pre`, `-{}-pre` and `-{}-version` in
+`gettingStartedInstall.md`, which is how LaTeX writes a double dash that must not become an en
+dash. The conversion of revision2026 step R7.1.5 has a rule for it (`autoGenerateHelper.py`
+maps `-{}-` to `--`) and these three were converted before that rule existed. A reader who
+copied the line got `pip install exudyn -{}-pre`, which pip refuses. No other hand-written page
+has one.

@@ -282,6 +282,61 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     developer documentation now, and says what a link cannot: that for a deeper
     understanding of the core there is no way around the GitHub project itself.
 
+<a id="rg3-12"></a>
+**RG3.12** *(group RG3; maintainer 2026-09-24)* **Building from source and the development
+    workflow are told three times and never from the start** (#2646). The maintainer read the
+    two chapters end to end and the faults are structural, not wording. Measured:
+
+    - **the order is wrong.** `gettingStarted.md` ends with the toctree that nests *Installation
+      instructions*, so a reader meets *Run a simple example in Python* **before** being told how
+      to install anything;
+    - **three places describe the build** and disagree. `gettingStartedInstall.md` has *Build and
+      install under Windows / Mac OS X / Ubuntu* (~170 lines, still *"go to `main` of your cloned
+      github folder"* although the `main/` level went in revision2026 step R3.1, still Ubuntu
+      18.04 with Python 3.6 and a `USE_GLFW_GRAPHICS` define in `BasicDefinitions.h` that no
+      longer exists); `docs/howTo/buildFromSource.md` is the current reference at 151 lines and
+      the maintainer *"finally found"* it; `docs/dev/README.md` has a third, short version;
+    - **nothing says how to get the code.** There is no `git clone` in the documentation, no
+      choice between ssh and https, and no page on branches, commit messages, pull, push and
+      merge - which an external contributor has to be told and which is what keeps the internal
+      workflow consistent;
+    - **`WORKFLOW.md` is 845 lines** whose sections run 0, 1, 2, **0a**, 2a, 2b, 3, 4, 5, 6: the
+      one-time setup of a clone stands after versioning. Section 0 starts from an environment
+      that already exists, without saying where it comes from;
+    - **Visual Studio 2022 is called the primary development environment**, which is half true.
+      It is the mixed Python/native debugger. The everyday work - Python, the definition files,
+      the documentation, Claude Code - happens in **VS Code**, which is where the co-developers
+      will be.
+
+    **The recommended shape**, which is what the sub-steps build. The rule behind it: *a fact is
+    written once and linked to*, and the **user manual tells a user how to install**, while
+    **building from source belongs to the developer documentation**.
+
+    | page | what it holds |
+    |---|---|
+    | `docs/manual/gettingStarted.md` | what Exudyn is, the goals, the thanks - and the toctree **before** the example |
+    | `docs/manual/gettingStartedInstall.md` | requirements, pip, a specific wheel, troubleshooting, uninstall. **One short section** *Build from source* saying when a user needs it and linking to the developer page; no recipe |
+    | **new** `docs/dev/GETTING_STARTED.md` | clone over https or ssh, create the environment, run `tools/setupLocalWorkspace.py`, build once, run the tests once - the step-by-step an engineer needs, absorbing `WORKFLOW.md` §0a |
+    | **new** `docs/dev/BUILD.md` | the **one** build reference: a platform-independent part first, then Windows, Linux, macOS, then "the build works and the import does not", debugging and cleaning up. Absorbs `docs/howTo/buildFromSource.md` **and** the three sections of the user manual |
+    | **new** `docs/dev/GIT.md` | branch, commit message, pull, push, merge, and what a contribution must provide - the command line form, because that is what a VS Code user types |
+    | `docs/dev/WORKFLOW.md` | what is left once the setup and the git part have moved out: the issue tracker, versioning, CI, the gates, committing - renumbered in the order it is done |
+    | `docs/howTo/buildFromSource.md` | **deleted**; `condaEnvironments.md` stays and is linked from the new setup page |
+
+    Sub-steps:
+
+    - **RG3.12.1** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-1) — the order in the user manual, and the LaTeX relicts;
+    - **RG3.12.2** `docs/dev/BUILD.md`: one build reference, the how-to note deleted, the manual
+      reduced to a pointer;
+    - **RG3.12.3** `docs/dev/GETTING_STARTED.md`: clone, environment, workspace, first build,
+      first test run - starting from nothing;
+    - **RG3.12.4** `docs/dev/GIT.md`: the git workflow, for co-developers and for contributors;
+    - **RG3.12.5** `WORKFLOW.md` restructured into the order the work is done, and shortened by
+      what moved out;
+    - **RG3.12.6** the editors: VS Code for the everyday work, Visual Studio 2022 for mixed
+      Python/native debugging - in `docs/dev/README.md`, in the invariants and in
+      `CLAUDE.md`.
+
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
