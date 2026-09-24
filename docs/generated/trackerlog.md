@@ -8,10 +8,10 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
 
-- Exudyn version = 1.12.47.dev1
+- Exudyn version = 1.12.48.dev1
 - last change = 2026-09-24
 - Number of issues = 2634
-- Number of resolved issues = 2361 (47 in current version)
+- Number of resolved issues = 2362 (48 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7808,11 +7808,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textblue">open issue 2624:</span> the settings dialog could edit simulationSettings as well
   - issue author: Claude-JG
   - description: revision2026b step RG6.2.18, low priority, from the catalogue of RG6.2.11. Everything below the widgets is ready: GetDictionaryWithTypeInfo is bound for SimulationSettings, SettingsPrefix writes simulationSettings... into the code line, and DefaultSettingsDictionary falls back to the constructor for a structure that is not on a SystemContainer. What is missing is a way to OPEN it - a function in exudyn.misc.GUI - and the decision whether the renderer offers a key for it while a solver runs, where changing a solver setting mid-step is not as harmless as changing a colour. Maintainer, 2026-09-23.
-  - effort: MEDIUM (within 16 hours)
-  - date raised: 2026-09-23
-- <span class="textorange">open issue 2610:</span> the results monitor must run beside the simulation, or it is redundant
-  - issue author: Claude-JG
-  - description: revision2026b step RG11.1. The monitor was a command line tool: a second terminal watched a solution file while the simulation wrote it. It now also has MonitorResults(...), documented for use inside a script. If that call blocks until the window is closed, it does nothing that PlotSensor does not already do, and it should not exist as a second way to plot a file. What would make it worth having is that it runs BESIDE the simulation - a thread, a process, or the renderer event loop. This step evaluates those options, says what each costs (matplotlib is not thread safe, a process needs no shared state but needs a protocol), and recommends one. Maintainer, 2026-09-23.
   - effort: MEDIUM (within 16 hours)
   - date raised: 2026-09-23
 - <span class="boldblue">open issue 2594:</span> fourteen figure files in docs/figures are referenced by nothing

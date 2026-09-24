@@ -1776,3 +1776,56 @@ within the release unchanged. A second test says the same from the other side, o
 page. And a third covers the boundary the cut now always hits: a changelog with a **single**
 `## Version` block, where `WriteReleaseNotes` runs to the end of the file.
 
+<a id="rg11-1"></a>
+### RG11.1 — the results monitor, evaluated (2026-09-24, #2610)
+
+The step asked whether `MonitorResults(...)` can run **beside** a simulation, and said that if it
+cannot, it is redundant because *"`PlotSensor` already does that"*. The maintainer asked for an
+evaluation and a recommendation, not for code. Here is what was measured.
+
+**How it blocks.** `ResultsMonitor.Run` (`resultsMonitor.py:693-721`) is **not**
+`plt.show(block=True)`; it is an explicit loop, `while plt.fignum_exists(...)`, driven by
+`plt.pause(updatePeriod)`, which also pumps the tkinter control panel through
+`_ControlPanel.ProcessEvents` instead of a `mainloop`. So the monitor already owns a cooperative
+event loop and gives it up only when the window closes. Two escape hatches exist: `once=True`
+returns right after the first draw, and a suppressed UI (`Agg`, or
+`exu.special.userInterface`) forces `once`, which is why the monitor is harmless in the test
+suite.
+
+**A premise of the step is wrong, and that matters for the conclusion.** `PlotSensor`
+(`plot.py:172`) reads each file **once** and draws it; it has no re-read, no offset tracking and
+no update loop. The incremental reader exists only in `resultsMonitor._IncrementalData`
+(`:278-338`). So the in-script call is **not** a second way of doing what `PlotSensor` does —
+it is the only way to watch a file grow, and dropping it would remove a capability rather than a
+duplicate.
+
+**What the package has to build on.** There is **no Python thread anywhere in `exudyn`** —
+`threading` appears twice, in comments. The renderer's second thread is C++
+(`GlfwClient.cpp:1591`, `std::thread`), and `multiprocessing` is used only for
+parameter-evaluation pools in `processing.py` and `FEM.py`. Whatever runs beside a simulation
+would be the first of its kind in the package.
+
+**The four candidates, judged.**
+
+- **a second thread** — cheapest to write and the worst fit: matplotlib is not thread safe, the
+  monitor drives its own `plt.pause` loop, and the solver holds the GIL for long stretches inside
+  C++, so the plot would freeze exactly while the simulation is interesting;
+- **the renderer's own loop** — there is a periodic callback there, but it ties the monitor to
+  a running renderer and puts matplotlib inside the GLFW thread's cadence. It also fails for the
+  common case: a long solve with no renderer;
+- **drop the in-script call** — ruled out by the measurement above: it is not redundant;
+- **a second process** — **recommended.** The file is already the protocol; the monitor is
+  already a command line tool (`python -m exudyn monitor`); nothing is shared, so no backend,
+  GIL or thread-safety question arises; and the child dies with the script if it is started with
+  the parent's lifetime in mind.
+
+**The recommendation, in the shape it would take**, is a handful of lines in
+`exudyn.misc.resultsMonitor`: a function that starts
+`subprocess.Popen([sys.executable, '-m', 'exudyn', 'monitor', fileName, ...])` and returns the
+handle, with a note that the file has to exist or the monitor waits for it — `WaitForData`
+(`:392`) already does that. The in-script `MonitorResults` stays exactly as it is, for the case
+where blocking is what the user wants.
+
+Not built here, because the maintainer asked for the evaluation alone. It is proposed as
+**RG11.3**.
+

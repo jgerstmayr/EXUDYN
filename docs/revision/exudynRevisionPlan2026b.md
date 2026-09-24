@@ -1250,7 +1250,16 @@ file, so an editor cannot complete them).
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
 
 <a id="rg11-1"></a>
-**RG11.1** *(group RG11; maintainer 2026-09-23)* **The results monitor runs beside the
+**RG11.1** **DONE 2026-09-24** (#2610) — [log](exudynRevisionLog2026b.md#rg11-1) —
+    **The results monitor runs beside the simulation, or it is redundant.** Evaluated, and the
+    recommendation is a **second process**: the file is already the protocol, the command line
+    already exists, and it is a handful of lines around
+    `subprocess.Popen([sys.executable, '-m', 'exudyn', 'monitor', ...])`. One premise of the step
+    was wrong and is corrected below — `PlotSensor` cannot follow a growing file, so the
+    in-script call is **not** redundant today. Building it is **RG11.3**, proposed and not
+    created. The original text follows.
+
+    *(group RG11; maintainer 2026-09-23)* **The results monitor runs beside the
     simulation, or it is redundant** (#2610). `exudyn.misc.resultsMonitor` was a **command line**
     tool: a second terminal watched a solution file grow while the simulation wrote it, which is
     the whole point of a monitor. The documented in-script form
@@ -1273,6 +1282,17 @@ What belongs to no group yet. Three of a kind here are a reason to propose a gro
       it ties the monitor to a running renderer;
     - **drop the in-script call** and document the command line form, which is the honest outcome
       if none of the above is worth its complexity.
+
+<a id="rg11-3"></a>
+**RG11.3** *(group RG11; proposed 2026-09-24 by RG11.1, not started)* **The results monitor beside
+    a running simulation.** RG11.1 evaluated the four ways and recommends a **second process**:
+    the solution file is already the protocol, `python -m exudyn monitor` already exists, nothing
+    is shared so no backend, GIL or thread-safety question arises, and it is a handful of lines
+    around `subprocess.Popen([sys.executable, '-m', 'exudyn', 'monitor', fileName, ...])` that
+    returns the handle. `MonitorResults` stays as it is for the case where blocking is wanted.
+    The open questions are the **lifetime** — whether the child is killed when the script ends
+    or left for the user to close — and whether the same call should serve
+    `SolutionViewer`.
 
 <a id="rg11-2"></a>
 **RG11.2** **DONE 2026-09-23** (#2620) — [log](exudynRevisionLog2026b.md#rg11-2) — *(group

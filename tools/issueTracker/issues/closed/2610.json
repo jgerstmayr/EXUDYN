@@ -1,0 +1,17 @@
+{
+  "number": 2610,
+  "title": "the results monitor must run beside the simulation, or it is redundant",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IDEA",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG11.1. The monitor was a command line tool: a second terminal watched a solution file while the simulation wrote it. It now also has MonitorResults(...), documented for use inside a script. If that call blocks until the window is closed, it does nothing that PlotSensor does not already do, and it should not exist as a second way to plot a file. What would make it worth having is that it runs BESIDE the simulation - a thread, a process, or the renderer event loop. This step evaluates those options, says what each costs (matplotlib is not thread safe, a process needs no shared state but needs a protocol), and recommends one. Maintainer, 2026-09-23.",
+  "dateRaised": "2026-09-23",
+  "deadline": "2027-03-22",
+  "dateResolved": "2026-09-24 10:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/resultsMonitor.py",
+  "releaseNotes": "revision2026b step RG11.1, an evaluation with a recommendation and no code, as the maintainer asked. Measured: MonitorResults blocks in ResultsMonitor.Run, which is not plt.show(block=True) but an explicit while loop driven by plt.pause that also pumps the tkinter panel, so the monitor already owns a cooperative event loop; once=True and a suppressed UI already return after the first draw. A PREMISE OF THE STEP IS WRONG: PlotSensor reads each file once and cannot follow a growing one - the incremental reader exists only in resultsMonitor._IncrementalData - so the in-script call is not redundant, and dropping it would remove a capability rather than a duplicate. There is no Python thread anywhere in exudyn (the renderer's second thread is C++), so whatever runs beside a simulation would be the first. Of the four candidates: a second thread is the worst fit (matplotlib is not thread safe and the solver holds the GIL inside C++), the renderer's loop ties the monitor to a running renderer, dropping the call is ruled out by the measurement, and a SECOND PROCESS is recommended - the file is already the protocol, python -m exudyn monitor already exists, nothing is shared, and it is a handful of lines around subprocess.Popen. Building it is proposed as RG11.3.",
+  "resolvedInVersion": "1.12.48"
+}
