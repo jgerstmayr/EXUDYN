@@ -2098,3 +2098,42 @@ RG6.2 that the layer below the widgets is what a test can reach. Reading the fla
 need a mapped window on the maintainer's screen, which CLAUDE.md rule 11 forbids and which a
 headless CI could not do either. The evidence is the maintainer's own experiment (topmost
 off, hints work) and the two earlier defects with the same cause.
+
+**Confirmed by the maintainer, 2026-09-24**: *"the hints now appear with alwaysTopmost = True
+AND with alwaysTopmost = False, so both works now, also in both modes"* - the renderer and
+the command line.
+
+<a id="rg6-2-25-1"></a>
+### RG6.2.25.1 — the short name IS the value string (2026-09-24, #2640)
+
+RG6.2.25 shortened the entries of the combo box, and the maintainer tried it: *"The list is
+now good, but finally, it still writes OutputVariableType.Torque or so into the field as soon
+as the combo box is collapsed."* The same problem one step later, and for the same reason -
+the value column is as wide as the box was.
+
+The first fix had kept the full name as the truth and shortened only what the list showed.
+That was the wrong place to draw the line, and the report is what showed it: the **cell** is
+also a place where the value is shown, and so are the window of the changes and the marking
+of a changed row. So the rule is turned around: **the short name is the value string**, and
+the full one exists in exactly one function.
+
+It is one line of behaviour in `ConvertValue2String`, which is the single place where a value
+becomes the string everything else compares and copies. Four places had to agree with it:
+
+- `ConvertString2Value` and `CheckType` accept **both** spellings, because a value can still
+  arrive written out - from a user typing it, or from an older script;
+- `CheckType` lists the **short** names when it refuses one, since those are what the dialog
+  offers;
+- `ValueLiteral` puts the type back: `exu.OutputVariableType.Displacement` is what Python
+  needs, and generated code is the only place that does;
+- `OnCellCommit` stops expanding what the box gave it.
+
+**Why the comparison did not break**: `ChangedSettings` compares the string the dialog shows
+on both sides, and both sides come from `ConvertValue2String` - so they moved together. The
+test that would have caught it if they had not is the one that asserts a single changed enum
+is a single change, and not 470 of them.
+
+Measured on the structures themselves: `visualizationSettings` has **two** enum settings and
+`simulationSettings` **two** (`linearSolverType` and the `dynamicSolverType` that #2597 found
+being edited as free text), and all four now read as `Displacement`, `_None`, `EXUdense`,
+`DOPRI5` while their code lines carry the type.

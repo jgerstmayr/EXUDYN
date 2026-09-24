@@ -1,0 +1,17 @@
+{
+  "number": 2640,
+  "title": "the value cell of an enum still shows the type name, so the selected value cannot be read",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "#2635 shortened the list of the combo box, and the maintainer reports what is left: the moment the box collapses, the cell shows 'OutputVariableType.Torque' again, which is the same problem one step later - the value column is as wide as the box was. The short name shall be THE value string: ConvertValue2String produces it, so the cell, the marking of a changed value and the comparison of ChangedSettings all use it, and ValueLiteral puts the type back, because that is the only place where Python needs the full name.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 13:25",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/settingsUtilities.py",
+  "releaseNotes": "The short name is the value string of an enum: ConvertValue2String produces it, so the cell of the dialog, the marking of a changed value and the comparison of ChangedSettings all speak it, and ValueLiteral puts the type back because the generated Python is the only place that needs the full name. CheckType and ConvertString2Value accept both spellings. revision2026b step RG6.2.25.1.",
+  "resolvedInVersion": "1.12.56"
+}

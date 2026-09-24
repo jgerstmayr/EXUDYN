@@ -139,7 +139,8 @@ def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
     
     if vType in dictionaryTypesT:#search for correct type in list
         for iValue in dictionaryTypesT[vType]:
-            if str(iValue) == value:
+            #the dialog shows and the code writes different spellings of one value (#2640)
+            if value in [str(iValue), EnumDisplayName(str(iValue), vType)]:
                 return [iValue, errorMsg]
 
     if (len(vSize) == 2 or                      #must be matrix
@@ -161,7 +162,13 @@ def ConvertValue2String(value, vType, vSize):
     elif vType == 'VectorFloat' or vType == 'MatrixFloat': #special treatment for conversion with according number of digits!
         #return str(np.array(value,dtype=float32).tolist()) #still produces float64 converted numbers
         return str(np.array(value,dtype=float32).astype(str).tolist()).replace("'","") #workaround to produce single-precition numbers ...
-    return str(value)
+
+    #AN ENUM IS SHOWN WITHOUT ITS TYPE (#2640). This is the one place a value becomes the
+    #string that the dialog puts in a cell and that ChangedSettings compares, so shortening
+    #it here shortens it everywhere at once - and the full name comes back in ValueLiteral,
+    #which is what writes the code. A value that is not an enum cannot start with its own
+    #type name, so this costs the others nothing.
+    return EnumDisplayName(str(value), vType)
 
 #check if a valueStr corresponds to correct type and size; return True, if correct; False if type incorrect
 #returns [isValid, errorMSG]
@@ -178,8 +185,9 @@ def CheckType(valueStr, vType, vSize, dictionaryTypesT=None):
     #reported as "invalid array or matrix" - which the combo box hid, because it never asks
     #CheckType (#2597)
     if dictionaryTypesT is not None and vType in dictionaryTypesT:
-        allowed = [str(value) for value in dictionaryTypesT[vType]]
-        if valueStr in allowed:
+        allowed = [EnumDisplayName(str(value), vType)
+                   for value in dictionaryTypesT[vType]]
+        if EnumDisplayName(valueStr, vType) in allowed:
             return [True, '']
         return [False, vType + ' must be one of: ' + ', '.join(allowed)]
     
@@ -273,8 +281,11 @@ def EnumDisplayName(valueStr, vType):
 
     An enum is edited in a combo box as wide as the value column, and every entry of a list
     begins with the same type name - which is already in the type column beside it - so the
-    part that tells the entries apart was pushed out of sight (#2635). Only what the box
-    SHOWS is shortened; what the settings structure holds is the full name.
+    part that tells the entries apart was pushed out of sight (#2635). Since #2640 this is
+    **the** value string of an enum - what `ConvertValue2String` produces, what the cell
+    shows, and what `ChangedSettings` compares - because shortening only the list left the
+    cell unreadable the moment the box collapsed. The full name lives in exactly one place:
+    `ValueLiteral`, which writes the Python.
 
     Args:
         valueStr: the value as str() writes it
@@ -288,7 +299,7 @@ def EnumDisplayName(valueStr, vType):
 
 
 def EnumFullName(displayName, vType):
-    """the inverse of EnumDisplayName: the name everything but the combo box uses
+    """the inverse of EnumDisplayName: the name Python needs, which `ValueLiteral` writes
 
     Args:
         displayName: the value as the combo box shows it
@@ -317,7 +328,8 @@ def ValueLiteral(valueStr, vType, dictionaryTypesT=None):
     if vType in ['String', 'FileName']:
         return repr(valueStr)
     if vType != 'bool' and dictionaryTypesT is not None and vType in dictionaryTypesT:
-        return 'exu.' + valueStr           #an enum needs the module it lives in
+        #the full name, which is what Python needs: the dialog shows the short one (#2640)
+        return 'exu.' + EnumFullName(valueStr, vType)
     return valueStr
 
 

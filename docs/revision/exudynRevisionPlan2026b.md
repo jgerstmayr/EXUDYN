@@ -645,6 +645,15 @@ This group is that revision and what has to happen before it can start.
     and the type is in the column beside it. The list shows the entry without its type; the
     settings structure and the generated code line keep the full name.
 
+<a id="rg6-2-25-1"></a>
+**RG6.2.25.1** **DONE 2026-09-24** (#2640) — [log](exudynRevisionLog2026b.md#rg6-2-25-1) —
+    **The value cell showed the type name again as soon as the combo box collapsed**
+    *(maintainer, 2026-09-24)*. RG6.2.25 shortened the list and left the cell, which is the
+    same problem one step later. The short name is **the** value string of an enum now -
+    `ConvertValue2String` produces it, so the cell, the marking of a changed value and the
+    comparison of `ChangedSettings` all speak it - and `ValueLiteral` puts the type back,
+    because the generated Python is the only place that needs the full name.
+
 <a id="rg6-2-26"></a>
 **RG6.2.26** **DONE 2026-09-24** (#2639) — [log](exudynRevisionLog2026b.md#rg6-2-26) —
     **The tooltips were invisible while the dialog is topmost** *(maintainer, 2026-09-24)*, in

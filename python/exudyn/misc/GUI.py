@@ -1118,7 +1118,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         vType = self.typeStorage[item]
         vSize = self.sizeStorage[item]
         if vType in self.dictionaryTypesT:
-            valueStr = EnumFullName(self.cellCombo.get(), vType)
+            valueStr = self.cellCombo.get()   #short, like every other value (#2640)
         else:
             valueStr = self.editItemVar.get()
 

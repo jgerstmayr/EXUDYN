@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 54 | 1.12.55 |
+| 1.12 | Metheney | 55 | 1.12.56 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.56** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the value cell of an enum still shows the type name, so the selected value cannot be read (#2640)
+  - description: \#2635 shortened the list of the combo box, and the maintainer reports what is left: the moment the box collapses, the cell shows 'OutputVariableType.Torque' again, which is the same problem one step later - the value column is as wide as the box was. The short name shall be THE value string: ConvertValue2String produces it, so the cell, the marking of a changed value and the comparison of ChangedSettings all use it, and ValueLiteral puts the type back, because that is the only place where Python needs the full name.
+  - **notes:** The short name is the value string of an enum: ConvertValue2String produces it, so the cell of the dialog, the marking of a changed value and the comparison of ChangedSettings all speak it, and ValueLiteral puts the type back because the generated Python is the only place that needs the full name. CheckType and ConvertString2Value accept both spellings. revision2026b step RG6.2.25.1.
+  - date resolved: **2026-09-24 13:25**, date raised: 2026-09-24
 - **1.12.55** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the tooltips of the settings dialog are invisible while the dialog is topmost (#2639)
   - description: The pop-up hints of the tree rows and of the buttons do not appear when the dialog is topmost, which it is by default and in every dialog of 'python -m exudyn dialogs'. Turning off visualizationSettings.dialogs.alwaysTopmost and reopening the dialog makes them work, which names the cause: the tooltip is a Toplevel of the dialog without the topmost flag, and on Windows a topmost window is always above one that is not - the same mechanism as the window of the changes in \#2621, which had to be given the flag before it could be seen. The tooltip needs it too; the dialog must stay topmost, because it blocks the render window.
   - **notes:** The tooltip window of the settings dialog carries -topmost and is lifted when it is placed, so the pop-up hints appear while the dialog is topmost - which it stays, because it blocks the render window. Same mechanism as \#2621 and \#2614: on Windows a topmost window is a stacking band, and a Toplevel without the flag can never be drawn above one that has it. revision2026b step RG6.2.26.

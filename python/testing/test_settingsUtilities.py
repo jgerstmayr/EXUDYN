@@ -27,7 +27,8 @@ import pytest
 import exudyn
 from exudyn.misc.settingsUtilities import (ChangedSettings, ChangedSettingsCode,
                                            EnumDisplayName, EnumFullName,
-                                           GetComboBoxListsDict,
+                                           CheckType, ConvertString2Value,
+                                           GetComboBoxListsDict, SettingsLeafList,
                                            PrintChangedSettings, SettingsValueStrings)
 
 
@@ -148,3 +149,37 @@ def testWhatCarriesNoTypeIsLeftAlone():
     assert EnumFullName('True', 'bool') == 'True'
     assert EnumFullName('', 'ItemType') == ''
     assert EnumFullName('ItemType.Node', 'ItemType') == 'ItemType.Node'
+
+
+def testTheValueStringOfAnEnumIsTheShortName():
+    """#2640: the cell showed OutputVariableType.Torque again as soon as the box collapsed"""
+    settings = exudyn.VisualizationSettings()
+    settings.contour.outputVariable = exudyn.OutputVariableType.Displacement
+    leaves = SettingsLeafList(settings.GetDictionaryWithTypeInfo())
+    shown = {path: valueStr for (path, _, valueStr, _, _, _) in leaves}
+    assert shown['contour.outputVariable'] == 'Displacement'
+
+    #and the code that reproduces it carries the type, because Python needs it there
+    assert ChangedSettingsCode(settings, comment=False) == \
+        'SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement'
+
+
+def testOneChangedEnumIsOneChange():
+    """the comparison is on the shown string, so both sides had to move together (#2640)"""
+    settings = exudyn.VisualizationSettings()
+    assert ChangedSettings(settings) == [], 'nothing differs from the defaults'
+    settings.interactive.highlightItemType = exudyn.ItemType.Node
+    assert [path for (path, _) in ChangedSettings(settings)] == ['interactive.highlightItemType']
+
+
+def testTheShortAndTheLongNameAreBothAccepted():
+    """a settings file, or a user, may still say the full one (#2640)"""
+    types = GetComboBoxListsDict(exudyn)
+    for value in ['Displacement', 'OutputVariableType.Displacement']:
+        assert CheckType(value, 'OutputVariableType', [1], types) == [True, '']
+        assert ConvertString2Value(value, 'OutputVariableType', [1], types)[0] \
+            == exudyn.OutputVariableType.Displacement
+
+    (isValid, message) = CheckType('Nonsense', 'OutputVariableType', [1], types)
+    assert not isValid and 'Displacement' in message, 'the message lists the short names'
+    assert 'OutputVariableType.Displacement' not in message
