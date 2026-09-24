@@ -10,7 +10,7 @@ You can view and download this file on Github: [exceptionTypesTest.py](https://g
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  What an Exudyn error looks like from Python (revision2026 step R6.3.7).
+# Details:  What an Exudyn error looks like from Python.
 #           Ten things a user can get wrong - a bad item number, a parameter of the wrong type, a
 #           size that does not fit, a feature an item does not have, a model the solver cannot
 #           solve, and a Python user function that raises - each provoked on purpose, caught, and
@@ -18,9 +18,9 @@ You can view and download this file on Github: [exceptionTypesTest.py](https://g
 #
 #           It is a test model and a record at the same time. As a test it checks one thing only:
 #           every case must raise SOMETHING. The classes and the messages are printed rather than
-#           asserted, because they are what revision2026 steps R6.3.5 and R6.3.6 change; asserting
-#           them here would mean editing this file at every step, and the log of a test run already
-#           shows what they were on that day.
+#           asserted: pinning a class or a wording here would mean editing this file whenever
+#           one of them is improved, and the log of a test run already shows what they were
+#           on that day.
 #
 # Usage:    Run it as it is and read the table.
 #           To see an error the way an IDE shows it - the traceback in Spyder or VS Code - set
@@ -182,8 +182,8 @@ else:
             silent += 1
         except BaseException as exception:
             message = str(exception).replace('\n', ' | ')
-            #since revision2026 step R6.3.8 (#2537) an Exudyn exception carries the error that
-            #caused it as __cause__ - the object, with its traceback - instead of only its words
+            #an Exudyn exception carries the error that caused it as __cause__ - the object,
+            #with its traceback - and not only its words (#2537)
             cause = exception.__cause__
             if cause is not None:
                 message = '[__cause__ ' + type(cause).__name__ + ': ' + str(cause) + '] ' + message

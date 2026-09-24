@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Behaviour record of the Python/C++ parameter conversion (revision2026 step R4.4.3.1):
+# Details:  Behaviour record of the Python/C++ parameter conversion:
 #           a fixed set of probe values is written into every parameter of every item and of the
 #           simulation and visualization settings, through each access path, and the outcome is
 #           compared with parameterConversionTestReference.txt. An outcome is the exception type
@@ -93,7 +93,7 @@ def Describe(value):
 records = {}
 
 def SetRangeChecks(active):
-    """exudyn.special.exceptions.parameterRangeChecks, which exists since revision2026 step R4.4.3.4b"""
+    """exudyn.special.exceptions.parameterRangeChecks (#2464)"""
     if hasattr(exu.special.exceptions, 'parameterRangeChecks'):
         exu.special.exceptions.parameterRangeChecks = active
 
@@ -127,7 +127,7 @@ for className, itemClass in inspect.getmembers(itemInterface, inspect.isclass):
     #the base item is created with range checks switched off, because some defaults violate their
     #range (e.g. coordinate=InvalidIndex() for a UInt, #2426); a default that is rejected when written
     #back with checks on is replaced by 1 in the dict and class paths, so those paths probe one
-    #parameter at a time instead of failing on another one. Before revision2026 step R4.4.3.4b nothing is replaced.
+    #parameter at a time instead of failing on another one.
     mbs = SC.AddSystem()
     with contextlib.redirect_stdout(io.StringIO()):
         try:
@@ -154,7 +154,7 @@ for className, itemClass in inspect.getmembers(itemInterface, inspect.isclass):
 
     for member in members:
         GetParameter = lambda mbs, i: getattr(mbs, 'Get' + kind + 'Parameter')(i, member)
-        #left out of the dict: the default is kept ('str=default'), a must-be-given parameter raises (revision2026 step R4.13)
+        #left out of the dict: the default is kept ('str=default'), a must-be-given parameter raises
         def RunOmit():
             mbs2 = SC.AddSystem()
             value = Describe(GetParameter(mbs2, Add(mbs2, {m: v for m, v in defaults.items() if m != member})))

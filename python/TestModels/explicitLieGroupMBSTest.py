@@ -222,7 +222,7 @@ exu.Print(val)
 
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-#2026-09-11 (revision2026 step R5.9): shortened from 1s/16000 steps to 0.1s/1600 steps when the
+#shortened from 1s/16000 steps to 0.1s/1600 steps when the
 #model was added to the test suite. The STEP SIZE is unchanged, so the integrator is exercised
 #exactly as before - only less simulated time. Reference value taken from the shortened model.
 fact = 1600

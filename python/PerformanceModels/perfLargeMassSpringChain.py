@@ -5,11 +5,11 @@
 #           small-system tests in the performance suite. perfRigidPendulum and the two
 #           spring-damper tests run a handful of coordinates for ~1e6 steps, so they measure
 #           per-step overhead; their system vectors are 3-20 elements long and no vectorized
-#           linear algebra can show up in them (revision2026 step R2.10, issue #2397).
+#           linear algebra can show up in them (#2397).
 #
 #           This model instead builds a chain of nBodies bodies coupled by spring-dampers and
 #           integrates it over three sizes, so the summary shows how the cost scales rather than
-#           one point on the curve (revision2026 step R5.15, issue #2460). In the default rigid
+#           one point on the curve (#2460). In the default rigid
 #           body mode every body carries 7 coordinates and the connectors are RigidBodySpringDamper
 #           elements, which puts the weight on the OBJECT computation - rotation parameters,
 #           local-to-global transformations, connector jacobians - instead of on the linear solver.

@@ -4,8 +4,6 @@
 # Details:  performance test with parallel computation and particles: the same model as
 #           TestModels/generalContactSpheresTest.py, but 100 times as many spheres and
 #           solved with 1, 4 and 8 threads to show how the contact computation scales.
-#           The two were one file with a performance switch in it until revision2026
-#           step R3.9 (#2513).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-11-01
@@ -219,7 +217,7 @@ simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerat
 simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
 
 #the same system solved with several thread counts, to show how the contact computation
-#scales; every run is reported separately (revision2026 step R5.15, issue #2460)
+#scales; every run is reported separately (#2460)
 import testRunnerTools
 
 for numberOfThreads in [1, 4, 8]:

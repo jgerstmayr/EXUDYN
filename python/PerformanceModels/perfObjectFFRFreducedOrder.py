@@ -29,7 +29,7 @@ import numpy as np
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 #the rotor mesh is shared with eight test models, so it stays in TestModels/testData/ rather
-#than being copied here (revision2026 step R3.9, #2513). runPerformanceTests.py runs with
+#than being copied here (#2513). runPerformanceTests.py runs with
 #python/PerformanceModels/ as working directory.
 inputFileName = '../TestModels/testData/rotorDiscTest'
 

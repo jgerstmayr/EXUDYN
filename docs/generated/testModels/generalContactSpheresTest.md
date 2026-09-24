@@ -213,7 +213,7 @@ simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerat
 simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
 
 #one run with a single thread, which is what makes this test reproducible. The scaling over
-#thread counts is measured by generalContactSpheresPerf.py (revision2026 step R3.9, #2513).
+#thread counts is measured by generalContactSpheresPerf.py (#2513).
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)

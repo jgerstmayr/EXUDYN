@@ -422,7 +422,7 @@ if vectorTests:
                 exu.Print('. res sym:\n',res[0], ',\n  res Py:\n', res[1], s)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#checks added 2026-09-17 (revision2026 step R5.4.2, #2479): everything above compares NUMBERS
+#checks (#2479): everything above compares NUMBERS
 #against Python's math module. These check what nothing checked at all - Diff, the VariableSet,
 #named variables without recording, __str__ and the error paths. They are written as a FUNCTION so
 #that every symbolic object they create is released on return, which keeps the new/delete balance

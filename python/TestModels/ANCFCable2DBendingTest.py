@@ -1,13 +1,14 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  ANCFCable2DBendingTest, one of the ten small tests that lived in python/testing/modelUnitTests.py
-#           from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test
-#           model. The model computes an ERROR against a reference value written into it back
-#           then, so its result is that error and its reference solution is 0.
+# Details:  A cantilever of `ANCFCable2D` elements, clamped at one end and pulled down by a tip
+#           force. Solved dynamically once and statically twice, the second time with the Newton
+#           tolerances at 1e-14 so that it converges onto the MATLAB reference it is compared with.
+#           The model compares against a reference value written into it, so its
+#           result is that difference and its reference solution is 0 (#2632).
 #
 # Author:   Johannes Gerstmayr
-# Date:     2019-11-01 (as a function), 2026-09-24 (as a test model)
+# Date:     2019-11-01, reworked 2026-09-24
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #

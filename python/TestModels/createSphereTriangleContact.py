@@ -97,8 +97,7 @@ for methodNum, method in enumerate(methodList):
     impactModel = 2
 
     isExplicitSolver = False
-    tEnd = 0.25     #end time of simulation; 2026-09-11 (revision2026 step R5.9): was 0.65, shortened for the
-                    #test suite with the step size unchanged
+    tEnd = 0.25     #shortened for the test suite, with the step size unchanged (#2494)
     stepSize = 2e-4 #*10
 
     g = 9.81
@@ -264,6 +263,4 @@ exu.sys['testResult'] = testSolution
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-#NOTE: the SolutionViewer call that used to sit here was guarded by '(not testIsActive) and False',
-#so it could never run; removed 2026-09-11 (revision2026 step R5.9).
 

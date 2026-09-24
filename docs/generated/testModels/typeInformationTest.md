@@ -10,7 +10,7 @@ You can view and download this file on Github: [typeInformationTest.py](https://
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test of exudyn.types (revision2026 step R4.10.4): the generated type information agrees
+# Details:  Test of exudyn.types: the generated type information agrees
 #           with the C++ module (enum values, item parameters), and the query functions agree with
 #           mbs.Assemble() for marker/object and connector/marker combinations that are built here.
 #           The result is the number of disagreements (0).

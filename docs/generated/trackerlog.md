@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.63.dev1
 - last change = 2026-09-24
-- Number of issues = 2648
+- Number of issues = 2649
 - Number of resolved issues = 2377 (63 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the published pages tell the reader about the revision instead of about themselves (#2648)
+  - description: The rule of CLAUDE.md 6a and CODING\_STYLE.md section 6 - documentation says what IS, not what it was - applied to what is already there. Measured 2026-09-24: 887 mentions of revision2026 in 257 files outside docs/revision/. The maintainer's example is the header of python/TestModels/GraphicsDataTest.py, which opens with 'one of the ten small tests that lived in python/testing/modelUnitTests.py from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test model' - the test models are documentation pages, and a reader of that page wants to know what the model computes. Tier by tier: the published model headers and the definitions, which are the reference manual, then the manual and the developer pages, then the comments in src/ and tools/, where the older rule already says that a comment cites the issue and not the plan step. What must survive is the issue number, which a reader of the documentation can follow, and any sentence carrying a measurement or a decision; what goes is the name a thing had before, when it changed, and which plan step changed it. revision2026b step RG3.13.
+  - date raised: 2026-09-24
 - `CHECK` `raised by: Claude-JG` fourteen figure files in docs/figures are referenced by nothing (#2594)
   - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.
   - **remarks:** Copies are in tmp/unusedFigures/ with a README naming the issue; the originals are untouched in docs/figures/ and still in git, because tmp/ is git-ignored and a move would have taken them out of version control. Waiting for the maintainer to look at them (revision2026b step RG3.8).; RG3.8.1 (2026-09-24): the maintainer drew ContactFrictionCircleCable2D.svg, ...stickingPos.svg and ...normals.svg, and the three figure directives in definitions/itemDefsObjects.py now read docs/figures/\<name\>.\* - Sphinx picks the SVG for html and the PDF for LaTeX from one name, verified in the built html. Still open in RG3.8: the four lost figures (generalContactANCF2Dcircle, generalContactSpheres, ObjectJointALEmoving2D, intro2.jpg) and the further SVG conversions listed in the log.
