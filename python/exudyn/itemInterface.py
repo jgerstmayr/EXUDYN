@@ -5128,7 +5128,7 @@ class VObjectJointGeneric:
 class ObjectJointGeneric:
     r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers.
     
-    An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
+    An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. addExampleImage{UniversalJoint}
     
     Args:
         name: constraints's unique name
@@ -5227,7 +5227,7 @@ class VObjectJointRevoluteZ:
 class ObjectJointRevoluteZ:
     """A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint :math:`z`-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate.
     
-    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), theDoc.pdf, for two rigid bodies (or ground). addExampleImage{RevoluteJointZ}
+    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), theDoc.pdf, for two rigid bodies (or ground). addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}
     
     Args:
         name: constraints's unique name
@@ -5380,6 +5380,8 @@ class VObjectJointSpherical:
 
 class ObjectJointSpherical:
     """A spherical joint, which constrains the relative translation between two position based markers.
+    
+    addExampleImage{SphericalJoint}
     
     Args:
         name: constraints's unique name
