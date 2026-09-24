@@ -975,17 +975,38 @@ def testTheChangelogLeavesOutWhatChangedNothing(tracker):
     assert '(#' + str(ideaNumber) + ')' not in text
 
 
-def testTheChangelogIsOrderedNewestFirstAndGroupedByRelease(tracker):
+def testTheChangelogHoldsTheCurrentReleaseOnly(tracker):
+    """revision2026b step RG3.10 (#2599): the earlier releases are on the tracker page, in
+    full, so the changelog is what somebody upgrading reads and nothing is printed twice"""
     IntoTheRelease(tracker)     #a release with no closed issue has no section, and rightly so
     text = tracker.ChangelogText()
     current = tracker.CurrentRelease()
-    #the current release comes first and says so
-    assert text.index('## Version ' + current['version']) < text.index('## Version 1.10')
-    assert '(current)' in text.split('## Version ' + current['version'])[1].split('\n')[0]
+
+    assert '## Version ' + current['version'] in text
+    assert '(current)' in text.split('## Version ' + current['version'])[1].split(chr(10))[0]
+    #exactly one release section, and the table above it still names them all
+    assert text.count(chr(10) + '## Version ') == 1
+    assert '| 1.10 |' in text, 'the overview table is the history at a glance and stays'
+    assert chr(10) + '## Version 1.10' not in text
+
     #1.10.9 must not sort after 1.10.10
     versions = re.findall(r'\*\*(\d+\.\d+\.\d+)\*\*', text)
     keys = [[int(part) for part in version.split('.')] for version in versions]
     assert keys == sorted(keys, reverse=True)
+
+
+def testTheTrackerPageHoldsEverythingBeforeTheCurrentRelease(tracker):
+    """the other half of the split: no issue of the current release is on that page, and the
+    heading says which version it stops before"""
+    IntoTheRelease(tracker)
+    text = tracker.MarkdownText()
+    current = tracker.CurrentRelease()
+
+    assert ('## Resolved issues and resolved bugs before version ' + current['version']
+            in text)
+    assert '### Version ' + current['version'] + chr(10) not in text
+    assert '- Version ' + current['version'] + '.' not in text
+    assert '### Version 1.10' in text, 'the earlier releases are still here, in full'
 
 
 def testTheGeneratedPagesAreCheckedAgainstTheStore(tracker, tmp_path):
@@ -1030,6 +1051,32 @@ def testTheReleaseNotesAreTheCurrentSectionOfTheChangelog(tmp_path, monkeypatch)
     assert 'the newest thing' in notes and 'something else' in notes
     #and it stops at the previous release: that one has been published already
     assert '1.11.235' not in notes and 'McLaughlin' not in notes
+
+
+def testTheReleaseNotesRunToTheEndOfAChangelogWithOneRelease(tmp_path, monkeypatch):
+    """the boundary the cut always hits since revision2026b step RG3.10: CHANGELOG.md holds
+    the current release and nothing after it, so there is no second '## Version ' to stop at
+    """
+    commands = ExudevCommands()
+    monkeypatch.setattr(commands.runner, 'RepositoryRoot', lambda: str(tmp_path))
+    monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.12.3')
+
+    (tmp_path / 'CHANGELOG.md').write_text(
+        '# Changelog' + chr(10)*2 + 'some prose' + chr(10)*2
+        + '| release | name |' + chr(10) + '|---|---|' + chr(10)
+        + '| 1.12 | Metheney |' + chr(10) + '| 1.11 | McLaughlin |' + chr(10)*2
+        + '## Version 1.12 - Metheney (current)' + chr(10)*2
+        + '- **1.12.3** `FIX` the newest thing (#99)' + chr(10)
+        + '- **1.12.2** `DOCU` something else (#98)' + chr(10),
+        encoding='utf-8')
+
+    assert commands.WriteReleaseNotes() == 0
+
+    notes = (tmp_path / 'dist' / 'RELEASE_NOTES.md').read_text(encoding='utf-8')
+    assert notes.startswith('# Exudyn 1.12.3')
+    assert 'the newest thing' in notes and 'something else' in notes
+    #the table above the release block is prose, not release notes
+    assert 'McLaughlin' not in notes
 
 
 def testTheReleaseTagIsTheVersion(monkeypatch):

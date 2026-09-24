@@ -273,7 +273,14 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     `docs/dev/README.md` carries them now, which nests them in the html sidebar as well.
 
 <a id="rg3-10"></a>
-**RG3.10** *(group RG3; maintainer 2026-09-23)* **`CHANGELOG.md` and the issue tracker page hold
+**RG3.10** **DONE 2026-09-24** (#2599) — [log](exudynRevisionLog2026b.md#rg3-10) —
+    **`CHANGELOG.md` and the issue tracker page hold the same list twice.** They do not any more:
+    the changelog is the **current release** with a table of every release above it (2440 lines
+    to **124**), and the tracker page is *"Resolved issues and resolved bugs **before version
+    1.12**"* (9153 to **8923**). Every issue is published, in exactly one place. The original
+    text follows.
+
+    *(group RG3; maintainer 2026-09-23)* **`CHANGELOG.md` and the issue tracker page hold
     the same list twice** (#2599). Both are written by `issueTracker.py` from the same store,
     both list every resolved issue per release: the changelog is **2384 lines**, the tracker page
     **8987**, and about 2370 lines of the first are a shorter rendering of what the second says

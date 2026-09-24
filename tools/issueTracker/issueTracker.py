@@ -666,11 +666,14 @@ def MarkdownText():
              '- Number of resolved issues = ' + str(totalResolved)
              + ' (' + str(numberOfResolved) + ' in current version)\n\n')
 
-    text += ('## Resolved issues and resolved bugs\n\n'
+    #the current release is in CHANGELOG.md, in full and with its release notes; this page
+    #carries everything before it, so that no issue is printed twice (revision2026b step RG3.10)
+    text += ('## Resolved issues and resolved bugs before version ' + releaseString + '\n\n'
              'The following list contains the issues which have been **RESOLVED** in the '
-             'according version:\n\n')
+             'according version. The issues of the current release, ' + releaseString + ', are '
+             'in the {ref}`changelog <sec-changelog>`.\n\n')
 
-    resolved = '### Version ' + releaseString + '\n\n'
+    resolved = ''
     openIssues = ''
     bugs = ''
 
@@ -723,7 +726,9 @@ def MarkdownText():
 
         title = ToMarkdown(issue['title'].strip(' '))
 
-        if issue['status'] == 'RESOLVED' and issue['type'] not in typesNotInReleaseNotes:
+        inCurrentRelease = (rNew == (majorCurrent, microCurrent))
+        if (issue['status'] == 'RESOLVED' and issue['type'] not in typesNotInReleaseNotes
+                and not inCurrentRelease):
             entry = ('- Version '+str(rNew[0])+'.'+str(rNew[1])+'.'+str(vIssueMicro)+': ')
             if issue['type'] == 'BUG':
                 entry += Colour('textred', 'resolved BUG '+IssueNumberString(issue))+': '+title
@@ -770,6 +775,11 @@ def MarkdownText():
 #issue, and the earlier ones as one line per issue - which is what somebody upgrading reads.
 changelogFile = 'CHANGELOG.md'
 changelogDetailedReleases = 1   #how many releases are printed WITH their release notes
+changelogReleases = 1           #how many releases are printed AT ALL (revision2026b step RG3.10,
+                                ##2599): the earlier ones are on the tracker page in full, and
+                                #2370 of the 2440 lines of this file were a shorter rendering of
+                                #what that page says with the author, the description and both
+                                #dates. One list, in one place.
 
 
 def ReleaseOfVersionString(version):
@@ -820,7 +830,11 @@ def ChangelogText():
              '<sec-issuetracker>`. Issues that were closed without being resolved are in neither '
              'list: they changed nothing - which is why a release can span more version '
              'numbers than it has lines here.\n\n'
-             'This file is generated; it is written by the tracker whenever an issue closes.\n\n')
+             'This file is generated; it is written by the tracker whenever an issue closes.'
+             '\n\n'
+             '**Only the current release is listed below.** Every earlier release is on the '
+             '{ref}`issue tracker page <sec-issuetracker>`, with more about each issue than this '
+             'file carries; the table above is the whole history at a glance.\n\n')
 
     #the overview: one row per release
     text += '| release | name | resolved issues | highest version |\n|---|---|---|---|\n'
@@ -831,7 +845,7 @@ def ChangelogText():
                  + str(len(perRelease[release])) + ' | ' + highest + ' |\n')
     text += '\n'
 
-    for (position, release) in enumerate(order):
+    for (position, release) in enumerate(order[:changelogReleases]):
         name = ReleaseName(release)
         text += ('## Version ' + release + (' - ' + name if name else '')
                  + (' (current)' if position == 0 else '') + '\n\n')

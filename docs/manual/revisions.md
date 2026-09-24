@@ -82,9 +82,12 @@ items, the Python utilities, the examples and the test models — is written by 
 the definitions and the docstrings. There is no PDF any more: the same content is the HTML
 documentation.
 
-**`CHANGELOG.md`** is new: every resolved issue of every release, newest first. The version number
-says where an issue landed — the micro version *is* the count of issues closed in a release, so
-1.10.160 is the 160th issue closed in release 1.10.
+**`CHANGELOG.md`** is new: every resolved issue of the **current** release, newest first, with
+a table of every release above it. The version number says where an issue landed — the micro
+version *is* the count of issues closed in a release, so 1.10.160 is the 160th issue closed in
+release 1.10. The earlier releases are on the issue tracker page, which carries more about each
+issue than the changelog does; since revision2026b step RG3.10 the two do not print the same list
+twice.
 
 ### What changed behind the scenes
 

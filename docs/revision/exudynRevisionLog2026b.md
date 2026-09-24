@@ -1743,3 +1743,36 @@ screen because the serial runner never called `SuppressAll`, the ten "unit tests
 to have been running since V1.6, and `itemHeaderEmitter.py` was writing files in the locale
 encoding. None of them was found by reading.
 
+<a id="rg3-10"></a>
+### RG3.10 — one list, in one place (2026-09-24, #2599)
+
+Both pages are written by `issueTracker.py` from the same store, and both listed every resolved
+issue of every release: `CHANGELOG.md` **2440** lines, `docs/generated/trackerlog.md` **9153**, of
+which about 2370 were a shorter rendering of what the other says in full — the tracker page adds
+the author, the description, the remarks and both dates. Roughly 35 duplicated pages in the PDF.
+
+The split the maintainer decided:
+
+- **`CHANGELOG.md` is the current release**, with its release notes, and the table of every
+  release stays above it — that table is the history at a glance and costs 16 lines. **124
+  lines**, which is what somebody upgrading reads.
+- **the tracker page is everything before it**, under a heading that says so:
+  *"Resolved issues and resolved bugs before version 1.12"*, with a line pointing at the changelog
+  for the current one. **8923 lines.**
+
+Every issue is still published and still searchable; none is published twice.
+
+**Two details decided where the text goes.** The pointer to the tracker page is in the **intro
+prose, above** the release block, because `exudev release` cuts `RELEASE_NOTES.md` from the first
+`## Version ` heading to the next one *or to the end of the file* — and with one release block
+there is no next one, so anything below it would land in the release notes. And
+`tools/issueTracker/trackerlog.html`, which keeps every issue for local browsing, needed nothing:
+it is untracked and git-ignored already.
+
+**The tests had to be turned around, not extended.** One of them asserted that the changelog's
+current release comes *before* `## Version 1.10— ` which is now absent. It asserts the new
+property instead: exactly one release section, the table still naming 1.10, and the ordering
+within the release unchanged. A second test says the same from the other side, on the tracker
+page. And a third covers the boundary the cut now always hits: a changelog with a **single**
+`## Version` block, where `WriteReleaseNotes` runs to the end of the file.
+
