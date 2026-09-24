@@ -1120,6 +1120,14 @@ file, so an editor cannot complete them).
       carries the word — `LOW EFF`, `MEDIUM EFF`, `HIGH EFF`, `HUGE EFF` — and the **priority**
       tag stays plain — `LOW`, `NORMAL`, `HIGH`.
 
+<a id="rg10-2-1"></a>
+**RG10.2.1** **DONE 2026-09-24** (#2636) — [log](exudynRevisionLog2026b.md#rg10-2-1) —
+    **The search of `exudev issue serve` missed most fields, and the list stopped at 400**
+    *(maintainer, 2026-09-24)*. The text search read four fields, so neither author could be
+    searched for, and the listing sent the newest 400 of 2,637 rows with no paging, which put
+    everything older than about #2240 out of reach. The search reads every field; the listing sends
+    what matched.
+
 <a id="rg10-3"></a>
 **RG10.3** **DONE 2026-09-23** (#2617) — [log](exudynRevisionLog2026b.md#rg10-3) — *(group
     RG10; maintainer 2026-09-23)* **`exudev` does not say how long a step took.** The batch

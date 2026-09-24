@@ -1,0 +1,17 @@
+{
+  "number": 2636,
+  "title": "issue serve: the search misses fields, and the list stops at 400 issues",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Two things in the web view of the issue tracker. The text search looks at title, description, workingRemarks and releaseNotes only, so an author cannot be searched for although every issue names two of them - who raised it and who resolved it - and neither can a file, a plan step or a version. And the listing sends at most 400 rows, so the early issues cannot be reached by scrolling at all: the store holds more than 2500. The search shall cover every field of an issue, and the listing shall send what matches.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 12:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issueServer.py",
+  "releaseNotes": "The web view of the issue tracker searches every field of an issue, the two authors included, and its list is no longer capped at 400 rows, so the oldest issues can be reached. revision2026b step RG10.2.1.",
+  "resolvedInVersion": "1.12.52"
+}

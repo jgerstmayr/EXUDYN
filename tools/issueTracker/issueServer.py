@@ -43,9 +43,11 @@ if os.path.dirname(os.path.abspath(__file__)) not in sys.path:
 import issueStore                                                             #noqa: E402
 import issueTracker                                                           #noqa: E402
 
-#how many issues one listing sends at most; the whole store is 2,568 issues and nobody reads them
-#in one page, while a search that finds 300 has to say so rather than pretend there were 200
-listLimit = 400
+#how many issues one listing sends at most, 0 for all of them. It was 400, which put the
+#first 2,200 issues out of reach: the list is sorted newest first and there is no paging, so
+#no amount of scrolling reached them (#2636). All of them is 2,637 rows and 550 KB over a
+#loopback socket, which the browser renders in well under a second.
+listLimit = 0
 
 
 #%%******************************************************************************************************
@@ -69,8 +71,13 @@ def IssueSummary(issue):
 
 
 def MatchingIssues(query):
-    """the issues a filter bar asks for: status, the three enum fields, and a text search over
-    the title, the description and the remarks"""
+    """the issues a filter bar asks for: status, the three enum fields, and a text search
+
+    The search reads EVERY field of an issue and not four of them, so the authors are
+    searchable - both of them, who raised it and who resolved it - and so are the file, the
+    plan step, the version it was resolved in and the dates (#2636). The number is searched
+    separately and exactly, so both "#2600" and "2600" find that issue.
+    """
     issues = list(reversed(issueTracker.GetIssues()))
 
     status = (query.get('status') or 'open').lower()
@@ -89,8 +96,8 @@ def MatchingIssues(query):
         def Matches(issue):
             if search.lstrip('#').isdigit() and str(issue['number']) == search.lstrip('#'):
                 return True
-            return any(search in str(issue[name]).lower()
-                       for name in ['title', 'description', 'workingRemarks', 'releaseNotes'])
+            return any(search in str(value).lower()
+                       for (name, value) in issue.items() if name != 'number')
         issues = [issue for issue in issues if Matches(issue)]
 
     return issues
@@ -131,7 +138,8 @@ def HandleGet(path, query):
 
     if path == '/api/issues':
         issues = MatchingIssues(query)
-        return JsonResponse({'issues': [IssueSummary(issue) for issue in issues[:listLimit]],
+        shown = issues[:listLimit] if listLimit else issues
+        return JsonResponse({'issues': [IssueSummary(issue) for issue in shown],
                              'matching': len(issues), 'limit': listLimit})
 
     if path == '/api/issue':
@@ -370,7 +378,7 @@ pageHtml = r"""<!DOCTYPE html>
  <select id="type"></select>
  <select id="effort"></select>
  <select id="priority"></select>
- <input type="text" id="search" placeholder="search or #number" size="22">
+ <input type="text" id="search" placeholder="search any field, or #number" size="22">
  <button id="newIssue">new issue</button>
  <span style="flex:1"></span>
  <span class="label">author</span><input type="text" id="author" size="10" value="JG">

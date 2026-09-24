@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 50 | 1.12.51 |
+| 1.12 | Metheney | 51 | 1.12.52 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.52** `IMPROVEMENT` issue serve: the search misses fields, and the list stops at 400 issues (#2636) - raised by Claude-JG
+  - The web view of the issue tracker searches every field of an issue, the two authors included, and its list is no longer capped at 400 rows, so the oldest issues can be reached. revision2026b step RG10.2.1.
 - **1.12.51** `IMPROVEMENT` settings dialog: the combo box of an enum repeats the type name in every entry (#2635) - raised by Claude-JG
   - The combo box that edits an enum lists its entries without the type name in front of them: 'Displacement' instead of 'OutputVariableType.Displacement'. Only the list is shortened - the value the settings structure holds, and the line that a settings dialog writes for a script, keep the full name. revision2026b step RG6.2.25.
 - **1.12.50** `BUG` the dialogs opened from the command line are larger and blurred (#2634) - raised by Claude-JG

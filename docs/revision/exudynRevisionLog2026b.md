@@ -1920,3 +1920,25 @@ test walks `GetComboBoxListsDict(exudyn)` and asserts
 the bools, whose `True` and `False` carry no prefix and must come through untouched, which is
 why `EnumFullName` leaves them, an empty string and an already complete name alone rather than
 prefixing whatever it is handed.
+
+<a id="rg10-2-1"></a>
+### RG10.2.1 - the web view finds an author, and reaches the first issue (2026-09-24, #2636)
+
+Two faults of `exudev issue serve`, both reported by the maintainer while using it.
+
+**The search read four fields** - title, description, `workingRemarks`, `releaseNotes` - so
+the two fields that say **who** did anything were not searchable, although the page shows an
+author box and every issue carries `author` and `resolvedAuthor`. It reads every field of the
+issue now, which also makes the file, the plan step, the version an issue was resolved in and
+the dates searchable, at no cost worth measuring: one pass over 2,637 dictionaries. The
+**number** stays a separate exact test, so `#2600` and `2600` both find that issue; the
+existing test already records why a number search cannot demand exactly one hit - issues
+reference each other in their text. Measured: `Claude-JG` finds **307** issues, and it is
+case-insensitive like every other search.
+
+**And the list sent the newest 400 rows.** The list is sorted newest first and has no paging,
+so the cap did not shorten the list, it **deleted its older half**: nothing older than about
+#2240 could be reached by any amount of scrolling. Measured before removing it: all 2,637 rows
+are **470 KB** of JSON, built in **0.06 s**, over a loopback socket. `listLimit = 0` now means
+no cap, and the page already said "N matching, M shown" when the two differ, so it needed no
+change beyond the placeholder of the search box, which now says *search any field*.

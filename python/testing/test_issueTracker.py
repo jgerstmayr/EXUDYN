@@ -498,7 +498,28 @@ def testTheListDoesNotSendTheDescriptions(server):
     (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all'})
     assert status == 200 and data['issues']
     assert 'description' not in data['issues'][0]
-    assert len(data['issues']) <= data['limit']
+    assert len(data['issues']) == data['matching'], 'every match is sent (#2636)'
+
+
+def testEveryMatchingIssueIsSentAndNotTheFirst400(server, tracker):
+    """the list is newest first and has no paging, so a cap hid the early issues (#2636)"""
+    (status, data) = Call(server, 'GET', '/api/issues', {'status': 'all'})
+    assert data['limit'] == 0, 'no cap'
+    numbers = [issue['number'] for issue in data['issues']]
+    assert min(numbers) == min(issue['number'] for issue in tracker.GetIssues()), \
+        'the oldest issue of the store is in the list'
+
+
+def testTheSearchReadsEveryFieldOfAnIssue(server, tracker):
+    """the authors above all: an issue names who raised it and who resolved it (#2636)"""
+    issue = [one for one in tracker.GetIssues() if one['author'].strip() != ''][-1]
+    (status, data) = Call(server, 'GET', '/api/issues',
+                          {'status': 'all', 'search': issue['author']})
+    assert issue['number'] in [one['number'] for one in data['issues']], 'searched by author'
+
+    (status, data) = Call(server, 'GET', '/api/issues',
+                          {'status': 'all', 'search': issue['author'].lower()})
+    assert issue['number'] in [one['number'] for one in data['issues']], 'case does not count'
 
 
 def testAMissingIssueIsAMessageAndNotACrash(server):
