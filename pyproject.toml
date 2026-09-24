@@ -290,7 +290,6 @@ USEGLFW = true              #compile with GLFW/OpenGL graphics; false e.g. for a
 compileParallel = true      #compile the 133 sources with all available threads
 quietCompile = true         #print a counter instead of every compiler command line
 minimalCppFiles = false     #compile the 54-file minimal set - for testing only
-useOpenVR = false           #compile with the OpenVR library
 compileExudynFast = true    #additionally build the exudynCPPfast variant (no range checks)
 performUnitTests = false    #compile the lest C++ unit tests (src/Tests/) into the module; they
                             #are then run by exudyn.special.RunCppUnitTests() and by

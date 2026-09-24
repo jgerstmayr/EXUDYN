@@ -76,7 +76,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs64;C:\Program Files %28x86%29\Microsoft Visual Studio\Shared\Python39_64\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openvr_api.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -111,7 +111,6 @@
     <ClCompile Include="..\src\Graphics\characterBitmap.cpp" />
     <ClCompile Include="..\src\Graphics\GlfwClient.cpp" />
     <ClCompile Include="..\src\Graphics\GlfwClientExtended.cpp" />
-    <ClCompile Include="..\src\Graphics\OpenVRinterface.cpp" />
     <ClCompile Include="..\src\Graphics\PostProcessData.cpp" />
     <ClCompile Include="..\src\Graphics\Raytracing.cpp" />
     <ClCompile Include="..\src\Graphics\VisualizationPrimitives.cpp" />
@@ -544,7 +543,6 @@
     <ClInclude Include="..\src\Graphics\GlfwClientBitmapText.h" />
     <ClInclude Include="..\src\Graphics\GlfwClientText.h" />
     <ClInclude Include="..\src\Graphics\GraphicsData.h" />
-    <ClInclude Include="..\src\Graphics\OpenVRinterface.h" />
     <ClInclude Include="..\src\Graphics\PostProcessData.h" />
     <ClInclude Include="..\src\Graphics\Raytracing.h" />
     <ClInclude Include="..\src\Graphics\VisualizationBasics.h" />

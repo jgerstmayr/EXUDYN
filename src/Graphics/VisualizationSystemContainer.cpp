@@ -374,8 +374,6 @@ void VisualizationSystemContainer::InitializeRenderState(bool validInitializatio
 		renderState.mouseSelectionZdepth = 0.f;
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//openVR:
-		renderState.openVRstate.Initialize(false); //disable
 	}
 }
 

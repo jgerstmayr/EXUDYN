@@ -1812,20 +1812,6 @@ class VSettingsExportImages:
     def SetDictionary(self, d: dict) -> None: ...
 
 
-class VSettingsOpenVR:
-    """Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions."""
-    actionManifestFileName: str
-    """This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR."""
-    enable: bool
-    """True: openVR enabled (if compiled with according flag and installed openVR)."""
-    logLevel: int
-    """integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output."""
-    showCompanionWindow: bool
-    """True: openVR will show companion window containing left and right eye view."""
-    def GetDictionary(self) -> dict: ...
-    def SetDictionary(self, d: dict) -> None: ...
-
-
 class VSettingsInteractiveAdvanced:
     """Advanced settings for interactive."""
     highlightColor: Tuple[float,float,float,float]
@@ -1864,8 +1850,6 @@ class VSettingsInteractive:
     """Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction."""
     advanced: VSettingsInteractiveAdvanced
     """advanced interactive visualization settings."""
-    openVR: VSettingsOpenVR
-    """openVR visualization settings."""
     autoRotateModelView: bool
     """True: rotate model view with autorotation."""
     autoRotationVelocity: Tuple[float,float,float]

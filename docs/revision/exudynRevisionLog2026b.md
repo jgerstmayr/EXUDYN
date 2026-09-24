@@ -2273,3 +2273,50 @@ answer is that most of it was portable already - the conda lookup tries `bin/con
 test can pretend to be any platform and read the steps back: `python/testing/test_exudev.py`
 sets `sys.platform` and `runner.onWindows`, then asserts the clean patterns, the opener and the
 argv of the container - nine cases, from whichever platform happens to run pytest.
+
+<a id="rg6-1"></a>
+### RG6.1 — OpenVR is removed (2026-09-24, #2645)
+
+The step the rendering revision was waiting for, planned as revision2026 step R11.1 and moved
+here when that plan closed. What OpenVR cost was never the feature - it is compiled only
+behind `__EXUDYN_USE_OPENVR`, which **no shipped wheel has ever set**, so nobody who installed
+Exudyn could use it. It cost the guards inside the renderer, a public settings structure
+documenting something unreachable, an entry in the render state, a source file in every build
+list, and **2 MB of vendored SDK and prebuilt binary** in a repository whose rule is to stay
+small.
+
+**What went, in one list:**
+
+| where | what |
+|---|---|
+| `src/Graphics/` | `OpenVRinterface.cpp` and `.h`, 40 KB |
+| `GlfwClient.cpp` | six `#ifdef __EXUDYN_USE_OPENVR` blocks: the extern, the instance, init, render, state, shutdown |
+| `GlfwClient.h` | the `#define` comment and `SetProjectionMatrix()`, whose only caller was OpenVRinterface |
+| `VisualizationSystemContainerBase.h` | the classes `OpenVRaction` and `OpenVRState`, and the `openVRstate` member of the render state |
+| `MainSystemContainer.cpp` | the `openVR` entry of the render state dictionary |
+| `definitions/` | `VSettingsOpenVR` and `interactive.openVR` - four settings |
+| `setup.py`, `pyproject.toml` | `useOpenVR`, `--openvr`, the macro, `openvr_api.lib`, `-lopenvr_api`, and the copy of the DLL into the package |
+| the build lists | `sources.json`, `msvc/cppsrc.vcxproj` and its `.filters` |
+| the repository | `include/openVR/` (1.2 MB), `libs/libs64/openvr_api.dll` (808 KB) and `.lib` |
+| Python | the example `openVRengine.py` and its action manifest |
+| documentation | the *OpenVR* section of *Advanced topics*, the `openVRstate` sentence in `GUI.md`, the Valve licence block |
+
+**What deliberately stayed.** Three things that look like OpenVR and are not:
+
+- the **`else` branch of `SetProjection`**, which was commented `//openVR`. It runs whenever
+  the render state carries a projection matrix that is not the identity - and `SetState`
+  accepts `projectionMatrix` from Python, so it is a general feature that OpenVR happened to
+  be the only user of. The comment says what it really is now;
+- **`projectionMatrix` in the render state**, for the same reason;
+- the **acknowledgement** of Aaron Bacher in `gettingStarted.md`, who helped integrate it. The
+  feature goes; the fact that somebody did the work does not.
+
+**The reference that had to move**: `parameterConversionTestReference.txt` records the outcome
+of writing a probe value into every parameter through every access path, so it carried three
+rows of `VisualizationSettings.interactive.openVR`. It was re-recorded with
+`recordReference = True`, which the model provides for exactly this, and **only those three
+rows differ**.
+
+Users are told rather than left to find out, which is what the step asked for: the release
+note of #2645 says it, and `docs/manual/revisions.md` has a paragraph under *What can break a
+script* saying that a script which needs OpenVR stays on Exudyn 1.11.

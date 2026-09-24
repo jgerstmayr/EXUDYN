@@ -1,0 +1,17 @@
+{
+  "number": 2645,
+  "title": "remove OpenVR",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "OpenVR blocks the rendering revision, it cannot be tested in CI or by most users - it needs a head mounted display or an emulator - and it carries a vendored SDK of 1.2 MB and a prebuilt 808 KB binary in the repository. It is compiled only behind __EXUDYN_USE_OPENVR, which no shipped wheel sets, so what it costs today is the guards in the renderer, the settings that document a feature nobody can reach, a library that setup.py copies into the package, and a source file in every build list. Scope: src/Graphics/OpenVRinterface.cpp and its header, every __EXUDYN_USE_OPENVR guard, the --openvr flag and -lopenvr_api in setup.py, include/openVR/, libs/libs64/openvr_api.dll and .lib, visualizationSettings.interactive.openVR, the renderState key openVR, the example openVRengine.py with its action manifest, and the manual sections. A user who needs OpenVR takes Exudyn <= 1.11, and the release notes say so. revision2026b step RG6.1, from revision2026 step R11.1.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 20:10",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/OpenVRinterface.cpp",
+  "releaseNotes": "OpenVR is removed. Gone are src/Graphics/OpenVRinterface.cpp and its header, every __EXUDYN_USE_OPENVR guard in the renderer, GlfwClient::SetProjectionMatrix (whose only caller it was), the classes OpenVRaction and OpenVRState with the openVRstate member of the render state, the openVR entry of the render state dictionary, the settings visualizationSettings.interactive.openVR, the useOpenVR/--openvr flag with the macro and -lopenvr_api in setup.py and pyproject.toml, include/openVR/ and libs/libs64/openvr_api.dll and .lib, the example openVRengine.py with its action manifest, the OpenVR section of Advanced topics and the Valve licence block - 2.1 MB in 13 tracked files. IF YOUR SCRIPT NEEDS OPENVR, STAY ON EXUDYN 1.11: it could only ever be used by compiling it in yourself, no released wheel carried it, and it stood in the way of the coming rendering work; docs/manual/revisions.md says so under 'What can break a script'. Deliberately kept: the projection matrix of the render state and the branch of SetProjection that uses it, because SetState accepts a projectionMatrix from Python and OpenVR was only its first user. revision2026b step RG6.1.",
+  "resolvedInVersion": "1.12.61"
+}

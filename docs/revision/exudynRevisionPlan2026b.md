@@ -410,14 +410,13 @@ anything** (RG2.1) - which is why a rendering revision is worth planning rather 
 This group is that revision and what has to happen before it can start.
 
 <a id="rg6-1"></a>
-**RG6.1** *(group RG6, before the rendering revision; revision2026 step R11.1)* **Remove OpenVR.** It **blocks the rendering revision**, it
-    is not testable in CI or by most users, and it carries a vendored SDK and a prebuilt binary.
-    Scope: `src/Graphics/OpenVRinterface.cpp` and its header, every `__EXUDYN_USE_OPENVR`
-    guard, the `--openvr` flag and `-lopenvr_api` in `setup.py`, `include/openVR/`, and
-    `libs/openvr_api.dll` + `.lib`. Users needing OpenVR take Exudyn <= 1.11; say so in the
-    release notes rather than leaving them to discover it. `docs/howTo/openVR.txt` was already
-    removed with revision2026 step R3.6.
-
+**RG6.1** **DONE 2026-09-24** (#2645) — [log](exudynRevisionLog2026b.md#rg6-1) —
+    **OpenVR is removed**, which is what the rendering revision was waiting for. The
+    interface and its header, every `__EXUDYN_USE_OPENVR` guard, the `--openvr` flag and
+    `-lopenvr_api`, the vendored SDK and the prebuilt library, the settings under
+    `interactive.openVR`, the `openVR` entry of the render state, the example and the manual
+    section are gone: **2.1 MB in 13 tracked files**. A user who needs it stays on 1.11, and
+    the changelog and the revisions chapter say so.
 
 <a id="rg6-2"></a>
 **RG6.2** **DONE 2026-09-23** (#2591), **reopened and closed again the same day for RG6.2.12
@@ -1028,22 +1027,21 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.2 | - | retroactive tags for the past releases whose commits can be identified |
 | RG1.3 | - | a second internal repository for development-only Python |
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
-| RG2.1 | #2562 | the drawing code is exercised by exactly one test model |
+| RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG3.8 | #2594 | the unreferenced figures the conversion lost |
-| RG4.1 | - | the Windows/Linux differences in contact and friction |
+| RG3.8 | #2594 | place or drop the figures that no page references |
+| RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
-| RG4.3 | #2398, #2400 | the cost of an explicit integration step |
-| RG5.1 | #2397 | a micro-benchmark that is maintained rather than written once |
+| RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
+| RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG6.1 | - | remove OpenVR - it blocks the rendering revision |
-| RG6.3 | #2583 | the renderer extraction functions, shaped for testing |
+| RG6.3 | #2583 | give the renderer a headless call that returns counts and an image at a given resolution |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1 | - | a checker for user scripts after the 1.12 API changes |
-| RG11.3 | - | the results monitor beside a running simulation (proposed by RG11.1) |
+| RG11.3 | - | run the results monitor in a second process beside the simulation |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
-| RG12.2 | #2589 | item parameters can be deprecated |
+| RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 
 ### Raised by the current work, and not yet a step
 
@@ -1062,15 +1060,18 @@ whether it becomes a step.
 
 ### Recommended next
 
-1. **RG2.2 and RG1.4** - the 1.13 release. The integration round is the only item on this page
-   that needs **other people's time**, so it is the one that has to start before the rest is
-   ready, not after.
-2. **RG12.1** (#2588) - the deprecation mechanism for `simulationSettings`. RG6.2.3.1 already
-   needed the mechanism for the rename of `fontScalingMacOS` and could use the one
-   `visualizationSettings` has; RG12.2 (#2589) cannot start until `simulationSettings` has
-   it too.
-3. **RG2.3** (#2582) **with RG6.3** (#2583) - they are one piece of work: a graphics test needs
-   the headless call and the resolution argument that RG6.3 defines, and RG6.3 has no reason to
-   exist without the suite.
-4. **RG6.1** - remove OpenVR before the rendering revision rather than porting it.
-5. **RG3.8** (#2594) - small, and it is published documentation that is visibly wrong.
+The title of each says what the step **does**; the sentence after it says why it comes here.
+
+1. **Run the integration round of the institute, then release 1.13** (RG2.2, RG1.4). It is
+   the only item on this page that needs **other people's time**, so it starts before the
+   rest is ready, not after.
+2. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+   `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
+3. **Build the graphics regression suite, with the headless renderer calls it needs**
+   (RG2.3 with RG6.3, #2582 and #2583). They are one piece of work: the suite needs the call
+   that updates the graphics data and returns counts, and that call has no other user.
+4. **Place or drop the figures that no page references** (RG3.8, #2594). Small, and it is
+   published documentation that is visibly wrong.
+5. **Write the checker for user scripts after the 1.12 API changes** (RG10.1). The 1.13
+   release is when users meet those changes, so it is worth having before RG1.4 lands.
+

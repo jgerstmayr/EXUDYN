@@ -663,9 +663,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 - **notes**: DEPRECATED and will be removed; use MainSystem.CreateRevoluteJoint(...) instead!
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`openVRengine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openVRengine.py) (Ex)
-
-
 (sec-rigidbodyutilities-addprismaticjoint)=
 ## Function: AddPrismaticJoint
 
@@ -675,9 +672,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`openVRengin
 - **input**: mbs: the MainSystem to which the joint and markers shall be added body0: a object number for body0, must be rigid body or ground object body1: a object number for body1, must be rigid body or ground object point: a 3D vector as list or np.array containing the global center point of the joint in reference configuration axis: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
 - **output**: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 - **notes**: DEPRECATED and will be removed; use MainSystem.CreatePrismaticJoint(...) instead!
-
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`openVRengine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openVRengine.py) (Ex)
 
 
 (sec-module-rigidbodyutilities-class-treelink)=

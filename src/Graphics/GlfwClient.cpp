@@ -39,12 +39,6 @@
 #include "deps/stb_image_write.h" //for save image as .PNG
 #endif
 
-#ifdef __EXUDYN_USE_OPENVR 
-#include "Graphics/OpenVRinterface.h"
-extern OpenVRinterface glfwOpenVRinterface;
-#endif //__EXUDYN_USE_OPENVR 
-
-
 using namespace std::string_literals; // enables s-suffix for std::string literals
 
 //if this flag is set, the GLFW thread will be detached (which may be advantageous if stoprenderer is not called); otherwise it is a joinable thread
@@ -75,17 +69,6 @@ extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is se
 //extern bool deactivateGlobalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
 //use PrintDelayed(...) or ShowMessage(...) instead #define rendererOut std::cout //defines the type of output for renderer: pout could be problematic because of parallel threads; std::cout does not work in Spyder
 
-
-//+++++++++++++++++++++++++++++++++++++
-//#undef __EXUDYN_USE_OPENVR
-#ifdef __EXUDYN_USE_OPENVR
-#include "Graphics/OpenVRinterface.h"
-OpenVRinterface openVRinterface;
-//extern void InitializeOpenVR(GLFWwindow* window, GlfwRenderer* glfwRenderer);
-//extern void RenderOpenVR(GLFWwindow* window, GlfwRenderer* glfwRenderer);
-//extern void getTrackedDevicePoseMatrices(std::vector<Matrix4DF> &Controller, std::vector<Matrix4DF> &Tracker);
-#endif
-//+++++++++++++++++++++++++++++++++++++
 
 GlfwRenderer glfwRenderer;
 
@@ -1915,14 +1898,6 @@ void GlfwRenderer::InitCreateWindow()
 
 
 
-#ifdef __EXUDYN_USE_OPENVR
-		if (verboseRenderer) { PrintDelayed("Initialize OpenVR"); }
-		if (visSettings->interactive.openVR.enable) 
-		{ 
-			glfwOpenVRinterface.SetLogLevel(visSettings->interactive.openVR.logLevel);
-			state->openVRstate.isActivated = glfwOpenVRinterface.InitOpenVR(&glfwRenderer);
-		}
-#endif
 
 		guint fontSize = (guint)(GetSettingsView(viewID, *visSettings).window.globalFontSize * GetFontScaling(viewID)); //use this size for fonts throughout
 		Real timeFont = EXUstd::GetTimeInSeconds();
@@ -2086,12 +2061,6 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 			SaveImage(viewID); //in case of flag, save frame to image file
 			});
 
-#ifdef __EXUDYN_USE_OPENVR
-		if (glfwOpenVRinterface.IsActivated())
-		{
-			glfwOpenVRinterface.RenderAndUpdateDevices();
-		}
-#endif
 		lastGraphicsUpdate = time;
 		SetCallBackRefreshSignal(false);
 	}
@@ -2100,15 +2069,6 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 	{
 		glfwWaitEventsTimeout((double)updateInterval); //wait x seconds for next event
 		ProcessJoystick();
-#ifdef __EXUDYN_USE_OPENVR
-        if (glfwOpenVRinterface.IsActivated())
-        {
-            //in future, this should be a GlfwRenderer function, which transmits data to renderState
-            glfwOpenVRinterface.GetState(state->openVRstate);
-            //OpenVRparameters p; //currently without any functionality
-            //glfwOpenVRinterface.SetDataAndParameters(p);
-        }
-#endif
     }
 	rendererTasksCount++;
 }
@@ -2128,9 +2088,6 @@ void GlfwRenderer::FinishRunLoop()
 
 	if (renderViews.HasValidWindows())
 	{
-#ifdef __EXUDYN_USE_OPENVR
-        glfwOpenVRinterface.ShutDown();
-#endif
 		//! first close sub-views
 		for (Index viewID = 1; viewID < renderViews.NumberOfViews(); viewID++)
 		{
@@ -2274,7 +2231,7 @@ void GlfwRenderer::SetProjection(Index viewID, int width, int height, float rati
 			}
 		}
 	}
-	else //openVR
+	else //a projection matrix was given from outside, through SetState (renderState)
 	{
 		if (state->projectionInfo == 0) //for companion window
 		{
@@ -2374,7 +2331,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	{
 		Render3Dobjects(viewID, width, height, ratio, zoom);
 
-		//do this always, e.g. in openVR case or if projection is modified:
+		//do this always, e.g. if the projection is modified:
 		//for texts, axes, etc.: draw without perspective
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

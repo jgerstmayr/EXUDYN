@@ -73,20 +73,6 @@ Some tests and examples using `GeneralContact`
 
 For details on the contact formulations, see {ref}`seccontacttheory`.
 
-(sec-overview-advanced-openvr)=
-## OpenVR
-
-The general open source libraries from Valve, see
-
-- https://github.com/ValveSoftware/openvr
-
-have been linked to Exudyn. In order to get OpenVR fully integrated, you need to run `setup.py` Exudyn with the `--openvr` flag. For general installation instructions, see {ref}`sec-install-installinstructions`.
-
-Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in `interactive.openVR`, but need to be considered with care.
-An example is provided in `openVRengine.py`, showing some optimal flags like locking the model rotation, zoom or translation.
-
-Everything is experimental, but contributions are welcome!
-
 (sec-overview-advanced-julia)=
 ## Interaction with Julia
 

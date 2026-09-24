@@ -100,7 +100,6 @@ openAIgymInterfaceTest
 openAIgymNLinkAdvanced
 openAIgymNLinkContinuous
 openAIgymTriplePendulum
-openVRengine
 parameterVariationExample
 particleClusters
 particlesSilo

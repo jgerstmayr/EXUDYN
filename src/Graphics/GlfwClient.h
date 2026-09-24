@@ -30,8 +30,6 @@
 #include "Graphics/GlfwClientText.h" //link to external library; include only if copyright is appropriate
 #include "Graphics/GlfwClientBitmapText.h"
 
-//currently done in preprocessor flags; check that openvr_api.dll is included in exudynCPP.pyd directory
-//#define __EXUDYN_USE_OPENVR //done with preprocessor flags in VisualStudio or in setup.py
 //#if !defined(__EXUDYN__APPLE__) && !defined(__EXUDYN__LINUX__ARM__) //would not work with APPLE
 class Raytracer;
 
@@ -438,16 +436,6 @@ public:
 			return 0;
 		}
 	}
-
-	//! set projection matrix from outside GlfwClient, used for OpenVR; this needs to be set before rendering objects!
-	//! projectionInfo used to switch between different modes
-	static void SetProjectionMatrix(const Matrix4DF& p, Index projectionInfo = 0, Index viewID=0) 
-	{ 
-		RenderState* state = renderViews.State(viewID);
-
-		state->projectionMatrix = p; 
-		state->projectionInfo = projectionInfo;
-	};
 
 	//! get current glfw window size
 	static void GetWindowSize(GLFWwindow* window, int& width, int& height)

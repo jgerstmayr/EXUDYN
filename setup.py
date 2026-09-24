@@ -68,7 +68,6 @@ config['USEGLFW'] = True
 config['compileParallel'] = True
 config['quietCompile'] = True
 config['minimalCppFiles'] = False
-config['useOpenVR'] = False
 config['compileExudynFast'] = True    #not for all Python versions
 config['performUnitTests'] = False    #the lest C++ unit tests in src/Tests/ (#2464)
 config['useAVX2'] = True              #ONLY inside exudynCPPfast; the default module is baseline (#2466)
@@ -130,7 +129,6 @@ configEnvironmentNames = {
     'compileParallel':   'EXUDYN_COMPILE_PARALLEL',
     'quietCompile':      'EXUDYN_QUIET_COMPILE',
     'minimalCppFiles':   'EXUDYN_MINIMAL_CPP_FILES',
-    'useOpenVR':         'EXUDYN_USE_OPENVR',
     'compileExudynFast': 'EXUDYN_COMPILE_EXUDYN_FAST',
     'performUnitTests':  'EXUDYN_PERFORM_UNIT_TESTS',
     'useAVX2':           'EXUDYN_USE_AVX2',
@@ -160,7 +158,6 @@ if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
     print("                  parallel may fail occasionally and loads the CPU heavily")
     print("  --glfw / --noglfw           ... compile with/without GLFW graphics")
     print("                  (--noglfw e.g. for a compute cluster)")
-    print("  --openvr / --no-openvr      ... compile with/without the openvr library")
     print("  --fast / --nofast           ... build the fast CPP library; this needs an extra run")
     print("  --quiet / --no-quiet        ... print a counter instead of every compiler command")
     print("  --minimal / --no-minimal    ... compile only the minimal set - for testing only")
@@ -186,7 +183,7 @@ if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
     sys.exit()
     
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#check GLFW and openVR
+#check GLFW
 
 #layer 1: command line - the highest priority. Every switch has BOTH forms: with the defaults
 #now checked into [tool.exudyn], an on-only flag would leave no way to ask for the opposite. That
@@ -198,7 +195,6 @@ configCommandLineFlags = [
     ('--parallel', '--no-parallel', 'compileParallel',   'parallel compile'),
     ('--quiet',    '--no-quiet',    'quietCompile',      'quiet compile'),
     ('--minimal',  '--no-minimal',  'minimalCppFiles',   'minimal C++ file set'),
-    ('--openvr',   '--no-openvr',   'useOpenVR',         'OpenVR'),
     ('--fast',     '--nofast',      'compileExudynFast', 'exudynCPPfast variant'),
     ('--unittests','--no-unittests','performUnitTests',  'C++ unit tests (lest)'),
     ('--avx2',     '--no-avx2',     'useAVX2',           'AVX2 in the fast module'),
@@ -290,15 +286,6 @@ addLibrary_dirs = []
 addPackageData = {'':['__init__.pyi', 'symbolic.pyi', 'py.typed']}
 
 if isWindows:
-    if config['useOpenVR']:
-        #this does not work without wildcard *; but does not add the .dll
-        #addPackageData['']+=['../../../libs/libs64/openvr*.dll'] #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
-        import shutil
-        shutil.copy2('libs/libs64/openvr_api.dll', 'python/exudyn/')
-
-        addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
-        print('add package data for openVR:', addPackageData)
-
     addLibrary_dirs=['libs/libs64' ]
     print("architecture==64bits")
 
@@ -333,10 +320,6 @@ if config['USEGLFW']:
         #unix: for graphics; libs (*.so) need to be installed on your linux system -> see setupToolsHowTo.txt:
         unixGLFWlibs = ['-lglfw', #GLFW
                         '-lGL'] #OpenGL
-    if config['useOpenVR']:
-        msvcGLFWlibs += ['openvr_api.lib'] #openvr_api.dll needs to be in directory of exudynCPP.pyd
-        unixGLFWlibs += ['-lopenvr_api']   #linux (openVR dev tools must be installed); MacOS (untested, library needs to be installed/placed in exudyn site-packages folder)
-        
 if config['useAVX512'] and not config['useAVX2']:
     raise ValueError('useAVX512 requires useAVX2; AVX-512 is built on top of it')
 
@@ -524,8 +507,6 @@ class BuildExt(_build_ext):
     #options used for all builds:
     allMacros = ['EXUDYN_RELEASE'] #exclude experimental parts    
     allMacros += [exudynPythonMacro] #Python version easily accessible
-    if config['useOpenVR']:
-        allMacros += ['__EXUDYN_USE_OPENVR'] #internally compiles functions for openVR; tested on windows and linux; needs openvr_api.lib, DLL for windows and installed dev kit for openVR on linux
     if config['minimalCppFiles']:
         allMacros += ['EXUDYN_MINIMAL_COMPILATION'] #for testing, only minimal number of items
     
@@ -974,7 +955,7 @@ if config['compileParallel']:
 #  version         - read from version.txt at the repository root, which issueTracker.py writes
 #  classifiers     - the Development Status entry follows the '.dev1' suffix of that version
 #  packages        - the exudyn and exudyn.robotics packages under python/
-#  package_data    - grows an openvr_api.dll entry when config['useOpenVR'] is set
+#  package_data    - the type stubs that ship beside the package
 #  ext_modules / cmdclass - the compilation itself
 setup(
     version=__version__,
@@ -1003,10 +984,6 @@ setup(
         "Topic :: Scientific/Engineering",
     ],
 )
-
-if config['useOpenVR'] and isWindows: #delete copied file
-    import os
-    os.remove('python/exudyn/openvr_api.dll')
 
 print('*** setup.py: DURATION =', round(time.time()-startTime,2), 'seconds')
 

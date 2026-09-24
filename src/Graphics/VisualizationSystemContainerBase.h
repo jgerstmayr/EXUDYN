@@ -23,55 +23,6 @@ class MainSystem;
 
 //MOVE to python generated class!!!
 
-class OpenVRaction
-{
-public:
-	Float2 trackpad;
-	float trigger;
-	bool button1;
-	bool button2;
-	bool button3;
-	bool button4;
-
-	void Init()
-	{
-		trackpad = Float2({ 0, 0 });
-		trigger = 0;
-		button1 = false;
-		button2 = false;
-		button3 = false;
-		button4 = false;
-	}
-};
-
-//for interaction with openVR
-class OpenVRState
-{
-public:
-	void Initialize(bool setActivated)
-	{
-		isActivated = setActivated;
-		controllerPoses.Flush();
-		controllerActions.Flush();
-		trackerPoses.Flush();
-
-		HMDpose.SetScalarMatrix(4, 1.f);
-		projectionLeft.SetScalarMatrix(4, 1.f);
-		eyePosLeft.SetScalarMatrix(4, 1.f);
-		projectionRight.SetScalarMatrix(4, 1.f);
-		eyePosRight.SetScalarMatrix(4, 1.f);
-	}
-
-	bool isActivated;										//!< flag is used to enable output with GetRenderState() only if enabled
-	ResizableArray<Matrix4DF> controllerPoses;		//!< stores current poses of openVR controllers
-	ResizableArray<OpenVRaction> controllerActions;	//!< stored for according controllers (same size as poses)
-	ResizableArray<Matrix4DF> trackerPoses;			//!< stores current poses of openVR trackers
-
-	//homogeneous transformations used in openVR / HMD (head mounted display):
-	Matrix4DF HMDpose;
-	Matrix4DF projectionLeft, eyePosLeft, projectionRight, eyePosRight;
-};
-
 //! for a given viewID, get respective settings structure
 inline const VSettingsView& GetSettingsView(Index viewID, const VisualizationSettings& visualizationSettings)
 {
@@ -168,7 +119,6 @@ public:
 	Vector3D joystickRotation;		//!< stored rotation of joystick, if available
 	Index joystickAvailable;		//!< -1 if no joystick available, otherwise the index of the available joystick
 
-	OpenVRState openVRstate;		//!< contains all data exchanced with openVR; this is always available, even if not compiled with openVR
 
 	//! minimal distance from screen plane for projection
 	constexpr float GetProjectionNearMin() const { return 0.1f; }

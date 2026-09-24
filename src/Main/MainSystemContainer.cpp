@@ -183,38 +183,6 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	d["joystickRotation"] = EPyUtils::ToPython(state.joystickRotation);
 	d["joystickAvailable"] = state.joystickAvailable;
 
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//OpenVR
-	if (state.openVRstate.isActivated) //add openVR only if enabled (which also means compiled ...)
-	{
-		auto VR = py::dict();
-
-		Matrix4D m4D;
-		m4D.CopyFrom(state.openVRstate.HMDpose); VR["HMDpose"] = EPyUtils::ToPython(m4D);
-		m4D.CopyFrom(state.openVRstate.projectionLeft); VR["projectionLeft"] = EPyUtils::ToPython(m4D);
-		m4D.CopyFrom(state.openVRstate.eyePosLeft); VR["eyePosLeft"] = EPyUtils::ToPython(m4D);
-		m4D.CopyFrom(state.openVRstate.projectionRight); VR["projectionRight"] = EPyUtils::ToPython(m4D);
-		m4D.CopyFrom(state.openVRstate.eyePosRight); VR["eyePosRight"] = EPyUtils::ToPython(m4D);
-
-		auto controllerPoseList = py::list();
-		for (auto mat : state.openVRstate.controllerPoses)
-		{
-			m4D.CopyFrom(mat); controllerPoseList.append(EPyUtils::ToPython(m4D));
-		}
-		VR["controllerPoses"] = controllerPoseList;
-
-		auto trackerPoseList = py::list();
-		for (auto mat : state.openVRstate.trackerPoses)
-		{
-			m4D.CopyFrom(mat); trackerPoseList.append(EPyUtils::ToPython(m4D));
-		}
-		VR["trackerPoses"] = trackerPoseList;
-
-		d["openVR"] = VR;
-		//TODO: controllerActions missing
-	}
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	return d;
 

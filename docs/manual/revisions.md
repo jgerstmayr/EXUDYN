@@ -54,6 +54,12 @@ the usual way notices nothing.
 **Item dictionaries are more forgiving, not less**: a parameter that is left out keeps its default
 or its current value, where it used to raise `KeyError`.
 
+**OpenVR is removed.** The `--openvr` build flag, the settings under
+`visualizationSettings.interactive.openVR`, the `openVR` entry of the render state and the
+example `openVRengine.py` are gone. It could only be used with a head mounted display or an
+emulator, it was never part of a released wheel - it had to be compiled in - and it stood in the
+way of the coming rendering work. A script that needs it stays on Exudyn 1.11.
+
 ### What is new to use
 
 **A command line for the installed package**: `python -m exudyn info` prints the version, where

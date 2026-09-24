@@ -608,22 +608,6 @@ VSettingsExportImages has the following items:
 
 
 
-(sec-vsettingsopenvr)=
-### VSettingsOpenVR
-
-Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions.
-
-VSettingsOpenVR has the following items:
-
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `actionManifestFileName`<br>`SC.visualizationSettings.interactive.openVR.actionManifestFileName` | FileName |  | 'C:/openVRactionsManifest.json' | This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR |
-| `enable`<br>`SC.visualizationSettings.interactive.openVR.enable` | bool |  | False | True: openVR enabled (if compiled with according flag and installed openVR) |
-| `logLevel`<br>`SC.visualizationSettings.interactive.openVR.logLevel` | Int |  | 1 | integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output |
-| `showCompanionWindow`<br>`SC.visualizationSettings.interactive.openVR.showCompanionWindow` | bool |  | True | True: openVR will show companion window containing left and right eye view |
-
-
-
 (sec-vsettingsinteractiveadvanced)=
 ### VSettingsInteractiveAdvanced
 
@@ -660,7 +644,6 @@ VSettingsInteractive has the following items:
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `advanced`<br>`SC.visualizationSettings.interactive.advanced` | VSettingsInteractiveAdvanced |  |  | advanced interactive visualization settings |
-| `openVR`<br>`SC.visualizationSettings.interactive.openVR` | VSettingsOpenVR |  |  | openVR visualization settings |
 | `autoRotateModelView`<br>`SC.visualizationSettings.interactive.autoRotateModelView` | bool |  | False | True: rotate model view with autorotation |
 | `autoRotationVelocity`<br>`SC.visualizationSettings.interactive.autoRotationVelocity` | Float3 | 3 | [0.,0.,1.047198] | Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!) |
 | `highlightItemIndex`<br>`SC.visualizationSettings.interactive.highlightItemIndex` | Int |  | -1 | index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted |

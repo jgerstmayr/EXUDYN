@@ -2012,36 +2012,6 @@ definitions.append(StructureDefinition(
         ],
     ))
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++   VSettingsOpenVR   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-definitions.append(StructureDefinition(
-    className='VSettingsOpenVR',
-    writeFile='VisualizationSettings.h',
-    addDictionaryAccess=False,
-    appendToFile=True,
-    classDescription=r'Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions',
-    typicalPaths='SC.visualizationSettings.interactive',
-    writePybindIncludes=True,
-    members=[
-        StructureParameter(type=Tbool, 
-            pythonName='enable',
-            defaultValue=False,
-            description=r'True: openVR enabled (if compiled with according flag and installed openVR)'),
-        StructureParameter(type=Tbool, 
-            pythonName='showCompanionWindow',
-            defaultValue=True,
-            description=r'True: openVR will show companion window containing left and right eye view'),
-        StructureParameter(type=TInt, 
-            pythonName='logLevel',
-            defaultValue=1,
-            description=r'integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output'),
-        StructureParameter(type=TFileName, 
-            pythonName='actionManifestFileName',
-            defaultValue='C:/openVRactionsManifest.json',
-            description=r'This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR'),
-        ],
-    ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   VSettingsInteractiveAdvanced   ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2130,10 +2100,6 @@ definitions.append(StructureDefinition(
             pythonName='advanced',
             defaultValue=NoDefaultValue,
             description=r'advanced interactive visualization settings'),
-        StructureParameter(type='VSettingsOpenVR', 
-            pythonName='openVR',
-            defaultValue=NoDefaultValue,
-            description=r'openVR visualization settings'),
         StructureParameter(type=Tbool, 
             pythonName='autoRotateModelView',
             defaultValue=False,
