@@ -2069,3 +2069,32 @@ module of the package, and **nothing calls a single function of it**. A dialog n
 so the suite cannot; what *can* be tested without one is the layer underneath —
 `ConvertString2Value`, `ConvertValue2String`, `CheckType`, `GetComboBoxListsDict` — and that
 is worth doing first, because it is where a wrong value comes from.
+
+<a id="rg6-2-26"></a>
+### RG6.2.26 — a tooltip of a topmost dialog is topmost (2026-09-24, #2639)
+
+The maintainer, on the dialogs of the renderer and of `python -m exudyn dialogs` alike: the
+pop-up hints do not appear, and *"when I turn off alwaysTopmost and restart the dialog from
+the renderer, it works"*. That second sentence is the diagnosis: a `Toplevel` without the
+topmost flag can never be drawn above a window that has it, because on Windows topmost is a
+**stacking band** and not an ordering within one. The tooltip was not failing to appear - it
+was appearing behind the dialog.
+
+**This is the third time the same mechanism has cost a defect in this dialog**: #2621, the
+window of the changes that looked like a button doing nothing, and #2614 before it, where
+the same window came up behind the dialog the second time it was opened. It is worth
+stating once, here: *every* window the settings dialog opens has to carry `-topmost`,
+or the dialog has to give it up while that window is open, which is what the changes window
+does. There is no third option.
+
+So `Tooltip.Place` sets `-topmost` on the window when it builds it, and lifts it each time it
+is placed - the flag chooses the band, `lift` orders within it. The question the maintainer
+raised alongside it, whether `alwaysTopmost` should default to **off** and the hints be
+disabled with it, does not have to be answered: the dialog keeps the topmost it needs
+in order to sit over the render window it blocks, and the hints work with it.
+
+**Not tested, and why**: a tooltip is a window, and the suite opens none - the finding of
+RG6.2 that the layer below the widgets is what a test can reach. Reading the flag back would
+need a mapped window on the maintainer's screen, which CLAUDE.md rule 11 forbids and which a
+headless CI could not do either. The evidence is the maintainer's own experiment (topmost
+off, hints work) and the two earlier defects with the same cause.

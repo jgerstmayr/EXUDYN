@@ -645,6 +645,15 @@ This group is that revision and what has to happen before it can start.
     and the type is in the column beside it. The list shows the entry without its type; the
     settings structure and the generated code line keep the full name.
 
+<a id="rg6-2-26"></a>
+**RG6.2.26** **DONE 2026-09-24** (#2639) — [log](exudynRevisionLog2026b.md#rg6-2-26) —
+    **The tooltips were invisible while the dialog is topmost** *(maintainer, 2026-09-24)*, in
+    the renderer and from the command line alike; turning `dialogs.alwaysTopmost` off and
+    reopening made them work, which named the cause. A tooltip is a `Toplevel` of the dialog
+    and had no topmost flag, and on Windows a topmost window is always above one that is not -
+    the mechanism that hid the window of the changes in #2621. The tooltip window carries the
+    flag now, so the dialog keeps the topmost it needs to block the render window.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a

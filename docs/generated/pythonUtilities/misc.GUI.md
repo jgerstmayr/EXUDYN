@@ -77,7 +77,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1143)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1155)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**: settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings exu: exudyn module dictionaryName: name displayed in dialog
@@ -87,7 +87,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1475)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1487)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**: tkWindow: the window to configure alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
@@ -97,7 +97,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1505)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1517)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -106,7 +106,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1559)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1571)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -115,7 +115,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1644)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1656)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -124,7 +124,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1659)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1671)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -133,7 +133,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1673)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1685)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
@@ -142,13 +142,13 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-module-misc.gui-class-tooltip)=
 ## CLASS Tooltip (in module misc.GUI)
 
-**class description**: The small yellow window that shows the description of the row under the mouse. tkinter has none, and the description used to be behind the key 'h' and a modal message box - which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a borderless Toplevel that is created when it is first needed and hidden afterwards, so a dialog that is never hovered never builds one.
+**class description**: The small yellow window that shows the description of the row under the mouse. tkinter has none, and the description used to be behind the key 'h' and a modal message box - which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a borderless Toplevel that is created when it is first needed and hidden afterwards, so a dialog that is never hovered never builds one. It is **topmost**, and that is not decoration: the dialog itself is topmost - it has to be, it blocks the render window - and on Windows a topmost window is always above one that is not, so a tooltip without the flag opens BEHIND the dialog and looks like a tooltip that never comes (#2639). The same mechanism hid the window of the changes in #2621. Turning `dialogs.alwaysTopmost` off made the tooltips work, which is what named the cause.
 
 
 (sec-gui-tooltip-show)=
 ### Class function: Show
 
-[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L286)
+[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L293)
 
 - **class function description**: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer's (#2614): a description that appears the moment the pointer crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a setting any more.
 
@@ -156,7 +156,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-cancel)=
 ### Class function: Cancel
 
-[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L299)
+[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L306)
 
 - **class function description**: forget a tooltip that was scheduled and has not appeared yet
 
@@ -164,7 +164,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-bind)=
 ### Class function: Bind
 
-[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L308)
+[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L315)
 
 - **class function description**: let a widget - a button, say - show this tooltip while the pointer rests on it
 
@@ -172,6 +172,6 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-place)=
 ### Class function: Place
 
-[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L313)
+[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L320)
 
 - **class function description**: place the tooltip at the screen position (x, y), a little below the pointer

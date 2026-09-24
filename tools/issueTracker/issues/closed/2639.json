@@ -1,0 +1,17 @@
+{
+  "number": 2639,
+  "title": "the tooltips of the settings dialog are invisible while the dialog is topmost",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The pop-up hints of the tree rows and of the buttons do not appear when the dialog is topmost, which it is by default and in every dialog of 'python -m exudyn dialogs'. Turning off visualizationSettings.dialogs.alwaysTopmost and reopening the dialog makes them work, which names the cause: the tooltip is a Toplevel of the dialog without the topmost flag, and on Windows a topmost window is always above one that is not - the same mechanism as the window of the changes in #2621, which had to be given the flag before it could be seen. The tooltip needs it too; the dialog must stay topmost, because it blocks the render window.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 13:11",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The tooltip window of the settings dialog carries -topmost and is lifted when it is placed, so the pop-up hints appear while the dialog is topmost - which it stays, because it blocks the render window. Same mechanism as #2621 and #2614: on Windows a topmost window is a stacking band, and a Toplevel without the flag can never be drawn above one that has it. revision2026b step RG6.2.26.",
+  "resolvedInVersion": "1.12.55"
+}

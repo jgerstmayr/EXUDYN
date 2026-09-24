@@ -273,6 +273,13 @@ class Tooltip:
     which is not where a reader looks for it (#2601, revision2026b step RG6.2.3). It is a
     borderless Toplevel that is created when it is first needed and hidden afterwards, so a
     dialog that is never hovered never builds one.
+
+    It is **topmost**, and that is not decoration: the dialog itself is topmost - it has to
+    be, it blocks the render window - and on Windows a topmost window is always above one
+    that is not, so a tooltip without the flag opens BEHIND the dialog and looks like a
+    tooltip that never comes (#2639). The same mechanism hid the window of the changes in
+    #2621. Turning `dialogs.alwaysTopmost` off made the tooltips work, which is what named
+    the cause.
     """
 
     def __init__(self, widget, wrapLength=520, delay=500):
@@ -316,12 +323,17 @@ class Tooltip:
         if self.window is None:
             self.window = tk.Toplevel(self.widget)
             self.window.wm_overrideredirect(True)   #no title bar, no border
+            self.window.attributes('-topmost', True)  #or it opens behind the dialog (#2639)
             self.label = tk.Label(self.window, justify=tk.LEFT, background='#ffffe0',
                                   relief=tk.SOLID, borderwidth=1, wraplength=self.wrapLength)
             self.label.pack(ipadx=3, ipady=2)
         self.label.configure(text=text)
         self.window.wm_geometry('+' + str(int(x) + 16) + '+' + str(int(y) + 18))
         self.window.deiconify()
+        try:                        #-topmost is the stacking BAND; lift orders within it
+            self.window.lift()
+        except tk.TclError:
+            pass
 
     def Hide(self):
         self.Cancel()

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 53 | 1.12.54 |
+| 1.12 | Metheney | 54 | 1.12.55 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.55** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the tooltips of the settings dialog are invisible while the dialog is topmost (#2639)
+  - description: The pop-up hints of the tree rows and of the buttons do not appear when the dialog is topmost, which it is by default and in every dialog of 'python -m exudyn dialogs'. Turning off visualizationSettings.dialogs.alwaysTopmost and reopening the dialog makes them work, which names the cause: the tooltip is a Toplevel of the dialog without the topmost flag, and on Windows a topmost window is always above one that is not - the same mechanism as the window of the changes in \#2621, which had to be given the flag before it could be seen. The tooltip needs it too; the dialog must stay topmost, because it blocks the render window.
+  - **notes:** The tooltip window of the settings dialog carries -topmost and is lifted when it is placed, so the pop-up hints appear while the dialog is topmost - which it stays, because it blocks the render window. Same mechanism as \#2621 and \#2614: on Windows a topmost window is a stacking band, and a Toplevel without the flag can never be drawn above one that has it. revision2026b step RG6.2.26.
+  - date resolved: **2026-09-24 13:11**, date raised: 2026-09-24
 - **1.12.54** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the revision plan carries the full text of the steps that are finished (#2638)
   - description: The plan states its own rule - a done step keeps one line here: status, date, outcome, link to the log; an open step keeps its full text - and does not follow it: 971 of its 1391 lines are steps that are done, several of them 30 to 130 lines of how the work was done, why, and which options were weighed. That belongs in the log, which has an entry for every one of them, and the problem as it was first stated belongs to the issue. The plan is where the OPEN work is read, and it is unreadable when four fifths of it is finished work.
   - **notes:** The revision plan holds the open work again: a finished step keeps its status, date, outcome and the link to its log entry, which is the rule the plan states in its own header. 1391 lines to 939, no anchor, step number or group heading lost, and no open step touched. The review of GUI.py, the one piece of analysis that lived only in the plan, is a log entry now. revision2026b step RG10.7.
