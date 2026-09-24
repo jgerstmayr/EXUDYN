@@ -265,6 +265,32 @@ def CpuInfoString():
 
 
 #%%******************************************************************************************************
+#what a performance model is handed, and what AddTiming below fills. It was in
+#python/testing/modelUnitTests.py until revision2026b step RG10.6.5 dissolved that module; the
+#test models and the mini examples use exu.sys now, and the seven performance models are the last
+#callers of this (#2632).
+#this class is for interaction of test suite with examples given as (autonomous) .py file
+class ExudynTestStructure:
+    def __init__(self, useGraphics = True, performTests = False, testError = 0, 
+                 testResult = 0, testTolFact = 1):
+        self.useGraphics = useGraphics
+        self.testError = testError      #for regular test models (store reference solution inside)
+        self.testResult = testResult    #the value a model computes; was a duplicate testError line
+        self.testTolFact = testTolFact  #additional factor to raise tolerance
+        self.performTests = performTests #this variable is only used for testing if example is calculated outside test mode
+
+        #one dict per simulation run, appended by testRunnerTools.AddTiming (issue #2460):
+        #{'name':..., 'time': solver.timer.total, 'result':...}. A performance model may run
+        #several sizes or thread counts, and runPerformanceTests.py reports every single one.
+        self.timings = []
+
+        self.useCorrectedAccGenAlpha = True  #always corrected
+        self.useNewGenAlphaSolver = True    #active by default
+        
+exudynTestGlobals = ExudynTestStructure() #variable used as global variable during testing
+
+
+#%%******************************************************************************************************
 def AddTiming(testGlobals, name, mbs, result, solverName='dynamicSolver'):
     """
     Record one simulation run of a performance model (issue #2460).
@@ -887,7 +913,7 @@ exu.special.userInterface.SuppressAll(True)  #revision2026 step R5.17
 exu.config.outputDirectory = {outputDirectory!r}
 exu.sys['testIsActive'] = True          #revision2026b step RG10.6: the channel is exu.sys
 exu.sys['testResult'] = {invalidResult!r}
-from modelUnitTests import exudynTestGlobals   #until every model is converted
+from testRunnerTools import exudynTestGlobals   #until the performance models are converted
 exudynTestGlobals.useGraphics = False
 exudynTestGlobals.performTests = True
 exudynTestGlobals.testResult = {invalidResult!r}
@@ -903,7 +929,9 @@ finally:
         _testResult = float(_result)
     except Exception:
         _testResult = float('nan')
-    print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start))
+    #a model may state a tolerance of its own (revision2026b step RG10.6); 0 means it did not
+    print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start),
+          repr(float(exu.sys.get('testTolerance', 0.))))
 """
 
 
@@ -950,6 +978,7 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
                 'output': 'TIMEOUT after ' + str(timeout) + ' seconds', 'failed': True}
 
     result = invalidResult
+    tolerance = 0.       #a tolerance the model asked for; 0 means it asked for none
     seconds = time.perf_counter() - start
     keptLines = []
     for line in output.split('\n'):
@@ -958,13 +987,14 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
             try: #the model may have printed something odd; never let parsing kill the suite
                 result = float(parts[1])
                 seconds = float(parts[2])
+                tolerance = float(parts[3])
             except (IndexError, ValueError):
                 pass
         else:
             keptLines += [line]
 
     return {'result': result, 'seconds': seconds, 'output': '\n'.join(keptLines).rstrip(),
-            'failed': failed}
+            'failed': failed, 'tolerance': tolerance}
 
 
 #%%******************************************************************************************************

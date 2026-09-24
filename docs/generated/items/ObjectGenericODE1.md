@@ -119,7 +119,7 @@ solverType = exu.DynamicSolverType.RK44
 mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
 
 #check result at default integration time
-exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
+exu.sys['testResult'] = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
 ```
 
 

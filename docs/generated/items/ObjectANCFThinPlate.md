@@ -64,5 +64,5 @@ Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1
 #to be done
 
 #check result
-exudynTestGlobals.testResult = 0
+exu.sys['testResult'] = 0
 ```

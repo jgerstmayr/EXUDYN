@@ -7,15 +7,10 @@
 # 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../testing')
-sys.path.append('../../testing') #for direct run in directory
-
 import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
 #create an environment for mini example
@@ -47,8 +42,8 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result at default integration time
-exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 
+exu.sys['testResult'] = mbs.GetNodeOutput(nMass, 
                                              exu.OutputVariableType.Displacement)[0]
 
-exu.Print("example for ObjectConnectorCoordinateSpringDamper completed, test result =", exudynTestGlobals.testResult)
+exu.Print("example for ObjectConnectorCoordinateSpringDamper completed, test result =", exu.sys['testResult'])
 

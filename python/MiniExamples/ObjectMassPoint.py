@@ -7,15 +7,10 @@
 # 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../testing')
-sys.path.append('../../testing') #for direct run in directory
-
 import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
 #create an environment for mini example
@@ -35,8 +30,8 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result
-exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
 #final x-coordinate of position shall be 2
 
-exu.Print("example for ObjectMassPoint completed, test result =", exudynTestGlobals.testResult)
+exu.Print("example for ObjectMassPoint completed, test result =", exu.sys['testResult'])
 

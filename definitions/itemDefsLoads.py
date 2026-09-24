@@ -234,7 +234,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
     #final z-coordinate of position shall be -g/2 due to constant acceleration with g=-9.81
     #result independent of mass
 """,

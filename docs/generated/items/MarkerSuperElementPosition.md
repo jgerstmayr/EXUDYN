@@ -101,7 +101,7 @@ mbs.Assemble()
 mbs.SolveDynamic(solverType = exu.DynamicSolverType.TrapezoidalIndex2)
 
 #check result at default integration time
-exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
+exu.sys['testResult'] = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
 ```
 
 

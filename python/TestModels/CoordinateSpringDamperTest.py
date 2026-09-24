@@ -1,0 +1,95 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  CoordinateSpringDamperTest, one of the ten small tests that lived in python/testing/modelUnitTests.py
+#           from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test
+#           model. The model computes an ERROR against a reference value written into it back
+#           then, so its result is that error and its reference solution is 0.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2019-11-01 (as a function), 2026-09-24 (as a test model)
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+
+testIsActive = exu.sys.get('testIsActive', False)
+exu.sys['testTolerance'] = 4e-13 #the tolerance RunAllModelUnitTests used for these ten
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+L=0.5
+mass = 1.6
+k = 4000
+omega0 = 50 # sqrt(4000/1.6)
+dRel = 0.05
+d = dRel * 2 * 80 #80=sqrt(1.6*4000)
+u0=-0.08
+v0=1
+f = 80
+x0 = f/k
+fFriction = 20 #force in Newton, only depends on direction of velocity
+
+#node for mass point:
+n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], initialVelocities= [v0,0,0]))
+nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [L,0,0]))
+
+#add mass points and ground object:
+objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
+massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+
+#marker for constraint / springDamper
+groundCoordinateMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+nodeCoordinateMarker0  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 0))
+nodeCoordinateMarker1  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 1))
+nodeCoordinateMarker2  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 2))
+
+#Spring-Dampers
+mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker0], 
+                                     stiffness = k, damping = d) ) #changed 2023-01-21: dryFriction=0*fFriction, dryFrictionProportionalZone=0.01)) #offset must be zero, because coordinates just represent the displacements
+mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker1], stiffness = k)) 
+mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker2], stiffness = k)) 
+
+#add loads:
+mbs.AddLoad(LoadCoordinate(markerNumber = nodeCoordinateMarker0, load = f))
+
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+tEnd = 1 #1
+steps = 1000    #1000
+simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
+simulationSettings.timeIntegration.numberOfSteps = steps
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.displayStatistics = False
+
+simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
+simulationSettings.solutionSettings.writeSolutionToFile=False
+
+if not testIsActive: 
+    SC.renderer.Start()
+
+mbs.SolveDynamic(simulationSettings)
+
+if not testIsActive: 
+    SC.renderer.DoIdleTasks()
+    SC.renderer.Stop() #safely close rendering window!
+
+u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
+uCoordinateSpringDamper= u[0] - L
+if True:
+    errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933407061654 #until 2022-01-25 (changed jacobians): 0.01183493340619235 #2021-09-27: new JacobianODE2RHS
+    #errorCoordinateSpringDamper = uCoordinateSpringDamper -0.011834933407368853 #2021-02-04: 0.011834933407368853
+else:
+    errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933406690284 #15.12.2019: 0.011834933406690284; beofre 15.12.2019: 0.011834933407047 #for 1000 steps, endtime=1; this is different from CartesianSpringDamper because of offset L (rounding errors around 1e-14)
+
+
+exu.Print('solution CoordinateSpringDamper=',uCoordinateSpringDamper)
+testResult = abs(errorCoordinateSpringDamper)
+exu.Print('solution of CoordinateSpringDamperTest=', testResult)
+exu.sys['testResult'] = testResult

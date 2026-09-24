@@ -37,7 +37,7 @@ import testRunnerTools
 useGraphics = False #without test
 #the following is used to always get the same results, independent of the test suite
 try:
-    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    from testRunnerTools import exudynTestGlobals #for globally storing test results
     useGraphics = exudynTestGlobals.useGraphics
 except:
     class ExudynTestGlobals:

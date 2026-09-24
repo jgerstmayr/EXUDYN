@@ -98,7 +98,7 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result, get current mass position at local position [0,0,0]
-exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
+exu.sys['testResult'] = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
 #final x-coordinate of position shall be 2
 ```
 

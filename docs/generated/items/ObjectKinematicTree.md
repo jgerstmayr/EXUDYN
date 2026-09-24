@@ -282,7 +282,7 @@ mbs.SolveDynamic(simulationSettings , solverType=exu.DynamicSolverType.RK67) #hi
 #check final value of angle:
 q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
 #exu.Print(q0)
-exudynTestGlobals.testResult = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
+exu.sys['testResult'] = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
 ```
 
 

@@ -43,17 +43,12 @@ def WriteMiniExample(className, miniExample, outputDir):
     s+= '# \n'
     s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n'
 
-    s+= 'import sys\n'
-    #modelUnitTests lives in python/testing/ since revision2026 step R3.9 (#2513); the first
-    #entry is for the suite (working directory python/TestModels/), the second for a direct
-    #run in python/MiniExamples/
-    s+= "sys.path.append('../testing')\n"
-    s+= "sys.path.append('../../testing') #for direct run in directory\n\n"
+    #nothing from python/testing/ is imported since revision2026b step RG10.6.4 (#2632): the
+    #result goes into exu.sys, so a mini example runs anywhere, in the suite and on its own
     s+= 'import exudyn as exu\n'
 
     s+= 'from exudyn.utilities import *\n'
     s+= 'import exudyn.graphics as graphics\n\n'
-    s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
     s+= 'import numpy as np\n'
     s+= '\n'
     s+= '#create an environment for mini example\n'
@@ -73,7 +68,7 @@ def WriteMiniExample(className, miniExample, outputDir):
     #s+= space4+'exu.Print("An error occured in test example for ' + className + ':", e)\n'
     #s+= 'else:\n'
     #s+= space4+'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
-    s+= 'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
+    s+= 'exu.Print("example for ' + className + ' completed, test result =", exu.sys[\'testResult\'])\n'
     s+= '\n'
     
     fileExample=open(outputDir+className+'.py','w',encoding='utf8') 

@@ -7,15 +7,10 @@
 # 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../testing')
-sys.path.append('../../testing') #for direct run in directory
-
 import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
 #create an environment for mini example
@@ -55,7 +50,7 @@ mbs.SolveDynamic(simulationSettings , solverType=exu.DynamicSolverType.RK67) #hi
 #check final value of angle:
 q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
 #exu.Print(q0)
-exudynTestGlobals.testResult = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
+exu.sys['testResult'] = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
 
-exu.Print("example for ObjectKinematicTree completed, test result =", exudynTestGlobals.testResult)
+exu.Print("example for ObjectKinematicTree completed, test result =", exu.sys['testResult'])
 

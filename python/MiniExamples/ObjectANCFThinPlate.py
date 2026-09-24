@@ -7,15 +7,10 @@
 # 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../testing')
-sys.path.append('../../testing') #for direct run in directory
-
 import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
 #create an environment for mini example
@@ -28,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #to be done
 
 #check result
-exudynTestGlobals.testResult = 0
+exu.sys['testResult'] = 0
 
-exu.Print("example for ObjectANCFThinPlate completed, test result =", exudynTestGlobals.testResult)
+exu.Print("example for ObjectANCFThinPlate completed, test result =", exu.sys['testResult'])
 

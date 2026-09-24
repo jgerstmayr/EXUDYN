@@ -21,6 +21,21 @@ def TestExamplesReferenceSolution():
     #them by more than the 5e-14 tolerance - the AVX branches of Use_avx.h sum in a different
     #order. The previous (AVX2) values are in git history, one commit back.
     refSol = {
+        #the ten small tests that were functions in modelUnitTests.py until revision2026b
+        #step RG10.6.5. Each computes an ERROR against a reference value written into it in
+        #2019, so its result IS that error and the reference here is 0; each model states
+        #its own tolerance, exu.sys['testTolerance'] = 4e-13, which is what
+        #RunAllModelUnitTests compared against
+        'ANCFCable2DBendingTest.py': 0.,
+        'CartesianSpringDamperTest.py': 0.,
+        'CoordinateSpringDamperTest.py': 0.,
+        'GraphicsDataTest.py': 0.,
+        'MathematicalPendulumTest.py': 0.,
+        'RigidPendulumTest.py': 0.,
+        'SliderCrank2DTest.py': 0.,
+        'SlidingJoint2DTest.py': 0.,
+        'SpringDamperMesh.py': 0.,
+        'SwitchingConstraintsTest.py': 0.,
         'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
         'ANCFBeamTest.py': 1.0104863123004104,                       #new 2023-04-04, after resolving local kappa bug

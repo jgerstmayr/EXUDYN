@@ -85,6 +85,6 @@ mbs.Assemble()
 mbs.SolveStatic()
 
 #check result
-exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
 #ux=-0.5013058140308901
 ```

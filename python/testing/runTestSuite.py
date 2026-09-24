@@ -54,7 +54,7 @@ import exudyn as exu
 
 if useFastModule: #asking is not getting; stop rather than write a log that claims the wrong module
     testRunnerTools.RequireFastModule('--fast-module')
-from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
+from testRunnerTools import ExudynTestStructure, exudynTestGlobals
 import time
 
 try:
@@ -125,7 +125,6 @@ if quietMode:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #choose which tests to run:
-TSScope.runUnitTests = False #skipped at least since V1.6
 TSScope.runTestExamples = True
 TSScope.runMiniExamples = True
 TSScope.runCppUnitTests = True
@@ -239,18 +238,10 @@ exudynTestGlobals.performTests = True
 
 TSScope.timeStart = -time.time()
 
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#small (old) unit tests
-testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
-                              # useCorrectedAccGenAlpha = exudynTestGlobals.useCorrectedAccGenAlpha,
-                              # useNewGenAlphaSolver = exudynTestGlobals.useNewGenAlphaSolver)
-rvModelUnitTests = True
-unitTestsFailed = []
-if TSScope.runUnitTests:
-    exu.Print('\n***********************')
-    exu.Print('  RUN MODEL UNIT TESTS ')
-    exu.Print('***********************\n')
-    [rvModelUnitTests, unitTestsFailed] = RunAllModelUnitTests(mbs, testInterface)
+#the ten 'model unit tests' were functions of python/testing/modelUnitTests.py, run from here
+#through a TestInterface object - and NOT run: runUnitTests was False "at least since V1.6".
+#They are ordinary test models since revision2026b step RG10.6.5 (#2632), so they are in the
+#list below with everything else, and they run.
 SC.Reset()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -363,6 +354,9 @@ if TSScope.runTestExamples:
                 TSScope.modelRun = TSScope.parallelResults[TSScope.file]
                 exu.Print(TSScope.modelRun['output'])
                 exudynTestGlobals.testResult = TSScope.modelRun['result']
+                #the model ran in another interpreter, so its tolerance comes back with it
+                if TSScope.modelRun.get('tolerance', 0.) > 0.:
+                    exu.sys['testTolerance'] = TSScope.modelRun['tolerance']
                 if TSScope.modelRun['failed']:
                     exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file
                               + '") terminated with an error, see its output above')
@@ -472,6 +466,8 @@ if TSScope.runMiniExamples:
         exu.Print('  START MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         SC.Reset()
         testError = -1
+        exu.sys['testIsActive'] = True          #revision2026b step RG10.6.4
+        exu.sys['testResult'] = TSScope.invalidResult
         exu.config.outputDirectory = TSScope.solutionDirectory + '/MiniExamples/' + file[:-3] #(#2418)
         fileDir = '../MiniExamples/'+file
         miniTimeStart = time.perf_counter()
@@ -481,6 +477,8 @@ if TSScope.runMiniExamples:
             exu.Print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
             print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)
         finally:
+            exudynTestGlobals.testResult = exu.sys.get('testResult', TSScope.invalidResult)
+            exu.sys['testIsActive'] = False
             exudynTestGlobals.testError = exudynTestGlobals.testResult-miniExamplesRefSol[name]
             if abs(exudynTestGlobals.testError) < TSScope.testTolerance:
                 exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
@@ -548,16 +546,6 @@ exu.Print('time elapsed =',round(TSScope.timeStart,3),'seconds')
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 totalFails = 0
-if TSScope.runUnitTests:
-    if rvModelUnitTests:
-        exu.Print('ALL UNIT TESTS SUCCESSFUL')
-    else:
-        exu.Print('UNIT TESTS FAILED: '+str(unitTestsFailed))
-    # localFileName += '-unittests'+str(len(unitTestsFailed))
-    totalFails+=len(unitTestsFailed)
-else:
-    exu.Print('UNIT TESTS SKIPPED')
-    
 if TSScope.runTestExamples:
     if len(testsFailed) == 0:
         exu.Print('ALL ' + str(TSScope.totalTests) + ' TestModel TESTS SUCCESSFUL')

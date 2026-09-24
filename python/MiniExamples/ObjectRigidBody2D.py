@@ -7,15 +7,10 @@
 # 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../testing')
-sys.path.append('../../testing') #for direct run in directory
-
 import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
 #create an environment for mini example
@@ -35,9 +30,9 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result
-exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
-exudynTestGlobals.testResult+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+exu.sys['testResult']+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
 #final x-coordinate of position shall be 2, angle theta shall be np.pi
 
-exu.Print("example for ObjectRigidBody2D completed, test result =", exudynTestGlobals.testResult)
+exu.Print("example for ObjectRigidBody2D completed, test result =", exu.sys['testResult'])
 

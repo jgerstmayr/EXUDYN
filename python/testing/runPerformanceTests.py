@@ -50,7 +50,7 @@ if useFastModule: #asking is not getting - a declined request would mismeasure t
 
 (exuCPPname, exuCPP) = testRunnerTools.LoadedCppModule() #never names the module itself (#2466)
 
-from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
+from testRunnerTools import ExudynTestStructure, exudynTestGlobals
 import time
 
 psutilExists = False

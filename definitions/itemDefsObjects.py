@@ -227,7 +227,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
     #final x-coordinate of position shall be 2
 """,
     objectType=ObjectTypeBody,
@@ -354,7 +354,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
     #final x-coordinate of position shall be 2
 """,
     objectType=ObjectTypeBody,
@@ -483,7 +483,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result, get current mass position at local position [0,0,0]
-    exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
+    exu.sys['testResult'] = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
     #final x-coordinate of position shall be 2
 """,
     objectType=ObjectTypeBody,
@@ -626,7 +626,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result, get current rotor z-rotation at local position [0,0,0]
-    exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
+    exu.sys['testResult'] = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
     #final z-angle of rotor shall be 2
 """,
     objectType=ObjectTypeBody,
@@ -1067,8 +1067,8 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
-    exudynTestGlobals.testResult+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+    exu.sys['testResult']+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
     #final x-coordinate of position shall be 2, angle theta shall be np.pi
 """,
     objectType=ObjectTypeBody,
@@ -1361,7 +1361,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     mbs.SolveDynamic(solverType = exu.DynamicSolverType.TrapezoidalIndex2)
 
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
 """,
     objectType=ObjectTypeSuperElement,
     outputVariables=[
@@ -1632,7 +1632,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
 
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
 """,
     objectType=ObjectTypeObject,
     outputVariables=[
@@ -2026,7 +2026,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #check final value of angle:
     q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
     #exu.Print(q0)
-    exudynTestGlobals.testResult = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
+    exu.sys['testResult'] = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
 """,
     objectType=ObjectTypeSuperElement,
     outputVariables=[
@@ -3353,7 +3353,7 @@ definitions.append(ItemDefinition(
     mbs.SolveStatic()
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
     #ux=-0.5013058140308901
 """,
     objectType=ObjectTypeFiniteElement,
@@ -3884,7 +3884,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     mbs.SolveStatic()
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
     #ux=-0.5013058140308901
 """,
     objectType=ObjectTypeFiniteElement,
@@ -4728,7 +4728,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #to be done
 
     #check result
-    exudynTestGlobals.testResult = 0
+    exu.sys['testResult'] = 0
 """,
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
@@ -5125,7 +5125,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
 """,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -5371,7 +5371,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
 """,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -5607,7 +5607,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
+    exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
 """,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -5840,7 +5840,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
 """,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -6050,7 +6050,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 """,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -6276,7 +6276,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, 
                                                  exu.OutputVariableType.Displacement)[0]
 """,
     objectType=ObjectTypeConnector,
@@ -6800,7 +6800,7 @@ definitions.append(ItemDefinition(
 
     #check result at default integration time
     #expect y=x after one period of orbiting (got: 100000.00000000479)
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
+    exu.sys['testResult'] = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 """,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -7504,7 +7504,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic(sims)
 
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
 """,
     objectType=ObjectTypeConstraint,
     outputVariables=[
@@ -7710,7 +7710,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #check result at default integration time
-    exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
+    exu.sys['testResult']  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
 """,
     objectType=ObjectTypeConstraint,
     outputVariables=[
@@ -10530,7 +10530,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
+    exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 """,
     objectType=ObjectTypeJoint,
     outputVariables=[

@@ -1592,3 +1592,47 @@ the value by seven orders of magnitude and with it the reference — so it becom
 `exu.sys['testTolerance']` in RG10.6.7, where changing that number is the point rather than a side
 effect.
 
+<a id="rg10-6-5"></a>
+### RG10.6.4 and RG10.6.5 — modelUnitTests.py is gone (2026-09-24, #2632)
+
+**The mini examples are generated**, which is the whole of RG10.6.4: the three lines that made
+each of the 24 files import the test suite are in `tools/generators/miniExampleEmitter.py`, and
+the `exudynTestGlobals.testResult = ...` at the end of each is in the 24 `miniExample` bodies in
+`definitions/`. Both changed; one regeneration rewrote the 24 files. A mini example now imports
+`exudyn` and nothing else, and it runs from any directory, which the two `sys.path.append('../testing')`
+lines existed to work around.
+
+**And modelUnitTests.py is deleted**, with `runUnitTests.py`. What it held:
+
+- **ten test functions**, each taking `(mbs, testInterface)` and returning an error. They are ten
+  ordinary files in `python/TestModels/` now. The extraction was scripted — dedent the body,
+  `testInterface.SC` to `SC`, the single top-level `return X` to `testResult = X` plus a print and
+  `exu.sys['testResult']— ` and the script refused a function it could not take apart cleanly
+  rather than guessing;
+- **`TestInterface`** and **`RunAllModelUnitTests`**, gone with them;
+- **`ExudynTestStructure`**, which is *not* gone: `testRunnerTools.AddTiming` collects a `timings`
+  list on it for the seven performance models (#2460). It moved to `testRunnerTools.py`, where the
+  rest of the runner machinery lives, and the performance models import it from there. RG10.6.8
+  finishes that.
+
+**The finding that makes this worth more than tidiness**: `runTestSuite.py` had
+`TSScope.runUnitTests = False #skipped at least since V1.6`. **The ten tests were not being run.**
+Dead since 2021, and one of them — `GraphicsDataTest— ` contains
+`testInterface.testinterface.SC.renderer.Start()`, a typo that would have raised the moment
+anybody turned the switch on. They run now, and all ten pass.
+
+**They also made the tolerance feature real.** `RunAllModelUnitTests` compared their errors
+against `errTol = 4e-13`, which is looser than the suite's 5e-14 — and `SliderCrank2DTest`
+really does produce 6.0e-14. So each of the ten states
+`exu.sys['testTolerance'] = 4e-13`, the thing RG10.6.1 built, and their reference solution is
+**0**, because what these old tests compute *is* an error against a value written into them in
+2019.
+
+That flushed out two runners that did not know about the feature yet: the **pytest** runner
+(`test_testModels.py`), which judged every model against the default, and the **parallel** path of
+the suite, where the model runs in another interpreter and `exu.sys` in the parent knows nothing
+about it. The tolerance now travels with the result through the worker's result marker. One
+feature, three runners — and the third was found by a test failing, not by thinking about it.
+
+**Nothing else moved**: all 139 previous results are identical, and the ten are new.
+

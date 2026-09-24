@@ -101,7 +101,7 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result, get current rotor z-rotation at local position [0,0,0]
-exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
+exu.sys['testResult'] = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
 #final z-angle of rotor shall be 2
 ```
 

@@ -149,7 +149,7 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result at default integration time
-exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 
+exu.sys['testResult'] = mbs.GetNodeOutput(nMass, 
                                              exu.OutputVariableType.Displacement)[0]
 ```
 

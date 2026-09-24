@@ -151,7 +151,7 @@ mbs.Assemble()
 mbs.SolveDynamic(exu.SimulationSettings())
 
 #check result at default integration time
-exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
+exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 ```
 
 

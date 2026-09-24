@@ -1189,10 +1189,17 @@ file, so an editor cannot complete them).
       magnitude and therefore the reference in `runTestSuiteRefSol.py`. It becomes
       `exu.sys['testTolerance']` in a step where that reference is changed on purpose, so that
       the bar for the sweep — identical numbers — stays meaningful.
-    - **RG10.6.4** the mini examples.
-    - **RG10.6.5** `modelUnitTests.py` becomes ten files in `python/TestModels/` and is deleted,
-      together with `TestInterface`, `ExudynTestStructure` and the `exudynTestGlobals` fallback
-      in the runners.
+    - **RG10.6.4** **DONE 2026-09-24** the mini examples — they are **generated**, so the change is in `tools/generators/miniExampleEmitter.py` and in the 24 `miniExample` bodies in `definitions/`.
+    - **RG10.6.5** **DONE 2026-09-24** `modelUnitTests.py` is deleted, with `runUnitTests.py`.
+      Its ten test functions are test models; `TestInterface` and `RunAllModelUnitTests` are gone
+      with the switch that had turned them off *"at least since V1.6"*; `ExudynTestStructure`
+      moved to `testRunnerTools.py`, which is where the seven **performance** models still take
+      it from — converting those needs the `timings` list of #2460 to move as well, which is
+      RG10.6.8.
+    - **RG10.6.8** *(added 2026-09-24, from RG10.6.5)* the seven **performance** models and
+      `runPerformanceTests.py` are the last users of `ExudynTestStructure`, because
+      `testRunnerTools.AddTiming` collects a `timings` list on it (#2460). That list has to move
+      into `exu.sys` before the class can go.
     - **RG10.6.6** the documentation of the test suite, and `python/pytestTemplate.py` and
       `docs/dev/` wherever they describe the old pattern.
 

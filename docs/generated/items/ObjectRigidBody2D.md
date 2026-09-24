@@ -145,8 +145,8 @@ mbs.Assemble()
 mbs.SolveDynamic()
 
 #check result
-exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
-exudynTestGlobals.testResult+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+exu.sys['testResult']+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
 #final x-coordinate of position shall be 2, angle theta shall be np.pi
 ```
 

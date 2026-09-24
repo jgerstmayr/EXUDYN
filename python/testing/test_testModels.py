@@ -106,9 +106,13 @@ def CheckRun(fileName, run, referenceValue, tolerance, judgeValue=True):
 
     assert not run['failed'], fileName + ' terminated with an error'
     assert run['result'] != invalidResult, (fileName + ' set no test result; a model must assign '
-                                            'exudynTestGlobals.testResult')
+                                            "exu.sys['testResult']")
     if not judgeValue:
         return
+    #a model may state a tolerance of its own (revision2026b step RG10.6); the ten former unit
+    #tests do, because the default 5e-14 is tighter than the 4e-13 they were judged against
+    if run.get('tolerance', 0.) > 0.:
+        tolerance = run['tolerance']
     error = run['result'] - referenceValue
     assert abs(error) < tolerance, (
         '{}: result {!r} differs from the reference {!r} by {:.3e}, tolerance {:.1e}'.format(

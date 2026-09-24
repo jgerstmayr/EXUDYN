@@ -7,15 +7,10 @@
 # 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../testing')
-sys.path.append('../../testing') #for direct run in directory
-
 import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
 #create an environment for mini example
@@ -48,8 +43,8 @@ mbs.Assemble()
 mbs.SolveStatic()
 
 #check result
-exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
 #ux=-0.5013058140308901
 
-exu.Print("example for ObjectANCFCable completed, test result =", exudynTestGlobals.testResult)
+exu.Print("example for ObjectANCFCable completed, test result =", exu.sys['testResult'])
 

@@ -154,7 +154,7 @@ mbs.SolveDynamic(sims, solverType=exu.DynamicSolverType.RK67)
 
 #check result at default integration time
 #expect y=x after one period of orbiting (got: 100000.00000000479)
-exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
+exu.sys['testResult'] = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 ```
 
 
