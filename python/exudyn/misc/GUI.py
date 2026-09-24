@@ -39,12 +39,13 @@ __all__ = [
     'boolDoubleClickDelay', 'textHeightFactor', 'treeEditDefaultWidth', 'treeEditDefaultHeight',
     'treeEditMaxInitialHeight', 'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems',
     'treeEditLastOpenItems', 'codeLineBackground', 'changedValueColor', 'IsApple',
-    'GetRendererSystemContainer', 'GetTkRootAndNewWindow', 'TkRootExists', 'DialogFontSize',
-    'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
-    'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo',
-    'TkinterEditDictionary', 'EditDictionary', 'ApplyDialogWindowSettings', 'rendererHelpText',
-    'ShowHelpDialog', 'pythonCommandExamples', 'ShowPythonCommandDialog',
-    'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'GetRendererSystemContainer', 'MakeProcessDpiAware', 'GetTkRootAndNewWindow', 'TkRootExists',
+    'DialogFontSize', 'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling',
+    'GetGUIContentScaling', 'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
+    'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary',
+    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
+    'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
+    'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -91,10 +92,39 @@ def GetRendererSystemContainer():
         pass
     return None
 
+def MakeProcessDpiAware():
+    """tell Windows that this process draws at the real resolution of the display
+
+    Without it, Windows renders the window at 96 dpi and stretches the bitmap, which is why
+    a dialog opened from a shell looked soft while the same dialog opened from the render
+    window was sharp: GLFW makes the process DPI aware when it creates the render window,
+    and a dialog that comes after it inherits that. From "python -m exudyn dialogs" there is
+    no GLFW (#2634).
+
+    It must be called BEFORE the first window is created; afterwards Windows refuses, which
+    is not an error here - something else has already set it, which is what we wanted.
+
+    Returns:
+        True if this process is DPI aware afterwards
+    """
+    if sys.platform != 'win32':
+        return True                 #X11 and macOS scale by themselves
+    import ctypes                                                       # noqa: PLC0415
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)   #1 = system aware, as GLFW sets it
+        return True
+    except Exception:               #already set, or an older Windows without shcore
+        try:
+            return bool(ctypes.windll.user32.SetProcessDPIAware())
+        except Exception:
+            return False
+
+
 def GetTkRootAndNewWindow():
     """get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
     """
     if tk._default_root is None:
+        MakeProcessDpiAware()       #before the first window, or Windows ignores it (#2634)
         root = tk.Tk()
         tkWindow = root
         tkRuns = False
@@ -160,7 +190,20 @@ def TkTextHeight(systemScaling):
     return int((treeviewDefaultFontSize*textHeightFactor)*systemScaling) #must be int; 13 is good with treeviewDefaultFontSize = 9; 12 leads to some cuts of 'g'
 
 #safely request scaling factor from exudyn
-def GetExudynDisplayScaling():
+def GetExudynDisplayScaling(root=None):
+    """the display scaling the dialogs size themselves by
+
+    The renderer knows it and reports it in its state. Without a renderer this used to
+    return 1, so a dialog opened from the command line came out at a different size than the
+    same dialog opened with V in the render window (#2634); tkinter is asked instead, which
+    knows it once MakeProcessDpiAware has been called.
+
+    Args:
+        root: a tkinter root to ask when there is no renderer; without one the answer is 1
+
+    Returns:
+        the scaling, 1 if nothing knows better
+    """
     try:
         if 'currentRendererSystemContainer' in exudyn.sys: 
             guiSC = exudyn.sys['currentRendererSystemContainer']
@@ -168,6 +211,9 @@ def GetExudynDisplayScaling():
                 rs = guiSC.renderer.GetState()
                 return rs['displayScaling']
         
+        if root is not None:        #96 dpi is the unscaled display, 144 is 150%
+            return max(1., root.winfo_fpixels('1i') / 96.)
+
         return 1
 
     except (KeyError, AttributeError, tk.TclError): 
@@ -177,7 +223,7 @@ def GetExudynDisplayScaling():
 def GetGUIContentScaling(root):
     try:
         if useRenderWindowDisplayScaling: #would also work under linux
-            s = 1.4*GetExudynDisplayScaling() #gives similar size as other programs; factor 1.4 is empirical
+            s = 1.4*GetExudynDisplayScaling(root) #gives similar size as other programs; factor 1.4 is empirical
             root.tk.call('tk', 'scaling', s) #needed to update font size internally ...
             return s
         else:
@@ -765,6 +811,10 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def MarkChangedValues(self, item=''):
         """colour every row that differs from the default - and every FOLDER that holds such a
         row somewhere below it, because a folded folder hides the mark otherwise (#2612)
+
+        Args:
+            item: the row to start at; '' is the whole tree, and the recursion passes the
+                children of a folder
 
         Returns:
             True if anything below the given item differs from the defaults

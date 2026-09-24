@@ -1867,3 +1867,32 @@ Three decisions worth keeping:
 testable at all, and what CLAUDE.md rule 11 is about. `test_commandLine.py` calls every form of
 it, and the five commands of the table are checked against the list the usage prints.
 
+<a id="rg6-2-24"></a>
+### RG6.2.24 — a dialog without a renderer must look like one with it (2026-09-24, #2634)
+
+`python -m exudyn dialogs` was one day old when the maintainer reported that its windows are
+*"larger, a different font, and seem to be blurred"*. Two causes, and they compound:
+
+- **the process was not DPI aware.** GLFW sets that when it creates the render window, so a
+  dialog opened with **V** inherits it and is drawn at the real resolution of the display. Started
+  from a shell there is no GLFW, so Windows draws the window at 96 dpi and **stretches the
+  bitmap**: soft, and on a 175% display 1.75 times too large;
+- **and the scaling it computed was wrong in the other direction.**
+  `GetExudynDisplayScaling()` reads `displayScaling` out of the renderer's state and returned
+  **1** when there is no renderer, so the content was laid out for an unscaled display and then
+  stretched.
+
+Both are fixed where they belong. `MakeProcessDpiAware()` is called once, in
+`GetTkRootAndNewWindow`, **before the first window** — afterwards Windows refuses, and that
+refusal is not an error here, it means something else has already done it. And
+`GetExudynDisplayScaling(root)` asks tkinter when it cannot ask a renderer:
+`root.winfo_fpixels('1i') / 96`, which is the display's true scaling once the process is aware of
+it. Measured on this machine: **1.749** where it used to say 1.
+
+So the dialog is now laid out at the same size the renderer's dialog is laid out at, and drawn
+sharp instead of stretched to it.
+
+**A test that had to be taught about its neighbours**: it asserts that without a renderer the
+answer is 1, and another test in the same file registers a container in `exudyn.sys— ` so it
+passed alone and failed in the file. It removes that key and puts it back.
+

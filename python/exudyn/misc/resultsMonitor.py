@@ -360,7 +360,8 @@ class ResultsMonitor:
     which is the function to call."""
 
     def __init__(self, fileName, settings):
-        """
+        """one monitored file and the settings it is drawn with
+
         Args:
             fileName: the results file to monitor
             settings: a dictionary as returned by `LoadSettings`, with the additional keys

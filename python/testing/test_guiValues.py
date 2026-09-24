@@ -505,3 +505,30 @@ def testTheRowHeightAndTheColumnsFollowTheFont():
         assert smallColumns == 1., 'the unscaled font must leave the columns as they were'
     finally:
         root.destroy()
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#how large the dialogs come out when no renderer is running (revision2026b step RG6.2.24, #2634):
+#'python -m exudyn dialogs' opens the same windows as the render window does, and they were
+#bigger and blurred, because the process was not DPI aware and the display scaling was read as 1
+
+def testTheProcessCanBeMadeDpiAware():
+    """on Windows this is what keeps the dialog sharp; elsewhere it is a no-op that says True"""
+    assert gui.MakeProcessDpiAware() in [True, False]   #False only on an old Windows
+
+
+def testTheDisplayScalingIsAskedOfTkinterWhenNoRendererCanBeAsked():
+    root = TkRootOrSkip()
+    #another test in this file registers a container, and the renderer branch would win
+    registered = exudyn.sys.pop('currentRendererSystemContainer', None)
+    try:
+        withoutRoot = gui.GetExudynDisplayScaling()
+        withRoot = gui.GetExudynDisplayScaling(root)
+        assert withoutRoot == 1, 'nothing to ask, so the old answer stands'
+        assert withRoot >= 1.
+        #it is the display's, not a guess: tkinter measures an inch against 96 dpi
+        assert abs(withRoot - max(1., root.winfo_fpixels('1i') / 96.)) < 1e-9
+    finally:
+        root.destroy()
+        if registered is not None:
+            exudyn.sys['currentRendererSystemContainer'] = registered

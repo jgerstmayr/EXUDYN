@@ -1,0 +1,17 @@
+{
+  "number": 2634,
+  "title": "the dialogs opened from the command line are larger and blurred",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "revision2026b step RG6.2.24, maintainer 2026-09-24. python -m exudyn dialogs vis|sim|help opens the same dialogs as the renderer, but they come out larger, in a different font, and visibly blurred. Two causes, both from the missing renderer. (1) The process is not DPI aware: GLFW makes it so when the render window opens, and Windows then draws tkinter at the real resolution; started from a shell there is no GLFW, so Windows bitmap-stretches the window and everything is soft. (2) GetExudynDisplayScaling() reads the display scaling from the renderer's state and returns 1 when there is no renderer, so GetGUIContentScaling sets the tk scaling to 1.4 instead of 1.4 times the display scaling - a different size than the same dialog has when the renderer opens it.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 11:44",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "revision2026b step RG6.2.24. The dialogs of 'python -m exudyn dialogs' are drawn like the ones the render window opens. Two causes, and they compound: the process was not DPI aware - GLFW sets that when it creates the render window, so a dialog opened with V inherits it, while from a shell Windows draws at 96 dpi and stretches the bitmap, which is both soft and, on a 175% display, 1.75 times too large - and GetExudynDisplayScaling() read displayScaling out of the renderer's state and returned 1 when there is no renderer, so the content was laid out for an unscaled display and then stretched. MakeProcessDpiAware() is now called once in GetTkRootAndNewWindow before the first window (afterwards Windows refuses, which is not an error: something else has already done it), and GetExudynDisplayScaling(root) asks tkinter when it cannot ask a renderer - root.winfo_fpixels('1i')/96, measured as 1.749 on this machine where it used to say 1.",
+  "resolvedInVersion": "1.12.50"
+}

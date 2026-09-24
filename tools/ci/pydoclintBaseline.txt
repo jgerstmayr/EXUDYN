@@ -126,12 +126,8 @@ python/exudyn/graphicsDataUtilities.py
     DOC001: Function/method `GraphicsDataRectangle`: Potential formatting errors in docstring. Error message: Expected a colon in 'minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
     DOC001: Function/method `GraphicsDataOrthoCubeLines`: Potential formatting errors in docstring. Error message: Expected a colon in 'minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
 --------------------
-python/exudyn/GUI.py
-    DOC202: Function `EditDictionaryWithTypeInfo` has a return section in docstring, but there are no return statements or annotations
---------------------
 python/exudyn/interactive.py
     DOC104: Function `AnimateModes`: Arguments are the same in the docstring and the function signature, but are in a different order.
-    DOC202: Function `AnimateModes` has a return section in docstring, but there are no return statements or annotations
     DOC202: Function `ConvertImages2Video` has a return section in docstring, but there are no return statements or annotations
 --------------------
 python/exudyn/kinematicTree.py
@@ -163,7 +159,15 @@ python/exudyn/machines.py
     DOC103: Function `GetBallBearingData`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [axis: , nBalls: ].
     DOC104: Function `CreateBallBearing`: Arguments are the same in the docstring and the function signature, but are in a different order.
 --------------------
-python/exudyn/mainSystemExtensions.py
+python/exudyn/misc/GUI.py
+    DOC202: Function `EditDictionaryWithTypeInfo` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `ApplyDialogWindowSettings` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `ShowHelpDialog` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `ShowPythonCommandDialog` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `ShowRightMouseSelectionDialog` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `AskQuitDialog` has a return section in docstring, but there are no return statements or annotations
+--------------------
+python/exudyn/misc/mainSystemExtensions.py
     DOC102: Function `MainSystemCreateGround`: Docstring contains more arguments than in function signature.
     DOC103: Function `MainSystemCreateGround`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [color: ].
     DOC104: Function `MainSystemCreateSpringDamper`: Arguments are the same in the docstring and the function signature, but are in a different order.
@@ -172,6 +176,9 @@ python/exudyn/mainSystemExtensions.py
     DOC102: Function `MainSystemCreateKinematicTree`: Docstring contains more arguments than in function signature.
     DOC103: Function `MainSystemCreateKinematicTree`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [showJoints: , showLinks: ].
     DOC104: Function `DrawSystemGraph`: Arguments are the same in the docstring and the function signature, but are in a different order.
+--------------------
+python/exudyn/misc/settingsUtilities.py
+    DOC202: Function `PrintChangedSettings` has a return section in docstring, but there are no return statements or annotations
 --------------------
 python/exudyn/physics.py
     DOC104: Function `StribeckFunction`: Arguments are the same in the docstring and the function signature, but are in a different order.

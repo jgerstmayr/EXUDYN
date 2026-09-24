@@ -847,6 +847,15 @@ This group is that revision and what has to happen before it can start.
     the column factor `max(1,int(round(systemScaling)))` was an **integer**, so it stayed at 1 for
     every value below 1.5. Both are **measured from the font** now, by `DialogRowMetrics`.
 
+<a id="rg6-2-24"></a>
+**RG6.2.24** **DONE 2026-09-24** (#2634) — [log](exudynRevisionLog2026b.md#rg6-2-24) —
+    **The dialogs opened from the command line were larger and blurred** *(maintainer,
+    2026-09-24)*. Two causes, both from the missing renderer: the process was not **DPI aware**
+    — GLFW makes it so when the render window opens, and without it Windows draws tkinter at 96
+    dpi and stretches the bitmap — and `GetExudynDisplayScaling()` read the scaling from the
+    renderer's state and returned **1** when there is none. The process makes itself DPI aware
+    before the first window, and tkinter is asked for the scaling when no renderer can be.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a

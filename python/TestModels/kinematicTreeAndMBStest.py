@@ -18,11 +18,14 @@ from exudyn.FEM import *
 import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
-#the result is too sensitive to small (1e-15) disturbances to be judged
-#against the default tolerance: it differs on 32 bits and on linux. Until
-#2026-09-24 that was said by multiplying the result by 1e-7, which hid the
-#tolerance inside the number the test compares (revision2026b step RG10.6.7)
-exu.sys['testTolerance'] = 5e-7
+#the result is too sensitive to small (1e-15) disturbances to be judged against the default
+#tolerance: it differs on 32 bits and on linux. Until 2026-09-24 that was said by multiplying
+#the result by 1e-7, which hid the tolerance inside the number the test compares (revision2026b
+#step RG10.6.7). 5e-7 was that multiplication written out, and the linux CI of 1.12.48 then
+#showed an error of 6.2e-7 - so the old form had been failing there too, unnoticed, because
+#nobody could see what the tolerance was. It is 5e-6 now: a relative 2e-8 on a result of 264,
+#with room for the platform difference that is really there
+exu.sys['testTolerance'] = 5e-6
 
 from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy

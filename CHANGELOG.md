@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 48 | 1.12.49 |
+| 1.12 | Metheney | 49 | 1.12.50 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.50** `BUG` the dialogs opened from the command line are larger and blurred (#2634) - raised by Claude-JG
+  - revision2026b step RG6.2.24. The dialogs of 'python -m exudyn dialogs' are drawn like the ones the render window opens. Two causes, and they compound: the process was not DPI aware - GLFW sets that when it creates the render window, so a dialog opened with V inherits it, while from a shell Windows draws at 96 dpi and stretches the bitmap, which is both soft and, on a 175% display, 1.75 times too large - and GetExudynDisplayScaling() read displayScaling out of the renderer's state and returned 1 when there is no renderer, so the content was laid out for an unscaled display and then stretched. MakeProcessDpiAware() is now called once in GetTkRootAndNewWindow before the first window (afterwards Windows refuses, which is not an error: something else has already done it), and GetExudynDisplayScaling(root) asks tkinter when it cannot ask a renderer - root.winfo\_fpixels('1i')/96, measured as 1.749 on this machine where it used to say 1.
 - **1.12.49** `EXTENSION` the settings dialog could edit simulationSettings as well (#2624) - raised by Claude-JG
   - revision2026b step RG6.2.18. The settings dialog is reachable from a shell: python -m exudyn dialogs vis \| sim \| help, the form the maintainer proposed on 2026-09-24 - not from the renderer, where changing a solver setting mid-step is not the harmless thing that changing a colour is. Everything below the widgets was ready since RG6.2, so the step is a command of 40 lines in python/exudyn/\_\_main\_\_.py, added to the CommandTable that already held monitor, plot, info and demo. It builds its own settings structure and never a SystemContainer (creating one attaches it to the render engine, \#2625), and since RG6.2.20 a plain structure carries the values a user really starts from. When the dialog closes, the command prints ChangedSettingsCode(settings) from RG12.3 - the lines that set what was changed, ready to paste - because browsing 470 settings is only useful if something can be taken away from it. The command dialog is deliberately not among them: a window that executes Python in the scope of a running model means nothing without one. The command asks UIWindowSuppressed('Dialogs', ...) first and returns quietly in an automated run, which is what makes it testable; python/testing/test\_commandLine.py calls every form of it.
 - **1.12.47** `DOCU` CHANGELOG.md and the issue tracker page hold the same list twice (#2599) - raised by Claude-JG
