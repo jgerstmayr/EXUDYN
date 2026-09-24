@@ -28,6 +28,7 @@ from exudyn.misc.keyBindings import RendererHelpText
 from exudyn.misc.settingsUtilities import (CheckType, ConvertString2Value,  # noqa: F401
                                            IsArrayInt, IsFloat, IsVector,
                                            ConvertValue2String, DefaultSettingsDictionary,
+                                           EnumDisplayName, EnumFullName,
                                            FindMatches, GetComboBoxListsDict,
                                            SettingsCodeLines, SettingsLeafList,
                                            SettingsPrefix, SettingsValueStrings,
@@ -1073,9 +1074,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         value = self.tree.item(item,'values')[0]
 
         if vType in self.dictionaryTypesT:    #bool and the enums: pick, do not type
-            values = tuple(str(entry) for entry in self.dictionaryTypesT[vType])
+            #without its type in front of it, or the entries are all prefix (#2635)
+            values = tuple(EnumDisplayName(str(entry), vType)
+                           for entry in self.dictionaryTypesT[vType])
+            shown = EnumDisplayName(value, vType)
             self.cellCombo['values'] = values
-            self.cellCombo.set(value if value in values else (values[0] if values else ''))
+            self.cellCombo.set(shown if shown in values else (values[0] if values else ''))
             self.cellCombo.place(x=x, y=y, width=width, height=height)
             self.cellCombo.focus_set()
         else:
@@ -1102,7 +1106,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         vType = self.typeStorage[item]
         vSize = self.sizeStorage[item]
         if vType in self.dictionaryTypesT:
-            valueStr = self.cellCombo.get()
+            valueStr = EnumFullName(self.cellCombo.get(), vType)
         else:
             valueStr = self.editItemVar.get()
 

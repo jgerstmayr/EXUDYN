@@ -1896,3 +1896,27 @@ sharp instead of stretched to it.
 answer is 1, and another test in the same file registers a container in `exudyn.sys— ` so it
 passed alone and failed in the file. It removes that key and puts it back.
 
+<a id="rg6-2-25"></a>
+### RG6.2.25 - an enum in a combo box, without the type in front of every entry (2026-09-24, #2635)
+
+The maintainer, on `contour.outputVariable`: the entries of the list all begin with
+`OutputVariableType.`, *"thus making it impossible to see what value it really is"*. Measured:
+the longest of its 33 entries is 43 characters of which **19 are the prefix**, the combo box
+is placed over the value cell and is therefore as wide as the value column, and the type name
+it spends that width on is **already in the type column beside it**. The item types and the
+solver types of the simulation settings are the same list with a shorter prefix.
+
+What changed is only what the box **shows**. `EnumDisplayName(valueStr, vType)` takes
+`vType + '.'` off the front, `EnumFullName` puts it back, and they sit in
+`settingsUtilities.py` next to the other conversions - tkinter-free, so a test can reach them
+without a window. The combo box shortens its list and its current entry in `StartCellEdit`,
+and `OnCellCommit` lengthens the pick again, so **the tree cell, the settings structure,
+`CheckType`, `ConvertString2Value` and the line `ChangedSettingsCode` writes all keep the full
+name** - the dialog stays the only place the short form exists.
+
+The round trip is required for **every enum the module has**, not for a hand-picked one: the
+test walks `GetComboBoxListsDict(exudyn)` and asserts
+`EnumFullName(EnumDisplayName(s, t), t) == s` for each of its values. The same box also edits
+the bools, whose `True` and `False` carry no prefix and must come through untouched, which is
+why `EnumFullName` leaves them, an empty string and an already complete name alone rather than
+prefixing whatever it is handed.

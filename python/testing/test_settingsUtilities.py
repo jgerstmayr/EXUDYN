@@ -26,6 +26,8 @@ import pytest
 
 import exudyn
 from exudyn.misc.settingsUtilities import (ChangedSettings, ChangedSettingsCode,
+                                           EnumDisplayName, EnumFullName,
+                                           GetComboBoxListsDict,
                                            PrintChangedSettings, SettingsValueStrings)
 
 
@@ -120,3 +122,29 @@ def testPrintingSaysTheSameThing(capsys):
     PrintChangedSettings(settings)
     printed = capsys.readouterr().out
     assert 'SC.visualizationSettings.openGL.lineWidth = 2.0' in printed
+
+
+def testAnEnumIsShownWithoutItsType():
+    """#2635: every entry of the list began with the same 22 characters"""
+    assert EnumDisplayName('OutputVariableType.Displacement', 'OutputVariableType') \
+        == 'Displacement'
+    assert EnumFullName('Displacement', 'OutputVariableType') \
+        == 'OutputVariableType.Displacement'
+
+
+def testTheTwoConversionsUndoEachOtherForEveryEnumOfTheModule():
+    """the combo box round trip: what is shown must commit as what it came from"""
+    types = GetComboBoxListsDict(exudyn)
+    assert 'OutputVariableType' in types and 'ItemType' in types, 'the enums of the module'
+    for (vType, values) in types.items():
+        for value in values:
+            full = str(value)
+            assert EnumFullName(EnumDisplayName(full, vType), vType) == full, full
+
+
+def testWhatCarriesNoTypeIsLeftAlone():
+    """the same box edits the bools, and a name that is already complete must not grow"""
+    assert EnumDisplayName('True', 'bool') == 'True'
+    assert EnumFullName('True', 'bool') == 'True'
+    assert EnumFullName('', 'ItemType') == ''
+    assert EnumFullName('ItemType.Node', 'ItemType') == 'ItemType.Node'

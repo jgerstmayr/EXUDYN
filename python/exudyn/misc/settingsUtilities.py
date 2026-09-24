@@ -30,7 +30,8 @@ import exudyn
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'IsFloat', 'IsArrayInt', 'IsVector', 'GetComboBoxListsDict', 'ConvertString2Value',
-    'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'ValueLiteral', 'SettingsCodeLines',
+    'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'EnumDisplayName',
+    'EnumFullName', 'ValueLiteral', 'SettingsCodeLines',
     'containerInitialisedSettings', 'DefaultSettingsDictionary', 'SettingsValueStrings',
     'FindMatches', 'SettingsPrefix', 'ChangedSettings', 'ChangedSettingsCode',
     'PrintChangedSettings',
@@ -264,6 +265,42 @@ def SettingsLeafList(dictionaryWithTypeInfo, path=''):
         else:
             leaves += SettingsLeafList(value, path + key + '.')
     return leaves
+
+
+def EnumDisplayName(valueStr, vType):
+    """the enum value without the type in front of it: Displacement, not
+    OutputVariableType.Displacement
+
+    An enum is edited in a combo box as wide as the value column, and every entry of a list
+    begins with the same type name - which is already in the type column beside it - so the
+    part that tells the entries apart was pushed out of sight (#2635). Only what the box
+    SHOWS is shortened; what the settings structure holds is the full name.
+
+    Args:
+        valueStr: the value as str() writes it
+        vType: the type name of the setting
+
+    Returns:
+        the value without its type prefix; anything else unchanged, bool included
+    """
+    prefix = vType + '.'
+    return valueStr[len(prefix):] if valueStr.startswith(prefix) else valueStr
+
+
+def EnumFullName(displayName, vType):
+    """the inverse of EnumDisplayName: the name everything but the combo box uses
+
+    Args:
+        displayName: the value as the combo box shows it
+        vType: the type name of the setting
+
+    Returns:
+        the value with its type prefix; an empty string, a bool and an already complete name
+        unchanged
+    """
+    if displayName in ['', 'True', 'False'] or displayName.startswith(vType + '.'):
+        return displayName
+    return vType + '.' + displayName
 
 
 def ValueLiteral(valueStr, vType, dictionaryTypesT=None):

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 49 | 1.12.50 |
+| 1.12 | Metheney | 50 | 1.12.51 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,8 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.51** `IMPROVEMENT` settings dialog: the combo box of an enum repeats the type name in every entry (#2635) - raised by Claude-JG
+  - The combo box that edits an enum lists its entries without the type name in front of them: 'Displacement' instead of 'OutputVariableType.Displacement'. Only the list is shortened - the value the settings structure holds, and the line that a settings dialog writes for a script, keep the full name. revision2026b step RG6.2.25.
 - **1.12.50** `BUG` the dialogs opened from the command line are larger and blurred (#2634) - raised by Claude-JG
   - revision2026b step RG6.2.24. The dialogs of 'python -m exudyn dialogs' are drawn like the ones the render window opens. Two causes, and they compound: the process was not DPI aware - GLFW sets that when it creates the render window, so a dialog opened with V inherits it, while from a shell Windows draws at 96 dpi and stretches the bitmap, which is both soft and, on a 175% display, 1.75 times too large - and GetExudynDisplayScaling() read displayScaling out of the renderer's state and returned 1 when there is no renderer, so the content was laid out for an unscaled display and then stretched. MakeProcessDpiAware() is now called once in GetTkRootAndNewWindow before the first window (afterwards Windows refuses, which is not an error: something else has already done it), and GetExudynDisplayScaling(root) asks tkinter when it cannot ask a renderer - root.winfo\_fpixels('1i')/96, measured as 1.749 on this machine where it used to say 1.
 - **1.12.49** `EXTENSION` the settings dialog could edit simulationSettings as well (#2624) - raised by Claude-JG

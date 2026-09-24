@@ -1,0 +1,17 @@
+{
+  "number": 2635,
+  "title": "settings dialog: the combo box of an enum repeats the type name in every entry",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The combo box that edits an enum setting - contour.outputVariable, the item types, the solver types - lists its entries as str(value), which is 'OutputVariableType.Displacement'. The box has the width of the value column, so the type name, which is the same in every entry and is already shown in the type column, takes the room that the part which actually distinguishes the entries needs, and the choice cannot be read. The entries shall be listed without the 'XXXType.' prefix; the value the settings structure and the generated code carry stays the full name.",
+  "dateRaised": "2026-09-24",
+  "deadline": "2027-03-23",
+  "dateResolved": "2026-09-24 12:22",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The combo box that edits an enum lists its entries without the type name in front of them: 'Displacement' instead of 'OutputVariableType.Displacement'. Only the list is shortened - the value the settings structure holds, and the line that a settings dialog writes for a script, keep the full name. revision2026b step RG6.2.25.",
+  "resolvedInVersion": "1.12.51"
+}

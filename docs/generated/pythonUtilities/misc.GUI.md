@@ -12,7 +12,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-makeprocessdpiaware)=
 ## Function: MakeProcessDpiAware
 
-[`MakeProcessDpiAware()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L95)
+[`MakeProcessDpiAware()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L96)
 
 - **function description**: tell Windows that this process draws at the real resolution of the display Without it, Windows renders the window at 96 dpi and stretches the bitmap, which is why a dialog opened from a shell looked soft while the same dialog opened from the render window was sharp: GLFW makes the process DPI aware when it creates the render window, and a dialog that comes after it inherits that. From "python -m exudyn dialogs" there is no GLFW (#2634). It must be called BEFORE the first window is created; afterwards Windows refuses, which is not an error here - something else has already set it, which is what we wanted.
 - **output**: True if this process is DPI aware afterwards
@@ -21,7 +21,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-gettkrootandnewwindow)=
 ## Function: GetTkRootAndNewWindow
 
-[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L123)
+[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L124)
 
 - **function description**: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
 
@@ -29,7 +29,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tkrootexists)=
 ## Function: TkRootExists
 
-[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L137)
+[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L138)
 
 - **function description**: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
 
@@ -37,7 +37,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogfontsize)=
 ## Function: DialogFontSize
 
-[`DialogFontSize(fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L144)
+[`DialogFontSize(fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L145)
 
 - **function description**: the point size the tree, its headings and its tags use
 - **input**: fontFactor: the multiplier DialogScaling returned
@@ -47,7 +47,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogrowmetrics)=
 ## Function: DialogRowMetrics
 
-[`DialogRowMetrics(root, fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L156)
+[`DialogRowMetrics(root, fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L157)
 
 - **function description**: how tall a row must be and how much wider the columns must be, MEASURED Both used to be computed from systemScaling, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display, so at dialogs.fontScaling=1 the rows were 13 pixels tall for a font with a linespace of 16 to 18 and the text was clipped, while the column factor max(1,int(round(systemScaling))) stayed at 1 for every value below 1.5 (#2631). The font is asked instead, which is right at any scaling and on any platform.
 - **input**: root: the tkinter root, which the fonts are measured against fontFactor: the multiplier DialogScaling returned
@@ -57,7 +57,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-getexudyndisplayscaling)=
 ## Function: GetExudynDisplayScaling
 
-[`GetExudynDisplayScaling(root = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L193)
+[`GetExudynDisplayScaling(root = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L194)
 
 - **function description**: the display scaling the dialogs size themselves by The renderer knows it and reports it in its state. Without a renderer this used to return 1, so a dialog opened from the command line came out at a different size than the same dialog opened with V in the render window (#2634); tkinter is asked instead, which knows it once MakeProcessDpiAware has been called.
 - **input**: root: a tkinter root to ask when there is no renderer; without one the answer is 1
@@ -67,7 +67,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogscaling)=
 ## Function: DialogScaling
 
-[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L234)
+[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L235)
 
 - **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602, revision2026b step RG6.2.3.1).
 - **input**: root: the tkinter root window, which knows the display scaling
@@ -77,7 +77,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1139)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1143)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**: settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings exu: exudyn module dictionaryName: name displayed in dialog
@@ -87,7 +87,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1471)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1475)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**: tkWindow: the window to configure alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
@@ -97,7 +97,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1501)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1505)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -106,7 +106,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1555)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1559)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -115,7 +115,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1640)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1644)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -124,7 +124,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1655)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1659)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -133,7 +133,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1669)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1673)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
@@ -148,7 +148,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-show)=
 ### Class function: Show
 
-[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L285)
+[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L286)
 
 - **class function description**: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer's (#2614): a description that appears the moment the pointer crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a setting any more.
 
@@ -156,7 +156,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-cancel)=
 ### Class function: Cancel
 
-[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L298)
+[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L299)
 
 - **class function description**: forget a tooltip that was scheduled and has not appeared yet
 
@@ -164,7 +164,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-bind)=
 ### Class function: Bind
 
-[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L307)
+[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L308)
 
 - **class function description**: let a widget - a button, say - show this tooltip while the pointer rests on it
 
@@ -172,6 +172,6 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-place)=
 ### Class function: Place
 
-[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L312)
+[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L313)
 
 - **class function description**: place the tooltip at the screen position (x, y), a little below the pointer

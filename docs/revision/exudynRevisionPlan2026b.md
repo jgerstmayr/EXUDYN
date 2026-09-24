@@ -856,6 +856,14 @@ This group is that revision and what has to happen before it can start.
     renderer's state and returned **1** when there is none. The process makes itself DPI aware
     before the first window, and tkinter is asked for the scaling when no renderer can be.
 
+<a id="rg6-2-25"></a>
+**RG6.2.25** **DONE 2026-09-24** (#2635) — [log](exudynRevisionLog2026b.md#rg6-2-25) —
+    **The combo box of an enum repeated the type name in every entry** *(maintainer,
+    2026-09-24)*. `contour.outputVariable` offered `OutputVariableType.Displacement` and 32
+    more, all beginning with the same 19 characters, in a box as wide as the value column -
+    and the type is in the column beside it. The list shows the entry without its type; the
+    settings structure and the generated code line keep the full name.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a
