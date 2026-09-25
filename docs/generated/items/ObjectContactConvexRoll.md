@@ -86,7 +86,7 @@ At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{
 $$
 \mathrm{f}_{\mathrm{N}} = \begin{cases}
 - (k_c \, z_{\mathrm{pen}} + d_c \,  \dot{z}_{\mathrm{pen}})  &\text{$z_{\mathrm{pen}}>0$} \\
-0 &\text{else} 
+0 &\text{else}
 \end{cases}
 $$ (eq-fpencontact)
 

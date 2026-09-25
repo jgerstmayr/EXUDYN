@@ -117,7 +117,6 @@ $$
 \pv_p = \pv_i + \rho \cdot \vv_s
 $$
 and the distance
-
 $$
 d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
 $$
@@ -208,6 +207,7 @@ $$
 Note that the `verticalOffset` from the cable center line, as defined in the related `MarkerBodyCable2DShape`,
 influences the behavior significantly, which is why we recommend to use `verticalOffset=0` whenever this is an
 appropriate assumption.
+
 Thus, the current sticking position $x_{curStick}$ is computed per segment as
 
 $$
@@ -296,16 +296,18 @@ x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
 $$
 
 - If $x_{gap} > 0$ or ($\mu_v == 0$ and $\mu_k == 0$), we set $x_{isSlipStick} = -2$ (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
-- Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`: 2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set while otherwise $\varepsilon^t_{PNS}=0$.
+- Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`: 2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set
 
-1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set while otherwise $\varepsilon^n_{PNS}=0$.
+1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set
 $$
 \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
 $$
+while otherwise $\varepsilon^n_{PNS}=0$.
 
 $$
 \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
 $$
+while otherwise $\varepsilon^t_{PNS}=0$.
 
 Note that the `PostNewtonStep` is iterated and the data variables are updated continuously until convergence, or until a max. number of iterations is reached. If `ignoreMaxIterations` == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare.
 
@@ -360,20 +362,21 @@ Choice of normals and tangent vectors for calculation of normal contact forces a
 Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
 
 - **CASE SN**: use **S**egment **N**ormals  
-If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment, and added to every force at segment points according to while in case $x_{gap}  > 0$ nothing is added.
+If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment,
 
 $$
 \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
 $$
-
+and added to every force at segment points according to
 $$
 \begin{aligned}
 \fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
 \end{aligned}
 $$
+while in case $x_{gap}  > 0$ nothing is added.
 
 - **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)  
-If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point, while in case $x_{gap}  > 0$ nothing is added.
+If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
 
 $$
 \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
@@ -382,12 +385,12 @@ $$
 in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$,
 and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
 The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment,
-
 $$
 \begin{aligned}
 \fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv^r
 \end{aligned}
 $$
+while in case $x_{gap}  > 0$ nothing is added.
 
 The forces $\fv_i$ are then applied through the marker to the `ObjectANCFCable2D` element as point loads via a position jacobian
 (using the according access function), for details see the C++ implementation.

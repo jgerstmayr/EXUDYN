@@ -480,7 +480,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       single-key. So the answer to the maintainer's question is the strongest one available:
       **nothing stays a backslash command outside math.**
 
-      - **RG3.14.3.1** *(from RG3.14.3, 2026-09-25)* **the display math.** The 372 `\be .. \ee` and
+      - **RG3.14.3.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-3-1) - **the display math.** The 372 `\be .. \ee` and
         45 `\bea .. \eea` blocks become `$$ ... $$` and `$$ \begin{aligned} ... \end{aligned} $$`,
         which is what `latexToMarkdown.ConvertDisplayMath` already writes, and the **45 equation
         labels inside them** become the MyST form `$$ ... $$ (eq-name)`. The mathematics itself does

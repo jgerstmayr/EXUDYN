@@ -99,8 +99,9 @@ not in the list below reaches the page as itself and is a defect.
   exception.
 - **Mathematics** is `$...$` inline and `$$...$$` on its own lines, with the macros that `conf.py`
   declares - `\LU{0}{\pv}`, `\Rcal`, `\eqDot`. `tools/checkMathMacros.py` fails on a macro it does
-  not know, so a typo in one is found. Display mathematics inside a definition is written
-  `\be ... \ee` (one equation) or `\bea ... \eea` (several, aligned).
+  not know, so a typo in one is found. Display mathematics stands on its own lines between `$$`
+  and `$$`; several aligned equations go inside `\begin{aligned} ... \end{aligned}`. A label goes
+  after the closing `$$`, `$$ (eq-objectground-position)`, and is referenced as any other target.
 - **A heading** is the Markdown heading it becomes, and the level is fixed by the page it lands in:
   `#### Equations of motion` inside `equations`, which sits under the item's *DESCRIPTION* heading,
   and `## Title` inside `latexText`, which sits under the page title. Where something refers to a

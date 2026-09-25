@@ -53,6 +53,7 @@ a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
 
 $$
 \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, .
+
 $$
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`

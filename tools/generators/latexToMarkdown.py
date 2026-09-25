@@ -353,7 +353,10 @@ def ConvertRSTFigures(text):
         lines += ['', caption.strip(), '```', '']
         return chr(10).join(lines)
 
-    pattern = (r'(?:\.\.\s+_([^:\n]+):\s*\n)?\.\.\s+figure::\s*(\S+)\s*\n'
+    #the RST block may be indented - the description it comes from is indented, and whether that
+    #indentation is still there when this pass runs depends on the caller. Both line starts
+    #therefore allow it, rather than the pass working by accident of a dedent that happened first.
+    pattern = (r'(?m)(?:^[ \t]*\.\.\s+_([^:\n]+):\s*\n)?^[ \t]*\.\.\s+figure::\s*(\S+)\s*\n'
                r'((?:\s+:[a-z]+:[^\n]*\n)*)\s*\n(\s+[^\n]+)\n')
     return re.sub(pattern, Block, text)
 

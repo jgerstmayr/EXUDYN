@@ -2905,3 +2905,44 @@ working remarks of **#2652**, where the macro is the subject of the sentence.
 **The stubtest backlog lost its OpenVR entry.** RG6.1 removed `VSettingsOpenVR` and the baseline
 still listed it; `checkPython --stubs` said so on every run, because the backlog is meant to shrink.
 272 entries now.
+
+<a id="rg3-14-3-1"></a>
+### RG3.14.3.1 — the display math (2026-09-25, #2655)
+
+The 417 display formulas of `definitions/` were written `\be ... \ee` and `\bea ... \eea`, Exudyn's
+own delimiters, and the converter turned them into the `$$ ... $$` that Markdown's display math
+already is. They are written that way now, with the 45 equation labels in the MyST form
+`$$ ... $$ (eq-name)`, so a reference to an equation - RG3.14.3 made those native links - points at
+something the source shows. The mathematics itself did not change: it is LaTeX, and it stays LaTeX.
+
+**The conversion was done by the converter.** `latexToMarkdown.ConvertDisplayMath` was applied to
+the source block by block, so there is no second implementation of `\eqComma`, `\eqDot`,
+`\nonumber` and the `&=&` of an aligned block to drift from the first. Two things had to be
+arranged, and both are consequences of doing at the source what the pipeline did in the middle of
+a run:
+
+- `StripComments` runs **before** `ConvertDisplayMath`, so a `\be` on a commented-out line never
+  opens a block. On the source it does, and it swallows everything up to the next `\ee` - which is
+  what the first attempt produced. The 26 delimiters inside a LaTeX comment are hidden from the
+  pass and put back after it.
+- `RemoveIndentation2` dedents a description by its **minimum** indentation before the converter
+  sees it, so `ConvertDisplayMath` emits its block at column 0. In the source the block keeps the
+  indentation of the `\be` it replaces, or the minimum drops and everything that depends on it
+  moves.
+
+**And one pass was working by accident.** `ConvertRSTFigures` matched `.. _label:` and
+`.. figure::` only at the start of a line, which held only because `RemoveIndentation2` had already
+removed the indentation. The pattern allows it now. Without that, five figure targets came out of
+the build as raw RST - `.. _fig-objectcontactconvexroll-sketch:` - instead of MyST targets, and the
+`[](#fig-...)` links of RG3.14.3 pointed at nothing.
+
+**The pages move by 13 lines, and every one is a repair.** A `\be` block inside a list item used to
+be joined into the item's text line (#2593), which glued the sentence after the formula onto the
+sentence before it:
+
+> *"1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set
+> while otherwise $\varepsilon^n_{PNS}=0$."*
+
+That now reads *"...had different sign to current gap, set"*, the formula, *"while otherwise
+$\varepsilon^n_{PNS}=0$."* Four sentences in `ObjectContactFrictionCircleCable2D` and
+`ObjectGenericODE2` are put right this way.
