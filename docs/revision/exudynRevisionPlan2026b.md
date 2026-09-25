@@ -582,6 +582,31 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       the issue archive are plain section names (**#2656** is the five hand-written docstrings that
       still say `theDoc.pdf` in their own text).
 
+    - **RG3.14.12** *(from #2656; maintainer 2026-09-25)* **the `theDoc.pdf` references are resolved
+      against real sections.** Five hand-written docstrings in the shipped package still send the
+      reader to a document that has not existed since decision D8. The maintainer searched the built
+      documentation: *"all of them can be clearly related to a section, but this has to be done with
+      the context of each paragraph or section"* - so this is one judgement per reference, not a
+      pattern. `MainSolverStatic`, for instance, **is** a section of the structures chapter and only
+      needs a label to be referenceable. Two of the five also carry `[Section](#sec:solverSubstructures)`,
+      whose target is spelled the LaTeX way and resolves to nothing.
+
+      And the name itself gets one honest mention: the **revisions chapter** says that the
+      documentation was a single PDF, `theDoc.pdf`, until this revision - a reader who meets the
+      name in an old issue has to be able to find out what it was - and points at how the
+      documentation is built now. That is the only place it is said (rule 6a).
+    - **RG3.14.13** *(from RG3.14; maintainer 2026-09-25)* **what is left of the LaTeX conversion,
+      and what of it goes.** `tools/generators/autoGenerateHelper.py` carries the old
+      LaTeX-to-RST machinery - a conversion dict of some 90 entries, `ReplaceWords`, `Str2Latex`,
+      `Latex2RSTlabel`, `GetTypesStringLatex`, the `sLatex`/`sRST` members of `PyLatexRST` and the
+      table helpers that exist to lay out a LaTeX table - in an unsystematic state, because each
+      revision step took what it needed and left the rest. Once RG3.14 has emptied `definitions/`
+      of structural LaTeX, most of it has no caller. The step is a **census with a verdict per
+      entry**: what is still reached, by whom, and what is deleted. The rule is the one that makes
+      it safe - the regeneration must stay byte-identical - and the outcome is expected to be that
+      the shapes worth keeping (the Markdown table helpers, `ImagePath`, the heading and label
+      helpers) stay and the LaTeX branch goes.
+
     **What would not work today**, and is either solved inside the step or stated as its boundary:
 
     - **A target that sits on neither a heading, an equation nor a named figure cannot be reached by
@@ -1397,7 +1422,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8 | #2594 | place or drop the figures that no page references |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: .1 to .3 and .8 done; display math, tables, user functions, the switches |
+| RG3.14 | #2655 | the item descriptions become Markdown: the tables, the user functions, the switches and the checks are open |
+| RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
