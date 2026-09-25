@@ -46,22 +46,27 @@ definitions.append(ItemDefinition(
     The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
+    **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
     A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{loadVector}}{Vector3D}{$\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
-      \rowTable{\returnValue}{Vector3D}{computed force vector}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{loadVector} | Vector3D | $\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | **return value** | Vector3D | computed force vector |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        from math import sin, cos, pi
-        def UFforce(mbs, t, loadVector): 
-            return [loadVector[0]*sin(t*10*2*pi),0,0]
-    \end{lstlisting}
+    *Example*:
+    
+```python
+from math import sin, cos, pi
+def UFforce(mbs, t, loadVector): 
+    return [loadVector[0]*sin(t*10*2*pi),0,0]
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
@@ -132,22 +137,27 @@ definitions.append(ItemDefinition(
     The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
+    **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
     A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{loadVector}}{Vector3D}{$\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
-      \rowTable{\returnValue}{Vector3D}{computed torque vector}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{loadVector} | Vector3D | $\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | **return value** | Vector3D | computed torque vector |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        from math import sin, cos, pi
-        def UFforce(mbs, t, loadVector): 
-            return [loadVector[0]*sin(t*10*2*pi),0,0]
-    \end{lstlisting}
+    *Example*:
+    
+```python
+from math import sin, cos, pi
+def UFforce(mbs, t, loadVector): 
+    return [loadVector[0]*sin(t*10*2*pi),0,0]
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
@@ -218,15 +228,17 @@ definitions.append(ItemDefinition(
     The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
+    **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
     A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{loadVector}}{Vector3D}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
-      \rowTable{\returnValue}{Vector3D}{computed load vector}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{loadVector} | Vector3D | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | **return value** | Vector3D | computed load vector |
+
     Example of user function: functionality same as in \texttt{LoadForceVector}
     %%RSTCOMPATIBLE
 """,
@@ -307,28 +319,33 @@ definitions.append(ItemDefinition(
     on a rotation coordinate (but take care for its meaning).
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadUserFunction(mbs, t, load)}
+    **Userfunction**: `loadUserFunction(mbs, t, load)`
     A user function, which computes the scalar load depending on time and the object's \texttt{load} parameter.
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{load}}{Real}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
-      \rowTable{\returnValue}{Real}{computed load}
-    \finishTable
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        from math import sin, cos, pi
-        #this example uses the object's stored parameter load to compute a time-dependent load
-        def UFload(mbs, t, load): 
-            return load*sin(10*(2*pi)*t)
 
-        n0=mbs.AddNode(Point())
-        nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
-        mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
-                                   load = 10,
-                                   loadUserFunction = UFload))
-    \end{lstlisting}
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{load} | Real | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | **return value** | Real | computed load |
+
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    *Example*:
+    
+```python
+from math import sin, cos, pi
+#this example uses the object's stored parameter load to compute a time-dependent load
+def UFload(mbs, t, load): 
+    return load*sin(10*(2*pi)*t)
+
+n0=mbs.AddNode(Point())
+nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
+mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
+                           load = 10,
+                           loadUserFunction = UFload))
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,

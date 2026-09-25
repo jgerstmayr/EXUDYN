@@ -198,6 +198,7 @@ Noting that $\frac{\partial \vv_{f} }{\partial \qv_{m0}} =
 -\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \LU{0}{\Jm_{pos,m0}}$ and
 $\frac{\partial \vv_{f} }{\partial \qv_{m1}} =
 \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \LU{0}{\Jm_{pos,m1}}$.
+
 The Jacobian w.r.t. velocity coordinates follows as
 
 $$
@@ -223,6 +224,7 @@ $$
 The latter term is currently neglected.
 
 Jacobians for markers $m1$ and mixed $m0$/$m1$ terms follow analogously.
+
 **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)`
 A user function, which computes the spring force depending on time, object variables (deltaL, deltaL_t) and
 object parameters (stiffness, damping, force).
@@ -253,6 +255,7 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
                                           referenceLength = 1,
                                           stiffness = 100, damping = 1,
                                           springForceUserFunction = UFforce))
+
 ```
 
 (miniexample-objectconnectorspringdamper)=

@@ -100,6 +100,7 @@ $$
 $$
 
 and `iN` represents the itemNumber (=objectNumber).
+
 If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
 the translational index 3 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\pv}$
 
@@ -165,6 +166,7 @@ $$
 $$
 
 **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)`
+
 A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint,
 e.g., in order to move or rotate a body on a prescribed trajectory.
 It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
@@ -187,6 +189,7 @@ for all relative translational and rotational joint coordinates:
 | **return value** | Real | computed offset vector for given time |
 
 **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, offsetUserFunctionParameters)`
+
 A user function, which computes an offset **velocity** vector for the GenericJoint.
 It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
 The `offsetUserFunction_t` is used instead of `offsetUserFunction` in case of `velocityLevel = True`,
@@ -213,6 +216,7 @@ for all relative translational and rotational joint coordinates:
 from math import sin, cos, pi
 def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
     return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
+
 ```
 
 

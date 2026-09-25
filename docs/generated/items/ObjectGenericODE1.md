@@ -61,6 +61,7 @@ $$ (eq-objectgenericode1-eom)
 Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), and that `iN` represents the itemNumber (=objectNumber).
 
 CoordinateLoads are added for the respective {ref}`ODE1 <ODE1>` coordinate on the RHS of the latter equation.
+
 **Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q)`
 A user function, which computes a RHS vector depending on current time and states of the object.
 Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
@@ -89,6 +90,7 @@ nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
 #now add object instead of object in mini-example:
 oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
                    rhsUserFunction=UFrhs))
+
 ```
 
 (miniexample-objectgenericode1)=

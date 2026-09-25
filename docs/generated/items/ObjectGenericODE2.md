@@ -112,6 +112,7 @@ $$ (eq-objectgenericode2-jac)
 For clarification also see the **example** in `TestModels/linearFEMgenericODE2.py`.
 
 CoordinateLoads are added for the respective {ref}`ODE2 <ODE2>` coordinate on the RHS of the latter equation.
+
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
@@ -197,6 +198,7 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
                    massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
                    forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
                    visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
+
 ```
 
 (miniexample-objectgenericode2)=

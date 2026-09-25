@@ -531,54 +531,58 @@ definitions.append(ItemDefinition(
     The return value of the user function is a list of \texttt{float} numbers which cast to a \texttt{std::vector} in pybind.
     This list can have arbitrary dimension, but should be kept constant during simulation.
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)}
+    **Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
     A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
     The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
     %
     The user function arguments are as follows:
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{sensorNumbers}}{Array $\in \Ncal^n$}{list of sensor numbers}
-      \rowTable{\texttt{factors}}{Vector $\in \Rcal^n$}{list of factors that can be freely used for the user function}
-      \rowTable{\texttt{configuration}}{exudyn.ConfigurationType}{usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions.}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n_r}$}{returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation.}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{sensorNumbers} | Array $\in \Ncal^n$ | list of sensor numbers |
+    | \texttt{factors} | Vector $\in \Rcal^n$ | list of factors that can be freely used for the user function |
+    | \texttt{configuration} | exudyn.ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
+    | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        import exudyn as exu
-        from exudyn.itemInterface import *
-        from math import pi, atan2
-        SC = exu.SystemContainer()
-        mbs = SC.AddSystem()
-        node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
-                                     initialCoordinates=[0,0,0],
-                                     initialVelocities=[0,-1,0]))
-        mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
-        
-        sNode = mbs.AddSensor(SensorNode(nodeNumber=node, fileName='solution/sensorTest.txt',
-                              outputVariableType=exu.OutputVariableType.Position))
+    *Example*:
+    
+```python
+import exudyn as exu
+from exudyn.itemInterface import *
+from math import pi, atan2
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
+                             initialCoordinates=[0,0,0],
+                             initialVelocities=[0,-1,0]))
+mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
 
-        #user function for sensor, convert position into angle:
-        def UFsensor(mbs, t, sensorNumbers, factors, configuration):
-            val = mbs.GetSensorValues(sensorNumbers[0]) #x,y,z
-            phi = atan2(val[1],val[0]) #compute angle from x,y: atan2(y,x)
-            return [factors[0]*phi] #return angle in degree
-        
-        sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
-                                         fileName='solution/sensorTest2.txt',
-                                         sensorUserFunction=UFsensor))
+sNode = mbs.AddSensor(SensorNode(nodeNumber=node, fileName='solution/sensorTest.txt',
+                      outputVariableType=exu.OutputVariableType.Position))
 
-        #assemble and solve system for default parameters
-        mbs.Assemble()
-        mbs.SolveDynamic()
+#user function for sensor, convert position into angle:
+def UFsensor(mbs, t, sensorNumbers, factors, configuration):
+    val = mbs.GetSensorValues(sensorNumbers[0]) #x,y,z
+    phi = atan2(val[1],val[0]) #compute angle from x,y: atan2(y,x)
+    return [factors[0]*phi] #return angle in degree
 
-        if False:
-            from exudyn.plot import PlotSensor
-            PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
-        
-    \end{lstlisting}
+sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
+                                 fileName='solution/sensorTest2.txt',
+                                 sensorUserFunction=UFsensor))
+
+#assemble and solve system for default parameters
+mbs.Assemble()
+mbs.SolveDynamic()
+
+if False:
+    from exudyn.plot import PlotSensor
+    PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainSensor,

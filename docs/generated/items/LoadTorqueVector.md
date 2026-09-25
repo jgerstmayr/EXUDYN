@@ -36,6 +36,7 @@ The item VLoadTorqueVector has the following parameters:
 
 The torque vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node.
 The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
 
@@ -52,6 +53,7 @@ A user function, which computes the torque vector depending on time and object p
 from math import sin, cos, pi
 def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
+
 ```
 
 

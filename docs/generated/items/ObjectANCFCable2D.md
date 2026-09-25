@@ -79,6 +79,7 @@ The Bernoulli-Euler beam is capable of large axial and bendig deformation as it 
 #### Kinematics and interpolation
 
 Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the $z$-coordinate.
+
 ANCF elements follow the original concept proposed by Shabana [shabana1997ancf].
 The present 2D element is based on the interpolation used by Berzeri and Shabana [berzeri2000], but the formulation (especially of the elastic forces) is according to
 Gerstmayr and Irschik [GerstmayrIrschik2008].
@@ -411,6 +412,7 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
                 axialForceUserFunction=axialForceUserFunction,
                 )
 #use  cable with GenerateStraightLineANCFCable(...)
+
 ```
 
 (miniexample-objectancfcable2d)=

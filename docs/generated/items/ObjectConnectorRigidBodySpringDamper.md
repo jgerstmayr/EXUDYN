@@ -103,6 +103,7 @@ $$
 $$
 
 and `iN` represents the itemNumber (=objectNumber).
+
 **Userfunction**: `springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
 A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities
 (displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between
@@ -165,6 +166,7 @@ mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody],
                                     damping = np.diag([0,k*0.01,0, 0,0,0]),
                                     offset = [0,0,0, 0,0,0],
                                     springForceTorqueUserFunction = UFforce))
+
 ```
 
 (miniexample-objectconnectorrigidbodyspringdamper)=

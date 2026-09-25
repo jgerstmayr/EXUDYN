@@ -3033,3 +3033,41 @@ Two things had to be arranged so that nothing was lost:
 - **The work is done per string value, through `ast`, never on the file text.** A table pattern let
   loose on a file matches from one item's `\startTable` to the *next* item's `\finishTable`: the
   first attempt gave `ObjectRigidBody` two rows belonging to `ObjectRigidBody2D`.
+
+<a id="rg3-14-5"></a>
+### RG3.14.5 — the user function blocks, and the last LaTeX out of definitions/ (2026-09-25, #2655)
+
+A user function was four macros: `\userFunction{sig}`, the `\startTable{arguments / return}` of its
+arguments with `\returnValue` as the last row, `\userFunctionExample{}`, and a `lstlisting` block.
+All 35 blocks are Markdown now - a bold line naming the signature, a pipe table, *Example*: and a
+fenced `python` block - and the conversion is the converter's own passes applied in place, so the
+pages keep every word.
+
+**`definitions/` is free of structural LaTeX.** `\userFunction`, `\returnValue`, `\startTable`,
+`\rowTable`, `\finishTable` and `lstlisting` are at zero, except in four tables that are commented
+out and were therefore never rendered.
+
+**The typed Python signature was measured and not used.** The plan, from the maintainer's own
+suggestion, was
+
+```python
+def forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                      q: 'Vector $\in \Rcal^{n_{ODE2}}$', ...) -> 'Vector6D':
+```
+
+and the obstacle is in that line: **35 of the 228 argument rows say the *size* of an argument as a
+formula** - `Vector $\in \Rcal^{n_{ODE2}}$`, `MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})
+\times n_{ae}}$` - and a formula does not render inside a code block. Putting the arguments into a
+signature would turn 35 sizes into literal LaTeX on the page. The table renders them, so the
+arguments stay a table; what the signature idea was really for - the `q\_t` escapes that exist only
+because the text was LaTeX - is gone either way, because the signature is now written as the Python
+it is.
+
+The pages move by **37 lines, every one an added blank line**: `**Userfunction**:` and `*Example*:`
+were glued to the end of the paragraph before them, because a macro replaced inside a paragraph
+stays inside it. Each of them starts its own paragraph now.
+
+Two rules from the earlier sub-steps had to be applied again, and a third was learnt here: only a
+string value that **holds** one of the constructs is touched at all. The newline collapse that
+`ConvertText` ends with is right for a description and wrong for a `miniExample`, whose blank lines
+are the Python's own - an attempt that collapsed every value rewrote the mini examples of five files.

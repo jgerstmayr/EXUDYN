@@ -34,6 +34,7 @@ The item VLoadCoordinate has the following parameters:
 The scalar `load` is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., `MarkerNodeCoordinate`.
 This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
 on a rotation coordinate (but take care for its meaning).
+
 **Userfunction**: `loadUserFunction(mbs, t, load)`
 A user function, which computes the scalar load depending on time and the object's `load` parameter.
 
@@ -57,6 +58,7 @@ nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
 mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
                            load = 10,
                            loadUserFunction = UFload))
+
 ```
 
 

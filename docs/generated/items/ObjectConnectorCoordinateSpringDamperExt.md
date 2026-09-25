@@ -186,6 +186,7 @@ As can be seen in generalized force $\Qm$, the factors $f_0$ and $f_1$ are added
 force on 'slower' coordinates for certain gear ratios.
 
 If `activeConnector = False`, $f_{SD}$ is set to zero.
+
 **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset,
 fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)`
 A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
@@ -223,6 +224,7 @@ mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters
 #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
 def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
     return k*(u-offset) + d*v
+
 ```
 
 

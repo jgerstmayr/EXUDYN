@@ -84,6 +84,7 @@ f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathr
 $$
 
 and `iN` represents the itemNumber (=objectNumber).
+
 **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
 A user function, which computes the scalar torque depending on mbs, time, local quantities
 (relative displacement, relative velocity), which are evaluated at current time.
@@ -119,6 +120,7 @@ mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody],
                                  damping = k*0.01,
                                  offset = 0,
                                  springForceUserFunction = UFforce))
+
 ```
 
 (miniexample-objectconnectorlinearspringdamper)=

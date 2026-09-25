@@ -51,56 +51,60 @@ definitions.append(ItemDefinition(
     In combination with markers, the \texttt{localPosition} $\pLocB$ is transformed by the \texttt{ObjectGround} to
     a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
 
-
     $$
     \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, .
           %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
     $$
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
     Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access |
+    | **return value** | BodyGraphicsData | list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata) |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        import exudyn as exu
-        from math import sin, cos, pi
-        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-        import exudyn.graphics as graphics
+    *Example*:
+    
+```python
+import exudyn as exu
+from math import sin, cos, pi
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
 
-        SC = exu.SystemContainer()
-        mbs = SC.AddSystem()
-        #create simple system:
-        mbs.AddNode(NodePoint())
-        body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
-        
-        #user function for moving graphics:
-        def UFgraphics(mbs, objectNum):
-            t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-            #draw moving sphere on ground
-            graphics1=graphics.Sphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
-                                         radius=0.1, color=graphics.color.red, nTiles=32)
-            return [graphics1] 
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+#create simple system:
+mbs.AddNode(NodePoint())
+body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
 
-        #add object with graphics user function
-        ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
-        mbs.Assemble()
-        sims=exu.SimulationSettings()
-        sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
-        SC.renderer.Start() #perform zoom all (press 'a' several times) after startup to see the sphere
-        mbs.SolveDynamic(sims)
-        SC.renderer.Stop()
-    \end{lstlisting}
+#user function for moving graphics:
+def UFgraphics(mbs, objectNum):
+    t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+    #draw moving sphere on ground
+    graphics1=graphics.Sphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                 radius=0.1, color=graphics.color.red, nTiles=32)
+    return [graphics1] 
+
+#add object with graphics user function
+ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
+mbs.Assemble()
+sims=exu.SimulationSettings()
+sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
+SC.renderer.Start() #perform zoom all (press 'a' several times) after startup to see the sphere
+mbs.SolveDynamic(sims)
+SC.renderer.Stop()
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -832,7 +836,6 @@ definitions.append(ItemDefinition(
     
     The angular velocity in body-fixed coordinates is related to the rotation parameters by means of a matrix $\LU{b}{\Gm_{rp}}$,
 
-
     $$
     \LU{b}{\tomega} = \LU{b}{\Gm_{rp}} \dot \ttheta = \LU{b}{\Gm_{rp}} \dot \tpsi \, ,
     $$ (eq-objectrigidbody-omegalocal)
@@ -840,13 +843,11 @@ definitions.append(ItemDefinition(
     and is specific for any rotation parametrization $rp$.
     The angular velocity in global coordinates is related to the rotation parameters by means of a matrix $\LU{0}{\Gm_{rp}}$,
 
-
     $$
     \LU{0}{\tomega} = \LU{0}{\Gm_{rp}} \dot \ttheta\, .
     $$ (eq-objectrigidbody-omega)
 
     The local angular accelerations follow as
-
 
     $$
     \LU{b}{\talpha} = \LU{b}{\dot \tomega}= \LU{b}{\Gm_{rp}} \ddot \ttheta + \LU{b}{\dot \Gm_{rp}} \dot \ttheta \, ,
@@ -861,7 +862,6 @@ definitions.append(ItemDefinition(
 
     The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point $=$ ABRV:COM and split for translations and rotations, using a coordinate-free notation,
 
-
     $$
     \mp{m \ImThree}{\Null}{\Null}{\Jm} \vp{\av_{COM}}{\talpha} = \vp{\Null}{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda}
     $$ (eq-objectrigidbody-eomcom0)
@@ -869,14 +869,12 @@ definitions.append(ItemDefinition(
     with the $3\times 3$ unit matrix $\ImThree$ and forces $\fv$ resp.\ torques $\ttau$ as discribed in the table above.
     A change of the reference point, using the vector $\bv_{COM}$ from the body's reference point $\pv$ to the ABRV:COM position, is simple by replacing ABRV:COM accelerations using the common relation known from Euler
 
-
     $$
     \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
     $$
 
     which is inserted into the first line of [](#eq-objectrigidbody-eomcom0). Additionally, the second line of [](#eq-objectrigidbody-eomcom0)
     (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to ABRV:COM, using the well known relation
-
 
     $$
     m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
@@ -888,7 +886,6 @@ definitions.append(ItemDefinition(
     This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point ($\neq$ ABRV:COM), 
     see e.g.\ [CITE:woernle2016](page 258ff.), which have the general coordinate-free form
 
-
     $$
     \mp{m \ImThree}{-m \tilde \bv_{COM}}{m \tilde \bv_{COM}}{\Jm} \vp{\av}{\talpha} = 
           \vp{-m \tilde \tomega \tilde \tomega \bv_{COM} }{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda} \, ,
@@ -896,7 +893,6 @@ definitions.append(ItemDefinition(
 
     in which $\Jm$ is the inertia tensor w.r.t.\ the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
     [](#eq-objectrigidbody-eomarbitrary) can be written in the global frame (0),
-
 
     $$
     \mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} = 
@@ -908,7 +904,6 @@ definitions.append(ItemDefinition(
     quantities that are constant in the body-fixed frame, $\LU{b}{\Jm}$ and $\LU{b}{\bv_{COM}}$, thus expressing also the 
     angular velocity $\LU{b}{\tomega}$ in the body-fixed frame,
     applying [](#eq-objectrigidbody-omegalocal) and [](#eq-objectrigidbody-alpha), and using the relations
-
 
     $$
     \begin{aligned}
@@ -923,7 +918,6 @@ definitions.append(ItemDefinition(
     $$
 
     we obtain
-
 
     $$
     \begin{aligned}
@@ -944,13 +938,11 @@ definitions.append(ItemDefinition(
 
     In case of Euler parameters, a constraint equation is automatically added, reading for the index 3 case
 
-
     $$
     g_\theta(\ttheta) = \theta_0^2 + \theta_1^2 + \theta_2^2 + \theta_3^2 - 1 = 0
     $$ (eq-objectrigidbody-eulerparameters)
 
     and for the index 2 case
-
 
     $$
     \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
@@ -958,14 +950,13 @@ definitions.append(ItemDefinition(
 
     Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint [](#eq-objectrigidbody-eulerparameters), the constraint reaction forces in [](#eq-objectrigidbody-eom) then read
 
-
     $$
     \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
     $$
 
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
     Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
@@ -974,11 +965,13 @@ definitions.append(ItemDefinition(
     
     For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access |
+    | **return value** | BodyGraphicsData | list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata) |
+
     
     For creating a \texttt{ObjectRigidBody}, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
     see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
@@ -1103,7 +1096,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | reference position | $\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$ | reference point, only equal to the position of ABRV:COM if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference) |
@@ -1124,20 +1116,17 @@ definitions.append(ItemDefinition(
 
     The equations of motion in case that \texttt{physicsCenterOfMass}=$\Null$ read:
 
-
     $$
     \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
     $$
 
     if \texttt{physicsCenterOfMass} is nonzero, we resort to (not that $J$ represents the moment of inertia related to the reference point!):
 
-
     $$
     \mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = \fv.
     $$
 
     where we use the relations caused by the non-zero center of mass
-
 
     $$
     \vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{\bv_{COM}}
@@ -1147,14 +1136,12 @@ definitions.append(ItemDefinition(
     Position-based markers can measure position $\pv\cConfig(\pLocB)$ depending on the local position $\pLocB$. 
     The {\bf position jacobian} depends on the local position $\pLocB$ and is defined as,
 
-
     $$
     \LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}\cConfig(\pLocB)\cCur / \partial \cv\cCur = \mr{1}{0}{-\sin(\theta)\LU{b}{b_0} - \cos(\theta)\LU{b}{b_1}} 
                                                                  {0}{1}{\cos(\theta)\LU{b}{b_0}-\sin(\theta)\LU{b}{b_1}} {0}{0}{0}
     $$
 
     which transforms the action of global forces $\LU{0}{\fv}$ of position-based markers on the coordinates $\cv$,
-
 
     $$
     \Qm = \LU{0}{\Jm_{pos}\tp} \LU{0}{\fv}_a
@@ -1163,20 +1150,18 @@ definitions.append(ItemDefinition(
     Note that a LoadCoordinate on coordinate 2 of the node would add a torque $\tau_2$ on the RHS.
     The {\bf rotation jacobian}, which is computed from angular velocity, reads
 
-
     $$
     \LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot \cv\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}
     $$
 
     and transforms the action of global torques $\LU{0}{\ttau}$ of orientation-based markers on the coordinates $\cv$,
 
-
     $$
     \Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
     $$
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
     Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
@@ -1185,11 +1170,13 @@ definitions.append(ItemDefinition(
 
     For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
-      \rowTable{\texttt{itemNumber}}{int}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
+    | \texttt{itemNumber} | int | integer number of the object in mbs, allowing easy access |
+    | **return value** | BodyGraphicsData | list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata) |
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -1340,7 +1327,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
-
     $$
     n = \sum_{i} n_{c_i},
     $$
@@ -1352,7 +1338,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The equations of motion read,
 
-
     $$
     \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
     $$ (eq-objectgenericode2-eom)
@@ -1361,14 +1346,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     In case that a user mass matrix is specified, [](#eq-objectgenericode2-eom) is replaced with
 
-
     $$
     \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
     $$
 
-
     The (internal) Jacobian $\Jm$ of [](#eq-objectgenericode2-eom) (assuming $\fv$ to be constant!) reads
-
 
     $$
     \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
@@ -1382,7 +1364,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of [](#eq-objectgenericode2-eom) 
     without $\Km$ and $\Dm$ (these matrices are added internally),
 
-
     $$
     \Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
                 -f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) - 
@@ -1394,54 +1375,56 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     CoordinateLoads are added for the respective ABRV:ODE2 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
     %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
+    | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{massMatrixUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{n \times n}$}{returns mass matrix for object, as exu.MatrixContainer, 
-                              numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations.}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs to |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
+    | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns mass matrix for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations. |
+
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{jacobianUserFunction(mbs, t, itemNumber, q, q\_t, fODE2, fODE2\_t)}
+    **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t)`
     A user function, which computes the jacobian of the ABRV:LHS of the equations of motion, depending on current time, states of object and two
     factors which are used to distinguish between position level and velocity level derivatives. 
     Can be used to create any kind of mechanical system by using the object states.
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\texttt{fODE2}}{Real}{factor to be multiplied with the position level jacobian, see [](#eq-objectgenericode2-jac)}
-      \rowTable{\texttt{fODE2\_t}}{Real}{factor to be multiplied with the velocity level jacobian, see [](#eq-objectgenericode2-jac)}
-      \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{n \times n}$}{returns special jacobian for object, as exu.MatrixContainer, 
-                              numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations;
-                              NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix;
-                              sparse triplets MAY NOT contain zero values!}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs to |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
+    | \texttt{fODE2} | Real | factor to be multiplied with the position level jacobian, see [](#eq-objectgenericode2-jac) |
+    | \texttt{fODE2\_t} | Real | factor to be multiplied with the velocity level jacobian, see [](#eq-objectgenericode2-jac) |
+    | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
+
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
     Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
@@ -1450,40 +1433,45 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
-    \finishTable
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
-        KD = numpy.diag([200,100])
-        #nonlinear force example; this force is added to right-hand-side ==> negative sign!
-        def UFforce(mbs, t, itemNumber, q, q_t): 
-            return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
-        
-        #non-constant mass matrix:
-        def UFmass(mbs, t, itemNumber, q, q_t): 
-            return (q[0]+1)*M #uses mass matrix from mini example
-        
-        #non-constant mass matrix:
-        def UFgraphics(mbs, itemNumber):
-            t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-            p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
-                                                meshNodeNumber = 0, #get first node's position 
-                                                configuration = exu.ConfigurationType.Visualization)
-            graphics1=graphics.Sphere(point=p,radius=0.1, color=graphics.color.red)
-                graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':graphics.color.blue}
-            return [graphics1, graphics2] 
 
-        #now add object instead of object in mini-example:
-        oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
-                           massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
-                           forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
-                           visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
-    \end{lstlisting}
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access |
+    | **return value** | BodyGraphicsData | list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata) |
+
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    *Example*:
+    
+```python
+#user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
+KD = numpy.diag([200,100])
+#nonlinear force example; this force is added to right-hand-side ==> negative sign!
+def UFforce(mbs, t, itemNumber, q, q_t): 
+    return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
+
+#non-constant mass matrix:
+def UFmass(mbs, t, itemNumber, q, q_t): 
+    return (q[0]+1)*M #uses mass matrix from mini example
+
+#non-constant mass matrix:
+def UFgraphics(mbs, itemNumber):
+    t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+    p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
+                                        meshNodeNumber = 0, #get first node's position 
+                                        configuration = exu.ConfigurationType.Visualization)
+    graphics1=graphics.Sphere(point=p,radius=0.1, color=graphics.color.red)
+        graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':graphics.color.blue}
+    return [graphics1, graphics2] 
+
+#now add object instead of object in mini-example:
+oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                   massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
+                   forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
+                   visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -1707,7 +1695,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
-
     $$
     n = \sum_{i} n_{c_i},
     $$
@@ -1716,8 +1703,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
 
     #### Equations of motion
-
-
 
     $$
     \dot \qv = \fv + \fv_{user}(mbs, t, i_N, \qv)
@@ -1728,21 +1713,23 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     CoordinateLoads are added for the respective ABRV:ODE1 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{rhsUserFunction(mbs, t, itemNumber, q)}
+    **Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q)`
     A user function, which computes a RHS vector depending on current time and states of the object. 
     Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
     Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (composed from ABRV:ODE1 nodal coordinates) in current configuration, without reference values}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n$ | object coordinates (composed from ABRV:ODE1 nodal coordinates) in current configuration, without reference values |
+    | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    %\userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    %**Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
     %A user function, which is called by the visualization thread in order to draw user-defined objects.
     %The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
     %Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
@@ -1753,24 +1740,27 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %\startTable{arguments /  return}{type or size}{description}
     %  \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
     %  \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access}
-    % \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
+    % \rowTable{**return value**}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
     %\finishTable
     %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        A = numpy.diag([200,100])
-        #simple linear user function returning A*q + const
-        def UFrhs(mbs, t, itemNumber, q): 
-            return np.dot(A, q) + np.array([0,2])
-            
-        nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
-                                            initialCoordinates=[1,0], numberOfODE1Coordinates=2))
+    *Example*:
+    
+```python
+A = numpy.diag([200,100])
+#simple linear user function returning A*q + const
+def UFrhs(mbs, t, itemNumber, q): 
+    return np.dot(A, q) + np.array([0,2])
+    
+nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
+                                    initialCoordinates=[1,0], numberOfODE1Coordinates=2))
 
-        #now add object instead of object in mini-example:
-        oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
-                           rhsUserFunction=UFrhs))
-                                     
-    \end{lstlisting}
+#now add object instead of object in mini-example:
+oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
+                   rhsUserFunction=UFrhs))
+                             
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObject,
@@ -1994,7 +1984,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     which denotes the transformation from joint coordinate (scalar) to rotations and translations.
     We can compute the local joint angular velocity $\tomega_i$ and translational velocity $\wv_i$, as a 6D vector $\vv^J_i$, from
 
-
     $$
     \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, \dot q_i
     $$
@@ -2002,13 +1991,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
     The joint coordinates, which can be rotational or translational, are stored in the vector
 
-
     $$
     \qv = [q_0, \, \ldots,\, q_{N_B-1}]\tp \, ,
     $$
 
     and the vector of joint velocity coordinates reads
-
 
     $$
     \dot \qv = [\dot q_0, \, \ldots,\, \dot q_{N_B-1}]\tp \, .
@@ -2016,13 +2003,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     Knowing the motion subspace $\tPhi_i$ for joint $i$, the velocity of joint $i$ reads
 
-
     $$
     \vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \, ,
     $$
 
     and accelerations follow as
-
 
     $$
     \av_i = \av_{p(i)} + \tPhi_i \, \ddot q_i + \dot \tPhi_i \, \dot q_i\, .
@@ -2032,14 +2017,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The local forces due to applied forces and inertia forces are computed, for now independently, for every link,
 
-
     $$
     \fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a
     $$
 
     The total forces can be computed from inverse dynamics. 
     At every free end of the tree, the forces are added up for the previous link, which needs to be done recursively starting at the leaves of the tree,
-
 
     $$
     \fv_{p(i)} \mathrel{+}=  \LU{i,p(i)}{\Xm\tp} \!\cdot \fv_i
@@ -2084,14 +2067,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
            $\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm$, $j = p(j)$, $\Mm_{ij} = \Fm\tp \, \tPhi_i$ and
            $\Mm_{ji} = \Mm_{ij}$.
 
-
-
     #### Implementation and user functions
 
     Currently, there is only the so-called Composite-Rigid-Body (CRB) algorithm implemented.
     This algorithm does not show the highest performance, but creates the mass matrix $\Mm_{CRB}$ and forces $\fv_{CRB}$
     in a conventional form. The equations read
-
 
     $$
     \Mm_{CRB}(\qv) \ddot \qv = \fv_{CRB}(\qv,\dot \qv) + \fv + \fv_{PD} + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
@@ -2112,7 +2092,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     The control force $\fv_{PD}$ realizes a simple linear control law
 
-
     $$
     \fv_{PD} = \Pm \cdot (\uv_o - \qv) + \Dm \cdot (\vv_o - \dot \qv)
     $$
@@ -2129,20 +2108,22 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     especially for describing the kinematic chain as well as the inertial parameters.
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object. 
     Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
     %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
+    | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
+
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     %%RSTCOMPATIBLE
@@ -2524,7 +2505,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | object coordinates | $\qv = [\qv\indt\tp,\;\qv\indr\tp,\;\qv\indf\tp]\tp$ | object coordinates |
@@ -2547,13 +2527,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     nodal coordinates are $[n_{c_0},\,\ldots,\,n_{c_n}]$, where $n_0$ denotes the rigid body node.
     This gives $n_c$ total nodal coordinates, 
 
-
     $$
     n_c = \sum_{i=0}^{n_\mathrm{nf}} n_{c_i} \, ,
     $$
 
     whereof the number of flexible coordinates is
-
 
     $$
     n\indf = 3 \cdot n_\mathrm{nf} \, .
@@ -2571,7 +2549,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The kinematics of the ABRV:FFRF is based on a splitting of 
     translational ($\cv_t \in \Rcal^{n\indf}$), rotational ($\cv\indr \in \Rcal^{n\indf}$) and flexible ($\cv\indf \in \Rcal^{n\indf}$) nodal displacements, 
 
-
     $$
     \LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \, .
     $$ (eq-objectffrf-coordinatessplitting)
@@ -2579,7 +2556,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     which are written in global coordinates in [](#eq-objectffrf-coordinatessplitting) but will be transformed to other coordinates later on.
     
     In the present formulation of \texttt{ObjectFFRF}, we use the following set of object coordinates (unknowns)
-
 
     $$
     \qv = \left[\LU{0}{\qv\indt\tp} \;\; \ttheta\tp \;\; \LU{b}{\qv\indf\tp} \right]\tp \in \Rcal^{n_c}
@@ -2589,7 +2565,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note that parts of the coordinates $\qv$ can be already interpreted in specific coordinate systems, which is therefore added.
     
     With the relations 
-
 
     $$
     \begin{aligned}
@@ -2603,20 +2578,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     we obtain the total relation of (global) nodal displacements to the object coordinates
 
-
     $$
     \LU{0}{\cv} = \tPhi\indt \LU{0}{\qv\indt} + \left(\LU{0b}{\Am_{bd}} - \Im_{bd}\right) \LU{b}{\xv\cRef} + \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \, .
     $$
 
     On velocity level, we have
 
-
     $$
     \LU{0}{\dot \cv} = \Lm \dot \qv \, ,
     $$
 
     with the matrix $\Lm \in \Rcal^{n\indf \times n_c}$
-
 
     $$
     \Lm = \left[\tPhi\indt ,\;\; -\LU{0b}{\Am_{bd}} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\;\; \LU{0b}{\Am_{bd}} \right]
@@ -2625,13 +2597,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     with the rotation parameters specific matrix $\LU{b}{\Gm}$, implicitly defined in the rigid body node by the relation $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \ttheta$
     and the body-fixed nodal position vector (for node $i$)
 
-
     $$
     \LU{b}{\pv} = \LU{b}{\xv\cRef} + \LU{b}{\qv\indf}, \quad \LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}\cRef} + \LU{b}{\qv_{\mathrm{f},i}^{(i)}}
     $$
 
     and the special tilde matrix for vectors $\pv \in \Rcal^{3 {n_\mathrm{nf}}}$, 
-
 
     $$
     \LU{b}{\tilde \pv} = \vr{\LU{b}{\tilde\pv^{(i)}}}{\vdots}{\LU{b}{\tilde\pv^{(i)}}} \in \Rcal^{3{n_\mathrm{nf}} \times 3} \, .
@@ -2645,14 +2615,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
     We use the Lagrange equations extended for constraint $\gv$,
 
-
     $$
     \frac{d}{dt} \left( \frac{\partial T}{\partial \dot \qv\tp} \right) - \frac{\partial T}{\partial \qv\tp}
             + \frac{\partial V}{\partial \qv\tp} + \frac{\partial \tlambda\tp \gv}{\partial \qv\tp} = \frac{\partial W}{\partial \qv\tp}
     $$
 
     with the quantities
-
 
     $$
     \begin{aligned}
@@ -2670,7 +2638,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     Elementary differentiation rules of the Lagrange equations lead to
 
-
     $$
     \Lm\tp \Mm \Lm \ddot \qv + \Lm\tp \Mm \dot \Lm \dot \qv + \hat \Km \qv + \frac{\partial \gv}{\partial \qv\tp} \tlambda = \Lm\tp \fv
     $$ (eq-objectffrf-leq)
@@ -2681,7 +2648,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     In case that \texttt{computeFFRFterms = True}, [](#eq-objectffrf-leq) can be transformed into the equations of motion,
 
-
     $$
     \left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
                         {\mathrm{sym.}}{}{\LU{b}{\Mm}} \right) \ddot \qv + 
@@ -2691,7 +2657,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     in which \texttt{iN} represents the itemNumber (=objectNumber of ObjectFFRF in mbs) in the user function.
     The mass terms are given as
-
 
     $$
     \begin{aligned}
@@ -2711,7 +2676,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The quadratic velocity vector follows as
 
-
     $$
     \fv_{v}(\qv,\dot \qv) = \vr
           {-\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm}\left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
@@ -2727,7 +2691,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     with the special matrix
 
-
     $$
     \omegaBDtilde = \mathrm{diag}\left(\LU{b}{\tilde \tomega_\mathrm{bd}}, \; \ldots ,\; \LU{b}{\tilde \tomega_\mathrm{bd}}  \right)
           \in \Rcal^{n\indf \times n\indf}
@@ -2737,7 +2700,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     \noindent If the rigid body node is using Euler parameters $\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, an {\bf additional constraint} (constraint nr.\ 0) is 
     added automatically for the Euler parameter norm, reading
-
 
     $$
     1 - \sum_{i=0}^{3} \theta_i^2 = 0.
@@ -2749,13 +2711,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     In order to suppress the rigid body motion of the mesh nodes, you should apply a ObjectConnectorCoordinateVector object with the following constraint
     equations which impose constraints of a so-called Tisserand frame, giving 3 constraints for the position of the center of mass
 
-
     $$
     \Phi\indt\tp \LU{b}{\Mm} \qv\indf = 0
     $$
 
     and 3 constraints for the rotation,
-
 
     $$
     \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
@@ -2764,29 +2724,33 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
     %++++++++++++++++++++++++++++++++++++++
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     %
     %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_c$}{object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_c$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n_c}$}{returns force vector for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n_c$ | object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
+    | **return value** | Vector $\in \Rcal^{n_c}$ | returns force vector for object |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{massMatrixUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_c$}{object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_c$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n_c \times n_c}$}{returns mass matrix for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n_c$ | object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
+    | **return value** | NumpyMatrix $\in \Rcal^{n_c \times n_c}$ | returns mass matrix for object |
+
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     %%RSTCOMPATIBLE
@@ -3090,7 +3054,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The reduced order ABRV:FFRF formulation is based on an approximation of flexible coordinates $\LU{b}{\qv\indf}$ 
     by means of a reduction or mode basis $\LU{b}{\tPsi}$ (\texttt{modeBasis}) and the the modal coordinates $\tzeta$,
 
-
     $$
     \LU{b}{\qv\indf} \approx \LU{b}{\tPsi} \tzeta
     $$
@@ -3103,7 +3066,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     The \texttt{ObjectFFRF} coordinates and [](#eq-objectffrf-eom)\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
 
-
     $$
     \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
             = \Hm \, \qv
@@ -3112,7 +3074,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
     
     The reduced equations follow from the reduction of system matrices in [](#eq-objectffrf-eom),
-
 
     $$
     \begin{aligned}
@@ -3123,7 +3084,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     the computation of rigid body inertia
 
-
     $$
     \begin{aligned}
     \LU{b}{\tTheta}\indu &= \LUX{b}{\tilde \xv}{\cRef\tp} \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
@@ -3131,7 +3091,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
 
     the center of mass (and according tilde matrix), using $\tPhi\indt$ from [](#eq-objectffrf-phit),
-
 
     $$
     \begin{aligned}
@@ -3141,7 +3100,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
  
     and seven inertia-like matrices [CITE:ZwoelferGerstmayr2021],
-
 
     $$
     \Mm_{AB} = \Am\tp \LU{b}{\Mm} \Bm, \quad \mathrm{using} \quad \Am\Bm \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; 
@@ -3160,7 +3118,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     Equations of motion, in case that \texttt{computeFFRFterms = True}:
 
-
     $$
     \begin{aligned}
     \left(\Mm_{user}(mbs, t,\qv,\dot \qv) + 
@@ -3170,7 +3127,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
 
     \footnote{NOTE that currently the internal (C++) computed terms are zero,
-
 
     $$
     \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} = \Null \quad \mathrm{and} \quad
@@ -3182,7 +3138,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note that in case of Euler parameters for the parameterization of rotations for the reference frame, the Euler parameter constraint equation is added automatically by this object.
     %
     The single terms of the mass matrix are defined as[CITE:ZwoelferGerstmayr2021]
-
 
     $$
     \begin{aligned}
@@ -3202,13 +3157,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     with the Kronecker product\footnote{In Python numpy module this is computed by \texttt{numpy.kron(zeta, Im).T}},
 
-
     $$
     \tzeta \otimes \Im = \vr{\zeta_0 \Im}{\vdots}{\zeta_{m-1} \Im}
     $$
 
     The quadratic velocity vector $\fv_v(\qv,\dot \qv) = \left[ \fv_{v\mathrm{t}}\tp,\; \fv_{v\mathrm{r}}\tp,\; \fv_{v\mathrm{f}}\tp \right]\tp$ reads
-
 
     $$
     \begin{aligned}
@@ -3241,7 +3194,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note that terms including $\LU{b}{\dot \Gm} \dot \ttheta$ vanish in case of Euler parameters or in case that $\LU{b}{\dot \Gm} = \Null$,
     and we use another Kronecker product with the unit matrix $\Im_\zeta \in \Rcal^{n_m \times n_m}$,
 
-
     $$
     \Im_\zeta \otimes \LU{b}{\tomega} = \mr{\LU{b}{\tomega}}{}{} {}{\ddots}{} {}{}{\LU{b}{\tomega}} \in \Rcal^{3n_m \times n_m}
     $$
@@ -3264,13 +3216,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     rotations at nodes.
     Recall that the modal coordinates $\tzeta$ are transformed to node coordinates by means of the mode basis  $\LU{b}{\tPsi}$,
 
-
     $$
     \LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta \, .
     $$
 
     The local displacements $\LU{b}{\uv\indf^{(i)}}$ of a specific node $i$ can be reconstructed in this way by means of
-
 
     $$
     \LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} \, ,
@@ -3278,13 +3228,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     and the global position of a node, see tables above, reads
 
-
     $$
     \LU{0}{\pv^{(i)}} = \LU{0}{\pv\indt} + \LU{0b}{\Am} \left( \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} \right)
     $$
 
     Thus, the jacobian of the global position reads
-
 
     $$
     \LU{0}{\Jm_\mathrm{pos}^{(i)}} = \frac{\partial \LU{0}{\pv^{(i)}}}{\partial [\qv\indt, \;\ttheta, \;\tzeta]}
@@ -3295,13 +3243,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     in which $\LU{b}{\tPsi_{r=...}}$ represents the row $r$ of the mode basis (matrix) $\LU{b}{\Psi}$, and
     the matrix 
 
-
     $$
     \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}} \in \Rcal^{3 \times n_m}
     $$
 
     Furthermore, the jacobian of the local position reads
-
 
     $$
     \LU{b}{\Jm_\mathrm{pos}^{(i)}} = \frac{\partial \LU{b}{\pv\indf^{(i)}}}{\partial [\qv\indt, \;\ttheta, \;\tzeta]}
@@ -3333,30 +3279,34 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     Note that itemNumber represents the index of the ObjectFFRFreducedOrder object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n_{ODE2}}$}{returns force vector for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n_{ODE2}$ | ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of \texttt{q}) in current configuration |
+    | **return value** | Vector $\in \Rcal^{n_{ODE2}}$ | returns force vector for object |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{massMatrixUserFunction(mbs, t, itemNumber, q, q\_t)}
+    **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
     A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$}{returns mass matrix for object}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^n_{ODE2}$ | ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values |
+    | \texttt{q\_t} | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of \texttt{q}) in current configuration |
+    | **return value** | NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$ | returns mass matrix for object |
+
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     %%RSTCOMPATIBLE
@@ -3876,7 +3826,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | angular velocity | $\omega_2 = (-r'_y \cdot \dot r'_x + r'_x \cdot \dot r'_y) / \Vert \rv(x)'\Vert^2 $ |  |
     | rotation matrix | $\LU{0b}{\Rot}$ |  |
 
-
     The Bernoulli-Euler beam is capable of large axial and bendig deformation as it employs the material measure of curvature for the bending.
     %
 
@@ -3892,13 +3841,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     The current position of an arbitrary element at local axial position $x \in [0,L]$, where $L$ is the beam length, reads
 
-
     $$
     \rv=\rv(x, t),
     $$
 
     The derivative of the position w.r.t.\ the axial reference coordinate is denoted as slope vector,
-
 
     $$
     \rv'= \frac{\partial \rv(x, t)}{\partial x}
@@ -3907,7 +3854,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The interpolation is based on cubic (spline) interpolation of position, displacements and velocities.
     The generalized coordinates $\qv \in \Rcal^8$ of the beam element is defined by
 
-
     $$
     \qv= \left[\, \rv_0^{T}\;\;\rv_0^{' T}\;\; \rv_1^{T}\;\; \rv_1^{' T}\, \right]^{T}.
     $$
@@ -3915,7 +3861,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     in which $\rv_0$ is the position of node 0 and $\rv_1$ is the position of node 1,
     $\rv'_0$ the slope at node 0 and $\rv'_1$ the slope at node 1.
     Note that ANCF coordinates in the present notation are computed as sum of reference and current coordinates
-
 
     $$
     \qv = \qv\cCur + \qv\cRef
@@ -3926,20 +3871,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Position and slope are interpolated with shape functions.
     The position and slope along the beam are interpolated by means of 
 
-
     $$
     \rv = \Sm \qv \qquad \mathrm{and} \qquad \rv'=\Sm' \qv.
     $$
 
     in which $\Sm$ is the shape function matrix,
 
-
     $$
     \Sm(x)= \left[\, S_1(x)\,\ImTwo\;\; S_2(x)\,\ImTwo\;\; S_3(x)\,\ImTwo\;\; S_4(x)\,\ImTwo\, \right].
     $$
 
     with identity matrix $\ImTwo \in \Rcal^{2 \times 2}$ and the shape functions
-
 
     $$
     \begin{aligned}
@@ -3953,7 +3895,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
     Velocity simply follows as 
 
-
     $$
     \frac{\partial \rv}{\partial t} = \dot \rv = \Sm \dot \qv.
     $$
@@ -3965,20 +3906,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The mass matrix is constant and therefore precomputed at the first time it is needed (e.g., during computation of initial accelerations).
     The analytical form of the mass matrix reads
 
-
     $$
     \Mm_{analytic} = \int_0^L \rho A \Sm(x)^T \Sm(x) dx
     $$
 
     which is approximated using
 
-
     $$
     \Mm = \sum_{ip = 0}^{n_{ip}-1} w(x_{ip}) \frac{L}{2} \rho A \Sm(x_{ip})^T \Sm(x_{ip})
     $$
 
     with integration weights $w(x_{ip})$, $\sum w(x_{ip})=2$, and integration points $x_{ip}$, given as,
-
 
     $$
     x_{ip} = \frac{L}{2}\xi_{ip} + \frac{L}{2} \, .
@@ -3992,13 +3930,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The elastic forces $\Qm_e$ are implicitly defined by the relation to the 
     virtual work of elastic forces, $\delta W_e$, of applied forces, $\delta W_a$ and of viscous forces, $\delta W_v$, 
 
-
     $$
     \Qm_e^T \delta \qv = \delta W_e + \delta W_a + \delta W_v.
     $$ (eq-cable2d-elasticforces)
 
     The virtual work of elastic forces reads [CITE:GerstmayrIrschik2008],
-
 
     $$
     \delta W_e = \int_0^L (N \delta \varepsilon + M \delta K) \,dx,
@@ -4007,13 +3943,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %\todo{compute $\delta W_e = \Qm_e^T \delta \qv$ }
     in which the axial strain is defined as [CITE:GerstmayrIrschik2008]
 
-
     $$
     \varepsilon=\Vert \rv'\Vert-1.
     $$
  
     and the material measure of curvature (bending strain) is given as
-
 
     $$
     K=\ev_3^T \frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2} .
@@ -4024,7 +3958,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     By derivation, we obtain the variation of axial strain
 
-
     $$
     \delta \varepsilon =\frac{\partial \varepsilon}{\partial q_i}\delta q_i
           %= \frac{\rv'^{T}\frac{\partial}{\partial q_i}\rv'}{\Vert \rv' \Vert} \delta q_i
@@ -4034,7 +3967,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     and the variation of $K$
 
-
     $$
     \begin{aligned}
     \delta K &= \frac{\partial}{\partial q_i} \left( \frac{(\rv'^{T}\times \rv'' )^{T}\ev_{3}}{\Vert \rv' \Vert^2 }\right) \delta q_i\\
@@ -4043,7 +3975,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$ (eq-cable2d-deltakappa)
 
     The normal force (axial force) $N$ in the beam is defined as function of the current strain $\varepsilon$,
-
 
     $$
     N = EA \, (\varepsilon - \varepsilon_0 - f\cRef \cdot \varepsilon\cRef).
@@ -4058,7 +3989,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The bending moment $M$ in the beam is defined as function of the current material measure of curvature $K$,
 
-
     $$
     M = EI \, (K - K_0 - f\cRef \cdot K\cRef).
     $$ (eq-m)
@@ -4070,14 +4000,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
 
-
     $$
     \delta W_v = \int_0^L \left( d_\varepsilon \dot \varepsilon \delta \varepsilon + d_K \dot K \delta K \right) \,d x.
     $$
 
     with material coefficients $d_\varepsilon$ and $d_K$.
     The time derivatives of axial strain $\dot \varepsilon_p$ follows by elementary differentiation
-
 
     $$
     \dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert \rv'\Vert-1 \right)
@@ -4086,7 +4014,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
 
     as well as the derivative of the curvature,
-
 
     $$
     \begin{aligned}
@@ -4100,7 +4027,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     The virtual work of applied forces reads
 
-
     $$
     \delta W_a = \sum_i \fv_i^T \delta \rv_i(x_f) + \int_0^L \bv^T \delta \rv(x) \,d x \, ,
     $$ (eq-applied)
@@ -4108,30 +4034,25 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     in which $\fv_i$ are forces applied to a certain position $x_f$ at the beam centerline.
     The second term contains a load per length $\bv$, which is case of gravity vector $\gv$ reads
 
-
     $$
     \bv = \rho \gv.
     $$
 
     Note that the variation of $\rv$ simply follows as
 
-
     $$
     \delta \rv= \Sm\, \delta \qv
     $$
 
-
     #### Numerical integration of Elastic Forces
 
     The numerical integration of elastic forces $\Qm_e$ is split into terms due to $\delta \varepsilon$ and $\delta K$,
-
 
     $$
     \Qm_e = \int_0^L \left(\bullet(x) \frac{\partial \delta \varepsilon}{\partial \delta \qv} + \bullet(x) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
     $$
 
     using different integration rules
-
 
     $$
     \Qm_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta \qv} \right)
@@ -4151,7 +4072,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     For application of forces and constraints at any local beam position $\pLocB=[x,\, y,\, 0]\tp$, the position / velocity Jacobian reads
 
-
     $$
     \frac{\partial \LU{0}{\vv(x)}}{\dot \qv} = \Sm(x) + \left[ -y \cdot n_x S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, 
             -y \cdot n_y S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, -y \cdot n_x S'_2(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\,\ldots \right]
@@ -4160,7 +4080,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     with the normalized beam axis normal $\LU{0}{\nv} = [n_x,\, n_y]\tp$, see table above.
 
     For application of torques at any axis point $x$, the rotation / angular velocity Jacobian $\frac{\partial \LU{0}{\omega(x)}}{\dot \qv} \in \Rcal^{3 \times 8}$ reads
-
 
     $$
     \frac{\partial \LU{0}{\omega(x)}}{\dot \qv} = 
@@ -4172,7 +4091,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain\_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature\_t, curvatureRef)}
+    **Userfunction**: `axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature_t, curvatureRef)`
     A user function, which computes the axial force depending on time, strains and curvatures and 
     object parameters (stiffness, damping).
     The object variables are provided to the function using the current values of the ANCFCable2D object.
@@ -4180,23 +4099,25 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     \mybold{NOTE:} this function has a different interface as compared to the bending moment function.
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{axialPositionNormalized}}{Real}{axial position at the cable where the user function is evaluated; range is [0,1]}
-      \rowTable{\texttt{axialStrain}}{Real}{$\varepsilon$}
-      \rowTable{\texttt{axialStrain\_t}}{Real}{$\varepsilon_t$}
-      \rowTable{\texttt{axialStrainRef}}{Real}{$\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$}
-      \rowTable{\texttt{physicsAxialStiffness}}{Real}{as given in object parameters}
-      \rowTable{\texttt{physicsAxialDamping}}{Real}{as given in object parameters}
-      \rowTable{\texttt{curvature}}{Real}{$K$}
-      \rowTable{\texttt{curvature\_t}}{Real}{$\dot K$}
-      \rowTable{\texttt{curvatureRef}}{Real}{$K_0 + f\cRef \cdot K\cRef$}
-      \rowTable{\returnValue}{Real}{scalar value of computed axial force}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{axialPositionNormalized} | Real | axial position at the cable where the user function is evaluated; range is [0,1] |
+    | \texttt{axialStrain} | Real | $\varepsilon$ |
+    | \texttt{axialStrain\_t} | Real | $\varepsilon_t$ |
+    | \texttt{axialStrainRef} | Real | $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$ |
+    | \texttt{physicsAxialStiffness} | Real | as given in object parameters |
+    | \texttt{physicsAxialDamping} | Real | as given in object parameters |
+    | \texttt{curvature} | Real | $K$ |
+    | \texttt{curvature\_t} | Real | $\dot K$ |
+    | \texttt{curvatureRef} | Real | $K_0 + f\cRef \cdot K\cRef$ |
+    | **return value** | Real | scalar value of computed axial force |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature\_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain\_t, axialStrainRef)}
+    **Userfunction**: `bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef)`
     A user function, which computes the bending moment depending on time, strains and curvatures and 
     object parameters (stiffness, damping).
     The object variables are provided to the function using the current values of the ANCFCable2D object.
@@ -4204,58 +4125,63 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     \mybold{NOTE:} this function has a different interface as compared to the axial force function.
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{axialPositionNormalized}}{Real}{axial position at the cable where the user function is evaluated; range is [0,1]}
-      \rowTable{\texttt{curvature}}{Real}{$K$}
-      \rowTable{\texttt{curvature\_t}}{Real}{$\dot K$}
-      \rowTable{\texttt{curvatureRef}}{Real}{$K_0 + f\cRef \cdot K\cRef$}
-      \rowTable{\texttt{physicsBendingStiffness}}{Real}{as given in object parameters}
-      \rowTable{\texttt{physicsBendingDamping}}{Real}{as given in object parameters}
-      \rowTable{\texttt{axialStrain}}{Real}{$\varepsilon$}
-      \rowTable{\texttt{axialStrain\_t}}{Real}{$\varepsilon_t$}
-      \rowTable{\texttt{axialStrainRef}}{Real}{$\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$}
-      \rowTable{\returnValue}{Real}{scalar value of computed bending moment}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{axialPositionNormalized} | Real | axial position at the cable where the user function is evaluated; range is [0,1] |
+    | \texttt{curvature} | Real | $K$ |
+    | \texttt{curvature\_t} | Real | $\dot K$ |
+    | \texttt{curvatureRef} | Real | $K_0 + f\cRef \cdot K\cRef$ |
+    | \texttt{physicsBendingStiffness} | Real | as given in object parameters |
+    | \texttt{physicsBendingDamping} | Real | as given in object parameters |
+    | \texttt{axialStrain} | Real | $\varepsilon$ |
+    | \texttt{axialStrain\_t} | Real | $\varepsilon_t$ |
+    | \texttt{axialStrainRef} | Real | $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$ |
+    | **return value** | Real | scalar value of computed bending moment |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #define some material parameters
-        rhoA = 100.
-        EA =   1e7.
-        EI =   1e5
+    *Example*:
+    
+```python
+#define some material parameters
+rhoA = 100.
+EA =   1e7.
+EI =   1e5
 
-        #example of bending moment user function
-        def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-                   curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
-                   physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
-            fact = min(1,t) #runs from 0 to 1
-            #change reference curvature of beam over time:
-            kappa=(curvature-curvatureRef*fact) 
-            return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+#example of bending moment user function
+def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+           curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
+           physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+    fact = min(1,t) #runs from 0 to 1
+    #change reference curvature of beam over time:
+    kappa=(curvature-curvatureRef*fact) 
+    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
 
-        def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-                   axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
-                   physicsAxialDamping, curvature, curvature_t, curvatureRef):
-            fact = min(1,t) #runs from 0 to 1
-            return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
-                    physicsAxialDamping*axialStrain_t)
+def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
+           physicsAxialDamping, curvature, curvature_t, curvatureRef):
+    fact = min(1,t) #runs from 0 to 1
+    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+            physicsAxialDamping*axialStrain_t)
 
-        cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                        physicsBendingStiffness=EI, 
-                        physicsBendingDamping = EI*0.1,
-                        physicsAxialStiffness=EA,
-                        physicsAxialDamping=EA*0.05,
-                        physicsReferenceAxialStrain=0.1, #10% stretch
-                        physicsReferenceCurvature=1,     #radius=1
-                        bendingMomentUserFunction=bendingMomentUserFunction,
-                        axialForceUserFunction=axialForceUserFunction,
-                        )
-        #use  cable with GenerateStraightLineANCFCable(...)
-    \end{lstlisting} \vspace{12pt}
+cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                physicsBendingStiffness=EI, 
+                physicsBendingDamping = EI*0.1,
+                physicsAxialStiffness=EA,
+                physicsAxialDamping=EA*0.05,
+                physicsReferenceAxialStrain=0.1, #10% stretch
+                physicsReferenceCurvature=1,     #radius=1
+                bendingMomentUserFunction=bendingMomentUserFunction,
+                axialForceUserFunction=axialForceUserFunction,
+                )
+#use  cable with GenerateStraightLineANCFCable(...)
+
+```
+ \vspace{12pt}
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -5334,7 +5260,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
@@ -5342,7 +5267,6 @@ definitions.append(ItemDefinition(
     | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
     | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
     | time derivative of distance | $\dot L$ | $\Delta\! \LU{0}{\vv}\tp \vv_{f}$ |
-
 
     | output variables | symbol | formula |
     |---|---|---|
@@ -5359,20 +5283,17 @@ definitions.append(ItemDefinition(
     %
     The unit vector in force direction reads (raises SysError if $L=0$),
 
-
     $$
     \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
     $$
 
     If \texttt{activeConnector = True}, the scalar spring force is computed as
 
-
     $$
     f_{SD} = k\cdot(L-L_0) + d \cdot(\dot L -\dot L_0)+ f_{a}
     $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv$ instead becomes ($t$ is current time)
-
 
     $$
     f_{SD} = \mathrm{UF}(mbs, t, i_N, L-L_0, \dot L - \dot L_0, k, d, f_{a})
@@ -5382,20 +5303,17 @@ definitions.append(ItemDefinition(
 
     The vector of the spring-damper force applied at both markers finally reads
 
-
     $$
     \fv = f_{SD}\vv_{f}
     $$
 
     The virtual work of the connector force is computed from the virtual displacement 
 
-
     $$
     \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
     $$
 
     and the virtual work (note the transposed version here, because the resulting generalized forces shall be a column vector),
-
 
     $$
     \delta W_{SD} = \fv \delta \Delta\! \LU{0}{\pv} 
@@ -5405,14 +5323,12 @@ definitions.append(ItemDefinition(
 
     The generalized (elastic) forces thus result from
 
-
     $$
     \Qm_{SD} = \frac{\partial \LU{0}{\pv}}{\partial \qv_{SD}\tp} \fv 
           \, ,
     $$
 
     and read for the markers $m0$ and $m1$,
-
 
     $$
     \Qm_{SD, m0} 
@@ -5429,7 +5345,6 @@ definitions.append(ItemDefinition(
 
     The position-level jacobian for the connector, involving all coordinates associated with markers $m0$ and $m1$, follows from 
 
-
     $$
     \Jm_{SD} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}}}
                         {\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \qv_{m1}}}
@@ -5437,14 +5352,12 @@ definitions.append(ItemDefinition(
 
     and the velocity level jacobian reads
 
-
     $$
     \Jm_{SD,t} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}}}
                         {\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \dot \qv_{m1}}}
     $$
 
     The sub-Jacobians follow from
-
 
     $$
     \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} = 
@@ -5457,7 +5370,6 @@ definitions.append(ItemDefinition(
     dominant, but is included in the numerical as well as the analytical derivatives, see the general jacobian computation information.
     
     The other term, which is the dominant term, is computed as (dependence of velocity term on position coordinates and $\dot L_0$ term neglected),
-
 
     $$
     \begin{aligned}
@@ -5475,7 +5387,6 @@ definitions.append(ItemDefinition(
 
     %+++++++++++++++++++++++++++++++++++++++++++
     Alternatively (again $\dot L_0$ term neglected):
-
 
     $$
     \begin{aligned}
@@ -5506,7 +5417,6 @@ definitions.append(ItemDefinition(
     %
     The Jacobian w.r.t.\ velocity coordinates follows as
 
-
     $$
     \begin{aligned}
     \frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}}
@@ -5521,7 +5431,6 @@ definitions.append(ItemDefinition(
     
     The term $\frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}}$, which is important for large damping, yields
 
-
     $$
     \frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}} = 
           \frac{\partial \Jm_{pos,m0} \dot \qv_{m0}}{\partial \qv_{m0}}=
@@ -5532,37 +5441,42 @@ definitions.append(ItemDefinition(
     
     Jacobians for markers $m1$ and mixed $m0$/$m1$ terms follow analogously.
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)}
+    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)`
     A user function, which computes the spring force depending on time, object variables (deltaL, deltaL\_t) and 
     object parameters (stiffness, damping, force).
     The object variables are provided to the function using the current values of the SpringDamper object.
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{deltaL}}{Real}{$L-L_0$, spring elongation}
-      \rowTable{\texttt{deltaL\_t}}{Real}{$(\dot L - \dot L_0)$, spring velocity, including offset}
-      \rowTable{\texttt{stiffness}}{Real}{copied from object}
-      \rowTable{\texttt{damping}}{Real}{copied from object}
-      \rowTable{\texttt{force}}{Real}{copied from object; constant force}
-      \rowTable{\returnValue}{Real}{scalar value of computed spring force}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{deltaL} | Real | $L-L_0$, spring elongation |
+    | \texttt{deltaL\_t} | Real | $(\dot L - \dot L_0)$, spring velocity, including offset |
+    | \texttt{stiffness} | Real | copied from object |
+    | \texttt{damping} | Real | copied from object |
+    | \texttt{force} | Real | copied from object; constant force |
+    | **return value** | Real | scalar value of computed spring force |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #define nonlinear force
-        def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
-            return k*u + d*v + F0
-        #markerNumbers taken from mini example
-        mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-                                                  referenceLength = 1, 
-                                                  stiffness = 100, damping = 1,
-                                                  springForceUserFunction = UFforce))
-    \end{lstlisting} \vspace{12pt}
+    *Example*:
+    
+```python
+#define nonlinear force
+def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
+    return k*u + d*v + F0
+#markerNumbers taken from mini example
+mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                                          referenceLength = 1, 
+                                          stiffness = 100, damping = 1,
+                                          springForceUserFunction = UFforce))
+
+```
+ \vspace{12pt}
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -5695,7 +5609,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
@@ -5710,13 +5623,11 @@ definitions.append(ItemDefinition(
     Connector forces are based on relative displacements and relative veolocities in global coordinates.
     Relative displacement between marker m0 to marker m1 positions is given by
 
-
     $$
     \Delta\! \LU{0}{\pv}= \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} \, ,
     $$ (eq-objectcartesianspringdamper-deltapos)
 
     and relative velocity reads
-
 
     $$
     \Delta\! \LU{0}{\vv}= \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} \, .
@@ -5724,13 +5635,11 @@ definitions.append(ItemDefinition(
 
     If \texttt{activeConnector = True}, the spring force vector is computed as
 
-
     $$
     \LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} \, .
     $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
-
 
     $$
     \LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
@@ -5743,13 +5652,11 @@ definitions.append(ItemDefinition(
     The force $\fv_{SD}$ acts via the markers' position jacobians $\Jm_{pos,m0}$ and $\Jm_{pos,m1}$.
     The generalized forces added to the ABRV:LHS equations read for marker $m0$,
 
-
     $$
     \fv_{LHS,m0} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_{SD}} \, ,
     $$
 
     and for marker $m1$,
-
 
     $$
     \fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \, .
@@ -5762,7 +5669,6 @@ definitions.append(ItemDefinition(
     and if there is no springForceUserFunction (otherwise numerical differentiation is used).
     
     The anayltic jacobian for the coupled equation parts $\fv_{LHS,m0}$ and $\fv_{LHS,m1}$ is based on the local jacobians
-
 
     $$
     \begin{aligned}
@@ -5779,7 +5685,6 @@ definitions.append(ItemDefinition(
     which allows a computation of the computation for both the position as well as the velocity part at the same time.
 
     \noindent The complete jacobian for the ABRV:LHS equations then reads,
-
 
     $$
     \begin{aligned}
@@ -5803,7 +5708,6 @@ definitions.append(ItemDefinition(
     The second term $\Jm_{CSD'}$ is only non-zero if $\frac{\partial \LU{0}{\Jm_{pos,i}\tp}}{\partial \qv_{i}}$ is non-zero, using $i \in \{m0, \, m1\}$.
     As the latter terms would require to compute a 3-dimensional array, the second jacobian term is computed as 
 
-
     $$
     \Jm_{CSD'} = \mp{-f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m0}\tp} \fv' \right)}{\partial \qv_{m0}}}{\Null}{\Null}
                           { f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m1}\tp} \fv' \right)}{\partial \qv_{m1}}}
@@ -5812,38 +5716,42 @@ definitions.append(ItemDefinition(
     in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in [](#eq-objectcartesianspringdamper-jacderiv) are evaluated by setting $\fv' = const$.
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)}
+    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
     A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL\_t) and object parameters 
     (stiffness, damping, force).
     The object variables are provided to the function using the current values of the SpringDamper object.
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{displacement}}{Vector3D}{$\Delta\! \LU{0}{\pv}$}
-      \rowTable{\texttt{velocity}}{Vector3D}{$\Delta\! \LU{0}{\vv}$}
-      %
-      \rowTable{\texttt{stiffness}}{Vector3D}{copied from object}
-      \rowTable{\texttt{damping}}{Vector3D}{copied from object}
-      \rowTable{\texttt{offset}}{Vector3D}{copied from object}
-      \rowTable{\returnValue}{Vector3D}{list or numpy array of computed spring force}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{displacement} | Vector3D | $\Delta\! \LU{0}{\pv}$ |
+    | \texttt{velocity} | Vector3D | $\Delta\! \LU{0}{\vv}$ |
+    | \texttt{stiffness} | Vector3D | copied from object |
+    | \texttt{damping} | Vector3D | copied from object |
+    | \texttt{offset} | Vector3D | copied from object |
+    | **return value** | Vector3D | list or numpy array of computed spring force |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #define simple force for spring-damper:
-        def UFforce(mbs, t, itemNumber, u, v, k, d, offset): 
-            return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
-        
-        #markerNumbers and parameters taken from mini example
-        mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
-                                            stiffness = [k,k,k], 
-                                            damping = [0,k*0.05,0], offset = [0,0,0],
-                                            springForceUserFunction = UFforce))
-    \end{lstlisting}
+    *Example*:
+    
+```python
+#define simple force for spring-damper:
+def UFforce(mbs, t, itemNumber, u, v, k, d, offset): 
+    return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
+                                    stiffness = [k,k,k], 
+                                    damping = [0,k*0.05,0], offset = [0,0,0],
+                                    springForceUserFunction = UFforce))
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -5968,7 +5876,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | input parameter | symbol | description |
     |---|---|---|
     | stiffness | $\kv \in \mathbb{R}^{6\times 6}$ | stiffness in $J0$ coordinates |
@@ -6000,11 +5907,9 @@ definitions.append(ItemDefinition(
     | VelocityLocal | $\LU{J0}{\Delta\vv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ |
     | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\tomega} - \LU{0,m0}{\Rot} \LU{m0}{\tomega} \right)$ |
 
-
     #### Connector forces
 
     If \texttt{activeConnector = True}, the vector spring force is computed as
-
 
     $$
     \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) + 
@@ -6017,7 +5922,6 @@ definitions.append(ItemDefinition(
     If the springForceTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
     $\fv_{SD}$ instead becomes ($t$ is current time)
 
-
     $$
     \fv_{SD} = \mathrm{UF}(mbs, t, i_N, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\tomega}, 
                                  \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
@@ -6025,7 +5929,7 @@ definitions.append(ItemDefinition(
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)}
+    **Userfunction**: `springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
     A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities 
     (displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between 
     both markers and which are defined in joint J0 coordinates. 
@@ -6037,24 +5941,25 @@ definitions.append(ItemDefinition(
     
     Detailed description of the arguments and local quantities:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{displacement}}{Vector3D}{$\LU{J0}{\Delta\pv}$}
-      \rowTable{\texttt{rotation}}{Vector3D}{$\LU{J0}{\ttheta}$}
-      \rowTable{\texttt{velocity}}{Vector3D}{$\LU{J0}{\Delta\vv}$}
-      \rowTable{\texttt{angularVelocity}}{Vector3D}{$\LU{J0}{\Delta\tomega}$}
-      %
-      \rowTable{\texttt{stiffness}}{Vector6D}{copied from object}
-      \rowTable{\texttt{damping}}{Vector6D}{copied from object}
-      \rowTable{\texttt{rotJ0}}{Matrix3D}{rotationMarker0 copied from object}
-      \rowTable{\texttt{rotJ1}}{Matrix3D}{rotationMarker1 copied from object}
-      \rowTable{\texttt{offset}}{Vector6D}{copied from object}
-      \rowTable{\returnValue}{Vector6D}{list or numpy array of computed spring force-torque}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{displacement} | Vector3D | $\LU{J0}{\Delta\pv}$ |
+    | \texttt{rotation} | Vector3D | $\LU{J0}{\ttheta}$ |
+    | \texttt{velocity} | Vector3D | $\LU{J0}{\Delta\vv}$ |
+    | \texttt{angularVelocity} | Vector3D | $\LU{J0}{\Delta\tomega}$ |
+    | \texttt{stiffness} | Vector6D | copied from object |
+    | \texttt{damping} | Vector6D | copied from object |
+    | \texttt{rotJ0} | Matrix3D | rotationMarker0 copied from object |
+    | \texttt{rotJ1} | Matrix3D | rotationMarker1 copied from object |
+    | \texttt{offset} | Vector6D | copied from object |
+    | **return value** | Vector6D | list or numpy array of computed spring force-torque |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)}
+    **Userfunction**: `postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
     A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size) 
     and the updated dataCoordinates $\dv^k$ of \texttt{NodeGenericData} $n_d$.
     Except from \texttt{dataCoordinates}, the arguments are the same as in \texttt{springForceTorqueUserFunction}.
@@ -6063,31 +5968,36 @@ definitions.append(ItemDefinition(
     
     Detailed description of the arguments and local quantities:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{dataCoordinates}}{Vector}{$\dv^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]$ for previous post Newton step $k-1$}
-      \rowTable{...}{...}{other arguements see \texttt{springForceTorqueUserFunction}}
-      \rowTable{\returnValue}{Vector}{$\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{dataCoordinates} | Vector | $\dv^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]$ for previous post Newton step $k-1$ |
+    | ... | ... | other arguements see \texttt{springForceTorqueUserFunction} |
+    | **return value** | Vector | $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #define simple force for spring-damper:
-        def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
-                    stiffness, damping, rotJ0, rotJ1, offset): 
-            k = stiffness #passed as list
-            u = displacement
-            return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
-        
-        #markerNumbers and parameters taken from mini example
-        mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
-                                            stiffness = np.diag([k,k,k, 0,0,0]), 
-                                            damping = np.diag([0,k*0.01,0, 0,0,0]), 
-                                            offset = [0,0,0, 0,0,0],
-                                            springForceTorqueUserFunction = UFforce))
-    \end{lstlisting}
+    *Example*:
+    
+```python
+#define simple force for spring-damper:
+def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
+            stiffness, damping, rotJ0, rotJ1, offset): 
+    k = stiffness #passed as list
+    u = displacement
+    return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                    stiffness = np.diag([k,k,k, 0,0,0]), 
+                                    damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                    offset = [0,0,0, 0,0,0],
+                                    springForceTorqueUserFunction = UFforce))
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -6272,11 +6182,9 @@ definitions.append(ItemDefinition(
     | relative displacement | $\Delta x = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\pv_{m1}} - \LU{0}{\pv_{m0}})$ | scalar relative displacement |
     | relative velocity | $\Delta v = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\vv_{m1}} - \LU{0}{\vv_{m0}})$ | scalar relative velocity; note that this only corresponds to the time derivative of $\Delta x$ if the markers only move along the axis (in a prismatic joint) |
 
-
     #### Connector forces
 
     If \texttt{activeConnector = True}, the vector spring force is computed as
-
 
     $$
     f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
@@ -6287,14 +6195,13 @@ definitions.append(ItemDefinition(
     If the springForceUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
     $f_{SD}$ instead becomes ($t$ is current time)
 
-
     $$
     f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)}
+    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
     A user function, which computes the scalar torque depending on mbs, time, local quantities 
     (relative displacement, relative velocity), which are evaluated at current time. 
     Furthermore, the user function contains object parameters (stiffness, damping, offset).
@@ -6303,33 +6210,37 @@ definitions.append(ItemDefinition(
     
     Detailed description of the arguments and local quantities:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{displacement}}{Real}{$\Delta x$}
-      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
-      %
-      \rowTable{\texttt{stiffness}}{Real}{copied from object}
-      \rowTable{\texttt{damping}}{Real}{copied from object}
-      \rowTable{\texttt{offset}}{Real}{copied from object}
-      \rowTable{\returnValue}{Real}{computed force}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{displacement} | Real | $\Delta x$ |
+    | \texttt{velocity} | Real | $\Delta v$ |
+    | \texttt{stiffness} | Real | copied from object |
+    | \texttt{damping} | Real | copied from object |
+    | \texttt{offset} | Real | copied from object |
+    | **return value** | Real | computed force |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #define simple cubic force for spring-damper:
-        def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
-            k = stiffness #passed as list
-            return k*displacement + 0.1*k* displacement**3
-        
-        #markerNumbers and parameters taken from mini example
-        mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
-                                         stiffness = k, 
-                                         damping = k*0.01, 
-                                         offset = 0,
-                                         springForceUserFunction = UFforce))
-    \end{lstlisting}
+    *Example*:
+    
+```python
+#define simple cubic force for spring-damper:
+def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
+    k = stiffness #passed as list
+    return k*displacement + 0.1*k* displacement**3
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
+                                 stiffness = k, 
+                                 damping = k*0.01, 
+                                 offset = 0,
+                                 springForceUserFunction = UFforce))
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -6473,7 +6384,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | input parameter | symbol | description |
     |---|---|---|
     | rotationMarker0 | $\LU{m0,J0}{\Rot}$ | rotation matrix which transforms from joint 0 into marker 0 coordinates |
@@ -6492,11 +6402,9 @@ definitions.append(ItemDefinition(
     | marker m1 ang.\ velocity | $\LU{m1}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
     | AngularVelocityLocal | $\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$ | angular velocity around joint0 Z-axis |
 
-
     #### Connector forces
 
     If \texttt{activeConnector = True}, the vector spring force is computed as
-
 
     $$
     \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
@@ -6507,14 +6415,13 @@ definitions.append(ItemDefinition(
     If the springTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
     $\tau_{SD}$ instead becomes ($t$ is current time)
 
-
     $$
     \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)}
+    **Userfunction**: `springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)`
     A user function, which computes the scalar torque depending on mbs, time, local quantities 
     (relative rotation, relative angularVelocity), which are evaluated at current time. 
     Furthermore, the user function contains object parameters (stiffness, damping, offset).
@@ -6523,34 +6430,38 @@ definitions.append(ItemDefinition(
     
     Detailed description of the arguments and local quantities:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{rotation}}{Real}{$\Delta \theta$}
-      \rowTable{\texttt{angularVelocity}}{Real}{$\Delta \omega$}
-      %
-      \rowTable{\texttt{stiffness}}{Real}{copied from object}
-      \rowTable{\texttt{damping}}{Real}{copied from object}
-      \rowTable{\texttt{offset}}{Real}{copied from object}
-      \rowTable{\returnValue}{Real}{computed torque}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{rotation} | Real | $\Delta \theta$ |
+    | \texttt{angularVelocity} | Real | $\Delta \omega$ |
+    | \texttt{stiffness} | Real | copied from object |
+    | \texttt{damping} | Real | copied from object |
+    | \texttt{offset} | Real | copied from object |
+    | **return value** | Real | computed torque |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #define simple cubic force for spring-damper:
-        def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
-            k = stiffness #passed as list
-            u = rotation
-            return k*u + 0.1*k*u**3
-        
-        #markerNumbers and parameters taken from mini example
-        mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
-                                            stiffness = k, 
-                                            damping = k*0.01, 
-                                            offset = 0,
-                                            springTorqueUserFunction = UFforce))
-    \end{lstlisting}
+    *Example*:
+    
+```python
+#define simple cubic force for spring-damper:
+def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
+    k = stiffness #passed as list
+    u = rotation
+    return k*u + 0.1*k*u**3
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                    stiffness = k, 
+                                    damping = k*0.01, 
+                                    offset = 0,
+                                    springTorqueUserFunction = UFforce))
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -6710,7 +6621,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 coordinate | $q_{m0}$ | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate! |
@@ -6718,11 +6628,9 @@ definitions.append(ItemDefinition(
     | marker m0 velocity coordinate | $v_{m0}$ | current velocity coordinate which is provided by marker m0 |
     | marker m1 velocity coordinate | $v_{m1}$ |  |
 
-
     #### Connector forces
 
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
-
 
     $$
     \Delta q= q_{m1} - q_{m0}
@@ -6730,20 +6638,17 @@ definitions.append(ItemDefinition(
 
     and relative velocity,
 
-
     $$
     \Delta v= v_{m1} - v_{m0}
     $$
 
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
 
-
     $$
     f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
     $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
-
 
     $$
     f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})%, f_\mu, v_\mu)
@@ -6767,32 +6672,36 @@ definitions.append(ItemDefinition(
     \ei}
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)}
+    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)`
     A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
     and object parameters .
     The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
-      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
-      %
-      \rowTable{\texttt{stiffness}}{Real}{copied from object}
-      \rowTable{\texttt{damping}}{Real}{copied from object}
-      \rowTable{\texttt{offset}}{Real}{copied from object}
-      \rowTable{\returnValue}{Real}{scalar value of computed force}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{displacement} | Real | $\Delta q$ |
+    | \texttt{velocity} | Real | $\Delta v$ |
+    | \texttt{stiffness} | Real | copied from object |
+    | \texttt{damping} | Real | copied from object |
+    | \texttt{offset} | Real | copied from object |
+    | **return value** | Real | scalar value of computed force |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #see also mini example! NOTE changes above since 2023-01-23
-        def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
-            return k*(u-offset) + d*v
-    \end{lstlisting}
+    *Example*:
+    
+```python
+#see also mini example! NOTE changes above since 2023-01-23
+def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
+    return k*(u-offset) + d*v
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -6922,7 +6831,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 coordinate | $q_{m0}$ | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate! |
@@ -6930,18 +6838,15 @@ definitions.append(ItemDefinition(
     | marker m0 velocity coordinate | $v_{m0}$ | current velocity coordinate which is provided by marker m0 |
     | marker m1 velocity coordinate | $v_{m1}$ |  |
 
-
     #### Connector forces
 
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
-
 
     $$
     q= f_1 \cdot q_{m1} - f_0 \cdot q_{m0}
     $$
 
     and relative velocity,
-
 
     $$
     v= f_1 \cdot v_{m1} - f_0 \cdot v_{m0}
@@ -6957,7 +6862,6 @@ definitions.append(ItemDefinition(
       This case works well for explicit integrators and represents simplified friction. It is suited best, e.g., for drives if considered
       for a specific velocity, but not for the velocity=0 (at which no friction force is produced).
       If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with
-
 
       $$
       f_\mathrm{friction} = \begin{cases} 
@@ -6988,7 +6892,6 @@ definitions.append(ItemDefinition(
       %not possible $d_{\mu}=-2$: undefined; solver should determine
       \item[1:] last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; in the sticking case, any deviation from that position leads to an additional bristle force  \\
 
-
           $$
           f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
           $$
@@ -7005,7 +6908,6 @@ definitions.append(ItemDefinition(
     The contact is represented by a spring-damper, which is activated as soon as the limit is reached and deactivated, if the limit is left again.
     Contact forces are computed from stiffness $k_\mathrm{limits}$ and damping $d_\mathrm{limits}$, penetration into stop and velocity,
 
-
     $$
     f_\mathrm{contact} = 
               \begin{cases} 
@@ -7021,14 +6923,12 @@ definitions.append(ItemDefinition(
     
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
 
-
     $$
     f_{SD} = k \cdot \left( q - x_\mathrm{off} \right) + d \cdot \left( v - v_\mathrm{off} \right)
           + f_\mathrm{friction} + f_\mathrm{contact}
     $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
-
 
     $$
     f_{SD} = \mathrm{UF}(mbs, t, i_N, q, v, k, d, x_\mathrm{off}, v_\mathrm{off}, 
@@ -7039,13 +6939,11 @@ definitions.append(ItemDefinition(
 
     The virtual work of the connector force is computed from the virtual displacement 
 
-
     $$
     \delta q = f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \, ,
     $$
 
     and the virtual work results as
-
 
     $$
     \delta W_{SD} = f_{SD} \cdot \delta q
@@ -7054,7 +6952,6 @@ definitions.append(ItemDefinition(
     $$
 
     The generalized (elastic) forces thus read for the markers $m0$ and $m1$,
-
 
     $$
     \Qm_{SD, m0} 
@@ -7070,8 +6967,8 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, 
-    fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)}
+    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, 
+    fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)`
     A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
     and several object parameters.
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
@@ -7081,33 +6978,37 @@ definitions.append(ItemDefinition(
     For parameters that are not passed via the user function interface, use mbs.GetObject(itemNumber) or, e.g.,
     mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters inside the user function.
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
-      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
-      %
-      \rowTable{\texttt{stiffness}}{Real}{copied from object}
-      \rowTable{\texttt{damping}}{Real}{copied from object}
-      \rowTable{\texttt{offset}}{Real}{copied from object}
-      \rowTable{\texttt{velocityOffset}}{Real}{copied from object}
-      \rowTable{\texttt{fDynamicFriction}}{Real}{copied from object}
-      \rowTable{\texttt{fStaticFrictionOffset}}{Real}{copied from object}
-      \rowTable{\texttt{exponentialDecayStatic}}{Real}{copied from object}
-      \rowTable{\texttt{fViscousFriction}}{Real}{copied from object}
-      \rowTable{\texttt{frictionProportionalZone}}{Real}{copied from object, also called regularization velocity or regVel}
-      \rowTable{\returnValue}{Real}{scalar value of computed force}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{displacement} | Real | $\Delta q$ |
+    | \texttt{velocity} | Real | $\Delta v$ |
+    | \texttt{stiffness} | Real | copied from object |
+    | \texttt{damping} | Real | copied from object |
+    | \texttt{offset} | Real | copied from object |
+    | \texttt{velocityOffset} | Real | copied from object |
+    | \texttt{fDynamicFriction} | Real | copied from object |
+    | \texttt{fStaticFrictionOffset} | Real | copied from object |
+    | \texttt{exponentialDecayStatic} | Real | copied from object |
+    | \texttt{fViscousFriction} | Real | copied from object |
+    | \texttt{frictionProportionalZone} | Real | copied from object, also called regularization velocity or regVel |
+    | **return value** | Real | scalar value of computed force |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #see also mini example! 
-        #For further parameters, use mbs.GetObject(itemNumber) or 
-        #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
-        def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
-            return k*(u-offset) + d*v
-    \end{lstlisting}
+    *Example*:
+    
+```python
+#see also mini example! 
+#For further parameters, use mbs.GetObject(itemNumber) or 
+#  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
+def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
+    return k*(u-offset) + d*v
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -7886,20 +7787,17 @@ definitions.append(ItemDefinition(
     For the special case of $R_A=R_B=0$, it follows that $\rv_A=\pv_A$ and $\rv_B=\pv_B$.
     Otherwise, we first compute the vector between circle centers,
 
-
     $$
     \cv = \pv_B - \pv_A, \quad \mathrm{and} \quad \cv_0 = \frac{\cv}{|\cv|} \, ,
     $$
 
     and obtain the tangent vectors
 
-
     $$
     \tv_A = \tv_B = \cv_0 \, ,
     $$
 
     as well as the normal vectors
-
 
     $$
     \nv_A = \av_A \times \cv_0, \quad \mathrm{and} \quad
@@ -7908,7 +7806,6 @@ definitions.append(ItemDefinition(
 
     Note that the orientation of the axis vectors $\av_A$ and $\av_B$ defines the orientation of the normals.
     By definition, we assume the following conditions,
-
 
     $$
     \nv_A\tp \rv_A < 0, \quad \mathrm{and} \quad 
@@ -7919,13 +7816,11 @@ definitions.append(ItemDefinition(
     In general, the unknown vectors $\rv_A$ and $\rv_B$ are computed by means of Newton's method.
     The unknown tangent vector is given as 
 
-
     $$
     \tv_c = \pv_B + \rv_B - \pv_A - \rv_A = \cv + \rv_B - \rv_A \, .
     $$
 
     We now parameterize the two unknown vectors by means of unknown angles $\varphi_A$ and $\varphi_B$,
-
 
     $$
     \rv_A = -R_A \left( \cos(\varphi_A) \tv_A - \sin(\varphi_A) \nv_A \right),
@@ -7935,7 +7830,6 @@ definitions.append(ItemDefinition(
 
     As vectors $\rv_A$ and $\rv_B$ must be perpendicular to $\tv_c$, it follows that
 
-
     $$
     \rv_A\tp (\cv + \rv_B - \rv_A) = 0,
           \quad \mathrm{and} \quad 
@@ -7943,7 +7837,6 @@ definitions.append(ItemDefinition(
     $$
 
     or
-
 
     $$
     \rv_A\tp \cv + \rv_A\tp \rv_B - R_A^2 = 0,
@@ -7955,7 +7848,6 @@ definitions.append(ItemDefinition(
     The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of [](#eq-reevingsystemsprings-newton) w.r.t.\ the 
     unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
 
-
     $$
     \varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,
     $$
@@ -7965,7 +7857,6 @@ definitions.append(ItemDefinition(
     #### Connector forces
 
     The current rope length results from the configuration of sheaves, including start and end position:
-
 
     $$
     L = d_{m_0-m_1} + C_{m_1} + d_{m_1-m_2} + C_{m_2} + \ldots  + d_{m_{nr-2}-m_{nr-1}}
@@ -7978,7 +7869,6 @@ definitions.append(ItemDefinition(
     
     In case that \texttt{hasCoordinateMarkers=True}, the total reference length and its derivative result as
 
-
     $$
     L_0 = L_{ref} + f_0 \cdot q_{m_{c0}} + f_1 \cdot q_{m_{c1}}, \quad
           \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
@@ -7987,13 +7877,11 @@ definitions.append(ItemDefinition(
     while we set $L_0 = L_{ref}$ and $\dot L_0=0$ otherwise.
     The linear force in the reeving system (assumed to be constant all over the rope) is computed as
 
-
     $$
     F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
     $$
 
     The rope force is computed from
-
 
     $$
     F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} > 0 \\
@@ -8293,7 +8181,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 coordinate | $q_{m0}$ | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate! |
@@ -8303,11 +8190,9 @@ definitions.append(ItemDefinition(
     | difference of coordinates | $\Delta q = q_{m1} - q_{m0}$ | Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates) |
     | difference of velocity coordinates | $\Delta v= v_{m1} - v_{m0}$ |  |
 
-
     #### Connector constraint equations
 
     If \texttt{activeConnector = True}, the index 3 algebraic equation reads
-
 
     $$
     \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} - l_\mathrm{off} = 0
@@ -8315,13 +8200,11 @@ definitions.append(ItemDefinition(
 
     If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
 
-
     $$
     \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(mbs, t, i_N, l_\mathrm{off}) = 0
     $$
 
     The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
-
 
     $$
     \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - d = 0
@@ -8329,7 +8212,6 @@ definitions.append(ItemDefinition(
 
     The factor $d$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $d=l_\mathrm{off}$.
     If velocity level constraints are active and the velocity level offsetUserFunction\_t $\mathrm{UF}_t$ is defined, $\dot \cv$ instead becomes ($t$ is current time)
-
 
     $$
     \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(mbs, t, i_N, l_\mathrm{off}) = 0
@@ -8342,14 +8224,13 @@ definitions.append(ItemDefinition(
 
     If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
 
-
     $$
     \cv(\lambda_0) = \lambda_0 = 0
     $$
 
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction(mbs, t, itemNumber, lOffset)}
+    **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, lOffset)`
     %
     A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
     It is NECESSARY to use sufficiently smooth functions, having {\bf initial offsets} consistent with {\bf initial configuration} of bodies, 
@@ -8362,16 +8243,18 @@ definitions.append(ItemDefinition(
 
     The user function gets time and the offset parameter as an input and returns the computed offset:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
-      \rowTable{\returnValue}{Real}{computed offset for given time}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{lOffset} | Real | $l_\mathrm{off}$ |
+    | **return value** | Real | computed offset for given time |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction\_t(mbs, t, itemNumber, lOffset)}
+    **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, lOffset)`
     %
     A user function, which computes scalar offset {\bf velocity} for the coordinate constraint.
     It is NECESSARY to use sufficiently smooth functions, having {\bf initial offset velocities} consistent with {\bf initial velocities} of bodies.
@@ -8383,37 +8266,42 @@ definitions.append(ItemDefinition(
 
     The user function gets time and the offset parameter as an input and returns the computed offset velocity:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
-      \rowTable{\returnValue}{Real}{computed offset velocity for given time}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{lOffset} | Real | $l_\mathrm{off}$ |
+    | **return value** | Real | computed offset velocity for given time |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #see also mini example!
-        from math import sin, cos, pi
-        def UFoffset(mbs, t, itemNumber, lOffset): 
-            return 0.5*lOffset*(1-cos(0.5*pi*t))
-        
-        def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
-            return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
+    *Example*:
+    
+```python
+#see also mini example!
+from math import sin, cos, pi
+def UFoffset(mbs, t, itemNumber, lOffset): 
+    return 0.5*lOffset*(1-cos(0.5*pi*t))
 
-        nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-        massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
-        
-        groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
-        nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
-        
-        #Spring-Damper between two marker coordinates
-        mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
-                                           offset = 0.1, 
-                                           offsetUserFunction = UFoffset, 
-                                           offsetUserFunction_t = UFoffset_t)) 
-    \end{lstlisting}
+def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
+    return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
+
+nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+
+groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+
+#Spring-Damper between two marker coordinates
+mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
+                                   offset = 0.1, 
+                                   offsetUserFunction = UFoffset, 
+                                   offsetUserFunction_t = UFoffset_t)) 
+
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -8549,7 +8437,6 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 coordinate vector | $\qv_{m0} \in \Rcal^{n_{q_{m0}}}$ | coordinate vector provided by marker $m0$; depending on the marker, the coordinates may or may not include reference coordinates |
@@ -8581,7 +8468,6 @@ definitions.append(ItemDefinition(
 
     If \texttt{activeConnector = True} and no \texttt{constraintUserFunction} is defined, the index 3 algebraic equations
 
-
     $$
     \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} 
           + \Ym_{m1} \cdot \qv^2_{m1} %quadratic terms have been excluded, as it could not be used for Euler Parameter constraints!
@@ -8593,7 +8479,6 @@ definitions.append(ItemDefinition(
     Note that the squared coordinates are understood as $\qv^2_{m0} = [q^2_{0,m0}, \; q^2_{1,m0}, \; \ldots]\tp$, same for $\qv^2_{m1}$.
 
     The index 2 (velocity level) algebraic equation accordingly reads
-
 
     $$
     \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} 
@@ -8611,12 +8496,9 @@ definitions.append(ItemDefinition(
 
     If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
 
-
     $$
     \cv(\tlambda) = \tlambda = 0
     $$
-
-
 
     If a \texttt{constraintUserFunction} is defined, it also requires an according \texttt{jacobianUserFunction} (and vice versa).
     %without $\Km$ and $\Dm$ (these matrices are added internally),
@@ -8628,7 +8510,7 @@ definitions.append(ItemDefinition(
     %CoordinateLoads are added for the respective ABRV:ODE2 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{constraintUserFunction(mbs, t, itemNumber, q, q\_t, velocityLevel)}
+    **Userfunction**: `constraintUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
     A user function, which computes algebraic equations for the connector based on the marker coordinates stored in \texttt{q} and \texttt{q\_t}.
     Depending on \texttt{velocityLevel}, the user function needs to compute either the position-level (\texttt{velocityLevel=False}) or
     the velocity level (\texttt{velocityLevel=True}) constraint equations.
@@ -8639,32 +8521,34 @@ definitions.append(ItemDefinition(
 
     Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector velocity coordinates in current configuration}
-      \rowTable{\texttt{velocityLevel}}{Bool}{velocityLevel as currently stored in connector}
-      \rowTable{\returnValue}{Vector $\in \Rcal^{n_{ae}}$}{returns vector (numpy array or list) of evaluated constraint equations for connector}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs to |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration |
+    | \texttt{q\_t} | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector velocity coordinates in current configuration |
+    | \texttt{velocityLevel} | Bool | velocityLevel as currently stored in connector |
+    | **return value** | Vector $\in \Rcal^{n_{ae}}$ | returns vector (numpy array or list) of evaluated constraint equations for connector |
+
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{jacobianUserFunction(mbs, t, itemNumber, q, q\_t, velocityLevel)}
+    **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
     A user function, which computes the jacobian of the algebraic equations w.r.t. the ODE2 coordiantes (ODE2\_t velocity coordinates if \texttt{velocityLevel=True}).
     The jacobian needs to exactly represent the derivative of the constraintUserFunction.
     The returned matrix of \texttt{jacobianUserFunction} must have \texttt{nAE} rows and \texttt{len(q)} columns.
-    \startTable{arguments /  return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
-      \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector velocity coordinates in current configuration}
-      \rowTable{\texttt{velocityLevel}}{Bool}{velocityLevel as currently stored in connector}
-      \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$}{returns special jacobian for connector, as exu.MatrixContainer, 
-                              numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations;
-                              sparse triplets MAY NOT contain zero values!}
-    \finishTable
+
+    | arguments /  return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs to |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{q} | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration |
+    | \texttt{q\_t} | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector velocity coordinates in current configuration |
+    | \texttt{velocityLevel} | Bool | velocityLevel as currently stored in connector |
+    | **return value** | MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$ | returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values! |
+
     %\vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     %%RSTCOMPATIBLE
@@ -11166,7 +11050,6 @@ definitions.append(ItemDefinition(
     equations=r"""    (sec-objectjointgeneric-definitionofquantities)=
     #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
     | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
@@ -11197,13 +11080,11 @@ definitions.append(ItemDefinition(
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
     the translational index 3 constraints read ($UF_{0,1,2}(mbs, t, \pv_{par})$ is the translational part of the user function $UF$),
 
-
     $$
     \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, i_N, \pv_{par}) = \Null
     $$
 
     and the translational index 2 constraints read
-
 
     $$
     \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, i_N, \pv_{par})= \Null
@@ -11214,7 +11095,6 @@ definitions.append(ItemDefinition(
     If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
     the translational index 3 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\pv}$
 
-
     $$
     \begin{aligned}
     \LU{J0}{\Delta p_k} - UF_{k}(mbs, t, i_N, \pv_{par}) &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
@@ -11223,7 +11103,6 @@ definitions.append(ItemDefinition(
     $$
 
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
-
 
     $$
     \begin{aligned}
@@ -11244,7 +11123,6 @@ definitions.append(ItemDefinition(
     
     If {\bf 3 rotation axes are constrained} (e.g., translational or planar joint),  $[j_3,\,\ldots,\,j_5] = [1,1,1]\tp$, the index 3 constraint equations read
 
-
     $$
     \begin{aligned}
     \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &= 0 \\
@@ -11255,7 +11133,6 @@ definitions.append(ItemDefinition(
 
     If {\bf 2 rotation axes are constrained} (revolute joint), e.g., $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$, the index 3 constraint equations read
 
-
     $$
     \begin{aligned}
     \lambda_3 &= 0 \\
@@ -11265,7 +11142,6 @@ definitions.append(ItemDefinition(
     $$
 
     If {\bf 1 rotation axis is constrained} (universal joint), e.g.,  $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$, the index 3 constraint equations read
-
 
     $$
     \begin{aligned}
@@ -11278,14 +11154,13 @@ definitions.append(ItemDefinition(
     %    
     if \texttt{activeConnector = False}, 
 
-
     $$
     \zv = \Null
     $$
 
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)}
+    **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)`
     %
     A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint, 
     e.g., in order to move or rotate a body on a prescribed trajectory.
@@ -11300,16 +11175,18 @@ definitions.append(ItemDefinition(
     The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset vector 
     for all relative translational and rotational joint coordinates:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
-      \rowTable{\returnValue}{Real}{computed offset vector for given time}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{offsetUserFunctionParameters} | Real | $\pv_{par}$, set of parameters which can be freely used in user function |
+    | **return value** | Real | computed offset vector for given time |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)}
+    **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, offsetUserFunctionParameters)`
     %
     A user function, which computes an offset {\bf velocity} vector for the GenericJoint.
     It is NECESSARY to use sufficiently smooth functions, having {\bf initial offset velocities} consistent with {\bf initial velocities} of bodies.
@@ -11322,24 +11199,28 @@ definitions.append(ItemDefinition(
     The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset velocity vector 
     for all relative translational and rotational joint coordinates:
     %
-    \startTable{arguments / return}{type or size}{description}
-      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
-      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
-      \rowTable{\returnValue}{Real}{computed offset velocity vector for given time}
-    \finishTable
+
+    | arguments / return | type or size | description |
+    |---|---|---|
+    | \texttt{mbs} | MainSystem | provides MainSystem mbs in which underlying item is defined |
+    | \texttt{t} | Real | current time in mbs |
+    | \texttt{itemNumber} | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+    | \texttt{offsetUserFunctionParameters} | Real | $\pv_{par}$, set of parameters which can be freely used in user function |
+    | **return value** | Real | computed offset velocity vector for given time |
+
     %
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunctionExample{}
-    \pythonstyle\begin{lstlisting}
-        #simple example, computing only the translational offset for x-coordinate
-        from math import sin, cos, pi
-        def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters): 
-            return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
+    *Example*:
+    
+```python
+#simple example, computing only the translational offset for x-coordinate
+from math import sin, cos, pi
+def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters): 
+    return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
 
-    \end{lstlisting}
+```
+
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -13007,14 +12888,12 @@ definitions.append(ItemDefinition(
 
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate
 
-
     $$
     s_{el} = q_{ALE} + s_\mathrm{off} - d_{m1} = s_g - d_{m1}.
     $$
 
     For the description of the according quantities, see the description above. The distance $d_{m1}$ is obtained from the \texttt{slidingMarkerOffsets} list, using the current (local) index $x_{data0}$.
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ (=$\rv_{ANCF}$) positions reads
-
 
     $$
     \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
@@ -13024,7 +12903,6 @@ definitions.append(ItemDefinition(
     The position $\LUR{0}{\rv}{ANCF}$ is computed from the beam represented by marker $m1$, using the local beam coordinate $x=s_{el}$. 
     The marker and the according beam finite element changes during movement using the list \texttt{slidingMarkerNumbers} and the index is updated in the PostNewtonStep.
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ velocities reads
-
 
     $$
     \LU{0}{\Delta\vv} = \LUR{0}{\vv}{ANCF} - \LU{0}{\vv}_{m0}
@@ -13038,7 +12916,6 @@ definitions.append(ItemDefinition(
     The 2D sliding joint is implemented having 2 equations, using the Lagrange multipliers $\zv$. 
     The algebraic (index 3) equations read
 
-
     $$
     \LU{0}{\Delta\pv} = 0
     $$
@@ -13046,13 +12923,11 @@ definitions.append(ItemDefinition(
     Note that the Lagrange multipliers $[\lambda_0,\,\lambda_1]\tp$are the global forces in the joint.
     In the index 2 case the algebraic equations read
 
-
     $$
     \LU{0}{\Delta\vv} = 0
     $$
 
     If \texttt{usePenalty = True}, the algebraic equations are changed to:
-
 
     $$
     \LU{0}{\Delta \pv} - \frac 1 k \zv = 0.
@@ -13069,7 +12944,6 @@ definitions.append(ItemDefinition(
 
     \noindent If \texttt{activeConnector = False}, the algebraic equations are changed to:
 
-
     $$
     \begin{aligned}
     \lambda_0 &= 0,   \\
@@ -13085,7 +12959,6 @@ definitions.append(ItemDefinition(
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
     updates the marker $m1$ index if necessary.
 
-
     $$
     \begin{aligned}
     s_{el} < 0 \quad \ra \quad x_{data0} \;-\!\!=1 \\
@@ -13096,7 +12969,6 @@ definitions.append(ItemDefinition(
     Furthermore, it is checked, if $x_{data0}$ becomes smaller than zero, which raises a warning and keeps $x_{data0}=0$.
     The same results if $x_{data0}\ge sn$, then $x_{data0} = sn$.
     Finally, the data coordinate is updated in order to provide the starting value for the next step,
-
 
     $$
     x_{data1} \;+\!\!= s.

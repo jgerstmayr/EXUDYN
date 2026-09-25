@@ -36,6 +36,7 @@ The item VLoadForceVector has the following parameters:
 
 The load vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node.
 The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
 
@@ -52,6 +53,7 @@ A user function, which computes the force vector depending on time and object pa
 from math import sin, cos, pi
 def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
+
 ```
 
 

@@ -500,7 +500,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       machinery than the table. A pipe table says both, in one place, in native Markdown. Making the
       **symbol column** data, so that a checker can say whether every symbol is a declared math
       macro, is worth a step of its own and is not this one.
-    - **RG3.14.5** - **a user function is a typed Python signature.** In place of
+    - **RG3.14.5** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-5) - **a user function block loses its LaTeX** - and the typed Python signature was measured and not used, because 35 of the 228 argument rows say the *size* of an argument as a formula, and a formula does not render inside a code block. The arguments stay a table, now a pipe table; the signature is written as the Python it is, so the `\_` escapes are gone either way. Originally planned as: In place of
       `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}` followed by a table and a
       `\returnValue` row:
 
@@ -1421,7 +1421,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8 | #2594 | place or drop the figures that no page references |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: the tables, the user functions, the switches and the checks are open |
+| RG3.14 | #2655 | the item descriptions become Markdown: `definitions/` is free of structural LaTeX; .7 closes the gate |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |

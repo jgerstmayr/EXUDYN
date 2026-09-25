@@ -142,11 +142,30 @@ not in the list below reaches the page as itself and is a defect.
   quantities of an item, *output variables | symbol | formula*, *input parameter | symbol |
   description* - and a cell may hold mathematics, a link or inline code, as any other text may.
   A `|` inside a cell is written `\|`; inside `$...$` it needs nothing.
-- **A user function** is `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}`, followed
-  by prose, a table of its arguments and return value written with `\startTable{arguments / return}`
-  and one `\rowTable{}{}{}` per argument, and optionally `\userFunctionExample{}` with a
-  `lstlisting` block. **This is the one construct that is still LaTeX**, and the whole block becomes
-  a typed Python signature in revision2026b step RG3.14.5.
+- **A user function** is a paragraph of its own that names the signature, then prose, then a table
+  of the arguments and the return value, and optionally an example:
+
+  ```
+  **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
+
+  A user function, which computes a force vector ...
+
+  | arguments /  return | type or size | description |
+  |---|---|---|
+  | `mbs` | MainSystem | provides reference to mbs |
+  | **return value** | Vector6D | the computed force |
+
+  *Example*:
+
+  ```python
+  def UFforce(mbs, t, itemNumber, q, q_t):
+      return [0, -10, 0, 0, 0, 0]
+  ```
+  ```
+
+  The type column may hold mathematics, `Vector $\in \Rcal^{n_{ODE2}}$`, which is why the arguments
+  are a table and not a typed Python signature: 35 of the 228 argument rows say the **size** of an
+  argument as a formula, and a formula does not render inside a code block.
 - **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows
   `docs/figures/RevoluteJointZ.png`.
 

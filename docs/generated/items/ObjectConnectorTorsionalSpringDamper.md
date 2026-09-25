@@ -87,6 +87,7 @@ $$
 $$
 
 and `iN` represents the itemNumber (=objectNumber).
+
 **Userfunction**: `springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)`
 A user function, which computes the scalar torque depending on mbs, time, local quantities
 (relative rotation, relative angularVelocity), which are evaluated at current time.
@@ -123,6 +124,7 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
                                     damping = k*0.01,
                                     offset = 0,
                                     springTorqueUserFunction = UFforce))
+
 ```
 
 (miniexample-objectconnectortorsionalspringdamper)=
