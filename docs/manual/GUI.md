@@ -1,12 +1,66 @@
 (sec-graphicsvisualization)=
-# Graphics and visualization
+# Renderer, graphics and visualization
 
-The 3D OpenGL graphics renderer window is kept simple, but useful to see the animated results of the multibody system.
-The graphics output is restricted to a 3D window (renderwindow) into which the renderer draws the visualization state of the `MainSystem` `mbs`.
-Note that visualization parameters can be widely changed (more than 200 parameters ...), see {ref}`sec-overview-basics-visualizationsettings`.
+Everything about what you see: the window the renderer opens, the view it shows, the
+images and animations it can save, and how to draw your own geometry. The renderer draws
+the visualization state of the `MainSystem` `mbs` into a 3D window, and more than 200
+parameters control what it draws, see
+{ref}`sec-overview-basics-visualizationsettings`.
+
+(sec-graphics-rendererwindow)=
+## The renderer window
+
+The window itself, and everything that is operated in it. For the raytracer, which draws the same model offline and at a higher quality, see {ref}`sec-overview-basics-raytracing`.
+
+(sec-overview-basics-renderer)=
+### Renderer and 3D graphics
+
+A 3D renderer is attached to the simulation. Visualization is started with  `SC.renderer.Start()`, see the examples and tutorials.
+In order to show your model in the render window, you have to provide 3D graphics data to the bodies. Flexible bodies (e.g., FFRF-like) can visualize their meshes. Further items (nodes, markers, ...) can be visualized with default settings, however, often you have to turn on drawing or enlarge default sizes to make items visible. Item number can also be shown.
+Finally, since version 1.6.188, sensor traces (trajectories) can be shown in the render window, see the `VisualizationSettings` in  {ref}`sec-visualizationsettingsmain`.
+
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct.
+
+ **Note**:
+
+- For closing the render window, press key 'Q' or Escape or just close the window.
+- There is no way to contruct models inside the renderer (no 'GUI').
+- Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+- After `visualizationSettings.general.reallyQuitTimeLimit` seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after `reallyQuitTimeLimit` seconds (usually 900 seconds).
+
+ Here are the **main features of the renderer**, using keyboard and mouse, for details see {ref}`sec-graphicsvisualization`:
+
+- press key H to show help in renderer
+- move model by pressing left mouse button and drag
+- rotate model by pressing right mouse button and drag
+- for further mouse functionality, see {ref}`sec-gui-sec-mouseinput`
+- change visibility (wire frame, solid, transparent, ...) by pressing T
+- zoom all: key A
+- open visualization dialog: key V, see {ref}`sec-overview-basics-visualizationsettings`
+- open Python command dialog: key X, see {ref}`sec-overview-basics-commandandhelp`
+- show item number: click on graphics element with left mouse button
+- show item dictionary: click on graphics element with right mouse button
+- for further keys, see {ref}`sec-gui-sec-keyboardinput` or press H in renderer
+- raytracing mode, see {ref}`sec-overview-basics-raytracing`
+
+Depending on your model (size, place, ...), you **may need to adjust the following general visualization** and `openGL` **parameters** in `visualizationSettings`, see {ref}`sec-visualizationsettingsmain`:
+
+- change window size
+- light and light position; switch `openGL.lightPositionsInCameraFrame` to switch between model-fixed or camera-fixed lights
+- shadow (turned off by using shadow=0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
+- visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., `visualizationSettings`
+- move camera with a selected marker: adjust `trackMarker` in `visualizationSettings.interactive`
+
+**NOTE**: changing `visualizationSettings` is not thread-safe, as it allows direct access to the C++ variables.
+In most cases, this is not problematic, e.g., turning on/off some view parameters my just lead to some short-time artifacts if
+they are changed during redraw. However, more advanced quantities (e.g., `trackMarker` or changing strings) may lead to problems,
+which is why it is strongly recommended to:
+
+- set all `visualizationSettings` **before start of renderer**
 
 (sec-gui-sec-mouseinput)=
-## Mouse input
+### Mouse input
 
 The following table includes the mouse functions; it is generated from the one table of bindings in
 `exudyn.misc.keyBindings`, which the help dialog of the render window shows as well:
@@ -16,7 +70,7 @@ The following table includes the mouse functions; it is generated from the one t
 
 Current mouse coordinates can be obtained via `SystemContainer.renderer.GetMouseCoordinates()`.
 
-### 6D mouse
+#### 6D mouse
 
 Graphics engines, especially in CAD and finite elements allow input of special 3D or 6D mouse devices.
 There is a basic interface for so-called 3D mouse / 6D mouse or space mouse, allowing to map the 6D joystick to translation and rotation,
@@ -24,7 +78,7 @@ see `visualizationSettings.interactive.useJoystickInput` and similar options.
 The interface only works, if the device maps 6 coordinates to the joystick input of GLFW (tested with 3DCONNEXION mouse).
 
 (sec-gui-sec-keyboardinput)=
-## Keyboard input
+### Keyboard input
 
 The following table includes the keyboard shortcuts available in the window; it is generated from the
 same table as the help dialog, which opens with the key **H**:
@@ -32,8 +86,139 @@ same table as the help dialog, which opens with the key **H**:
 ```{include} /docs/generated/keyBindings.md
 ```
 
+(sec-overview-basics-visualizationsettings)=
+### Visualization settings dialog
+
+Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
+
+Details on visualization settings and its substructures are provided in {ref}`sec-visualizationsettingsmain`. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., `SC.renderer.DoIdleTasks()` ).
+The visualization settings dialog is shown exemplarily in {ref}`fig-visualizationsettings`.
+Note that this dialog is automatically created and uses Python's `tkinter`, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
+
+**Working in the dialog.** A setting is edited **in its cell**: select the row and type, or pick
+from the list where the value is a `bool` or one of the Exudyn enumeration types; RETURN or
+leaving the field applies the value, ESCAPE keeps the old one, and a double click toggles a
+`bool`. Hovering a row shows its description, its type and, for a vector or matrix setting, its
+size. Every change is applied immediately.
+
+The row at the bottom holds the **line that sets the selected setting**, ready to be pasted into a
+script, with a button that copies it:
+
+```python
+  SC.visualizationSettings.openGL.lineWidth = 2.0
+```
+
+A setting whose value differs from the Exudyn **default** is shown in colour, from the moment the
+dialog opens, so that a model's own settings can be told from the rest. The two buttons beside the
+copy button open a window that lists those differences as the code that makes them, and copies all
+of it at once: **diff to default** for everything that differs from the defaults, and
+**this session** for what was changed since the dialog was opened.
+
+To find a setting without knowing which folder it sits in, use the **find** field at the top or
+press CTRL+F: it searches the names first and the descriptions second, RETURN or F3 steps to the
+next hit, and the drop-down beside it lists the hits so that one can be picked.
+
+The appearance of visualization settings dialogs may be adjusted by directly modifying `exudyn.misc.GUI` variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
+
+```python
+  import exudyn.misc.GUI
+  exudyn.misc.GUI.dialogDefaultWidth             #unscaled width of, e.g., right-mouse-button dialog
+  exudyn.misc.GUI.treeEditDefaultWidth = 800
+  exudyn.misc.GUI.treeEditDefaultHeight = 600
+  exudyn.misc.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
+  exudyn.misc.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened when a dialog is opened the first time
+  exudyn.misc.GUI.treeEditLastOpenItems          #which folders were open when a dialog was last used in this process; the next dialog opens with them (None until a dialog was used)
+  #
+  exudyn.misc.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
+  exudyn.misc.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the `tkinter` internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
+  #
+  exudyn.misc.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
+```
+
+(fig-visualizationsettings)=
+```{figure} /docs/figures/visualizationSettings.png
+:width: 700
+
+View of visualization settings
+```
+
+Note: Press 'V' in render window to open dialog.
+
+The visualization settings structure can be accessed in the system container `SC` (access per reference, no copying!), accessing every value or structure directly, e.g.,
+
+```python
+  SC.visualizationSettings.nodes.defaultSize = 0.001      #draw nodes very small
+
+  #change openGL parameters; current values can be obtained from SC.renderer.GetState()
+  #change zoom factor:
+  SC.visualizationSettings.openGL.advanced.initialZoom = 0.2
+  #set the center point of the scene (can be attached to moving object):
+  SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.192, -0.0039,-0.075]
+
+  #turn of auto-fit:
+  SC.visualizationSettings.general.autoFitScene = False
+
+  #change smoothness of a cylinder:
+  SC.visualizationSettings.general.cylinderTiling = 100
+
+  #make round objects flat:
+  SC.visualizationSettings.openGL.advanced.shadeModelSmooth = False
+
+  #turn on coloured plot, using y-component of displacements:
+  SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+  SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
+```
+
+(sec-overview-basics-commandandhelp)=
+### Execute Command and Help
+
+In addition to the Visualization settings dialog, a simple help window opens upon pressing key 'H'.
+It is also possible to execute single Python commands during simulation by pressing 'X', which opens a dialog, saying 'Exudyn Command Window'.
+Note that the dialog may appear behind the visualization window!
+This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
+The Python commands are evaluated in the global python scope, meaning that `mbs` or other variables of your scripts are available.
+User errors are caught by exceptions, but in severe cases this may lead to crash.
+To print values, always use `print(...)` to see the string representation of an object.
+
+ Useful examples (single lines) may be:
+
+```python
+  x=5 #or change any other variable used in Python user functions
+  print(mbs) #print current mbs overview
+  print(mbs.GetSensorValues(0))
+  #adjust simulation end time, in long-run simulations:
+  mbs.sys['dynamicSolver'].it.endTime = 1
+  #adjust output behavior
+  mbs.sys['dynamicSolver'].output.verboseMode = 0
+```
+
+ You can also do quite fancy things during simulation, e.g., to deactivate joints (of course this may result in strange behavior):
+
+```python
+  n=mbs.systemData.NumberOfObjects()
+  for i in range(n):
+      d = mbs.GetObject(i)
+      #if 'Joint' in d['objectType']:
+      if 'activeConnector' in d:
+          mbs.SetObjectParameter(i, 'activeConnector', False)
+```
+
+Note that you could also change `visualizationSettings` in this way, but the Visualization settings dialog is much more convenient.
+Changing `simulationSettings` within the execute command is dangerous and must be treated with care.
+
+Some parameters, such as `simulationSettings.timeIntegration.endTime` are copied into the internal solver's `mbs.sys['dynamicSolver'].it` structure.
+
+Thus, changing `simulationSettings.timeIntegration.endTime` has no effect during simulation.
+As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the `simulationSettings` passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing `simulationSettings` will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
+Specifically, `newton` and `discontinuous` settings cannot be changed on the fly as they are copied internally.
+
+(sec-graphics-modelview)=
+## The model view
+
+What the camera looks at, how a view is kept, and how it can be made to follow the model.
+
 (sec-renderstate)=
-## Render state
+### Render state
 
 The system container function `SC.renderer.GetState()` returns a dictionary with current information on the renderer.
 This information is updated whenever the renderer performs redrawing or when according changes in the renderer are performed.
@@ -83,128 +268,269 @@ Note that other items in renderState are ignored when calling `SC.renderer.SetSt
 
 $^*$Note that values with an asterisk are only available if the renderer has already been started using `SC.renderer.Start()`.
 
-(sec-graphicsdata)=
-## GraphicsData
+(sec-overview-basics-storingmodelview)=
+### Storing the model view
 
-All graphics objects are defined by a `GraphicsData` structure.
-Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range ($<1000000$) in order to obtain a fast response of the renderer.
+The **simplest way to store the model view** is to **press CTRL-F3** when the renderer is running, to get the code for setting the model view printed to the console, e.g.,
 
-Many objects include a `GraphicsData` dictionary structure for definition of attached visualization of the object.
-Note that objects expect a list of `GraphicsData`, which can be produced with `exudyn.graphics. ...` functions (until Exudyn 1.8.33 with `GraphicsData...(...)`, which are now deprecated).
-Note that if reading out the `GraphicsData` from the object again, it usually has a different structure sorted by types of `GraphicsData`.
-Typically, you can use primitives (cube, sphere, ...) or {ref}`STL <STL>` data to define the objects appearance.
-`GraphicsData` dictionaries can be created with functions provided in the utility module `exudyn.graphics`, see {ref}`sec-module-graphics`.
+- `Set current view: SC.renderer.SetModelView(zoom=8.8,rotationVector=`\ `[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])`
 
-`GraphicsData` can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
-**NOTE** that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see {ref}`fig-trianglenormals`.
-
-(fig-trianglenormals)=
-```{figure} /docs/figures/triangleNormal.png
-:width: 250
-
-Definition of triangle normals and outside/inside regions in Exudyn
-```
-
-The normal to a triangle with vertex positions $\pv_0$, $\pv_1$, $\pv_2$ is computed from cross product as $\nv = \frac{(\pv_1-\pv_0) \times (\pv_2-\pv_0)}{|(\pv_1-\pv_0) \times (\pv_2-\pv_0)|}$;
-the normal $\nv$ then points to the outside region of the mesh or body; the direction of $\nv$ just depends on the ordering of the vertex points (interchange of two points changes the normal direction); correct normals are needed for contact computations as well as for correct shading effects in visualization.
-
-(sec-bodygraphicsdata)=
-### BodyGraphicsData
-
-`BodyGraphicsData` contains a list of `GraphicsData` items, i.e. `bodyGraphicsData = [graphicsItem1, graphicsItem2, ...]`. Every single `graphicsItem` may be defined as one of the following structures using a specific 'type'.
-The following sections show the different possible types of `GraphicsData`.
-
-### GraphicsData: Line
-
-GraphicsData `'type' = 'Line'` draws a polygonal line between all specified points:
-
-| **Name** | **type** | **default value** | **description** |
-|---|---|---|---|
-| color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
-| data | list | mandatory | list of float triples of x,y,z coordinates of the line floats to define RGB-color and transparency |
-
- **Example**:
+Then, just copy the code after `SC.renderer.Start`, see the following code snippet:
 
 ```python
-  #rectangle with side length 1:
-  graphicsData = {'type':'Line',
-                  'color': [1,0,0,1], #red
-                  'data': [0,0,0,
-                           1,0,0,
-                           1,1,0,
-                           0,1,0,
-                           0,0,0]}
-
-  vGround=VObjectGround(graphicsData=[graphicsData])
-  oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
-                                   visualization=vGround))
+  import exudyn as exu
+  SC=exu.SystemContainer()
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  SC.renderer.Start()
+  SC.renderer.SetModelView(zoom=8.8,rotationVector=[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])
+  #+++++++++++++++
+  #do simulation here
+  #+++++++++++++++
+  SC.renderer.Stop()
 ```
 
- Certainly this can be done **much more elegant and shorter with** `graphics.Lines`:
+---
+
+If you are using an interactive Python, there is a automated way to store and restore the current view (zoom, centerpoint, orientation, etc.) by using `SC.renderer.GetState()` and `SC.renderer.SetState()`,
+see also {ref}`sec-renderstate`.
+A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (note that `visualizationSettings.general.autoFitScene` should be set False if you want to use the stored zoom factor):
 
 ```python
-  import exudyn.graphics as graphics
-  graphicsData = graphics.Lines([[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,0]],
-                                color=graphics.color.red)
+  import exudyn as exu
+  SC=exu.SystemContainer()
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  SC.renderer.Start()
+  SC.renderer.RestoreSavedState() #the view of the previous run, if there is one
+  #+++++++++++++++
+  #do simulation here and adjust model view settings with mouse
+  #+++++++++++++++
+
+  #store model view for next run:
+  SC.renderer.Stop() #stores render state in exu.sys['renderState']
 ```
 
-### GraphicsData: Lines
+---
+ \
+Whenever `SC.renderer.Start()` is called, the renderState is reset (because it is assumed that the model has been changed and the previous view is invalid). However, you always can store and restore the renderstate manually.
+Since version 1.10.98, the `ZoomAll` and `SetModelView` also work without starting the renderer (using only the raytracer). However, note that `ZoomAll` and `SetModelView` have to be called before the raytracer call RedrawAndGetImage(True) or after renderer.Start() using regular OpenGL.
 
-GraphicsData `'type': 'Lines'` draws a list of $n$ lines defined by 2 points each:
-
-| **Name** | **type** | **default value** | **description** |
-|---|---|---|---|
-| colors | list | mandatory | list [R0,G0,B0,A0, R1,G2,B1,A1, ...] of $2\times n$ x 4 floats to define RGB-color and transparency of line points |
-| points | list | mandatory | list of $2 \times n$ float triples of x,y,z coordinates of the line points; Example for two lines: data=[0,0,0, 1,0,0, 1,0,0, 1,1,0] ... draws a L-shape with side length 1 |
-
-### GraphicsData: Circle
-
-GraphicsData `'type' = 'Circle'` draws a polygonal line between all specified points:
-
-| **Name** | **type** | **default value** | **description** |
-|---|---|---|---|
-| color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
-| radius | float | mandatory | radius of circle |
-| position | list | mandatory | list of float triples of x,y,z coordinates of center point of the circle |
-
- **Example**:
+If you wish to include all details of your view, like to rotation, you can obtain the current model view from the console after a simulation, e.g.,
 
 ```python
-  graphicsData = {'type':'Circle',
-                  'color': [0,0,1,1],  #blue
-                  'radius': 0.5,
-                  'position':[2,3,0]}
+  In[1] : SC.renderer.GetState()
+  Out[1]:
+  {'centerPoint': [1.0, 0.0, 0.0],
+   'maxSceneSize': 2.0,
+   'zoom': 1.0,
+   'currentWindowSize': [1024, 768],
+   'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
+                     [-0.60402274,  0.76604444, 0.21984631],
+                     [-0.7198463 , -0.6427876 , 0.26200265]])}
 ```
 
-### GraphicsData: Text
+which contains the last state of the renderer (NOTE: here, only part of the render state is shown for simplicity!).
+Now copy the output and set this with `SC.renderer.SetState` in your Python code to have a fixed model view in every simulation (`SC.renderer.SetState` AFTER `SC.renderer.Start()`):
 
-GraphicsData `'type' = 'Text'` places the given text (mono-space font) at position:
+```python
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  SC.renderer.Start()
+  renderState={'centerPoint': [1.0, 0.0, 0.0],
+               'maxSceneSize': 2.0,
+               'zoom': 1.0,
+               'currentWindowSize': [1024, 768],
+               'modelRotation':     [[ 0.34202015,  0.        ,  0.9396926 ],
+                                    [-0.60402274,  0.76604444,  0.21984631],
+                                    [-0.7198463 , -0.6427876 ,  0.26200265]])
+  SC.renderer.SetState(renderState)
+  #.... further code for simulation here
+```
 
-| **Name** | **type** | **default value** | **description** |
-|---|---|---|---|
-| color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
-| text | string | mandatory | text to be displayed, using UTF-8 encoding (see {ref}`sec-utf8`); multiline texts can be written with line breaks |
-| position | list | mandatory | list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g. position=[20,10,0] |
-| fontSize | float | 0 | scalar fontSize or 0 for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize); display scaling increases font size |
-| offset | list | [0,0] | offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals offset of one character to the right and up) |
+Note that in the current version of Exudyn there is more data stored in render state, which is not used in `SC.renderer.SetState`,
+see also {ref}`sec-renderstate`.
 
-### GraphicsData: TriangleList
+---
 
-GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for given points and connectivity; triangles may look smoothened by using appropriate normals; edges may be added optionally:
+(sec-overview-advanced-camerafollowing)=
+### Camera following objects and interacting with model view
 
-| **Name** | **type** | **default value** | **description** |
-|---|---|---|---|
-| points | list | mandatory | list [x0,y0,z0, x1,y1,z1, ...] containing $n \times 3$ floats (grouped x0,y0,z0, x1,y1,z1, ...) to define x,y,z coordinates of points, $n$ being the number of points (=vertices) |
-| colors | list | [] | list [R0,G0,B0,A0, R1,G2,B1,A1, ...] containing $n \times 4$ floats to define RGB-color and transparency A of triangle vertices (points), where $n$ must be according to number of points; if field 'colors' does not exist, default colors will be used |
-| normals | list | [] | list [n0x,n0y,n0z, ...] containing $n \times 3$ floats to define normal direction of triangles per point, where $n$ must be according to number of points; if field 'normals' does not exist, default normals [0,0,0] will be used |
-| triangles | list | mandatory | list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ integers to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $\le$ points.size() |
-| edges | list | [] | list [L0point0, L0point1, L1point0, L1point1, ...] containing $n_{lines} \times 2$ integers to define point indices of edges drawn on triangle mesh |
-| edgeColor | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency of edges |
+For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles.
+Since Exudyn 1.4.18 you can attach view to a marker, using the visualization setting
 
-Examples of `GraphicsData` can be found in the Python examples and in the file `graphics.py`, see Section {ref}`sec-module-graphics`.
+```python
+  SC.visualizationSettings.view0.camera.trackMarker = nMarker
+```
+
+in which `nMarker` represents the desired marker number to follow.
+See also related options in `SC.visualizationSettings.interactive` in {ref}`sec-vsettingsinteractive`.
+
+The following paragraph represents a slower, slightly outdated approach, which may be interesting for advanced usage of object tracking.
+To do so, the current render state (`SC.renderer.GetState()`, `SC.renderer.SetState(...)`) can be obtained and modified, in order to always follow a certain position.
+As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which `mbs.variables['nTrackNode']` is a node number to be tracked:
+
+```python
+  #mbs.variables['nTrackNode'] contains node number
+  def UFgraphics(mbs, objectNum):
+      n = mbs.variables['nTrackNode']
+      p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position,
+                            configuration=exu.ConfigurationType.Visualization)
+      rs=SC.renderer.GetState() #get current render state
+      A = np.array(rs['modelRotation'])
+      p = A.T @ p #transform point into model view coordinates
+      rs['centerPoint']=[p[0],p[1],p[2]]
+      SC.renderer.SetState(rs)  #modify render state
+      return []
+
+  #add object with graphics user function
+  oGround2 = mbs.AddObject(ObjectGround(visualization=
+                 VObjectGround(graphicsDataUserFunction=UFgraphics)))
+  #.... further code for simulation here
+```
+
+NOTE that this approach is slower and it may lead to a (usually silient) crash after closing the renderer, as the renderer thread is somehow coupled to Python which is prohibited from Python side.
+
+(sec-graphics-imagesanimations)=
+## Images, animations and the solution viewer
+
+Looking at a solution after it was computed, and taking pictures of it.
+
+(sec-overview-basics-solutionviewer)=
+### Solution viewer
+
+Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
+If you are running large models, it may be more convenient to watch results after simulation has been finished.
+For this, you can use
+
+- `interactive.SolutionViewer`, see {ref}`sec-mainsystemextensions-solutionviewer`
+- `interactive.AnimateModes`, lets you view the animation of computed modes, see {ref}`sec-interactive-animatemodes`
+
+shown exemplary in {ref}`fig-solutionviewer`.
+
+(fig-solutionviewer)=
+```{figure} /docs/figures/solutionViewer.png
+:width: 800
+
+View of `SolutionViewer` (as of Exudyn 1.5.42.dev1)
+```
+
+The `SolutionViewer` adds a `tkinter` interactive dialog, which lets you interact with the model, with the following features:
+
+- The SolutionViewer represents a 'Player' for the dynamic solution or a series of static solutions, which is available after simulation if `solutionSettings.writeSolutionToFile = True`
+- The parameter `solutionSettings.solutionWritePeriod` represents the time period used to store solutions during dynamic computations.
+- As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
+- In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
+- In the 'Continuous run' mode, the player runs in an infinite loop
+- In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for **creating animations**, see {ref}`sec-overview-basics-animations` and works together with the visualization settings dialog.
+- In the 'Record animation' mode, the player records frames that are shown in the render window; before pressing on 'Record animation', press 'Stop' and switch to 'One cycle'. Then put the solution steps slider to the first frame and press 'Record animation', which stores images in the current subfolder 'images' as 'frame00001.png' with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.
+- Since Exudyn V1.9.83, the button 'Make mp4' allows to directly generate animation files, see next section.
+
+The solution should be loaded with
+`LoadSolutionFile('coordinatesSolution.txt')`, where 'coordinatesSolution.txt' represents the stored solution file,
+see
+
+- `exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName`
+
+You can call the `SolutionViewer` either in the model, or at the command line / IPython to load a previous solution (belonging to the same mbs underlying the solution!):
+
+```python
+  from exudyn.utilities import LoadSolutionFile
+  sol = LoadSolutionFile('coordinatesSolution.txt')
+  mbs.SolutionViewer(solution=sol)
+```
+
+**By default and as a recommended way**, if no solution is provided, `SolutionViewer` tries to reload the solution of the previous simulation that is referred to from `mbs.sys['simulationSettings']`:
+
+```python
+  #... mbs has been previously solved
+  mbs.SolutionViewer()
+```
+
+An example for the `SolutionViewer` is integrated into the `Examples/` directory, see `solutionViewerTest.py`. \
+
+(sec-overview-basics-animations)=
+### Storing images and generating animations
+
+In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
+
+Images can be stored conveniently either in the way shown below for series of images, or using the SolutionViewer, {ref}`sec-overview-basics-solutionviewer`.
+For single images, you can use
+
+- `SC.renderer.RedrawAndGetImage()`
+
+to obtain single images at dedicated time instants.
+If the renderer is active, you directly get a snapshot of the current view.
+
+#### Software rendering
+
+Setting the flag `useRaytracer=True` in `RedrawAndGetImage`, the software raytracer will be used -- see {ref}`sec-overview-basics-raytracing` for more details.
+If the renderer has not yet been started, you ONLY can use the raytracer for image retrieval, however, you should use `renderer.ZoomAll` and `renderer.SetModelView` to adjust the view previously.
+However, the pure raytracer capability allows to retrieve images without opening the render window, which may be annoying in automated image retrieval or on HPC environments where openGL may not be available.
+
+Retrieved images can be conveniently used with `matplotlib` for further manipulation or storing, also see examples:
+
+```python
+  import matplotlib.pyplot as plt
+
+  #zoom all or set model view first!
+  #...
+
+  image=SC.renderer.RedrawAndGetImage()
+  plt.imsave("testImage.jpg", image)
+  plt.imshow(image)
+  plt.axis('off')
+  plt.show()
+```
+
+#### Generating Animations
+
+Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
+The easiest way to create animations, is using the SolutionViewer with its integrated features, see {ref}`sec-overview-basics-solutionviewer`.
+
+To turn on recording of images during solving, set the following flag to a positive value
+
+- `simulationSettings.solutionSettings.recordImagesInterval = 0.01`
+
+which means, that after every 0.01 seconds of simulation time, an image of the current view is taken and stored in the directory and filename (without filename ending) specified by
+
+- `SC.visualizationSettings.exportImages.saveImageFileName = "myFolder/frame"`
+
+By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
+
+To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button 'Make mp4'), which requires prior installation using `pip install ffmpeg-python` .
+Note that you may also need to install ffmpeg itself, depending on your platform.
+See the {ref}`GUI chapter <sec-graphicsvisualization>` for the visualization settings that
+control image export.
+
+(sec-graphics-addgraphics)=
+## How to add graphics
+
+Drawing geometry of your own. The dictionary format the drawing functions take is described in {ref}`sec-graphicsdata`.
+
+### Graphics user functions via Python
+
+There are some user functions in order to customize drawing:
+
+- You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (`exu.graphics.FromSTLfileASCII`, `exu.graphics.FromSTLfile`, ) using the established format {ref}`STL <STL>` (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
+- Some objects, e.g., `ObjectGenericODE2` or `ObjectRigidBody`, provide customized a function `graphicsDataUserFunction`. This user function just returns a list of GraphicsData, see {ref}`sec-graphicsdata`. With this function you can change the shape of the body in every step of the computation.
+- Specifically, the `graphicsDataUserFunction` in `ObjectGround` can be used to draw any moving background in the scene.
+
+Note that all kinds of `graphicsDataUserFunction`s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the `graphicsDataUserFunction` between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
+
+(sec-overview-basics-colorrgba)=
+### Color, RGBA and alpha-transparency
+
+Many functions and objects include color information. In order to allow alpha-transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
+
+- red (R) channel
+- green (G) channel
+- blue (B) channel
+- alpha (A) value, representing the so-called **alpha-transparency** (A=0: fully transparent, A=1: solid)
+
+E.g., red color with no transparency is obtained by the color=[1,0,0,1].
+Color predefinitions are found in `graphics.py`, e.g., using `graphics.color.red` or `graphics.color.steelblue` as well a list of 16 colors `graphics.colorList`, which is convenient to be used in a loop creating objects.
+Earlier, special colors were given in `exudyn.graphicsDataUtilities.py`, e.g., `color4red` or `color4steelblue` as well as `color4list`, which are marked as deprecated.
 
 (sec-utf8)=
-## Character encoding: UTF-8
+### Character encoding: UTF-8
 
 Character encoding is a major issue in computer systems, as different languages need a huge amount of different characters,
 see the amusing blog of Joel Spolsky:\

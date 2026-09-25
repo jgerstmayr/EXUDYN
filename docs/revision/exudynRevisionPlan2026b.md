@@ -663,7 +663,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 
 
 <a id="rg3-15"></a>
-**RG3.15** *(group RG3; maintainer 2026-09-25)* **The chapters of the user manual** (#2657, #2661).
+**RG3.15** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-15) — **The chapters of the user manual** (#2657, #2661).
     The table of contents is decided and is written out at the end of this document, in *The chapters
     of the user manual, as decided for #2657 and #2662*. In short: **Renderer, graphics and
     visualization** becomes the one visualization chapter, in four sections - *The renderer window*,
@@ -1478,7 +1478,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.14 | #2655 | the item descriptions become Markdown: `definitions/` is free of structural LaTeX; .7 closes the gate |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
-| RG3.15 | #2657, #2661 | the chapters of the user manual, as decided |
 | RG3.16 | #2662 | every heading in sentence case |
 | RG3.17 | #2663 | a comment in a description is an HTML comment |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |

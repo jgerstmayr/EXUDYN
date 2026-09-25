@@ -4,43 +4,211 @@
 This section covers some advanced topics, which may be only relevant for a smaller group of people.
 Functionality may be extended but also removed in future
 
-(sec-overview-advanced-camerafollowing)=
-## Camera following objects and interacting with model view
+(sec-overview-basics-graphicspipeline)=
+## Graphics pipeline
 
-For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles.
-Since Exudyn 1.4.18 you can attach view to a marker, using the visualization setting
+There are basically two loops during simulation, which feed the graphics pipeline.
+The solver runs a loop:
 
-```python
-  SC.visualizationSettings.view0.camera.trackMarker = nMarker
+- compute step (or set up initial values)
+- finish computation step; results are in current state
+- copy current state to visualization state (thread safe)
+- signal graphics pipeline that new visualization data is available
+- the renderer may update the visualization depending on `graphicsUpdateInterval` in \ `visualizationSettings.general`
+
+The openGL graphics thread (=separate thread) runs the following loop:
+
+- render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
+- go idle for some milliseconds
+- check if openGL rendering needs an update (e.g. due to user interaction)
+- $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
+- check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
+
+(sec-overview-basics-raytracing)=
+## Raytracing
+
+In order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
+This allows to include shadows and transparency correctly, with additional support for relections, refraction, emission, fog and materials.
+In the future, textures may be added as well.
+
+(fig-raytracerdemo)=
+```{figure} /docs/figures/raytracerDemo.jpg
+:width: 400
+
+Example image of raytraced renderer view.
 ```
 
-in which `nMarker` represents the desired marker number to follow.
-See also related options in `SC.visualizationSettings.interactive` in {ref}`sec-vsettingsinteractive`.
+The basic things to know are:
 
-The following paragraph represents a slower, slightly outdated approach, which may be interesting for advanced usage of object tracking.
-To do so, the current render state (`SC.renderer.GetState()`, `SC.renderer.SetState(...)`) can be obtained and modified, in order to always follow a certain position.
-As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which `mbs.variables['nTrackNode']` is a node number to be tracked:
+- Raytracing settings are collected in `SC.visualizationSettings.raytracer` (in the following, we omit 'SC.visualizationSettings').
+- Raytracing is activated by setting `raytracer.enable=True`. Please make sure that you start with small render window sizes / complexity first.
+- The render window size is adjusted by `window.renderWindowSize`. Be careful with this settings.
+- Adjust the `raytracer.numberOfThreads` for optimal performance, use `raytracer.verbose` to see render times for different settings. For testing, use `raytracer.imageSizeFactor>1` to decrease the raytracer's resolution (with same image size), while `openGL.multiSampling` will increase the resolution (anti-aliasing). Note that switching from `openGL.multiSampling=1` and `raytracer.imageSizeFactor=4` to `openGL.multiSampling=3` and `raytracer.imageSizeFactor=1` increases computational costs by a factor $4\times 4\times 3\times 3 = 144$. Use only one light, if sufficient (set `openGL.light1.enable=False`).
+- Scene, lights, shadow, clipping plane, etc. settings are taken form OpenGL settings and directly used in the software renderer, like `openGL.light0.position`, the `shadow` of each light, `openGL.perspective`, `openGL.clippingPlaneNormal`, `openGL.showLines`, etc.;
+- some settings are in general, like `general.backgroundColor` or `general.drawWorldBasis`;
+- In order to see the advantages of the software renderer, materials have to be used, see below.
+
+ **Materials**:
+
+- Materials have the type `VSettingsMaterial`, see description in {ref}`sec-vsettingsmaterial`, for adjusting color, reflectivity, shininess, alpha-transparency, etc.;
+- Materials can only be used within triangulated geometries (GraphicsData `TriangleList`) using a material-flag in the color, like `graphics.Sphere(..., color=graphics.material.chrome)`. In the RGBA color, the alpha-channel is replaced by a material index which starts at 1000 (where 1000 represents material index 0). Note that in the regular OpenGL-rendering, alpha$>$1 is equivalent to alpha$=$1. The first 10 materials are linked to `raytracer.material0 ... raytracer.material9`.
+- The material's `baseColor` is used if the color red-channel is set to $-1$. Note that this allows to globally change the color of objects by changing `baseColor` in the material settings in `visualizationSettings`. Summarizing, using `color=[1,0,0,graphics.material.indexSteel]` chooses red color with steel material settings, while `color=[-1,-1,-1,graphics.material.indexSteel]` will use the color of steel (but will be black for OpenGL renderer), identical with `color=graphics.material.steel`.
+- The setting `backgroundColorReflections` can be used to represent the background which is used for rendering, while the background is independently set to black or white. Otherwise, black background leads to black regions on highly reflective objects or very light regions for white backgrounds.
+- System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in `general.showComputationInfo` and similar. However, note that **item texts are currently not shown** in raytracer, affecting node numbers, etc.!
+
+ **Limitations and risks**:
+
+- Raytracing is CPU-based and therefore slow. Do not use very high resolution (4K) together with multisampling $>1$. Start with small render window sizes (e.g. 600 $\times$ 400)
+- Raytracing usually uses multithreading with speedups $>10$ on 16 cores. However, this cannot be combined with multithreaded simulations. It is therefore recommended to use raytracing in the solution viewer, not during simulation.
+- If software rendering of a single frame gets to long (>4 seconds), timeouts become active and it may occasionally not work. There are some options to compensate, see above.
+- In general, it is **recommended to start with default settings and experiment** with changes using the visualization settings dialog.
+
+ To add raytracing to your project, do like this:
 
 ```python
-  #mbs.variables['nTrackNode'] contains node number
-  def UFgraphics(mbs, objectNum):
-      n = mbs.variables['nTrackNode']
-      p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position,
-                            configuration=exu.ConfigurationType.Visualization)
-      rs=SC.renderer.GetState() #get current render state
-      A = np.array(rs['modelRotation'])
-      p = A.T @ p #transform point into model view coordinates
-      rs['centerPoint']=[p[0],p[1],p[2]]
-      SC.renderer.SetState(rs)  #modify render state
-      return []
+  ...
+  #sphere with chrome
+  graphics.Sphere(radius=radius,
+                  color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome],
+                  nTiles=32)
+  ground = mbs.CreateGround(referencePosition=[0,0,0],
+                            graphicsDataList=[gSphere])
 
-  #add object with graphics user function
-  oGround2 = mbs.AddObject(ObjectGround(visualization=
-                 VObjectGround(graphicsDataUserFunction=UFgraphics)))
-  #.... further code for simulation here
+  #add mbs components
+  #assemble
+  #solve
+  ...
+  #after computation, switch to raytracing
+  SC.visualizationSettings.openGL.multiSampling = 1
+  SC.visualizationSettings.openGL.imageSizeFactor = 3 #reduce resolution for first tests!
+  SC.visualizationSettings.openGL.light1.enable = False
+  SC.visualizationSettings.raytracer.numberOfThreads = 16 #adjust to your n-threads
+  SC.visualizationSettings.view0.camera.useRaytracer = True
+
+  mbs.SolutionViewer()
 ```
 
-NOTE that this approach is slower and it may lead to a (usually silient) crash after closing the renderer, as the renderer thread is somehow coupled to Python which is prohibited from Python side.
+ Have fun!
+
+(sec-graphicsdata)=
+## GraphicsData
+
+All graphics objects are defined by a `GraphicsData` structure.
+Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range ($<1000000$) in order to obtain a fast response of the renderer.
+
+Many objects include a `GraphicsData` dictionary structure for definition of attached visualization of the object.
+Note that objects expect a list of `GraphicsData`, which can be produced with `exudyn.graphics. ...` functions (until Exudyn 1.8.33 with `GraphicsData...(...)`, which are now deprecated).
+Note that if reading out the `GraphicsData` from the object again, it usually has a different structure sorted by types of `GraphicsData`.
+Typically, you can use primitives (cube, sphere, ...) or {ref}`STL <STL>` data to define the objects appearance.
+`GraphicsData` dictionaries can be created with functions provided in the utility module `exudyn.graphics`, see {ref}`sec-module-graphics`.
+
+`GraphicsData` can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
+**NOTE** that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see {ref}`fig-trianglenormals`.
+
+(fig-trianglenormals)=
+```{figure} /docs/figures/triangleNormal.png
+:width: 250
+
+Definition of triangle normals and outside/inside regions in Exudyn
+```
+
+The normal to a triangle with vertex positions $\pv_0$, $\pv_1$, $\pv_2$ is computed from cross product as $\nv = \frac{(\pv_1-\pv_0) \times (\pv_2-\pv_0)}{|(\pv_1-\pv_0) \times (\pv_2-\pv_0)|}$;
+the normal $\nv$ then points to the outside region of the mesh or body; the direction of $\nv$ just depends on the ordering of the vertex points (interchange of two points changes the normal direction); correct normals are needed for contact computations as well as for correct shading effects in visualization.
+
+(sec-bodygraphicsdata)=
+### BodyGraphicsData
+
+`BodyGraphicsData` contains a list of `GraphicsData` items, i.e. `bodyGraphicsData = [graphicsItem1, graphicsItem2, ...]`. Every single `graphicsItem` may be defined as one of the following structures using a specific 'type'.
+The following sections show the different possible types of `GraphicsData`.
+
+### GraphicsData: Line
+
+GraphicsData `'type' = 'Line'` draws a polygonal line between all specified points:
+
+| **Name** | **type** | **default value** | **description** |
+|---|---|---|---|
+| color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
+| data | list | mandatory | list of float triples of x,y,z coordinates of the line floats to define RGB-color and transparency |
+
+ **Example**:
+
+```python
+  #rectangle with side length 1:
+  graphicsData = {'type':'Line',
+                  'color': [1,0,0,1], #red
+                  'data': [0,0,0,
+                           1,0,0,
+                           1,1,0,
+                           0,1,0,
+                           0,0,0]}
+
+  vGround=VObjectGround(graphicsData=[graphicsData])
+  oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
+                                   visualization=vGround))
+```
+
+ Certainly this can be done **much more elegant and shorter with** `graphics.Lines`:
+
+```python
+  import exudyn.graphics as graphics
+  graphicsData = graphics.Lines([[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,0]],
+                                color=graphics.color.red)
+```
+
+### GraphicsData: Lines
+
+GraphicsData `'type': 'Lines'` draws a list of $n$ lines defined by 2 points each:
+
+| **Name** | **type** | **default value** | **description** |
+|---|---|---|---|
+| colors | list | mandatory | list [R0,G0,B0,A0, R1,G2,B1,A1, ...] of $2\times n$ x 4 floats to define RGB-color and transparency of line points |
+| points | list | mandatory | list of $2 \times n$ float triples of x,y,z coordinates of the line points; Example for two lines: data=[0,0,0, 1,0,0, 1,0,0, 1,1,0] ... draws a L-shape with side length 1 |
+
+### GraphicsData: Circle
+
+GraphicsData `'type' = 'Circle'` draws a polygonal line between all specified points:
+
+| **Name** | **type** | **default value** | **description** |
+|---|---|---|---|
+| color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
+| radius | float | mandatory | radius of circle |
+| position | list | mandatory | list of float triples of x,y,z coordinates of center point of the circle |
+
+ **Example**:
+
+```python
+  graphicsData = {'type':'Circle',
+                  'color': [0,0,1,1],  #blue
+                  'radius': 0.5,
+                  'position':[2,3,0]}
+```
+
+### GraphicsData: Text
+
+GraphicsData `'type' = 'Text'` places the given text (mono-space font) at position:
+
+| **Name** | **type** | **default value** | **description** |
+|---|---|---|---|
+| color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
+| text | string | mandatory | text to be displayed, using UTF-8 encoding (see {ref}`sec-utf8`); multiline texts can be written with line breaks |
+| position | list | mandatory | list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g. position=[20,10,0] |
+| fontSize | float | 0 | scalar fontSize or 0 for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize); display scaling increases font size |
+| offset | list | [0,0] | offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals offset of one character to the right and up) |
+
+### GraphicsData: TriangleList
+
+GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for given points and connectivity; triangles may look smoothened by using appropriate normals; edges may be added optionally:
+
+| **Name** | **type** | **default value** | **description** |
+|---|---|---|---|
+| points | list | mandatory | list [x0,y0,z0, x1,y1,z1, ...] containing $n \times 3$ floats (grouped x0,y0,z0, x1,y1,z1, ...) to define x,y,z coordinates of points, $n$ being the number of points (=vertices) |
+| colors | list | [] | list [R0,G0,B0,A0, R1,G2,B1,A1, ...] containing $n \times 4$ floats to define RGB-color and transparency A of triangle vertices (points), where $n$ must be according to number of points; if field 'colors' does not exist, default colors will be used |
+| normals | list | [] | list [n0x,n0y,n0z, ...] containing $n \times 3$ floats to define normal direction of triangles per point, where $n$ must be according to number of points; if field 'normals' does not exist, default normals [0,0,0] will be used |
+| triangles | list | mandatory | list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ integers to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $\le$ points.size() |
+| edges | list | [] | list [L0point0, L0point1, L1point0, L1point1, ...] containing $n_{lines} \times 2$ integers to define point indices of edges drawn on triangle mesh |
+| edgeColor | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency of edges |
+
+Examples of `GraphicsData` can be found in the Python examples and in the file `graphics.py`, see Section {ref}`sec-module-graphics`.
 
 (sec-overview-advanced-contact)=
 ## Contact problems
@@ -236,3 +404,17 @@ Basically, data can be transmitted in both directions, e.g., within a preStepUse
 
 Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for Exudyn.
+
+(sec-overview-advanced-tools)=
+## Tools that are not part of a model
+
+Two things that are used beside a model rather than inside one: the command line of
+the installed package, and the results monitor, which watches a running simulation
+from a second process.
+
+```{toctree}
+:maxdepth: 2
+
+commandLine
+resultsMonitor
+```

@@ -3135,3 +3135,45 @@ Two things worth keeping in mind from this. The HTML build is **not** sufficient
 reference resolves - the two writers disagree, and only the PDF said so, which is why RG3.3.1 had to
 be fixed first to be able to see it at all. And `checkDefinitions` now rejects a Markdown link whose
 target is one of the 44 equation labels, so the form cannot come back by hand.
+
+<a id="rg3-15"></a>
+### RG3.15 — the chapters of the user manual (2026-09-25, #2657, #2661)
+
+The maintainer's table of contents, carried out. What was eleven visualization sections in *Exudyn
+basics*, five in the graphics chapter and one in *Advanced topics* is one chapter in four sections:
+
+```
+Renderer, graphics and visualization
+    The renderer window        <- Renderer and 3D graphics, Mouse input (+6D mouse), Keyboard input,
+                                  Visualization settings dialog, Execute command and help
+    The model view             <- Render state, Storing the model view, Camera following objects
+    Images, animations and     <- Solution viewer, Storing images and generating animations
+        the solution viewer        (+ Software rendering, Generating animations)
+    How to add graphics        <- Graphics user functions via Python, Color RGBA and
+                                  alpha-transparency, Character encoding: UTF-8
+```
+
+**Performance, errors and solver failures** is a new chapter, `docs/manual/performanceErrors.md`,
+with the three sections that were the end of *Exudyn basics*: the errors Exudyn raises with their
+five sub-sections, removing convergence problems, and the ways to speed a model up.
+
+**Advanced topics** took what is internals or reference rather than use - the graphics pipeline,
+raytracing and the whole `GraphicsData` reference with its six sub-sections - and, for #2661, *the
+command line* and *the results monitor*, which were chapters of their own between the manual and the
+notation. They are sub-pages of a new section, *Tools that are not part of a model*.
+
+**Exudyn basics** keeps one visualization section, *Seeing the model*: the four lines that start and
+stop the renderer, and a link. Its introduction listed six topics of which four had left, so it says
+what the chapter now holds and points at the two chapters that took the rest.
+
+**The move was done by a tool, not by hand**, and that is what makes it safe. A page is read as a
+list of sections - a heading, the MyST targets standing above it, and the text down to the next
+heading, sub-sections included - and the new pages are assembled from those sections; a section
+therefore carries its targets with it and every reference to it keeps working. **Measured: 39 targets
+before, 46 after, none lost** - the seven new ones are the four section headings, the new chapter, the
+new *Seeing the model* and the tools section. `exudev docs` under `-W` passes, which is the second
+half of the proof: a reference that had lost its target would fail the build.
+
+One thing is left for the maintainer to decide: **the file is still called `GUI.md`** while the
+chapter it holds is called *Renderer, graphics and visualization*. Renaming a tracked file needs
+approval, and it changes the URL of the page.

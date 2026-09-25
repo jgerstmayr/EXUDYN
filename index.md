@@ -26,11 +26,10 @@ README
 docs/manual/gettingStarted
 docs/manual/introduction
 docs/manual/introductionBasics
-docs/manual/introductionAdvanced
 docs/manual/tutorial
 docs/manual/GUI
-docs/manual/commandLine
-docs/manual/resultsMonitor
+docs/manual/performanceErrors
+docs/manual/introductionAdvanced
 docs/manual/notation
 docs/manual/theory
 docs/manual/solver
