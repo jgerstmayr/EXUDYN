@@ -680,7 +680,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     what makes this a move and not a rewrite, and it is the thing the gate has to prove.
 
 <a id="rg3-16"></a>
-**RG3.16** *(group RG3; maintainer 2026-09-25)* **Every heading is sentence case** (#2662).
+**RG3.16** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-16) — **Every heading is sentence case** (#2662).
     *"This is a heading"*, everywhere. Measured 2026-09-25: 116 of the 189 headings of
     `docs/manual/` and `index.md` already are, and about fifteen are Title Case and should not be -
     *Installation and Getting Started*, *Exudyn Basics*, *Generating Animations*, *Generalized
@@ -1478,7 +1478,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.14 | #2655 | the item descriptions become Markdown: `definitions/` is free of structural LaTeX; .7 closes the gate |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
-| RG3.16 | #2662 | every heading in sentence case |
 | RG3.17 | #2663 | a comment in a description is an HTML comment |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |

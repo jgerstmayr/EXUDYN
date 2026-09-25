@@ -1,5 +1,5 @@
 (sec-overview-basics)=
-# Exudyn Basics
+# Exudyn basics
 
 What every model needs: how the module is used, how the solver is told what to do, where the results
 go, and how to look at the model while it runs.

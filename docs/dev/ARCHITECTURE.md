@@ -55,7 +55,7 @@ Coordinates are **redundant** (not minimal), and constraints add Lagrange multip
 automatically. Index conventions — 0-based in both languages, 3D by default with a `2D` suffix for
 planar items — are in [CODING_STYLE.md](CODING_STYLE.md#6-item-and-dimensionality-conventions).
 
-## The three-fold split: C / Main / Visualization
+## The three-fold split: `C` / `Main` / `Visualization`
 
 Every item kind exists three times, and this is the single most important structural fact:
 

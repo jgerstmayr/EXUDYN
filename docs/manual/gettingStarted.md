@@ -1,5 +1,5 @@
 (sec-installation-gettingstarted)=
-# Installation and Getting Started
+# Installation and getting started
 
 The overview of what Exudyn is and what it can do is the page before this one, `README.rst` -
 the landing page of the repository and of the PyPI package, which is part of this documentation

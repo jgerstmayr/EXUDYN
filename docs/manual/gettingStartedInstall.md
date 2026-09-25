@@ -87,7 +87,7 @@ If the PyPi index is not updated, it may help to use
 - `pip install -i https://pypi.org/project/ exudyn`
 
 (sec-install-installinstructions-wheel)=
-## Install from specific Wheel (Ubuntu and Windows)
+## Install from a specific wheel (Ubuntu and Windows)
 
 A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending `.whl`).
 NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!

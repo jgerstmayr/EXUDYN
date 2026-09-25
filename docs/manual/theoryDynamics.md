@@ -1,4 +1,4 @@
-# Dynamics: Mechanical principles
+# Dynamics: mechanical principles
 
 Following kinematics, dynamics comes into play, which involves the study of the forces and torques that cause the motion, bridging the gap between the motion observed and the reasons behind it.
 In this section, we shortly recap mechanical principles, which are used throughout for the simulation of multibody systems.
@@ -67,7 +67,7 @@ $$ (eq-virt-arb-zwangskraefte)
 
 where here $\delta \rv$ is the virtual displacement associated with the constraint force.
 
-## Generalized Principle of Virtual Work
+## Generalized principle of virtual work
 
 With the generalized principle of virtual work, it follows
 
@@ -102,7 +102,7 @@ $$
   \delta \rv_j = \sum_{i=1}^n \frac{\partial \rv_j}{\partial  q_i} \delta q_i \, .
 $$ (eq-theory-virtual-displacement)
 
-## Generalized Forces
+## Generalized forces
 
 To derive the Lagrangian equations, we first consider the virtual work done by $N$ forces on $N$ mass points
 
@@ -128,7 +128,7 @@ Consequently, the virtual work can also be written as,
 $$
   \delta W = \sum_{i=1}^n Q_i \, \delta q_i \, .
 $$
-## Lagrange's Equations of Motion
+## Lagrange's equations of motion
 
 We define the kinetic energy as $T$, which for $N$ mass points is given by
 

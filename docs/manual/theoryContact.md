@@ -1,5 +1,5 @@
 (seccontacttheory)=
-# Modeling of Contact in Exudyn
+# Modeling of contact in Exudyn
 
 The `GeneralContact` module, see {ref}`sec-generalcontact`,  which is
 
@@ -76,7 +76,7 @@ $$ (eq-generalcontactregularizedfriction)
 **Note** that the following equations represent the computed contact relations in high detail, but minor cases and flags, such as the `intraSpheresContact` are not described here, but must be carefully considered in the description of `GeneralContact`, see {ref}`sec-generalcontact`.
 
 (seccontactspheresphere)=
-## Sphere-sphere contact: Equations
+## Sphere-sphere contact: equations
 
 The contact model between two spheres follows a penalty formulation, using a spring and optional damper to model the contact.
 Currently, only linear springs are utilized, however, the user is free to modify the equations in the code to model any nonlinear case as well.
@@ -492,7 +492,7 @@ $$
 $$
 
 (seccontactspheretriangle)=
-## Sphere-triangle contact: Equations
+## Sphere-triangle contact: equations
 
 The sphere-triangle contact model follows a penalty formulation, using a spring and optional damper to model the unilateral contact behavior. Note that the model can be used for for planar (2D) contact between circles and lineas accordingly, where triangles are placed perpendicular to the $X-Y$ plane, representing lines for the contact with circles.
 Currently, only linear springs are utilized, however, the user is free to modify the equations in the code to model any nonlinear

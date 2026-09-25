@@ -3177,3 +3177,33 @@ half of the proof: a reference that had lost its target would fail the build.
 One thing is left for the maintainer to decide: **the file is still called `GUI.md`** while the
 chapter it holds is called *Renderer, graphics and visualization*. Renaming a tracked file needs
 approval, and it changes the URL of the page.
+
+<a id="rg3-16"></a>
+### RG3.16 — every heading in sentence case (2026-09-25, #2662)
+
+The maintainer, reading the new table of contents: *"there is no unified headings style upper/lower
+case: use 'This is a heading' style for all."*
+
+Sixteen headings are renamed, and they are listed one per line in the log of the commit so that each
+can be judged: *Installation and Getting Started*, *Exudyn Basics*, *Execute Command and Help*,
+*Generating Animations*, *Parameter Variation*, *Genetic Optimization*, *Modeling of Contact in
+Exudyn*, two *contact: Equations*, *Dynamics: Mechanical principles*, *Generalized Principle of
+Virtual Work*, *Generalized Forces*, *Lagrange's Equations of Motion*, *Euler's and Chasles's
+Theorems*, *Install from specific Wheel*. The last one gained an article as well, because *"Install
+from a specific wheel"* is the sentence it was trying to be.
+
+The sixteenth is a different kind: `ARCHITECTURE.md`'s *"The three-fold split: C / Main /
+Visualization"* names the three class prefixes of the C++ code, so they are written as code -
+`` `C` / `Main` / `Visualization` `` - which is both more correct and what the new checker reads.
+
+**`tools/checkHeadings.py` is the eleventh check of `exudev generate --all-checks`.** A heading is
+sentence case unless a capital in the middle is one of three things: a **proper noun** from a list
+(*Newmark*, *Runge-Kutta*, *Hurty-Craig-Bampton*, *Ubuntu*, *Microsoft*, ...), a **name the code
+spells with a capital**, which is recognised by its shape - CamelCase, ALLCAPS, or a name with a
+digit - rather than listed, because the code has hundreds of them, or a word inside `` `code` `` or
+`$math$`, which is not prose. Two more rules came out of the first run: what follows a colon after a
+code name are that name's **values** and are spelled the way the code spells them (*GraphicsData:
+Line*), and a leading marker is not the first word (*"(A) Solve for unknown accelerations"*).
+
+All **353** headings of `docs/manual/`, `docs/dev/`, `docs/howTo/`, `index.md` and `CONTRIBUTING.md`
+pass it.

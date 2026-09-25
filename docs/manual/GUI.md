@@ -170,7 +170,7 @@ The visualization settings structure can be accessed in the system container `SC
 ```
 
 (sec-overview-basics-commandandhelp)=
-### Execute Command and Help
+### Execute command and help
 
 In addition to the Visualization settings dialog, a simple help window opens upon pressing key 'H'.
 It is also possible to execute single Python commands during simulation by pressing 'X', which opens a dialog, saying 'Exudyn Command Window'.
@@ -480,7 +480,7 @@ Retrieved images can be conveniently used with `matplotlib` for further manipula
   plt.show()
 ```
 
-#### Generating Animations
+#### Generating animations
 
 Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
 The easiest way to create animations, is using the SolutionViewer with its integrated features, see {ref}`sec-overview-basics-solutionviewer`.

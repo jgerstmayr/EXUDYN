@@ -149,7 +149,7 @@ A very practical joint, which has no relevance for kinematics, is the rigid join
 
 Indeed, some cases in constraints may not be represented by a set of kinematic pairs, such as several mass points arranged along an inextensible string. Therefore, codeName usually employs kinematic pairs, but also allows an arbitrary number of bodies to be coupled.
 
-## Euler's and Chasles's Theorems
+## Euler's and Chasles's theorems
 
 In the following, we consider so-called active rotations of bodies. Consider a body rotating with an angular velocity $\tomega$. Thereing, the orientation of the body can be given with respect a previous orientation using a transformation matrix (rotation matrix).
 Here, the components of the transformation matrix are given as a function of time. When reconsidering the {ref}`DOF <DOF>` of a mechanism, it is thus the question, how many independent coordinates are required to describe a spatial rotation?
