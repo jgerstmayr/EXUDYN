@@ -3484,3 +3484,50 @@ strict HTML build. The two drifts are the intended ones - `itemInterface.py` (ti
 One user function of 23 is converted. RG12.4.4 - a `Protocol` in `itemInterface.py` - is now worth
 doing on this one before the remaining 22 of RG12.4.5, because a Protocol is what a user actually
 feels in an editor.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.4.3 - the check between the Python def and the C++ user function (2026-09-25, #2664)
+
+The signature of a user function was stated in five places and compared in none. There is now one
+comparison, `userFunctionModel.CheckAgainstCpp`, between the def of the definition file and the
+`std::function` that `definitionTypes.userFunctionSignatures` maps the parameter's type to. It
+reports four kinds of disagreement:
+
+| finding | example |
+|---|---|
+| the number of arguments | `takes 1 argument(s), the C++ user function 2: MainSystem, Index` |
+| an argument's type | `argument itemNumber: 'Real' cannot be the C++ Index (Index)` |
+| the return type | `the return: 'BodyGraphicsData' cannot be the C++ StdVector (np.ndarray)` |
+| an argument the docstring does not describe | `its row of the table would be empty` |
+
+All four were provoked on purpose against the real `PyFunctionGraphicsData` and
+`PyFunctionVectorMbsScalarIndex2Vector` signatures, and the last one is in because an undescribed
+argument does not fail anything - it simply leaves a cell of the generated table empty.
+
+**A size is deliberately not compared.** `cppToAnnotation` maps `StdVector`, `StdVector2D`,
+`StdVector3D`, `StdVector6D`, `StdMatrix3D`, `StdMatrix6D`, `NumpyMatrix` and `StdArrayIndex` all to
+`np.ndarray`, because the size of an argument is a formula in its description and not part of its
+type - the maintainer's own correction, and the thing that makes a typed signature possible at all.
+`py::object` says nothing about what it carries, so it accepts the three things that are passed as
+one: `BodyGraphicsData`, `MatrixContainer` or `np.ndarray`. A C++ type that is not in the table is
+itself a finding rather than a silent pass, so the vocabulary cannot grow behind the check's back.
+
+**Two places call it, and that is on purpose.** `itemInterfaceEmitter` raises, because it cannot emit
+`userFunctionArgsDict` from a def it does not believe; `tools/checkDefinitions.py` reports the same
+findings with the file and the line, which is what a writer wants:
+
+    definitions/itemDefsObjects.py:41  ObjectGround.graphicsDataUserFunction: the def argument
+    itemNumber: 'Real' cannot be the C++ Index (Index)
+
+That line is from a deliberately wrong annotation; `--check` exited 1 and the file was put back.
+
+`CppSignatureTypes` reads the `std::function<...>` text and reports `const MainSystem&` as
+`MainSystem`: a reference and a const are how C++ takes an argument and say nothing that a Python
+annotation could state.
+
+**Gates**: 11/11 checks, regeneration a no-op (the check changes no output), and the definitions
+checker reporting the fifth of its families. Neither the wheel nor the test suite is touched: no
+generated file changed, so what was built and tested in RG12.4.2 is still what is installed.
+
+Two of 23 signatures' worth of machinery is now in place; what is missing for a user is RG12.4.4,
+the `Protocol`.

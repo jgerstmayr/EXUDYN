@@ -20,6 +20,9 @@
 #     undefined reference, and only the PDF says so.
 #   - a literal whose value carries a backslash or mathematics is written r'...', so that
 #     Python does not read a backslash-t as a tab.
+#   - a user function def agrees with the C++ user function it is called as: the number of its
+#     arguments, each argument's type, its return type, and that its docstring describes every
+#     argument. The signature used to be stated in five places and compared in none.
 #   - every heading is written at the level of the page it is placed in, and a title that means one
 #     of the recurring sections is spelled like it. The old \mysubsubsubsection said the level in
 #     its name and NormalizeHeadings quietly repaired whatever did not fit, so neither was checked.
@@ -291,6 +294,39 @@ def CheckRawStrings(paths):
     return findings
 
 
+def CheckUserFunctions(root):
+    """a user function def that does not agree with the C++ user function it is called as
+
+    This is the only comparison of the two. The findings are the ones of
+    userFunctionModel.CheckAgainstCpp - the generator raises on them as well, because it cannot emit
+    userFunctionArgsDict without them; here they carry the file and the line
+    (revision2026b step RG12.4, #2664)."""
+    import inspect
+    for directory in [os.path.join(root, 'tools', 'generators'),
+                      os.path.join(root, 'definitions')]:
+        if directory not in sys.path:
+            sys.path.insert(0, directory)
+    import definitionLoader                                  #the list of modules, in emit order
+    from itemModel import pyFunctionTypeConversion, TypeName
+    from userFunctionModel import ReadUserFunction, CheckAgainstCpp
+
+    findings = []
+    for moduleName in definitionLoader.itemModules:
+        for definition in __import__(moduleName).definitions:
+            for member in definition['members']:
+                function = member.get('userFunction')
+                if function is None:
+                    continue
+                userFunction = ReadUserFunction(function, member['pythonName'])
+                for finding in CheckAgainstCpp(userFunction,
+                                               pyFunctionTypeConversion[TypeName(member)]):
+                    findings.append((inspect.getsourcefile(function),
+                                     function.__code__.co_firstlineno,
+                                     definition['className'] + '.' + member['pythonName']
+                                     + ': the def ' + finding))
+    return findings
+
+
 def CheckAbbreviations(paths, declared):
     """ABRV:KEY with a key the list does not have"""
     findings = []
@@ -319,7 +355,8 @@ def main():
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
                 + CheckCitations(paths, known) + CheckRawStrings(paths)
                 + CheckPercentComments(paths)
-                + CheckEquationReferences(paths) + CheckNoLatex(paths))
+                + CheckEquationReferences(paths) + CheckNoLatex(paths)
+                + CheckUserFunctions(root))
 
     if len(findings) == 0:
         if not args.quiet:
@@ -327,7 +364,8 @@ def main():
                   + str(len(declared)) + ' abbreviations that the list has,\n'
                   '    write every heading at the level of the page it is placed in,\n'
                   '    cite only keys of the ' + str(len(known)) + '-entry bibliography,\n'
-                  "    and write every literal that carries a backslash as r'...'.")
+                  "    and write every literal that carries a backslash as r'...'.\n"
+                  '    Every user function def agrees with the C++ user function it is called as.')
         return 0
 
     print('FINDINGS in definitions/ - see definitions/README.md, "Writing a description":')

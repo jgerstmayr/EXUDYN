@@ -27,7 +27,7 @@ if toolsDirectory not in sys.path:
 import itemModel as im                                                              # noqa: E402
 import typeModel as tm                                                              # noqa: E402
 import publicApi                                                                     # noqa: E402
-from userFunctionModel import ReadUserFunction                                     # noqa: E402
+from userFunctionModel import ReadUserFunction, CheckAgainstCpp                     # noqa: E402
 from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
                        IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
                        possibleTypes)
@@ -66,16 +66,15 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
 
         #a parameter that carries a Python def knows what its arguments are CALLED; arg0, arg1, ...
         #are the fallback for the ones still written as prose (revision2026b step RG12.4, #2664).
-        #The count is checked here, against the std::function, because this is the one place that
-        #holds both
+        #The def is checked against the std::function here, because this is the one place that holds
+        #both; tools/checkDefinitions.py reports the same findings with the file and the line
         if item.get('userFunction') is not None:
             userFunction = ReadUserFunction(item['userFunction'], userFunctionName)
-            names = [name for (name, _) in userFunction.arguments]
-            if len(names) != len(fcnArgsList):
+            findings = CheckAgainstCpp(userFunction, item['stdFunctionType'])
+            if len(findings) != 0:
                 raise ValueError(classType + itemType + '.' + userFunctionName + ': the Python def '
-                                 'takes ' + str(len(names)) + ' argument(s), the C++ user function '
-                                 + str(len(fcnArgsList)) + ' (' + ', '.join(fcnTypesList) + ')')
-            fcnArgsList = names
+                                 + '; '.join(findings))
+            fcnArgsList = [name for (name, _) in userFunction.arguments]
 
         userFunctionArgsDict[classType+itemType+','+userFunctionName] = [fcnTypesList,fcnArgsList,[fcnType]]
 

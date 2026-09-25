@@ -179,8 +179,15 @@ not in the list below reaches the page as itself and is a defect.
   annotation types - `Real`, `Index`, `Bool`, `MainSystem`, `np.ndarray` and the rest - are names
   in `definitions/definitionTypes.py`, so the file stays ordinary, importable Python. Nothing is
   executed: the source is read with `ast`, and an annotation reaches the page **as it is
-  written**. The number of arguments is checked against the C++ `std::function` of the
-  parameter's type, in `itemInterfaceEmitter.CreateStringSymbolicUserFunctionArgs`.
+  written**.
+
+  **The def is checked against the C++ user function it is called as** - the `std::function` that
+  `definitionTypes.userFunctionSignatures` maps the parameter's type to. The number of arguments,
+  each argument's type, the return type and that the docstring describes every argument:
+  `tools/checkDefinitions.py` reports them with the file and the line, and the generator refuses to
+  emit. A size is not compared, because it is not in the type: `StdVector3D` and `StdVector` are
+  both `np.ndarray`, and `py::object` accepts `BodyGraphicsData`, `MatrixContainer` or
+  `np.ndarray`. The table of C++ type to annotation is `userFunctionModel.cppToAnnotation`.
 
   The **size** of an argument belongs in its `Args:` line, as a formula -
   `q: generalized coordinates, $\qv \in \Rcal^{n_{ODE2}}$` - and not in its type, because a

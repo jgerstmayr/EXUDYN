@@ -1576,10 +1576,12 @@ package).
       from one blank line that was inside the example's code fence. The trial item is not the
       `ObjectGenericODE2.forceUserFunction` this step first named: that item has four blocks and
       one shared example, which is a reordering question and not a mechanism question.
-    - **RG12.4.3** — the **check**: the arity and the argument types of the typed function agree with
-      the `std::function` that `definitionTypes.userFunctionSignatures` maps the parameter's type to.
-      Today nothing compares them, and a disagreement is found by a user whose function is called
-      with the wrong number of arguments.
+    - **RG12.4.3** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-3) - the check:
+      the number of arguments, each argument's type, the return type and that the docstring
+      describes every argument, all against the `std::function` that
+      `definitionTypes.userFunctionSignatures` maps the parameter's type to. A size is not
+      compared, because a size is not in the type. `tools/checkDefinitions.py` reports a finding
+      with the file and the line, and the generator refuses to emit.
     - **RG12.4.4** — a **`Protocol` per user function** in `itemInterface.py`, generated from the
       same source: `class ObjectGenericODE2ForceUserFunction(Protocol)` with `__call__` typed. An
       editor then completes the arguments and marks a wrong one, at no runtime cost. This is the part

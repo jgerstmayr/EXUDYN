@@ -126,6 +126,77 @@ def ReadUserFunction(function, name=None):
                         summary, details, argumentText, returnText)
 
 
+#the Python annotation that a C++ type of a std::function accepts. The SIZE is deliberately not
+#distinguished - StdVector3D and StdVector are both np.ndarray - because the size of an argument is
+#a formula in its description and not part of its type (revision2026b step RG12.4, #2664). py::object
+#says nothing about what it carries, so it accepts the three things that are actually passed as one.
+cppToAnnotation = {'MainSystem': ['MainSystem'],
+                   'Real': ['Real'],
+                   'Index': ['Index'],
+                   'int': ['Index'],
+                   'bool': ['Bool'],
+                   'StdVector': ['np.ndarray'],
+                   'StdVector2D': ['np.ndarray'],
+                   'StdVector3D': ['np.ndarray'],
+                   'StdVector6D': ['np.ndarray'],
+                   'StdMatrix3D': ['np.ndarray'],
+                   'StdMatrix6D': ['np.ndarray'],
+                   'NumpyMatrix': ['np.ndarray'],
+                   'StdArrayIndex': ['np.ndarray'],
+                   'ConfigurationType': ['ConfigurationType'],
+                   'py::object': ['BodyGraphicsData', 'MatrixContainer', 'np.ndarray'],
+                   }
+
+
+def CppSignatureTypes(stdFunction):
+    """([argument types], return type) of a std::function<...> as definitionTypes.py writes it
+
+    'const MainSystem&' is reported as 'MainSystem': a reference and a const are how C++ takes an
+    argument and say nothing a Python annotation could state."""
+    inner = stdFunction.split('<', 1)[1].rsplit('>', 1)[0]
+    returnType = inner.split('(', 1)[0].strip()
+    arguments = [argument.replace('const', '').replace('&', '').strip()
+                 for argument in inner.split('(', 1)[1].rsplit(')', 1)[0].split(',')
+                 if argument.strip() != '']
+    return (arguments, returnType)
+
+
+def CheckAgainstCpp(userFunction, stdFunction):
+    """what disagrees between the Python def and the C++ user function; [] when they agree
+
+    This is the only place where the two halves of a user function meet, and until it existed
+    nothing compared them: a signature was stated in five places and checked in none, so a
+    disagreement was found by a user whose function was called with the wrong number of arguments
+    (revision2026b step RG12.4, #2664)."""
+    (cppArguments, cppReturn) = CppSignatureTypes(stdFunction)
+    findings = []
+
+    if len(userFunction.arguments) != len(cppArguments):
+        return [('takes ' + str(len(userFunction.arguments)) + ' argument(s), the C++ user function '
+                 + str(len(cppArguments)) + ': ' + ', '.join(cppArguments))]
+
+    for (index, (name, annotation)) in enumerate(userFunction.arguments):
+        accepted = cppToAnnotation.get(cppArguments[index])
+        if accepted is None:
+            findings.append('argument ' + name + ': the C++ type ' + cppArguments[index]
+                            + ' has no Python annotation - add it to userFunctionModel')
+        elif annotation not in accepted:
+            findings.append('argument ' + name + ': ' + repr(annotation) + ' cannot be the C++ '
+                            + cppArguments[index] + ' (' + ' or '.join(accepted) + ')')
+        if name not in userFunction.argumentText:
+            findings.append('argument ' + name + ': the docstring does not describe it, so its '
+                            'row of the table would be empty')
+
+    accepted = cppToAnnotation.get(cppReturn)
+    if accepted is None:
+        findings.append('the return: the C++ type ' + cppReturn + ' has no Python annotation'
+                        ' - add it to userFunctionModel')
+    elif userFunction.returnType not in accepted:
+        findings.append('the return: ' + repr(userFunction.returnType) + ' cannot be the C++ '
+                        + cppReturn + ' (' + ' or '.join(accepted) + ')')
+    return findings
+
+
 def UserFunctionsOf(definition):
     """(parameterName, UserFunction) for every member of an item that carries one"""
     found = []
