@@ -3071,3 +3071,67 @@ Two rules from the earlier sub-steps had to be applied again, and a third was le
 string value that **holds** one of the constructs is touched at all. The newline collapse that
 `ConvertText` ends with is right for a description and wrong for a `miniExample`, whose blank lines
 are the Python's own - an attempt that collapsed every value rewrote the mini examples of five files.
+
+<a id="rg3-3-1"></a>
+### RG3.3.1 — the PDF is built without Perl (2026-09-25, #2658)
+
+The maintainer: *"I just observed that the PDF docs creation currently does not work."* It worked
+here, twice, which was the useful part of the puzzle - the same repository, the same MiKTeX, one
+machine, two answers. Their output named the cause:
+
+> `MiKTeX could not find the script engine 'perl' which is required to execute 'latexmk'.`
+
+**`latexmk` is a Perl script.** Git for Windows ships a perl in
+`…\Programs\Git\usr\bin`, Git Bash puts that directory on PATH and PowerShell deliberately does not,
+and every run of mine went through Git Bash. So `exudev docs --pdf` never depended on the TeX
+installation alone: it depended on which shell started it, and nothing said so.
+
+`latexmk` automates three things - run the engine, build the index, run the engine again until the
+cross-references stop moving - and `commands.BuildDocumentationPdf` does them with the engine and
+`makeindex` that every TeX installation brings:
+
+- `xelatex -interaction=nonstopmode`, plus `--enable-installer` on Windows so that MiKTeX fetches a
+  missing package instead of opening a dialog nobody is there to answer;
+- `makeindex -s python.ist` after the first pass, and an **empty `.ind` for an empty `.idx`** -
+  `makeindex` refuses an empty input and the document needs the file to exist, which is exactly what
+  the `latexmkrc` sphinx writes does in its own `xindy` wrapper. This document's `.idx` **is** empty;
+- then another pass, and another while the engine asks for one **or the files it reads on the next
+  pass have changed**. That second condition is the one that matters: the first version asked the
+  `.log` only, and one of its markers was *"There were undefined references"* - a statement about the
+  document, not a request. This document had 34 of them, so the marker never cleared and every build
+  ran to the five-pass limit. latexmk decides by the contents of the `.aux`, `.toc`, `.out` and
+  `.idx`, and so does this now.
+
+**Verified with every directory holding a `perl.exe` removed from PATH** - the maintainer's
+situation, reproduced rather than imagined: 1103 pages, 10.3 MB, **two passes, 54 s**, where latexmk
+took 75 s and the first version of this 2 m 18 s.
+
+And the 34 undefined references were not noise. See RG3.14.3.2: they were the reason this step had to
+come first.
+
+<a id="rg3-14-3-2"></a>
+### RG3.14.3.2 — a reference to an equation is the role, not a link (2026-09-25, #2655)
+
+RG3.14.3 turned all 144 references of `definitions/` into native Markdown links, and the HTML build
+under `-W` said they all resolve. **42 of them point at an equation, and every one of those left the
+PDF as an undefined reference.** The LaTeX writer gives a link to an equation the anchor
+
+```
+docs/generated/items/NodeRigidBodyEP:equation-eq-noderigidbodyep-gm
+```
+
+while it labels the equation itself
+
+```
+equation:docs/generated/items/NodeRigidBodyEP:eq-noderigidbodyep-gm
+```
+
+- the word and the separator in different places. The `{eq}` role, which the manual chapters still
+use, writes `\eqref{equation:…}` and matches. So for an equation the role is what works and the link
+is not, and the 42 references are roles again. Sections, chapters and figures stay native links:
+none of those was undefined.
+
+Two things worth keeping in mind from this. The HTML build is **not** sufficient evidence that a
+reference resolves - the two writers disagree, and only the PDF said so, which is why RG3.3.1 had to
+be fixed first to be able to see it at all. And `checkDefinitions` now rejects a Markdown link whose
+target is one of the 44 equation labels, so the form cannot come back by hand.

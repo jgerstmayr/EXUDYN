@@ -724,6 +724,147 @@ def DocumentationPdfPath():
                         'exudynDocumentationV' + runner.RepositoryVersion() + '.pdf')
 
 
+#the LaTeX run, without the Perl that latexmk is written in (#2658). latexmk automates three things
+#- run the engine, build the index, run the engine again until the references stop moving - and it
+#is a Perl script, so MiKTeX answers "could not find the script engine 'perl'" wherever no Perl is
+#on PATH. It used to succeed in Git Bash and fail in PowerShell on the same machine, because Git for
+#Windows ships a perl in its usr/bin that Git Bash puts on PATH and PowerShell does not. The three
+#things are done here instead, with the engine and makeindex that every TeX installation brings.
+latexJob = 'exudynDocumentation'
+
+#what the engine writes into the .log when it wants to be run again. NOT "There were undefined
+#references": that is a statement about the document, not a request - this document has 34 of them
+#and the marker would never clear, so the loop would always run to its limit.
+rerunMarkers = ['Rerun to get', 'Label(s) may have changed', 'Please rerun', 'Rerun LaTeX']
+#the files the engine writes for itself and reads on the next pass; latexmk decides by their
+#contents, and so does this
+crossReferenceFiles = ['.aux', '.toc', '.out', '.idx']
+maximumPasses = 5           #sphinx's own Makefile runs five unconditionally; this stops when done
+
+
+def LatexDirectory():
+    return os.path.join(runner.RepositoryRoot(), pdfBuildDirectory, 'latex')
+
+
+def RunLatexTool(argv, verbose, what):
+    """one call of a TeX tool in the latex directory; returns (returnCode, output)"""
+    try:
+        finished = subprocess.run(argv, cwd=LatexDirectory(), capture_output=not verbose,
+                                  text=True, errors='replace')
+    except FileNotFoundError:
+        print('exudev docs --pdf: ' + argv[0] + ' was not found. ' + what
+              + ' needs a TeX installation on PATH (MiKTeX or TeX Live).')
+        return (1, '')
+    return (finished.returncode, '' if verbose else (finished.stdout or ''))
+
+
+def CrossReferenceState():
+    """the contents of the files the engine writes for its own next pass"""
+    state = {}
+    for extension in crossReferenceFiles:
+        path = os.path.join(LatexDirectory(), latexJob + extension)
+        if os.path.isfile(path):
+            with io.open(path, 'rb') as contents:
+                state[extension] = contents.read()
+    return state
+
+
+def WantsAnotherPass(previousState):
+    """another pass would change something: either the engine asked for one, or the files it reads
+    on the next pass are not the ones it read on this one"""
+    logFile = os.path.join(LatexDirectory(), latexJob + '.log')
+    if os.path.isfile(logFile):
+        with io.open(logFile, 'r', encoding='utf-8', errors='replace') as log:
+            text = log.read()
+        if any(marker in text for marker in rerunMarkers):
+            return True
+    return CrossReferenceState() != previousState
+
+
+def LatexErrors():
+    """the engine's error lines, which start with '!' - what to print when there is no PDF"""
+    logFile = os.path.join(LatexDirectory(), latexJob + '.log')
+    if not os.path.isfile(logFile):
+        return []
+    with io.open(logFile, 'r', encoding='utf-8', errors='replace') as log:
+        return [line.rstrip() for line in log if line.startswith('!')]
+
+
+def BuildIndex(verbose):
+    """the index, with makeindex - a C program in every TeX installation, unlike the xindy that
+    sphinx's latexmkrc asks for. An EMPTY .idx gets an empty .ind, which is what that latexmkrc
+    does too: makeindex refuses an empty input and the document needs the file to exist."""
+    indexInput = os.path.join(LatexDirectory(), latexJob + '.idx')
+    if not os.path.isfile(indexInput):
+        return 0
+    if os.path.getsize(indexInput) == 0:
+        with io.open(os.path.join(LatexDirectory(), latexJob + '.ind'), 'w',
+                     encoding='utf-8') as empty:
+            empty.write('')
+        return 0
+
+    style = ['-s', 'python.ist'] if os.path.isfile(os.path.join(LatexDirectory(),
+                                                                'python.ist')) else []
+    (returnCode, output) = RunLatexTool(['makeindex'] + style + [latexJob + '.idx'], verbose,
+                                        'the index of the documentation')
+    if returnCode != 0:
+        #sphinx's own Makefile ignores a failing makeindex ("-$(MAKEINDEX)"): a missing or partial
+        #index is a defect of the index, not of the document
+        print('   makeindex returned ' + str(returnCode) + '; the index may be incomplete')
+        if output:
+            print('   ' + output.strip().replace('\n', '\n   '))
+    return 0
+
+
+def BuildDocumentationPdf(verbose=False):
+    """xelatex, the index, and xelatex again until the references stop moving"""
+    directory = LatexDirectory()
+    if not os.path.isfile(os.path.join(directory, latexJob + '.tex')):
+        print('exudev docs --pdf: no ' + latexJob + '.tex in ' + directory
+              + ' - the sphinx latex step did not run')
+        return 1
+
+    engine = ['xelatex', '-interaction=nonstopmode']
+    if runner.onWindows:
+        #let MiKTeX fetch a package it does not have yet instead of opening a dialog nobody is
+        #there to answer; on TeX Live the option is unknown and is not passed
+        engine += ['--enable-installer']
+    engine += [latexJob + '.tex']
+
+    indexBuilt = False
+    for passNumber in range(1, maximumPasses + 1):
+        print('   xelatex pass ' + str(passNumber) + ' ...')
+        stateBefore = CrossReferenceState()
+        (returnCode, output) = RunLatexTool(engine, verbose, 'the documentation pdf')
+        if returnCode != 0 and not os.path.isfile(os.path.join(directory, latexJob + '.pdf')):
+            for line in LatexErrors()[:10]:
+                print('   ' + line)
+            if output and not LatexErrors():
+                print('   ' + output.strip()[-2000:].replace('\n', '\n   '))
+            return returnCode
+
+        if not indexBuilt:
+            BuildIndex(verbose)          #after the first pass, when the .idx exists
+            indexBuilt = True
+            continue                     #the index has changed, so one more pass is needed
+
+        if not WantsAnotherPass(stateBefore):
+            break
+
+    if not os.path.isfile(os.path.join(directory, latexJob + '.pdf')):
+        print('exudev docs --pdf: the engine wrote no pdf')
+        for line in LatexErrors()[:10]:
+            print('   ' + line)
+        return 1
+
+    errors = LatexErrors()
+    if errors:
+        print('   the engine reported ' + str(len(errors)) + ' error(s); the pdf was written anyway:')
+        for line in errors[:5]:
+            print('   ' + line)
+    return 0
+
+
 def CollectDocumentationPdf():
     """beside the wheels and RELEASE_NOTES.md, which is where a release is assembled from"""
     built = os.path.join(runner.RepositoryRoot(), pdfBuildDirectory, 'latex',
@@ -774,18 +915,13 @@ def Docs(options):
         steps += [Step('pdf: the latex sources (' + environment + ')',
                        argv=runner.InEnvironment(environment, pdfArgv, options), cwd=root)]
 
-        #latexmk runs the engine as often as the table of contents and the references need, and
-        #reads the latexmkrc that sphinx writes beside the .tex. --enable-installer lets MiKTeX
-        #fetch a package it does not have yet instead of opening a dialog nobody is there to
-        #answer; on TeX Live the option is unknown to the engine and simply not passed.
-        engine = 'xelatex --enable-installer %O %S' if runner.onWindows else 'xelatex %O %S'
-        latexmkArgv = ['latexmk', '-pdfxe', '-e', '$xelatex=q/' + engine + '/',
-                       '-interaction=nonstopmode']
-        if not options.verbose:
-            latexmkArgv += ['-quiet']
+        #the engine is run here rather than by latexmk, which is a Perl script: see
+        #BuildDocumentationPdf. Nothing outside a TeX installation is needed for it (#2658).
         steps += [Step('pdf: the latex run (xelatex)',
-                       argv=latexmkArgv + ['exudynDocumentation.tex'],
-                       cwd=os.path.join(root, pdfBuildDirectory, 'latex'))]
+                       action=lambda: BuildDocumentationPdf(options.verbose),
+                       note='run xelatex in ' + pdfBuildDirectory + '/latex, build the index with '
+                            'makeindex, and run xelatex again until the references stop moving '
+                            '(at most ' + str(maximumPasses) + ' passes)')]
 
         steps += [Step('collect the pdf into dist/', action=CollectDocumentationPdf,
                        note='copy ' + pdfBuildDirectory + '/latex/exudynDocumentation.pdf to '

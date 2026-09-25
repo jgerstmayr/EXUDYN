@@ -182,6 +182,16 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     issue history is in, because a reader who searches it gets the reason for each change
     with it. 1159 pages. The three defects it uncovered are RG3.6, RG3.7 and RG3.8.
 
+<a id="rg3-3-1"></a>
+**RG3.3.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-3-1) —
+    **`exudev docs --pdf` needed Perl and did not say so** (#2658). The LaTeX run was `latexmk`,
+    which is a Perl script: it succeeded in Git Bash and failed in PowerShell on the same machine,
+    because Git for Windows ships a perl in its `usr/bin` that the one puts on PATH and the other
+    does not. The three things `latexmk` automates - run the engine, build the index, run the engine
+    again until the cross-references stop moving - are done by `commands.BuildDocumentationPdf` now,
+    with the engine and `makeindex` that every TeX installation brings. **Verified with every
+    directory holding a `perl.exe` removed from PATH**: 1103 pages, two passes, 54 s.
+
 <a id="rg3-4"></a>
 **RG3.4** **DONE 2026-09-22** (#2587) — [log](exudynRevisionLog2026b.md#rg3-4) — *(group RG3; maintainer 2026-09-22)* **The revisions chapter says where the details
     are** (#2587). It is deliberately short, and it should end by pointing at the developer
@@ -487,6 +497,13 @@ gaps it names are the first candidates. The maintainer's own findings go here as
         not change: `\be` and `\ee` are Exudyn's own delimiters, not LaTeX's, and `$$` is what
         Markdown's display math is. With them go `\eqComma` and `\eqDot`, which the converter
         already spells out, and `\nonumber`, which numbers nothing in an `aligned` block.
+      - **RG3.14.3.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-3-2) -
+        **a reference to an equation is the role, not a link.** RG3.14.3 made all 144 references
+        native, and 42 of them point at an equation: those resolve in the HTML and **left the PDF as
+        undefined references**, because the LaTeX writer gives a link to an equation the anchor
+        `<document>:equation-<label>` while it labels the equation `equation:<document>:<label>`.
+        Only the PDF said so, which is why RG3.3.1 had to come first. `checkDefinitions` rejects a
+        link whose target is an equation label.
     - **RG3.14.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-4) - **a table
       is a Markdown table.** The 48 tables that are not a user function's argument list are pipe
       tables, written where they stand in the text; the 34 argument tables belong to RG3.14.5 and
@@ -1449,7 +1466,6 @@ whether it becomes a step.
 | RG10 | #2541 | `exudyn.config` and `exudyn.special` are in no stub file |
 | RG12 | #2497 | 59 bare `except:` remain in the shipped package |
 | maintainer, 2026-09-25 | #2657 | the visualization documentation is spread over three chapters with no structure - a structure is proposed below |
-| RG3.3, #2655 | #2658 | `exudev docs --pdf` fails wherever no Perl is on PATH, because `latexmk` is a Perl script |
 | maintainer, 2026-09-25 | #2659 | the simulation settings section does not mention `python -m exudyn dialogs sim` |
 | maintainer, 2026-09-25 | #2660 | six pages of the C++ interface repeat their own title as the first section |
 | maintainer, 2026-09-25 | #2661 | the command line and the results monitor belong in *Advanced topics* |
