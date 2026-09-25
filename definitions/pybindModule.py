@@ -131,7 +131,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToFi
                             )
 
 pb.DefPyFunctionAccess(cClass='', pyName='Print', cName='PyPrint', 
-                            description="this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False",
+                            description="this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole is set to False",
                             #argList=[], 
                             #this fails in C++ compilation: ['*args','**kwargs'], and also these:
                             #argList=['args','kwargs'], #shall be: ['py::arg("args" = py::args(), py::arg("kwargs") = py::kwargs()
