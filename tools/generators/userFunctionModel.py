@@ -40,11 +40,14 @@ class UserFunction:
     returnType    the return annotation as written, or '' when there is none
     summary       the first paragraph of the docstring
     details       what follows it, or ''
-    argumentText  {name: description} from the Args: lines
+    argumentText  {name: description} from the Args: lines, without the leading size formula
     returnText    the Returns: line, or ''
+    argumentSize  {name: size} for the arguments whose description began with one, as '$\\in ...$'
+    returnSize    the size the Returns: line began with, or ''
     """
 
-    def __init__(self, name, arguments, returnType, summary, details, argumentText, returnText):
+    def __init__(self, name, arguments, returnType, summary, details, argumentText, returnText,
+                 argumentSize=None, returnSize=''):
         self.name = name
         self.arguments = arguments
         self.returnType = returnType
@@ -52,6 +55,13 @@ class UserFunction:
         self.details = details
         self.argumentText = argumentText
         self.returnText = returnText
+        self.argumentSize = argumentSize or {}
+        self.returnSize = returnSize
+
+    def TypeAndSize(self, annotation, size):
+        """what the 'type or size' column of the table says: the annotation, and the size if the
+        size is not already in it"""
+        return annotation + (' ' + size if size != '' else '')
 
     def Signature(self):
         """the signature as the documentation prints it: the documented name and the argument names"""
@@ -67,6 +77,19 @@ def _Annotation(node):
     return '' if node is None else ast.unparse(node)
 
 
+def _SplitSize(text):
+    """(size, description) of one Args: or Returns: line
+
+    A description that begins with '$\\in ...$' begins with the SIZE of the argument, which the table
+    prints in the type column: 'q: $\\in \\Rcal^n$ object coordinates' is a Vector of n entries. A
+    formula that does not start with \\in is part of the description - '$\\fv$ copied from object' is
+    the symbol of the argument and not its size."""
+    match = re.match(r'^(\$\\in\s[^$]*\$)\s*(.*)$', text, flags=re.DOTALL)
+    if match is None:
+        return ('', text)
+    return (match.group(1), match.group(2).strip())
+
+
 def _SplitDocstring(text):
     """(summary, details, {argument: text}, returnText) of a Google-style docstring
 
@@ -78,10 +101,13 @@ def _SplitDocstring(text):
     prose = sections[0].strip()
     arguments = {}
     returnText = ''
+    returnSize = ''
+    sizes = {}
     for index in range(1, len(sections) - 1, 2):
         (name, body) = (sections[index], sections[index + 1])
         if name.startswith('Return'):
-            returnText = ' '.join(line.strip() for line in body.strip().split('\n')).strip()
+            (returnSize, returnText) = _SplitSize(
+                ' '.join(line.strip() for line in body.strip().split('\n')).strip())
             continue
         current = None
         for line in textwrap.dedent(body).split('\n'):
@@ -93,10 +119,13 @@ def _SplitDocstring(text):
                 arguments[current] += ' ' + line.strip()
     #Google style: the summary is the FIRST LINE, and the details are what follows it. The details
     #keep their own line breaks, because a description is Markdown and a writer laid those out
+    for (name, description) in list(arguments.items()):
+        (sizes[name], arguments[name]) = _SplitSize(description)
+
     lines = prose.split('\n')
     summary = lines[0].strip()
     details = '\n'.join(lines[1:]).strip()
-    return (summary, details, arguments, returnText)
+    return (summary, details, arguments, returnText, sizes, returnSize)
 
 
 def ReadUserFunction(function, name=None):
@@ -113,7 +142,8 @@ def ReadUserFunction(function, name=None):
                          + ' is not a plain function definition')
 
     arguments = [(argument.arg, _Annotation(argument.annotation)) for argument in node.args.args]
-    (summary, details, argumentText, returnText) = _SplitDocstring(ast.get_docstring(node))
+    (summary, details, argumentText, returnText, sizes, returnSize) = _SplitDocstring(
+        ast.get_docstring(node))
 
     described = set(argumentText)
     known = set(name for (name, _) in arguments)
@@ -123,28 +153,29 @@ def ReadUserFunction(function, name=None):
                          + ', '.join(unknown))
 
     return UserFunction(name or node.name, arguments, _Annotation(node.returns),
-                        summary, details, argumentText, returnText)
+                        summary, details, argumentText, returnText, sizes, returnSize)
 
 
-#the Python annotation that a C++ type of a std::function accepts. The SIZE is deliberately not
-#distinguished - StdVector3D and StdVector are both np.ndarray - because the size of an argument is
-#a formula in its description and not part of its type (revision2026b step RG12.4, #2664). py::object
-#says nothing about what it carries, so it accepts the three things that are actually passed as one.
+#the Python annotation that a C++ type of a std::function accepts, one to one (revision2026b step
+#RG12.4, #2664). A FIXED size is part of the annotation - Vector3D is not Vector - because that is
+#what the argument table of a user function says and what the C++ signature needs. A size that is not
+#fixed is a formula in the argument's description, which is where a formula renders. py::object says
+#nothing about what it carries, so it accepts the two things that are passed as one.
 cppToAnnotation = {'MainSystem': ['MainSystem'],
                    'Real': ['Real'],
                    'Index': ['Index'],
                    'int': ['Index'],
                    'bool': ['Bool'],
-                   'StdVector': ['np.ndarray'],
-                   'StdVector2D': ['np.ndarray'],
-                   'StdVector3D': ['np.ndarray'],
-                   'StdVector6D': ['np.ndarray'],
-                   'StdMatrix3D': ['np.ndarray'],
-                   'StdMatrix6D': ['np.ndarray'],
-                   'NumpyMatrix': ['np.ndarray'],
-                   'StdArrayIndex': ['np.ndarray'],
+                   'StdVector': ['Vector'],
+                   'StdVector2D': ['Vector2D'],
+                   'StdVector3D': ['Vector3D'],
+                   'StdVector6D': ['Vector6D'],
+                   'StdMatrix3D': ['Matrix3D'],
+                   'StdMatrix6D': ['Matrix6D'],
+                   'NumpyMatrix': ['NumpyMatrix'],
+                   'StdArrayIndex': ['Array'],
                    'ConfigurationType': ['ConfigurationType'],
-                   'py::object': ['BodyGraphicsData', 'MatrixContainer', 'np.ndarray'],
+                   'py::object': ['BodyGraphicsData', 'MatrixContainer'],
                    }
 
 
@@ -155,7 +186,14 @@ annotationToPython = {'MainSystem': 'exudyn.MainSystem',
                       'Real': 'float',
                       'Index': 'int',
                       'Bool': 'bool',
-                      'np.ndarray': 'np.ndarray',
+                      'Vector': 'np.ndarray',
+                      'Vector2D': 'np.ndarray',
+                      'Vector3D': 'np.ndarray',
+                      'Vector6D': 'np.ndarray',
+                      'Matrix3D': 'np.ndarray',
+                      'Matrix6D': 'np.ndarray',
+                      'NumpyMatrix': 'np.ndarray',
+                      'Array': 'np.ndarray',
                       'BodyGraphicsData': 'list',
                       'MatrixContainer': 'exudyn.MatrixContainer',
                       'ConfigurationType': 'exudyn.ConfigurationType',

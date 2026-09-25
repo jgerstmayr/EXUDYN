@@ -294,6 +294,20 @@ class MatrixContainer:
     """a dense or sparse matrix, as the C++ interface exchanges it"""
 
 
+#the array types. A user function receives and returns numpy arrays; these names say the SIZE where
+#the size is fixed, because that is what the argument table of a user function has always said and
+#what the C++ signature needs (StdVector3D and StdVector are not the same argument). A size that is
+#not fixed is a formula in the argument's description instead.
+Vector = np.ndarray
+Vector2D = np.ndarray
+Vector3D = np.ndarray
+Vector6D = np.ndarray
+Matrix3D = np.ndarray
+Matrix6D = np.ndarray
+NumpyMatrix = np.ndarray
+Array = np.ndarray
+
+
 class ConfigurationType:
     """exudyn.ConfigurationType"""
 

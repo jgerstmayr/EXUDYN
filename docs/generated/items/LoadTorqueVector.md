@@ -53,7 +53,6 @@ A user function, which computes the torque vector depending on time and object p
 from math import sin, cos, pi
 def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
-
 ```
 
 

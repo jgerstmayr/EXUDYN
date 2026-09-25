@@ -1588,12 +1588,70 @@ package).
       the item class annotated with it - `Union[ObjectGroundGraphicsDataUserFunction, int]`,
       because 0 is the value that means no user function. Without the annotation an editor has
       nothing to complete at the place where a user writes the function.
-    - **RG12.4.5** — the remaining 22 signatures, in the order of the item files; **23 distinct
+    - **RG12.4.5** — the remaining signatures, in the order of the item files; **23 distinct
       signatures under 17 names in 35 blocks**, so two thirds of the work is naming arguments that
-      are already written down in the prose.
+      are already written down in the prose. A block is converted by a script that refuses what it
+      does not recognise; what it refuses is done by hand.
+        - **RG12.4.5.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-5-1) - the
+          vocabulary of sizes (`Vector6D`, `Matrix3D`, `Array`, and a size that is not fixed as the
+          leading `$\in ...$` of the argument's description), and the five items of
+          `itemDefsLoads.py` and `itemDefsSensors.py`: six user functions of 23.
+        - **RG12.4.5.2** — the connectors of `itemDefsObjects.py`: `ObjectConnectorSpringDamper`,
+          `CartesianSpringDamper`, `RigidBodySpringDamper`, `LinearSpringDamper`,
+          `TorsionalSpringDamper`, `CoordinateSpringDamper`, `CoordinateSpringDamperExt`,
+          `Coordinate`, `CoordinateVector` - nine items, several with two blocks.
+        - **RG12.4.5.3** — the bodies and the rest: `ObjectGenericODE2` (four blocks),
+          `ObjectGenericODE1`, `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`,
+          `ObjectANCFCable2D`, `ObjectRigidBody`, `ObjectRigidBody2D`, `ObjectJointGeneric`.
+        - **RG12.4.5.4** — the gate: every parameter of a `TPyFunction...` type carries a def, so
+          a new user function cannot be written as prose again.
     - **RG12.4.6** — what becomes redundant then: the argument table in the prose (generated), the
       `\_` escapes (gone with RG3.14.5), and the question whether `advancedUtilities`' hand-built
       `F(...)` string can be replaced by the generated `Protocol`.
+    - **RG12.4.7** *(maintainer, 2026-09-25)* — **the `TPyFunction...` group type disappears from a
+      definition**. *"Can the types like `TPyFunctionMbsScalarIndexScalar5` then also be eliminated?
+      They are common interfaces also for the C++-side, but if the automatic mechanisms allow to also
+      generate the appropriate function signatures ... then it would be removed. One could just define
+      every different user function in `PySymbolicUserFunctionSet.h`, instead of having the current
+      groups."*
+
+      **It can, and the def is the source that makes it possible.** Measured 2026-09-25: 24 group
+      names in `definitionTypes.userFunctionSignatures`, named after their signature
+      (`MbsScalarIndexScalar5` = `Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)`), used
+      **53 times** in `definitions/` - four items share `MbsScalarIndexScalar5`, four share
+      `VectorMbsScalarIndex2Vector`, and nine names are used once. The group is a **lookup key, not a
+      C++ type**: the generated item header declares the member as the `std::function<...>` text, so
+      nothing in C++ ever names the group except `PySymbolicUserFunctionSet.h`, which declares one
+      member per group and dispatches an if-chain of (item, user function) onto it.
+
+      The def already states the whole signature - once RG12.4.5 gives every argument a **sized**
+      annotation (`Vector6D`, `Matrix3D`, `Vector`, `ArrayIndex`), `cppToAnnotation` is
+      one-to-one and the `std::function<...>` is **derivable from the annotations**. Then `type=` says
+      nothing the def does not.
+
+        - **RG12.4.7.1** — **the proof, changing no output**: derive the `std::function<...>` from
+          each def's annotations and compare it with
+          `definitionTypes.userFunctionSignatures[type]`. Every converted user function must agree,
+          and the comparison joins `CheckAgainstCpp`, which today reads the mapping in one direction
+          only. Nothing is removed while the two disagree anywhere, and a disagreement is a finding
+          with a file and a line, not a broken build.
+        - **RG12.4.7.2** — **the removal**: `type=` goes from a user function parameter, the emitters
+          take the signature from the def, and the group name becomes an emitted detail. Where the
+          generated C++ wants a name it is `<Item><Parameter>` - the name the `Protocol` already has -
+          so `PySymbolicUserFunctionSet.h` can declare one member per user function instead of one per
+          group, which is what the maintainer asked for. Whether it *should* is a separate question:
+          identical signatures collapsing into one member is deduplication, and deduplication of a
+          generated file is cheap to keep and cheap to drop.
+
+      **The restriction the maintainer names is real and it is in the symbolic set.** A symbolic user
+      function is evaluated through `EvaluateBool`, `EvaluateReal`, `EvaluateStdVector`,
+      `EvaluateStdVector2D`, `EvaluateStdVector3D` and `EvaluateStdVector6D` - **six** return shapes,
+      and `PySymbolicUserFunctionSet.h` dispatches **15** (item, user function) pairs of the 35.
+      There is no `Evaluate` for `py::object` (graphics data, `MatrixContainer`), for `NumpyMatrix`,
+      or for `StdArrayIndex`/`ConfigurationType` arguments. So one member per user function does not
+      make every user function symbolic: a member can only bind to an `Evaluate` that exists. The step
+      therefore makes the restriction **stated** - the generator says which user functions have no
+      symbolic path, in one place - instead of leaving it to be discovered at the call.
 
 
 ## Next steps recommended

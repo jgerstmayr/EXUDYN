@@ -33,6 +33,18 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   LoadForceVector   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def LoadForceVector_loadVectorUserFunction(mbs: MainSystem, t: Real, loadVector: Vector3D) -> Vector3D:
+    r"""A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
+
+    Args:
+        mbs: provides MainSystem mbs to which load belongs
+        t: current time in mbs
+        loadVector: $\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+    Returns:
+        computed force vector
+    """
+
 definitions.append(ItemDefinition(
     className='LoadForceVector',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -44,30 +56,7 @@ definitions.append(ItemDefinition(
 
     The load vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node. 
     The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
-    A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
-    <!-- -->
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
-    | `t` | Real | current time in mbs |
-    | `loadVector` | Vector3D | $\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
-    | **return value** | Vector3D | computed force vector |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-from math import sin, cos, pi
-def UFforce(mbs, t, loadVector): 
-    return [loadVector[0]*sin(t*10*2*pi),0,0]
-
-```
 """,
     mainParentClass=MainParentClassMainLoad,
     pythonShortName='Force',
@@ -92,7 +81,13 @@ def UFforce(mbs, t, loadVector):
         ItemParameter(type=TPyFunctionVector3DmbsScalarVector3D, destination=DestComp+DestParam,
             pythonName='loadVectorUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object"""),
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object""",
+            userFunction=LoadForceVector_loadVectorUserFunction,
+            userFunctionExample=r'''
+from math import sin, cos, pi
+def UFforce(mbs, t, loadVector): 
+    return [loadVector[0]*sin(t*10*2*pi),0,0]
+'''),
         ItemFunctionDef('GetMarkerNumber',
             implementation='return parameters.markerNumber;'),
         ItemFunctionDef('SetMarkerNumber',
@@ -124,6 +119,18 @@ def UFforce(mbs, t, loadVector):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   LoadTorqueVector   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def LoadTorqueVector_loadVectorUserFunction(mbs: MainSystem, t: Real, loadVector: Vector3D) -> Vector3D:
+    r"""A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
+
+    Args:
+        mbs: provides MainSystem mbs to which load belongs
+        t: current time in mbs
+        loadVector: $\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+    Returns:
+        computed torque vector
+    """
+
 definitions.append(ItemDefinition(
     className='LoadTorqueVector',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -135,30 +142,7 @@ definitions.append(ItemDefinition(
 
     The torque vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node. 
     The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
-    A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
-    <!-- -->
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
-    | `t` | Real | current time in mbs |
-    | `loadVector` | Vector3D | $\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
-    | **return value** | Vector3D | computed torque vector |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-from math import sin, cos, pi
-def UFforce(mbs, t, loadVector): 
-    return [loadVector[0]*sin(t*10*2*pi),0,0]
-
-```
 """,
     mainParentClass=MainParentClassMainLoad,
     pythonShortName='Torque',
@@ -183,7 +167,13 @@ def UFforce(mbs, t, loadVector):
         ItemParameter(type=TPyFunctionVector3DmbsScalarVector3D, destination=DestComp+DestParam,
             pythonName='loadVectorUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"""),
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]""",
+            userFunction=LoadTorqueVector_loadVectorUserFunction,
+            userFunctionExample=r'''
+from math import sin, cos, pi
+def UFforce(mbs, t, loadVector): 
+    return [loadVector[0]*sin(t*10*2*pi),0,0]
+'''),
         ItemFunctionDef('GetMarkerNumber',
             implementation='return parameters.markerNumber;'),
         ItemFunctionDef('SetMarkerNumber',
@@ -215,6 +205,21 @@ def UFforce(mbs, t, loadVector):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   LoadMassProportional   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def LoadMassProportional_loadVectorUserFunction(mbs: MainSystem, t: Real,
+                                                loadVector: Vector3D) -> Vector3D:
+    r"""A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
+
+    Example of user function: functionality same as in `LoadForceVector`
+
+    Args:
+        mbs: provides MainSystem mbs to which load belongs
+        t: current time in mbs
+        loadVector: $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+    Returns:
+        computed load vector
+    """
+
 definitions.append(ItemDefinition(
     className='LoadMassProportional',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -226,22 +231,7 @@ definitions.append(ItemDefinition(
 
     The load applies a (translational) and distributed load proportional to the distributed body's density.
     The marker of type `MarkerBodyMass` transforms the loadVector via an according jacobian matrix to object coordinates.
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
-    A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
-    <!-- -->
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
-    | `t` | Real | current time in mbs |
-    | `loadVector` | Vector3D | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
-    | **return value** | Vector3D | computed load vector |
-
-    Example of user function: functionality same as in `LoadForceVector`
 """,
     mainParentClass=MainParentClassMainLoad,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
@@ -276,7 +266,8 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TPyFunctionVector3DmbsScalarVector3D, destination=DestComp+DestParam,
             pythonName='loadVectorUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"""),
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!""",
+            userFunction=LoadMassProportional_loadVectorUserFunction),
         ItemFunctionDef('GetMarkerNumber',
             implementation='return parameters.markerNumber;'),
         ItemFunctionDef('SetMarkerNumber',
@@ -306,6 +297,18 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   LoadCoordinate   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def LoadCoordinate_loadUserFunction(mbs: MainSystem, t: Real, load: Real) -> Real:
+    r"""A user function, which computes the scalar load depending on time and the object's `load` parameter.
+
+    Args:
+        mbs: provides MainSystem mbs to which load belongs
+        t: current time in mbs
+        load: $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+    Returns:
+        computed load
+    """
+
 definitions.append(ItemDefinition(
     className='LoadCoordinate',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -318,36 +321,7 @@ definitions.append(ItemDefinition(
     The scalar `load` is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., `MarkerNodeCoordinate`.
     This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
     on a rotation coordinate (but take care for its meaning).
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `loadUserFunction(mbs, t, load)`
-    A user function, which computes the scalar load depending on time and the object's `load` parameter.
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
-    | `t` | Real | current time in mbs |
-    | `load` | Real | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
-    | **return value** | Real | computed load |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-from math import sin, cos, pi
-#this example uses the object's stored parameter load to compute a time-dependent load
-def UFload(mbs, t, load): 
-    return load*sin(10*(2*pi)*t)
-
-n0=mbs.AddNode(Point())
-nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
-mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
-                           load = 10,
-                           loadUserFunction = UFload))
-
-```
 """,
     mainParentClass=MainParentClassMainLoad,
     visuParentClass=VisuParentClassVisualizationLoad,
@@ -367,7 +341,20 @@ mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
         ItemParameter(type=TPyFunctionMbsScalar2, destination=DestComp+DestParam,
             pythonName='loadUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!""",
+            userFunction=LoadCoordinate_loadUserFunction,
+            userFunctionExample=r'''
+from math import sin, cos, pi
+#this example uses the object's stored parameter load to compute a time-dependent load
+def UFload(mbs, t, load): 
+    return load*sin(10*(2*pi)*t)
+
+n0=mbs.AddNode(Point())
+nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
+mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
+                           load = 10,
+                           loadUserFunction = UFload))
+'''),
         ItemFunctionDef('GetMarkerNumber',
             implementation='return parameters.markerNumber;'),
         ItemFunctionDef('SetMarkerNumber',

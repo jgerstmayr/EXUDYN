@@ -106,7 +106,7 @@ def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False, flagFl
     ...
 @overload
 def Print() -> None: 
-    """This allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False."""
+    """This allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole is set to False."""
     ...
 @overload
 def SetOutputPrecision(numberOfDigits: int) -> None: 

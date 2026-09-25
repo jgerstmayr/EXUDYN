@@ -27,8 +27,8 @@ The openGL graphics thread (=separate thread) runs the following loop:
 (sec-overview-basics-raytracing)=
 ## Raytracing
 
-In order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
-This allows to include shadows and transparency correctly, with additional support for relections, refraction, emission, fog and materials.
+For offscreen rendering (e.g. on a supercomputer without and video adapter), for offscreen AI-research on multiple cores, and in order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
+This allows to include shadows and transparency correctly, with additional support for reflections, refraction, emission, fog and materials.
 In the future, textures may be added as well.
 
 (fig-raytracerdemo)=

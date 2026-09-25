@@ -58,7 +58,6 @@ nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
 mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
                            load = 10,
                            loadUserFunction = UFload))
-
 ```
 
 

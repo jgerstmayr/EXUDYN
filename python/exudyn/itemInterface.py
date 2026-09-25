@@ -17,39 +17,42 @@ from typing import Protocol, Union
 __all__ = [
     'CopyDictLevel1', 'IIDiagMatrix', 'CheckForValidUInt', 'CheckForValidPInt',
     'CheckForValidUReal', 'CheckForValidPReal', 'IsValidNumber', 'CheckForValidNumpyArray',
-    'userFunctionArgsDict', 'ObjectGroundGraphicsDataUserFunction', 'VNodePoint', 'NodePoint',
-    'Point', 'VPoint', 'VNodePoint2D', 'NodePoint2D', 'Point2D', 'VPoint2D', 'VNodeRigidBodyEP',
-    'NodeRigidBodyEP', 'RigidEP', 'VRigidEP', 'VNodeRigidBodyRxyz', 'NodeRigidBodyRxyz',
-    'RigidRxyz', 'VRigidRxyz', 'VNodeRigidBodyRotVecLG', 'NodeRigidBodyRotVecLG', 'RigidRotVecLG',
-    'VRigidRotVecLG', 'VNodeRigidBody2D', 'NodeRigidBody2D', 'Rigid2D', 'VRigid2D', 'VNode1D',
-    'Node1D', 'VNodePoint2DSlope1', 'NodePoint2DSlope1', 'Point2DS1', 'VPoint2DS1',
-    'VNodePointSlope1', 'NodePointSlope1', 'VNodePointSlope12', 'NodePointSlope12',
-    'VNodePointSlope23', 'NodePointSlope23', 'VNodeGenericODE2', 'NodeGenericODE2',
-    'VNodeGenericODE1', 'NodeGenericODE1', 'VNodeGenericAE', 'NodeGenericAE', 'VNodeGenericData',
-    'NodeGenericData', 'VNodePointGround', 'NodePointGround', 'PointGround', 'VPointGround',
-    'VObjectGround', 'ObjectGround', 'VObjectMassPoint', 'ObjectMassPoint', 'MassPoint',
-    'VMassPoint', 'VObjectMassPoint2D', 'ObjectMassPoint2D', 'MassPoint2D', 'VMassPoint2D',
-    'VObjectMass1D', 'ObjectMass1D', 'Mass1D', 'VMass1D', 'VObjectRotationalMass1D',
-    'ObjectRotationalMass1D', 'Rotor1D', 'VRotor1D', 'VObjectRigidBody', 'ObjectRigidBody',
-    'RigidBody', 'VRigidBody', 'VObjectRigidBody2D', 'ObjectRigidBody2D', 'RigidBody2D',
-    'VRigidBody2D', 'VObjectGenericODE2', 'ObjectGenericODE2', 'VObjectGenericODE1',
-    'ObjectGenericODE1', 'VObjectKinematicTree', 'ObjectKinematicTree', 'KinematicTree',
-    'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF', 'VObjectFFRFreducedOrder',
-    'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject', 'VObjectANCFCable', 'ObjectANCFCable',
-    'Cable', 'VCable', 'VObjectANCFCable2D', 'ObjectANCFCable2D', 'Cable2D', 'VCable2D',
-    'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D', 'ALECable2D', 'VALECable2D', 'VObjectANCFBeam',
-    'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam', 'VObjectBeamGeometricallyExact2D',
-    'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D', 'VObjectBeamGeometricallyExact',
-    'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D', 'VObjectANCFThinPlate',
-    'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper', 'ObjectConnectorSpringDamper',
-    'SpringDamper', 'VSpringDamper', 'VObjectConnectorCartesianSpringDamper',
-    'ObjectConnectorCartesianSpringDamper', 'CartesianSpringDamper', 'VCartesianSpringDamper',
-    'VObjectConnectorRigidBodySpringDamper', 'ObjectConnectorRigidBodySpringDamper',
-    'RigidBodySpringDamper', 'VRigidBodySpringDamper', 'VObjectConnectorLinearSpringDamper',
-    'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper', 'VLinearSpringDamper',
-    'VObjectConnectorTorsionalSpringDamper', 'ObjectConnectorTorsionalSpringDamper',
-    'TorsionalSpringDamper', 'VTorsionalSpringDamper', 'VObjectConnectorCoordinateSpringDamper',
-    'ObjectConnectorCoordinateSpringDamper', 'CoordinateSpringDamper', 'VCoordinateSpringDamper',
+    'userFunctionArgsDict', 'ObjectGroundGraphicsDataUserFunction',
+    'LoadForceVectorLoadVectorUserFunction', 'LoadTorqueVectorLoadVectorUserFunction',
+    'LoadMassProportionalLoadVectorUserFunction', 'LoadCoordinateLoadUserFunction',
+    'SensorUserFunctionSensorUserFunction', 'VNodePoint', 'NodePoint', 'Point', 'VPoint',
+    'VNodePoint2D', 'NodePoint2D', 'Point2D', 'VPoint2D', 'VNodeRigidBodyEP', 'NodeRigidBodyEP',
+    'RigidEP', 'VRigidEP', 'VNodeRigidBodyRxyz', 'NodeRigidBodyRxyz', 'RigidRxyz', 'VRigidRxyz',
+    'VNodeRigidBodyRotVecLG', 'NodeRigidBodyRotVecLG', 'RigidRotVecLG', 'VRigidRotVecLG',
+    'VNodeRigidBody2D', 'NodeRigidBody2D', 'Rigid2D', 'VRigid2D', 'VNode1D', 'Node1D',
+    'VNodePoint2DSlope1', 'NodePoint2DSlope1', 'Point2DS1', 'VPoint2DS1', 'VNodePointSlope1',
+    'NodePointSlope1', 'VNodePointSlope12', 'NodePointSlope12', 'VNodePointSlope23',
+    'NodePointSlope23', 'VNodeGenericODE2', 'NodeGenericODE2', 'VNodeGenericODE1',
+    'NodeGenericODE1', 'VNodeGenericAE', 'NodeGenericAE', 'VNodeGenericData', 'NodeGenericData',
+    'VNodePointGround', 'NodePointGround', 'PointGround', 'VPointGround', 'VObjectGround',
+    'ObjectGround', 'VObjectMassPoint', 'ObjectMassPoint', 'MassPoint', 'VMassPoint',
+    'VObjectMassPoint2D', 'ObjectMassPoint2D', 'MassPoint2D', 'VMassPoint2D', 'VObjectMass1D',
+    'ObjectMass1D', 'Mass1D', 'VMass1D', 'VObjectRotationalMass1D', 'ObjectRotationalMass1D',
+    'Rotor1D', 'VRotor1D', 'VObjectRigidBody', 'ObjectRigidBody', 'RigidBody', 'VRigidBody',
+    'VObjectRigidBody2D', 'ObjectRigidBody2D', 'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2',
+    'ObjectGenericODE2', 'VObjectGenericODE1', 'ObjectGenericODE1', 'VObjectKinematicTree',
+    'ObjectKinematicTree', 'KinematicTree', 'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF',
+    'VObjectFFRFreducedOrder', 'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject',
+    'VObjectANCFCable', 'ObjectANCFCable', 'Cable', 'VCable', 'VObjectANCFCable2D',
+    'ObjectANCFCable2D', 'Cable2D', 'VCable2D', 'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D',
+    'ALECable2D', 'VALECable2D', 'VObjectANCFBeam', 'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam',
+    'VObjectBeamGeometricallyExact2D', 'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D',
+    'VObjectBeamGeometricallyExact', 'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D',
+    'VObjectANCFThinPlate', 'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper',
+    'ObjectConnectorSpringDamper', 'SpringDamper', 'VSpringDamper',
+    'VObjectConnectorCartesianSpringDamper', 'ObjectConnectorCartesianSpringDamper',
+    'CartesianSpringDamper', 'VCartesianSpringDamper', 'VObjectConnectorRigidBodySpringDamper',
+    'ObjectConnectorRigidBodySpringDamper', 'RigidBodySpringDamper', 'VRigidBodySpringDamper',
+    'VObjectConnectorLinearSpringDamper', 'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper',
+    'VLinearSpringDamper', 'VObjectConnectorTorsionalSpringDamper',
+    'ObjectConnectorTorsionalSpringDamper', 'TorsionalSpringDamper', 'VTorsionalSpringDamper',
+    'VObjectConnectorCoordinateSpringDamper', 'ObjectConnectorCoordinateSpringDamper',
+    'CoordinateSpringDamper', 'VCoordinateSpringDamper',
     'VObjectConnectorCoordinateSpringDamperExt', 'ObjectConnectorCoordinateSpringDamperExt',
     'CoordinateSpringDamperExt', 'VCoordinateSpringDamperExt', 'VObjectConnectorGravity',
     'ObjectConnectorGravity', 'ConnectorGravity', 'VConnectorGravity',
@@ -197,11 +200,11 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorCoordinateVector,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4'], ['py::object']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector6D']],
         'ObjectJointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector6D']],
-        'LoadForceVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 'arg0', 'arg1'], ['StdVector3D']],
-        'LoadTorqueVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 'arg0', 'arg1'], ['StdVector3D']],
-        'LoadMassProportional,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 'arg0', 'arg1'], ['StdVector3D']],
-        'LoadCoordinate,loadUserFunction': [['MainSystem', 'Real', 'Real'], ['mbs', 'arg0', 'arg1'], ['Real']],
-        'SensorUserFunction,sensorUserFunction': [['MainSystem', 'Real', 'StdArrayIndex', 'StdVector', 'ConfigurationType'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']]}
+        'LoadForceVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D']],
+        'LoadTorqueVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D']],
+        'LoadMassProportional,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D']],
+        'LoadCoordinate,loadUserFunction': [['MainSystem', 'Real', 'Real'], ['mbs', 't', 'load'], ['Real']],
+        'SensorUserFunction,sensorUserFunction': [['MainSystem', 'Real', 'StdArrayIndex', 'StdVector', 'ConfigurationType'], ['mbs', 't', 'sensorNumbers', 'factors', 'configuration'], ['StdVector']]}
 
 
 class ObjectGroundGraphicsDataUserFunction(Protocol):
@@ -221,6 +224,90 @@ class ObjectGroundGraphicsDataUserFunction(Protocol):
         list: list of ``GraphicsData`` dictionaries, see Section sec-graphicsdata
     """
     def __call__(self, mbs: exudyn.MainSystem, itemNumber: int) -> list: ...
+
+class LoadForceVectorLoadVectorUserFunction(Protocol):
+    r"""A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which load belongs
+
+        t (float): current time in mbs
+
+        loadVector (np.ndarray): :math:`\fv` copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+
+    Returns:
+        np.ndarray: computed force vector
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, loadVector: np.ndarray) -> np.ndarray: ...
+
+class LoadTorqueVectorLoadVectorUserFunction(Protocol):
+    r"""A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which load belongs
+
+        t (float): current time in mbs
+
+        loadVector (np.ndarray): :math:`\ttau` copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+
+    Returns:
+        np.ndarray: computed torque vector
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, loadVector: np.ndarray) -> np.ndarray: ...
+
+class LoadMassProportionalLoadVectorUserFunction(Protocol):
+    r"""A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
+    
+    Example of user function: functionality same as in ``LoadForceVector``
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which load belongs
+
+        t (float): current time in mbs
+
+        loadVector (np.ndarray): :math:`\bv` copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+
+    Returns:
+        np.ndarray: computed load vector
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, loadVector: np.ndarray) -> np.ndarray: ...
+
+class LoadCoordinateLoadUserFunction(Protocol):
+    r"""A user function, which computes the scalar load depending on time and the object's ``load`` parameter.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which load belongs
+
+        t (float): current time in mbs
+
+        load (float): :math:`\bv` copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+
+    Returns:
+        float: computed load
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, load: float) -> float: ...
+
+class SensorUserFunctionSensorUserFunction(Protocol):
+    """A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
+    
+    The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
+    The user function arguments are as follows:
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
+
+        t (float): current time in mbs
+
+        sensorNumbers (np.ndarray): list of sensor numbers
+
+        factors (np.ndarray): list of factors that can be freely used for the user function
+
+        configuration (exudyn.ConfigurationType): usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions.
+
+    Returns:
+        np.ndarray: returns list or numpy array of sensor output values; size :math:`n_r` is implicitly defined by the returned list and may not be changed during simulation.
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, sensorNumbers: np.ndarray, factors: np.ndarray, configuration: exudyn.ConfigurationType) -> np.ndarray: ...
 
 #+++++++++++++++++++++++++++++++
 #NODE
@@ -6920,7 +7007,7 @@ class LoadForceVector:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction: Union[LoadForceVectorLoadVectorUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = np.array(loadVector)
@@ -6980,7 +7067,7 @@ class LoadTorqueVector:
         Requested Marker type: ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction: Union[LoadTorqueVectorLoadVectorUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = np.array(loadVector)
@@ -7038,7 +7125,7 @@ class LoadMassProportional:
         Requested Marker type: ``Body`` + ``BodyMass``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], loadVectorUserFunction: Union[LoadMassProportionalLoadVectorUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = np.array(loadVector)
@@ -7094,7 +7181,7 @@ class LoadCoordinate:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction: Union[LoadCoordinateLoadUserFunction, int] = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.load = load
@@ -7578,7 +7665,7 @@ class SensorUserFunction:
         visualization: visualization data, see VSensorUserFunction
 
     """
-    def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = {'show': True}):
         self.name = name
         self.sensorNumbers = copy.copy(sensorNumbers)
         self.factors = np.array(factors)

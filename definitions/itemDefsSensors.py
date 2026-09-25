@@ -521,6 +521,24 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   SensorUserFunction   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, sensorNumbers: Array,
+                                          factors: Vector, configuration: ConfigurationType) -> Vector:
+    r"""A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
+
+    The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
+    The user function arguments are as follows:
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        sensorNumbers: $\in \Ncal^n$ list of sensor numbers
+        factors: $\in \Rcal^n$ list of factors that can be freely used for the user function
+        configuration: usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions.
+    Returns:
+        $\in \Rcal^{n_r}$ returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation.
+    """
+
 definitions.append(ItemDefinition(
     className='SensorUserFunction',
     cParentClass=ParentClassCSensor,
@@ -530,26 +548,37 @@ definitions.append(ItemDefinition(
     Note that the sensorNumbers and factors need to be consistent. 
     The return value of the user function is a list of `float` numbers which cast to a `std::vector` in pybind.
     This list can have arbitrary dimension, but should be kept constant during simulation.
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
-    A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
-    The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
-    <!-- -->
-    The user function arguments are as follows:
 
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `sensorNumbers` | Array $\in \Ncal^n$ | list of sensor numbers |
-    | `factors` | Vector $\in \Rcal^n$ | list of factors that can be freely used for the user function |
-    | `configuration` | exudyn.ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
-    | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
+""",
+    mainParentClass=MainParentClassMainSensor,
+    visuParentClass=VisuParentClassVisualizationSensor,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"sensor's unique name"),
+        ItemParameter(type=TArrayIndex(ItemSensor), destination=DestComp+DestParam,
+            pythonName='sensorNumbers',
+            defaultValue='ArrayIndex()',
+            description=r"""$\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$optional list of $n$ sensor numbers for use in user function"""),
+        ItemParameter(type=TVector, destination=DestComp+DestParam,
+            pythonName='factors',
+            defaultValue='Vector()',
+            description=r"""$\mathbf{f}_s = [f_0,\,\ldots,\,f_m]\tp$optional list of $m$ factors which can be used, e.g., for weighting sensor values"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='writeToFile',
+            defaultValue=True,
+            description=r"True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''"),
+        ItemParameter(type=TString, destination=DestComp+DestParam,
+            pythonName='fileName',
+            defaultValue=NoDefaultValue,
+            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+        ItemParameter(type=TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration, destination=DestComp+DestParam,
+            pythonName='sensorUserFunction',
+            defaultValue=0,
+            description=r'A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example',
+            userFunction=SensorUserFunction_sensorUserFunction,
+            userFunctionExample=r'''
 import exudyn as exu
 from exudyn.itemInterface import *
 from math import pi, atan2
@@ -580,36 +609,7 @@ mbs.SolveDynamic()
 if False:
     from exudyn.plot import PlotSensor
     PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
-
-```
-""",
-    mainParentClass=MainParentClassMainSensor,
-    visuParentClass=VisuParentClassVisualizationSensor,
-    members=[
-        ItemParameter(type=TString, destination=DestMain, fromParent=True,
-            pythonName='name',
-            defaultValue=NoDefaultValue,
-            description=r"sensor's unique name"),
-        ItemParameter(type=TArrayIndex(ItemSensor), destination=DestComp+DestParam,
-            pythonName='sensorNumbers',
-            defaultValue='ArrayIndex()',
-            description=r"""$\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$optional list of $n$ sensor numbers for use in user function"""),
-        ItemParameter(type=TVector, destination=DestComp+DestParam,
-            pythonName='factors',
-            defaultValue='Vector()',
-            description=r"""$\mathbf{f}_s = [f_0,\,\ldots,\,f_m]\tp$optional list of $m$ factors which can be used, e.g., for weighting sensor values"""),
-        ItemParameter(type=TBool, destination=DestComp+DestParam,
-            pythonName='writeToFile',
-            defaultValue=True,
-            description=r"True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''"),
-        ItemParameter(type=TString, destination=DestComp+DestParam,
-            pythonName='fileName',
-            defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
-        ItemParameter(type=TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration, destination=DestComp+DestParam,
-            pythonName='sensorUserFunction',
-            defaultValue=0,
-            description=r'A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example'),
+'''),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='storeInternal',
             defaultValue=False,

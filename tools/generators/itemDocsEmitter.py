@@ -117,13 +117,17 @@ def UserFunctionDocumentation(parameter):
     text += userFunction.summary + '\n'
     if userFunction.details != '':
         text += userFunction.details + '\n'
-    text += '\n| arguments /  return | type or size | description |\n|---|---|---|\n'
+    #one space after the slash: 21 of the hand-written headers have two and three have one, and a
+    #generated header is the same everywhere (revision2026b step RG12.4.5, #2664)
+    text += '\n| arguments / return | type or size | description |\n|---|---|---|\n'
     for (name, annotation) in userFunction.arguments:
-        text += ('| `' + name + '` | ' + annotation + ' | '
-                 + userFunction.argumentText.get(name, '') + ' |\n')
+        text += ('| `' + name + '` | '
+                 + userFunction.TypeAndSize(annotation, userFunction.argumentSize.get(name, ''))
+                 + ' | ' + userFunction.argumentText.get(name, '') + ' |\n')
     if userFunction.returnType != '':
-        text += ('| **return value** | ' + userFunction.returnType + ' | '
-                 + userFunction.returnText + ' |\n')
+        text += ('| **return value** | '
+                 + userFunction.TypeAndSize(userFunction.returnType, userFunction.returnSize)
+                 + ' | ' + userFunction.returnText + ' |\n')
     if parameter['userFunctionExample'] != '':
         text += '\n*Example*:\n\n```python\n' + parameter['userFunctionExample'].strip('\n') + '\n```\n'
     return text

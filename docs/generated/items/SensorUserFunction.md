@@ -36,16 +36,15 @@ This list can have arbitrary dimension, but should be kept constant during simul
 **Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
 A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
 The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
-
 The user function arguments are as follows:
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
 | `sensorNumbers` | Array $\in \Ncal^n$ | list of sensor numbers |
 | `factors` | Vector $\in \Rcal^n$ | list of factors that can be freely used for the user function |
-| `configuration` | exudyn.ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
+| `configuration` | ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
 | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |
 
 *Example*:
@@ -81,7 +80,6 @@ mbs.SolveDynamic()
 if False:
     from exudyn.plot import PlotSensor
     PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
-
 ```
 
 

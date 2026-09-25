@@ -38,7 +38,7 @@ The class **exudyn** has the following **functions and structures**:
   exu.SetWriteToFile('', False) #terminate writing to file which closes the file
   ```
 
-- **`Print()`**: this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False
+- **`Print()`**: this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole is set to False
 - **`InvalidIndex()`**: This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function
 - **`__version__`**: contains the current version of the Exudyn package
 - **`symbolic`**: the symbolic submodule for creating symbolic variables in Python, see documentation of Symbolic; For details, see Section Symbolic.

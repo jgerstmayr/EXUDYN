@@ -38,6 +38,7 @@ The marker of type `MarkerBodyMass` transforms the loadVector via an according j
 
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
+Example of user function: functionality same as in `LoadForceVector`
 
 | arguments / return | type or size | description |
 |---|---|---|
@@ -45,8 +46,6 @@ A user function, which computes the mass proporitional load vector depending on 
 | `t` | Real | current time in mbs |
 | `loadVector` | Vector3D | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
 | **return value** | Vector3D | computed load vector |
-
-Example of user function: functionality same as in `LoadForceVector`
 
 (miniexample-loadmassproportional)=
 #### MINI EXAMPLE for LoadMassProportional
