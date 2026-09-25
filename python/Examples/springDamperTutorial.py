@@ -16,6 +16,8 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import Point, NodePointGround, MassPoint, MarkerNodeCoordinate,\
                              CoordinateSpringDamper, LoadCoordinate, SensorObject
+#OutputFilePath is used at the end of the file to read back what was written (#2669)
+from exudyn.basicUtilities import OutputFilePath
 #to be sure to have all items and functions imported, just do:
 #from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
@@ -90,6 +92,13 @@ SC.visualizationSettings.nodes.defaultSize=0.1
 
 SC.renderer.Start()            #start graphics visualization
 #SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar or 'Q' to continue
+
+#watch the sensor file while the simulation writes it, in a process of its own;
+#the call returns at once and the window stays open afterwards (close it by hand).
+#Nothing is started when windows are suppressed, e.g. while the test suite runs.
+from exudyn.misc.resultsMonitor import StartResultsMonitor
+StartResultsMonitor('solution/groundForce.txt', updatePeriod=0.2,
+                    title='spring-damper: force at the ground')
 
 #start solver:
 mbs.SolveDynamic(simulationSettings)

@@ -28,6 +28,27 @@ MonitorResults('solution/genetic.txt', logY=True, updatePeriod=0.5)
 `MonitorResults(...)` is the function; the command line is a thin layer over it. Everything the
 options do is available as an argument, and `help(MonitorResults)` describes them.
 
+`MonitorResults(...)` **blocks** until its window is closed, which is what is wanted in a console
+and not what is wanted in a script that still has to run the simulation. For that there is
+
+```python
+from exudyn.misc.resultsMonitor import StartResultsMonitor
+StartResultsMonitor('solution/sensorPos.txt', updatePeriod=0.5)
+mbs.SolveDynamic(simulationSettings)     #the plot follows the file while this runs
+```
+
+`StartResultsMonitor(...)` starts the monitor as a **second process** - `python -m exudyn monitor`
+with the options it was given - and returns at once. The two processes share nothing but the file,
+which is the protocol they already had, so there is no plotting inside the solver and no question of
+threads. The file does not have to exist yet: the monitor waits for the first row.
+
+The process is **not** stopped when the script ends, so the plot is still there when a short
+simulation is over; the returned `subprocess.Popen` is the handle for a script that wants it gone.
+Nothing is started when windows are suppressed
+(`EXUDYN_SUPPRESS_UI_WINDOW_OPEN`, `exudyn.special.userInterface.suppressPlots`), so a test that runs such a
+script neither opens a window nor leaves a process behind. `springDamperTutorial.py` watches a sensor
+file this way and `3SpringsDistance.py` the coordinates solution.
+
 ## Finding the file
 
 Typing a path is the part that used to make the monitor awkward, so there are three ways around

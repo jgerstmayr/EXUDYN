@@ -1503,15 +1503,17 @@ What belongs to no group yet. Three of a kind here are a reason to propose a gro
     created.
 
 <a id="rg11-3"></a>
-**RG11.3** *(group RG11; proposed 2026-09-24 by RG11.1, not started)* **The results monitor beside
+**RG11.3** **DONE 2026-09-26** (#2670) — [log](exudynRevisionLog2026b.md#rg11-3) — **The results monitor beside
     a running simulation.** RG11.1 evaluated the four ways and recommends a **second process**:
     the solution file is already the protocol, `python -m exudyn monitor` already exists, nothing
     is shared so no backend, GIL or thread-safety question arises, and it is a handful of lines
     around `subprocess.Popen([sys.executable, '-m', 'exudyn', 'monitor', fileName, ...])` that
     returns the handle. `MonitorResults` stays as it is for the case where blocking is wanted.
-    The open questions are the **lifetime** — whether the child is killed when the script ends
-    or left for the user to close — and whether the same call should serve
-    `SolutionViewer`.
+    The two open questions are **answered**: the child is **left running**, because the point of a
+    monitor on a short simulation is that the plot is still there when it ends, and the returned
+    `subprocess.Popen` is the handle for a script that wants it gone; and `SolutionViewer` is **not**
+    served by the same call - it needs the renderer and the system, not a file, so it has nothing to
+    gain from a second process that can only read what was written.
 
 <a id="rg11-2"></a>
 **RG11.2** **DONE 2026-09-23** (#2620) — [log](exudynRevisionLog2026b.md#rg11-2) —
@@ -1706,6 +1708,58 @@ package).
       symbolic path, in one place - instead of leaving it to be discovered at the call.
 
 
+<a id="rg12-5"></a>
+**RG12.5** *(group RG12; maintainer 2026-09-26)* **User settings that persist between runs: one
+    `~/.exudyn` file, and what may be in it** (#2666). The results monitor introduced
+    `~/.exudyn/resultsMonitor.json` (`resultsMonitor.SettingsFileName`) without a decision about what
+    such a directory is *for*. The maintainer: *"this is basically good and could be used for other
+    things as well (store window positions, dialog sizes, even fontscaling, etc. in a systematic
+    manner) ... mostly I would see overrides for anything in visualizationSettings - except special
+    types - and exudyn.config (like config.outputDirectory)"*.
+
+    **What is settled**: one file rather than one per tool; it needs documentation; and because it
+    changes what a script does when it is present, it belongs in `docs/manual/revisions.md`. A note
+    is printed on the first import when the stored settings are **not empty**, because a stored
+    setting makes a run less reproducible and the user must be able to see that from the output.
+
+    **What is open, and is what the sub-steps decide.** Each of these is a real fork, not a detail:
+
+    - **What may be overridden.** `visualizationSettings` (excluding the types that are not a plain
+      value - a `BodyGraphicsData`, a user function, a container) and parts of `exudyn.config` such
+      as `outputDirectory`. A whitelist by type is checkable; a free-form dictionary is not.
+    - **Who reads it.** Either `python/exudyn/__init__.py` reads the JSON and writes the values into
+      the module through the existing dict interface - Python only, no C++ change, and the values are
+      in place before a script can look at them - or C++ reads it with
+      `py::module_::import("json")`, which puts the file into the core and its failure modes with it.
+      The first is the smaller change and is the recommendation to argue against.
+    - **When it is applied**, and whether a script can ask what came from the file rather than from
+      the defaults. Without that, a bug report about a setting is not reproducible by the reader.
+    - **Whether the results monitor's own file is folded in** or kept beside it. Folding it in is the
+      point of "one file"; keeping it is less work and leaves the monitor standalone.
+    - **The dialog settings that drive it**: `storeDialogPositions` (position and size) and
+      `storeDialogSettings` (font size, columns, opened trees) in `visualizationSettings`, so that
+      storing is something a user switches on rather than something that happens.
+
+    Related: **RG6.2.11** (#2608) is a second file storing overall window states, and this step
+    should decide whether that is the same file.
+
+<a id="rg12-6"></a>
+**RG12.6** *(group RG12; maintainer 2026-09-26)* **The columns of a settings dialog are relative and
+    configurable** (#2667). `misc/GUI.py` gives the tree four fixed widths - 325, 188, 113 and 420
+    pixels, multiplied by the dialog scaling - so a long name is cut off on every screen.
+    `visualizationSettings.dialogs` gets `columnWidthName`, `columnWidthValue` and `columnWidthType`,
+    each a fraction in 0..1 of the dialog width, and the **description column takes what is left**,
+    which is what makes three numbers enough. The minimum widths stay, because a column of zero
+    width is not a configuration a user means.
+
+<a id="rg12-7"></a>
+**RG12.7** *(group RG12; maintainer 2026-09-26)* **The mouse wheel changes the font size of a dialog**
+    (#2668). About 10% per notch, up and down. Every metric of the dialog already follows the font -
+    `DialogFontSize`, `DialogRowMetrics`, `textHeightFactor` - so the work is to rebuild the tree at
+    the new size and to keep the scroll position. **Which modifier** is the open question: the wheel
+    alone scrolls the tree, so it is `Ctrl` + wheel unless the maintainer prefers otherwise, and on
+    macOS that is a different event name than on Windows and X11.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -1737,7 +1791,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.3 | #2583 | give the renderer a headless call that returns counts and an image at a given resolution |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1 | - | a checker for user scripts after the 1.12 API changes |
-| RG11.3 | - | run the results monitor in a second process beside the simulation |
+| RG12.5 | #2666 | user settings that persist between runs: one ~/.exudyn file, and what may be in it |
+| RG12.6 | #2667 | the columns of a settings dialog are relative and configurable |
+| RG12.7 | #2668 | the mouse wheel changes the font size of a dialog |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4 | #2664 | a user function is one typed Python function, and the description, the args dict and a Protocol are generated from it |

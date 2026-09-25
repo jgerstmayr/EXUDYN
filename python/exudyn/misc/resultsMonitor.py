@@ -31,6 +31,7 @@ import argparse
 import glob
 import json
 import os
+import subprocess
 import sys
 import time
 
@@ -48,7 +49,7 @@ from exudyn.processing import SingleIndex2SubIndices
 __all__ = [
     'knownResultsFileTypes', 'SettingsFileName', 'LoadSettings', 'SaveSettings',
     'ReadResultsFileHeader', 'ResultsFileColumns', 'FindResultsFiles', 'SelectResultsFile',
-    'ResultsMonitor', 'MonitorResults', 'Main',
+    'ResultsMonitor', 'MonitorResults', 'StartResultsMonitor', 'Main',
     ]
 
 #the four header types that ParseOutputFileHeader recognizes; anything else is not a results file
@@ -994,6 +995,86 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
             monitor.SaveFigure(saveFigure)
             saveFigure = ''
     return monitor
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the monitor beside a running simulation
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+def StartResultsMonitor(fileName, xColumns=None, yColumns=None, updatePeriod=None,
+                        logX=False, logY=False, addMarker=False, title='',
+                        showPanel=True, extraArguments=None):
+    """Start a results monitor in a SECOND process, so that a simulation can go on while its
+    results are being watched. The call returns at once.
+
+    The monitor is `python -m exudyn monitor` in a process of its own: it reads the file that the
+    simulation writes, which is the only thing the two share, so there is no question of threads,
+    of the GIL, or of a plotting backend inside the solver. The file does not need to exist yet -
+    the monitor waits for the first row.
+
+    Note:
+        The process is NOT stopped when the script ends: that is what makes it useful after a
+        short simulation. The returned handle is a `subprocess.Popen`, so a script that wants it
+        gone calls `.terminate()` on it.
+
+    Note:
+        Nothing is started when windows are suppressed - `exudyn.special.userInterface.suppressUI`
+        or `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` - and None is returned. A test that calls this
+        therefore neither opens a window nor leaves a process behind.
+
+    Args:
+        fileName: the results file the simulation writes: a sensor file, a coordinates solution
+                  file, or the `resultsFile` of `ParameterVariation` / `GeneticOptimization`
+        xColumns: list of column indices for the x-axes; None takes the default (time)
+        yColumns: list of column indices for the y-axes; None takes the default (all but time)
+        updatePeriod: seconds between two updates; None takes the stored setting (1 second)
+        logX: logarithmic x-axis
+        logY: logarithmic y-axis
+        addMarker: mark the last point of every curve with a red circle
+        title: name of the figure window
+        showPanel: show the control panel next to the plot
+        extraArguments: further command line options of `python -m exudyn monitor`, as a list of
+                        strings, for what this function does not name
+
+    Returns:
+        the `subprocess.Popen` of the monitor, or None when windows are suppressed or the process
+        could not be started
+
+    Example:
+        from exudyn.misc.resultsMonitor import StartResultsMonitor
+        monitor = StartResultsMonitor('solution/sensorPos.txt', updatePeriod=0.5)
+        mbs.SolveDynamic(simulationSettings)     #the plot follows the file while this runs
+    """
+    if UIWindowSuppressed('Plots', 'StartResultsMonitor'):
+        return None
+
+    arguments = [sys.executable, '-m', 'exudyn', 'monitor', str(fileName)]
+    if xColumns is not None:
+        arguments += ['--x-cols', ','.join([str(column) for column in xColumns])]
+    if yColumns is not None:
+        arguments += ['--y-cols', ','.join([str(column) for column in yColumns])]
+    if updatePeriod is not None:
+        arguments += ['--update', str(updatePeriod)]
+    if logX:
+        arguments += ['--log-x']
+    if logY:
+        arguments += ['--log-y']
+    if addMarker:
+        arguments += ['--marker']
+    if title != '':
+        arguments += ['--title', title]
+    if not showPanel:
+        arguments += ['--no-panel']
+    arguments += list(extraArguments or [])
+
+    try:
+        #the child keeps its own stdout: what it prints is the user's, and capturing it would fill
+        #a pipe that nobody reads and block the monitor
+        return subprocess.Popen(arguments)
+    except Exception as e:
+        print('WARNING: could not start the results monitor: ' + str(e))
+        return None
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

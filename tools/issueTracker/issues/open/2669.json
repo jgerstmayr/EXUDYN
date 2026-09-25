@@ -1,0 +1,14 @@
+{
+  "number": 2669,
+  "title": "springDamperTutorial.py crashes at the end: OutputFilePath is not imported",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The tutorial solves and then reads its own output with OutputFilePath(...), which it never imports - from exudyn.utilities it imports a named list, and OutputFilePath is in exudyn.basicUtilities. A user who runs the tutorial to the end gets NameError: name OutputFilePath is not defined, after the simulation has finished. It is not in the example test suite, which is why nothing noticed. Found on 2026-09-26 while adding the results monitor to the example (revision2026b step RG11.3).",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "python/Examples/springDamperTutorial.py",
+  "line": "129"
+}

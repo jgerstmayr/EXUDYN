@@ -1,0 +1,17 @@
+{
+  "number": 2670,
+  "title": "The results monitor beside a running simulation, in a second process",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "RG11.1 (#2610) evaluated the four ways to watch results while a simulation runs and recommended a second process: the solution file is already the protocol, python -m exudyn monitor already exists, nothing is shared so no backend, GIL or thread-safety question arises. MonitorResults blocks until its window closes, which is right in a console and wrong in a script that still has to run the simulation. This is the function that starts the monitor and returns at once.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 01:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/resultsMonitor.py",
+  "releaseNotes": "StartResultsMonitor(fileName, ...) starts python -m exudyn monitor in a second process and returns at once, so a script can watch its results while it computes them. The child is left running when the script ends, and the returned subprocess.Popen is the handle to stop it; nothing is started when windows are suppressed. Two examples use it, one on a sensor file and one on the coordinates solution (revision2026b step RG11.3).",
+  "resolvedInVersion": "1.12.71"
+}

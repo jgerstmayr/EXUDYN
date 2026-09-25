@@ -108,6 +108,13 @@ if computeDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.displayStatistics = True
 
+    #watch the coordinates solution while the solver writes it, in a process of its own;
+    #the call returns at once, and nothing is started when windows are suppressed
+    from exudyn.misc.resultsMonitor import StartResultsMonitor
+    StartResultsMonitor(simulationSettings.solutionSettings.coordinatesSolutionFileName,
+                        yColumns=[1,2], updatePeriod=0.5,
+                        title='3 springs: displacement of the mass point')
+    
     mbs.SolveDynamic(simulationSettings)
 
 else:

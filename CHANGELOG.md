@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 69 | 1.12.70 |
+| 1.12 | Metheney | 70 | 1.12.71 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.71** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The results monitor beside a running simulation, in a second process (#2670)
+  - description: RG11.1 (\#2610) evaluated the four ways to watch results while a simulation runs and recommended a second process: the solution file is already the protocol, python -m exudyn monitor already exists, nothing is shared so no backend, GIL or thread-safety question arises. MonitorResults blocks until its window closes, which is right in a console and wrong in a script that still has to run the simulation. This is the function that starts the monitor and returns at once.
+  - **notes:** StartResultsMonitor(fileName, ...) starts python -m exudyn monitor in a second process and returns at once, so a script can watch its results while it computes them. The child is left running when the script ends, and the returned subprocess.Popen is the handle to stop it; nothing is started when windows are suppressed. Two examples use it, one on a sensor file and one on the coordinates solution (revision2026b step RG11.3).
+  - date resolved: **2026-09-26 01:26**, date raised: 2026-09-26
 - **1.12.70** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A comment in a description is still a LaTeX percent comment (#2663)
   - description: The maintainer, 2026-09-25: 'In the itemDefs... files I still see % used for comments - latex style. Shouldnt we use \<!-- This is a single-line comment --\> comments? % could still survive as the % symbol, but maybe just inside a formula.' Measured the same day over definitions/: 513 lines are nothing but a % comment, 7 carry a % comment after text, and exactly one backslash-percent escape exists. Two of the 513 sit INSIDE a multi-line inline formula, where a continuation line of the formula is commented out - and that is the case that decides the design. MathJax and LaTeX both honour % as a comment inside mathematics, so a % there needs no handling at all; it only has to be left alone. Outside mathematics a comment becomes \<!-- ... --\>, which the converter removes so that it does not reach the page, and which cannot silently eat the next line of a formula the way % can: latexToMarkdown.StripComments runs BEFORE the mathematics is protected, so today a stray % anywhere truncates the rest of its line whatever it is. A commented-out block - a table, a figure - is then one \<!-- ... --\> rather than a % on every line.
   - **notes:** A comment in a description is \<!-- ... --\> and is removed by the converter; a % survives only inside mathematics, where MathJax and LaTeX read it. tools/checkDefinitions.py enforces both, and the ten % lines left in definitions/ are all inside formulas (revision2026b step RG3.17).

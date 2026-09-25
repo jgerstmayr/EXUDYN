@@ -1,0 +1,13 @@
+{
+  "number": 2666,
+  "title": "User settings that persist between runs: one ~/.exudyn file, and what may be in it",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "The results monitor introduced ~/.exudyn/resultsMonitor.json without a decision about what such a directory is for (maintainer, 2026-09-26). The maintainer sees it as generally useful - window positions, dialog sizes, font scaling, overrides for visualizationSettings except special types, and for exudyn.config such as outputDirectory - and asks for ONE file rather than one per tool, for whether C++ could read it (py::module_::import('json')) or whether __init__.py should read it and write the values into the module through the dict interface, and for a note printed on the first import when the stored settings are not empty, because stored settings make a run less reproducible. It needs documentation and belongs in the revisions chapter, because it changes behaviour when a file is present. Related: #2608 (window states) and the dialog settings storeDialogPositions and storeDialogSettings.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "python/exudyn/misc/resultsMonitor.py"
+}

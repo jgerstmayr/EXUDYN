@@ -1,0 +1,13 @@
+{
+  "number": 2668,
+  "title": "Ctrl and the mouse wheel change the font size of a dialog",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "The font size of the settings dialogs is a setting that has to be found and typed. The maintainer asks whether the mouse wheel could change it directly - about 10 percent per notch, up and down (maintainer, 2026-09-26). The dialog already computes every metric from the font size through DialogFontSize and DialogRowMetrics, so the question is mostly about rebuilding the tree at a new size and about which modifier, since the wheel alone scrolls.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "python/exudyn/misc/GUI.py"
+}

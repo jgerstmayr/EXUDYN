@@ -3774,3 +3774,43 @@ The measurement is in the plan under RG4.1, with the relative error of each and 
 differ on Linux. Nine of fifteen do. **Nothing is four orders of magnitude out** - the largest is
 1.4e-04 on a friction model - so macOS shows the same unexplained platform arithmetic as Linux on a
 few more models, and no new category. The five macOS-only ones are RG4.1.2.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG11.3 - the results monitor beside a running simulation (2026-09-26, #2670)
+
+`StartResultsMonitor(fileName, ...)` starts `python -m exudyn monitor` in a **second process** and
+returns at once, so a script can watch its own results while it computes them:
+
+```python
+StartResultsMonitor('solution/sensorPos.txt', updatePeriod=0.5)
+mbs.SolveDynamic(simulationSettings)
+```
+
+RG11.1 evaluated four ways and recommended this one; building it took the 60 lines it predicted,
+because the file is the protocol the two processes already shared and the command line already
+existed. Nothing is shared in memory, so there is no plotting inside the solver, no GIL question and
+no backend question.
+
+**The two questions RG11.1 left open are answered.** The child is **left running** when the script
+ends - the point of a monitor on a short simulation is that the plot is still there afterwards - and
+the returned `subprocess.Popen` is the handle for a script that wants it gone. `SolutionViewer` is
+**not** served by the same call: it needs the renderer and the system in memory, not a file, so a
+second process has nothing to give it.
+
+**It respects the suppression flag**, which the maintainer asked for: with
+`EXUDYN_SUPPRESS_UI_WINDOW_OPEN` or `suppressPlots` it starts nothing, prints why, and returns None.
+A test that runs a script which calls it therefore neither opens a window nor leaves a process
+behind - and the two examples below run in the example suite.
+
+**Verified as a real subprocess**, not only by reading: started on a committed
+`coordinatesSolution.txt` with `MPLBACKEND=Agg` and `--once --save`, the child exited 0 and wrote a
+33 KB figure. The suppressed path was checked separately and returns None.
+
+**Two examples use it**, one per kind of file: `springDamperTutorial.py` watches its **sensor** file
+`solution/groundForce.txt`, and `3SpringsDistance.py` the **coordinates solution** that its long
+integration writes.
+
+`springDamperTutorial.py` also **crashed at its last line** and had for some time: it reads its own
+output with `OutputFilePath(...)` and never imported it (#2669). It is not in the example suite,
+which is why nothing noticed. One import line; found by running the tutorial to the end, which is
+what adding the monitor to it required.
