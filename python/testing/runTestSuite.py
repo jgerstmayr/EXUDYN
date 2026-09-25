@@ -254,7 +254,8 @@ TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
     from runTestSuiteRefSol import (TestExamplesReferenceSolution, TestExamplesToleranceFactors,
-                                    SensitiveTests, UnresolvedOnLinux, DeliberatelyNotRun)
+                                    SensitiveTests, UnresolvedOnLinux, UnresolvedOnMacOS,
+                                    DeliberatelyNotRun)
     TSScope.examplesTestRefSol = TestExamplesReferenceSolution()
     #the values above belong to the BASELINE module; a module with vector extensions gets the
     #second set on top of them, which holds only the models that actually move (#2470)
@@ -268,10 +269,12 @@ if TSScope.runTestExamples:
                   + ' AVX2 reference values applied')
     TSScope.testTolFactors = TestExamplesToleranceFactors()
     TSScope.sensitiveTests = SensitiveTests()
-    #known Windows/Linux differences are excluded from the exit code ON LINUX ONLY: the
+    #known platform differences are excluded from the exit code ON THAT PLATFORM ONLY: the
     #reference values are the Windows ones, so Windows must still pass them
     TSScope.unresolvedTests = set()
-    if not isWindows and not isMacOS:
+    if isMacOS:
+        TSScope.unresolvedTests = UnresolvedOnMacOS()
+    elif not isWindows:
         TSScope.unresolvedTests = UnresolvedOnLinux()
     #the tests whose failure must not set the exit code, whatever the reason
     TSScope.excludedFromExitCode = TSScope.sensitiveTests | TSScope.unresolvedTests
@@ -441,6 +444,7 @@ if TSScope.runTestExamples:
 #is importable while the working directory stays TestModels/ (#2513)
 from MiniExamples.miniExamplesFileList import miniExamplesFileList
 miniExamplesFailed = []
+miniExamplesFailedKnown = []        #of those, the ones a platform list names
 if TSScope.runMiniExamples:
     from runTestSuiteRefSol import MiniExamplesReferenceSolution
 
@@ -489,6 +493,10 @@ if TSScope.runMiniExamples:
                 exu.Print('******************************************')
                 miniExamplesFailed += [testExamplesCnt]
                 miniExamplesFailedNames.add(name)
+                #a mini example is a model like any other and can be a known platform difference:
+                #ObjectConnectorRigidBodySpringDamper.py is one on macOS (#2379)
+                if name in TSScope.excludedFromExitCode:
+                    miniExamplesFailedKnown += [testExamplesCnt]
             miniExamplesTestSolList[name] = TSScope.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
             miniExamplesTestErrorList[name] = TSScope.testError #this list contains errors
             miniExamplesTestTimeList[name] = time.perf_counter() - miniTimeStart
@@ -633,15 +641,16 @@ if outputLocal:
 #set the exit code: those models are chaotic or use an unseeded sparse eigenvalue solver,
 #so they differ between machines and would make a scheduled run fail at random.
 if useExitCode:
-    reproducibleFails = totalFails - len(testsFailedSensitive)
+    reproducibleFails = totalFails - len(testsFailedSensitive) - len(miniExamplesFailedKnown)
     #a coverage gap is a failure of the suite itself, not of a test: the list no longer
     #describes the folder, so a passing run no longer means what it says
     if TSScope.runTestExamples and TSScope.coverageFailed:
         print('FAILED: test coverage - see the TEST COVERAGE section of the log', flush=True)
         sys.exit(1)
-    if len(testsFailedSensitive) != 0:
-        print('note: ' + str(len(testsFailedSensitive)) +
-              ' known-difference test(s) failed (sensitive or unresolved-on-Linux);'
+    knownDifferences = len(testsFailedSensitive) + len(miniExamplesFailedKnown)
+    if knownDifferences != 0:
+        print('note: ' + str(knownDifferences) +
+              ' known-difference test(s) failed (sensitive, or unresolved on this platform);'
               ' excluded from the exit code', flush=True)
     if reproducibleFails > 0:
         print('FAILED: ' + str(reproducibleFails) + ' reproducible test(s)', flush=True)

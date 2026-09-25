@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 68 | 1.12.69 |
+| 1.12 | Metheney | 69 | 1.12.70 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.70** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A comment in a description is still a LaTeX percent comment (#2663)
+  - description: The maintainer, 2026-09-25: 'In the itemDefs... files I still see % used for comments - latex style. Shouldnt we use \<!-- This is a single-line comment --\> comments? % could still survive as the % symbol, but maybe just inside a formula.' Measured the same day over definitions/: 513 lines are nothing but a % comment, 7 carry a % comment after text, and exactly one backslash-percent escape exists. Two of the 513 sit INSIDE a multi-line inline formula, where a continuation line of the formula is commented out - and that is the case that decides the design. MathJax and LaTeX both honour % as a comment inside mathematics, so a % there needs no handling at all; it only has to be left alone. Outside mathematics a comment becomes \<!-- ... --\>, which the converter removes so that it does not reach the page, and which cannot silently eat the next line of a formula the way % can: latexToMarkdown.StripComments runs BEFORE the mathematics is protected, so today a stray % anywhere truncates the rest of its line whatever it is. A commented-out block - a table, a figure - is then one \<!-- ... --\> rather than a % on every line.
+  - **notes:** A comment in a description is \<!-- ... --\> and is removed by the converter; a % survives only inside mathematics, where MathJax and LaTeX read it. tools/checkDefinitions.py enforces both, and the ten % lines left in definitions/ are all inside formulas (revision2026b step RG3.17).
+  - date resolved: **2026-09-26 01:05**, date raised: 2026-09-25
 - **1.12.69** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The arguments of a documented function are one paragraph, not one per line (#2665)
   - description: In the reference manual - the Python utility functions, and the MainSystem extensions of the Python-C++ command interface - the Args: block of a docstring is joined into a single paragraph, so a function of ten arguments is one wall of text and the argument names are in the body font. The old RST pages had one argument per line with the name in a monospace font. The HTML and the PDF are both affected, because both are built from the same generated Markdown. Reported by the maintainer with a screenshot of the old rendering, 2026-09-26.
   - **notes:** The input tag of a documented function is a nested list now, one argument per line with its name as code, in the Python utility functions and in the MainSystem extensions alike; 30 pages. A tag that is prose rather than a list of arguments is written as it was.

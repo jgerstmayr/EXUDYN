@@ -2,12 +2,16 @@
   "number": 2663,
   "title": "A comment in a description is still a LaTeX percent comment",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-09-25: 'In the itemDefs... files I still see % used for comments - latex style. Shouldnt we use <!-- This is a single-line comment --> comments? % could still survive as the % symbol, but maybe just inside a formula.' Measured the same day over definitions/: 513 lines are nothing but a % comment, 7 carry a % comment after text, and exactly one backslash-percent escape exists. Two of the 513 sit INSIDE a multi-line inline formula, where a continuation line of the formula is commented out - and that is the case that decides the design. MathJax and LaTeX both honour % as a comment inside mathematics, so a % there needs no handling at all; it only has to be left alone. Outside mathematics a comment becomes <!-- ... -->, which the converter removes so that it does not reach the page, and which cannot silently eat the next line of a formula the way % can: latexToMarkdown.StripComments runs BEFORE the mathematics is protected, so today a stray % anywhere truncates the rest of its line whatever it is. A commented-out block - a table, a figure - is then one <!-- ... --> rather than a % on every line.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
-  "file": "definitions/itemDefsObjects.py"
+  "dateResolved": "2026-09-26 01:05",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "A comment in a description is <!-- ... --> and is removed by the converter; a % survives only inside mathematics, where MathJax and LaTeX read it. tools/checkDefinitions.py enforces both, and the ten % lines left in definitions/ are all inside formulas (revision2026b step RG3.17).",
+  "resolvedInVersion": "1.12.70"
 }

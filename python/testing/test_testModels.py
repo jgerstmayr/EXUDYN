@@ -39,7 +39,8 @@ modelsDirectory = os.path.join(os.path.dirname(testingDirectory), 'TestModels')
 import testRunnerTools                                                          # noqa: E402
 from runTestSuiteRefSol import (TestExamplesReferenceSolution,                  # noqa: E402
                                 TestExamplesToleranceFactors, SensitiveTests,
-                                UnresolvedOnLinux, MiniExamplesReferenceSolution,
+                                UnresolvedOnLinux, UnresolvedOnMacOS,
+                                MiniExamplesReferenceSolution,
                                 SlowTests, OptionalPackageTests,
                                 AVX2ReferenceSolutionUpdate,
                                 NotJudgedOutsideRegularModule)
@@ -54,7 +55,12 @@ isMacOS = (sys.platform == 'darwin')
 #Windows/Linux differences - the reference values are the Windows ones, so those are tolerated on
 #Linux only. This is the rule runTestSuite.py applies to its exit code; here such a model still
 #runs and must not crash, but its value is not judged.
-notJudged = SensitiveTests() | (UnresolvedOnLinux() if (not isWindows and not isMacOS) else set())
+if isWindows:
+    notJudged = SensitiveTests()
+elif isMacOS:
+    notJudged = SensitiveTests() | UnresolvedOnMacOS()
+else:
+    notJudged = SensitiveTests() | UnresolvedOnLinux()
 
 #a module without range checks cannot judge a model whose result counts rejected inputs (#2470)
 onlyRegularModule = (set() if testRunnerTools.ModuleIsRegular()

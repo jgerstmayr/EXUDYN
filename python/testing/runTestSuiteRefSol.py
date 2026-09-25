@@ -360,6 +360,33 @@ def UnresolvedOnLinux():
     return unresolved
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def UnresolvedOnMacOS():
+    """the models whose result differs on macOS by more than their tolerance
+
+    What UnresolvedOnLinux() is to Linux. The reference values are the Windows ones, so a difference
+    here is the same kind of reproducible platform difference - a different compiler, a different
+    libm - and not a fault of the model. Measured on 2026-09-26 by the maintainer, on macOS ARM with
+    Python 3.13 and V1.12.68.dev1 (tmp/testSuiteLog_V1.12.68.dev1_darwin-ARM-64bit-P3.13.txt):
+    thirteen test models and one mini example, of which nine are also unresolved on Linux.
+
+    A model that is in this set and passes is not a problem: the set says "a difference here proves
+    nothing", not "there must be one"."""
+
+    unresolved = UnresolvedOnLinux() | set([
+        #macOS ARM only, 2026-09-26; the relative error against the 3e-11 tolerance
+        'ANCFbeltDrive.py',                     #rel. 8.9e-06
+        'ANCFcontactCircleTest.py',             #rel. 1.5e-07
+        'ANCFgeneralContactCircle.py',          #rel. 7.8e-11
+        'ANCFslidingAndALEjointTest.py',        #rel. 1.4e-09
+        'connectorGravityTest.py',              #rel. 3.9e-13 of a value of 1.0e+06
+        #the only mini example that differs; the test model of the same connector
+        #(rigidBodySpringDamperIntrinsic.py) is in the Linux list above
+        'ObjectConnectorRigidBodySpringDamper.py',  #rel. 2.5e-09
+        ])
+
+    return unresolved
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #return reference solutions for mini examples in dictionary
 def MiniExamplesReferenceSolution():
     refSol = {

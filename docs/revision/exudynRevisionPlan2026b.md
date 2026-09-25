@@ -807,6 +807,45 @@ find its file and line, on every raise).
     permanently, and hidden a four-order-of-magnitude divergence behind a policy decision. That is
     the argument for populating these lists from measurement, restated as a concrete near miss.
 
+    **macOS, measured 2026-09-26** by the maintainer on macOS ARM / Python 3.13 / V1.12.68.dev1
+    (`tmp/testSuiteLog_V1.12.68.dev1_darwin-ARM-64bit-P3.13.txt`): **fifteen** differ - fourteen test
+    models and one mini example. Nine of them are the Linux ones, so the two platforms fail mostly
+    the same models and macOS is not a separate phenomenon; five are macOS only, and the mini
+    example is the first one anywhere:
+
+    | test | relative error | also on Linux |
+    |---|---|---|
+    | `generalContactFrictionTests.py` | 1.4e-04 | yes |
+    | `generalContactCylinderTest.py` | 2.3e-05 | yes |
+    | `sphereTriangleTest2.py` | 1.8e-05 | yes |
+    | `ANCFbeltDrive.py` | 8.9e-06 | **no** |
+    | `ANCFcontactCircleTest.py` | 1.5e-07 | **no** |
+    | `connectorGravityTest.py` | 3.9e-13 of 1.0e+06 | **no** |
+    | `contactSphereSphereTest.py` | 6.2e-09 | yes |
+    | `ANCFslidingAndALEjointTest.py` | 1.4e-09 | **no** |
+    | `generalContactImplicit1.py` | 3.9e-08 | yes |
+    | `rollingDiscTangentialForces.py` | 4.0e-09 | yes |
+    | `coordinateSpringDamperExt.py` | 2.1e-10 | yes |
+    | `sliderCrank3Dbenchmark.py` | 2.9e-10 | yes |
+    | `rigidBodySpringDamperIntrinsic.py` | 6.6e-11 | yes |
+    | `ANCFgeneralContactCircle.py` | 7.8e-11 | **no** |
+    | `ObjectConnectorRigidBodySpringDamper.py` (mini example) | 2.5e-09 | **no** |
+
+    **Nothing is four orders of magnitude out**, which is the difference from the Linux table above:
+    `sphereTriangleTest.py` - the one that mattered there - is not among them. The largest is 1.4e-04
+    on a friction model, the same family that is unresolved on Linux, and the five macOS-only ones
+    are ANCF contact and sliding models plus a gravity connector whose *absolute* difference is
+    3.9e-07 on a value of a million. So the reading is: the same unexplained platform arithmetic,
+    on a few more models, and no new category.
+
+    - **RG4.1.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg4-1-1) - `UnresolvedOnMacOS()`
+      beside `UnresolvedOnLinux()`, applied on darwin, so the suite exits 0 there as it does on Linux.
+      A **mini example** can be a known platform difference too, which nothing allowed for before.
+    - **RG4.1.2** — the five macOS-only models. They are not the same question as the Linux nine:
+      four are ANCF contact/sliding and one is a gravity connector, and none of them appears on
+      Linux at all. Worth one look at whether they share a mechanism before being folded into the
+      general question.
+
 <a id="rg4-2"></a>
 **RG4.2** *(group RG4; revision2026 step R10.2)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
     computed contact point is stored in the parameter structure and read by the visualization, so

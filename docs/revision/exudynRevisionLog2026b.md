@@ -3752,3 +3752,25 @@ so the message points at the thing that would have prevented it. Replacing the s
 cost a user the signature in the message, which is what they are looking at when they read it.
 
 **Gates**: 11/11 checks, the wheel, the full suite, the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG4.1.1 - macOS is treated like Linux (2026-09-26, #2379)
+
+The maintainer ran the suite on macOS ARM (V1.12.68.dev1, Python 3.13) and it exited non-zero on
+**fifteen** models. Fourteen are test models and one is a **mini example**, which nothing had allowed
+for: the exit code subtracted only the test models that a platform list names.
+
+`UnresolvedOnMacOS()` stands beside `UnresolvedOnLinux()` in `runTestSuiteRefSol.py` and is the union
+of it with the five models that differ only there, plus the mini example. The runner applies the list
+on darwin, pytest judges by the same rule, and the mini example loop now counts a failure that a
+platform list names separately, so it does not set the exit code either.
+
+Checked against the maintainer's log rather than assumed: **all fifteen failures are covered**, and
+one entry - `createSphereTriangleContact.py`, from the Linux list - passes on macOS, which is what a
+"a difference here proves nothing" list should do. Windows is unchanged: the full suite still reports
+`PASSED: no reproducible test failed`, and pytest 404 passed / 2 skipped.
+
+The measurement is in the plan under RG4.1, with the relative error of each and which of them also
+differ on Linux. Nine of fifteen do. **Nothing is four orders of magnitude out** - the largest is
+1.4e-04 on a friction model - so macOS shows the same unexplained platform arithmetic as Linux on a
+few more models, and no new category. The five macOS-only ones are RG4.1.2.
