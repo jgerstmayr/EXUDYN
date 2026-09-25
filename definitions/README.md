@@ -121,13 +121,13 @@ not in the list below reaches the page as itself and is a defect.
   name is lower case with `-` between the parts, and it must sit on a **heading**, an **equation**
   or a **named figure**; a target above a paragraph resolves in no link at all. A section target
   goes on the line above its heading, `(sec-item-objectground)=`.
-- **A citation** is the key of `docs/bibliographyDoc.bib` in square brackets, written directly:
-  `[ZwoelferGerstmayr2021]`. `conf.py` appends a Markdown link definition for every key of the
-  bibliography, so the key becomes a link into the generated references page by itself - and a key
-  that is **not** in the bibliography stays plain text, silently. No pattern can tell a key from
-  the other square brackets a description is full of (`[SI:kg]`, `[0,0,0]`), so what
-  `tools/checkDefinitions.py` reports is a **near miss**: a bracketed word that is almost a key.
-  A key that is nothing like one is caught only by reading the page.
+- **A citation** is `[CITE:ZwoelferGerstmayr2021]`, with a key of `docs/bibliographyDoc.bib`. The
+  converter drops the marker and `conf.py` does the rest: it appends a Markdown link definition for
+  every key of the bibliography, so `[Key]` becomes a link into the generated references page. The
+  marker is there to be checked - `tools/checkDefinitions.py` rejects a `CITE:` key the
+  bibliography does not have, and a key written **without** the marker - and a `[CITE:` left in a
+  generated page is a conversion that did not happen. Without it nothing could be told apart: a
+  description is full of square brackets that are not citations (`[SI:kg]`, `[0,0,0]`).
 - **A table** is `\startTable{header}{header}{header}` with a `\rowTable{}{}{}` per row and
   `\finishTable` at the end - three columns, always.
 - **A user function** is `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}`, followed

@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.68.dev1
 - last change = 2026-09-25
-- Number of issues = 2656
+- Number of issues = 2657
 - Number of resolved issues = 2382 (68 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -3174,7 +3174,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date resolved: **2023-05-15 11:34**, date raised: 2023-05-15
 - **1.6.105** `EXTENSION` MainSystem Python extensions (#1563)
   - description: add Python utility functions for mbs, such as PlotSensor, SolveDynamic, ...; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension
-  - **notes:** see \\refSection{sec:mainsystem:pythonExtensions} for extended functionality
+  - **notes:** see sec:mainsystem:pythonExtensions for extended functionality
   - date resolved: **2023-05-15 01:17**, date raised: 2023-05-09
 - **1.6.104** `DOCU` Type definitions (#1564)
   - description: fix header structure in latex and RST for Type Definitions
@@ -3739,7 +3739,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: update docu of Visualization settings dialog in introduction
   - date resolved: **2023-01-11 17:41**, date raised: 2023-01-11
 - **1.5.51** `CHANGE` visualizationSettings (#1382)
-  - description: increase initial size of visualizations dialog for larger screens; see  \\refSection{sec:overview:basics:visualizationsettings} how to change to a smaller window size
+  - description: increase initial size of visualizations dialog for larger screens; see  sec:overview:basics:visualizationsettings how to change to a smaller window size
   - date resolved: **2023-01-11 16:57**, date raised: 2023-01-11
 - **1.5.50** `CHANGE` visualizationSettings (#1381)
   - description: change order of items to have easier access to each tree node
@@ -5282,7 +5282,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: function got faster mode in case of constant sampling rate
   - date resolved: **2022-01-11 14:39**, date raised: 2022-01-11
 - **1.1.79** `DOCU` Add LTG description (#854)
-  - description: add section on local-to-global mapping of coordinates \\refSection{sec:overview:ltgmapping}
+  - description: add section on local-to-global mapping of coordinates sec:overview:ltgmapping
   - date resolved: **2022-01-08 12:09**, date raised: 2022-01-08
 - **1.1.78** `DOCU` publications directory (#849)
   - description: create separate directory Examples/publications/ for publication data, Python files of numerical examples, etc.
@@ -5672,7 +5672,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add convenient utility function to add revolute joint based on 2 bodies, point and axis, doing all necessary work in background
   - date resolved: **2021-07-02 08:49**, date raised: 2021-07-02
 - **1.0.254** `DOCU` add links for utility functions (#700)
-  - description: ADDED LINKS to Examples/ and TestModels/ example files at end of each python utility function and class, see \\refSection{sec:pythonUtilityFunctions}
+  - description: ADDED LINKS to Examples/ and TestModels/ example files at end of each python utility function and class, see sec:pythonUtilityFunctions
   - date resolved: **2021-07-01 21:46**, date raised: 2021-07-01
 - **1.0.253** <span class="textred">`BUG`</span> GenericJoint (#697)
   - description: index2 equations not properly implemented for prismatic joints
@@ -5921,7 +5921,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add feature to visualize eigenmodes, e.g. using ObjectFFRFreducedOrder and set one initialCoordinate nonzero
   - date resolved: **2021-04-07 13:48**, date raised: 2020-06-12
 - **1.0.175** `EXTENSION` Eigenmode visualizer (#619)
-  - description: visualize eigenmodes with interactive tools with new function AnimateModes(...) to show eigenmodes of system or ObjectFFRFreducedOrder (see \\refSection{sec:interactive:AnimateModes})
+  - description: visualize eigenmodes with interactive tools with new function AnimateModes(...) to show eigenmodes of system or ObjectFFRFreducedOrder (see sec:interactive:AnimateModes)
   - date resolved: **2021-04-07 13:47**, date raised: 2021-03-30
 - **1.0.174** `EXTENSION` InteractiveDialog (#622)
   - description: improved functionality of InteractiveDialog in interactive.py, specially for animating modes
@@ -6131,7 +6131,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add existing Lie group integrator in C++
   - date resolved: **2021-01-26 13:17**, date raised: 2021-01-25
 - **1.0.108** `EXTENSION` explicit integrator (#554)
-  - description: add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout \\refSection{sec:ExplicitSolver} for description of explicit solvers and \\refSection{sec:DynamicSolverType} for available solver types
+  - description: add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout sec:ExplicitSolver for description of explicit solvers and sec:DynamicSolverType for available solver types
   - date resolved: **2021-01-25 00:54**, date raised: 2021-01-24
 - **1.0.107** `EXTENSION` add RK4 integrator (#513)
   - description: put existing python RK4 integrator into CPP
@@ -6232,7 +6232,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: dense mode returned unsorted eigenvalues==\>add sorting
   - date resolved: **2021-01-03 10:21**, date raised: 2021-01-03
 - **1.0.76** `CHANGE` interpret UTF8 (#524)
-  - description: add conversion from UTF8 to unicode to interpret most central European characters + some important characters correctly (see \\refSection{sec:graphicsData})
+  - description: add conversion from UTF8 to unicode to interpret most central European characters + some important characters correctly (see sec:graphicsData)
   - date resolved: **2021-01-02 20:13**, date raised: 2020-12-29
 - **1.0.75** `EXTENSION` opengl write UTF8 (#525)
   - description: use UTF8 encoding in opengl text output
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Five hand-written docstrings still send the reader to theDoc.pdf (#2656)
+  - description: theDoc.pdf has not existed since decision D8. The generators no longer produce the name - revision2026b step RG3.14.10 made a section reference name its section - but five docstrings in the shipped package say it in their own text: python/exudyn/solver.py (3, two of which also carry a Markdown link written \[Section\](\#sec:solverSubstructures), whose target spelling is the LaTeX one and not the MyST one), python/exudyn/misc/mainSystemExtensions.py (1) and the module header of python/exudyn/\_\_init\_\_.py, which links to the file on GitHub. They are hand-written, so no regeneration reaches them.
+  - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` The item and settings descriptions are written in LaTeX, not in Markdown (#2655)
   - description: The descriptions in definitions/ are the source of the reference manual, and a developer writing one meets 2684 LaTeX macro occurrences in 87 distinct macros: 709 rowTable, 160 hac, 127 mysubsubsubsection, 86 startTable, 69 refSection, 35 userFunction. The build converts them (tools/generators/latexToMarkdown.py) and the published pages are correct, so this is not a defect in the output - it is that the input is a language nobody writing an item description should have to know, and that nothing checks it. Replace the structural macros by a small documented set plus data in the definition dict, keep the math as it is, and remove the onlyRST/ignoreRST switches.
   - date raised: 2026-09-25

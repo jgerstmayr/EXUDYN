@@ -163,7 +163,6 @@ exudyn.VSettingsOpenGL.showMeshFaces
 exudyn.VSettingsOpenGL.textLineSmooth
 exudyn.VSettingsOpenGL.textLineWidth
 exudyn.VSettingsOpenGLAdvanced
-exudyn.VSettingsOpenVR
 exudyn.VSettingsRaytracer
 exudyn.VSettingsRaytracer.ambientLightColor
 exudyn.VSettingsRaytracer.backgroundColorReflections

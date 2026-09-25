@@ -112,13 +112,15 @@ def CheckHeadings(paths):
     return findings
 
 
-#a citation is the bibliography key in square brackets, and conf.py appends a link definition for
-#every key, so [ZwoelferGerstmayr2021] resolves by itself. A MISTYPED key resolves to nothing and
-#renders as its own text, silently - and no pattern can tell a key from the other square brackets a
-#description is full of ([SI:kg], [0,0,0], [localIndex]). What can be told is a NEAR miss: measured
-#over definitions/, 38 bracketed word-like tokens, 30 of them keys, and the closest the other eight
-#come to a key is 0.59 - so 0.85 reports a typo and nothing else.
+#a citation is [CITE:Key], and the converter turns it into the [Key] that conf.py resolves - it
+#appends a Markdown link definition for every key of the bibliography to every document Sphinx
+#reads. The marker is what makes a citation checkable: without it, no pattern could tell a key from
+#the other square brackets a description is full of ([SI:kg], [0,0,0], [localIndex]) - 1228 of them
+#in definitions/ - and twelve of the bibliography's own keys are not shaped like a key at all.
+#The third check is for a writer who forgets the marker entirely; 0.85 is chosen from the
+#measurement that the closest a non-citation comes to a key is 0.59.
 CITATION_SIMILARITY = 0.85
+citationMarked = re.compile(r'\[CITE:([^\]]*)\]')
 citationToken = re.compile(r'(?<!\])\[([A-Za-z][A-Za-z0-9_.\-]{3,60})\](?!\()')
 
 
@@ -128,21 +130,35 @@ def BibliographyKeys(path):
 
 
 def CheckCitations(paths, known):
-    """a bracketed token that is nearly a bibliography key, and therefore probably meant to be one"""
+    """a [CITE:Key] whose key is not in the bibliography, a citation written without the marker,
+    and a bracketed token that is nearly a key and therefore probably meant to be one"""
     findings = []
     for path in paths:
         for (keyword, text, lineno) in Descriptions(path):
             if keyword in CODE_KEYWORDS:
                 continue
+
+            def Where(match, text=text, lineno=lineno):
+                return (path, lineno + text.count('\n', 0, match.start()))
+
+            for match in citationMarked.finditer(text):
+                key = match.group(1).strip()
+                if key in known:
+                    continue
+                close = difflib.get_close_matches(key, known, n=1, cutoff=0.6)
+                findings.append(Where(match) + ('[CITE:' + key + '] is in no bibliography entry'
+                                                + ('; did you mean [CITE:' + close[0] + ']?'
+                                                   if close else ''),))
             for match in citationToken.finditer(text):
                 token = match.group(1)
                 if token in known:
+                    findings.append(Where(match) + ('[' + token + '] is a bibliography key and'
+                                                    ' has to be written [CITE:' + token + ']',))
                     continue
                 close = difflib.get_close_matches(token, known, n=1, cutoff=CITATION_SIMILARITY)
                 if close:
-                    findings.append((path, lineno + text.count('\n', 0, match.start()),
-                                     '[' + token + '] is in no bibliography entry; did you mean ['
-                                     + close[0] + ']?'))
+                    findings.append(Where(match) + ('[' + token + '] is in no bibliography entry;'
+                                                    ' did you mean [CITE:' + close[0] + ']?',))
     return findings
 
 

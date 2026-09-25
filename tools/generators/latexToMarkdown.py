@@ -439,8 +439,13 @@ def ConvertInline(text):
     #OUTSIDE math are prose that names the colour itself
     for name in ['termA', 'termC']:
         text = ReplaceCommand(text, name, 1, lambda a: a.strip())
-    #citations are DROPPED by the current LaTeX->RST path, which is why the HTML has sentences
-    #ending in "by the main developer ." - keep them readable until #2550 gives them a page
+    #a citation is [CITE:Key] in the definitions (#2655) and \cite{Key} in the hand-written
+    #chapters; both become [Key], which conf.py resolves - it appends a Markdown link definition
+    #for every key of the bibliography to every document Sphinx reads. Nothing may keep the CITE:
+    #marker, so a "[CITE:" left in a generated page is a conversion that did not happen.
+    text = re.sub(r'\[CITE:([^\]]+)\]',
+                  lambda m: '[' + '; '.join(key.strip() for key in m.group(1).split(',')) + ']',
+                  text)
     text = ReplaceCommand(text, 'cite', 1,
                           lambda a: '[' + '; '.join(key.strip() for key in a.split(',')) + ']')
     text = ReplaceCommand(text, 'label', 1, lambda a: '\n(' + RefLabel(a.strip()) + ')=\n')

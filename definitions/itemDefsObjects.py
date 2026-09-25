@@ -823,7 +823,7 @@ definitions.append(ItemDefinition(
     #### Equations of motion for arbitrary reference point
 
     This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point ($\neq$ ABRV:COM), 
-    see e.g.\ [woernle2016](page 258ff.), which have the general coordinate-free form
+    see e.g.\ [CITE:woernle2016](page 258ff.), which have the general coordinate-free form
     \be \label{eq:ObjectRigidBody:EOMarbitrary}
       \mp{m \ImThree}{-m \tilde \bv_{COM}}{m \tilde \bv_{COM}}{\Jm} \vp{\av}{\talpha} = 
       \vp{-m \tilde \tomega \tilde \tomega \bv_{COM} }{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda} \eqComma
@@ -1829,7 +1829,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     #### General
 
-    The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition [Siciliano2016].
+    The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition [CITE:Siciliano2016].
 
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see [](#sec-mainsystem-object), 
     or \texttt{SensorSuperElement}, see [](#sec-mainsystem-sensor), directly access special output variables
@@ -1844,8 +1844,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The \texttt{KinematicTree} has one node of type \texttt{NodeGenericODE2} with $n$ coordinates.
     %
-    The equations of motion are built by special multibody algorithms, following Featherstone [Featherstone2008]. 
-    For a short introduction into this topic, see Chapter 3 of [Siciliano2016]. 
+    The equations of motion are built by special multibody algorithms, following Featherstone [CITE:Featherstone2008]. 
+    For a short introduction into this topic, see Chapter 3 of [CITE:Siciliano2016]. 
     
     The kinematic tree defines a set of rigid bodies connected by joints, having no loops.
     In this way, every body $i$, also denoted as link, has either a previous body $p(i) \neq \mathrm{-1}$ or not.
@@ -2449,7 +2449,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{transformation of flexible coordinates}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++
-    The derivations follow Zwölfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
+    The derivations follow Zwölfer and Gerstmayr [CITE:ZwoelferGerstmayr2021] with only small modifications in the notation.
 
     #### Nodal coordinates
 
@@ -2567,7 +2567,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \Mm\indrf, \LU{b}{\Mm}$ in [](#eq-objectffrf-eom) are set to zero (and not computed) and
     the quadratic velocity vector $\fv_{v} = \Null$.
     Note that the user functions $\fv_{user}(mbs, t, i_N, \qv,\dot \qv)$ and $\Mm_{user}(mbs, t, i_N, \qv,\dot \qv)$ may be empty (=0). 
-    The detailed equations of motion for this element can be found in [ZwoelferGerstmayr2020].
+    The detailed equations of motion for this element can be found in [CITE:ZwoelferGerstmayr2020].
 
     The quadratic velocity vector follows as
     \be
@@ -2918,7 +2918,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The formulation is based on the EOM of \texttt{ObjectFFRF}, {\bf also regarding parts of notation} 
     and some input parameters, [](#sec-item-objectffrf), and 
-    can be found in Zwölfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
+    can be found in Zwölfer and Gerstmayr [CITE:ZwoelferGerstmayr2021] with only small modifications in the notation.
     The notation of kinematics quantities follows the floating frame of reference idea with
     quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
     %++++++++++++++++++++++++
@@ -2973,7 +2973,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \LU{b}{\tchi}\indu &=& \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\xv\cRef}\\
       \LU{b}{\tilde \tchi\indu} &=& \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
     \eea 
-    and seven inertia-like matrices [ZwoelferGerstmayr2021],
+    and seven inertia-like matrices [CITE:ZwoelferGerstmayr2021],
     \be
       \Mm_{AB} = \Am\tp \LU{b}{\Mm} \Bm, \quad \mathrm{using} \quad \Am\Bm \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; 
         \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
@@ -3004,7 +3004,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
     Note that in case of Euler parameters for the parameterization of rotations for the reference frame, the Euler parameter constraint equation is added automatically by this object.
     %
-    The single terms of the mass matrix are defined as[ZwoelferGerstmayr2021]
+    The single terms of the mass matrix are defined as[CITE:ZwoelferGerstmayr2021]
     \bea
       \Mm\indtt &=& m \ImThree \\
       \Mm\indtr &=& -\LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
@@ -3054,13 +3054,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \Im_\zeta \otimes \LU{b}{\tomega} = \mr{\LU{b}{\tomega}}{}{} {}{\ddots}{} {}{}{\LU{b}{\tomega}} \in \Rcal^{3n_m \times n_m}
     \ee
     
-    %$\ra$ will be completed later, see according literature of Zwölfer and Gerstmayr [ZwoelferGerstmayr2021].
+    %$\ra$ will be completed later, see according literature of Zwölfer and Gerstmayr [CITE:ZwoelferGerstmayr2021].
     
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt \ldots \Mm\indff$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
     Note that the user functions $\fv_{user}(mbs, t,\qv,\dot \qv)$ and 
     $\Mm_{user}(mbs, t,\qv,\dot \qv)$ may be empty (=0). 
-    The detailed equations of motion for this element can be found in [ZwoelferGerstmayr2021].
+    The detailed equations of motion for this element can be found in [CITE:ZwoelferGerstmayr2021].
 
     %+++++++++++++++++++++++++
     %+++++++++++++++++++++++++
@@ -3672,9 +3672,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %
     Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the $z$-coordinate.
     %
-    ANCF elements follow the original concept proposed by Shabana [shabana1997ancf].
-    The present 2D element is based on the interpolation used by Berzeri and Shabana [berzeri2000], but the formulation (especially of the elastic forces) is according to
-    Gerstmayr and Irschik [GerstmayrIrschik2008].
+    ANCF elements follow the original concept proposed by Shabana [CITE:shabana1997ancf].
+    The present 2D element is based on the interpolation used by Berzeri and Shabana [CITE:berzeri2000], but the formulation (especially of the elastic forces) is according to
+    Gerstmayr and Irschik [CITE:GerstmayrIrschik2008].
     Slight improvements for the integration of elastic forces and additional terms for off-axis forces and constraints are mentioned here.
     
     The current position of an arbitrary element at local axial position $x \in [0,L]$, where $L$ is the beam length, reads
@@ -3746,12 +3746,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \be \label{eq:cable2D:elasticForces}
       \Qm_e^T \delta \qv = \delta W_e + \delta W_a + \delta W_v.
     \ee
-    The virtual work of elastic forces reads [GerstmayrIrschik2008],
+    The virtual work of elastic forces reads [CITE:GerstmayrIrschik2008],
     \be
       \delta W_e = \int_0^L (N \delta \varepsilon + M \delta K) \,dx,
     \ee
     %\todo{compute $\delta W_e = \Qm_e^T \delta \qv$ }
-    in which the axial strain is defined as [GerstmayrIrschik2008]
+    in which the axial strain is defined as [CITE:GerstmayrIrschik2008]
     \be
       \varepsilon=\Vert \rv'\Vert-1.
     \ee 
@@ -4141,7 +4141,7 @@ definitions.append(ItemDefinition(
     If you apply a LoadForce using a MarkerPosition, the force is acting on the beam finite element, but not on the axially moving coordinate.
     In contrast to the latter, the ObjectJointALEMoving2D and the MarkerBodyMass are acting on the moving coordinate as well.
 
-    A detailed paper on this element is yet under submission, but a similar formulation can be found in [PechsteinGerstmayr2013ale] and 
+    A detailed paper on this element is yet under submission, but a similar formulation can be found in [CITE:PechsteinGerstmayr2013ale] and 
     the underlying beam element is identical to ObjectANCFCable2D.
     %%RSTCOMPATIBLE
 """,
@@ -7063,7 +7063,7 @@ definitions.append(ItemDefinition(
     #### Pressure build up equations
 
     %
-    The hydraulics model consists of a double-acting piston. It follows the paper of [RahikainenGonzalezNayaEtAl2020] 
+    The hydraulics model consists of a double-acting piston. It follows the paper of [CITE:RahikainenGonzalezNayaEtAl2020] 
     except for the friction and the additional valve, which are not available here.
     
     The hydraulic actuator contains internal states, namely pressures $p_0$ and $p_1$.
@@ -7091,7 +7091,7 @@ definitions.append(ItemDefinition(
     \be \label{eq:hydraulicActuator:effBulkModulus}
       K_{k,eff} = \frac{1}{ \frac{1}{K_{oil}} + \frac{V_{k,cur} - V_{h,k}}{V_{k,cur} \cdot K_{cyl}} + \frac{V_{h,k}}{V_{k,cur} \cdot K_{hose}} },
     \ee
-    where we use a slightly different approach from [RahikainenGonzalezNayaEtAl2020] when computing the volume for the cylinder bulk modulus term for $k=1$.
+    where we use a slightly different approach from [CITE:RahikainenGonzalezNayaEtAl2020] when computing the volume for the cylinder bulk modulus term for $k=1$.
     
     Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in [](#eq-hydraulicactuator-effbulkmodulus)  
     are set to zero (which other wise would give infinity).
@@ -8272,7 +8272,7 @@ definitions.append(ItemDefinition(
     \be
       \LU{J1}{\fv_t} = [f_{t,x} ,\; f_{t,y}]\tp = \LU{J1}{\tmu} \cdot \left( \phi(|\vv_t|,v_\mu) \cdot f_n \cdot \LU{J1}{\ev_t} \right) \eqComma
     \ee
-    with the regularization function, see Geradin and Cardona [GeradinCardona2001] (Sec.\ 7.9.3), if \texttt{useLinearProportionalZone=False},
+    with the regularization function, see Geradin and Cardona [CITE:GeradinCardona2001] (Sec.\ 7.9.3), if \texttt{useLinearProportionalZone=False},
     \be
       \phi(v, v_\mu) = 
         \left\{ 
@@ -8532,7 +8532,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     \mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i} \label{eq:ConnectorConvexRolling:polynomial}
     \ee
     with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker \texttt{m1} in the bodies local frame and transformed accordingly. 
-    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in [](#fig-objectcontactconvexroll-sketch), explained in detail in [ManzlGerstmayr2021]. 
+    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in [](#fig-objectcontactconvexroll-sketch), explained in detail in [CITE:ManzlGerstmayr2021]. 
     At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp$  with 
     \be
     \mathrm{f}_{\mathrm{N}} = \begin{cases}
@@ -9110,11 +9110,11 @@ definitions.append(ItemDefinition(
       v_t = \left( \dot \pv_p - \dot \pv_{m0} \right) \tv
     \ee
     In case of \texttt{frictionStiffness != 0}, we continuously track the sticking position at which the cable element (or segment) and the circle 
-    previously sticked together, similar as proposed by Lugr{\'i}s et al.~[LugrisEscalonaDC2011]. 
+    previously sticked together, similar as proposed by Lugr{\'i}s et al.~[CITE:LugrisEscalonaDC2011]. 
     The difference here to the latter reference, is that we explicitly exclude switching from Newton's method and that Lugr{\'i}s et al.~used
     contact points, while we use linear segments.
     For a simple 1D example using this position based approach for friction, see \texttt{Examples/lugreFrictionText.py}, 
-    which compares the traditional LuGre friction model [CanudasDeWitEtAl1993] with the position based model with tangential stiffness. 
+    which compares the traditional LuGre friction model [CITE:CanudasDeWitEtAl1993] with the position based model with tangential stiffness. 
     %++++++++++++++++++++++++
     \ignoreRST{
     \begin{figure}[tbph]
@@ -9622,7 +9622,7 @@ definitions.append(ItemDefinition(
     \ee
     The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against $\LU{0}{\nv}$ for marker 1. As an illustrative case, the gap velocity is positive, if sphere 0 does not move, i.e. $\LU{0}{\vv}_{m0}=0$ holds, and sphere 1 in direction of the normal vector. Note that this holds for the sphere-sphere contact and sphere-hollowsphere contact cases. The elastic force $f_c$ is computed depending on the chosen impact model.
 
-    CASE $m_\mathrm{impact}=0$: the Adhesive Elasto-Plastic model described in [Morrissey2014] is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap $\delta_p$ is needed. It is computed with
+    CASE $m_\mathrm{impact}=0$: the Adhesive Elasto-Plastic model described in [CITE:Morrissey2014] is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap $\delta_p$ is needed. It is computed with
     \be
     \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta \eqDot
     \ee
@@ -9637,7 +9637,7 @@ definitions.append(ItemDefinition(
     \ee
     Note that $k_2$ is computed with $k_2 = k_c/(1-\lambda_\mathrm{P})$. The terms with the stiffness $k_c$ and $k_2$ have a positive sign, since they act in the direction of $\LU{0}{\nv}$ for marker 1. The constant adhesion force $f_\mathrm{adh}$ and the stiffness $k_\mathrm{adh}$ act against $\LU{0}{\nv}$, which corresponds to a force sticking the spheres together.
 
-    CASE $m_\mathrm{impact}=1$: the restitution model proposed by Hunt and Crossley in [Hunt1975] is used to simulate the energy loss of the spheres during contact:
+    CASE $m_\mathrm{impact}=1$: the restitution model proposed by Hunt and Crossley in [CITE:Hunt1975] is used to simulate the energy loss of the spheres during contact:
     \be
     f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
     \ee
@@ -9649,9 +9649,9 @@ definitions.append(ItemDefinition(
     \be
     \dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}
     \ee
-    Note that the Hunt-Crossley restitution is valid for a very small energy loss ($e_\mathrm{res}\approx1$) [Carvalho2019].
+    Note that the Hunt-Crossley restitution is valid for a very small energy loss ($e_\mathrm{res}\approx1$) [CITE:Carvalho2019].
 
-    CASE $m_\mathrm{impact}=2$: a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in [Carvalho2019] is used for $e_\mathrm{res} > \frac{1}{3}$ and a model proposed by Gonthier et al. in [Gonthier2004] is used for impacts with a high plastic proportion, $e_\mathrm{res} < \frac{1}{3}$. Note that the two models are identical at $e_\mathrm{res} = \frac{1}{3}$. $\lambda$ is therefore computed as follows:
+    CASE $m_\mathrm{impact}=2$: a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in [CITE:Carvalho2019] is used for $e_\mathrm{res} > \frac{1}{3}$ and a model proposed by Gonthier et al. in [CITE:Gonthier2004] is used for impacts with a high plastic proportion, $e_\mathrm{res} < \frac{1}{3}$. Note that the two models are identical at $e_\mathrm{res} = \frac{1}{3}$. $\lambda$ is therefore computed as follows:
     \be
     \lambda=
     \begin{cases}

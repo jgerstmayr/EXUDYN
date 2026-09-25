@@ -524,7 +524,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeNode,
     equations=r"""    \paragraph{Detailed information:}
     For a detailed description on the rigid body dynamics formulation using this node, 
-    see Holzinger and Gerstmayr [HolzingerGerstmayr2020].
+    see Holzinger and Gerstmayr [CITE:HolzingerGerstmayr2020].
 
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
     \be

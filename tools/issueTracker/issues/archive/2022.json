@@ -242,7 +242,7 @@
       "author": "JG",
       "status": "RESOLVED",
       "type": "DOCU",
-      "description": "add section on local-to-global mapping of coordinates \\refSection{sec:overview:ltgmapping}",
+      "description": "add section on local-to-global mapping of coordinates sec:overview:ltgmapping",
       "dateRaised": "2022-01-08",
       "deadline": "2022-03-09",
       "dateResolved": "2022-01-08 12:09",

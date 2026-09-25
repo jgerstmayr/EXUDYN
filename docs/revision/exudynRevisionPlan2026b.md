@@ -567,10 +567,20 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     - **RG3.14.10** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-10) - **the
       citations, and the field that was called `latexText`.** The 31 `\cite{key}` calls are
       `[key]`, which is what they already rendered as, so the pages do not move; a citation is
-      checked in the only direction that works, as a **near miss** of a bibliography key, because
-      1228 bracketed tokens in `definitions/` are not citations and twelve of the 100 keys are not
-      shaped like one. And `StructureDefinition.latexText`, which is neither LaTeX nor written in
+      given the marker of RG3.14.11 and checked against the bibliography;
+      without a marker nothing could be told apart, because 1228 bracketed tokens in `definitions/`
+      are not citations and twelve of the 100 keys are not shaped like one. And `StructureDefinition.latexText`, which is neither LaTeX nor written in
       it, is `sectionText`: the heading and the paragraph that open a group of structures.
+
+    - **RG3.14.11** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-11) - **the
+      citation marker, and the last of `theDoc.pdf`.** A citation is `[CITE:Key]`, which the
+      converter turns into the `[Key]` that `conf.py` resolves: the pages do not move, and the
+      marker is what makes three checks possible - a key the bibliography does not have, a key
+      written without the marker, and a bracketed word that is nearly a key. A `[CITE:` left in a
+      generated page is a conversion that did not happen. `\refSection` in a docstring names its
+      section instead of the literal `theDoc.pdf`, and the eight `\refSection{...}` that stood in
+      the issue archive are plain section names (**#2656** is the five hand-written docstrings that
+      still say `theDoc.pdf` in their own text).
 
     **What would not work today**, and is either solved inside the step or stated as its boundary:
 

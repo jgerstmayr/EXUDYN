@@ -836,7 +836,7 @@
       "author": "JG",
       "status": "RESOLVED",
       "type": "CHANGE",
-      "description": "increase initial size of visualizations dialog for larger screens; see  \\refSection{sec:overview:basics:visualizationsettings} how to change to a smaller window size",
+      "description": "increase initial size of visualizations dialog for larger screens; see  sec:overview:basics:visualizationsettings how to change to a smaller window size",
       "dateRaised": "2023-01-11",
       "deadline": "2023-07-10",
       "dateResolved": "2023-01-11 16:57",
@@ -2929,7 +2929,7 @@
       "deadline": "2023-11-05",
       "dateResolved": "2023-05-15 01:17",
       "resolvedAuthor": "JG",
-      "releaseNotes": "see \\refSection{sec:mainsystem:pythonExtensions} for extended functionality",
+      "releaseNotes": "see sec:mainsystem:pythonExtensions for extended functionality",
       "resolvedInVersion": "1.6.105"
     },
     {

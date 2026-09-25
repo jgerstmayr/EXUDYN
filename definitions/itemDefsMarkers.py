@@ -913,7 +913,7 @@ definitions.append(ItemDefinition(
     #### Marker background
 
     The marker allows to realize a multi-point constraint (assuming that the marker is used in a joint constraint), 
-    connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g.\ [HeirmanDesmet2010]. 
+    connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g.\ [CITE:HeirmanDesmet2010]. 
     However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for \texttt{ObjectFFRFreducedOrder} objects.
 
     For more information on the various quantities and their coordinate systems, see table above and [](#fig-markersuperelementrigid-sketch).
@@ -979,7 +979,7 @@ definitions.append(ItemDefinition(
     the set of nodes provided. For this reason, the check performed in \texttt{mbs.assemble()} will take care that the nodes are capable
     to describe rotations.
     The first approach, here called as a standard, follows the idea that displacements contribute to rotation are weighted by their quadratic distance, 
-    cf.\ [HeirmanDesmet2010], and gives the (small rotation) rotation vector
+    cf.\ [CITE:HeirmanDesmet2010], and gives the (small rotation) rotation vector
     \be
        \LU{r}{\ttheta}_{m} = \frac{\sum_i w_i \LU{r}{\pv_{ref}^{(i)}} \times \LU{r}{\uv^{(i)}}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2}
     \ee

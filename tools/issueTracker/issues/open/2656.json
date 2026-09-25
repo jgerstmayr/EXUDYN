@@ -1,0 +1,13 @@
+{
+  "number": 2656,
+  "title": "Five hand-written docstrings still send the reader to theDoc.pdf",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "theDoc.pdf has not existed since decision D8. The generators no longer produce the name - revision2026b step RG3.14.10 made a section reference name its section - but five docstrings in the shipped package say it in their own text: python/exudyn/solver.py (3, two of which also carry a Markdown link written [Section](#sec:solverSubstructures), whose target spelling is the LaTeX one and not the MyST one), python/exudyn/misc/mainSystemExtensions.py (1) and the module header of python/exudyn/__init__.py, which links to the file on GitHub. They are hand-written, so no regeneration reaches them.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "file": "python/exudyn/solver.py"
+}

@@ -2869,3 +2869,39 @@ variable in `structureDocsEmitter` that carried the chapter's own introduction w
 `latexText` too, and is `chapterIntro`.
 
 The regeneration is byte-identical.
+
+<a id="rg3-14-11"></a>
+### RG3.14.11 — the citation marker, and the last of theDoc.pdf (2026-09-25, #2655)
+
+**The citation is `[CITE:ZwoelferGerstmayr2021]`** (maintainer, 2026-09-25): *"any left `[CITE:`
+would already indicate that something went wrong. Clearly, other `[FunnyCitation]` would stay, but
+this is ok."* The converter drops the marker and `conf.py` does the rest, so the 31 citations of
+`definitions/` render exactly as before - the pages are byte-identical - and the marker buys three
+checks that were impossible without it:
+
+- a `[CITE:Key]` whose key the bibliography does not have, **exactly**, with the nearest key named;
+- a key written **without** the marker - `[ZwoelferGerstmayr2021]` - which is the writer who forgot;
+- a bracketed word that is nearly a key, for the writer who forgot both.
+
+And a `[CITE:` left anywhere in a generated page is a conversion that did not happen; there is none.
+`docstringText.PlainTextLinks` drops the marker too, for the day a cited description becomes a
+docstring.
+
+**`\refSection` now names its section.** `CleanStringForPyiDescription` rewrote it to the literal
+`theDoc.pdf` - a document that has not existed since decision D8 - so a docstring told the reader to
+open a file that is not there. It writes the target name, the same thing a native Markdown link
+leaves behind, which is what a reader can search for. One generated docstring changes:
+`ComputeODE2Eigenvalues` says *"see sec-mbs-systemdata"* instead of *"see theDoc.pdf"*.
+
+Five **hand-written** docstrings in the shipped package still say `theDoc.pdf` in their own text, so
+no regeneration reaches them; that is **#2656**.
+
+**Eight `\refSection{...}` in the issue archive** (maintainer: *"I don't know why... could give a
+bad rendering of the issue"*) are the plain section names now, in `archive/2021.json`, `2022.json`
+and `2023.json`. They are historical issue texts from before the macro had any meaning outside the
+LaTeX build, and they were published as raw macros in the tracker page. The two left are in the
+working remarks of **#2652**, where the macro is the subject of the sentence.
+
+**The stubtest backlog lost its OpenVR entry.** RG6.1 removed `VSettingsOpenVR` and the baseline
+still listed it; `checkPython --stubs` said so on every run, because the backlog is meant to shrink.
+272 entries now.

@@ -56,7 +56,8 @@ def PlainTextLinks(text):
     no page to link to: [](#sec-solvers) is the anchor a reader can search for, and
     [the solvers](#sec-solvers) is what the writer wanted to say (#2655)"""
     text = re.sub(r'\[([^\]]+)\]\(#([^)]+)\)', r'\1', text)
-    return re.sub(r'\[\]\(#([^)]+)\)', r'\1', text)
+    text = re.sub(r'\[\]\(#([^)]+)\)', r'\1', text)
+    return re.sub(r'\[CITE:([^\]]+)\]', r'[\1]', text)    #a citation reads as its key
 
 
 def StripAbbreviations(text):
@@ -87,7 +88,11 @@ def CleanStringForPyiDescription(text, enforcePeriod=False):
     
 
     
-    text = re.sub(r'\\refSection\{(.*?)\}', 'theDoc.pdf', text) #eliminate
+    #a section reference names the section. It used to be rewritten to the literal "theDoc.pdf", a
+    #document that has not existed since decision D8; the target name is what a reader can search
+    #for in the documentation, and it is what a native Markdown link leaves behind too (#2655)
+    text = re.sub(r'\\refSection\{(.*?)\}',
+                  lambda m: m.group(1).replace(':', '-').replace('_', '-').lower(), text)
     text = StripAbbreviations(PlainTextLinks(text))
     text = re.sub(r'\\acp\{(.*?)\}', r'\1', text) #convert to readable text
     text = re.sub(r'\\ac\{(.*?)\}', r'\1', text) #convert to readable text
