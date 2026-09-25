@@ -1570,11 +1570,12 @@ package).
       reader that turns one into names, Python types, the docstring and the `Args:`/`Returns:` lines.
       `ast` only: the block is parsed, never run, so a type may be a name that does not exist at
       generation time.
-    - **RG12.4.2** — **one function, end to end**: `ObjectGenericODE2.forceUserFunction`. The
-      description block of the item page is generated from it, `userFunctionArgsDict` gets the real
-      names and the Python types, and the page is compared line by line against what the prose
-      produced. If `ItemUserFunction` is absent, everything stays exactly as it is - which is what
-      makes the remaining 34 blocks a sequence of small commits rather than one large one.
+    - **RG12.4.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-2) - one function,
+      end to end: `ObjectGround.graphicsDataUserFunction`. Its block is generated from the def,
+      `userFunctionArgsDict` carries the real argument names, and the page is unchanged apart
+      from one blank line that was inside the example's code fence. The trial item is not the
+      `ObjectGenericODE2.forceUserFunction` this step first named: that item has four blocks and
+      one shared example, which is a reordering question and not a mechanism question.
     - **RG12.4.3** — the **check**: the arity and the argument types of the typed function agree with
       the `std::function` that `definitionTypes.userFunctionSignatures` maps the parameter's type to.
       Today nothing compares them, and a disagreement is found by a user whose function is called

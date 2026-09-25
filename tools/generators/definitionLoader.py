@@ -64,7 +64,14 @@ def _Member(member, lineDefinition, source, structureClassNames):
               'args': member.get('args', '') or '',
               'cFlags': _Flags(member, source, structureClassNames),
               'parameterDescription': member.get('description', '') or ''}
-    return {key: _Mangle(values[key], key, source) for key in lineDefinition}
+    line = {key: _Mangle(values[key], key, source) for key in lineDefinition}
+    #a user function is a real Python def in the definition file, and what is carried through is the
+    #FUNCTION OBJECT, not a string: its arguments, their types and the docstring are read from its
+    #source, and the documentation block is generated from them (revision2026b step RG12.4, #2664)
+    if member.get('userFunction') is not None:
+        line['userFunction'] = member['userFunction']
+        line['userFunctionExample'] = member.get('userFunctionExample') or ''
+    return line
 
 
 def _Load(modules, parseInfoTemplate, lineDefinition, source):

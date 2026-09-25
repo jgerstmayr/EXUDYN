@@ -147,30 +147,48 @@ not in the list below reaches the page as itself and is a defect.
   quantities of an item, *output variables | symbol | formula*, *input parameter | symbol |
   description* - and a cell may hold mathematics, a link or inline code, as any other text may.
   A `|` inside a cell is written `\|`; inside `$...$` it needs nothing.
-- **A user function** is a paragraph of its own that names the signature, then prose, then a table
-  of the arguments and the return value, and optionally an example:
-
-  ```
-  **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
-
-  A user function, which computes a force vector ...
-
-  | arguments /  return | type or size | description |
-  |---|---|---|
-  | `mbs` | MainSystem | provides reference to mbs |
-  | **return value** | Vector6D | the computed force |
-
-  *Example*:
+- **A user function** is not written in the description at all: it is an ordinary Python
+  function, in the definition file, immediately above the `definitions.append(...)` it belongs
+  to, and the parameter is given it by object. The block of the page - the signature line, the
+  prose, the table of the arguments and the return value - is generated from it
+  (`tools/generators/userFunctionModel.py`, called by `itemDocsEmitter.UserFunctionDocumentation`):
 
   ```python
-  def UFforce(mbs, t, itemNumber, q, q_t):
-      return [0, -10, 0, 0, 0, 0]
-  ```
+  def ObjectGround_graphicsDataUserFunction(mbs: MainSystem,
+                                            itemNumber: Index) -> BodyGraphicsData:
+      r"""A user function, which is called by the visualization thread ...
+
+      the details, in as many lines as it takes
+
+      Args:
+          mbs: provides reference to mbs, which can be used in the user function
+          itemNumber: integer number of the object in mbs
+      Returns:
+          list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata)
+      """
+
+  ... ItemParameter(..., pythonName='graphicsDataUserFunction',
+                    userFunction=ObjectGround_graphicsDataUserFunction,
+                    userFunctionExample=r'''<the Python script shown under the block>'''),
   ```
 
-  The type column may hold mathematics, `Vector $\in \Rcal^{n_{ODE2}}$`, which is why the arguments
-  are a table and not a typed Python signature: 35 of the 228 argument rows say the **size** of an
-  argument as a formula, and a formula does not render inside a code block.
+  The **first line** of the docstring is the summary and what follows it the details; both are
+  Markdown, by the rules of this section, and their line breaks are kept. Only `Args:` and
+  `Returns:` are read. The def is named `<Item>_<parameter>` because four items have a
+  `forceUserFunction`; **the name the page prints is the parameter's `pythonName`**. The
+  annotation types - `Real`, `Index`, `Bool`, `MainSystem`, `np.ndarray` and the rest - are names
+  in `definitions/definitionTypes.py`, so the file stays ordinary, importable Python. Nothing is
+  executed: the source is read with `ast`, and an annotation reaches the page **as it is
+  written**. The number of arguments is checked against the C++ `std::function` of the
+  parameter's type, in `itemInterfaceEmitter.CreateStringSymbolicUserFunctionArgs`.
+
+  The **size** of an argument belongs in its `Args:` line, as a formula -
+  `q: generalized coordinates, $\qv \in \Rcal^{n_{ODE2}}$` - and not in its type, because a
+  formula renders in a table cell and not inside a code block. That is what lets the arguments
+  be a real signature.
+
+  The user functions still written as a hand-made block in a description are being converted
+  item by item (revision2026b step RG12.4); a new one is written as a def.
 - **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows
   `docs/figures/RevoluteJointZ.png`.
 

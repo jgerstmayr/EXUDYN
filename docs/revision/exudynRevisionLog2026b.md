@@ -3434,3 +3434,53 @@ four user function blocks of `ObjectGenericODE2` sit at the end of its equations
 followed by an `*Example*:` and a code block that belongs to the first of them, so generating them at
 the end would reorder the page. An item with **one** user function and no trailing example -
 `ObjectGround.graphicsDataUserFunction` - is the cleaner first end-to-end test.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.4.2 - one user function, end to end (2026-09-25, #2664)
+
+`ObjectGround.graphicsDataUserFunction` is now an ordinary Python function in
+`definitions/itemDefsObjects.py`, written above the `definitions.append(...)` of the item and handed
+to its `ItemParameter` by object. The 48 lines of hand-made block that stood in the item's
+`equations` - the bold signature line, five lines of prose, a three-row argument table, a separator
+and a fenced example - are gone; what remains of them is a two-line signature with real annotations,
+a Google-style docstring, and the example as `userFunctionExample=r'''...'''`.
+
+**The page is the proof.** `docs/generated/items/ObjectGround.md` differs from the committed one in
+**one line**: a blank line that sat inside the example's code fence, because the source had a blank
+line before the closing fence. Everything else - the wording, the table, the double space in
+`arguments /  return`, the position of the block after the equations - is byte-identical, generated
+from the def instead of copied from prose.
+
+**What the mechanism is.** Four small pieces, none of which does anything to an item that carries no
+def:
+
+- `tools/generators/userFunctionModel.py` reads the def: `inspect.getsource` for the text, `ast` for
+  the tree. Its `_SplitDocstring` was corrected here - the summary is the **first line** and the
+  details are what follows it, with their own line breaks kept, because a description is Markdown and
+  a writer laid those lines out. A paragraph-joining summary would have rewrapped the five lines into
+  one and made the comparison meaningless.
+- `definitionLoader._Member` carries the **function object** through to the emitters, beside the
+  strings the old line parser produced.
+- `itemDocsEmitter.UserFunctionDocumentation` builds the block as *definition-style Markdown* and
+  sends it through the same `ConvertText` as a hand-written description, so `[](#sec-graphicsdata)`,
+  a formula in a type cell and an `ABRV:` all behave the same in it.
+- `itemInterfaceEmitter.CreateStringSymbolicUserFunctionArgs` takes the argument **names** from the
+  def where there is one, and checks their **count** against the `std::function` of the parameter's
+  type. That is the arity half of RG12.4.3, done here because this is the one place that holds both
+  the def and the C++ signature. The single line it changed in `python/exudyn/itemInterface.py` is
+  `['mbs', 'arg0']` becoming `['mbs', 'itemNumber']`; those names are read only by
+  `advancedUtilities.ConvertFunctionToSymbolic`, and only to print the signature a user got wrong.
+
+**The rules are in one place.** `definitions/README.md` section *Writing a description* now says that
+a user function is not written in a description at all, with this def as the example, and says the
+three things a writer needs to know: the first line is the summary, the size of an argument goes in
+its `Args:` line as a formula, and the def is named `<Item>_<parameter>` while the page prints the
+parameter's `pythonName`. Rule 6b of `CLAUDE.md` already points there.
+
+**Gates**: 11/11 checks, the wheel, the full suite (`PASSED: no reproducible test failed`), and the
+strict HTML build. The two drifts are the intended ones - `itemInterface.py` (tier 1) and the
+`ObjectGround` page.
+
+One user function of 23 is converted. RG12.4.4 - a `Protocol` in `itemInterface.py` - is now worth
+doing on this one before the remaining 22 of RG12.4.5, because a Protocol is what a user actually
+feels in an editor.

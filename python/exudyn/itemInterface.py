@@ -167,7 +167,7 @@ def CheckForValidNumpyArray(value):
 userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['bool']],
         'MainSystem,postStepUserFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['bool']],
         'MainSystem,postNewtonFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['StdVector2D']],
-        'ObjectGround,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'arg0'], ['py::object']],
+        'ObjectGround,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object']],
         'ObjectRigidBody,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'arg0'], ['py::object']],
         'ObjectRigidBody2D,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'arg0'], ['py::object']],
         'ObjectGenericODE2,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']],

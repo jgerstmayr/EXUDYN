@@ -91,9 +91,11 @@ def _SplitDocstring(text):
                 arguments[current] = match.group(2).strip()
             elif current is not None and line.strip() != '':
                 arguments[current] += ' ' + line.strip()
-    paragraphs = prose.split('\n\n')
-    summary = ' '.join(line.strip() for line in paragraphs[0].split('\n')).strip()
-    details = '\n\n'.join(paragraph.strip() for paragraph in paragraphs[1:]).strip()
+    #Google style: the summary is the FIRST LINE, and the details are what follows it. The details
+    #keep their own line breaks, because a description is Markdown and a writer laid those out
+    lines = prose.split('\n')
+    summary = lines[0].strip()
+    details = '\n'.join(lines[1:]).strip()
     return (summary, details, arguments, returnText)
 
 

@@ -99,7 +99,6 @@ sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
 SC.renderer.Start() #perform zoom all (press 'a' several times) after startup to see the sphere
 mbs.SolveDynamic(sims)
 SC.renderer.Stop()
-
 ```
 
 

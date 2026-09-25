@@ -481,10 +481,12 @@ userFunctionSignatures = {'KeyPressUserFunction': 'std::function<bool(int, int, 
 def ItemParameter(type=Required, destination=Required, pythonName=Required,
                   defaultValue=Required, description=Required,
                   cFlags='', size='', args='', cplusplusName='',
-                  fromParent=False, deprecated=None, userFunction=None):
+                  fromParent=False, deprecated=None, userFunction=None, userFunctionExample=None):
     #userFunction: for a parameter that IS a user function, the Python def that says what its
     #arguments are called, what they are, and what they mean - see the header of
     #tools/generators/userFunctionModel.py (revision2026b step RG12.4, #2664)
+    #userFunctionExample: the Python code shown under the generated block, as text; it is a script
+    #and not a function, so it cannot be a def, and it is fenced as python by the emitter
     return _member('ItemParameter', locals())
 
 

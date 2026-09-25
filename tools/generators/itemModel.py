@@ -406,6 +406,9 @@ def SymbolicUserFunctions(definition):
                            'userFunctionName': member.get('cplusplusName', '') or member['pythonName'],
                            'pyUserFunctionType': TypeName(member),
                            'stdFunctionType': pyFunctionTypeConversion[TypeName(member)],
+                           #the Python def of the definition file, where there is one: it is what
+                           #the arguments are really called (revision2026b step RG12.4, #2664)
+                           'userFunction': member.get('userFunction'),
                            })
     return result
 

@@ -33,6 +33,27 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectGround   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#the user functions of ObjectGround. A user function is an ordinary Python def: its arguments,
+#their types and what they mean are read from THIS source, and the documentation block of the
+#item page, the argument table and the entries of userFunctionArgsDict are generated from it
+#(revision2026b step RG12.4, #2664). It is never called - see tools/generators/userFunctionModel.py
+def ObjectGround_graphicsDataUserFunction(mbs: MainSystem,
+                                          itemNumber: Index) -> BodyGraphicsData:
+    r"""A user function, which is called by the visualization thread in order to draw user-defined objects.
+
+    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
+    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+
+    Args:
+        mbs: provides reference to mbs, which can be used in user function to access all data of the object
+        itemNumber: integer number of the object in mbs, allowing easy access
+    Returns:
+        list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata)
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectGround',
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 0;
@@ -56,54 +77,6 @@ definitions.append(ItemDefinition(
                               %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
                         $$
 
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
-    A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
-    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects. 
-    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
-    inefficient and only designed to enable simpler tests, but not large scale problems.
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
-    | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-import exudyn as exu
-from math import sin, cos, pi
-from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-import exudyn.graphics as graphics
-
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-#create simple system:
-mbs.AddNode(NodePoint())
-body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
-
-#user function for moving graphics:
-def UFgraphics(mbs, objectNum):
-    t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-    #draw moving sphere on ground
-    graphics1=graphics.Sphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
-                                 radius=0.1, color=graphics.color.red, nTiles=32)
-    return [graphics1] 
-
-#add object with graphics user function
-ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
-mbs.Assemble()
-sims=exu.SimulationSettings()
-sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
-SC.renderer.Start() #perform zoom all (press 'a' several times) after startup to see the sphere
-mbs.SolveDynamic(sims)
-SC.renderer.Stop()
-
-```
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeBody,
@@ -182,7 +155,36 @@ SC.renderer.Stop()
         ItemParameter(type=TPyFunctionGraphicsData, destination=DestVisu,
             pythonName='graphicsDataUserFunction',
             defaultValue=0,
-            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function'),
+            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function',
+            userFunction=ObjectGround_graphicsDataUserFunction,
+            userFunctionExample=r'''import exudyn as exu
+from math import sin, cos, pi
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+#create simple system:
+mbs.AddNode(NodePoint())
+body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+
+#user function for moving graphics:
+def UFgraphics(mbs, objectNum):
+    t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+    #draw moving sphere on ground
+    graphics1=graphics.Sphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                 radius=0.1, color=graphics.color.red, nTiles=32)
+    return [graphics1] 
+
+#add object with graphics user function
+ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
+mbs.Assemble()
+sims=exu.SimulationSettings()
+sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
+SC.renderer.Start() #perform zoom all (press 'a' several times) after startup to see the sphere
+mbs.SolveDynamic(sims)
+SC.renderer.Stop()
+'''),
         ItemParameter(type=TBodyGraphicsData, destination=DestVisu,
             pythonName='graphicsData',
             defaultValue=NoDefaultValue,
