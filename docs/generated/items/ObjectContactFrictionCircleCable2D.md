@@ -369,7 +369,8 @@ Choice of normals and tangent vectors for calculation of normal contact forces a
 
 Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
 
-- **CASE SN**: use **S**egment **N**ormals  
+- **CASE SN**: use **S**egment **N**ormals
+
 If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment,
 
 $$
@@ -383,7 +384,8 @@ $$
 $$
 while in case $x_{gap}  > 0$ nothing is added.
 
-- **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)  
+- **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)
+
 If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
 
 $$
@@ -392,6 +394,7 @@ $$
 $$
 in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$,
 and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
+
 The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment,
 $$
 \begin{aligned}

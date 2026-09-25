@@ -568,7 +568,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
         `\codeName\ ` needed before a comma.
       - **RG3.14.7.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-2) - `\texttt{x}` to `` `x` ``: 706 of the 1005, one to one, no line structure.
       - **RG3.14.7.3** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-3) - the bold forms: `\bf` (45) in its `{\bf x}` shape and `\mybold` (29).
-      - **RG3.14.7.4** - the **lists**: `\bi`/`\ei` (19/19), `\item` (84), `\bn`/`\en` (4/4).
+      - **RG3.14.7.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-4) - the **lists**: `\bi`/`\ei` (19/19), `\item` (84), `\bn`/`\en` (4/4).
         This is the one that rewrites lines, and `ConvertLists` indents a block inside an item by two
         while `DedentOutsideCode` keeps that indentation inside a fence - so it is done alone, with
         the byte-identical comparison read per file.

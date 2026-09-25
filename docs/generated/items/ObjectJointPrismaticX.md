@@ -78,7 +78,7 @@ The item VObjectJointPrismaticX has the following parameters:
 
 #### Connector constraint equations
 
-**Equations for translational part (`activeConnector = True`)**:  
+**Equations for translational part (`activeConnector = True`)**:
 
 The two translational index 3 constraints for a free motion along the local $x$-axis read (in the coordinate system $J0$),
 
@@ -98,7 +98,7 @@ $$
 \end{aligned}
 $$
 
-**Equations for rotational part (`activeConnector = True`)**:  
+**Equations for rotational part (`activeConnector = True`)**:
 
 Note that the axes are always given in global coordinates, compare the table in
 [](#sec-objectjointprismaticx-definitionofquantities).

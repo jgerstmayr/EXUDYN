@@ -83,7 +83,7 @@ The item VObjectJointRevoluteZ has the following parameters:
 
 #### Connector constraint equations
 
-**Equations for translational part (`activeConnector = True`)**:  
+**Equations for translational part (`activeConnector = True`)**:
 
 The translational index 3 constraints read,
 
@@ -97,7 +97,7 @@ $$
 \LU{0}{\Delta \vv} = \Null
 $$
 
-**Equations for rotational part (`activeConnector = True`)**:  
+**Equations for rotational part (`activeConnector = True`)**:
 
 Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointrevolutez-definitionofquantities),
 and they include the transformations by $\LU{m0,J0}{\Rot}$ and $\LU{m1,J1}{\Rot}$.

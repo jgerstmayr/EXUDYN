@@ -210,7 +210,7 @@ $$
 
 see also the descriptions given after {eq}`eq-markersuperelementrigid-jacrotstandard` in the 'standard' approach.
 
-**EXAMPLE for marker on body 4, mesh nodes 10,11,12,13**:  
+**EXAMPLE for marker on body 4, mesh nodes 10,11,12,13**:
 
 `MarkerSuperElementRigid(bodyNumber = 4, meshNodeNumber = [10, 11, 12, 13], weightingFactors = [0.25, 0.25, 0.25, 0.25], referencePosition=[0,0,0])`
 

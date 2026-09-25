@@ -3315,3 +3315,36 @@ What is left of the 1005 is **146 in 7 names**: the lists with the line breaks t
 to be a table cell (RG3.14.7.5). One census entry was an artefact: the four `\n` of
 `pybindMainSystem` are C++ string escapes in a lambda passed as `cName`, which is code and not a
 description - so the gate has to know that keyword too.
+
+<a id="rg3-14-7-4"></a>
+### RG3.14.7.4 - the lists, and the line breaks between their items (2026-09-25, #2655)
+
+The maintainer asked for the two together, and they belong together: **37 of the 41 line breaks
+outside mathematics stand at the end of an `\item` or in the middle of one**. 20 lists, 84 items and
+42 breaks, and what is left of the 1005 macros is **18 in 5 names**.
+
+A LaTeX line break is not two trailing spaces - the maintainer decided that: *"in latex, these
+spaces ment nothing, so why should they do here"*. Between paragraphs it is a blank line; inside what
+becomes one list item it is a **continuation paragraph** of the item. The 112 breaks inside
+mathematics are row separators of an array or an aligned block and are untouched.
+
+**The pages move by 72 lines and every one is one of those two things**: a trailing double space
+that was a forced break is gone, and where the break carried meaning it is a paragraph break -
+`- **CASE SN**: use **S**egment **N**ormals` now stands on its own line above the sentence that
+explains it, instead of being welded to it.
+
+Three things had to be arranged, and each of them was a wrong page first.
+
+- `ConvertLists` emits a list at **column 0** whatever the indentation of its input, and indents a
+  line that is already indented inside a fenced block by two more. In the pipeline it runs after
+  `RemoveIndentation2` has dedented the description, so column 0 is right; here each block is
+  dedented before the pass and indented back after it - the same rule the display math of
+  RG3.14.3.1 and the tables of RG3.14.4 needed. Without it **every figure inside a list item moved
+  four spaces right**.
+- A break inside an item **cannot** be a blank line: `ConvertLists` joins an item's own lines into
+  one and drops it. It is carried through the join as a marker and split out afterwards.
+- A list may open **in the middle of a line** - `Usage: \bi` in four pybind descriptions - so the
+  indentation is read from the line, not from the macro.
+
+What is left: six `\addExampleImage`, six `\tabnewline` of the one pybind example that used to be a
+table cell, and the `\n` family, which is C++ in a `cName` lambda and not a description at all.

@@ -52,9 +52,9 @@ The item VNodePoint2D has the following parameters:
 
 **Detailed information:**
 The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
-Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist.   
+Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist.
 
-Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.   
+Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.
 
 **Example** for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
 

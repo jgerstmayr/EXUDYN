@@ -84,7 +84,7 @@ The item VObjectJointGeneric has the following parameters:
 
 #### Connector constraint equations
 
-**Equations for translational part (`activeConnector = True`)**:  
+**Equations for translational part (`activeConnector = True`)**:
 
 If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
 the translational index 3 constraints read ($UF_{0,1,2}(mbs, t, \pv_{par})$ is the translational part of the user function $UF$),
@@ -120,7 +120,7 @@ $$
 \end{aligned}
 $$
 
-**Equations for rotational part (`activeConnector = True`)**:  
+**Equations for rotational part (`activeConnector = True`)**:
 
 The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
 Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointgeneric-definitionofquantities).

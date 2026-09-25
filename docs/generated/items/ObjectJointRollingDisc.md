@@ -120,7 +120,7 @@ $$
 
 #### Connector constraint equations
 
-Constraints for `activeConnector = True`:  
+Constraints for `activeConnector = True`:
 
 The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
 
