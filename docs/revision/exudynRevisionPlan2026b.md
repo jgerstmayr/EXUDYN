@@ -662,6 +662,44 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     `git diff docs/generated/` read after each.
 
 
+<a id="rg3-15"></a>
+**RG3.15** *(group RG3; maintainer 2026-09-25)* **The chapters of the user manual** (#2657, #2661).
+    The table of contents is decided and is written out at the end of this document, in *The chapters
+    of the user manual, as decided for #2657 and #2662*. In short: **Renderer, graphics and
+    visualization** becomes the one visualization chapter, in four sections - *The renderer window*,
+    *The model view*, *Images, animations and the solution viewer*, *How to add graphics* - built
+    from the eleven visualization sections that sit in *Exudyn basics* today, the five that are
+    already in the chapter and the one in *Advanced topics*. **Performance, errors and solver
+    failures** becomes a chapter of its own with the three sections of *Exudyn basics* that belong
+    together and are not basics. *Advanced topics* takes what is internals or reference - the
+    graphics pipeline, raytracing, the `GraphicsData` reference - and, with #2661, the command line
+    and the results monitor. *Exudyn basics* keeps one visualization section, *Seeing the model*,
+    which points at the chapter.
+
+    Every section that moves keeps its target, so that the references to it keep working; that is
+    what makes this a move and not a rewrite, and it is the thing the gate has to prove.
+
+<a id="rg3-16"></a>
+**RG3.16** *(group RG3; maintainer 2026-09-25)* **Every heading is sentence case** (#2662).
+    *"This is a heading"*, everywhere. Measured 2026-09-25: 116 of the 189 headings of
+    `docs/manual/` and `index.md` already are, and about fifteen are Title Case and should not be -
+    *Installation and Getting Started*, *Exudyn Basics*, *Generating Animations*, *Generalized
+    Forces*, *Lagrange's Equations of Motion* and the like. What stays capitalised is a proper noun
+    (*Runge-Kutta*, *Newmark*, *Hurty-Craig-Bampton*, *Tait-Bryan*) and a name the code spells with
+    a capital (`GraphicsData: Line`, *Items: Nodes, Objects, ...*), so the checker that finds them
+    needs a list of those names and reports the rest.
+
+<a id="rg3-17"></a>
+**RG3.17** *(group RG3; maintainer 2026-09-25)* **A comment in a description is an HTML comment**
+    (#2663). 513 lines of `definitions/` are nothing but a `%` comment and 7 more carry one after
+    text; they become `<!-- ... -->`, which the converter removes so that it does not reach the page.
+    **`%` survives inside mathematics and nowhere else**: MathJax and LaTeX both honour it there, so
+    it needs no handling at all - two of the 513 are a commented-out continuation line inside a
+    multi-line formula, which is exactly the case that must keep working. The reason to change the
+    rest is in `StripComments`: it runs **before** the mathematics is protected, so a `%` anywhere
+    truncates the rest of its line whatever that line is.
+
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
@@ -1440,6 +1478,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.14 | #2655 | the item descriptions become Markdown: `definitions/` is free of structural LaTeX; .7 closes the gate |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
+| RG3.15 | #2657, #2661 | the chapters of the user manual, as decided |
+| RG3.16 | #2662 | every heading in sentence case |
+| RG3.17 | #2663 | a comment in a description is an HTML comment |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
@@ -1465,11 +1506,8 @@ whether it becomes a step.
 | RG4 | #2423 | every C++ user error inspects the Python source to find its file and line |
 | RG10 | #2541 | `exudyn.config` and `exudyn.special` are in no stub file |
 | RG12 | #2497 | 59 bare `except:` remain in the shipped package |
-| maintainer, 2026-09-25 | #2657 | the chapters of the user manual are restructured - the table of contents is **decided**, see below |
 | maintainer, 2026-09-25 | #2659 | the simulation settings section does not mention `python -m exudyn dialogs sim` |
 | maintainer, 2026-09-25 | #2660 | six pages of the C++ interface repeat their own title as the first section |
-| maintainer, 2026-09-25 | #2661 | the command line and the results monitor belong in *Advanced topics* |
-| maintainer, 2026-09-25 | #2662 | the manual mixes sentence case and Title Case in its headings |
 
 ### The chapters of the user manual, as decided for #2657 and #2662
 

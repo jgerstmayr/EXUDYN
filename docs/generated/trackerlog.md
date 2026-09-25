@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.68.dev1
 - last change = 2026-09-25
-- Number of issues = 2663
+- Number of issues = 2664
 - Number of resolved issues = 2382 (68 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A comment in a description is still a LaTeX percent comment (#2663)
+  - description: The maintainer, 2026-09-25: 'In the itemDefs... files I still see % used for comments - latex style. Shouldnt we use \<!-- This is a single-line comment --\> comments? % could still survive as the % symbol, but maybe just inside a formula.' Measured the same day over definitions/: 513 lines are nothing but a % comment, 7 carry a % comment after text, and exactly one backslash-percent escape exists. Two of the 513 sit INSIDE a multi-line inline formula, where a continuation line of the formula is commented out - and that is the case that decides the design. MathJax and LaTeX both honour % as a comment inside mathematics, so a % there needs no handling at all; it only has to be left alone. Outside mathematics a comment becomes \<!-- ... --\>, which the converter removes so that it does not reach the page, and which cannot silently eat the next line of a formula the way % can: latexToMarkdown.StripComments runs BEFORE the mathematics is protected, so today a stray % anywhere truncates the rest of its line whatever it is. A commented-out block - a table, a figure - is then one \<!-- ... --\> rather than a % on every line.
+  - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The manual mixes sentence case and Title Case in its headings (#2662)
   - description: Measured 2026-09-25 over docs/manual/\*.md and index.md: 116 of the 189 headings are sentence case - 'Mouse input', 'Render state' - and the rest are not. Filtering out the proper nouns (Runge-Kutta, Newmark, Generalized-alpha, Hurty-Craig-Bampton, Lagrange-d'Alembert, Tait-Bryan, Ubuntu) and the code names that are capitalised because the code is (GraphicsData: Line, Items: Nodes, Objects, ...), about fifteen are Title Case and should not be: Installation and Getting Started, Exudyn Basics, Execute Command and Help, Generating Animations, Parameter Variation, Genetic Optimization, Modeling of Contact in Exudyn, Sphere-sphere contact: Equations, Sphere-triangle contact: Equations, Dynamics: Mechanical principles, Generalized Principle of Virtual Work, Generalized Forces, Lagrange's Equations of Motion, Euler's and Chasles's Theorems, Install from specific Wheel. The maintainer decided 2026-09-25: sentence case - 'This is a heading' - everywhere. A checker can report a mid-heading capital that is not in a list of names, which is how the fifteen were found.
   - date raised: 2026-09-25
