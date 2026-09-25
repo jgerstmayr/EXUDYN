@@ -516,7 +516,7 @@ class MainSystem:
         ...
     @overload
     def AssembleLTGLists(self) -> None: 
-        r"""Build \ac{LTG} coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc.
+        """Build LTG coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc.
         
         vectors and matrices) and store special object lists (body, connector, constraint, ...)
         """

@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationMarkerNodeCoordinate
-* @brief        A node-Marker attached to a \hac{ODE2} coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinate}.
+* @brief        A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use \texttt{MarkerNodeODE1Coordinate}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

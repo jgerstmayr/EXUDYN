@@ -1772,7 +1772,7 @@ class VObjectGenericODE1:
         return str(dict(self))
 
 class ObjectGenericODE1:
-    r"""A system of :math:`n` acf{ODE1}, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ODE1 systems.
+    r"""A system of :math:`n` ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ODE1 systems.
     
     It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions :math:`n` or :math:`(n \times n)`, or they must be empty :math:`(0 \times 0)`, using [] in Python.
     

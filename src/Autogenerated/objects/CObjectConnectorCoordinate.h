@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:48:23 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Real offset;                                  //!< AUTO: An offset between the two values
     Real factorValue1;                            //!< AUTO: An additional factor multiplied with value1 used in algebraic equation
-    bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for \hac{ODE2} coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
+    bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for ABRV:ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real)> > offsetUserFunction;//!< AUTO: A Python function which defines the time-dependent offset; see description below
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real)> > offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for velocity level constraints; see description below
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
@@ -125,7 +125,7 @@ public: // AUTO:
     //! AUTO:  Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false) const override;
 
-    //! AUTO:  compute derivative of algebraic equations w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1} and \hac{AE} coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians
+    //! AUTO:  compute derivative of algebraic equations w.r.t. ABRV:ODE2, ABRV:ODE2 time derivatives, ABRV:ODE1 and ABRV:AE coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags

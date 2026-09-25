@@ -49,7 +49,7 @@ OVDAngularVelocityBody = r'$\LU{0}{\tomega}\cConfig$global 3D angular velocity v
 OVDAngularVelocityLocalBody = r'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D angular velocity vector of body'
 
 #used by 4 items
-OVDVelocityCoordinatesODE2 = r'all \hac{ODE2} velocity coordinates'
+OVDVelocityCoordinatesODE2 = r'all ABRV:ODE2 velocity coordinates'
 
 #used by 4 items
 OVDGeneralizedForces = 'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'

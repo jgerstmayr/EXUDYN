@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:48:23 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 //#include <pybind11/stl.h>//for NumpyMatrix
 //#include <pybind11/pybind11.h>
 //typedef py::array_t<Real> NumpyMatrix;
-#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
+#include "Pymodules/PyMatrixContainer.h"//for some ABRV:FFRF matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectGenericODE2Parameters
@@ -41,7 +41,7 @@ public: // AUTO:
     PyMatrixContainer stiffnessMatrix;            //!< AUTO: stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction
     PyMatrixContainer dampingMatrix;              //!< AUTO: damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction
     Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix instead of the constant mass matrix given in \f$\Mm\f$; return numpy array or MatrixContainer; see description below
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)> > jacobianUserFunction;//!< AUTO: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times \f$f_{ODE2}\f$) and w.r.t.\ the velocities (times \f$f_{ODE2_t}\f$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
@@ -63,7 +63,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectGenericODE2
-* @brief        A system of \f$n\f$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions \f$n\f$ or \f$(n \times n)\f$, or they must be empty \f$(0 \times 0)\f$, except for the mass matrix which always needs to have dimensions \f$(n \times n)\f$.
+* @brief        A system of \f$n\f$ second order ordinary differential equations (ABRV:ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions \f$n\f$ or \f$(n \times n)\f$, or they must be empty \f$(0 \times 0)\f$, except for the mass matrix which always needs to have dimensions \f$(n \times n)\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -189,7 +189,7 @@ public: // AUTO:
         return parameters.nodeNumbers.NumberOfItems();
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
+    //! AUTO:  number of ABRV:ODE2 coordinates; needed for object?
     virtual Index GetODE2Size() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

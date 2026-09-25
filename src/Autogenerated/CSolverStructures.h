@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-20 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,13 +31,13 @@ public: // AUTO:
   Real factorization;                             //!< AUTO: solve or inverse
   Real integrationFormula;                        //!< AUTO: time spent for evaluation of integration formulas
   Real jacobianAE;                                //!< AUTO: jacobian of algebraic equations (not counted in sum)
-  Real jacobianODE1;                              //!< AUTO: jacobian w.r.t. coordinates of \hac{ODE1} equations (not counted in sum)
-  Real jacobianODE2;                              //!< AUTO: jacobian w.r.t. coordinates of \hac{ODE2} equations (not counted in sum)
-  Real jacobianODE2_t;                            //!< AUTO: jacobian w.r.t. coordinates_t of \hac{ODE2} equations (not counted in sum)
+  Real jacobianODE1;                              //!< AUTO: jacobian w.r.t. coordinates of ABRV:ODE1 equations (not counted in sum)
+  Real jacobianODE2;                              //!< AUTO: jacobian w.r.t. coordinates of ABRV:ODE2 equations (not counted in sum)
+  Real jacobianODE2_t;                            //!< AUTO: jacobian w.r.t. coordinates_t of ABRV:ODE2 equations (not counted in sum)
   Real massMatrix;                                //!< AUTO: mass matrix computation
   Real newtonIncrement;                           //!< AUTO: Jac\f$^{-1}\f$ * RHS; backsubstitution
-  Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE1} right-hand-side
-  Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE2} right-hand-side
+  Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of ABRV:ODE1 right-hand-side
+  Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of ABRV:ODE2 right-hand-side
   Real overhead;                                  //!< AUTO: overhead, such as initialization, copying and some matrix-vector multiplication
   Real postNewton;                                //!< AUTO: discontinuous iteration / PostNewtonStep
   Real python;                                    //!< AUTO: time spent for Python functions
@@ -142,7 +142,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-20 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -163,12 +163,12 @@ public: // AUTO:
   Index startAE;                                  //!< AUTO: start of algebraic coordinates, but set to zero if nAE==0
   ResizableVectorParallel startOfStepStateAAlgorithmic;//!< AUTO: additional term needed for generalized alpha (startOfStep state)
   ResizableVectorParallel systemResidual;         //!< AUTO: system residual vector (vectors will be linked to this vector!)
-  ResizableVectorParallel temp2ODE2;              //!< AUTO: second temporary vector for \hac{ODE2} quantities; use in static computation
-  ResizableVectorParallel tempODE1F0;             //!< AUTO: temporary vector for \hac{ODE1} Jacobian
-  ResizableVectorParallel tempODE1F1;             //!< AUTO: temporary vector for \hac{ODE1} Jacobian
-  ResizableVectorParallel tempODE2;               //!< AUTO: temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton
-  ResizableVectorParallel tempODE2F0;             //!< AUTO: temporary vector for \hac{ODE2} Jacobian
-  ResizableVectorParallel tempODE2F1;             //!< AUTO: temporary vector for \hac{ODE2} Jacobian
+  ResizableVectorParallel temp2ODE2;              //!< AUTO: second temporary vector for ABRV:ODE2 quantities; use in static computation
+  ResizableVectorParallel tempODE1F0;             //!< AUTO: temporary vector for ABRV:ODE1 Jacobian
+  ResizableVectorParallel tempODE1F1;             //!< AUTO: temporary vector for ABRV:ODE1 Jacobian
+  ResizableVectorParallel tempODE2;               //!< AUTO: temporary vector for ABRV:ODE2 quantities; use in initial accelerations and during Newton
+  ResizableVectorParallel tempODE2F0;             //!< AUTO: temporary vector for ABRV:ODE2 Jacobian
+  ResizableVectorParallel tempODE2F1;             //!< AUTO: temporary vector for ABRV:ODE2 Jacobian
   GeneralMatrix* jacobianAE;                      //!< AUTO: link to dense or sparse algebraic equations jacobian
   GeneralMatrix* systemJacobian;                  //!< AUTO: link to dense or sparse system jacobian
   GeneralMatrix* systemMassMatrix;                //!< AUTO: link to dense or sparse system mass matrix; in explicit solver, after a step, this will contain the factorized mass matrix
@@ -176,8 +176,8 @@ public: // AUTO:
   TemporaryComputationDataArray tempCompDataArray;//!< AUTO: temporary data per thread, used during item-related residual and jacobian computation; for parallel computation
 
 private: // AUTO: 
-  GeneralMatrixEXUdense jacobianAEdense;          //!< AUTO: dense \hac{AE} jacobian
-  GeneralMatrixEigenSparse jacobianAEsparse;      //!< AUTO: sparse \hac{AE} jacobian
+  GeneralMatrixEXUdense jacobianAEdense;          //!< AUTO: dense ABRV:AE jacobian
+  GeneralMatrixEigenSparse jacobianAEsparse;      //!< AUTO: sparse ABRV:AE jacobian
   LinearSolverType linearSolverType;              //!< AUTO: contains linear solver type value; cannot be accessed directly, because a change requires new linking of system matrices
   GeneralMatrixEXUdense systemJacobianDense;      //!< AUTO: dense system jacobian
   GeneralMatrixEigenSparse systemJacobianSparse;  //!< AUTO: sparse system jacobian
@@ -259,7 +259,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-20 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -366,7 +366,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-20 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -455,7 +455,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-20 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -572,7 +572,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-20 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

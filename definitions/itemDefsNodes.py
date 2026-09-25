@@ -36,7 +36,7 @@ definitions = []
 definitions.append(ItemDefinition(
     className='NodePoint',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for \hac{ODE2}.""",
+    classDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
     equations=r"""    \paragraph{Detailed information:}
     The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
@@ -127,7 +127,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodePoint2D',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for \ac{ODE2}.""",
+    classDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
     equations=r"""    \paragraph{Detailed information:}
     The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
@@ -321,7 +321,7 @@ definitions.append(ItemDefinition(
             implementation='return nRotationCoordinates;'),
         ItemFunctionDef('GetAlgebraicEquationsSize',
             implementation='return (Index)(useNodeAE&&parameters.addConstraintEquation);',
-            description=r"""number of \hac{AE} equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)"""),
+            description=r"""number of ABRV:AE equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)"""),
         ItemTypes('Node', ['Position', 'Orientation', 'RigidBody', 'RotationEulerParameters'],
             description=r'return node type (for node treatment in computation)'),
         ItemFunctionDef('GetNodeGroup',
@@ -661,10 +661,10 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeRigidBody2D',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are \hac{ODE2}, used for second order differetial equations.""",
+    classDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
     equations=r"""    \paragraph{Detailed information:}
-    The node provides 2 displacement coordinates (displacement of \hac{COM}, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
+    The node provides 2 displacement coordinates (displacement of ABRV:COM, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
     The node leads to 3 ODE2 equations of motions, where the first 2 equations are
     residuals of global translational forces, and the third equation is the residual of the
     torque around the Z-axis (due to planar motion, local=global).
@@ -764,7 +764,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='Node1D',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A node with one \hac{ODE2} coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
+    classDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
     classType=ClassTypeNode,
     equations=r"""    \paragraph{Detailed information:}
     The current position/rotation coordinate of the 1D node is computed from
@@ -782,9 +782,9 @@ definitions.append(ItemDefinition(
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
-        ItemOutputVariable(OVCoordinates, r"""$\qv\cConfig = [q_0]\tp\cConfig$\hac{ODE2} coordinate of node (in vector form)"""),
-        ItemOutputVariable(OVCoordinates_t, r"""$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$\hac{ODE2} velocity coordinate of node (in vector form)"""),
-        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$\hac{ODE2} acceleration coordinate of node (in vector form)"""),
+        ItemOutputVariable(OVCoordinates, r"""$\qv\cConfig = [q_0]\tp\cConfig$ABRV:ODE2 coordinate of node (in vector form)"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$ABRV:ODE2 velocity coordinate of node (in vector form)"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$ABRV:ODE2 acceleration coordinate of node (in vector form)"""),
         ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -1175,7 +1175,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericODE2',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A node containing a number of \hac{ODE2} variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
+    classDescription=r"""A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1205,7 +1205,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TIndex(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
             pythonName='numberOfODE2Coordinates',
             defaultValue=0,
-            description=r'$n_c$number of generic \hac{ODE2} coordinates'),
+            description=r'$n_c$number of generic ABRV:ODE2 coordinates'),
         ItemFunctionDef('GetNumberOfODE2Coordinates',
             implementation='return parameters.numberOfODE2Coordinates;'),
         ItemTypes('Node', ['GenericODE2'],
@@ -1247,13 +1247,13 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericODE1',
     cParentClass=ParentClassCNodeODE1,
-    classDescription=r"""A node containing a number of \hac{ODE1} variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
+    classDescription=r"""A node containing a number of ABRV:ODE1 variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
-        ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{ODE1} coordinates vector of node"""),
-        ItemOutputVariable(OVCoordinates_t, r"""$\dot \yv\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig$\hac{ODE1} velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$ABRV:ODE1 coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot \yv\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig$ABRV:ODE1 velocity coordinates vector of node"""),
         ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -1272,7 +1272,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TIndex(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
             pythonName='numberOfODE1Coordinates',
             defaultValue=0,
-            description=r'$n_c$number of generic \hac{ODE1} coordinates'),
+            description=r'$n_c$number of generic ABRV:ODE1 coordinates'),
         ItemFunctionDef('GetNumberOfODE1Coordinates',
             implementation='return parameters.numberOfODE1Coordinates;'),
         ItemTypes('Node', ['GenericODE1'],
@@ -1303,11 +1303,11 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericAE',
     cParentClass=ParentClassCNodeAE,
-    classDescription=r"""A node containing a number of \hac{AE} variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
+    classDescription=r"""A node containing a number of ABRV:AE variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
-        ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{AE} coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$ABRV:AE coordinates vector of node"""),
         ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -1326,7 +1326,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TIndex(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
             pythonName='numberOfAECoordinates',
             defaultValue=0,
-            description=r'$n_c$number of generic \hac{AE} coordinates'),
+            description=r'$n_c$number of generic ABRV:AE coordinates'),
         ItemFunctionDef('GetNumberOfAECoordinates',
             implementation='return parameters.numberOfAECoordinates;'),
         ItemTypes('Node', ['GenericAE'],
@@ -1406,7 +1406,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodePointGround',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' \hac{ODE2} and \hac{ODE1} coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
+    classDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[

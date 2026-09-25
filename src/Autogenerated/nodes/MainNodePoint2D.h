@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodePoint2D
-* @brief        A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for \ac{ODE2}.
+* @brief        A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

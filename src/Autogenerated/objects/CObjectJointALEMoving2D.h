@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ public: // AUTO:
     ArrayIndex slidingMarkerNumbers;              //!< AUTO: a list of sn (global) marker numbers which are are used to update marker1
     Vector slidingMarkerOffsets;                  //!< AUTO: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...
     Real slidingOffset;                           //!< AUTO: sliding offset [SI:m]: a scalar offset, which represents the (reference arc) length of all previous sliding cable elements
-    ArrayIndex nodeNumbers;                       //!< AUTO: node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \hac{ODE2} coordinate
+    ArrayIndex nodeNumbers;                       //!< AUTO: node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ABRV:ODE2 coordinate
     bool usePenaltyFormulation;                   //!< AUTO: flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)
     Real penaltyStiffness;                        //!< AUTO: penalty stiffness [SI:N/m] used if usePenaltyFormulation=True
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
@@ -52,7 +52,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectJointALEMoving2D
-* @brief        A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the \hac{ODE2} coordinate q[0] provides the (given) moving coordinate in the cable element.
+* @brief        A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -130,7 +130,7 @@ public: // AUTO:
     //! AUTO:  Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false) const override;
 
-    //! AUTO:  compute derivative of algebraic equations w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1} and \hac{AE} coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians
+    //! AUTO:  compute derivative of algebraic equations w.r.t. ABRV:ODE2, ABRV:ODE2 time derivatives, ABRV:ODE1 and ABRV:AE coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags

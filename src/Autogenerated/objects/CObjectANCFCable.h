@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -56,7 +56,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectANCFCable
-* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -166,7 +166,7 @@ public: // AUTO:
         return 2;
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
+    //! AUTO:  number of ABRV:ODE2 coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
         return nODE2coordinates;

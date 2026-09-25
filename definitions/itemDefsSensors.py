@@ -36,7 +36,7 @@ definitions = []
 definitions.append(ItemDefinition(
     className='SensorNode',
     cParentClass=ParentClassCSensor,
-    classDescription=r"""A sensor attached to a \hac{ODE2} or \hac{ODE1} node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    classDescription=r"""A sensor attached to a ABRV:ODE2 or ABRV:ODE1 node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,

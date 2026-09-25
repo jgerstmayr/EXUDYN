@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:48:23 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -45,7 +45,7 @@ public: // AUTO:
     ArrayIndex linkParents;                       //!< AUTO: index of parent joint/link; if no parent exists, the value is \f$-1\f$; by default, \f$p_0=-1\f$ because the \f$i\f$th parent index must always fulfill \f$p_i<i\f$; must be always set
     Matrix3DList jointTransformations;            //!< AUTO: list of constant joint transformations from parent joint coordinates \f$p_0\f$ to this joint coordinates \f$j_0\f$; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (\f$-1\f$), the base coordinate system \f$0\f$ is used; must be always set
     Vector3DList jointOffsets;                    //!< AUTO: list of constant joint offsets from parent joint to this joint; \f$p_0\f$, \f$p_1\f$, \f$\ldots\f$ denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists (\f$-1\f$), the base coordinate system \f$0\f$ is used; must be always set
-    Matrix3DList linkInertiasCOM;                 //!< AUTO: list of link inertia tensors w.r.t.\ \ac{COM} in joint/link \f$j_i\f$ coordinates; must be always set
+    Matrix3DList linkInertiasCOM;                 //!< AUTO: list of link inertia tensors w.r.t.\ ABRV:COM in joint/link \f$j_i\f$ coordinates; must be always set
     Vector3DList linkCOMs;                        //!< AUTO: list of vectors for center of mass (COM) in joint/link \f$j_i\f$ coordinates; must be always set
     Vector linkMasses;                            //!< AUTO: masses of links; must be always set
     Vector3DList linkForces;                      //!< AUTO: list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list \f$[]\f$, adding no forces
@@ -325,7 +325,7 @@ public: // AUTO:
         return 1;
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates
+    //! AUTO:  number of ABRV:ODE2 coordinates
     virtual Index GetODE2Size() const override
     {
         return parameters.jointTransformations.NumberOfItems();

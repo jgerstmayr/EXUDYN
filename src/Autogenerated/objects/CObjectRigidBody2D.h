@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:48:23 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,7 +32,7 @@ class CObjectRigidBody2DParameters // AUTO:
 public: // AUTO:
     Real physicsMass;                             //!< AUTO: must be >= 0; mass [SI:kg] of rigid body
     Real physicsInertia;                          //!< AUTO: must be >= 0; inertia [SI:kgm\f$^2\f$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0
-    Vector2D physicsCenterOfMass;                 //!< AUTO: local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0], the computation will not consider additional terms for the \hac{COM} and it is faster
+    Vector2D physicsCenterOfMass;                 //!< AUTO: local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0], the computation will not consider additional terms for the ABRV:COM and it is faster
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for 2D rigid body node
     //! AUTO: default constructor with parameter initialization
     CObjectRigidBody2DParameters()
@@ -156,7 +156,7 @@ public: // AUTO:
         return 1;
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
+    //! AUTO:  number of ABRV:ODE2 coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
         return nODE2coordinates;

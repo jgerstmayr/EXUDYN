@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationMarkerNodeCoordinates
-* @brief        A node-Marker attached to all \hac{ODE2} coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinates}.
+* @brief        A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use \texttt{MarkerNodeODE1Coordinates}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

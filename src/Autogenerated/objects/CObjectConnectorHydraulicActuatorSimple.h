@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -161,7 +161,7 @@ public: // AUTO:
         return parameters.nodeNumbers.NumberOfItems();
     }
 
-    //! AUTO:  number of \hac{ODE1} coordinates; needed for object?
+    //! AUTO:  number of ABRV:ODE1 coordinates; needed for object?
     virtual Index GetODE1Size() const override;
 
     //! AUTO:  return object type (for node treatment in computation)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:26 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,7 +112,7 @@ public: // AUTO:
         return nRotationCoordinates;
     }
 
-    //! AUTO:  number of \hac{AE} equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)
+    //! AUTO:  number of ABRV:AE equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)
     virtual Index GetAlgebraicEquationsSize() const override
     {
         return (Index)(useNodeAE&&parameters.addConstraintEquation);
@@ -175,10 +175,10 @@ public: // AUTO:
     //! AUTO:  provide according output variable in 'value'; used e.g. for postprocessing and sensors
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
 
-    //! AUTO:  ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
+    //! AUTO:  ONLY for nodes with ABRV:AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
 
-    //! AUTO:  ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
+    //! AUTO:  ONLY for nodes with ABRV:AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, JacobianType::Type& filledJacobians) const override;
 
     //! AUTO:  Compute vector to of 4 Euler Parameters from reference and configuration coordinates

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:53:53 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix;
-#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
+#include "Pymodules/PyMatrixContainer.h"//for some ABRV:FFRF matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectFFRFParameters
@@ -40,10 +40,10 @@ public: // AUTO:
     PyMatrixContainer massMatrixFF;               //!< AUTO: body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
     PyMatrixContainer stiffnessMatrixFF;          //!< AUTO: body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
     PyMatrixContainer dampingMatrixFF;            //!< AUTO: body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
-    Vector forceVector;                           //!< AUTO: generalized, force vector added to RHS; the rigid body part \f$\fv_r\f$ is directly applied to rigid body coordinates while the flexible part \f$\fv\indf\f$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with \hac{COM} at the origin of the reference frame
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below
-    PythonUserFunctionBase< std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the \hac{FFRF} mass matrix; see description below
-    bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard \hac{FFRF} terms are computed; use this flag for user-defined definition of \hac{FFRF} terms in mass matrix and quadratic velocity vector
+    Vector forceVector;                           //!< AUTO: generalized, force vector added to RHS; the rigid body part \f$\fv_r\f$ is directly applied to rigid body coordinates while the flexible part \f$\fv\indf\f$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with ABRV:COM at the origin of the reference frame
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below
+    PythonUserFunctionBase< std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the ABRV:FFRF mass matrix; see description below
+    bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard ABRV:FFRF terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector
     //! AUTO: default constructor with parameter initialization
     CObjectFFRFParameters()
     {
@@ -61,7 +61,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectFFRF
-* @brief        This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
+* @brief        This object is used to represent equations modelled by the ABRV:FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the ABRV:FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
@@ -85,10 +85,10 @@ class CObjectFFRF: public CObjectSuperElement // AUTO:
 protected: // AUTO:
     CObjectFFRFParameters parameters; //! AUTO: contains all parameters for CObjectFFRF
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
-    bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
-    Real physicsMass;                             //!< AUTO: must be >= 0; total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
+    Real physicsMass;                             //!< AUTO: must be >= 0; total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (\hac{COM}); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Matrix PHItTM;                                //!< AUTO: projector matrix; may be removed in future
     Vector referencePositions;                    //!< AUTO: vector containing the reference positions of all flexible nodes
     mutable Vector tempVector;                    //!< AUTO: temporary vector
@@ -134,18 +134,18 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     ArrayIndex& GetCoordinateIndexPerNode() { return coordinateIndexPerNode; }
 
-    //! AUTO:  Write (Reference) access to:ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
+    //! AUTO:  Write (Reference) access to:ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
     void SetObjectIsInitialized(const bool& value) { objectIsInitialized = value; }
-    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
+    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
     const bool& GetObjectIsInitialized() const { return objectIsInitialized; }
-    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
+    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
     bool& GetObjectIsInitialized() { return objectIsInitialized; }
 
-    //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     void SetPhysicsMass(const Real& value) { physicsMass = value; }
-    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     const Real& GetPhysicsMass() const { return physicsMass; }
-    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Real& GetPhysicsMass() { return physicsMass; }
 
     //! AUTO:  Write (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
@@ -155,11 +155,11 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
     Matrix3D& GetPhysicsInertia() { return physicsInertia; }
 
-    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (\hac{COM}); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     void SetPhysicsCenterOfMass(const Vector3D& value) { physicsCenterOfMass = value; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (\hac{COM}); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     const Vector3D& GetPhysicsCenterOfMass() const { return physicsCenterOfMass; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (\hac{COM}); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Vector3D& GetPhysicsCenterOfMass() { return physicsCenterOfMass; }
 
     //! AUTO:  Write (Reference) access to:\f$\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\f$projector matrix; may be removed in future
@@ -297,7 +297,7 @@ public: // AUTO:
         return parameters.nodeNumbers.NumberOfItems();
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
+    //! AUTO:  number of ABRV:ODE2 coordinates; needed for object?
     virtual Index GetODE2Size() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

@@ -386,8 +386,8 @@ pb.DefLatexFinishTable()
 pb.CppCode("\n//        LTG readout functions:\n")
 pb.DefLatexStartClass(pyClassStr+': Get object LTG coordinate mappings', '', subSection=True, labelName='sec:systemData:ObjectLTG')
 
-pb.AddDocu('This section provides access functions the \\ac{LTG}-lists for every object (body, constraint, ...) '+
-            'in the system. For details on the \\ac{LTG} mapping, see \\refSection{sec:overview:ltgmapping}.')
+pb.AddDocu('This section provides access functions the ABRV:LTG-lists for every object (body, constraint, ...) '+
+            'in the system. For details on the ABRV:LTG mapping, see \\refSection{sec:overview:ltgmapping}.')
 
 pb.DefLatexStartTable(classStr+':object LTG coordinate mappings')
 

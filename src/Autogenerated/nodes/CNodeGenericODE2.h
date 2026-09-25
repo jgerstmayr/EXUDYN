@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CNodeGenericODE2Parameters // AUTO:
 {
 public: // AUTO:
     Vector referenceCoordinates;                  //!< AUTO: generic reference coordinates of node; must be consistent with numberOfODE2Coordinates
-    Index numberOfODE2Coordinates;                //!< AUTO: must be > 0; number of generic \hac{ODE2} coordinates
+    Index numberOfODE2Coordinates;                //!< AUTO: must be > 0; number of generic ABRV:ODE2 coordinates
     //! AUTO: default constructor with parameter initialization
     CNodeGenericODE2Parameters()
     {
@@ -40,7 +40,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeGenericODE2
-* @brief        A node containing a number of \hac{ODE2} variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
+* @brief        A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

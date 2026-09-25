@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,11 +29,11 @@ public: // AUTO:
   bool appendToFile;                              //!< AUTO: flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!
   bool binarySolutionFile;                        //!< AUTO: if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files
   std::string coordinatesSolutionFileName;        //!< AUTO: filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)
-  bool exportAccelerations;                       //!< AUTO: add \hac{ODE2} accelerations to solution file (coordinatesSolutionFile)
+  bool exportAccelerations;                       //!< AUTO: add ABRV:ODE2 accelerations to solution file (coordinatesSolutionFile)
   bool exportAlgebraicCoordinates;                //!< AUTO: add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)
   bool exportDataCoordinates;                     //!< AUTO: add DataCoordinates to solution file (coordinatesSolutionFile)
   bool exportODE1Velocities;                      //!< AUTO: add coordinatesODE1_t to solution file (coordinatesSolutionFile)
-  bool exportVelocities;                          //!< AUTO: add \hac{ODE2} velocities to solution file (coordinatesSolutionFile)
+  bool exportVelocities;                          //!< AUTO: add ABRV:ODE2 velocities to solution file (coordinatesSolutionFile)
   Index flushFilesDOF;                            //!< AUTO: must be > 0; number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time
   bool flushFilesImmediately;                     //!< AUTO: flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)
   Index outputPrecision;                          //!< AUTO: must be >= 0; precision for floating point numbers written to solution and sensor files
@@ -137,7 +137,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -148,8 +148,8 @@ public: // AUTO:
 class NumericalDifferentiationSettings // AUTO: 
 {
 public: // AUTO: 
-  bool addReferenceCoordinatesToEpsilon;          //!< AUTO: True: for the size estimation of the differentiation parameter, the reference coordinate \f$q^{Ref}_i\f$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
-  bool doSystemWideDifferentiation;               //!< AUTO: True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation
+  bool addReferenceCoordinatesToEpsilon;          //!< AUTO: True: for the size estimation of the differentiation parameter, the reference coordinate \f$q^{Ref}_i\f$ is added to ABRV:ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
+  bool doSystemWideDifferentiation;               //!< AUTO: True: system wide differentiation (e.g. all ABRV:ODE2 equations w.r.t. all ABRV:ODE2 coordinates); False: only local (object) differentiation
   bool forAE;                                     //!< AUTO: flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification
   bool forODE2;                                   //!< AUTO: flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms
   bool forODE2connectors;                         //!< AUTO: flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE
@@ -203,7 +203,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -257,7 +257,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
   Index maxModifiedNewtonRestartIterations;       //!< AUTO: must be >= 0; maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step
   Real modifiedNewtonContractivity;               //!< AUTO: must be > 0; maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
   bool modifiedNewtonJacUpdatePerStep;            //!< AUTO: True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton)
-  Index newtonResidualMode;                       //!< AUTO: must be >= 0; 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
+  Index newtonResidualMode;                       //!< AUTO: must be >= 0; 0 ... use residual for computation of error (standard); 1 ... use ABRV:ODE2 and ABRV:ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   Real relativeTolerance;                         //!< AUTO: must be >= 0; relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
   bool useModifiedNewton;                         //!< AUTO: True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)
   bool useNewtonSolver;                           //!< AUTO: flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution
@@ -340,7 +340,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -412,7 +412,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -469,7 +469,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -588,7 +588,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -614,7 +614,7 @@ public: // AUTO:
   Real loadStepStart;                             //!< AUTO: must be >= 0; a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user
   Real minimumStepSize;                           //!< AUTO: must be > 0; lower limit of step size, before nonlinear solver stops
   Index numberOfLoadSteps;                        //!< AUTO: must be > 0; number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once
-  Real stabilizerODE2term;                        //!< AUTO: must be >= 0; add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
+  Real stabilizerODE2term;                        //!< AUTO: must be >= 0; add mass-proportional stabilizer term in ABRV:ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
   Index stepInformation;                          //!< AUTO: must be >= 0; add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
   bool useLoadFactor;                             //!< AUTO: True: compute a load factor \f$\in [0,1]\f$ from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction
   Index verboseMode;                              //!< AUTO: must be >= 0; 0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse
@@ -688,7 +688,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -742,7 +742,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -808,7 +808,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

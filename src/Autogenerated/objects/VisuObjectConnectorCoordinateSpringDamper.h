@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectConnectorCoordinateSpringDamper
-* @brief        A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
+* @brief        A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

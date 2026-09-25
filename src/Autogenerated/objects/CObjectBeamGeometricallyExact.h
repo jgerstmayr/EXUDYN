@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -149,7 +149,7 @@ public: // AUTO:
         return 2;
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
+    //! AUTO:  number of ABRV:ODE2 coordinates; needed for object?
     virtual Index GetODE2Size() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

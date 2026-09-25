@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainMarkerNodeODE1Coordinate
-* @brief        A node-Marker attached to a \hac{ODE1} coordinate of a node.
+* @brief        A node-Marker attached to a ABRV:ODE1 coordinate of a node.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

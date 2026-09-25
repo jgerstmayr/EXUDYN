@@ -405,9 +405,14 @@ def ConvertInline(text):
                                                                  + a.strip() + '.png')
                                   + '\n:width: 400\n```\n')
     #abbreviations: the target lives in the generated abbreviation page
+    #ABRV:KEY is the form the definitions use - no backslash, no braces (#2655). An abbreviation
+    #target is a bare label, not a section: {ref} without explicit text cannot find a title for it,
+    #and the strict build calls that an error. The key is alphanumeric and the macro ends where the
+    #key does; measured over definitions/, no abbreviation is followed by an alphanumeric character.
+    text = re.sub(r'\bABRV:([A-Za-z0-9]+)',
+                  lambda m: '{ref}`' + m.group(1) + ' <' + m.group(1) + '>`', text)
+    #the seven LaTeX spellings, still used by the hand-written chapters of docs/manual/
     for name in ['hac', 'hacs', 'acf', 'acl', 'acs', 'acp', 'ac']:
-        #an abbreviation target is a bare label, not a section: {ref} without explicit text
-        #cannot find a title for it, and the strict build calls that an error
         text = ReplaceCommand(text, name, 1,
                               lambda a: '{ref}`' + a.strip() + ' <' + a.strip() + '>`')
     text = ReplaceCommand(text, 'refSectionA', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')

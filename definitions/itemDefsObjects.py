@@ -728,7 +728,7 @@ definitions.append(ItemDefinition(
     static constexpr Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{CreateRigidBody(...)}, see \refSection{sec:mainsystemextensions:CreateRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, \hac{COM} and mass. \addExampleImage{ObjectRigidBody}""",
+    classDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{CreateRigidBody(...)}, see \refSection{sec:mainsystemextensions:CreateRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, ABRV:COM and mass. \addExampleImage{ObjectRigidBody}""",
     classType=ClassTypeObject,
     equations=r"""    %++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Definition of quantities}
@@ -739,7 +739,7 @@ definitions.append(ItemDefinition(
         \rowTable{(relative) current coordinates}{$\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp$}{unknowns in solver; {\bf relative} to the reference coordinates; current coordinates at initial configuration = initial coordinates $\qv\cIni$}
         \rowTable{current velocity coordinates}{$\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp$}{current velocity coordinates}
     %
-        \rowTable{body's reference point}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of {\bf body's reference point} provided by node $n_0$ in any configuration except for reference; if $\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp$, this position becomes equal to the \hac{COM} position}
+        \rowTable{body's reference point}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of {\bf body's reference point} provided by node $n_0$ in any configuration except for reference; if $\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp$, this position becomes equal to the ABRV:COM position}
         \rowTable{reference body's reference point}{$\pRefG\cRef = \LU{0}{\pv}(n_0)\cRef$}{position of {\bf body's reference point} in reference configuration}
         \rowTable{body's reference point displacement}{$\LU{0}{\uv}\cConfig = \pRefG\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
         \rowTable{body's reference point velocity}{$\LU{0}{\vv}\cConfig = \dot \pRefG\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
@@ -788,24 +788,24 @@ definitions.append(ItemDefinition(
     $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$.
     
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Equations of motion for \hac{COM}}
-    The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point $=$ \hac{COM} and split for translations and rotations, using a coordinate-free notation,
+    \mysubsubsubsection{Equations of motion for ABRV:COM}
+    The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point $=$ ABRV:COM and split for translations and rotations, using a coordinate-free notation,
     \be \label{eq:ObjectRigidBody:EOMcom0}
       \mp{m \ImThree}{\Null}{\Null}{\Jm} \vp{\av_{COM}}{\talpha} = \vp{\Null}{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda}
     \ee
     with the $3\times 3$ unit matrix $\ImThree$ and forces $\fv$ resp.\ torques $\ttau$ as discribed in the table above.
-    A change of the reference point, using the vector $\bv_{COM}$ from the body's reference point $\pv$ to the \hac{COM} position, is simple by replacing \hac{COM} accelerations using the common relation known from Euler
+    A change of the reference point, using the vector $\bv_{COM}$ from the body's reference point $\pv$ to the ABRV:COM position, is simple by replacing ABRV:COM accelerations using the common relation known from Euler
     \be
       \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \eqComma
     \ee
     which is inserted into the first line of \eq{eq:ObjectRigidBody:EOMcom0}. Additionally, the second line of \eq{eq:ObjectRigidBody:EOMcom0}
-    (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to \hac{COM}, using the well known relation
+    (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to ABRV:COM, using the well known relation
     \be
       m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
     \ee
     
     \mysubsubsubsection{Equations of motion for arbitrary reference point}
-    This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point ($\neq$ \hac{COM}), 
+    This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point ($\neq$ ABRV:COM), 
     see e.g.\ \cite{woernle2016}(page 258ff.), which have the general coordinate-free form
     \be \label{eq:ObjectRigidBody:EOMarbitrary}
       \mp{m \ImThree}{-m \tilde \bv_{COM}}{m \tilde \bv_{COM}}{\Jm} \vp{\av}{\talpha} = 
@@ -908,11 +908,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TVectorND(6), destination=DestComp+DestParam,
             pythonName='physicsInertia',
             defaultValue='Vector6D({0.,0.,0., 0.,0.,0.})',
-            description=r"""$\LU{b}{\jv_6}$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \hac{COM}; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, \hac{COM} and mass"""),
+            description=r"""$\LU{b}{\jv_6}$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, ABRV:COM and mass"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='physicsCenterOfMass',
             defaultValue=DVZeroVector3D,
-            description=r"""$\LU{b}{\bv_{COM}}$local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0,0], the computation will not consider additional terms for the \hac{COM} and it is faster"""),
+            description=r"""$\LU{b}{\bv_{COM}}$local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0,0], the computation will not consider additional terms for the ABRV:COM and it is faster"""),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -957,9 +957,9 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('GetNumberOfNodes',
             implementation='return 1;'),
         ItemFunctionDef('GetODE2Size',
-            description=r'number of \hac{ODE2} coordinates; depends on node'),
+            description=r'number of ABRV:ODE2 coordinates; depends on node'),
         ItemFunctionDef('GetAlgebraicEquationsSize',
-            description=r'number of \hac{AE} coordinates; depends on node'),
+            description=r'number of ABRV:AE coordinates; depends on node'),
         ItemRequestedTypes('Node', ['Position', 'Orientation', 'RigidBody']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
@@ -997,7 +997,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
-      \rowTable{reference position}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{reference point, only equal to the position of \hac{COM} if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference)}
+      \rowTable{reference position}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{reference point, only equal to the position of ABRV:COM if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference)}
       \rowTable{reference point displacement}{$\LU{0}{\uv}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of reference point which is provided by node $n_0$ in any configuration; NOTE that for configurations other than reference, it is follows that $\pRefG\cRef - \pRefG\cConfig$}
       \rowTable{reference point velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of reference point which is provided by node $n_0$ in any configuration}
       \rowTable{body rotation}{$\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$}{rotation of body as provided by node $n_0$ in any configuration}
@@ -1108,7 +1108,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TVectorND(2), destination=DestComp+DestParam,
             pythonName='physicsCenterOfMass',
             defaultValue='Vector2D({0.,0.})',
-            description=r"""$\LU{b}{\bv_{COM}}$local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0], the computation will not consider additional terms for the \hac{COM} and it is faster"""),
+            description=r"""$\LU{b}{\bv_{COM}}$local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0], the computation will not consider additional terms for the ABRV:COM and it is faster"""),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -1187,11 +1187,11 @@ definitions.append(ItemDefinition(
 //#include <pybind11/stl.h>//for NumpyMatrix
 //#include <pybind11/pybind11.h>
 //typedef py::array_t<Real> NumpyMatrix; 
-#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
+#include "Pymodules/PyMatrixContainer.h"//for some ABRV:FFRF matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""A system of $n$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.""",
+    classDescription=r"""A system of $n$ second order ordinary differential equations (ABRV:ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Additional output variables for superelement node access}
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
@@ -1230,7 +1230,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in \codeName\ -- computed 
     by means of numerical differentiation.
-    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the \ac{LHS} of \eq{eq_ObjectGenericODE2_EOM} 
+    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of \eq{eq_ObjectGenericODE2_EOM} 
     without $\Km$ and $\Dm$ (these matrices are added internally),
     \be \label{eq_ObjectGenericODE2_Jac}
       \Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
@@ -1239,7 +1239,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \ee
     For clarification also see the \mybold{example} in \texttt{TestModels/linearFEMgenericODE2.py}.
     
-    CoordinateLoads are added for the respective \hac{ODE2} coordinate on the RHS of the latter equation.
+    CoordinateLoads are added for the respective ABRV:ODE2 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}
@@ -1271,7 +1271,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{jacobianUserFunction(mbs, t, itemNumber, q, q\_t, fODE2, fODE2\_t)}
-    A user function, which computes the jacobian of the \ac{LHS} of the equations of motion, depending on current time, states of object and two
+    A user function, which computes the jacobian of the ABRV:LHS of the equations of motion, depending on current time, states of object and two
     factors which are used to distinguish between position level and velocity level derivatives. 
     Can be used to create any kind of mechanical system by using the object states.
     \startTable{arguments /  return}{type or size}{description}
@@ -1369,10 +1369,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     objectType=ObjectTypeSuperElement,
     outputVariables=[
-        ItemOutputVariable(OVCoordinatesTotal, r"""all \hac{ODE2} displacement plus reference coordinates of object"""),
-        ItemOutputVariable(OVCoordinates, r'all \hac{ODE2} (displacement) coordinates'),
+        ItemOutputVariable(OVCoordinatesTotal, r"""all ABRV:ODE2 displacement plus reference coordinates of object"""),
+        ItemOutputVariable(OVCoordinates, r'all ABRV:ODE2 (displacement) coordinates'),
         ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
-        ItemOutputVariable(OVCoordinates_tt, r'all \hac{ODE2} acceleration coordinates'),
+        ItemOutputVariable(OVCoordinates_tt, r'all ABRV:ODE2 acceleration coordinates'),
         ItemOutputVariable(OVForce, OVDGeneralizedForces),
         ],
     visuParentClass=VisuParentClassVisualizationObjectSuperElement,
@@ -1404,7 +1404,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below"""),
+            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below"""),
         ItemParameter(type=TPyFunctionMatrixContainerMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
@@ -1549,7 +1549,7 @@ typedef py::array_t<Real> NumpyMatrix;
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObject,
-    classDescription=r"""A system of $n$ \acf{ODE1}, having a system matrix, a rhs vector, but mostly it will use a user function to describe special \hac{ODE1} systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.""",
+    classDescription=r"""A system of $n$ ABRV:ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ABRV:ODE1 systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Equations of motion}
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
@@ -1564,7 +1564,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \ee
     Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), and that \texttt{iN} represents the itemNumber (=objectNumber). 
 
-    CoordinateLoads are added for the respective \hac{ODE1} coordinate on the RHS of the latter equation.
+    CoordinateLoads are added for the respective ABRV:ODE1 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{rhsUserFunction(mbs, t, itemNumber, q)}
@@ -1577,7 +1577,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (composed from \hac{ODE1} nodal coordinates) in current configuration, without reference values}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (composed from ABRV:ODE1 nodal coordinates) in current configuration, without reference values}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1640,9 +1640,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     objectType=ObjectTypeObject,
     outputVariables=[
-        ItemOutputVariable(OVCoordinatesTotal, r"""all \hac{ODE2} displacement plus reference coordinates of object"""),
-        ItemOutputVariable(OVCoordinates, r'all \hac{ODE1} coordinates'),
-        ItemOutputVariable(OVCoordinates_t, r'all \hac{ODE1} velocity coordinates'),
+        ItemOutputVariable(OVCoordinatesTotal, r"""all ABRV:ODE2 displacement plus reference coordinates of object"""),
+        ItemOutputVariable(OVCoordinates, r'all ABRV:ODE1 coordinates'),
+        ItemOutputVariable(OVCoordinates_t, r'all ABRV:ODE1 velocity coordinates'),
         ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -1989,9 +1989,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \fv_{PD} = \Pm \cdot (\uv_o - \qv) + \Dm \cdot (\vv_o - \dot \qv)
     \ee
     Here, the '.' operator represents an element-wise multiplication of two vectors, resulting in a vector.
-    The force $\fv_{PD}$ at the \ac{RHS} acts in direction of prescribed joint motion $\uv_o$ and
+    The force $\fv_{PD}$ at the ABRV:RHS acts in direction of prescribed joint motion $\uv_o$ and
     prescribed joint velocities $\vv_o$ multiplied with proportional and 'derivative' factors $P$ and $D$.
-    Omitting $\uv_o$ and $\vv_o$ and putting $\fv_{PD}$ on the \ac{LHS}, we immediately can interpret these
+    Omitting $\uv_o$ and $\vv_o$ and putting $\fv_{PD}$ on the ABRV:LHS, we immediately can interpret these
     terms as stiffness and damping on the single coordinates.
     The control force is also considered in the object's jacobian, which is currently computed by numerical
     differentiation.
@@ -2053,9 +2053,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     objectType=ObjectTypeSuperElement,
     outputVariables=[
-        ItemOutputVariable(OVCoordinates, r"""all \hac{ODE2} joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object"""),
+        ItemOutputVariable(OVCoordinates, r"""all ABRV:ODE2 joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object"""),
         ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
-        ItemOutputVariable(OVCoordinates_tt, r'all \hac{ODE2} acceleration coordinates'),
+        ItemOutputVariable(OVCoordinates_tt, r'all ABRV:ODE2 acceleration coordinates'),
         ItemOutputVariable(OVForce, OVDGeneralizedForces),
         ],
     pythonShortName='KinematicTree',
@@ -2096,7 +2096,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
             pythonName='linkInertiasCOM',
             defaultValue='Matrix3DList()',
-            description=r"""$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$list of link inertia tensors w.r.t.\ \ac{COM} in joint/link $j_i$ coordinates; must be always set"""),
+            description=r"""$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$list of link inertia tensors w.r.t.\ ABRV:COM in joint/link $j_i$ coordinates; must be always set"""),
         ItemParameter(type=TVector3DList, destination=DestComp+DestParam,
             pythonName='linkCOMs',
             defaultValue='Vector3DList()',
@@ -2248,7 +2248,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             implementation='return 1;'),
         ItemFunctionDef('GetODE2Size',
             implementation='return parameters.jointTransformations.NumberOfItems();',
-            description=r'number of \hac{ODE2} coordinates'),
+            description=r'number of ABRV:ODE2 coordinates'),
         ItemRequestedTypes('Node', ['GenericODE2']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
@@ -2354,7 +2354,7 @@ definitions.append(ItemDefinition(
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix; 
-#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
+#include "Pymodules/PyMatrixContainer.h"//for some ABRV:FFRF matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addPublicC=r"""    static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
@@ -2362,7 +2362,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
+    classDescription=r"""This object is used to represent equations modelled by the ABRV:FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the ABRV:FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Additional output variables for superelement node access}
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
@@ -2425,7 +2425,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     \mysubsubsubsection{Kinematics}
     We assume a finite element mesh with 
-    The kinematics of the \hac{FFRF} is based on a splitting of 
+    The kinematics of the ABRV:FFRF is based on a splitting of 
     translational ($\cv_t \in \Rcal^{n\indf}$), rotational ($\cv\indr \in \Rcal^{n\indf}$) and flexible ($\cv\indf \in \Rcal^{n\indf}$) nodal displacements, 
     \be \label{eq:ObjectFFRF:coordinatesSplitting}
       \LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \eqDot
@@ -2537,7 +2537,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \omegaBDtilde = \mathrm{diag}\left(\LU{b}{\tilde \tomega_\mathrm{bd}}, \; \ldots ,\; \LU{b}{\tilde \tomega_\mathrm{bd}}  \right)
       \in \Rcal^{n\indf \times n\indf}
     \ee
-    CoordinateLoads are added for each \hac{ODE2} coordinate on the RHS of the latter equation. 
+    CoordinateLoads are added for each ABRV:ODE2 coordinate on the RHS of the latter equation. 
     
     \noindent If the rigid body node is using Euler parameters $\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, an {\bf additional constraint} (constraint nr.\ 0) is 
     added automatically for the Euler parameter norm, reading
@@ -2589,9 +2589,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
     outputVariables=[
-        ItemOutputVariable(OVCoordinates, r'all \hac{ODE2} coordinates'),
+        ItemOutputVariable(OVCoordinates, r'all ABRV:ODE2 coordinates'),
         ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
-        ItemOutputVariable(OVCoordinates_tt, r'all \hac{ODE2} acceleration coordinates'),
+        ItemOutputVariable(OVCoordinates_tt, r'all ABRV:ODE2 acceleration coordinates'),
         ItemOutputVariable(OVForce, OVDGeneralizedForces),
         ],
     visuParentClass=VisuParentClassVisualizationObjectSuperElement,
@@ -2619,19 +2619,19 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='forceVector',
             defaultValue='Vector()',
-            description=r"""$\LU{0}{\fv} = [\LU{0}{\fv\indr},\; \LU{0}{\fv\indf}]\tp \in \Rcal^{n_c}$generalized, force vector added to RHS; the rigid body part $\fv_r$ is directly applied to rigid body coordinates while the flexible part $\fv\indf$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with \hac{COM} at the origin of the reference frame"""),
+            description=r"""$\LU{0}{\fv} = [\LU{0}{\fv\indr},\; \LU{0}{\fv\indf}]\tp \in \Rcal^{n_c}$generalized, force vector added to RHS; the rigid body part $\fv_r$ is directly applied to rigid body coordinates while the flexible part $\fv\indf$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with ABRV:COM at the origin of the reference frame"""),
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv_{user} =  [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}$A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q\_t; see description below"""),
+            description=r"""$\fv_{user} =  [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q\_t; see description below"""),
         ItemParameter(type=TPyFunctionMatrixMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
-            description=r"""$\Mm_{user} \in \Rcal^{n_c\times n_c}$A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the \hac{FFRF} mass matrix; see description below"""),
+            description=r"""$\Mm_{user} \in \Rcal^{n_c\times n_c}$A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the ABRV:FFRF mass matrix; see description below"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='computeFFRFterms',
             defaultValue=True,
-            description=r"""flag decides whether the standard \hac{FFRF} terms are computed; use this flag for user-defined definition of \hac{FFRF} terms in mass matrix and quadratic velocity vector"""),
+            description=r"""flag decides whether the standard ABRV:FFRF terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector"""),
         ItemParameter(type=TArrayIndex, destination=DestComp, cFlags=CFReadOnly,
             pythonName='coordinateIndexPerNode',
             defaultValue='ArrayIndex()',
@@ -2639,11 +2639,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TBool, destination=DestComp,
             pythonName='objectIsInitialized',
             defaultValue=False,
-            description=r"""ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()"""),
+            description=r"""ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp, cFlags=CFReadOnly,
             pythonName='physicsMass',
             defaultValue=0.,
-            description=r"""$m$total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix $\LU{b}{\Mm}$"""),
+            description=r"""$m$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix $\LU{b}{\Mm}$"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp, cFlags=CFReadOnly,
             pythonName='physicsInertia',
             defaultValue='EXUmath::unitMatrix3D',
@@ -2651,7 +2651,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TVectorND(3), destination=DestComp, cFlags=CFReadOnly,
             pythonName='physicsCenterOfMass',
             defaultValue=DVZeroVector3D,
-            description=r"""$\LU{b}{\bv}_{COM}$local position of center of mass (\hac{COM}); auto-computed from mass matrix $\LU{b}{\Mm}$"""),
+            description=r"""$\LU{b}{\bv}_{COM}$local position of center of mass (ABRV:COM); auto-computed from mass matrix $\LU{b}{\Mm}$"""),
         ItemParameter(type=TNumpyMatrix, destination=DestComp, cFlags=CFReadOnly,
             pythonName='PHItTM',
             defaultValue='Matrix()',
@@ -2799,7 +2799,7 @@ definitions.append(ItemDefinition(
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix; 
-#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
+#include "Pymodules/PyMatrixContainer.h"//for some ABRV:FFRF matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addPublicC=r"""    static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
@@ -2808,7 +2808,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""This object is used to represent modally reduced flexible bodies using the \hac{FFRF} and the \hac{CMS}. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.""",
+    classDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.""",
     classType=ClassTypeObject,
     equations=r"""    %+++++++++++++++++++++++++++++++++++++
     \mysubsubsubsectionlabel{Super element output variables}{sec:objectffrfreducedorder:superelementoutput}
@@ -2886,7 +2886,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %++++++++++++++++++++++++
 
                        
-    The reduced order \hac{FFRF} formulation is based on an approximation of flexible coordinates $\LU{b}{\qv\indf}$ 
+    The reduced order ABRV:FFRF formulation is based on an approximation of flexible coordinates $\LU{b}{\qv\indf}$ 
     by means of a reduction or mode basis $\LU{b}{\tPsi}$ (\texttt{modeBasis}) and the the modal coordinates $\tzeta$,
     \be
       \LU{b}{\qv\indf} \approx \LU{b}{\tPsi} \tzeta
@@ -3056,7 +3056,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     frame. This means, that a force to a \texttt{MarkerBodyPosition} would only be applied to the (rigid) floating frame, but not onto the deformable body and
     results depend strongly on the choice of the reference frame (or the underlying mode shapes).
     
-    CoordinateLoads are added for each \hac{ODE2} coordinate on the RHS of the equations of motion. 
+    CoordinateLoads are added for each ABRV:ODE2 coordinate on the RHS of the equations of motion. 
     %++++++++++++++++++++++++++++++++++++++++
     
     
@@ -3070,7 +3070,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{\hac{FFRF} object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n_{ODE2}}$}{returns force vector for object}
     \finishTable
@@ -3081,7 +3081,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{\hac{FFRF} object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
       \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$}{returns mass matrix for object}
     \finishTable
@@ -3092,7 +3092,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
     outputVariables=[
-        ItemOutputVariable(OVCoordinates, r'all \hac{ODE2} coordinates'),
+        ItemOutputVariable(OVCoordinates, r'all ABRV:ODE2 coordinates'),
         ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
         ItemOutputVariable(OVForce, OVDGeneralizedForces),
         ],
@@ -3122,7 +3122,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv\induser \in \Rcal^{n_{ODE2}}$A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below"""),
+            description=r"""$\fv\induser \in \Rcal^{n_{ODE2}}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below"""),
         ItemParameter(type=TPyFunctionMatrixMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
@@ -3130,7 +3130,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='computeFFRFterms',
             defaultValue=True,
-            description=r"""flag decides whether the standard \hac{FFRF}/\hac{CMS} terms are computed; use this flag for user-defined definition of \hac{FFRF} terms in mass matrix and quadratic velocity vector"""),
+            description=r"""flag decides whether the standard ABRV:FFRF/ABRV:CMS terms are computed; use this flag for user-defined definition of ABRV:FFRF terms in mass matrix and quadratic velocity vector"""),
         ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
             pythonName='modeBasis',
             defaultValue='Matrix()',
@@ -3150,7 +3150,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TBool, destination=DestComp,
             pythonName='objectIsInitialized',
             defaultValue=False,
-            description=r"""ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()"""),
+            description=r"""ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, some internal (constant) ABRV:FFRF matrices are recomputed during Assemble()"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp,
             pythonName='physicsMass',
             defaultValue=0.,
@@ -3162,7 +3162,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TVectorND(3), destination=DestComp,
             pythonName='physicsCenterOfMass',
             defaultValue=DVZeroVector3D,
-            description=r"""$\LU{b}{\bv}_{COM}$local position of center of mass (\hac{COM})"""),
+            description=r"""$\LU{b}{\bv}_{COM}$local position of center of mass (ABRV:COM)"""),
         ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
             pythonName='mPsiTildePsi',
             defaultValue='Matrix()',
@@ -3190,7 +3190,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp,
             pythonName='physicsCenterOfMassTilde',
             defaultValue='EXUmath::zeroMatrix3D',
-            description=r"""$\LU{b}{\tilde \bv}_{COM}$tilde matrix from local position of \hac{COM}; autocomputed during initialization"""),
+            description=r"""$\LU{b}{\tilde \bv}_{COM}$tilde matrix from local position of ABRV:COM; autocomputed during initialization"""),
         ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
             pythonName='tempUserFunctionForce',
             defaultValue='Vector()',
@@ -3301,7 +3301,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
         ItemFunctionDef('HasReferenceFrame',
             implementation='localReferenceFrameNode = rigidBodyNodeNumber; return true;',
-            description=r"""always true, because \hac{FFRF}-based object; return according LOCAL node number"""),
+            description=r"""always true, because ABRV:FFRF-based object; return according LOCAL node number"""),
         ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst,
             pythonName='GetNumberOfMeshNodes',
             implementation='return parameters.referencePositions.NumberOfItems()/3;',
@@ -3348,7 +3348,7 @@ definitions.append(ItemDefinition(
     static constexpr Index nNodalCoordinates = 6; //!< number of nodal coordinates
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
+    classDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
     classType=ClassTypeObject,
     equations=r"""    %%RSTCOMPATIBLE
 """,
@@ -3586,7 +3586,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     static constexpr Index nNodalCoordinates = 4; //!< number of nodal coordinates
 """,
     cParentClass=ParentClassCObjectANCFCable2DBase,
-    classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}).""",
+    classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
@@ -4055,7 +4055,7 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation
 """,
     cParentClass=ParentClassCObjectANCFCable2DBase,
-    classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}).""",
+    classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
     equations=r"""    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
     The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
@@ -4330,7 +4330,7 @@ definitions.append(ItemDefinition(
             implementation='return nNodes;'),
         ItemFunctionDef('GetODE2Size',
             implementation='return nODE2coordinates;',
-            description=r'number of \hac{ODE2} coordinates'),
+            description=r'number of ABRV:ODE2 coordinates'),
         ItemRequestedTypes('Node', ['Position', 'Orientation', 'PointSlope23']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
@@ -4430,7 +4430,7 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<maxODE2coordinates*maxODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}).""",
+    classDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
     equations=r"""    See paper of Simo and Vu-Quoc (1986).
     Detailed description coming later.
@@ -4539,7 +4539,7 @@ definitions.append(ItemDefinition(
             implementation='return parameters.nodeNumbers.NumberOfItems();'),
         ItemFunctionDef('GetODE2Size',
             implementation='return parameters.nodeNumbers.NumberOfItems()*3;',
-            description=r'number of \hac{ODE2} coordinates'),
+            description=r'number of ABRV:ODE2 coordinates'),
         ItemFunction(type=Tbool, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='IsLinear',
             implementation='return parameters.nodeNumbers.NumberOfItems() == 2;',
@@ -5290,7 +5290,7 @@ definitions.append(ItemDefinition(
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
 
     The force $\fv_{SD}$ acts via the markers' position jacobians $\Jm_{pos,m0}$ and $\Jm_{pos,m1}$.
-    The generalized forces added to the \ac{LHS} equations read for marker $m0$,
+    The generalized forces added to the ABRV:LHS equations read for marker $m0$,
     \be
       \fv_{LHS,m0} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_{SD}} \eqComma
     \ee
@@ -5298,7 +5298,7 @@ definitions.append(ItemDefinition(
     \be
       \fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \eqDot
     \ee
-    The \ac{LHS} equation parts are added accordingly using the \ac{LTG} mapping.
+    The ABRV:LHS equation parts are added accordingly using the ABRV:LTG mapping.
     Note that the different signs result from the signs in \eq{eq_ObjectCartesianSpringDamper_deltaPos}.
 
     The connector also provides an analytic jacobian, which is used if \texttt{newton.numericalDifferentiation.forODE2 = False} 
@@ -5316,7 +5316,7 @@ definitions.append(ItemDefinition(
     Here, $f_{ODE2}$ is the factor for the position derivative and $f_{ODE2_t}$ is the factor for the velocity derivative, 
     which allows a computation of the computation for both the position as well as the velocity part at the same time.
 
-    \noindent The complete jacobian for the \ac{LHS} equations then reads,
+    \noindent The complete jacobian for the ABRV:LHS equations then reads,
     \bea
       \Jm_{CSD}&=&\mp{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m0}}}
                   {\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m1}}}
@@ -6204,7 +6204,7 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
+    classDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
@@ -6399,7 +6399,7 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.""",
+    classDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
@@ -6970,7 +6970,7 @@ definitions.append(ItemDefinition(
     except for the friction and the additional valve, which are not available here.
     
     The hydraulic actuator contains internal states, namely pressures $p_0$ and $p_1$.
-    The \ac{ODE1} for pressures follows for the the case of laminar flow, based on system and tank pressure,
+    The ABRV:ODE1 for pressures follows for the the case of laminar flow, based on system and tank pressure,
     valve positions as well as the actuator velocity and position (only for change of volume).
     
     The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
@@ -7001,7 +7001,7 @@ definitions.append(ItemDefinition(
 
     Otherwise, if \texttt{useChamberVolumeChange == False}, $V_{0,cur}=V_{h,0}$, $V_{1,cur}=V_{h,1}$ and $K_{k,eff} = K_{oil}$ for chambers $k \in {0,1}$.
     
-    The pressure equations (explicit \ac{ODE1}) have the structure
+    The pressure equations (explicit ABRV:ODE1) have the structure
     \be
       \vp{\dot p_0}{\dot p_1} = \vp{f_0(p_0, s, \dot s)}{f_1(p_1, s, \dot s)}
     \ee
@@ -7764,7 +7764,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='velocityLevel',
             defaultValue=False,
-            description=r"""If true: connector constrains velocities (only works for \hac{ODE2} coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"""),
+            description=r"""If true: connector constrains velocities (only works for ABRV:ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"""),
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar, destination=DestComp+DestParam,
             pythonName='offsetUserFunction',
             defaultValue=0,
@@ -7843,7 +7843,7 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects \ac{LTG}-lists to build the according coordinate mappings.""",
+    classDescription=r"""A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects ABRV:LTG-lists to build the according coordinate mappings.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
@@ -7909,7 +7909,7 @@ definitions.append(ItemDefinition(
     %        -f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) - 
     %         f_{ODE2_t} \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right)
     %\ee
-    %CoordinateLoads are added for the respective \hac{ODE2} coordinate on the RHS of the latter equation.
+    %CoordinateLoads are added for the respective ABRV:ODE2 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{constraintUserFunction(mbs, t, itemNumber, q, q\_t, velocityLevel)}
@@ -7995,7 +7995,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='velocityLevel',
             defaultValue=False,
-            description=r"""If true: connector constrains velocities (only works for \hac{ODE2} coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"""),
+            description=r"""If true: connector constrains velocities (only works for ABRV:ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"""),
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2VectorBool, destination=DestComp+DestParam,
             pythonName='constraintUserFunction',
             defaultValue=0,
@@ -11355,7 +11355,7 @@ definitions.append(ItemDefinition(
       \vr{\lambda_1}{\lambda_2}{\lambda_3} \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} \!&=&\! 0, \quad \mbox{... three index 1 equ. 
                                                $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
     \eea
-    No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and \hac{ODE2} coordinates read
+    No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and ABRV:ODE2 coordinates read
     %\be
     %  \Jm_{AE} = \mr{0}{0}{r^\prime_0} {0}{0}{r^\prime_1} {r^\prime_0}{r^\prime_1}{r^{\prime\prime}_0\lambda_0 + r^{\prime\prime}_1\lambda_1}    %\LURU{0}{\rv}{ANCF}{\prime\prime \mathrm{T}} \vp{\lambda_0}{\lambda_1}}
     %\ee
@@ -11594,7 +11594,7 @@ definitions.append(ItemDefinition(
       \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} &=& 0, \quad \mbox{... one index 1 equ. 
                                                $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
     \eea
-    No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and \hac{ODE2} coordinates read
+    No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and ABRV:ODE2 coordinates read
     \be
       \Jm_{AE} = \mr{0}{0}{r^\prime_0} {0}{0}{r^\prime_1} {r^\prime_0}{r^\prime_1}{r^{\prime\prime}_0\lambda_0 + r^{\prime\prime}_1\lambda_1}    %\LURU{0}{\rv}{ANCF}{\prime\prime \mathrm{T}} \vp{\lambda_0}{\lambda_1}}
     \ee
@@ -11778,13 +11778,13 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectJointALEMoving2D',
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the \hac{ODE2} coordinate q[0] provides the (given) moving coordinate in the cable element.""",
+    classDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,
     equations=r"""    \mysubsubsubsection{Definition of quantities}
     %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{generic data node}{$\xv=[x_{data0}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{generic \hac{ODE2} node}{$\qv=[q_{0}]\tp$}{coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects}
+    \rowTable{generic ABRV:ODE2 node}{$\qv=[q_{0}]\tp$}{coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects}
     \rowTable{data coordinate}{$x_{data0}$}{the current index in slidingMarkerNumbers}
     \rowTable{ALE coordinate}{$q_{ALE} = q_{0}$}{current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation); note that reference coordinate of $q_{ALE}$ is ignored!}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
@@ -11853,7 +11853,7 @@ definitions.append(ItemDefinition(
       \LU{0}{\Delta \pv} - \frac 1 k \zv = 0.
     \ee
     %
-    %not realized yet, because \hac{AE} Jacobian becomes involved:
+    %not realized yet, because ABRV:AE Jacobian becomes involved:
     %If \texttt{usePenaltyFormulation = True}, the algebraic equations are changed to:
     %\bea
     %  k_1 \LURU{0}{\rv}{ANCF}{\prime \mathrm{T}}   \LU{0}{\Delta\pv} - \lambda_0 &=& 0, \nonumber \\
@@ -11919,7 +11919,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TArrayIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumbers',
             defaultValue='ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })',
-            description=r"""$[n_{GD}, n_{ALE}]$node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \hac{ODE2} coordinate"""),
+            description=r"""$[n_{GD}, n_{ALE}]$node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ABRV:ODE2 coordinate"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='usePenaltyFormulation',
             defaultValue=False,

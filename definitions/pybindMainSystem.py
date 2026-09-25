@@ -69,7 +69,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='AssembleCoordinates', cName='Ass
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AssembleLTGLists', cName='AssembleLTGLists', 
-                        description="build \\ac{LTG} coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)",
+                        description="build ABRV:LTG coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)",
                         returnType='None',
                         )
 

@@ -353,7 +353,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeCoordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r"""A node-Marker attached to a \hac{ODE2} coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinate}.""",
+    classDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use \texttt{MarkerNodeODE1Coordinate}.""",
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -403,7 +403,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeCoordinates',
     cParentClass=ParentClassCMarker,
-    classDescription=r"""A node-Marker attached to all \hac{ODE2} coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinates}.""",
+    classDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use \texttt{MarkerNodeODE1Coordinates}.""",
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -447,7 +447,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeODE1Coordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A node-Marker attached to a \hac{ODE1} coordinate of a node.',
+    classDescription=r'A node-Marker attached to a ABRV:ODE1 coordinate of a node.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -1288,7 +1288,7 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='GetObjectODE2Coordinates',
             args='const CSystemData& cSystemData, Vector& objectCoordinates, Vector& objectCoordinates_t',
-            description=r"""return the \hac{ODE2} coordinate vectors (and derivative) of the attached object"""),
+            description=r"""return the ABRV:ODE2 coordinate vectors (and derivative) of the attached object"""),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,

@@ -106,8 +106,10 @@ not in the list below reaches the page as itself and is a defect.
   something refers to it.
 - **Inline code** - a parameter name, a Python call, a type - is `\texttt{mbs.Assemble()}`.
 - **A list** is `\bi ... \item ... \ei` (bulleted) or `\ben ... \item ... \een` (numbered).
-- **An abbreviation** is `\hac{ODE2}`, which links to the list of abbreviations. The keys are the
-  `abbreviations` dict in `tools/generators/examplesDocsEmitter.py`; add one there before using it.
+- **An abbreviation** is `ABRV:ODE2` - no backslash, no braces - which links to the list of
+  abbreviations. The key ends where the word ends. The keys are the `abbreviations` dict in
+  `tools/generators/examplesDocsEmitter.py`, which also writes the list; add one there before using
+  it. `tools/checkDefinitions.py` names the file and the line of a key that does not exist.
 - **A reference** to a section is `\refSection{sec:itemGround}`, to an equation `\eq{eq:name}`, to
   a figure `\fig{fig:name}`. The label is written with `\label{...}` at the target.
 - **A citation** is the key of `docs/bibliographyDoc.bib` in square brackets, written directly:

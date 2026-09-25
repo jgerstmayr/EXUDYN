@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationNodePointGround
-* @brief        A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' \hac{ODE2} and \hac{ODE1} coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.
+* @brief        A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

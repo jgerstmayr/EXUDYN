@@ -95,13 +95,13 @@ nodeFunctions = [
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
         args='Vector& algebraicEquations, bool useIndex2 = false',
-        description=r"""ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();"""),
+        description=r"""ONLY for nodes with ABRV:AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();"""),
 
     ItemFunctionLib(classType='Node', pythonName='ComputeJacobianAE',
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
         args='ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, JacobianType::Type& filledJacobians',
-        description=r"""ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();"""),
+        description=r"""ONLY for nodes with ABRV:AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();"""),
 
     ItemFunctionLib(classType='Node', pythonName='GetAcceleration',
         type=TVectorND(3), destination=DestComp,
@@ -446,12 +446,12 @@ objectFunctions = [
     ItemFunctionLib(classType='Object', pythonName='GetODE1Size',
         type=TIndex, destination=DestComp,
         cFlags=CFConst,
-        description=r'number of \hac{ODE1} coordinates; needed for object?'),
+        description=r'number of ABRV:ODE1 coordinates; needed for object?'),
 
     ItemFunctionLib(classType='Object', pythonName='GetODE2Size',
         type=TIndex, destination=DestComp,
         cFlags=CFConst,
-        description=r'number of \hac{ODE2} coordinates; needed for object?'),
+        description=r'number of ABRV:ODE2 coordinates; needed for object?'),
 
     ItemFunctionLib(classType='Object', pythonName='GetOutputVariable',
         type=Tvoid, destination=DestComp,
@@ -631,7 +631,7 @@ objectFunctions = [
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
         args='ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE',
-        description=r"""Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}"""),
+        description=r"""Compute jacobians of algebraic equations part of rigid body w.r.t. ABRV:ODE2, ABRV:ODE2 time derivatives, ABRV:ODE1, ABRV:AE"""),
 
     ItemFunctionLib(classType='Object', parentClass='CObjectBody', pythonName='ComputeJacobianODE2_ODE2',
         type=Tvoid, destination=DestComp,
@@ -654,7 +654,7 @@ objectFunctions = [
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
         args='EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData',
-        description=r"""Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"""),
+        description=r"""Computational function: compute Jacobian of ABRV:ODE2 ABRV:LHS equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"""),
 
     ItemFunctionLib(classType='Object', parentClass='CObjectConnector', pythonName='ComputeODE1RHS',
         type=Tvoid, destination=DestComp,
@@ -698,7 +698,7 @@ objectFunctions = [
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
         args='ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex',
-        description=r"""compute derivative of algebraic equations w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1} and \hac{AE} coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"""),
+        description=r"""compute derivative of algebraic equations w.r.t. ABRV:ODE2, ABRV:ODE2 time derivatives, ABRV:ODE1 and ABRV:AE coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"""),
 
     ItemFunctionLib(classType='Object', parentClass='CObjectConstraint', pythonName='GetMarkerNumbers',
         type='ArrayIndex&', destination=DestComp,

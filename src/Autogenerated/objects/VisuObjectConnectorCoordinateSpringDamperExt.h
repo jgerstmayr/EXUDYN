@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectConnectorCoordinateSpringDamperExt
-* @brief        A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.
+* @brief        A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-25  09:23:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
