@@ -724,6 +724,35 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     truncates the rest of its line whatever that line is.
 
 
+<a id="rg3-18"></a>
+**RG3.18** *(group RG3; maintainer 2026-09-25)* **The pages of the Python-C++ interface repeat their
+    own title, and it costs the MainSystem extensions their place in the table of contents** (#2660).
+
+    Six pages open with their own name twice - *12.3 SystemContainer* / *12.3.1 SystemContainer*, and
+    the same for `Renderer`, `MainSystem`, `SystemData`, `Symbolic` and `GeneralContact`. The title
+    comes from `markdownPageTitles` in `pybindEmitter.WriteMarkdownPages` and the section from the
+    class's own `DefPyStartClass`, and for these six the two are the same word.
+
+    **The second half of the issue is the same defect seen from the table of contents** (maintainer,
+    2026-09-25): there is no entry for *MainSystem extensions (create)* nor for *MainSystem
+    extensions (general)*. Measured: both are **level-3** headings of
+    `docs/generated/cInterface/MainSystem.md`, and they are at level 3 rather than 2 *because* the
+    redundant section takes a level - the page title is 1, the repeated name is 2, the extension
+    sections are 3. Nested through the cInterface index into the main `toctree`, both of which say
+    `:maxdepth: 3`, level 3 on that page falls past the limit. **Removing the repetition moves them
+    to level 2 and they appear**, which is why the two halves are one step.
+
+    What has to be arranged: the repeated section **carries the target** a reference points at
+    (`sec:mainsystem:pythonextensions` and its kind), so the label moves to the page title before the
+    heading goes - the same rule that made RG3.15 a move and not a rewrite, and the strict build is
+    what proves it.
+
+    The item pages of the reference manual have the same shape - `# ObjectGround` then
+    `## ObjectGround` - and are looked at in this step. There the second heading carries
+    `sec:item:<Item>`, which **every** item reference in the documentation uses, so it is the more
+    delicate half of the two.
+
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
@@ -1573,6 +1602,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.14 | #2655 | the item descriptions become Markdown: .7.2 to .7.6 close the gate; .12 and .13 open |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
+| RG3.18 | #2660 | the C++ interface pages stop repeating their title, and the MainSystem extensions reach the table of contents |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
@@ -1600,7 +1630,6 @@ whether it becomes a step.
 | RG10 | #2541 | `exudyn.config` and `exudyn.special` are in no stub file |
 | RG12 | #2497 | 59 bare `except:` remain in the shipped package |
 | maintainer, 2026-09-25 | #2659 | the simulation settings section does not mention `python -m exudyn dialogs sim` |
-| maintainer, 2026-09-25 | #2660 | six pages of the C++ interface repeat their own title as the first section |
 
 ### The chapters of the user manual, as decided for #2657 and #2662
 
