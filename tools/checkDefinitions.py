@@ -12,6 +12,8 @@
 #   - every ABRV:KEY names an abbreviation that the list actually has. The abbreviations are the
 #     dict in tools/generators/examplesDocsEmitter.py, which also writes
 #     docs/generated/abbreviations.md, so the key and its target cannot drift apart.
+#   - a description holds no LaTeX outside its mathematics. This is the rule the whole of
+#     RG3.14 was for, and until it existed a macro the converter did not know reached the page.
 #   - a comment is <!-- ... --> ; a '%' is a comment only inside mathematics, where the engine
 #     reads it, because this converter strips a '%' before the mathematics is protected.
 #   - a reference to an equation is the {eq} role: a Markdown link to one leaves the PDF as an
@@ -70,7 +72,8 @@ DEFAULT_HEADING_LEVEL = 4
 
 #keywords whose value is Python, not prose - published as a code block, so a '#' is a comment
 CODE_KEYWORDS = set(['code', 'miniExample', 'example', 'implementation', 'addProtectedC',
-                     'addPublicC', 'addIncludesC'])
+                     'addPublicC', 'addIncludesC', 'cName', 'cplusplusName',
+                     'addConstructor', 'cppText'])
 
 
 def Descriptions(path):
@@ -234,6 +237,36 @@ def CheckPercentComments(paths):
     return findings
 
 
+structuralMacro = re.compile(r'(?<!\\)\\([A-Za-z]+)')
+
+
+def CheckNoLatex(paths):
+    """a backslash command in a description, outside mathematics, is an error (#2655, RG3.14.7.6)
+
+    This is the rule the whole of RG3.14 was for: the description of an item, a structure or a pybind
+    call is Markdown, the mathematics inside it is LaTeX, and nothing else is. Until now a macro the
+    converter did not know was carried through to the page as itself; a ReportUnknown that
+    would have found them sat in latexToMarkdown and was called by nothing, and is deleted.
+
+    What is not a description and is skipped: a value passed to one of CODE_KEYWORDS, which is C++ or
+    Python (the \\n of a lambda in cName is a C++ string escape); an HTML comment, which never reaches
+    a page; a fenced code block; and the mathematics itself."""
+    findings = []
+    for path in paths:
+        for (keyword, text, lineno) in Descriptions(path):
+            if keyword in CODE_KEYWORDS:
+                continue
+            stripped = re.sub(r'<!--.*?-->', ' ', text, flags=re.S)
+            stripped = re.sub(r'(?m)^[ ]*```.*?^[ ]*```', ' ', stripped, flags=re.S)
+            for pattern in mathSpan:
+                stripped = re.sub(pattern, ' ', stripped, flags=re.S)
+            for match in structuralMacro.finditer(stripped):
+                findings.append((path, lineno + stripped.count('\n', 0, match.start()),
+                                 'a LaTeX command outside mathematics: ' + chr(92)
+                                 + match.group(1)))
+    return findings
+
+
 def CheckRawStrings(paths):
     """a literal whose value carries a backslash or mathematics is written r'...'
 
@@ -286,7 +319,7 @@ def main():
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
                 + CheckCitations(paths, known) + CheckRawStrings(paths)
                 + CheckPercentComments(paths)
-                + CheckEquationReferences(paths))
+                + CheckEquationReferences(paths) + CheckNoLatex(paths))
 
     if len(findings) == 0:
         if not args.quiet:

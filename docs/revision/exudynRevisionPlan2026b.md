@@ -553,7 +553,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       `\ignoreRST` twin holds the two LaTeX `algorithm` environments; RG3.8.2 already put the
       algorithms into the text as numbered lists, so **there is no case left for keeping even
       one**, and the step may delete all 24.
-    - **RG3.14.7** - **the tail and the gate.** 1005 backslash commands in 23 names are left in a
+    - **RG3.14.7** **DONE 2026-09-25** - **the tail and the gate.** 1005 backslash commands in 23 names are left in a
       description outside mathematics, a comment and a code block: **807 in `itemDefs*`, 190 in
       `pybind*`, 8 in `structureDefs*`**. A first attempt converted them in one pass and moved 738
       lines of the pages, so the step is split - the maintainer's advice, 2026-09-25: *"why not try
@@ -580,7 +580,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
         Markdown hard break is two trailing spaces, which `StripComments` removes, and 191 lines
         already end in two or more spaces by accident - so this sub-step decides what a line break in
         a description *is*, and that decision is why it comes last.
-      - **RG3.14.7.6** - **the gate**: a `\name` in a description, outside mathematics, a comment
+      - **RG3.14.7.6** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-6) - **the gate**: a `\name` in a description, outside mathematics, a comment
         and a code block, is an error with the file, the line and the name - in
         `tools/checkDefinitions.py`, beside the other five rules.
         `latexToMarkdown.ReportUnknown` has been dead code all along and goes with it.

@@ -3380,3 +3380,24 @@ The six `\addExampleImage` are the `{image}` directive the converter wrote from 
 What is left in `definitions/` is **five backslashes in one place**: the `\n` of a C++ lambda passed
 as `cName` in `pybindMainSystem`. That is code, not a description, and RG3.14.7.6 has to know the
 keyword rather than convert it.
+
+<a id="rg3-14-7-6"></a>
+### RG3.14.7.6 - the gate (2026-09-25, #2655)
+
+**A backslash command in a description, outside its mathematics, is an error.** That is the rule
+the whole of RG3.14 was for, and it is the sixth in `tools/checkDefinitions.py`. Until now a macro
+the converter did not know was carried through to the page as itself, and nothing said so - a
+`ReportUnknown` that would have found them sat in `latexToMarkdown` and was **called by nothing**; it is
+deleted, and the file is 490 lines.
+
+What the gate does not look at, because it is not a description:
+
+- a value passed to one of the code keywords. Two were found by writing the check: `cName` holds a
+  C++ lambda whose `\n` is a string escape, and `addConstructor` holds C++ with a literal `\n` that the
+  old parser turned into a newline. `cplusplusName` and `cppText` are in the list for the same reason;
+- an HTML comment, which never reaches a page;
+- a fenced code block;
+- the mathematics itself, where `checkMathMacros` is the check and `\%` is the engine's own comment.
+
+**RG3.14.7 is closed: 1005 macros, none left.** `definitions/` is Markdown with LaTeX mathematics,
+and it stays that way now by a check rather than by attention.

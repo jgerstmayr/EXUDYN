@@ -446,16 +446,6 @@ def Tidy(text):
     return text.strip() + '\n'
 
 
-def ReportUnknown(text):
-    """every backslash command left outside math - the point of the tool is to name them"""
-    text = re.sub(r'^[ ]*```.*?^[ ]*```', '', text, flags=re.S | re.M)  #code is not LaTeX
-    (stripped, _) = ProtectMath(text)
-    found = {}
-    for match in re.finditer(r'\\([A-Za-z]+)', stripped):
-        found[match.group(1)] = found.get(match.group(1), 0) + 1
-    return found
-
-
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def DedentOutsideCode(text):
     """the .tex sources indent their prose, and that indentation means nothing in Markdown - but
