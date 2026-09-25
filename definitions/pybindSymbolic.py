@@ -28,7 +28,7 @@ symbolicModule = PybindInterface()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pb.CreateNewRSTfile('Symbolic')
 
-pb.AddDocu(r"""The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, \mybold{always veryfy your symbolic expressions or user functions}, as behavior may be unexpected in some cases. """,
+pb.AddDocu(r"""The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, **always veryfy your symbolic expressions or user functions**, as behavior may be unexpected in some cases. """,
             section='Symbolic', sectionLevel=1,sectionLabel='sec:cinterface:symbolic')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -80,7 +80,7 @@ y = x/3.       #directly evaluates to 14
 esym.SetRecording(True)
 """)
 
-symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are \mybold{not recorded}, are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:""")
 
 symbolicModule.DefLatexStartTable(pyClassStr)
 
@@ -165,7 +165,7 @@ c = (a >= b)
 c = a*7 + SymReal.sin(8)
 """)
 
-symbolicModule.AddDocu(r"""Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. \mybold{HINT}: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:""")
+symbolicModule.AddDocu(r"""Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. **HINT**: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:""")
 
 symbolicModule.StubCode('\n#functions directly in symbolic module:\n')
 

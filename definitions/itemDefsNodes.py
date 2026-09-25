@@ -43,7 +43,7 @@ definitions.append(ItemDefinition(
     Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \\
 
-     {\bf Example} for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
+     **Example** for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -134,7 +134,7 @@ definitions.append(ItemDefinition(
     Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \\
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \\
     
-     {\bf Example} for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
+     **Example** for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -236,32 +236,32 @@ definitions.append(ItemDefinition(
 
 
     $$
-            1 - \sum_{i=0}^{3} \theta_i^2 = 0.
-            $$
+                1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+                $$
 
     The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position 
     $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
 
 
     $$
-            \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
-            $$
+                \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+                $$
 
     Note that the Euler parameters $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
 
 
     $$
-            \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-            $$
+                \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+                $$
 
     The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$
 
 
     $$
-            \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} 
-                                     {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
-                                     {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
-            $$
+                \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} 
+                                         {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
+                                         {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
+                $$
 
     The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
 
@@ -415,22 +415,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-            \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
-            $$
+                \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+                $$
 
     Note that the Euler angles $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
 
 
     $$
-            \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-            $$
+                \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+                $$
 
     The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
 
 
     $$
-            \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
-            $$
+                \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
+                $$
 
     see [](#sec-symbolsitems) for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
     
@@ -438,11 +438,11 @@ definitions.append(ItemDefinition(
 
 
     $$
-            \begin{aligned}
-            \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
-                  \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
-            \end{aligned}
-            $$
+                \begin{aligned}
+                \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
+                      \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
+                \end{aligned}
+                $$
 
     
     For creating a `NodeRigidBodyRxyz` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`, 
@@ -563,8 +563,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-            \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
-            $$
+                \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
+                $$
 
     with the rotation angle $\varphi$ and the rotation axis $\nv$.
     All coordinates $\cv\cConfig$ lead to second order differential equations, 
@@ -579,8 +579,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-            \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
-            $$
+                \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
+                $$
 
     Note that $\Rot(\tnu)$ is defined in function ` RotationVector2RotationMatrix`, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
     
@@ -588,7 +588,7 @@ definitions.append(ItemDefinition(
     rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
     matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
     
-    \mybold{Note}, that the node automatically switches to Lie group integration of its
+    **Note**, that the node automatically switches to Lie group integration of its
     rotational coordinates, both in explicit integration as well as for implicit time integration.
     This node avoids typical singularities of rotations and is therefore perfectly suited
     for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
@@ -712,10 +712,10 @@ definitions.append(ItemDefinition(
 
 
     $$
-            \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
-            $$
+                \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
+                $$
 
-     {\bf Example} for NodeRigidBody2D: see ObjectRigidBody2D
+     **Example** for NodeRigidBody2D: see ObjectRigidBody2D
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -813,16 +813,16 @@ definitions.append(ItemDefinition(
 
 
     $$
-            p_0 = {q_0}\cRef + {q_0}\cCur
-            $$
+                p_0 = {q_0}\cRef + {q_0}\cCur
+                $$
 
     The coordinate leads to one second order differential equation.
     The graphical representation and the (internal) position of the node is
 
 
     $$
-            p\cConfig= \vr{{p_0}\cConfig}{0}{0}
-            $$
+                p\cConfig= \vr{{p_0}\cConfig}{0}{0}
+                $$
 
     The (internal) velocity vector is $[{p_0}\cConfig,\,0,\,0]\tp$.
     %%RSTCOMPATIBLE

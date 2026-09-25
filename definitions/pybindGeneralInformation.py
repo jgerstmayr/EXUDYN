@@ -60,7 +60,7 @@ mbs = SC.AddSystem()
 """)
 #pb.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
 
-pb.AddDocu(r"""Furthermore, there are a couple of commands available directly in the `exudyn` module, given in the following subsections. Regarding the \mybold{(basic) module access}, functions are related to the `exudyn = exu` module, see these examples:""")
+pb.AddDocu(r"""Furthermore, there are a couple of commands available directly in the `exudyn` module, given in the following subsections. Regarding the **(basic) module access**, functions are related to the `exudyn = exu` module, see these examples:""")
 
 pb.AddDocuCodeBlock(code="""
 #  import exudyn module:
@@ -199,4 +199,4 @@ RuntimeError: Exudyn: parsing of Python file terminated due to Python (user) err
 
 pb.AddDocu(r"""Finally, there may be system errors. They may be caused due to previous wrong input, but if there is no reason seen, it may be appropriate to report this error on [github.com/jgerstmayr/EXUDYN/](https://github.com/jgerstmayr/EXUDYN) .""")
 
-pb.AddDocu(r"""Be careful in reading and interpreting such error messages. You should \mybold{read them from top to bottom}, as the cause may be in the beginning. Often files and line numbers of errors are provided (e.g., if you have a longer script). In the ultimate case, try to comment parts of your code or deactivate items to see where the error comes from. See also section on Trouble shooting and FAQ.""")
+pb.AddDocu(r"""Be careful in reading and interpreting such error messages. You should **read them from top to bottom**, as the cause may be in the beginning. Often files and line numbers of errors are provided (e.g., if you have a longer script). In the ultimate case, try to comment parts of your code or deactivate items to see where the error comes from. See also section on Trouble shooting and FAQ.""")
