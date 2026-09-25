@@ -1456,6 +1456,77 @@ find out about the settings of a model. It is the group a user notices most and 
 Open in the tracker for this group: **#2497** (59 bare `except:` remain in the shipped
 package).
 
+<a id="rg12-4"></a>
+**RG12.4** *(group RG12; maintainer 2026-09-25)* **A user function is one typed Python function, and
+    everything else is generated from it** (#2664). **After RG3.14** - the descriptions have to be
+    Markdown first, because this step makes the documentation block an output rather than a text.
+
+    Traced for `ObjectGenericODE2.forceUserFunction` on 2026-09-25, the same signature is stated in
+    **five** places and checked in none:
+
+    | where | what it says |
+    |---|---|
+    | `definitions/itemDefsObjects.py`, the `ItemParameter` | `type=TPyFunctionVectorMbsScalarIndex2Vector` |
+    | `definitions/definitionTypes.py` | that type as `std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>` |
+    | `definitions/itemDefsObjects.py`, the prose | `forceUserFunction(mbs, t, itemNumber, q, q_t)` and an argument table with its own type column |
+    | `python/exudyn/itemInterface.py`, `userFunctionArgsDict` | `[[types], ['mbs','arg0','arg1','arg2','arg3'], ['StdVector']]` |
+    | `src/System/evaluateUserFunctions.cpp` | the call, by hand |
+
+    **The registry already exists and is half filled in**: `userFunctionArgsDict` is generated, is
+    shipped, and `advancedUtilities.py` builds the symbolic function interface out of it - with
+    `arg0` for `t` and `StdVector` for a numpy array. That is the thing to fix, and the rest follows
+    from it.
+
+    **The source becomes one typed Python function in the `ItemDefinition`**, parsed with `ast` and
+    never executed:
+
+    ```python
+    ItemUserFunction(r'''
+        def forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                              q: np.ndarray, q_t: np.ndarray) -> np.ndarray:
+            """compute the generalized user force vector for the ODE2 equations
+
+            Args:
+                t: current time
+                q: generalized coordinates, $\qv \in \Rcal^{n_{ODE2}}$
+                q_t: their time derivatives, $\dot\qv \in \Rcal^{n_{ODE2}}$
+            Returns:
+                the force vector, $\fv_{user} \in \Rcal^{n_{ODE2}}$
+            """
+        ''')
+    ```
+
+    Note what moved: the **size of an argument is a formula in its description**, not part of its
+    type. That is the maintainer's own correction of the idea and it is what makes the whole thing
+    possible - RG3.14.5 could not put the arguments into a code block because 35 of the 228 rows said
+    the size as a formula, and a formula does not render inside one. Typed as `np.ndarray` and
+    described as $\qv \in \Rcal^{n_{ODE2}}$, both halves are in the right place.
+
+    - **RG12.4.1** — the vocabulary: `ItemUserFunction` in `definitions/definitionTypes.py`, and the
+      reader that turns one into names, Python types, the docstring and the `Args:`/`Returns:` lines.
+      `ast` only: the block is parsed, never run, so a type may be a name that does not exist at
+      generation time.
+    - **RG12.4.2** — **one function, end to end**: `ObjectGenericODE2.forceUserFunction`. The
+      description block of the item page is generated from it, `userFunctionArgsDict` gets the real
+      names and the Python types, and the page is compared line by line against what the prose
+      produced. If `ItemUserFunction` is absent, everything stays exactly as it is - which is what
+      makes the remaining 34 blocks a sequence of small commits rather than one large one.
+    - **RG12.4.3** — the **check**: the arity and the argument types of the typed function agree with
+      the `std::function` that `definitionTypes.userFunctionSignatures` maps the parameter's type to.
+      Today nothing compares them, and a disagreement is found by a user whose function is called
+      with the wrong number of arguments.
+    - **RG12.4.4** — a **`Protocol` per user function** in `itemInterface.py`, generated from the
+      same source: `class ObjectGenericODE2ForceUserFunction(Protocol)` with `__call__` typed. An
+      editor then completes the arguments and marks a wrong one, at no runtime cost. This is the part
+      a user feels, so it is worth doing on the one function of RG12.4.2 before the rest.
+    - **RG12.4.5** — the remaining 22 signatures, in the order of the item files; **23 distinct
+      signatures under 17 names in 35 blocks**, so two thirds of the work is naming arguments that
+      are already written down in the prose.
+    - **RG12.4.6** — what becomes redundant then: the argument table in the prose (generated), the
+      `\_` escapes (gone with RG3.14.5), and the question whether `advancedUtilities`' hand-built
+      `F(...)` string can be replaced by the generated `Protocol`.
+
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -1489,6 +1560,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG11.3 | - | run the results monitor in a second process beside the simulation |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
+| RG12.4 | #2664 | a user function is one typed Python function, and the description, the args dict and a Protocol are generated from it |
 
 ### Raised by the current work, and not yet a step
 
