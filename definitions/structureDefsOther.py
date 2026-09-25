@@ -34,7 +34,7 @@ definitions = []
 definitions.append(StructureDefinition(
     className='PyBeamSection',
     writeFile='PyStructuralElementsDataStructures.h',
-    classDescription=r"""Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.""",
+    classDescription=r"""Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t. bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.""",
     cppText=r"""#include "Main/StructuralElementsDataStructures.h"
 #include "Pymodules/PybindUtilities.h"
 """,

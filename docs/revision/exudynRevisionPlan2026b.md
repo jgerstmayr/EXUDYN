@@ -553,13 +553,37 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       `\ignoreRST` twin holds the two LaTeX `algorithm` environments; RG3.8.2 already put the
       algorithms into the text as numbered lists, so **there is no case left for keeping even
       one**, and the step may delete all 24.
-    - **RG3.14.7** - **the tail and the gate.** `\texttt{x}` is `` `x` ``, `\bf` is `**`,
-      `\bi/\item/\ei` is a Markdown list - all in `latexToMarkdown.ConvertInline` and
-      `ConvertLists`; the 32 macros that occur at most twice are rewritten one by one. Then
-      `tools/generators/generate.py` gains the check that closes the step: **a backslash command in
-      a `definitions/` description, outside math, is an error with the file, the line and the
-      name** - `latexToMarkdown.ReportUnknown` already finds them and only prints, and
-      `tools/checkMathMacros.py` already holds the line between a math macro and a structural one.
+    - **RG3.14.7** - **the tail and the gate.** 1005 backslash commands in 23 names are left in a
+      description outside mathematics, a comment and a code block: **807 in `itemDefs*`, 190 in
+      `pybind*`, 8 in `structureDefs*`**. A first attempt converted them in one pass and moved 738
+      lines of the pages, so the step is split - the maintainer's advice, 2026-09-25: *"why not try
+      step-by-step or by defs-classes, with some global replacement of latex elements where it would
+      always work first"*. The order is by how much a macro interacts with the line structure, which
+      is where every failure so far has come from.
+
+      - **RG3.14.7.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-1) - the
+        macros that are a single element and touch no line: `\codeName` (11), `\vspace` (20),
+        `\noindent` (17), `\paragraph` (15), `\footnote` (13), and one each of `\text`,
+        `\mysmall`, `\textdegree`, `\phantom`, `\exuUrl`, plus the 55 escaped spaces that
+        `\codeName\ ` needed before a comma.
+      - **RG3.14.7.2** - `\texttt{x}` to `` `x` ``: 706 of the 1005, one to one, no line structure.
+      - **RG3.14.7.3** - the bold forms: `\bf` (45) in its `{\bf x}` shape and `\mybold` (29).
+      - **RG3.14.7.4** - the **lists**: `\bi`/`\ei` (19/19), `\item` (84), `\bn`/`\en` (4/4).
+        This is the one that rewrites lines, and `ConvertLists` indents a block inside an item by two
+        while `DedentOutsideCode` keeps that indentation inside a fence - so it is done alone, with
+        the byte-identical comparison read per file.
+      - **RG3.14.7.5** - what is not a `\name`: the **41 LaTeX line breaks** `\\` (21 in
+        `itemDefs`, 14 in `pybind`, 6 in `structureDefs`), the 6 `\tabnewline` of the pybind tables,
+        the **67 `%%RSTCOMPATIBLE` markers** - 65 of which have nothing after them at all - and the
+        six `\n` in pybind descriptions that reach the page as two characters, because the old
+        parser turned a literal `\n` into a newline for the item files and never for these. A
+        Markdown hard break is two trailing spaces, which `StripComments` removes, and 191 lines
+        already end in two or more spaces by accident - so this sub-step decides what a line break in
+        a description *is*, and that decision is why it comes last.
+      - **RG3.14.7.6** - **the gate**: a `\name` in a description, outside mathematics, a comment
+        and a code block, is an error with the file, the line and the name - in
+        `tools/checkDefinitions.py`, beside the other five rules.
+        `latexToMarkdown.ReportUnknown` has been dead code all along and goes with it.
     - **RG3.14.8** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-8) - **the one place the rules are written.** A new section of
       `definitions/README.md`, which is published (`docs/dev/README.md` lists it) and today says
       how a *member* is written but nothing about the description text. Its skeleton is written
@@ -1547,7 +1571,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8 | #2594 | place or drop the figures that no page references |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: `definitions/` is free of structural LaTeX; .7 closes the gate |
+| RG3.14 | #2655 | the item descriptions become Markdown: .7.2 to .7.6 close the gate; .12 and .13 open |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |

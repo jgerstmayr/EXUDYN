@@ -23,14 +23,14 @@ pb = PybindInterface()
 pb.AddDocu('',section='Python-C++ command interface', sectionLevel=0, sectionLabel='sec:PCpp:command:interface')
 pb.ResetMarkdown() #the chapter heading lives in the index page
 
-pb.AddDocu(r"""This chapter lists the basic interface functions which can be used to set up a \codeName\ model in Python.""")
+pb.AddDocu(r"""This chapter lists the basic interface functions which can be used to set up a Exudyn model in Python.""")
 
 pb.AddDocu(r"""This chapter lists the basic interface functions which can be used to set up 
-a \codeName\ model in Python. Note that some functions or classes will be used in examples, which are explained in detail later on.
+a Exudyn model in Python. Note that some functions or classes will be used in examples, which are explained in detail later on.
 In the following, some basic steps and concepts for usage are shown, references to all functions are placed hereafter:
 """, section='General information on Python-C++ interface', sectionLevel=1, sectionLabel='sec:generalPythonInterface')
 
-pb.AddDocu(r"""To import the module, just include the \codeName\ module in Python:""")
+pb.AddDocu(r"""To import the module, just include the Exudyn module in Python:""")
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu
 """)
@@ -43,7 +43,7 @@ from exudyn.itemInterface import *
 #pb.AddDocuList(itemList=['\\texttt{from exudyn.itemInterface import *}'], itemText='[]')
 pb.AddDocu(r"""Note that including \texttt{exudyn.utilities} will cover \texttt{itemInterface}. Also note that \texttt{from ... import *} is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.""")
 
-pb.AddDocu(r"""The general hub to multibody dynamics models is provided by the classes \texttt{SystemContainer} and \texttt{MainSystem}, except for some very basic system functionality (which is inside the \codeName\ module). 
+pb.AddDocu(r"""The general hub to multibody dynamics models is provided by the classes \texttt{SystemContainer} and \texttt{MainSystem}, except for some very basic system functionality (which is inside the Exudyn module). 
 
 You can create a new \texttt{SystemContainer}, which is a class that is initialized by assigning a system container to a variable, usually denoted as \texttt{SC}:""")
 pb.AddDocuCodeBlock(code="""
@@ -118,10 +118,10 @@ r"""You can also print item indices, e.g., \texttt{print(ni)} as it converts to 
 r"""If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type."""
     ], itemText='[]')
 
-pb.AddDocu(r"""As a key concept to working with \codeName\ , most data which is retrieved by C++ interface functions is copied.
+pb.AddDocu(r"""As a key concept to working with Exudyn , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
-There are only a few very important cases where data is referenced in \codeName\ , the main ones are 
+There are only a few very important cases where data is referenced in Exudyn , the main ones are 
 \texttt{SystemContainer}, 
 \texttt{MainSystem}, 
 \texttt{VisualizationSettings}, and
@@ -197,6 +197,6 @@ RuntimeError: Exudyn: parsing of Python file terminated due to Python (user) err
 
 """, pythonStyle=False)
 
-pb.AddDocu(r"""Finally, there may be system errors. They may be caused due to previous wrong input, but if there is no reason seen, it may be appropriate to report this error on \exuUrl{https://github.com/jgerstmayr/EXUDYN}{github.com/jgerstmayr/EXUDYN/} .""")
+pb.AddDocu(r"""Finally, there may be system errors. They may be caused due to previous wrong input, but if there is no reason seen, it may be appropriate to report this error on [github.com/jgerstmayr/EXUDYN/](https://github.com/jgerstmayr/EXUDYN) .""")
 
 pb.AddDocu(r"""Be careful in reading and interpreting such error messages. You should \mybold{read them from top to bottom}, as the cause may be in the beginning. Often files and line numbers of errors are provided (e.g., if you have a longer script). In the ultimate case, try to comment parts of your code or deactivate items to see where the error comes from. See also section on Trouble shooting and FAQ.""")

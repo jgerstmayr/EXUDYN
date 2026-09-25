@@ -5149,7 +5149,7 @@ class ObjectJointGeneric:
 
         offsetUserFunction_t: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters; type: PyFunctionVector6DmbsScalarIndexVector6D
 
-        alternativeConstraints: this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: :math:`{}^{0}{\mathbf{t}}_{x0}\tp ({}^{0}{\mathbf{t}}_{y1} \times {}^{0}{\mathbf{t}}_{z0})`, :math:`{}^{0}{\mathbf{t}}_{y0}\tp ({}^{0}{\mathbf{t}}_{z1} \times {}^{0}{\mathbf{t}}_{x0})`, :math:`{}^{0}{\mathbf{t}}_{z0}\tp ({}^{0}{\mathbf{t}}_{x1} \times {}^{0}{\mathbf{t}}_{y0})`; this avoids 180textdegree flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers; type: bool
+        alternativeConstraints: this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: :math:`{}^{0}{\mathbf{t}}_{x0}\tp ({}^{0}{\mathbf{t}}_{y1} \times {}^{0}{\mathbf{t}}_{z0})`, :math:`{}^{0}{\mathbf{t}}_{y0}\tp ({}^{0}{\mathbf{t}}_{z1} \times {}^{0}{\mathbf{t}}_{x0})`, :math:`{}^{0}{\mathbf{t}}_{z0}\tp ({}^{0}{\mathbf{t}}_{x1} \times {}^{0}{\mathbf{t}}_{y0})`; this avoids 180° flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers; type: bool
 
         visualization: visualization data, see VObjectJointGeneric
 

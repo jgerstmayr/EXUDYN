@@ -94,38 +94,38 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-    $$
+        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
+        $$
 
-    and it is usually computed as the derivative of the (global) translational velocity w.r.t.\ velocity coordinates,
+    and it is usually computed as the derivative of the (global) translational velocity w.r.t. velocity coordinates,
 
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-    $$
+        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+        $$
 
 
     As an example of the \texttt{ObjectRigidBody2D}, see [](#sec-item-objectrigidbody2d), the position and velocity are computed as
 
 
     $$
-    \LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \, ,
-    $$
+        \LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \, ,
+        $$
 
 
 
     $$
-    \LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) \, .
-    $$
+        \LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) \, .
+        $$
 
     Thus, the position jacobian for \texttt{ObjectRigidBody2D} reads
 
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}} 
-          {0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}} 
-          {0}{0}{0}
-    $$
+        \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}} 
+              {0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}} 
+              {0}{0}{0}
+        $$
 
     <!-- -->
     For details, see the respective definition of the body and the C++ implementation.
@@ -245,8 +245,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-    $$
+        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
+        $$
 
     For details, see the respective definition of the node and the C++ implementation.
     
@@ -256,8 +256,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
-    $$
+        \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -315,22 +315,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-    $$
+        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
+        $$
 
-    and it is usually computed as the derivative of the (global) translational velocity w.r.t.\ velocity coordinates,
-
-
-    $$
-    \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-    $$
-
-    The rotation jacobian is computed as the derivative of the (global) angular velocity w.r.t.\ velocity coordinates,
+    and it is usually computed as the derivative of the (global) translational velocity w.r.t. velocity coordinates,
 
 
     $$
-    \LU{0}{\Jm_\mathrm{rot}} = \frac{\partial \LU{0}{\tomega_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+        $$
+
+    The rotation jacobian is computed as the derivative of the (global) angular velocity w.r.t. velocity coordinates,
+
+
     $$
+        \LU{0}{\Jm_\mathrm{rot}} = \frac{\partial \LU{0}{\tomega_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+        $$
 
     This usually results in the velocity transformation matrix.
     For details, see the respective definition of the node and the C++ implementation.
@@ -587,22 +587,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\av}_0 = \LU{0,m_0}{\Rot}_{m0} \LU{m_0}{\av}_0
-    $$
+        \LU{0}{\av}_0 = \LU{0,m_0}{\Rot}_{m0} \LU{m_0}{\av}_0
+        $$
 
     The relative translation marker computes the relative translation from the equation
 
 
     $$
-    t =  \LU{0}{\av}_0\tp (\pv_{m1} - \pv_{m0}) - x_\mathrm{off}
-    $$
+        t =  \LU{0}{\av}_0\tp (\pv_{m1} - \pv_{m0}) - x_\mathrm{off}
+        $$
 
     The translational velocity, which may be used in coordinate spring-dampers or for velocity-level constraints, is computed as
 
 
     $$
-    \dot t = \LU{0}{\av}_0\tp (\dot \pv_{m1} - \dot \pv_{m0}) + \LU{0}{\dot \av}_0\tp (\pv_{m1} - \pv_{m0})
-    $$
+        \dot t = \LU{0}{\av}_0\tp (\dot \pv_{m1} - \dot \pv_{m0}) + \LU{0}{\dot \av}_0\tp (\pv_{m1} - \pv_{m0})
+        $$
 
     Jacobians are computed according to the relative translational velocity, ignoring the $\dot \av_0$ part.
     Using this approach, coordinate constraints can be added to mechanisms to purely add internal drives, not affecting global momenta.
@@ -685,45 +685,45 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{m_0,b}{\Rot}_b = \left[\LU{m_0}{\xv}_b, \LU{m_0}{\yv}_b, \LU{m_0}{\av}_0\right]
-    $$
+        \LU{m_0,b}{\Rot}_b = \left[\LU{m_0}{\xv}_b, \LU{m_0}{\yv}_b, \LU{m_0}{\av}_0\right]
+        $$
 
     The relative rotation marker computes the relative rotation according to
 
 
     $$
-    \LU{m_0,m_1}{\Rot}_{rel} = \LU{m_0,0}{\Rot}_{m0} \LU{0,m_1}{\Rot}_{m1}
-    $$
+        \LU{m_0,m_1}{\Rot}_{rel} = \LU{m_0,0}{\Rot}_{m0} \LU{0,m_1}{\Rot}_{m1}
+        $$
 
     This relative rotation, which represents a rotation about axis $\LU{m_0}{\av}_0$ is then transformed into the orthonormal basis,
 
 
     $$
-    \LU{b}{\Rot}_{rel} = \LU{b,m_0}{\Rot}_b \LU{m_0,m_1}{\Rot}_{rel} \LU{m_0,b}{\Rot}_b
-    $$
+        \LU{b}{\Rot}_{rel} = \LU{b,m_0}{\Rot}_b \LU{m_0,m_1}{\Rot}_{rel} \LU{m_0,b}{\Rot}_b
+        $$
 
     and contains the desired rotation about the z-axis, which can be extracted as
 
 
     $$
-    \varphi = \mathrm{atan2}(\LU{b}{\Rot}_{rel}[1,0],\LU{b}{\Rot}_{rel}[0,0]) - x_\mathrm{off}
-    $$
+        \varphi = \mathrm{atan2}(\LU{b}{\Rot}_{rel}[1,0],\LU{b}{\Rot}_{rel}[0,0]) - x_\mathrm{off}
+        $$
 
     The global axis is computed as 
 
 
     $$
-    \LU{0}{\av}_0 = \LU{0,m_0}{\Rot}_{m0} \LU{m_0}{\av}_0
-    $$
+        \LU{0}{\av}_0 = \LU{0,m_0}{\Rot}_{m0} \LU{m_0}{\av}_0
+        $$
     
     Using the angular velocities at the two bodies, $\LU{m_0}{\tomega_0}$ and  $\LU{m_1}{\tomega_1}$, the relative angular velocity, which may be used in coordinate spring-dampers or for velocity-level constraints, 
     is simply computed as
 
 
     $$
-    \dot \varphi = \LU{0}{\av}_0\tp \left( \LU{0,m_1}{\Rot}_{m1} \LU{m_1}{\tomega_1} - 
-                            \LU{0,m_0}{\Rot}_{m0} \LU{m_0}{\tomega_0} \right)
-    $$
+        \dot \varphi = \LU{0}{\av}_0\tp \left( \LU{0,m_1}{\Rot}_{m1} \LU{m_1}{\tomega_1} - 
+                                \LU{0,m_0}{\Rot}_{m0} \LU{m_0}{\tomega_0} \right)
+        $$
 
     Jacobians are computed according to the relative rotation velocity.
     Using this approach, coordinate constraints can be added to mechanisms to purely add internal drives, not affecting global momenta.
@@ -819,26 +819,26 @@ definitions.append(ItemDefinition(
     | marker velocity | $\LU{0}{\vv}_{m} = \sum_i w_i \cdot \LU{0}{\vv_i}$ | current global velocity which is provided by marker |
 
     <!-- -->
-    \vspace{6pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
     #### Marker quantities
 
-    The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
+    The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t. the 
     object velocity coordinates $\dot \qv_{n_b}$,
 
 
     $$
-    \Jm_{m,pos} = \frac{\partial \LU{0}{\vv}_{m}}{\partial \dot \qv_{n_b}}
-          = \sum_i w_i \cdot \Jm_{i,pos}
-    $$
+        \Jm_{m,pos} = \frac{\partial \LU{0}{\vv}_{m}}{\partial \dot \qv_{n_b}}
+              = \sum_i w_i \cdot \Jm_{i,pos}
+        $$
 
     in which $\Jm_{i,pos}$ denotes the position jacobian of mesh node $i$,
 
 
     $$
-    \Jm_{i,pos} = \frac{\partial \LU{0}{\vv}_{i}}{\partial \dot \qv_{n_b}}
-    $$
+        \Jm_{i,pos} = \frac{\partial \LU{0}{\vv}_{i}}{\partial \dot \qv_{n_b}}
+        $$
 
     The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for \texttt{ObjectGenericODE2}, because the jacobian only affects one single node.
     In \texttt{ObjectFFRFreducedOrder}, the jacobian may affect all reduced coordinates.
@@ -954,7 +954,7 @@ definitions.append(ItemDefinition(
     | mesh node number | $i = k_i$ | abbreviation, runs over all marker mesh nodes |
     | mesh node local displacement | $\LU{r}{\uv^{(i)}}$ | current local (within reference frame $r$) displacement of mesh node $k_i$ in object $n_b$ |
     | mesh node local position | $\LU{r}{\pv^{(i)}} = \LU{r}{\xv^{(i)}\cRef} + \LU{r}{\uv^{(i)}}$ | current local (within reference frame $r$, which is the body frame $b$ ,e.g., in \texttt{ObjectFFRFreducedOrder}) position of mesh node $k_i$ in object $n_b$ |
-    | mesh node local reference position | $\LU{r}{\xv^{(i)}\cRef}$ | local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$, see e.g.\ \texttt{ObjectFFRFreducedOrder} |
+    | mesh node local reference position | $\LU{r}{\xv^{(i)}\cRef}$ | local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$, see e.g. \texttt{ObjectFFRFreducedOrder} |
     | averaged local reference position | $\LU{r}{\xv^\mathrm{avg}\cRef} = \sum_i w_i \LU{r}{\xv^{(i)}\cRef}$ | midpoint reference position of marker; averaged local reference positions of all mesh nodes $k_i$, using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see [](#fig-markersuperelementrigid-sketch) |
     | marker centered mesh node local reference position | $\LU{r}{\pv^{(i)}\cRef} = \LU{r}{\xv^{(i)}\cRef}- \LU{r}{\xv^\mathrm{avg}\cRef}$ | local reference position of mesh node $k_i$ relative to the center position of marker |
     | mesh node local velocity | $\LU{r}{\vv^{(i)}}$ | current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$ |
@@ -969,13 +969,13 @@ definitions.append(ItemDefinition(
     | marker global angular velocity | $\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$ | current global angular velocity |
 
     <!-- -->
-    \vspace{6pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
     #### Marker background
 
     The marker allows to realize a multi-point constraint (assuming that the marker is used in a joint constraint), 
-    connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g.\ [CITE:HeirmanDesmet2010]. 
+    connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g. [CITE:HeirmanDesmet2010]. 
     However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for \texttt{ObjectFFRFreducedOrder} objects.
 
     For more information on the various quantities and their coordinate systems, see table above and [](#fig-markersuperelementrigid-sketch).
@@ -996,22 +996,22 @@ definitions.append(ItemDefinition(
 
     #### Marker quantities
 
-    The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the 
+    The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t. the 
     object velocity coordinates $\dot \qv_{n_b}$,
 
 
     $$
-    \LU{0}{\Jm_{m,pos}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} \, .
-    $$
+        \LU{0}{\Jm_{m,pos}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} \, .
+        $$
 
     In case of \texttt{ObjectGenericODE2}, assuming pure displacement based nodes,
     the jacobian will consist of zeros and unit matrices $\Im$ ,
 
 
     $$
-    \LU{0}{\Jm_{m,pos}^{GenericODE2}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} 
-          = \left[ \Null,\; \ldots,\; \Null,\; w_0 \Im,\; \Null,\; \ldots,\; \Null,\; w_1 \Im,\; \Null,\; \ldots,\; \Null \right]\, ,
-    $$
+        \LU{0}{\Jm_{m,pos}^{GenericODE2}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} 
+              = \left[ \Null,\; \ldots,\; \Null,\; w_0 \Im,\; \Null,\; \ldots,\; \Null,\; w_1 \Im,\; \Null,\; \ldots,\; \Null \right]\, ,
+        $$
 
     in which the $\Im$ matrices are placed at the according indices of marker nodes.
 
@@ -1020,11 +1020,11 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\Jm_{m,pos}^{FFRFreduced}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
-          = \sum_i w_i \LU{0}{\Jm^{(i)}_\mathrm{pos}}
-          = \left[\Im, \; -\LU{0r}{\Rot} \left(\LU{r}{\ov\cRef} + \sum_i \LU{r}{\pv^{(i)}} \right) \LU{r}{\Gm},\;
-                  \sum_i w_i \LU{0r}{\Rot} \vr{\LU{r}{\tPsi_{r=3i}\tp}}{\LU{r}{\tPsi_{r=3i+1}\tp}}{\LU{r}{\tPsi_{r=3i+2}\tp}} \right] \, .
-    $$
+        \LU{0}{\Jm_{m,pos}^{FFRFreduced}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
+              = \sum_i w_i \LU{0}{\Jm^{(i)}_\mathrm{pos}}
+              = \left[\Im, \; -\LU{0r}{\Rot} \left(\LU{r}{\ov\cRef} + \sum_i \LU{r}{\pv^{(i)}} \right) \LU{r}{\Gm},\;
+                      \sum_i w_i \LU{0r}{\Rot} \vr{\LU{r}{\tPsi_{r=3i}\tp}}{\LU{r}{\tPsi_{r=3i+1}\tp}}{\LU{r}{\tPsi_{r=3i+2}\tp}} \right] \, .
+        $$
 
     <!--
     \sum_i w_i \Im = \Im !!!
@@ -1045,12 +1045,12 @@ definitions.append(ItemDefinition(
     the set of nodes provided. For this reason, the check performed in \texttt{mbs.assemble()} will take care that the nodes are capable
     to describe rotations.
     The first approach, here called as a standard, follows the idea that displacements contribute to rotation are weighted by their quadratic distance, 
-    cf.\ [CITE:HeirmanDesmet2010], and gives the (small rotation) rotation vector
+    cf. [CITE:HeirmanDesmet2010], and gives the (small rotation) rotation vector
 
 
     $$
-    \LU{r}{\ttheta}_{m} = \frac{\sum_i w_i \LU{r}{\pv_{ref}^{(i)}} \times \LU{r}{\uv^{(i)}}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2}
-    $$
+        \LU{r}{\ttheta}_{m} = \frac{\sum_i w_i \LU{r}{\pv_{ref}^{(i)}} \times \LU{r}{\uv^{(i)}}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2}
+        $$
 
     Note that $\pv_{ref}^{(i)}$ is not the reference position in the \texttt{ObjectFFRFreducedOrder} object, but it is relative to the midpoint reference position
     all marker nodes, given in $\LU{r}{\xv^\mathrm{avg}\cRef}$.
@@ -1059,23 +1059,23 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{r}{\tomega}_{m} = \LU{r}{\dot \ttheta}_{m} = \frac{\sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\vv_i}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2}
-    $$
+        \LU{r}{\tomega}_{m} = \LU{r}{\dot \ttheta}_{m} = \frac{\sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\vv_i}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2}
+        $$
 
     <!--
     
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     -->
-    The marker also provides a `rotation' jacobian, which is the derivative of the marker angular velocity $\LU{0}{\tomega}_{m}$ w.r.t.\ the 
+    The marker also provides a `rotation' jacobian, which is the derivative of the marker angular velocity $\LU{0}{\tomega}_{m}$ w.r.t. the 
     object velocity coordinates $\dot \qv_{n_b}$,
 
 
     $$
-    \LU{0}{\Jm_{m,rot}} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
-                      = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
-                      = \LU{0r}{\Rot} \left(\frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot \qv_{n_b}} + 
-                                       \frac{\sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos}^{(i)}}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2} \right)
-    $$
+        \LU{0}{\Jm_{m,rot}} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
+                          = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
+                          = \LU{0r}{\Rot} \left(\frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot \qv_{n_b}} + 
+                                           \frac{\sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos}^{(i)}}}{\sum_i w_i |\LU{r}{\pv_{ref}^{(i)}}|^2} \right)
+        $$
 
     In case of \texttt{ObjectFFRFreducedOrder}, this jacobian is computed as
 
@@ -1094,7 +1094,7 @@ definitions.append(ItemDefinition(
             as defined in \texttt{ObjectFFRFreducedOrder}.
      \ei
     For further quantities also consult the according description in \texttt{ObjectFFRFreducedOrder}.
-    \vspace{6pt}\\
+    \\
     <!--
     
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1104,12 +1104,12 @@ definitions.append(ItemDefinition(
     #### Alternative computation of rotation (\texttt{useAlternativeApproach = True})
 
     Note that this approach is {\bf still under development} and needs further validation. 
-    However, tests show that this model is superior to the standard approach, as it improves the averaging of motion w.r.t.\ rotations
+    However, tests show that this model is superior to the standard approach, as it improves the averaging of motion w.r.t. rotations
     at the marker nodes.
 
     In the alternative approach, the weighting matrix $\Wm$ 
     has the interpretation of an inertia tensor built from nodes using weights equal to node masses.
-    In such an interpretation, the 'local angular momentum' w.r.t.\ the marker (averaged) position can be computed as 
+    In such an interpretation, the 'local angular momentum' w.r.t. the marker (averaged) position can be computed as 
 
 
     $$
@@ -1121,15 +1121,15 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \Wm = -\sum_i  w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\tilde \pv_{ref}^{(i)}}
-    $$
+        \Wm = -\sum_i  w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\tilde \pv_{ref}^{(i)}}
+        $$
 
     Furthermore, we need to introduce the averaged velocity of the marker averaged reference position, using $\LU{r}{\dot \uv^{(i)}} = \LU{r}{\vv^{(i)}}$, which is defined as
 
 
     $$
-    \LU{r}{\vv^\mathrm{avg}} = \sum_i  w_i \LU{r}{\vv^{(i)}} \, ,
-    $$
+        \LU{r}{\vv^\mathrm{avg}} = \sum_i  w_i \LU{r}{\vv^{(i)}} \, ,
+        $$
 
     similar to the averaged local reference position $\LU{r}{\xv^\mathrm{avg}\cRef}$ given in the table above, see also [](#fig-markersuperelementrigid-sketch).
 
@@ -1137,18 +1137,18 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{r}{\ttheta}_{m,alt} = \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \left( \LU{r}{\uv^{(i)}} - \LU{r}{\xv^\mathrm{avg}\cRef} \right) \, ,
-    $$
+        \LU{r}{\ttheta}_{m,alt} = \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \left( \LU{r}{\uv^{(i)}} - \LU{r}{\xv^\mathrm{avg}\cRef} \right) \, ,
+        $$
 
     and the marker local angular velocity is defined as
 
 
     $$
-    \LU{r}{\tomega}_{m,alt} = \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \left( \LU{r}{\vv^{(i)}} - \LU{r}{\vv^\mathrm{avg}} \right) \, .
-    $$
+        \LU{r}{\tomega}_{m,alt} = \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \left( \LU{r}{\vv^{(i)}} - \LU{r}{\vv^\mathrm{avg}} \right) \, .
+        $$
 
     Note that, the average velocity $\LU{r}{\vv^\mathrm{avg}}$ would cancel out in a symmetric mesh, but would cause spurious 
-    angular velocities in unsymmetric (w.r.t.\ the axis of rotation) distribition of mesh nodes. 
+    angular velocities in unsymmetric (w.r.t. the axis of rotation) distribition of mesh nodes. 
     This could even lead to spurious rotations or angular velocities in pure translatoric motion.
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -1156,27 +1156,27 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\Jm_{m,rot,alt}} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
-                      = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
-                      = \LU{0r}{\Rot} \left(\frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot \qv_{n_b}}  + 
-                                            \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos}^{(i)}}\right)
-    $$
+        \LU{0}{\Jm_{m,rot,alt}} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
+                          = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
+                          = \LU{0r}{\Rot} \left(\frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot \qv_{n_b}}  + 
+                                                \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos}^{(i)}}\right)
+        $$
 
     In case of \texttt{ObjectFFRFreducedOrder}, this jacobian is computed as
 
 
     $$
-    \LU{0}{\Jm_{m,rot,alt}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{\Gm_{local}},\; 
-                                                    \LU{0r}{\Rot} \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}} \right]
-    $$
+        \LU{0}{\Jm_{m,rot,alt}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{\Gm_{local}},\; 
+                                                        \LU{0r}{\Rot} \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}} \right]
+        $$
 
     see also the descriptions given after {eq}`eq-markersuperelementrigid-jacrotstandard` in the 'standard' approach.
     <!-- -->
-    \vspace{12pt}\\
-    \noindent {\bf EXAMPLE for marker on body 4, mesh nodes 10,11,12,13}:\vspace{6pt}\\
+    \\
+     {\bf EXAMPLE for marker on body 4, mesh nodes 10,11,12,13}:\\
     \texttt{MarkerSuperElementRigid(bodyNumber = 4, meshNodeNumber = [10, 11, 12, 13], weightingFactors = [0.25, 0.25, 0.25, 0.25], referencePosition=[0,0,0])}
-    \vspace{12pt}\\
-    \noindent For detailed examples, see \texttt{TestModels}.
+    \\
+     For detailed examples, see \texttt{TestModels}.
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainMarker,
@@ -1283,7 +1283,7 @@ definitions.append(ItemDefinition(
         \rowTable{marker global angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current global angular velocity}
         \finishTable
     
-        \vspace{6pt}
+        
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     -->
 
@@ -1292,7 +1292,7 @@ definitions.append(ItemDefinition(
     More information will be added later. The marker computes jacobians according to \texttt{Jacobian} in \texttt{class Robot}.
     %%RSTCOMPATIBLE
     <!--
-        The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the
+        The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t. the
         object velocity coordinates $\dot \qv_{n_b}$,
         \be
           \LU{0}{\Jm_{m,pos}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} \eqDot

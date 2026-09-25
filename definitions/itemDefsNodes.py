@@ -38,12 +38,12 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     classDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
     Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
-    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
+    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \\
 
-    \noindent {\bf Example} for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
+     {\bf Example} for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -129,12 +129,12 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     classDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
-    Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \vspace{6pt}\\
-    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
+    Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \\
+    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \\
     
-    \noindent {\bf Example} for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
+     {\bf Example} for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -224,7 +224,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     classDescription=r"""A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).""",
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The first 3 equations are residuals of translational forces in global coordinates,
     while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
@@ -236,34 +236,34 @@ definitions.append(ItemDefinition(
 
 
     $$
-    1 - \sum_{i=0}^{3} \theta_i^2 = 0.
-    $$
+        1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+        $$
 
     The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position 
     $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
 
 
     $$
-    \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
-    $$
+        \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+        $$
 
     Note that the Euler parameters $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
 
 
     $$
-    \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-    $$
+        \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+        $$
 
     The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$
 
 
     $$
-    \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} 
-                             {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
-                             {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
-    $$
+        \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} 
+                                 {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
+                                 {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
+        $$
 
-    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
 
 
     $$
@@ -407,7 +407,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     classDescription=r"""A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.""",
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position 
@@ -415,34 +415,34 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
-    $$
+        \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+        $$
 
     Note that the Euler angles $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
 
 
     $$
-    \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-    $$
+        \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+        $$
 
     The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
 
 
     $$
-    \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
-    $$
+        \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
+        $$
 
     see [](#sec-symbolsitems) for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
     
-    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
 
 
     $$
-    \begin{aligned}
-    \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
-          \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
+              \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
+        \end{aligned}
+        $$
 
     
     For creating a \texttt{NodeRigidBodyRxyz} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
@@ -555,7 +555,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     classDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     For a detailed description on the rigid body dynamics formulation using this node, 
     see Holzinger and Gerstmayr [CITE:HolzingerGerstmayr2020].
 
@@ -563,8 +563,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
-    $$
+        \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
+        $$
 
     with the rotation angle $\varphi$ and the rotation axis $\nv$.
     All coordinates $\cv\cConfig$ lead to second order differential equations, 
@@ -579,8 +579,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
-    $$
+        \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
+        $$
 
     Note that $\Rot(\tnu)$ is defined in function \texttt{ RotationVector2RotationMatrix}, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
     
@@ -702,7 +702,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     classDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     The node provides 2 displacement coordinates (displacement of ABRV:COM, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
     The node leads to 3 ODE2 equations of motions, where the first 2 equations are
     residuals of global translational forces, and the third equation is the residual of the
@@ -712,10 +712,10 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
-    $$
+        \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
+        $$
 
-    \noindent {\bf Example} for NodeRigidBody2D: see ObjectRigidBody2D
+     {\bf Example} for NodeRigidBody2D: see ObjectRigidBody2D
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -808,21 +808,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     classDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
     classType=ClassTypeNode,
-    equations=r"""    \paragraph{Detailed information:}
+    equations=r"""    **Detailed information:**
     The current position/rotation coordinate of the 1D node is computed from
 
 
     $$
-    p_0 = {q_0}\cRef + {q_0}\cCur
-    $$
+        p_0 = {q_0}\cRef + {q_0}\cCur
+        $$
 
     The coordinate leads to one second order differential equation.
     The graphical representation and the (internal) position of the node is
 
 
     $$
-    p\cConfig= \vr{{p_0}\cConfig}{0}{0}
-    $$
+        p\cConfig= \vr{{p_0}\cConfig}{0}{0}
+        $$
 
     The (internal) velocity vector is $[{p_0}\cConfig,\,0,\,0]\tp$.
     %%RSTCOMPATIBLE

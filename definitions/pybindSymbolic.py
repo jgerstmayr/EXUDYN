@@ -28,7 +28,7 @@ symbolicModule = PybindInterface()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pb.CreateNewRSTfile('Symbolic')
 
-pb.AddDocu(r"""The Symbolic sub-module in \texttt{exudyn.symbolic} allows limited symbolic manipulations in \codeName\ and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, \mybold{always veryfy your symbolic expressions or user functions}, as behavior may be unexpected in some cases. """,
+pb.AddDocu(r"""The Symbolic sub-module in \texttt{exudyn.symbolic} allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, \mybold{always veryfy your symbolic expressions or user functions}, as behavior may be unexpected in some cases. """,
             section='Symbolic', sectionLevel=1,sectionLabel='sec:cinterface:symbolic')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

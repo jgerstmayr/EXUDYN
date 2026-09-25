@@ -52,9 +52,9 @@ definitions.append(ItemDefinition(
     a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
 
     $$
-    \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, .
-          %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
-    $$
+        \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, .
+              %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
@@ -220,8 +220,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
-    $$
+        \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
+        $$
 
     For example, a LoadCoordinate on coordinate 1 of the node would add a term in $f_1$ on the RHS.
     
@@ -229,15 +229,15 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1}
-    $$
+        \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1}
+        $$
 
     transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
 
 
     $$
-    \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
-    $$
+        \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -358,8 +358,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \mp{m}{0} {0}{m} \vp{\ddot q_0}{\ddot q_1} = \vp{f_0}{f_1}.
-    $$
+        \mp{m}{0} {0}{m} \vp{\ddot q_0}{\ddot q_1} = \vp{f_0}{f_1}.
+        $$
 
     For example, a LoadCoordinate on coordinate 1 of the node would add a term in $f_1$ on the RHS.
     
@@ -367,18 +367,18 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = 
-          \left[\!\! \begin{array}{ccc}
-          1 & 0 & 0 \vspace{0.1cm}\\ 
-          0 & 1 & 0 \end{array} \!\!\right]
-    $$
+        \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = 
+              \left[\!\! \begin{array}{ccc}
+              1 & 0 & 0 \vspace{0.1cm}\\ 
+              0 & 1 & 0 \end{array} \!\!\right]
+        $$
 
     transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
 
 
     $$
-    \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
-    $$
+        \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -502,24 +502,24 @@ definitions.append(ItemDefinition(
 
 
     $$
-    m \cdot \ddot q_0 = f.
-    $$
+        m \cdot \ddot q_0 = f.
+        $$
 
     Note that $f$ is computed from all connectors and loads upon the object. E.g., a 3D force vector $\LU{0}{\fv}_a$ is 
     transformed to $f$ as
 
 
     $$
-    f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a
-    $$
+        f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a
+        $$
 
     Thus, the {\bf position jacobian} reads 
 
 
     $$
-    \Jm_{pos} = \partial \pv\cCur / \partial {q_0}\cCur = 
-           \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}}
-    $$
+        \Jm_{pos} = \partial \pv\cCur / \partial {q_0}\cCur = 
+               \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}}
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -657,24 +657,24 @@ definitions.append(ItemDefinition(
 
 
     $$
-    J \cdot \ddot \psi_0 = \tau.
-    $$
+        J \cdot \ddot \psi_0 = \tau.
+        $$
 
     Note that $\tau$ is computed from all connectors and loads upon the object. E.g., a 3D torque vector $\LU{0}{\ttau}_a$ is 
     transformed to $\tau$ as
 
 
     $$
-    \tau = \LU{b}{[0,\,0,\,1]}\LU{b0}{\Rot_{0}} \LU{0}{\ttau}_a
-    $$
+        \tau = \LU{b}{[0,\,0,\,1]}\LU{b0}{\Rot_{0}} \LU{0}{\ttau}_a
+        $$
 
     Thus, the {\bf rotation jacobian} reads 
 
 
     $$
-    \Jm_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} = 
-           \LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
-    $$
+        \Jm_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} = 
+               \LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -800,7 +800,7 @@ definitions.append(ItemDefinition(
 
     | intermediate variables | symbol | description |
     |---|---|---|
-    | inertia tensor | $\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$ | symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t.\ body's reference point |
+    | inertia tensor | $\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$ | symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t. body's reference point |
     | reference coordinates | $\qv\cRef = [\pRef\tp\cRef,\,\tpsi\tp\cRef]\tp$ | defines reference configuration, {\bf DIFFERENT} meaning from body's reference point! |
     | (relative) current coordinates | $\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp$ | unknowns in solver; {\bf relative} to the reference coordinates; current coordinates at initial configuration = initial coordinates $\qv\cIni$ |
     | current velocity coordinates | $\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp$ | current velocity coordinates |
@@ -868,32 +868,32 @@ definitions.append(ItemDefinition(
     \mp{m \ImThree}{\Null}{\Null}{\Jm} \vp{\av_{COM}}{\talpha} = \vp{\Null}{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda}
     $$ (eq-objectrigidbody-eomcom0)
 
-    with the $3\times 3$ unit matrix $\ImThree$ and forces $\fv$ resp.\ torques $\ttau$ as discribed in the table above.
+    with the $3\times 3$ unit matrix $\ImThree$ and forces $\fv$ resp. torques $\ttau$ as discribed in the table above.
     A change of the reference point, using the vector $\bv_{COM}$ from the body's reference point $\pv$ to the ABRV:COM position, is simple by replacing ABRV:COM accelerations using the common relation known from Euler
 
     $$
-    \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
-    $$
+        \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
+        $$
 
     which is inserted into the first line of {eq}`eq-objectrigidbody-eomcom0`. Additionally, the second line of {eq}`eq-objectrigidbody-eomcom0`
     (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to ABRV:COM, using the well known relation
 
     $$
-    m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
-    $$
+        m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
+        $$
 
     
     #### Equations of motion for arbitrary reference point
 
     This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point ($\neq$ ABRV:COM), 
-    see e.g.\ [CITE:woernle2016](page 258ff.), which have the general coordinate-free form
+    see e.g. [CITE:woernle2016](page 258ff.), which have the general coordinate-free form
 
     $$
     \mp{m \ImThree}{-m \tilde \bv_{COM}}{m \tilde \bv_{COM}}{\Jm} \vp{\av}{\talpha} = 
           \vp{-m \tilde \tomega \tilde \tomega \bv_{COM} }{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda} \, ,
     $$ (eq-objectrigidbody-eomarbitrary)
 
-    in which $\Jm$ is the inertia tensor w.r.t.\ the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
+    in which $\Jm$ is the inertia tensor w.r.t. the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
     {eq}`eq-objectrigidbody-eomarbitrary` can be written in the global frame (0),
 
     $$
@@ -908,16 +908,16 @@ definitions.append(ItemDefinition(
     applying {eq}`eq-objectrigidbody-omegalocal` and {eq}`eq-objectrigidbody-alpha`, and using the relations
 
     $$
-    \begin{aligned}
-    \LU{0}{\tilde \tomega}  \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}}
-          &= \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \tomega} \LU{b}{\bv_{COM}} = - \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega} 
-          = -\LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\Gm_{rp}} \dot \ttheta \, , \\
-        %
-          -m \LU{0}{\tilde \bv_{COM}} \LU{0}{\tilde \talpha} 
-          &= -m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tilde \talpha}
-          = -m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}} \left( \LU{b}{\Gm_{rp}} \ddot \ttheta + \LU{b}{\dot \Gm_{rp}} \dot \ttheta \right) \, ,
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\tilde \tomega}  \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}}
+              &= \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \tomega} \LU{b}{\bv_{COM}} = - \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega} 
+              = -\LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\Gm_{rp}} \dot \ttheta \, , \\
+            %
+              -m \LU{0}{\tilde \bv_{COM}} \LU{0}{\tilde \talpha} 
+              &= -m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tilde \talpha}
+              = -m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}} \left( \LU{b}{\Gm_{rp}} \ddot \ttheta + \LU{b}{\dot \Gm_{rp}} \dot \ttheta \right) \, ,
+        \end{aligned}
+        $$
 
     we obtain
 
@@ -953,8 +953,8 @@ definitions.append(ItemDefinition(
     Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint {eq}`eq-objectrigidbody-eulerparameters`, the constraint reaction forces in {eq}`eq-objectrigidbody-eom` then read
 
     $$
-    \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
-    $$
+        \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
+        $$
 
     <!--
     
@@ -1121,48 +1121,48 @@ definitions.append(ItemDefinition(
     The equations of motion in case that \texttt{physicsCenterOfMass}=$\Null$ read:
 
     $$
-    \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
-    $$
+        \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
+        $$
 
     if \texttt{physicsCenterOfMass} is nonzero, we resort to (not that $J$ represents the moment of inertia related to the reference point!):
 
     $$
-    \mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = \fv.
-    $$
+        \mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = \fv.
+        $$
 
     where we use the relations caused by the non-zero center of mass
 
     $$
-    \vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{\bv_{COM}}
-    $$
+        \vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{\bv_{COM}}
+        $$
 
     
     Position-based markers can measure position $\pv\cConfig(\pLocB)$ depending on the local position $\pLocB$. 
     The {\bf position jacobian} depends on the local position $\pLocB$ and is defined as,
 
     $$
-    \LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}\cConfig(\pLocB)\cCur / \partial \cv\cCur = \mr{1}{0}{-\sin(\theta)\LU{b}{b_0} - \cos(\theta)\LU{b}{b_1}} 
-                                                                 {0}{1}{\cos(\theta)\LU{b}{b_0}-\sin(\theta)\LU{b}{b_1}} {0}{0}{0}
-    $$
+        \LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}\cConfig(\pLocB)\cCur / \partial \cv\cCur = \mr{1}{0}{-\sin(\theta)\LU{b}{b_0} - \cos(\theta)\LU{b}{b_1}} 
+                                                                     {0}{1}{\cos(\theta)\LU{b}{b_0}-\sin(\theta)\LU{b}{b_1}} {0}{0}{0}
+        $$
 
     which transforms the action of global forces $\LU{0}{\fv}$ of position-based markers on the coordinates $\cv$,
 
     $$
-    \Qm = \LU{0}{\Jm_{pos}\tp} \LU{0}{\fv}_a
-    $$
+        \Qm = \LU{0}{\Jm_{pos}\tp} \LU{0}{\fv}_a
+        $$
 
     Note that a LoadCoordinate on coordinate 2 of the node would add a torque $\tau_2$ on the RHS.
     The {\bf rotation jacobian}, which is computed from angular velocity, reads
 
     $$
-    \LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot \cv\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}
-    $$
+        \LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot \cv\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}
+        $$
 
     and transforms the action of global torques $\LU{0}{\ttau}$ of orientation-based markers on the coordinates $\cv$,
 
     $$
-    \Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
-    $$
+        \Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
@@ -1332,8 +1332,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
     $$
-    n = \sum_{i} n_{c_i},
-    $$
+        n = \sum_{i} n_{c_i},
+        $$
 
     which is used throughout the description of this object.
     <!-- -->
@@ -1351,19 +1351,19 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     In case that a user mass matrix is specified, {eq}`eq-objectgenericode2-eom` is replaced with
 
     $$
-    \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
-    $$
+        \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
+        $$
 
     The (internal) Jacobian $\Jm$ of {eq}`eq-objectgenericode2-eom` (assuming $\fv$ to be constant!) reads
 
     $$
-    \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
-                f_{ODE2_t} \left(\Dm - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right) +
-    $$
+        \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
+                    f_{ODE2_t} \left(\Dm - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right) +
+        $$
 
     Chosing $f_{ODE2} = 1$ and $f_{ODE2_t}=0$ would immediately give the jacobian of position quantities.
     
-    If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in \codeName\ -- computed 
+    If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in Exudyn -- computed 
     by means of numerical differentiation.
     In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of {eq}`eq-objectgenericode2-eom` 
     without $\Km$ and $\Dm$ (these matrices are added internally),
@@ -1412,7 +1412,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
     | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns mass matrix for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations. |
 
-    \vspace{12pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t)`
     A user function, which computes the jacobian of the ABRV:LHS of the equations of motion, depending on current time, states of object and two
@@ -1430,7 +1430,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | \texttt{fODE2\_t} | Real | factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac` |
     | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
 
-    \vspace{12pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
     A user function, which is called by the visualization thread in order to draw user-defined objects.
@@ -1560,7 +1560,7 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
         ItemParameter(type=TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar, destination=DestComp+DestParam,
             pythonName='jacobianUserFunction',
             defaultValue=0,
-            description=r"""$\Jm_{user} \in \Rcal^{n\times n}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times $f_{ODE2}$) and w.r.t.\ the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"""),
+            description=r"""$\Jm_{user} \in \Rcal^{n\times n}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"""),
         ItemParameter(type=TArrayIndex, destination=DestComp+DestParam, cFlags=CFReadOnly,
             pythonName='coordinateIndexPerNode',
             defaultValue='ArrayIndex()',
@@ -1704,8 +1704,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
     $$
-    n = \sum_{i} n_{c_i},
-    $$
+        n = \sum_{i} n_{c_i},
+        $$
 
     which is used throughout the description of this object.
     <!-- -->
@@ -1913,7 +1913,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     addPublicC=r"""    static constexpr Index noParent = -1;//AUTO: number which defines that this link has no parent
 """,
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.""",
+    classDescription=r"""A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.""",
     classType=ClassTypeObject,
     equations=r"""    <!-- -->
 
@@ -1946,7 +1946,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #### General notes
 
     The \texttt{KinematicTree} object is used to represent the equations of motion of a (open) tree-structured multibody system
-    using a minimal set of coordinates. Even though that \codeName\ is based on redundant coordinates,
+    using a minimal set of coordinates. Even though that Exudyn is based on redundant coordinates,
     the \texttt{KinematicTree} allows to efficiently model standard multibody models based on revolute and prismatic joints.
     Especially, a chain with 3 links leads to only 3 equations of motion, while a redundant formulation would lead
     to $3 \times 7$ coordinates using Euler Parameters and $3 \times 6$ constraints for joints and Euler parameters,
@@ -1997,48 +1997,48 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     We can compute the local joint angular velocity $\tomega_i$ and translational velocity $\wv_i$, as a 6D vector $\vv^J_i$, from
 
     $$
-    \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, \dot q_i
-    $$
+        \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, \dot q_i
+        $$
 
     <!-- -->
     The joint coordinates, which can be rotational or translational, are stored in the vector
 
     $$
-    \qv = [q_0, \, \ldots,\, q_{N_B-1}]\tp \, ,
-    $$
+        \qv = [q_0, \, \ldots,\, q_{N_B-1}]\tp \, ,
+        $$
 
     and the vector of joint velocity coordinates reads
 
     $$
-    \dot \qv = [\dot q_0, \, \ldots,\, \dot q_{N_B-1}]\tp \, .
-    $$
+        \dot \qv = [\dot q_0, \, \ldots,\, \dot q_{N_B-1}]\tp \, .
+        $$
 
     Knowing the motion subspace $\tPhi_i$ for joint $i$, the velocity of joint $i$ reads
 
     $$
-    \vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \, ,
-    $$
+        \vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \, ,
+        $$
 
     and accelerations follow as
 
     $$
-    \av_i = \av_{p(i)} + \tPhi_i \, \ddot q_i + \dot \tPhi_i \, \dot q_i\, .
-    $$
+        \av_i = \av_{p(i)} + \tPhi_i \, \ddot q_i + \dot \tPhi_i \, \dot q_i\, .
+        $$
 
     Note that the previous formulas can be interpreted coordinate free, but they are usually implemented in joint coordinates.
 
     The local forces due to applied forces and inertia forces are computed, for now independently, for every link,
 
     $$
-    \fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a
-    $$
+        \fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a
+        $$
 
     The total forces can be computed from inverse dynamics. 
     At every free end of the tree, the forces are added up for the previous link, which needs to be done recursively starting at the leaves of the tree,
 
     $$
-    \fv_{p(i)} \mathrel{+}=  \LU{i,p(i)}{\Xm\tp} \!\cdot \fv_i
-    $$
+        \fv_{p(i)} \mathrel{+}=  \LU{i,p(i)}{\Xm\tp} \!\cdot \fv_i
+        $$
 
     The mass matrix is then built by recursively computing the intertia of the links and adding the joint contributions by
     projecting the local inertia into the joint motion space, see the composite-rigid-body algorithm.
@@ -2049,7 +2049,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
      <!--ignoreRST -->
     
 
-        **Recursive Newton-Euler algorithm** (acc.\ to Featherstone). It returns the joint forces
+        **Recursive Newton-Euler algorithm** (acc. to Featherstone). It returns the joint forces
         $\tau$ for given $\qv$, $\dot \qv$, $\mathrm{MotionSubspace}(i)$, $\Xm_{L}$ and
         $\LU{\mathrm{-1}}{\fv}^a_i$, assuming $\dot\tPhi_i=0$:
 
@@ -2067,7 +2067,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
            $\tau_i = \tPhi_i\tp \cdot \fv_i$, and
            $\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i$ if $p(i) \neq \mathrm{-1}$.
 
-        **Composite-rigid-body algorithm** (acc.\ to Featherstone). It returns the mass matrix $\Mm$
+        **Composite-rigid-body algorithm** (acc. to Featherstone). It returns the mass matrix $\Mm$
         for given $\tPhi_i$, $\LU{i,p(i)}{\Xm}$ and $\Im_i$:
 
         1. start with $\Mm_0 = \Null$ and the 6D inertia tensors $\Im_i^C = \Im_i$ for every body.
@@ -2105,8 +2105,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The control force $\fv_{PD}$ realizes a simple linear control law
 
     $$
-    \fv_{PD} = \Pm \cdot (\uv_o - \qv) + \Dm \cdot (\vv_o - \dot \qv)
-    $$
+        \fv_{PD} = \Pm \cdot (\uv_o - \qv) + \Dm \cdot (\vv_o - \dot \qv)
+        $$
 
     Here, the '.' operator represents an element-wise multiplication of two vectors, resulting in a vector.
     The force $\fv_{PD}$ at the ABRV:RHS acts in direction of prescribed joint motion $\uv_o$ and
@@ -2138,7 +2138,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
     | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
-    \vspace{12pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     %%RSTCOMPATIBLE
 """,
@@ -2220,7 +2220,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
             pythonName='linkInertiasCOM',
             defaultValue='Matrix3DList()',
-            description=r"""$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$list of link inertia tensors w.r.t.\ ABRV:COM in joint/link $j_i$ coordinates; must be always set"""),
+            description=r"""$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$list of link inertia tensors w.r.t. ABRV:COM in joint/link $j_i$ coordinates; must be always set"""),
         ItemParameter(type=TVector3DList, destination=DestComp+DestParam,
             pythonName='linkCOMs',
             defaultValue='Vector3DList()',
@@ -2240,7 +2240,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TVector, destination=DestComp+DestParam,
             pythonName='jointForceVector',
             defaultValue='Vector()',
-            description=r"""$\fv \in \Rcal^{n}$generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$"""),
+            description=r"""$\fv \in \Rcal^{n}$generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t. rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$"""),
         ItemParameter(type=TVector, destination=DestComp+DestParam,
             pythonName='jointPositionOffsetVector',
             defaultValue='Vector()',
@@ -2544,20 +2544,20 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     This gives $n_c$ total nodal coordinates, 
 
     $$
-    n_c = \sum_{i=0}^{n_\mathrm{nf}} n_{c_i} \, ,
-    $$
+        n_c = \sum_{i=0}^{n_\mathrm{nf}} n_{c_i} \, ,
+        $$
 
     whereof the number of flexible coordinates is
 
     $$
-    n\indf = 3 \cdot n_\mathrm{nf} \, .
-    $$
+        n\indf = 3 \cdot n_\mathrm{nf} \, .
+        $$
 
     
-    \noindent The total number of equations (=coordinates) of the object is $n_c$.
-    The first node $n_0$ represents the rigid body motion of the underlying reference frame with $n_{c\indr} = n_{c_0}$ coordinates \footnote{e.g., 
+     The total number of equations (=coordinates) of the object is $n_c$.
+    The first node $n_0$ represents the rigid body motion of the underlying reference frame with $n_{c\indr} = n_{c_0}$ coordinates  (e.g., 
     $n_{c\indr}=6$ coordinates for Euler angles and $n_{c\indr}=7$ coordinates in case of Euler parameters; currently only the Euler parameter
-    case is implemented.}. 
+    case is implemented.). 
     
     #### Kinematics
 
@@ -2574,8 +2574,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     In the present formulation of \texttt{ObjectFFRF}, we use the following set of object coordinates (unknowns)
 
     $$
-    \qv = \left[\LU{0}{\qv\indt\tp} \;\; \ttheta\tp \;\; \LU{b}{\qv\indf\tp} \right]\tp \in \Rcal^{n_c}
-    $$
+        \qv = \left[\LU{0}{\qv\indt\tp} \;\; \ttheta\tp \;\; \LU{b}{\qv\indf\tp} \right]\tp \in \Rcal^{n_c}
+        $$
 
     with $\LU{0}{\qv}\indt \in \Rcal^{3}$, $\ttheta \in \Rcal^{4}$ and $\LU{b}{\qv}\indf \in \Rcal^{n\indf}$.
     Note that parts of the coordinates $\qv$ can be already interpreted in specific coordinate systems, which is therefore added.
@@ -2595,27 +2595,27 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     we obtain the total relation of (global) nodal displacements to the object coordinates
 
     $$
-    \LU{0}{\cv} = \tPhi\indt \LU{0}{\qv\indt} + \left(\LU{0b}{\Am_{bd}} - \Im_{bd}\right) \LU{b}{\xv\cRef} + \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \, .
-    $$
+        \LU{0}{\cv} = \tPhi\indt \LU{0}{\qv\indt} + \left(\LU{0b}{\Am_{bd}} - \Im_{bd}\right) \LU{b}{\xv\cRef} + \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \, .
+        $$
 
     On velocity level, we have
 
     $$
-    \LU{0}{\dot \cv} = \Lm \dot \qv \, ,
-    $$
+        \LU{0}{\dot \cv} = \Lm \dot \qv \, ,
+        $$
 
     with the matrix $\Lm \in \Rcal^{n\indf \times n_c}$
 
     $$
-    \Lm = \left[\tPhi\indt ,\;\; -\LU{0b}{\Am_{bd}} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\;\; \LU{0b}{\Am_{bd}} \right]
-    $$
+        \Lm = \left[\tPhi\indt ,\;\; -\LU{0b}{\Am_{bd}} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\;\; \LU{0b}{\Am_{bd}} \right]
+        $$
 
     with the rotation parameters specific matrix $\LU{b}{\Gm}$, implicitly defined in the rigid body node by the relation $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \ttheta$
     and the body-fixed nodal position vector (for node $i$)
 
     $$
-    \LU{b}{\pv} = \LU{b}{\xv\cRef} + \LU{b}{\qv\indf}, \quad \LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}\cRef} + \LU{b}{\qv_{\mathrm{f},i}^{(i)}}
-    $$
+        \LU{b}{\pv} = \LU{b}{\xv\cRef} + \LU{b}{\qv\indf}, \quad \LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}\cRef} + \LU{b}{\qv_{\mathrm{f},i}^{(i)}}
+        $$
 
     and the special tilde matrix for vectors $\pv \in \Rcal^{3 {n_\mathrm{nf}}}$, 
 
@@ -2632,22 +2632,22 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     We use the Lagrange equations extended for constraint $\gv$,
 
     $$
-    \frac{d}{dt} \left( \frac{\partial T}{\partial \dot \qv\tp} \right) - \frac{\partial T}{\partial \qv\tp}
-            + \frac{\partial V}{\partial \qv\tp} + \frac{\partial \tlambda\tp \gv}{\partial \qv\tp} = \frac{\partial W}{\partial \qv\tp}
-    $$
+        \frac{d}{dt} \left( \frac{\partial T}{\partial \dot \qv\tp} \right) - \frac{\partial T}{\partial \qv\tp}
+                + \frac{\partial V}{\partial \qv\tp} + \frac{\partial \tlambda\tp \gv}{\partial \qv\tp} = \frac{\partial W}{\partial \qv\tp}
+        $$
 
     with the quantities
 
     $$
-    \begin{aligned}
-    T(\LU{0}{\dot \cv(\qv, \dot \qv)}) &= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0}{\Mm}  \LU{0}{\dot \cv}  
-            = \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0b}{\Am_{bd}} \LU{b}{\Mm} \LU{0b}{\Am_{bd}}\tp  \LU{0}{\dot \cv}
-            = \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{b}{\Mm}  \LU{0}{\dot \cv}\\
-            V(\LU{0}{\qv\indf}) &= \frac{1}{2}\LU{b}{\qv\indf\tp} \LU{b}{\Km}  \LU{b}{\qv\indf}  \\
-            \delta W(\LU{0}{\cv(\qv)},t) &= \LU{b}{\delta \cv \tp} \fv  \\
-            \gv(\qv, t) &= \Null  \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        T(\LU{0}{\dot \cv(\qv, \dot \qv)}) &= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0}{\Mm}  \LU{0}{\dot \cv}  
+                = \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0b}{\Am_{bd}} \LU{b}{\Mm} \LU{0b}{\Am_{bd}}\tp  \LU{0}{\dot \cv}
+                = \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{b}{\Mm}  \LU{0}{\dot \cv}\\
+                V(\LU{0}{\qv\indf}) &= \frac{1}{2}\LU{b}{\qv\indf\tp} \LU{b}{\Km}  \LU{b}{\qv\indf}  \\
+                \delta W(\LU{0}{\cv(\qv)},t) &= \LU{b}{\delta \cv \tp} \fv  \\
+                \gv(\qv, t) &= \Null  \\
+        \end{aligned}
+        $$
 
     Note that $\LU{b}{\Mm}$ and $\LU{b}{\Km}$ are the conventional finite element mass an stiffness 
     matrices defined in the body frame.
@@ -2675,14 +2675,14 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The mass terms are given as
 
     $$
-    \begin{aligned}
-    \Mm\indtt &= \tPhi\indt\tp \LU{b}{\Mm} \tPhi\indt,\\
-          \Mm\indtr &= -\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\\
-          \Mm\indtf &= \LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm} ,\\
-          \Mm\indrr &= \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\\
-          \Mm\indrf &= - \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \, .
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \Mm\indtt &= \tPhi\indt\tp \LU{b}{\Mm} \tPhi\indt,\\
+              \Mm\indtr &= -\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\\
+              \Mm\indtf &= \LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm} ,\\
+              \Mm\indrr &= \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\\
+              \Mm\indrf &= - \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \, .
+        \end{aligned}
+        $$
 
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt, \Mm\indtr, \Mm\indtf, \Mm\indrr, 
     \Mm\indrf, \LU{b}{\Mm}$ in {eq}`eq-objectffrf-eom` are set to zero (and not computed) and
@@ -2693,51 +2693,51 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The quadratic velocity vector follows as
 
     $$
-    \fv_{v}(\qv,\dot \qv) = \vr
-          {-\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm}\left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
-                                                         2 \omegaBDtilde \LU{b}{\dot \qv}\indf - 
-                                                         \LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
-          {\LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
-                                                         2 \omegaBDtilde \LU{b}{\dot \qv}\indf - 
-                                                         \LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
-          {-\LU{b}{\Mm} \left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
-                                                         2 \omegaBDtilde \LU{b}{\dot \qv}\indf - 
-                                                         \LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
-    $$
+        \fv_{v}(\qv,\dot \qv) = \vr
+              {-\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm}\left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
+                                                             2 \omegaBDtilde \LU{b}{\dot \qv}\indf - 
+                                                             \LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
+              {\LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
+                                                             2 \omegaBDtilde \LU{b}{\dot \qv}\indf - 
+                                                             \LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
+              {-\LU{b}{\Mm} \left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
+                                                             2 \omegaBDtilde \LU{b}{\dot \qv}\indf - 
+                                                             \LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
+        $$
 
     with the special matrix
 
     $$
-    \omegaBDtilde = \mathrm{diag}\left(\LU{b}{\tilde \tomega_\mathrm{bd}}, \; \ldots ,\; \LU{b}{\tilde \tomega_\mathrm{bd}}  \right)
-          \in \Rcal^{n\indf \times n\indf}
-    $$
+        \omegaBDtilde = \mathrm{diag}\left(\LU{b}{\tilde \tomega_\mathrm{bd}}, \; \ldots ,\; \LU{b}{\tilde \tomega_\mathrm{bd}}  \right)
+              \in \Rcal^{n\indf \times n\indf}
+        $$
 
     CoordinateLoads are added for each ABRV:ODE2 coordinate on the RHS of the latter equation. 
     
-    \noindent If the rigid body node is using Euler parameters $\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, an {\bf additional constraint} (constraint nr.\ 0) is 
+     If the rigid body node is using Euler parameters $\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, an {\bf additional constraint} (constraint nr. 0) is 
     added automatically for the Euler parameter norm, reading
 
     $$
-    1 - \sum_{i=0}^{3} \theta_i^2 = 0.
-    $$
+        1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+        $$
 
     
     <!--
-    \noindent If \texttt{constrainRigidBodyMotion==True}, {\bf 6 algebraic constraints} (constraint nrs.\ $[1\ldots 6]$) are added to restrict rigid body motion:
+     If \texttt{constrainRigidBodyMotion==True}, {\bf 6 algebraic constraints} (constraint nrs. $[1\ldots 6]$) are added to restrict rigid body motion:
     of the flexible coordinates, by applying the constraints of a Tisserand frame, giving 3 constraints for the position of the center of mass
     -->
     In order to suppress the rigid body motion of the mesh nodes, you should apply a ObjectConnectorCoordinateVector object with the following constraint
     equations which impose constraints of a so-called Tisserand frame, giving 3 constraints for the position of the center of mass
 
     $$
-    \Phi\indt\tp \LU{b}{\Mm} \qv\indf = 0
-    $$
+        \Phi\indt\tp \LU{b}{\Mm} \qv\indf = 0
+        $$
 
     and 3 constraints for the rotation,
 
     $$
-    \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
-    $$
+        \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
+        $$
 
     <!--
     
@@ -2773,7 +2773,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | \texttt{q\_t} | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
     | **return value** | NumpyMatrix $\in \Rcal^{n_c \times n_c}$ | returns mass matrix for object |
 
-    \vspace{12pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     %%RSTCOMPATIBLE
 """,
@@ -3081,56 +3081,56 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     by means of a reduction or mode basis $\LU{b}{\tPsi}$ (\texttt{modeBasis}) and the the modal coordinates $\tzeta$,
 
     $$
-    \LU{b}{\qv\indf} \approx \LU{b}{\tPsi} \tzeta
-    $$
+        \LU{b}{\qv\indf} \approx \LU{b}{\tPsi} \tzeta
+        $$
 
     The mode basis $\LU{b}{\tPsi}$ contains so-called mode shape vectors in its columns, which may be computed from eigen analysis, static computation or more advanced techniques, 
-    see the helper functions in module \texttt{exudyn.FEM}, within the class \text{FEMinterface}.
+    see the helper functions in module \texttt{exudyn.FEM}, within the class FEMinterface.
     To compute eigen modes, use \texttt{FEMinterface.ComputeEigenmodes(...)} or
     \texttt{FEMinterface.ComputeHurtyCraigBamptonModes(...)}. For details on model order reduction and component mode synthesis, see [](#sec-theory-cms).
     In many applications, $n_m$ typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
     
-    The \texttt{ObjectFFRF} coordinates and {eq}`eq-objectffrf-eom`\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
+    The \texttt{ObjectFFRF} coordinates and {eq}`eq-objectffrf-eom` (this is not done for user functions and \texttt{forceVector}) can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
 
     $$
-    \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
-            = \Hm \, \qv
-    $$
+        \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
+                = \Hm \, \qv
+        $$
 
     with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
     
     The reduced equations follow from the reduction of system matrices in {eq}`eq-objectffrf-eom`,
 
     $$
-    \begin{aligned}
-    \Km\indred &= \LU{b}{\tPsi}\tp \LU{b}{\Km} \LU{b}{\tPsi} \, , \\
-          \Mm\indred &= \LU{b}{\tPsi}\tp \LU{b}{\Mm} \LU{b}{\tPsi} \, , \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \Km\indred &= \LU{b}{\tPsi}\tp \LU{b}{\Km} \LU{b}{\tPsi} \, , \\
+              \Mm\indred &= \LU{b}{\tPsi}\tp \LU{b}{\Mm} \LU{b}{\tPsi} \, , \\
+        \end{aligned}
+        $$
 
     the computation of rigid body inertia
 
     $$
-    \begin{aligned}
-    \LU{b}{\tTheta}\indu &= \LUX{b}{\tilde \xv}{\cRef\tp} \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{b}{\tTheta}\indu &= \LUX{b}{\tilde \xv}{\cRef\tp} \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
+        \end{aligned}
+        $$
 
     the center of mass (and according tilde matrix), using $\tPhi\indt$ from {eq}`eq-objectffrf-phit`,
 
     $$
-    \begin{aligned}
-    \LU{b}{\tchi}\indu &= \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\xv\cRef}\\
-          \LU{b}{\tilde \tchi\indu} &= \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{b}{\tchi}\indu &= \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\xv\cRef}\\
+              \LU{b}{\tilde \tchi\indu} &= \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
+        \end{aligned}
+        $$
  
     and seven inertia-like matrices [CITE:ZwoelferGerstmayr2021],
 
     $$
-    \Mm_{AB} = \Am\tp \LU{b}{\Mm} \Bm, \quad \mathrm{using} \quad \Am\Bm \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; 
-            \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
-    $$
+        \Mm_{AB} = \Am\tp \LU{b}{\Mm} \Bm, \quad \mathrm{using} \quad \Am\Bm \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; 
+                \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
+        $$
 
     Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of {eq}`eq-objectffrf-specialtilde` is frequently used.
     
@@ -3147,84 +3147,84 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Equations of motion, in case that \texttt{computeFFRFterms = True}:
 
     $$
-    \begin{aligned}
-    \left(\Mm_{user}(mbs, t,\qv,\dot \qv) + 
-                        \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} \right) \ddot \qv + 
-                        \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm\indff} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km\indff} \qv = &&\\ \fv_v(\qv,\dot \qv) + \fv_{user}(mbs, t,\qv,\dot \qv) &&
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \left(\Mm_{user}(mbs, t,\qv,\dot \qv) + 
+                            \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} \right) \ddot \qv + 
+                            \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm\indff} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km\indff} \qv = &&\\ \fv_v(\qv,\dot \qv) + \fv_{user}(mbs, t,\qv,\dot \qv) &&
+        \end{aligned}
+        $$
 
-    \footnote{NOTE that currently the internal (C++) computed terms are zero,
+     (NOTE that currently the internal (C++) computed terms are zero,
 
     $$
-    \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} = \Null \quad \mathrm{and} \quad
-            \fv_v(\qv,\dot \qv) = \Null \, ,
-    $$
+        \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} = \Null \quad \mathrm{and} \quad
+                \fv_v(\qv,\dot \qv) = \Null \, ,
+        $$
 
-    but they are implemented in predefined user functions, see \texttt{FEM.py}, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions). In near future, these terms will be implemented in C++ and replace the user functions.}
+    but they are implemented in predefined user functions, see \texttt{FEM.py}, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions). In near future, these terms will be implemented in C++ and replace the user functions.)
     <!-- -->
     Note that in case of Euler parameters for the parameterization of rotations for the reference frame, the Euler parameter constraint equation is added automatically by this object.
     <!-- -->
     The single terms of the mass matrix are defined as[CITE:ZwoelferGerstmayr2021]
 
     $$
-    \begin{aligned}
-    \Mm\indtt &= m \ImThree \\
-          \Mm\indtr &= -\LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
-                          \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\Gm}\\
-          \Mm\indtf &= \LU{0b}{\Rot} \Mm_{\Phi\indt\!\Psi} \\
-          \Mm\indrr &= \LU{b}{\Gm\tp} \left[\LU{b}{\tTheta}\indu + 
-                                              \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
-                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
-                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
-                                                                                \right] \LU{b}{\Gm}\\
-          \Mm\indrf &= -\LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef\Psi} + \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}\Psi}  \right] \\ 
-          \Mm\indff &= \Mm_{\Psi\Psi}
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \Mm\indtt &= m \ImThree \\
+              \Mm\indtr &= -\LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
+                              \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\Gm}\\
+              \Mm\indtf &= \LU{0b}{\Rot} \Mm_{\Phi\indt\!\Psi} \\
+              \Mm\indrr &= \LU{b}{\Gm\tp} \left[\LU{b}{\tTheta}\indu + 
+                                                  \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
+                                                                                    \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
+                                                                                    \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
+                                                                                    \right] \LU{b}{\Gm}\\
+              \Mm\indrf &= -\LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef\Psi} + \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}\Psi}  \right] \\ 
+              \Mm\indff &= \Mm_{\Psi\Psi}
+        \end{aligned}
+        $$
 
-    with the Kronecker product\footnote{In Python numpy module this is computed by \texttt{numpy.kron(zeta, Im).T}},
+    with the Kronecker product (In Python numpy module this is computed by \texttt{numpy.kron(zeta, Im).T}),
 
     $$
-    \tzeta \otimes \Im = \vr{\zeta_0 \Im}{\vdots}{\zeta_{m-1} \Im}
-    $$
+        \tzeta \otimes \Im = \vr{\zeta_0 \Im}{\vdots}{\zeta_{m-1} \Im}
+        $$
 
     The quadratic velocity vector $\fv_v(\qv,\dot \qv) = \left[ \fv_{v\mathrm{t}}\tp,\; \fv_{v\mathrm{r}}\tp,\; \fv_{v\mathrm{f}}\tp \right]\tp$ reads
 
     $$
-    \begin{aligned}
-    \fv_{v\mathrm{t}} &= \LU{0b}{\Rot} \LU{b}{\tilde \tomega}\left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
-                          \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\tomega} + 
-                                        2 \LU{0b}{\Rot} \Mm_{\Phi\indt\!{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right)  \LU{b}{\tomega} \\
-                                    && + \LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
-                          \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\dot \Gm} \dot \ttheta \, , \\
-            \fv_{v\mathrm{r}} &= -\LU{b}{\Gm\tp} \LU{b}{\tilde \tomega} \left[\LU{b}{\tTheta}\indu + 
-                                              \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
-                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
-                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
-                                                                                \right]\LU{b}{\tomega} \\
-                                                && -2 \LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right) +
-                                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \dot \tzeta \otimes \Im \right)
-                                                                     \right] \LU{b}{\tomega} \\
-                                                && -\LU{b}{\Gm\tp}\left[\LU{b}{\tTheta}\indu + 
-                                              \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
-                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
-                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
-                                                                                \right] \LU{b}{\dot \Gm} \dot \ttheta \, , \\
-            \fv_{v\mathrm{f}} &= \left( \Im_\zeta \otimes \LU{b}{\tomega} \right)\tp 
-                                        \left[ \Mm_{\tilde\xv\cRef{\widetilde\Psi}}\tp + \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right) \right] \LU{b}{\tomega}
-                                                                    +2 \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \dot\tzeta \otimes \Im \right) \LU{b}{\tomega} \\
-                                                && + \left[ \Mm_{\tilde\xv\cRef{\Psi}}\tp + \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \tzeta \otimes \Im \right)
-                                                     \right] \LU{b}{\dot \Gm} \dot \ttheta \, .
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \fv_{v\mathrm{t}} &= \LU{0b}{\Rot} \LU{b}{\tilde \tomega}\left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
+                              \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\tomega} + 
+                                            2 \LU{0b}{\Rot} \Mm_{\Phi\indt\!{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right)  \LU{b}{\tomega} \\
+                                        && + \LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
+                              \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\dot \Gm} \dot \ttheta \, , \\
+                \fv_{v\mathrm{r}} &= -\LU{b}{\Gm\tp} \LU{b}{\tilde \tomega} \left[\LU{b}{\tTheta}\indu + 
+                                                  \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
+                                                                                    \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
+                                                                                    \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
+                                                                                    \right]\LU{b}{\tomega} \\
+                                                    && -2 \LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right) +
+                                                                                                \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \dot \tzeta \otimes \Im \right)
+                                                                         \right] \LU{b}{\tomega} \\
+                                                    && -\LU{b}{\Gm\tp}\left[\LU{b}{\tTheta}\indu + 
+                                                  \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
+                                                                                    \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
+                                                                                    \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
+                                                                                    \right] \LU{b}{\dot \Gm} \dot \ttheta \, , \\
+                \fv_{v\mathrm{f}} &= \left( \Im_\zeta \otimes \LU{b}{\tomega} \right)\tp 
+                                            \left[ \Mm_{\tilde\xv\cRef{\widetilde\Psi}}\tp + \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right) \right] \LU{b}{\tomega}
+                                                                        +2 \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \dot\tzeta \otimes \Im \right) \LU{b}{\tomega} \\
+                                                    && + \left[ \Mm_{\tilde\xv\cRef{\Psi}}\tp + \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \tzeta \otimes \Im \right)
+                                                         \right] \LU{b}{\dot \Gm} \dot \ttheta \, .
+        \end{aligned}
+        $$
 
     Note that terms including $\LU{b}{\dot \Gm} \dot \ttheta$ vanish in case of Euler parameters or in case that $\LU{b}{\dot \Gm} = \Null$,
     and we use another Kronecker product with the unit matrix $\Im_\zeta \in \Rcal^{n_m \times n_m}$,
 
     $$
-    \Im_\zeta \otimes \LU{b}{\tomega} = \mr{\LU{b}{\tomega}}{}{} {}{\ddots}{} {}{}{\LU{b}{\tomega}} \in \Rcal^{3n_m \times n_m}
-    $$
+        \Im_\zeta \otimes \LU{b}{\tomega} = \mr{\LU{b}{\tomega}}{}{} {}{\ddots}{} {}{}{\LU{b}{\tomega}} \in \Rcal^{3n_m \times n_m}
+        $$
 
     
     <!--$\ra$ will be completed later, see according literature of Zwölfer and Gerstmayr [CITE:ZwoelferGerstmayr2021]. -->
@@ -3247,42 +3247,42 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Recall that the modal coordinates $\tzeta$ are transformed to node coordinates by means of the mode basis  $\LU{b}{\tPsi}$,
 
     $$
-    \LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta \, .
-    $$
+        \LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta \, .
+        $$
 
     The local displacements $\LU{b}{\uv\indf^{(i)}}$ of a specific node $i$ can be reconstructed in this way by means of
 
     $$
-    \LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} \, ,
-    $$
+        \LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} \, ,
+        $$
 
     and the global position of a node, see tables above, reads
 
     $$
-    \LU{0}{\pv^{(i)}} = \LU{0}{\pv\indt} + \LU{0b}{\Am} \left( \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} \right)
-    $$
+        \LU{0}{\pv^{(i)}} = \LU{0}{\pv\indt} + \LU{0b}{\Am} \left( \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} \right)
+        $$
 
     Thus, the jacobian of the global position reads
 
     $$
-    \LU{0}{\Jm_\mathrm{pos}^{(i)}} = \frac{\partial \LU{0}{\pv^{(i)}}}{\partial [\qv\indt, \;\ttheta, \;\tzeta]}
-         = \left[\ImThree, \; -\LU{0b}{\Rot} \left(\LU{b}{\tilde\uv\indf^{(i)}} + \LU{b}{\tilde\xv^{(i)}\cRef} \right) \LU{b}{\Gm},\;
-                 \LU{0b}{\Rot} \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}}\right] \, ,
-    $$
+        \LU{0}{\Jm_\mathrm{pos}^{(i)}} = \frac{\partial \LU{0}{\pv^{(i)}}}{\partial [\qv\indt, \;\ttheta, \;\tzeta]}
+             = \left[\ImThree, \; -\LU{0b}{\Rot} \left(\LU{b}{\tilde\uv\indf^{(i)}} + \LU{b}{\tilde\xv^{(i)}\cRef} \right) \LU{b}{\Gm},\;
+                     \LU{0b}{\Rot} \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}}\right] \, ,
+        $$
 
     in which $\LU{b}{\tPsi_{r=...}}$ represents the row $r$ of the mode basis (matrix) $\LU{b}{\Psi}$, and
     the matrix 
 
     $$
-    \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}} \in \Rcal^{3 \times n_m}
-    $$
+        \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}} \in \Rcal^{3 \times n_m}
+        $$
 
     Furthermore, the jacobian of the local position reads
 
     $$
-    \LU{b}{\Jm_\mathrm{pos}^{(i)}} = \frac{\partial \LU{b}{\pv\indf^{(i)}}}{\partial [\qv\indt, \;\ttheta, \;\tzeta]}
-         = \left[\Null, \; \Null, \; \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}}\right] \, ,
-    $$
+        \LU{b}{\Jm_\mathrm{pos}^{(i)}} = \frac{\partial \LU{b}{\pv\indf^{(i)}}}{\partial [\qv\indt, \;\ttheta, \;\tzeta]}
+             = \left[\Null, \; \Null, \; \vr{\LU{b}{\tPsi_{r=3i}\tp}}{\LU{b}{\tPsi_{r=3i+1}\tp}}{\LU{b}{\tPsi_{r=3i+2}\tp}}\right] \, ,
+        $$
 
     which is used in \texttt{MarkerSuperElementRigid}.
     
@@ -3339,7 +3339,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | \texttt{q\_t} | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of \texttt{q}) in current configuration |
     | **return value** | NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$ | returns mass matrix for object |
 
-    \vspace{12pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     %%RSTCOMPATIBLE
 """,
@@ -3876,29 +3876,29 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The current position of an arbitrary element at local axial position $x \in [0,L]$, where $L$ is the beam length, reads
 
     $$
-    \rv=\rv(x, t),
-    $$
+        \rv=\rv(x, t),
+        $$
 
-    The derivative of the position w.r.t.\ the axial reference coordinate is denoted as slope vector,
+    The derivative of the position w.r.t. the axial reference coordinate is denoted as slope vector,
 
     $$
-    \rv'= \frac{\partial \rv(x, t)}{\partial x}
-    $$
+        \rv'= \frac{\partial \rv(x, t)}{\partial x}
+        $$
 
     The interpolation is based on cubic (spline) interpolation of position, displacements and velocities.
     The generalized coordinates $\qv \in \Rcal^8$ of the beam element is defined by
 
     $$
-    \qv= \left[\, \rv_0^{T}\;\;\rv_0^{' T}\;\; \rv_1^{T}\;\; \rv_1^{' T}\, \right]^{T}.
-    $$
+        \qv= \left[\, \rv_0^{T}\;\;\rv_0^{' T}\;\; \rv_1^{T}\;\; \rv_1^{' T}\, \right]^{T}.
+        $$
 
     in which $\rv_0$ is the position of node 0 and $\rv_1$ is the position of node 1,
     $\rv'_0$ the slope at node 0 and $\rv'_1$ the slope at node 1.
     Note that ANCF coordinates in the present notation are computed as sum of reference and current coordinates
 
     $$
-    \qv = \qv\cCur + \qv\cRef
-    $$
+        \qv = \qv\cCur + \qv\cRef
+        $$
 
     which is used throughout here. For time derivatives, it follows that $\dot \qv = \dot \qv\cCur$.
     
@@ -3906,14 +3906,14 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The position and slope along the beam are interpolated by means of 
 
     $$
-    \rv = \Sm \qv \qquad \mathrm{and} \qquad \rv'=\Sm' \qv.
-    $$
+        \rv = \Sm \qv \qquad \mathrm{and} \qquad \rv'=\Sm' \qv.
+        $$
 
     in which $\Sm$ is the shape function matrix,
 
     $$
-    \Sm(x)= \left[\, S_1(x)\,\ImTwo\;\; S_2(x)\,\ImTwo\;\; S_3(x)\,\ImTwo\;\; S_4(x)\,\ImTwo\, \right].
-    $$
+        \Sm(x)= \left[\, S_1(x)\,\ImTwo\;\; S_2(x)\,\ImTwo\;\; S_3(x)\,\ImTwo\;\; S_4(x)\,\ImTwo\, \right].
+        $$
 
     with identity matrix $\ImTwo \in \Rcal^{2 \times 2}$ and the shape functions
 
@@ -3930,8 +3930,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Velocity simply follows as 
 
     $$
-    \frac{\partial \rv}{\partial t} = \dot \rv = \Sm \dot \qv.
-    $$
+        \frac{\partial \rv}{\partial t} = \dot \rv = \Sm \dot \qv.
+        $$
 
     <!-- -->
 
@@ -3941,14 +3941,14 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The analytical form of the mass matrix reads
 
     $$
-    \Mm_{analytic} = \int_0^L \rho A \Sm(x)^T \Sm(x) dx
-    $$
+        \Mm_{analytic} = \int_0^L \rho A \Sm(x)^T \Sm(x) dx
+        $$
 
     which is approximated using
 
     $$
-    \Mm = \sum_{ip = 0}^{n_{ip}-1} w(x_{ip}) \frac{L}{2} \rho A \Sm(x_{ip})^T \Sm(x_{ip})
-    $$
+        \Mm = \sum_{ip = 0}^{n_{ip}-1} w(x_{ip}) \frac{L}{2} \rho A \Sm(x_{ip})^T \Sm(x_{ip})
+        $$
 
     with integration weights $w(x_{ip})$, $\sum w(x_{ip})=2$, and integration points $x_{ip}$, given as,
 
@@ -3971,21 +3971,21 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The virtual work of elastic forces reads [CITE:GerstmayrIrschik2008],
 
     $$
-    \delta W_e = \int_0^L (N \delta \varepsilon + M \delta K) \,dx,
-    $$
+        \delta W_e = \int_0^L (N \delta \varepsilon + M \delta K) \,dx,
+        $$
 
     <!--\todo{compute $\delta W_e = \Qm_e^T \delta \qv$ } -->
     in which the axial strain is defined as [CITE:GerstmayrIrschik2008]
 
     $$
-    \varepsilon=\Vert \rv'\Vert-1.
-    $$
+        \varepsilon=\Vert \rv'\Vert-1.
+        $$
  
     and the material measure of curvature (bending strain) is given as
 
     $$
-    K=\ev_3^T \frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2} .
-    $$
+        K=\ev_3^T \frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2} .
+        $$
 
     <!--\todo{define vector e3} -->
     in which $\ev_3$ is the unit vector which is perpendicular to the plane of the planar beam element.
@@ -4035,28 +4035,28 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
 
     $$
-    \delta W_v = \int_0^L \left( d_\varepsilon \dot \varepsilon \delta \varepsilon + d_K \dot K \delta K \right) \,d x.
-    $$
+        \delta W_v = \int_0^L \left( d_\varepsilon \dot \varepsilon \delta \varepsilon + d_K \dot K \delta K \right) \,d x.
+        $$
 
     with material coefficients $d_\varepsilon$ and $d_K$.
     The time derivatives of axial strain $\dot \varepsilon_p$ follows by elementary differentiation
 
     $$
-    \dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert \rv'\Vert-1 \right)
-            %= \frac{\rv^{\prime T} \frac{\partial}{\partial t}\rv'}{\Vert \rv'\Vert} 
-            = \frac{1}{\Vert \rv'\Vert} \rv^{\prime T} \Sm' \dot \qv
-    $$
+        \dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert \rv'\Vert-1 \right)
+                %= \frac{\rv^{\prime T} \frac{\partial}{\partial t}\rv'}{\Vert \rv'\Vert} 
+                = \frac{1}{\Vert \rv'\Vert} \rv^{\prime T} \Sm' \dot \qv
+        $$
 
     as well as the derivative of the curvature,
 
     $$
-    \begin{aligned}
-    \dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \\
-                     & = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\\
-                     %& = & \frac{\ev_3^T}{(\rv'^T \rv')^2} \left((\rv'^T \rv') \left( \frac {\partial \rv''}{\partial t} \times \rv''+ \frac{\partial \rv''}{\partial t} \times \rv' \right)-\left( \rv' \times \rv'' \right) \left(2\rv'^T \frac{\partial \rv'}{\partial t}\right) \right) \\
-                     & = &  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \\
+                         & = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\\
+                         %& = & \frac{\ev_3^T}{(\rv'^T \rv')^2} \left((\rv'^T \rv') \left( \frac {\partial \rv''}{\partial t} \times \rv''+ \frac{\partial \rv''}{\partial t} \times \rv' \right)-\left( \rv' \times \rv'' \right) \left(2\rv'^T \frac{\partial \rv'}{\partial t}\right) \right) \\
+                         & = &  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
+        \end{aligned}
+        $$
 
     
     The virtual work of applied forces reads
@@ -4069,29 +4069,29 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The second term contains a load per length $\bv$, which is case of gravity vector $\gv$ reads
 
     $$
-    \bv = \rho \gv.
-    $$
+        \bv = \rho \gv.
+        $$
 
     Note that the variation of $\rv$ simply follows as
 
     $$
-    \delta \rv= \Sm\, \delta \qv
-    $$
+        \delta \rv= \Sm\, \delta \qv
+        $$
 
     #### Numerical integration of Elastic Forces
 
     The numerical integration of elastic forces $\Qm_e$ is split into terms due to $\delta \varepsilon$ and $\delta K$,
 
     $$
-    \Qm_e = \int_0^L \left(\bullet(x) \frac{\partial \delta \varepsilon}{\partial \delta \qv} + \bullet(x) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
-    $$
+        \Qm_e = \int_0^L \left(\bullet(x) \frac{\partial \delta \varepsilon}{\partial \delta \qv} + \bullet(x) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
+        $$
 
     using different integration rules
 
     $$
-    \Qm_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta \qv} \right)
-                       + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
-    $$
+        \Qm_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta \qv} \right)
+                           + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
+        $$
 
     with the integration points $x_{ip}$ as defined in {eq}`eq-ancfcable-iptransform` and integration rules from [](#sec-integrationpoints).
     There are 3 different options for integration rules depending on the flag \texttt{useReducedOrderIntegration}:
@@ -4107,22 +4107,22 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     For application of forces and constraints at any local beam position $\pLocB=[x,\, y,\, 0]\tp$, the position / velocity Jacobian reads
 
     $$
-    \frac{\partial \LU{0}{\vv(x)}}{\dot \qv} = \Sm(x) + \left[ -y \cdot n_x S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, 
-            -y \cdot n_y S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, -y \cdot n_x S'_2(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\,\ldots \right]
-    $$
+        \frac{\partial \LU{0}{\vv(x)}}{\dot \qv} = \Sm(x) + \left[ -y \cdot n_x S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, 
+                -y \cdot n_y S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, -y \cdot n_x S'_2(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\,\ldots \right]
+        $$
 
     with the normalized beam axis normal $\LU{0}{\nv} = [n_x,\, n_y]\tp$, see table above.
 
     For application of torques at any axis point $x$, the rotation / angular velocity Jacobian $\frac{\partial \LU{0}{\omega(x)}}{\dot \qv} \in \Rcal^{3 \times 8}$ reads
 
     $$
-    \frac{\partial \LU{0}{\omega(x)}}{\dot \qv} = 
-           \left[\!\! \begin{array}{ccccc} 
-          0 & 0 & 0 & \cdots & 0 \vspace{0.1cm}\\ 
-          0 & 0 & 0 & \cdots & 0 \vspace{0.1cm}\\ 
-          -r'_y \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & r'_x \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & 
-          -r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
-    $$
+        \frac{\partial \LU{0}{\omega(x)}}{\dot \qv} = 
+               \left[\!\! \begin{array}{ccccc} 
+              0 & 0 & 0 & \cdots & 0 \vspace{0.1cm}\\ 
+              0 & 0 & 0 & \cdots & 0 \vspace{0.1cm}\\ 
+              -r'_y \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & r'_x \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & 
+              -r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature_t, curvatureRef)`
@@ -4217,7 +4217,7 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
 #use  cable with GenerateStraightLineANCFCable(...)
 
 ```
- \vspace{12pt}
+ 
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -5322,61 +5322,61 @@ definitions.append(ItemDefinition(
     The unit vector in force direction reads (raises SysError if $L=0$),
 
     $$
-    \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
-    $$
+        \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
+        $$
 
     If \texttt{activeConnector = True}, the scalar spring force is computed as
 
     $$
-    f_{SD} = k\cdot(L-L_0) + d \cdot(\dot L -\dot L_0)+ f_{a}
-    $$
+        f_{SD} = k\cdot(L-L_0) + d \cdot(\dot L -\dot L_0)+ f_{a}
+        $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv$ instead becomes ($t$ is current time)
 
     $$
-    f_{SD} = \mathrm{UF}(mbs, t, i_N, L-L_0, \dot L - \dot L_0, k, d, f_{a})
-    $$
+        f_{SD} = \mathrm{UF}(mbs, t, i_N, L-L_0, \dot L - \dot L_0, k, d, f_{a})
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber). Note that, if \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
 
     The vector of the spring-damper force applied at both markers finally reads
 
     $$
-    \fv = f_{SD}\vv_{f}
-    $$
+        \fv = f_{SD}\vv_{f}
+        $$
 
     The virtual work of the connector force is computed from the virtual displacement 
 
     $$
-    \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
-    $$
+        \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
+        $$
 
     and the virtual work (note the transposed version here, because the resulting generalized forces shall be a column vector),
 
     $$
-    \delta W_{SD} = \fv \delta \Delta\! \LU{0}{\pv} 
-          = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \left(\delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \right)\tp \vv_{f} 
-          \, .
-    $$
+        \delta W_{SD} = \fv \delta \Delta\! \LU{0}{\pv} 
+              = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \left(\delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \right)\tp \vv_{f} 
+              \, .
+        $$
 
     The generalized (elastic) forces thus result from
 
     $$
-    \Qm_{SD} = \frac{\partial \LU{0}{\pv}}{\partial \qv_{SD}\tp} \fv 
-          \, ,
-    $$
+        \Qm_{SD} = \frac{\partial \LU{0}{\pv}}{\partial \qv_{SD}\tp} \fv 
+              \, ,
+        $$
 
     and read for the markers $m0$ and $m1$,
 
     $$
-    \Qm_{SD, m0} 
-          = -\left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \Jm_{pos,m0}\tp \vv_{f} , \quad
-          \Qm_{SD, m1} 
-          = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0)+ f_{a} \right) \Jm_{pos,m1}\tp \vv_{f} 
-          \, ,
-    $$
+        \Qm_{SD, m0} 
+              = -\left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \Jm_{pos,m0}\tp \vv_{f} , \quad
+              \Qm_{SD, m1} 
+              = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0)+ f_{a} \right) \Jm_{pos,m1}\tp \vv_{f} 
+              \, ,
+        $$
 
-    where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t.\ its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
+    where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t. its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
     <!-- -->
 
     #### Connector Jacobian
@@ -5384,24 +5384,24 @@ definitions.append(ItemDefinition(
     The position-level jacobian for the connector, involving all coordinates associated with markers $m0$ and $m1$, follows from 
 
     $$
-    \Jm_{SD} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}}}
-                        {\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \qv_{m1}}}
-    $$
+        \Jm_{SD} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}}}
+                            {\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \qv_{m1}}}
+        $$
 
     and the velocity level jacobian reads
 
     $$
-    \Jm_{SD,t} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}}}
-                        {\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \dot \qv_{m1}}}
-    $$
+        \Jm_{SD,t} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}}}
+                            {\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \dot \qv_{m1}}}
+        $$
 
     The sub-Jacobians follow from
 
     $$
-    \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} = 
-           -\frac{\partial \Jm_{pos,m0}\tp }{\partial \qv_{m0}} \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right) 
-           -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \qv_{m0}}
-    $$
+        \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} = 
+               -\frac{\partial \Jm_{pos,m0}\tp }{\partial \qv_{m0}} \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right) 
+               -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \qv_{m0}}
+        $$
 
     in which the term $\frac{\partial \Jm_{pos,m0}\tp }{\partial \qv_{m0}}$ is computed from a special function provided by markers, that
     compute the derivative of the marker jacobian times a constant vector, in this case the spring force $\fv$; this jacobian term is usually less  
@@ -5410,42 +5410,42 @@ definitions.append(ItemDefinition(
     The other term, which is the dominant term, is computed as (dependence of velocity term on position coordinates and $\dot L_0$ term neglected),
 
     $$
-    \begin{aligned}
-    \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}}
-          &= -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \qv_{m0}}
-          \\
-          &= -\Jm_{pos,m0}\tp \frac{\partial  \left( k\cdot \left( \Delta\! \LU{0}{\pv} - L_0 \vv_{f} \right)+ \vv_{f} \left(d \cdot \vv_{f}\tp \Delta\! \LU{0}{\vv}  + f_{a} \right) \right)   }{\partial \qv_{m0}} 
-          \\
-          &\approx& \Jm_{pos,m0}\tp \left(k\cdot \Im - k  \frac{L_0}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)  +\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \left(d \cdot \vv_{f}\tp \Delta\! \LU{0}{\vv}  + f_{a} \right) \right. \\
-          &&\left. + d \LU{0}{\vv_{f}} \otimes \left(\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes 
-          \LU{0}{\vv_{f}} \right) \LU{0}{\vv_{f}} \right) \right)
-          \LU{0}{\Jm_{pos,m0}}
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}}
+              &= -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \qv_{m0}}
+              \\
+              &= -\Jm_{pos,m0}\tp \frac{\partial  \left( k\cdot \left( \Delta\! \LU{0}{\pv} - L_0 \vv_{f} \right)+ \vv_{f} \left(d \cdot \vv_{f}\tp \Delta\! \LU{0}{\vv}  + f_{a} \right) \right)   }{\partial \qv_{m0}} 
+              \\
+              &\approx& \Jm_{pos,m0}\tp \left(k\cdot \Im - k  \frac{L_0}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)  +\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \left(d \cdot \vv_{f}\tp \Delta\! \LU{0}{\vv}  + f_{a} \right) \right. \\
+              &&\left. + d \LU{0}{\vv_{f}} \otimes \left(\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes 
+              \LU{0}{\vv_{f}} \right) \LU{0}{\vv_{f}} \right) \right)
+              \LU{0}{\Jm_{pos,m0}}
+        \end{aligned}
+        $$
 
     <!--+++++++++++++++++++++++++++++++++++++++++++ -->
     Alternatively (again $\dot L_0$ term neglected):
 
     $$
-    \begin{aligned}
-    \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}}
-          &= -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \qv_{m0}}
-          \\
-          %+++
-          &= \Jm_{pos,m0}\tp \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)
-              \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right) \Jm_{pos,m0}
-          \\
-          && +\Jm_{pos,m0}\tp \LU{0}{\vv_{f}}
-              \otimes \left( k\cdot \LU{0}{\vv_{f}} + d \cdot\Delta\! \LU{0}{\vv} \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) 
-              \right) \Jm_{pos,m0} - d \Jm_{pos,m0}\tp \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}}  \\
-          %+++
-          &= \Jm_{pos,m0}\tp \left(\frac{f_{SD}}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)
-               + k \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} + 
-              \frac{d}{L} \left(\LU{0}{\vv_{f}} \otimes \Delta\! \LU{0}{\vv}\right) 
-                     \cdot \left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) + ...!
-              \right) \Jm_{pos,m0}
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}}
+              &= -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \qv_{m0}}
+              \\
+              %+++
+              &= \Jm_{pos,m0}\tp \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)
+                  \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right) \Jm_{pos,m0}
+              \\
+              && +\Jm_{pos,m0}\tp \LU{0}{\vv_{f}}
+                  \otimes \left( k\cdot \LU{0}{\vv_{f}} + d \cdot\Delta\! \LU{0}{\vv} \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) 
+                  \right) \Jm_{pos,m0} - d \Jm_{pos,m0}\tp \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}}  \\
+              %+++
+              &= \Jm_{pos,m0}\tp \left(\frac{f_{SD}}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)
+                   + k \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} + 
+                  \frac{d}{L} \left(\LU{0}{\vv_{f}} \otimes \Delta\! \LU{0}{\vv}\right) 
+                         \cdot \left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) + ...!
+                  \right) \Jm_{pos,m0}
+        \end{aligned}
+        $$
 
     <!--+++++++++++++++++++++++++++++++++++++++++++ -->
     Noting that $\frac{\partial \vv_{f} }{\partial \qv_{m0}} = 
@@ -5453,16 +5453,16 @@ definitions.append(ItemDefinition(
     $\frac{\partial \vv_{f} }{\partial \qv_{m1}} = 
     \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \LU{0}{\Jm_{pos,m1}}$.
     <!-- -->
-    The Jacobian w.r.t.\ velocity coordinates follows as
+    The Jacobian w.r.t. velocity coordinates follows as
 
     $$
-    \begin{aligned}
-    \frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}}
-          &= -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \dot \qv_{m0}}
-          \\
-          &= \Jm_{pos,m0}\tp \left(d \vv_{f} \otimes \vv_{f} \right) \LU{0}{\Jm_{pos,m0}}
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}}
+              &= -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \dot \qv_{m0}}
+              \\
+              &= \Jm_{pos,m0}\tp \left(d \vv_{f} \otimes \vv_{f} \right) \LU{0}{\Jm_{pos,m0}}
+        \end{aligned}
+        $$
 
     Note that in case that $L=0$, the term $\frac{1}{L} \left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)$ is replaced
     by the unit matrix, in order to avoid zero (singular) jacobian; this is a workaround and should only occur in exceptional cases.
@@ -5470,10 +5470,10 @@ definitions.append(ItemDefinition(
     The term $\frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}}$, which is important for large damping, yields
 
     $$
-    \frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}} = 
-          \frac{\partial \Jm_{pos,m0} \dot \qv_{m0}}{\partial \qv_{m0}}=
-          \frac{\partial \Jm_{pos,m0} }{\partial \qv_{m0}} \dot \qv_{m0}
-    $$
+        \frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}} = 
+              \frac{\partial \Jm_{pos,m0} \dot \qv_{m0}}{\partial \qv_{m0}}=
+              \frac{\partial \Jm_{pos,m0} }{\partial \qv_{m0}} \dot \qv_{m0}
+        $$
 
     The latter term is currently neglected.
     
@@ -5516,7 +5516,7 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
                                           springForceUserFunction = UFforce))
 
 ```
- \vspace{12pt}
+ 
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -5670,20 +5670,20 @@ definitions.append(ItemDefinition(
     and relative velocity reads
 
     $$
-    \Delta\! \LU{0}{\vv}= \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} \, .
-    $$
+        \Delta\! \LU{0}{\vv}= \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} \, .
+        $$
 
     If \texttt{activeConnector = True}, the spring force vector is computed as
 
     $$
-    \LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} \, .
-    $$
+        \LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} \, .
+        $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
 
     $$
-    \LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
-    $$
+        \LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     If \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.
@@ -5693,14 +5693,14 @@ definitions.append(ItemDefinition(
     The generalized forces added to the ABRV:LHS equations read for marker $m0$,
 
     $$
-    \fv_{LHS,m0} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_{SD}} \, ,
-    $$
+        \fv_{LHS,m0} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_{SD}} \, ,
+        $$
 
     and for marker $m1$,
 
     $$
-    \fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \, .
-    $$
+        \fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \, .
+        $$
 
     The ABRV:LHS equation parts are added accordingly using the ABRV:LTG mapping.
     Note that the different signs result from the signs in {eq}`eq-objectcartesianspringdamper-deltapos`.
@@ -5711,37 +5711,37 @@ definitions.append(ItemDefinition(
     The anayltic jacobian for the coupled equation parts $\fv_{LHS,m0}$ and $\fv_{LHS,m1}$ is based on the local jacobians
 
     $$
-    \begin{aligned}
-    \Jm_{loc0} &= f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m0}} +
-                         f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m0}}
-                      = -f_{ODE2} \cdot \diag(\kv) - f_{ODE2_t} \cdot \diag(\dv) \, , \\
-          \Jm_{loc1} &= f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m1}} +
-                         f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m1}}
-                      =  f_{ODE2} \cdot \diag(\kv) + f_{ODE2_t} \cdot \diag(\dv) \, .
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \Jm_{loc0} &= f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m0}} +
+                             f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m0}}
+                          = -f_{ODE2} \cdot \diag(\kv) - f_{ODE2_t} \cdot \diag(\dv) \, , \\
+              \Jm_{loc1} &= f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m1}} +
+                             f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m1}}
+                          =  f_{ODE2} \cdot \diag(\kv) + f_{ODE2_t} \cdot \diag(\dv) \, .
+        \end{aligned}
+        $$
 
     Here, $f_{ODE2}$ is the factor for the position derivative and $f_{ODE2_t}$ is the factor for the velocity derivative, 
     which allows a computation of the computation for both the position as well as the velocity part at the same time.
 
-    \noindent The complete jacobian for the ABRV:LHS equations then reads,
+     The complete jacobian for the ABRV:LHS equations then reads,
 
     $$
-    \begin{aligned}
-    \Jm_{CSD}&=\mp{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m0}}}
-                      {\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m1}}}
-                      {\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m0}}}
-                      {\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m1}}} + \Jm_{CSD'} \\
-                &= \mp{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc0} \Jm_{pos,m0}}
-                       {-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
-                       {\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc0} \Jm_{pos,m0}}
-                       {\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'} \\
-                &= \mp{\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m0}}
-                       {-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
-                       {-\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m0}}
-                       {\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'}
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \Jm_{CSD}&=\mp{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m0}}}
+                          {\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m1}}}
+                          {\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m0}}}
+                          {\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m1}}} + \Jm_{CSD'} \\
+                    &= \mp{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc0} \Jm_{pos,m0}}
+                           {-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
+                           {\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc0} \Jm_{pos,m0}}
+                           {\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'} \\
+                    &= \mp{\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m0}}
+                           {-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
+                           {-\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m0}}
+                           {\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'}
+        \end{aligned}
+        $$
 
     Here, $\qv_{m0}$ are the coordinates associated with marker $m0$ and $\qv_{m1}$ of marker $m1$.
 
@@ -5954,9 +5954,9 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = True}, the vector spring force is computed as
 
     $$
-    \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) + 
-                \dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
-    $$
+        \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) + 
+                    \dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
+        $$
 
     For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
     if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.
@@ -5965,9 +5965,9 @@ definitions.append(ItemDefinition(
     $\fv_{SD}$ instead becomes ($t$ is current time)
 
     $$
-    \fv_{SD} = \mathrm{UF}(mbs, t, i_N, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\tomega}, 
-                                 \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
-    $$
+        \fv_{SD} = \mathrm{UF}(mbs, t, i_N, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\tomega}, 
+                                     \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -6231,8 +6231,8 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = True}, the vector spring force is computed as
 
     $$
-    f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
-    $$
+        f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
+        $$
 
     if \texttt{activeConnector = False}, $f_{SD}$ is set zero.
 
@@ -6240,8 +6240,8 @@ definitions.append(ItemDefinition(
     $f_{SD}$ instead becomes ($t$ is current time)
 
     $$
-    f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
-    $$
+        f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -6442,8 +6442,8 @@ definitions.append(ItemDefinition(
     |---|---|---|
     | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
     | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
-    | marker m0 ang.\ velocity | $\LU{m0}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
-    | marker m1 ang.\ velocity | $\LU{m1}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
+    | marker m0 ang. velocity | $\LU{m0}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
+    | marker m1 ang. velocity | $\LU{m1}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
     | AngularVelocityLocal | $\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$ | angular velocity around joint0 Z-axis |
 
     #### Connector forces
@@ -6451,8 +6451,8 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = True}, the vector spring force is computed as
 
     $$
-    \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
-    $$
+        \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
+        $$
 
     if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
 
@@ -6460,8 +6460,8 @@ definitions.append(ItemDefinition(
     $\tau_{SD}$ instead becomes ($t$ is current time)
 
     $$
-    \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
-    $$
+        \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -6677,32 +6677,32 @@ definitions.append(ItemDefinition(
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
 
     $$
-    \Delta q= q_{m1} - q_{m0}
-    $$
+        \Delta q= q_{m1} - q_{m0}
+        $$
 
     and relative velocity,
 
     $$
-    \Delta v= v_{m1} - v_{m0}
-    $$
+        \Delta v= v_{m1} - v_{m0}
+        $$
 
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
 
     $$
-    f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
-    $$
+        f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
+        $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
 
     $$
-    f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})%, f_\mu, v_\mu)
-    $$
+        f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})%, f_\mu, v_\mu)
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
     If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
 
-    NOTE \mysmall{ that until 2023-01-21 (exudyn V1.5.76), the CoordinateSpringDamper included the parameters dryFriction and dryFrictionProportionalZone.
+    NOTE { that until 2023-01-21 (exudyn V1.5.76), the CoordinateSpringDamper included the parameters dryFriction and dryFrictionProportionalZone.
     These parameters have been removed and they are only available in CoordinateSpringDamperExt, HOWEVER, with different names.
     In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDamper with the same friction behavior, we recoomend:
     \bi
@@ -6889,14 +6889,14 @@ definitions.append(ItemDefinition(
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
 
     $$
-    q= f_1 \cdot q_{m1} - f_0 \cdot q_{m0}
-    $$
+        q= f_1 \cdot q_{m1} - f_0 \cdot q_{m0}
+        $$
 
     and relative velocity,
 
     $$
-    v= f_1 \cdot v_{m1} - f_0 \cdot v_{m0}
-    $$
+        v= f_1 \cdot v_{m1} - f_0 \cdot v_{m0}
+        $$
 
     The friction force is computed from given friction 'force' parameters, as there is no normal force in this model.
     This means, that \texttt{fDynamicFriction} represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and 
@@ -6910,13 +6910,13 @@ definitions.append(ItemDefinition(
       If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with
 
       $$
-      f_\mathrm{friction} = \begin{cases} 
-                 (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} 
-                       \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
-                 \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + 
-                 f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
-                 \end{cases}
-      $$
+            f_\mathrm{friction} = \begin{cases} 
+                       (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} 
+                             \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
+                       \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + 
+                       f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
+                       \end{cases}
+            $$
 
     This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
     but may be problematic in implicit integration).\\
@@ -6939,8 +6939,8 @@ definitions.append(ItemDefinition(
       \item[1:] last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; in the sticking case, any deviation from that position leads to an additional bristle force  \\
 
           $$
-          f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
-          $$
+                    f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
+                    $$
 
       \item[2:] limit stop state $d_{ls}$: $d_{ls} = 0$: no limit reached (no contact, $d_{ls}<0$: limitStopsLower surpassed, $d_{ls}>0$: limitStopsUpper surpassed; $|d_{ls}|$ contains the penetration value of the soft contact model
     \ei
@@ -6955,12 +6955,12 @@ definitions.append(ItemDefinition(
     Contact forces are computed from stiffness $k_\mathrm{limits}$ and damping $d_\mathrm{limits}$, penetration into stop and velocity,
 
     $$
-    f_\mathrm{contact} = 
-              \begin{cases} 
-                   k_\mathrm{limits} \cdot (q-s_\mathrm{upper}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q > s_\mathrm{upper}\\
-                   k_\mathrm{limits} \cdot (q-s_\mathrm{lower}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q < s_\mathrm{lower}
-                   \end{cases}
-    $$
+        f_\mathrm{contact} = 
+                  \begin{cases} 
+                       k_\mathrm{limits} \cdot (q-s_\mathrm{upper}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q > s_\mathrm{upper}\\
+                       k_\mathrm{limits} \cdot (q-s_\mathrm{lower}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q < s_\mathrm{lower}
+                       \end{cases}
+        $$
 
     <!-- -->
     NOTE: while a combination of friction and limit stop is possible, it may be wanted to put a friction with 
@@ -6970,41 +6970,41 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
 
     $$
-    f_{SD} = k \cdot \left( q - x_\mathrm{off} \right) + d \cdot \left( v - v_\mathrm{off} \right)
-          + f_\mathrm{friction} + f_\mathrm{contact}
-    $$
+        f_{SD} = k \cdot \left( q - x_\mathrm{off} \right) + d \cdot \left( v - v_\mathrm{off} \right)
+              + f_\mathrm{friction} + f_\mathrm{contact}
+        $$
 
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
 
     $$
-    f_{SD} = \mathrm{UF}(mbs, t, i_N, q, v, k, d, x_\mathrm{off}, v_\mathrm{off}, 
-                   f_{\mu,\mathrm{d}}, f_{\mu,\mathrm{so}}, v_\mathrm{exp}, f_{\mu,\mathrm{v}}, v_\mathrm{reg})
-    $$
+        f_{SD} = \mathrm{UF}(mbs, t, i_N, q, v, k, d, x_\mathrm{off}, v_\mathrm{off}, 
+                       f_{\mu,\mathrm{d}}, f_{\mu,\mathrm{so}}, v_\mathrm{exp}, f_{\mu,\mathrm{v}}, v_\mathrm{reg})
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
     The virtual work of the connector force is computed from the virtual displacement 
 
     $$
-    \delta q = f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \, ,
-    $$
+        \delta q = f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \, ,
+        $$
 
     and the virtual work results as
 
     $$
-    \delta W_{SD} = f_{SD} \cdot \delta q
-          = f_{SD} \cdot \left( f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \right)
-          \, .
-    $$
+        \delta W_{SD} = f_{SD} \cdot \delta q
+              = f_{SD} \cdot \left( f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \right)
+              \, .
+        $$
 
     The generalized (elastic) forces thus read for the markers $m0$ and $m1$,
 
     $$
-    \Qm_{SD, m0} 
-          = -f_{SD} \cdot f_0 \cdot \Jm_{coord,m0} \, , \quad
-          \Qm_{SD, m1} 
-          = f_{SD} \cdot f_1 \cdot \Jm_{coord,m1} \, ,
-    $$
+        \Qm_{SD, m0} 
+              = -f_{SD} \cdot f_0 \cdot \Jm_{coord,m0} \, , \quad
+              \Qm_{SD, m1} 
+              = f_{SD} \cdot f_1 \cdot \Jm_{coord,m1} \, ,
+        $$
 
     in which $\Jm_{coord,m0}$ and $\Jm_{coord,m1}$ represent the coordinate Jacobians of the respective markers.
     As can be seen in generalized force $\Qm$, the factors $f_0$ and $f_1$ are added accordingly which increase the 
@@ -7267,22 +7267,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
-    $$
+        \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
+        $$
 
     If \texttt{activeConnector = True}, and $L>=d_{min}$ the gravitational force is computed as
 
 
     $$
-    f_G = - G \frac{mass_0 \cdot mass_1}{L^2}
-    $$
+        f_G = - G \frac{mass_0 \cdot mass_1}{L^2}
+        $$
 
     If \texttt{activeConnector = True}, and $L<d_{min}$ the gravitational force is computed as
 
 
     $$
-    f_G = - G \frac{mass_0 \cdot mass_1}{L^2+(L-d_{min})^2}
-    $$
+        f_G = - G \frac{mass_0 \cdot mass_1}{L^2+(L-d_{min})^2}
+        $$
 
     which results in a regularization for small distances, which is helpful if there are no restrictions in objects to keep apart.
     If $d_{min}=0$ and $L=0$, there a system error is raised.
@@ -7291,45 +7291,45 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \fv = f_G \vv_{f}
-    $$
+        \fv = f_G \vv_{f}
+        $$
 
     The virtual work of the connector force is computed from the virtual displacement 
 
 
     $$
-    \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
-    $$
+        \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
+        $$
 
     and the virtual work (not the transposed version here, because the resulting generalized forces shall be a column vector,
 
 
     $$
-    \delta W_G = \fv \delta \Delta\! \LU{0}{\pv} 
-          = -\left( - G \frac{mass_0 \cdot mass_1}{L^2} \right) \left(\delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \right)\tp \vv_{f} 
-          \, .
-    $$
+        \delta W_G = \fv \delta \Delta\! \LU{0}{\pv} 
+              = -\left( - G \frac{mass_0 \cdot mass_1}{L^2} \right) \left(\delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \right)\tp \vv_{f} 
+              \, .
+        $$
 
     The generalized (elastic) forces thus result from
 
 
     $$
-    \Qm_G = \frac{\partial \LU{0}{\pv}}{\partial \qv_G\tp} \fv 
-          \, ,
-    $$
+        \Qm_G = \frac{\partial \LU{0}{\pv}}{\partial \qv_G\tp} \fv 
+              \, ,
+        $$
 
     and read for the markers $m0$ and $m1$,
 
 
     $$
-    \Qm_{G, m0} 
-          = -\left( - G \frac{mass_0 \cdot mass_1}{L^2} \right) \Jm_{pos,m0}\tp \vv_{f} , \quad
-          \Qm_{G, m1} 
-          = \left( - G \frac{mass_0 \cdot mass_1}{L^2} \right) \Jm_{pos,m1}\tp \vv_{f} 
-          \, ,
-    $$
+        \Qm_{G, m0} 
+              = -\left( - G \frac{mass_0 \cdot mass_1}{L^2} \right) \Jm_{pos,m0}\tp \vv_{f} , \quad
+              \Qm_{G, m1} 
+              = \left( - G \frac{mass_0 \cdot mass_1}{L^2} \right) \Jm_{pos,m1}\tp \vv_{f} 
+              \, ,
+        $$
 
-    where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t.\ its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
+    where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t. its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectConnector,
@@ -7482,8 +7482,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
-    $$
+        \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
+        $$
 
     The simple double-acting hydraulic actuator has two pressure chambers, one being denoted with 0 at the
     piston head (nut) and the other at the piston rod side denoted with 1. The pressure $p_0$ acts at the piston head at area $A_0$, 
@@ -7493,8 +7493,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    f_{HA} = -p_0 \cdot A_0 + p_1 \cdot A_1 + v \cdot d_HA
-    $$
+        f_{HA} = -p_0 \cdot A_0 + p_1 \cdot A_1 + v \cdot d_HA
+        $$
 
     where $v$ represents the actuator velocitiy and $d_HA$ is the viscous damping coefficient.
 
@@ -7502,23 +7502,23 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \fv = f_{HA}\vv_{f}
-    $$
+        \fv = f_{HA}\vv_{f}
+        $$
 
     The virtual work of the connector force is computed from the virtual displacement 
 
 
     $$
-    \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
-    $$
+        \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \, ,
+        $$
 
     and the virtual work (not the transposed version here, because the resulting generalized forces shall be a column vector),
 
 
     $$
-    \delta W_{HA} = \fv \delta \Delta\! \LU{0}{\pv} 
-          \, .
-    $$
+        \delta W_{HA} = \fv \delta \Delta\! \LU{0}{\pv} 
+              \, .
+        $$
     
     <!--
     
@@ -7540,15 +7540,15 @@ definitions.append(ItemDefinition(
 
 
     $$
-    s = L - L_o
-    $$
+        s = L - L_o
+        $$
 
     such that at zero stroke, the actuator length is $L_o$. The stroke velocity (positive value means extension) reads
 
 
     $$
-    \dot s = \Delta\! \LU{0}{\vv\tp} \vv_{f}
-    $$
+        \dot s = \Delta\! \LU{0}{\vv\tp} \vv_{f}
+        $$
 
     
     If \texttt{useChamberVolumeChange == True}, the volume change due to stroke change will be considered for the
@@ -7557,9 +7557,9 @@ definitions.append(ItemDefinition(
 
 
     $$
-    V_{0,cur} = V_{h,0} + A_0 \cdot s, \quad
-          V_{1,cur} = V_{h,1} + A_1 \cdot (L_s - s)
-    $$
+        V_{0,cur} = V_{h,0} + A_0 \cdot s, \quad
+              V_{1,cur} = V_{h,1} + A_1 \cdot (L_s - s)
+        $$
 
     The effective bulk modulus for chamber $k \in {0,1}$ is computed as follows,
 
@@ -7579,8 +7579,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \vp{\dot p_0}{\dot p_1} = \vp{f_0(p_0, s, \dot s)}{f_1(p_1, s, \dot s)}
-    $$
+        \vp{\dot p_0}{\dot p_1} = \vp{f_0(p_0, s, \dot s)}{f_1(p_1, s, \dot s)}
+        $$
 
     and follow for different cases and chambers / valves $k=\{0,1\}$, based on the simple model where 
     \bi
@@ -7588,32 +7588,32 @@ definitions.append(ItemDefinition(
       \item $A_{v,k} > 0$: valve k opened towards system pressure (pump)
       \item $A_{v,k} < 0$: valve k opened towards tank pressure
     \ei
-    Thus, the following equations are used\footnote{while it would happen rarely in regular operation, the arguments of the square roots could become negative; 
-    thus, in the implementation we use $\mathrm{sqrts}(x) = \mathrm{sign}(x) \cdot \sqrt{\mathrm{abs}(x)}$.}:
+    Thus, the following equations are used (while it would happen rarely in regular operation, the arguments of the square roots could become negative; 
+    thus, in the implementation we use $\mathrm{sqrts}(x) = \mathrm{sign}(x) \cdot \sqrt{\mathrm{abs}(x)}$.):
 
 
     $$
-    \dot p_0 = \frac{K_{0,eff}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v,0} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_0)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,0} \ge 0
-    $$
+        \dot p_0 = \frac{K_{0,eff}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v,0} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_0)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,0} \ge 0
+        $$
 
 
 
     $$
-    \dot p_0 = \frac{K_{0,eff}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v,0} \cdot Q_n \cdot \mathrm{sqrts}(p_0 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,0} < 0
-    $$
+        \dot p_0 = \frac{K_{0,eff}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v,0} \cdot Q_n \cdot \mathrm{sqrts}(p_0 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,0} < 0
+        $$
 
     <!-- -->
 
 
     $$
-    \dot p_1 = \frac{K_{1,eff}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v,1} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_1)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,1} \ge 0
-    $$
+        \dot p_1 = \frac{K_{1,eff}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v,1} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_1)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,1} \ge 0
+        $$
 
 
 
     $$
-    \dot p_1 = \frac{K_{1,eff}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v,1} \cdot Q_n \cdot \mathrm{sqrts}(p_1 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,1} < 0
-    $$
+        \dot p_1 = \frac{K_{1,eff}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v,1} \cdot Q_n \cdot \mathrm{sqrts}(p_1 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,1} < 0
+        $$
 
     
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -7815,7 +7815,7 @@ definitions.append(ItemDefinition(
     #### General model assumptions
 
     The \texttt{ConnectorReevingSystemSprings} model is based on a linear elastic, visco-elastic, and mass-less spring which
-    is tangent to a list of rolls. The contact with the rolls is friction-less, causing no torque w.r.t.\ the rolling axis of the sheave.
+    is tangent to a list of rolls. The contact with the rolls is friction-less, causing no torque w.r.t. the rolling axis of the sheave.
     The force in the rope results from the difference of the total length $L$ compared to the reference length or the rope, which 
     may be changed by adding or subtracting rope length at the end points. All geometric operations are performed in 3D, allowing to model
     simple reeving systems in 3D.
@@ -7844,53 +7844,53 @@ definitions.append(ItemDefinition(
     Otherwise, we first compute the vector between circle centers,
 
     $$
-    \cv = \pv_B - \pv_A, \quad \mathrm{and} \quad \cv_0 = \frac{\cv}{|\cv|} \, ,
-    $$
+        \cv = \pv_B - \pv_A, \quad \mathrm{and} \quad \cv_0 = \frac{\cv}{|\cv|} \, ,
+        $$
 
     and obtain the tangent vectors
 
     $$
-    \tv_A = \tv_B = \cv_0 \, ,
-    $$
+        \tv_A = \tv_B = \cv_0 \, ,
+        $$
 
     as well as the normal vectors
 
     $$
-    \nv_A = \av_A \times \cv_0, \quad \mathrm{and} \quad
-          \nv_B = \av_B \times \cv_0 \, .
-    $$
+        \nv_A = \av_A \times \cv_0, \quad \mathrm{and} \quad
+              \nv_B = \av_B \times \cv_0 \, .
+        $$
 
     Note that the orientation of the axis vectors $\av_A$ and $\av_B$ defines the orientation of the normals.
     By definition, we assume the following conditions,
 
     $$
-    \nv_A\tp \rv_A < 0, \quad \mathrm{and} \quad 
-          \nv_B\tp \rv_B < 0 \, .
-    $$
+        \nv_A\tp \rv_A < 0, \quad \mathrm{and} \quad 
+              \nv_B\tp \rv_B < 0 \, .
+        $$
 
     For two circles with equal radius and axes orientations, the angles result in $\varphi_A=\varphi_B=\pi$.
     In general, the unknown vectors $\rv_A$ and $\rv_B$ are computed by means of Newton's method.
     The unknown tangent vector is given as 
 
     $$
-    \tv_c = \pv_B + \rv_B - \pv_A - \rv_A = \cv + \rv_B - \rv_A \, .
-    $$
+        \tv_c = \pv_B + \rv_B - \pv_A - \rv_A = \cv + \rv_B - \rv_A \, .
+        $$
 
     We now parameterize the two unknown vectors by means of unknown angles $\varphi_A$ and $\varphi_B$,
 
     $$
-    \rv_A = -R_A \left( \cos(\varphi_A) \tv_A - \sin(\varphi_A) \nv_A \right),
-          \quad \mathrm{and} \quad 
-          \rv_B = -R_B \left( \cos(\varphi_B) \tv_B - \sin(\varphi_B) \nv_B \right) \, .
-    $$
+        \rv_A = -R_A \left( \cos(\varphi_A) \tv_A - \sin(\varphi_A) \nv_A \right),
+              \quad \mathrm{and} \quad 
+              \rv_B = -R_B \left( \cos(\varphi_B) \tv_B - \sin(\varphi_B) \nv_B \right) \, .
+        $$
 
     As vectors $\rv_A$ and $\rv_B$ must be perpendicular to $\tv_c$, it follows that
 
     $$
-    \rv_A\tp (\cv + \rv_B - \rv_A) = 0,
-          \quad \mathrm{and} \quad 
-          \rv_B\tp (\cv + \rv_B - \rv_A) = 0,
-    $$
+        \rv_A\tp (\cv + \rv_B - \rv_A) = 0,
+              \quad \mathrm{and} \quad 
+              \rv_B\tp (\cv + \rv_B - \rv_A) = 0,
+        $$
 
     or
 
@@ -7901,12 +7901,12 @@ definitions.append(ItemDefinition(
     $$ (eq-reevingsystemsprings-newton)
 
     The relations {eq}`eq-reevingsystemsprings-newton` reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
-    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of {eq}`eq-reevingsystemsprings-newton` w.r.t.\ the 
+    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of {eq}`eq-reevingsystemsprings-newton` w.r.t. the 
     unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
 
     $$
-    \varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,
-    $$
+        \varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,
+        $$
 
     and iterate until the error is below a certain tolerance, for details see the implementation in \texttt{Geometry.h}.
     
@@ -7915,8 +7915,8 @@ definitions.append(ItemDefinition(
     The current rope length results from the configuration of sheaves, including start and end position:
 
     $$
-    L = d_{m_0-m_1} + C_{m_1} + d_{m_1-m_2} + C_{m_2} + \ldots  + d_{m_{nr-2}-m_{nr-1}}
-    $$
+        L = d_{m_0-m_1} + C_{m_1} + d_{m_1-m_2} + C_{m_2} + \ldots  + d_{m_{nr-2}-m_{nr-1}}
+        $$
 
     in which $d_{...}$ represents the free spans between two sheaves as computed from the common tangent in the previous section,
     and $C_{...}$ represents the length along the circumference of the according marker if the according radius $r$ is non-zero.
@@ -7926,24 +7926,24 @@ definitions.append(ItemDefinition(
     In case that \texttt{hasCoordinateMarkers=True}, the total reference length and its derivative result as
 
     $$
-    L_0 = L_{ref} + f_0 \cdot q_{m_{c0}} + f_1 \cdot q_{m_{c1}}, \quad
-          \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
-    $$
+        L_0 = L_{ref} + f_0 \cdot q_{m_{c0}} + f_1 \cdot q_{m_{c1}}, \quad
+              \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
+        $$
 
     while we set $L_0 = L_{ref}$ and $\dot L_0=0$ otherwise.
     The linear force in the reeving system (assumed to be constant all over the rope) is computed as
 
     $$
-    F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
-    $$
+        F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
+        $$
 
     The rope force is computed from
 
     $$
-    F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} > 0 \\
-                              F_{reg} \cdot \mathrm{tanh}(F_{lin}/F_{reg})\quad \mathrm{else} 
-                \end{cases}
-    $$
+        F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} > 0 \\
+                                  F_{reg} \cdot \mathrm{tanh}(F_{lin}/F_{reg})\quad \mathrm{else} 
+                    \end{cases}
+        $$
 
     Which allows small compressive forces $F_{reg}$.
     In case that $F_{reg} < 0$, compressive forces are not regularized (linear spring).
@@ -8107,30 +8107,30 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \left|\LU{0}{\Delta\pv}\right| - d_0 = 0
-    $$
+        \left|\LU{0}{\Delta\pv}\right| - d_0 = 0
+        $$
 
     Due to the fact that the force direction is given by
 
 
     $$
-    \frac{1}{|\LU{0}{\Delta\pv}|}\LU{0}{\Delta\pv} \, ,
-    $$
+        \frac{1}{|\LU{0}{\Delta\pv}|}\LU{0}{\Delta\pv} \, ,
+        $$
 
     the prescribed distance $d_0$ may not be zero. This would, otherwise, result in a change of the number of constraints.
     The index 2 (velocity level) algebraic equation reads
 
 
     $$
-    \left(\frac{\LU{0}{\Delta\pv}}{\left|\LU{0}{\Delta\pv}\right|}\right)\tp \Delta\vv = 0
-    $$
+        \left(\frac{\LU{0}{\Delta\pv}}{\left|\LU{0}{\Delta\pv}\right|}\right)\tp \Delta\vv = 0
+        $$
 
     if \texttt{activeConnector = False}, the algebraic equation reads
 
 
     $$
-    \lambda_0 = 0
-    $$
+        \lambda_0 = 0
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -8251,27 +8251,27 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = True}, the index 3 algebraic equation reads
 
     $$
-    \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} - l_\mathrm{off} = 0
-    $$
+        \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} - l_\mathrm{off} = 0
+        $$
 
     If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
 
     $$
-    \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(mbs, t, i_N, l_\mathrm{off}) = 0
-    $$
+        \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(mbs, t, i_N, l_\mathrm{off}) = 0
+        $$
 
     The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
 
     $$
-    \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - d = 0
-    $$
+        \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - d = 0
+        $$
 
     The factor $d$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $d=l_\mathrm{off}$.
     If velocity level constraints are active and the velocity level offsetUserFunction\_t $\mathrm{UF}_t$ is defined, $\dot \cv$ instead becomes ($t$ is current time)
 
     $$
-    \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(mbs, t, i_N, l_\mathrm{off}) = 0
-    $$
+        \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(mbs, t, i_N, l_\mathrm{off}) = 0
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
@@ -8281,8 +8281,8 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
 
     $$
-    \cv(\lambda_0) = \lambda_0 = 0
-    $$
+        \cv(\lambda_0) = \lambda_0 = 0
+        $$
 
     <!--
     
@@ -8533,24 +8533,24 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = True} and no \texttt{constraintUserFunction} is defined, the index 3 algebraic equations
 
     $$
-    \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} 
-          + \Ym_{m1} \cdot \qv^2_{m1} %quadratic terms have been excluded, as it could not be used for Euler Parameter constraints!
-          - \Xm_{m0} \cdot\qv_{m0} 
-          - \Ym_{m0} \cdot\qv^2_{m0} 
-          - \vv_\mathrm{off} = 0
-    $$
+        \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} 
+              + \Ym_{m1} \cdot \qv^2_{m1} %quadratic terms have been excluded, as it could not be used for Euler Parameter constraints!
+              - \Xm_{m0} \cdot\qv_{m0} 
+              - \Ym_{m0} \cdot\qv^2_{m0} 
+              - \vv_\mathrm{off} = 0
+        $$
 
     Note that the squared coordinates are understood as $\qv^2_{m0} = [q^2_{0,m0}, \; q^2_{1,m0}, \; \ldots]\tp$, same for $\qv^2_{m1}$.
 
     The index 2 (velocity level) algebraic equation accordingly reads
 
     $$
-    \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} 
-          + \Ym_{m1} \cdot \dot \qv^2_{m1} 
-          - \Xm_{m0} \cdot \dot \qv_{m0} 
-          - \Ym_{m0} \cdot \dot \qv^2_{m0} 
-          - \dv_\mathrm{off} = 0
-    $$
+        \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} 
+              + \Ym_{m1} \cdot \dot \qv^2_{m1} 
+              - \Xm_{m0} \cdot \dot \qv_{m0} 
+              - \Ym_{m0} \cdot \dot \qv^2_{m0} 
+              - \dv_\mathrm{off} = 0
+        $$
 
     The vector $\dv$ in velocity level equations is zero, except if \texttt{parameters.velocityLevel = True}, then $\dv=\vv_\mathrm{off}$.
 
@@ -8561,8 +8561,8 @@ definitions.append(ItemDefinition(
     If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
 
     $$
-    \cv(\tlambda) = \tlambda = 0
-    $$
+        \cv(\tlambda) = \tlambda = 0
+        $$
 
     If a \texttt{constraintUserFunction} is defined, it also requires an according \texttt{jacobianUserFunction} (and vice versa).
     <!--
@@ -8598,7 +8598,7 @@ definitions.append(ItemDefinition(
     | \texttt{velocityLevel} | Bool | velocityLevel as currently stored in connector |
     | **return value** | Vector $\in \Rcal^{n_{ae}}$ | returns vector (numpy array or list) of evaluated constraint equations for connector |
 
-    \vspace{12pt}
+    
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
     A user function, which computes the jacobian of the algebraic equations w.r.t. the ODE2 coordiantes (ODE2\_t velocity coordinates if \texttt{velocityLevel=True}).
@@ -8616,7 +8616,7 @@ definitions.append(ItemDefinition(
     | **return value** | MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$ | returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values! |
 
     <!--
-    \vspace{12pt}
+    
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     -->
     %%RSTCOMPATIBLE
@@ -8671,7 +8671,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TPyFunctionMatrixContainerMbsScalarIndex2VectorBool, destination=DestComp+DestParam,
             pythonName='jacobianUserFunction',
             defaultValue=0,
-            description=r"""$\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times $f_{ODE2}$) and w.r.t.\ the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"""),
+            description=r"""$\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -8772,7 +8772,7 @@ definitions.append(ItemDefinition(
     #### Geometric relations
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    \noindent The main geometrical setup is shown in the following figure:
+     The main geometrical setup is shown in the following figure:
     
 
     ```{figure} /docs/figures/ObjectJointRollingDiscSketch.png
@@ -8785,44 +8785,44 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
-    $$
+        \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
+        $$
 
     we create a disc coordinate system $D1$ ($\LU{0}{\wv}_1, \; \LU{0}{\wv}_2, \; \LU{0}{\wv}_3$), with the longitudinal direction,
 
 
     $$
-    \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv}
-    $$
+        \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv}
+        $$
 
     and the vector to the contact point,
 
 
     $$
-    \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
-    $$
+        \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
+        $$
 
     The vector from marker $m0$ position to the contact point can be computed from
 
 
     $$
-    \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3 - \LU{0}{\pv}_{m0}
-    $$
+        \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3 - \LU{0}{\pv}_{m0}
+        $$
 
     The velocity of the contact point at the disc is computed from,
 
 
     $$
-    \LU{0}{\vv}_{C} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
-                            - \left(\LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \LU{0}{\pv}_{C} \right)
-    $$
+        \LU{0}{\vv}_{C} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
+                                - \left(\LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \LU{0}{\pv}_{C} \right)
+        $$
 
     A second coordinate system, denoted as $J1$, is defined by vectors ($\LU{0}{\wv}_{lat}, \; \LU{0}{\wv}_2, \;  \LU{0}{\vv}_{PN}$), using
 
 
     $$
-    \LU{0}{\wv}_{lat} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2
-    $$
+        \LU{0}{\wv}_{lat} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2
+        $$
 
     Note that {\bf in the case that} the rolling axis $\LU{0}{\wv}_1$ lies in the rolling plane, we obtain the special case
     $\LU{0}{\wv}_{lat} = \LU{0}{\wv}_1$ and $\LU{0}{\wv}_3 = -\LU{0}{\vv}_{PN}$.
@@ -8834,8 +8834,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    f_n = \left(k_c \cdot \LU{0}{\pv}_{C} + d_c \cdot \LU{0}{\vv}_{C} \right)\tp \LU{0}{\vv_{PN}} \, .
-    $$
+        f_n = \left(k_c \cdot \LU{0}{\pv}_{C} + d_c \cdot \LU{0}{\vv}_{C} \right)\tp \LU{0}{\vv_{PN}} \, .
+        $$
 
     Note that due to the projection onto $\LU{0}{\vv_{PN}}$, this equation also works for inclined planes
     and reference points, that are not at $[0,0,0]\tp$.
@@ -8844,72 +8844,72 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{J1}{\vv_t} = [\LU{0}{\vv}_{C}\tp \LU{0}{\wv}_{lat}, \; \LU{0}{\vv}_{C}\tp \LU{0}{\wv}_2 ]\tp \, ,
-    $$
+        \LU{J1}{\vv_t} = [\LU{0}{\vv}_{C}\tp \LU{0}{\wv}_{lat}, \; \LU{0}{\vv}_{C}\tp \LU{0}{\wv}_2 ]\tp \, ,
+        $$
 
     is used for the computation of tangential forces,
 
 
     $$
-    \LU{J1}{\fv_t} = [f_{t,x} ,\; f_{t,y}]\tp = \LU{J1}{\tmu} \cdot \left( \phi(|\vv_t|,v_\mu) \cdot f_n \cdot \LU{J1}{\ev_t} \right) \, ,
-    $$
+        \LU{J1}{\fv_t} = [f_{t,x} ,\; f_{t,y}]\tp = \LU{J1}{\tmu} \cdot \left( \phi(|\vv_t|,v_\mu) \cdot f_n \cdot \LU{J1}{\ev_t} \right) \, ,
+        $$
 
-    with the regularization function, see Geradin and Cardona [CITE:GeradinCardona2001] (Sec.\ 7.9.3), if \texttt{useLinearProportionalZone=False},
+    with the regularization function, see Geradin and Cardona [CITE:GeradinCardona2001] (Sec. 7.9.3), if \texttt{useLinearProportionalZone=False},
 
 
     $$
-    \phi(v, v_\mu) = 
-            \left\{ 
-                \begin{array}{ccl}
-                    \displaystyle \left( 2-\frac{v}{v_\mu} \right)\frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
-                    1 & \mathrm{if} & v > v_\mu \\
-                \end{array}
-                \right.
-    $$
+        \phi(v, v_\mu) = 
+                \left\{ 
+                    \begin{array}{ccl}
+                        \displaystyle \left( 2-\frac{v}{v_\mu} \right)\frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
+                        1 & \mathrm{if} & v > v_\mu \\
+                    \end{array}
+                    \right.
+        $$
 
     and the linear regularization function, if \texttt{useLinearProportionalZone=True},
 
 
     $$
-    \phi(v, v_\mu) = 
-            \left\{ 
-                \begin{array}{ccl}
-                    \displaystyle \frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
-                    1 & \mathrm{if} & v > v_\mu \\
-                \end{array}
-                \right.
-    $$
+        \phi(v, v_\mu) = 
+                \left\{ 
+                    \begin{array}{ccl}
+                        \displaystyle \frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
+                        1 & \mathrm{if} & v > v_\mu \\
+                    \end{array}
+                    \right.
+        $$
 
     The direction of tangential slip is given as
 
 
     $$
-    \LU{J1}{\ev_t} = 
-            \left\{ 
-                \begin{array}{ccl}
-                    \displaystyle \frac{\LU{J1}{\vv_t}}{|\vv_t|} &\mathrm{if}& |\vv_t|>0 \\
-                    %\left[0,\; 0\right]\tp &\mathrm{else}& \\
-                    \vp{0}{0} &\mathrm{else}& \\
-                \end{array}
-                \right.
-    $$
+        \LU{J1}{\ev_t} = 
+                \left\{ 
+                    \begin{array}{ccl}
+                        \displaystyle \frac{\LU{J1}{\vv_t}}{|\vv_t|} &\mathrm{if}& |\vv_t|>0 \\
+                        %\left[0,\; 0\right]\tp &\mathrm{else}& \\
+                        \vp{0}{0} &\mathrm{else}& \\
+                    \end{array}
+                    \right.
+        $$
 
     The friction coefficient matrix $\LU{J1}{\tmu}$ is given in joint coordinates and computed from
 
 
     $$
-    \LU{J1}{\tmu} = \mp{\mu_x + d_x \cdot |\vv_t|}{0}{0}{\mu_y + d_y \cdot |\vv_t|}
-    $$
+        \LU{J1}{\tmu} = \mp{\mu_x + d_x \cdot |\vv_t|}{0}{0}{\mu_y + d_y \cdot |\vv_t|}
+        $$
 
     where for isotropic behaviour of surface and wheel, it will give a diagonal matrix with the friction coefficient in the diagonal.
     In case that the dry friction angle $\alpha_t$ is not zero, the $\tmu$ changes to
 
 
     $$
-    \LU{J1}{\tmu} = \mp{\cos(\alpha_t)}{\sin(\alpha_t)}{-\sin(\alpha_t)}{\cos(\alpha_t)} 
-          \mp{\mu_x + d_x \cdot |\vv_t|}{0}{0}{\mu_y + d_y \cdot |\vv_t|} 
-          \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
-    $$
+        \LU{J1}{\tmu} = \mp{\cos(\alpha_t)}{\sin(\alpha_t)}{-\sin(\alpha_t)}{\cos(\alpha_t)} 
+              \mp{\mu_x + d_x \cdot |\vv_t|}{0}{0}{\mu_y + d_y \cdot |\vv_t|} 
+              \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
+        $$
 
     <!-- -->
 
@@ -8926,8 +8926,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\fv} = f_{t,x}\LU{0}{\wv}_{lat} + f_{t,y} \LU{0}{\wv}_2 + f_n \LU{0}{\vv}_{PN}
-    $$
+        \LU{0}{\fv} = f_{t,x}\LU{0}{\wv}_{lat} + f_{t,y} \LU{0}{\wv}_2 + f_n \LU{0}{\vv}_{PN}
+        $$
 
     Due to the fact that the marker positions are not collocated with the contact point, 
     there are additional torques that need to be considered in the action on the body.
@@ -8935,22 +8935,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\ttau_{m1}} = (r\cdot \LU{0}{\wv}_3) \times \LU{0}{\fv}
-    $$
+        \LU{0}{\ttau_{m1}} = (r\cdot \LU{0}{\wv}_3) \times \LU{0}{\fv}
+        $$
 
     The torque onto the ground (marker $m0$) is computed as
 
 
     $$
-    \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
-    $$
+        \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
+        $$
 
     Note that if \texttt{activeConnector = False}, we replace {eq}`eq-connectorrollingdiscpenalty-forces` with
 
 
     $$
-    \LU{J1}{\fv} = \Null
-    $$
+        \LU{J1}{\fv} = \Null
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -9169,49 +9169,49 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     ```
 
 
-    \noindent
+    
     The revolution results in a velocity of 
 
 
     $$
-    ^{0}\vv_{C} ={^{0}{\tomega_{\mathrm{m1}}}} \times {^{0}{\pv_{\mathrm{m1,\,C}}}}
-    $$
+        ^{0}\vv_{C} ={^{0}{\tomega_{\mathrm{m1}}}} \times {^{0}{\pv_{\mathrm{m1,\,C}}}}
+        $$
 
     in the contact point, while the tangential component of the velocity of the body itself with the normal Vector to the contact plane $\nv$ follows to
 
 
     $$
-    \LURU{0}{\vv}{\mathrm{m1,\,t}}{} = \LU{0}{\vv_{\mathrm{m1}}} - {^0\nv} \, \left({^0\nv}^T \, \LU{0}{\vv_{\mathrm{m1}}}\right).
-    $$
+        \LURU{0}{\vv}{\mathrm{m1,\,t}}{} = \LU{0}{\vv_{\mathrm{m1}}} - {^0\nv} \, \left({^0\nv}^T \, \LU{0}{\vv_{\mathrm{m1}}}\right).
+        $$
  
     Therefore the slip velocity of the body can be calculated with
 
 
     $$
-    \LURU{0}{\vv}{\mathrm{s}}{} = \LURU{0}{\vv}{C}{} - {^0\vv_{\mathrm{m1,\,t}}}
-    $$
+        \LURU{0}{\vv}{\mathrm{s}}{} = \LURU{0}{\vv}{C}{} - {^0\vv_{\mathrm{m1,\,t}}}
+        $$
 
     and points in the direction 
 
 
     $$
-    \LURU{0}{\rv}{s}{} = \frac{1}{\left\lVert \LURU{0}{\vv}{\mathrm{s}}{}\right\rVert} {^0{\vv}_{\mathrm{s}}}.
-    $$
+        \LURU{0}{\rv}{s}{} = \frac{1}{\left\lVert \LURU{0}{\vv}{\mathrm{s}}{}\right\rVert} {^0{\vv}_{\mathrm{s}}}.
+        $$
 
-    \noindent The slip force is then calculated
+     The slip force is then calculated
 
 
     $$
-    ^0\fv_{\mathrm{s}} = \mu(\left\lVert\LU{}{^0\vv_{\mathrm{s}}}\right\rVert)  \, \mathrm{f}_{\mathrm{N}} \, {^0\rv_\mathrm{s}}
-    $$
+        ^0\fv_{\mathrm{s}} = \mu(\left\lVert\LU{}{^0\vv_{\mathrm{s}}}\right\rVert)  \, \mathrm{f}_{\mathrm{N}} \, {^0\rv_\mathrm{s}}
+        $$
 
     and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see [](#sec-module-physics). 
     The torque 
 
 
     $$
-    ^0\ttau = {^0\pv_{\mathrm{m1,\,C}}} \times (^0\fv_{\mathrm{N}} + {^0\fv_{\mathrm{s}}})
-    $$
+        ^0\ttau = {^0\pv_{\mathrm{m1,\,C}}} \times (^0\fv_{\mathrm{N}} + {^0\fv_{\mathrm{s}}})
+        $$
 
     acts onto the body, resulting from the slip force acting not in the bodies center. 
     %%RSTCOMPATIBLE
@@ -9269,7 +9269,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='rollLength',
             defaultValue=0.,
-            description=r'$L$roll length [m], symmetric w.r.t.\ centerpoint'),
+            description=r"""$L$roll length [m], symmetric w.r.t. centerpoint"""),
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='coefficientsHull',
             defaultValue=' Vector()',
@@ -9654,15 +9654,15 @@ definitions.append(ItemDefinition(
     All computations here are performed in the global coordinates system (0), 
     including edge points of every segment.
 
-    With the intermediate quantities (all of them related to segment $s_i$)\footnote{we omit $s_i$ in some terms for brevity!},
+    With the intermediate quantities (all of them related to segment $s_i$) (we omit $s_i$ in some terms for brevity!),
 
 
     $$
-    \vv_s = \pv_{i+1} - \pv_i, \quad
-          \vv_p = \pv_{m0} - \pv_i, \quad
-          n = \vv_s\tp \vv_p, \quad
-          d = \vv_s\tp \vv_s
-    $$
+        \vv_s = \pv_{i+1} - \pv_i, \quad
+              \vv_p = \pv_{m0} - \pv_i, \quad
+              n = \vv_s\tp \vv_p, \quad
+              d = \vv_s\tp \vv_s
+        $$
 
     and assuming that $d \neq 0$ (otherwise the two segment points would be identical and
     the shortest distance would be $d_g = |\vv_p|$),
@@ -9671,8 +9671,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \rho = \frac{n}{d}
-    $$
+        \rho = \frac{n}{d}
+        $$
 
     We distinguish 3 cases (see also [](#fig-objectcontactfrictioncirclecable2d-sketch) for cases 1 and 2):
         \bn
@@ -9681,31 +9681,31 @@ definitions.append(ItemDefinition(
 
 
         $$
-        d_g = |\pv_{m0} - \pv_i| \quad (\rho \le 0)
-        $$
+                d_g = |\pv_{m0} - \pv_i| \quad (\rho \le 0)
+                $$
 
         \item If $\rho \ge 1$, the shortest distance would be the distance to point $\pv_p=\pv_{i+1}$,
         reading 
 
 
         $$
-        d_g = |\pv_{m0} - \pv_{i+1}| \quad (\rho \ge 1)
-        $$
+                d_g = |\pv_{m0} - \pv_{i+1}| \quad (\rho \ge 1)
+                $$
 
         \item Finally, if $0 < \rho < 1$, then the shortest distance has a projected point somewhere
         on the segment with the point (projected on the segment)
 
 
         $$
-        \pv_p = \pv_i + \rho \cdot \vv_s
-        $$
+                \pv_p = \pv_i + \rho \cdot \vv_s
+                $$
 
         and the distance
 
 
         $$
-        d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
-        $$
+                d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
+                $$
 
     \en
     Here, the shortest distance vector for every segment results from the projected point $\pv_p$ 
@@ -9714,8 +9714,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \dv_g = \dv_{g,s_i}= \pv_{m0} - \pv_p \, .
-    $$
+        \dv_g = \dv_{g,s_i}= \pv_{m0} - \pv_p \, .
+        $$
 
     The contact gap for a specific point for segment $s_i$ is in general defined as
 
@@ -9735,8 +9735,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \nv_{s_i} = \nv = [n_0, n_1]\tp = \frac{1}{|\dv_{g,s_i}|} \dv_{g,s_i}, \quad \tv_{s_i} = \tv = [-n_1, n_0]\tp
-    $$
+        \nv_{s_i} = \nv = [n_0, n_1]\tp = \frac{1}{|\dv_{g,s_i}|} \dv_{g,s_i}, \quad \tv_{s_i} = \tv = [-n_1, n_0]\tp
+        $$
 
     The vectors $\tv_{s_i}$ and $\nv_{s_i}$ define the local (contact) frame for further computations.
     
@@ -9744,8 +9744,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \dot \pv_p = (1-\rho) \cdot \vv_i + \rho \cdot \vv_{i+1}
-    $$
+        \dot \pv_p = (1-\rho) \cdot \vv_i + \rho \cdot \vv_{i+1}
+        $$
 
     Alternatively, $\dot \pv_p$ could be computed from the cable element by evaluating the velocity at the contact points, but we feel that
     this choice is more consistent with the computations at position level.
@@ -9754,8 +9754,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    v_n = \left( \dot \pv_p - \dot \pv_{m0} \right) \nv
-    $$
+        v_n = \left( \dot \pv_p - \dot \pv_{m0} \right) \nv
+        $$
 
     In a similar, the tangential velocity reads
 
@@ -9789,23 +9789,23 @@ definitions.append(ItemDefinition(
 
 
     $$
-    x_{s,curStick} = \rho \cdot L_{seg}
-    $$
+        x_{s,curStick} = \rho \cdot L_{seg}
+        $$
 
     in which $\rho \in [0,1]$ denotes the relative position of contact at the segment with reference length $L_{seg}=\frac{L}{n_{cs}}$.
     The relative position at the circle $c$ is
 
 
     $$
-    x_{c,curStick} = \alpha \cdot r
-    $$
+        x_{c,curStick} = \alpha \cdot r
+        $$
 
-    We immediately see, that under pure rolling\footnote{neglecting the effects of small penetration, usually much smaller than shown for visibility in [](#fig-objectcontactfrictioncirclecable2d-stickingpos).},
+    We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in [](#fig-objectcontactfrictioncirclecable2d-stickingpos).),
 
 
     $$
-    x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.
-    $$
+        x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.
+        $$
 
     Note that the \texttt{verticalOffset} from the cable center line, as defined in the related \texttt{MarkerBodyCable2DShape},
     influences the behavior significantly, which is why we recommend to use \texttt{verticalOffset=0} whenever this is an 
@@ -9855,8 +9855,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    f_t^{(lin)} = \mu_v \cdot v_t \, ,
-    $$
+        f_t^{(lin)} = \mu_v \cdot v_t \, ,
+        $$
     
     <!--++++++++++++++++++++++++++++++++++++++++++++++ -->
 
@@ -9875,8 +9875,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]
-    $$
+        [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]
+        $$
 
     Here, $x_{gap}$ contains the gap of the segment ($\le 0$ means contact), $x_{lastStick}$ is described in 
     {eq}`objectcontactfrictioncirclecable2d-curstick`, and 
@@ -9894,43 +9894,43 @@ definitions.append(ItemDefinition(
       \item[II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
       \bn
         \item Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
-        \item Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick`\footnote{terms are only evaluated if $\mu_k \neq 0$}
-        \item Retrieve \texttt{startOfStep} sticking position\footnote{Importantly, the \texttt{PostNewtonStep} always refers to the \texttt{startOfStep} state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step} in $x^{startOfStep}_{lastStick}$ and compute and normalize
-        difference in sticking position\footnote{in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$}:
+        \item Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick` (terms are only evaluated if $\mu_k \neq 0$)
+        \item Retrieve \texttt{startOfStep} sticking position (Importantly, the \texttt{PostNewtonStep} always refers to the \texttt{startOfStep} state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize
+        difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$):
 
 
         $$
-        \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
-                  \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
-        $$
+                \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
+                          \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+                $$
 
         \item Compute linear tangential force for friction stiffness and velocity penalty: 
 
 
           $$
-          f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
-          $$
+                    f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+                    $$
 
-        \item Compute tangential force according to Coulomb friction model \footnote{note that the sign of $\Delta x_{stick}$ is used here, but
-        alternatively we may also use the sign of $f_{t,lin}$}:
+        \item Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but
+        alternatively we may also use the sign of $f_{t,lin}$):
 
 
         $$
-        f_t = 
-                        \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
-                          |f_t^{(lin)}| \le \mu \cdot |f_n| \\ 
-                          \mu \cdot |f_n| \cdot \mathrm{Sign}(\Delta x_{stick}), \quad \mathrm{else}
-                        \end{cases}
-        $$
+                f_t = 
+                                \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
+                                  |f_t^{(lin)}| \le \mu \cdot |f_n| \\ 
+                                  \mu \cdot |f_n| \cdot \mathrm{Sign}(\Delta x_{stick}), \quad \mathrm{else}
+                                \end{cases}
+                $$
 
         \item In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, 
         such that the spring is pre-tensioned already,
 
 
         $$
-        x_{lastStick} = x_{curStick} - \mathrm{Sign}(\Delta x_{stick}) \frac{\mu \cdot |f_n|}{\mu_k}, \quad 
-                  x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
-        $$
+                x_{lastStick} = x_{curStick} - \mathrm{Sign}(\Delta x_{stick}) \frac{\mu \cdot |f_n|}{\mu_k}, \quad 
+                          x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
+                $$
 
         \item In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, 
         if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
@@ -9943,21 +9943,21 @@ definitions.append(ItemDefinition(
 
 
         $$
-        \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
-        $$
+                \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
+                $$
 
     while otherwise $\varepsilon^n_{PNS}=0$.
         \item if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous \texttt{PostNewtonStep} is different from current $x_{isSlipStick}$, set
 
 
         $$
-        \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
-        $$
+                \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
+                $$
 
     while otherwise $\varepsilon^t_{PNS}=0$.
       \en
     \ei
-    Note that the \texttt{PostNewtonStep} is iterated and the data variables are updated continuously until convergence, or until a max.\ number of iterations is reached. If \texttt{ignoreMaxIterations} == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare. 
+    Note that the \texttt{PostNewtonStep} is iterated and the data variables are updated continuously until convergence, or until a max. number of iterations is reached. If \texttt{ignoreMaxIterations} == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare. 
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++ -->
 
@@ -9973,29 +9973,29 @@ definitions.append(ItemDefinition(
       \item[I.] Compute contact force $f_n$, {eq}`objectcontactfrictioncirclecable2d-contactforce`.
       \item[II.] In case of sticking ($|x_{isSlipStick}|\neq 1$):
       \bi
-        \item[II.1] the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
+        \item[II.1] the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads (see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.):
 
 
         $$
-        \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
-                  \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
-        $$
+                \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
+                          \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+                $$
 
         \item[II.2] if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
         \item[II.3] using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit)
 
 
         $$
-        f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
-        $$
+                f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+                $$
 
     \ei
-      \item[III.] In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as\footnote{see again difference to \texttt{PostNewtonStep}!},
+      \item[III.] In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as (see again difference to \texttt{PostNewtonStep}!),
 
 
       $$
-      f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
-      $$
+            f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
+            $$
  
     \ei
     Note that in the Newton method, the tangential force may be inconsistent with the Kuhn-Tucker conditions. However,
@@ -10028,17 +10028,17 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
-    $$
+        \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
+        $$
 
     and added to every force at segment points according to
 
 
       $$
-      \begin{aligned}
-      \fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
-      \end{aligned}
-      $$
+            \begin{aligned}
+            \fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
+            \end{aligned}
+            $$
 
     while in case $x_{gap}  > 0$ nothing is added.
     <!-- -->
@@ -10049,9 +10049,9 @@ definitions.append(ItemDefinition(
 
 
       $$
-      \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
-              \fv^r = f_n \cdot \nv_{r,s_i} + f_t \tv_{r,s_i}
-      $$
+            \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
+                    \fv^r = f_n \cdot \nv_{r,s_i} + f_t \tv_{r,s_i}
+            $$
 
       in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$,
       and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
@@ -10060,10 +10060,10 @@ definitions.append(ItemDefinition(
 
 
       $$
-      \begin{aligned}
-      \fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv^r
-      \end{aligned}
-      $$
+            \begin{aligned}
+            \fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv^r
+            \end{aligned}
+            $$
 
     while in case $x_{gap}  > 0$ nothing is added.
     \ei
@@ -10075,22 +10075,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \fv_{m0} = -\sum_{s_i} \fv_{s_i}
-    $$
+        \fv_{m0} = -\sum_{s_i} \fv_{s_i}
+        $$
 
     and additional torques on the circle's rotation simply follow from
 
 
     $$
-    \tau_{m0} = -\sum_{s_i} r \cdot f_{t_{s_i}} \, .
-    $$
+        \tau_{m0} = -\sum_{s_i} r \cdot f_{t_{s_i}} \, .
+        $$
 
     <!-- -->
     During Newton iterations, the contact forces for segment $s_i$ are considered only, if 
     $x_i <= 0$. The dataCoordinate $x_i$ is not modified during Newton iterations, but computed
     during the DiscontinuousIteration, see [](#fig-solver-discontinuous-iteration) in the solver description. 
     <!-- -->
-    \vspace{12pt}\\
+    \\
     If \texttt{activeConnector = False}, all contact and friction forces on the cable and the force and torque on the 
     circle's marker are set to zero.
     %%RSTCOMPATIBLE
@@ -10275,22 +10275,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    g = h_1 || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || - (r_0 + h_1 r_1)
-    $$
+        g = h_1 || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || - (r_0 + h_1 r_1)
+        $$
 
     and the overlap $\delta$ is the negated gap: $\delta=-g$. In the contact case, the overlap $\delta$ is positive. If the first sphere is a hollow sphere, the gap consequently reads
 
 
     $$
-    g = r_1 - r_0 - || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || \, ,
-    $$
+        g = r_1 - r_0 - || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || \, ,
+        $$
 
     such that if sphere 0 is in contact with the inner side of sphere 1, i.e. $|| \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} ||\geq(r_1-r_0)$ holds, the gap is negative and the overlap $\delta$ is positive. The normal vector $\LU{0}{\nv}$ always points from marker 0 to the contact point:
 
 
     $$
-    \LU{0}{\nv} = h_1 \frac{\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}}{|| \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} ||} \, .
-    $$
+        \LU{0}{\nv} = h_1 \frac{\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}}{|| \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} ||} \, .
+        $$
 
     In the case of sphere-sphere contact, $\LU{0}{\nv}$ points from marker 0 to marker 1, and 
     in the case of sphere-hollowsphere contact, $\LU{0}{\nv}$ has the reversed direction as if it points from marker 1 to marker 0.
@@ -10299,8 +10299,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    v_\mathrm{\delta,n} = \left(\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}\right)\cdot \LU{0}{\nv}
-    $$
+        v_\mathrm{\delta,n} = \left(\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}\right)\cdot \LU{0}{\nv}
+        $$
 
     and the tangential (gap) velocity $\LU{0}{\vv}_\mathrm{\delta,t}$ at the contact point, that is needed for the friction model, reads
 
@@ -10324,10 +10324,10 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\vv}_{a0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{\nv}\cdot \left(r_0-\frac{\delta}{2}\right)\right)
-        , \qquad
-        \LU{0}{\vv}_{a1} = \LU{0}{\vv}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{\nv}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) \, .
-    $$
+        \LU{0}{\vv}_{a0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{\nv}\cdot \left(r_0-\frac{\delta}{2}\right)\right)
+            , \qquad
+            \LU{0}{\vv}_{a1} = \LU{0}{\vv}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{\nv}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) \, .
+        $$
 
     For the velocity $\LU{0}{\vv}_{a0}$ of sphere 0 at the contact point the sphere-sphere and sphere-hollowsphere contact cases are computed equally. For the velocity $\LU{0}{\vv}_{a1}$ of sphere 1 at the contact point, one negative sign $h_1$ is needed since the vector pointing to the contact point has the same direction for both spheres and one negative sign $h_1$ is needed to correctly compute the length of the vector pointing from the center of sphere 1 to the contact point.
 
@@ -10335,15 +10335,15 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\fv}_\mathrm{1,n} = \underbrace{(f_c + f_d)}_{f_\mathrm{1,n}} \cdot \LU{0}{\nv} \, ,
-    $$
+        \LU{0}{\fv}_\mathrm{1,n} = \underbrace{(f_c + f_d)}_{f_\mathrm{1,n}} \cdot \LU{0}{\nv} \, ,
+        $$
 
     where $f_c$ is the elastic and $f_d$ the damping part. The damping $f_d$ is always computed the same, independent of the chosen impact model:
 
 
     $$
-    f_d = - d_c v_\mathrm{\delta,n} \, .
-    $$
+        f_d = - d_c v_\mathrm{\delta,n} \, .
+        $$
 
     The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against $\LU{0}{\nv}$ for marker 1. As an illustrative case, the gap velocity is positive, if sphere 0 does not move, i.e. $\LU{0}{\vv}_{m0}=0$ holds, and sphere 1 in direction of the normal vector. Note that this holds for the sphere-sphere contact and sphere-hollowsphere contact cases. The elastic force $f_c$ is computed depending on the chosen impact model.
 
@@ -10351,20 +10351,20 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta \, .
-    $$
+        \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta \, .
+        $$
 
     The Adhesive Elasto-Plastic model distinguishes three different cases, modeling the loading and unloading behavior of the spheres:
 
 
     $$
-    f_c=
-        \begin{cases}
-            -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} & \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\
-            -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) & \text{if } k_c\delta^{n_\mathrm{exp}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) > -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\
-            -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} & \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right)
-        \end{cases}\, .
-    $$
+        f_c=
+            \begin{cases}
+                -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} & \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\
+                -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) & \text{if } k_c\delta^{n_\mathrm{exp}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) > -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\
+                -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} & \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right)
+            \end{cases}\, .
+        $$
 
     Note that $k_2$ is computed with $k_2 = k_c/(1-\lambda_\mathrm{P})$. The terms with the stiffness $k_c$ and $k_2$ have a positive sign, since they act in the direction of $\LU{0}{\nv}$ for marker 1. The constant adhesion force $f_\mathrm{adh}$ and the stiffness $k_\mathrm{adh}$ act against $\LU{0}{\nv}$, which corresponds to a force sticking the spheres together.
 
@@ -10372,22 +10372,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
-    $$
+        f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
+        $$
 
     with
 
 
     $$
-    \lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) \, .
-    $$
+        \lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) \, .
+        $$
 
     The restitution coefficient $e_\mathrm{res}$ describes the ration of the normal (gap) velocity before and after the impact of the spheres. In the case of $e_\mathrm{res}<1$, the impact has a plastic portion, resulting in a force acting against $\LU{0}{\nv}$ for marker 1, which is why $\lambda$ must be negative in that case. $\dot\delta_\mathrm{-}$ is the initial relative velocity, which is either the minimum impact velocity or the normal (negated gap) velocity:
 
 
     $$
-    \dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}
-    $$
+        \dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}
+        $$
 
     Note that the Hunt-Crossley restitution is valid for a very small energy loss ($e_\mathrm{res}\approx1$) [CITE:Carvalho2019].
 
@@ -10395,44 +10395,44 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \lambda=
-        \begin{cases}
-            \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} & \text{if } e_\mathrm{res} > \frac{1}{3} \\
-            \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} & \text{if } e_\mathrm{res} > 0 \\
-        \end{cases}\, .
-    $$
+        \lambda=
+            \begin{cases}
+                \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} & \text{if } e_\mathrm{res} > \frac{1}{3} \\
+                \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} & \text{if } e_\mathrm{res} > 0 \\
+            \end{cases}\, .
+        $$
 
     The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation {eq}`eq-ossctangentialvelocity`. Thus, the tangential force for marker 1 is computed as
 
 
     $$
-    \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot
-        \begin{cases}
-            \frac{\mu_d f_\mathrm{1,n}}{v_{reg}} & \text{if } v_{rel} < v_{reg} \\
-            \frac{\mu_d f_\mathrm{1,n}}{v_{rel}} & \text{else}\\
-        \end{cases} \, .
-    $$
+        \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot
+            \begin{cases}
+                \frac{\mu_d f_\mathrm{1,n}}{v_{reg}} & \text{if } v_{rel} < v_{reg} \\
+                \frac{\mu_d f_\mathrm{1,n}}{v_{rel}} & \text{else}\\
+            \end{cases} \, .
+        $$
 
     Note that the case distinction above is made to ensure that for very small relative velocities the friction force does not become implausibly high. Taken together, the force acting on marker 1 due to the connector is computed as
 
 
     $$
-    \LU{0}{\fv}_{m1}=\LU{0}{\fv}_\mathrm{1,n}+\LU{0}{\fv}_\mathrm{1,t} \, ,
-    $$
+        \LU{0}{\fv}_{m1}=\LU{0}{\fv}_\mathrm{1,n}+\LU{0}{\fv}_\mathrm{1,t} \, ,
+        $$
 
     the force acting on marker 0 is $\LU{0}{\fv}_{m0}=-\LU{0}{\fv}_{m1}$. The global torque $\LU{0}{\ttau}_{m1}$ acting on marker 1 due to the connector is computed as
 
 
     $$
-    \LU{0}{\ttau}_{m1}=-h_1 \LU{0}{\nv}\left( r_1-h_1 \frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m1} \, ,
-    $$
+        \LU{0}{\ttau}_{m1}=-h_1 \LU{0}{\nv}\left( r_1-h_1 \frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m1} \, ,
+        $$
 
     and on marker 0 as
 
 
     $$
-    \LU{0}{\ttau}_{m0}=\LU{0}{\nv} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m0}= \LU{0}{\nv}\left( r_0-\frac{1}{2}\delta \right) \times \left( -\LU{0}{\fv}_{m1} \right) \, .
-    $$
+        \LU{0}{\ttau}_{m0}=\LU{0}{\nv} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m0}= \LU{0}{\nv}\left( r_0-\frac{1}{2}\delta \right) \times \left( -\LU{0}{\fv}_{m1} \right) \, .
+        $$
 
     It can be seen that the torque due to the connector is the same for both spheres, if $r_0=r_1$ applies.
     %%RSTCOMPATIBLE
@@ -11149,20 +11149,20 @@ definitions.append(ItemDefinition(
 
     #### Connector constraint equations
 
-    \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
+    **Equations for translational part (\texttt{activeConnector = True})**:\\
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
     the translational index 3 constraints read ($UF_{0,1,2}(mbs, t, \pv_{par})$ is the translational part of the user function $UF$),
 
     $$
-    \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, i_N, \pv_{par}) = \Null
-    $$
+        \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, i_N, \pv_{par}) = \Null
+        $$
 
     and the translational index 2 constraints read
 
     $$
-    \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, i_N, \pv_{par})= \Null
-    $$
+        \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, i_N, \pv_{par})= \Null
+        $$
 
     and \texttt{iN} represents the itemNumber (=objectNumber).
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -11170,26 +11170,26 @@ definitions.append(ItemDefinition(
     the translational index 3 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\pv}$
 
     $$
-    \begin{aligned}
-    \LU{J0}{\Delta p_k} - UF_{k}(mbs, t, i_N, \pv_{par}) &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
-          \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{J0}{\Delta p_k} - UF_{k}(mbs, t, i_N, \pv_{par}) &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+              \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
+        \end{aligned}
+        $$
 
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
 
     $$
-    \begin{aligned}
-    \LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, i_N, \pv_{par})  &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
-          \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, i_N, \pv_{par})  &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+              \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
+        \end{aligned}
+        $$
 
     <!--
     
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     -->
-    \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
+    **Equations for rotational part (\texttt{activeConnector = True})**:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
     Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointgeneric-definitionofquantities).
     
@@ -11200,39 +11200,39 @@ definitions.append(ItemDefinition(
     If {\bf 3 rotation axes are constrained} (e.g., translational or planar joint),  $[j_3,\,\ldots,\,j_5] = [1,1,1]\tp$, the index 3 constraint equations read
 
     $$
-    \begin{aligned}
-    \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &= 0 \\
-           \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &= 0 \\
-           \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &= 0
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &= 0 \\
+               \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &= 0 \\
+               \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &= 0
+        \end{aligned}
+        $$
 
     If {\bf 2 rotation axes are constrained} (revolute joint), e.g., $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$, the index 3 constraint equations read
 
     $$
-    \begin{aligned}
-    \lambda_3 &= 0 \\
-           \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &= 0 \\
-           \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{z1} &= 0
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \lambda_3 &= 0 \\
+               \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &= 0 \\
+               \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{z1} &= 0
+        \end{aligned}
+        $$
 
     If {\bf 1 rotation axis is constrained} (universal joint), e.g.,  $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$, the index 3 constraint equations read
 
     $$
-    \begin{aligned}
-    \LU{0}{\tv}_{y0}\tp \LU{0}{\tv}_{z1} &= 0 \\
-           \lambda_4 &= 0 \\
-           \lambda_5 &= 0
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\tv}_{y0}\tp \LU{0}{\tv}_{z1} &= 0 \\
+               \lambda_4 &= 0 \\
+               \lambda_5 &= 0
+        \end{aligned}
+        $$
 
     <!-- -->
     if \texttt{activeConnector = False}, 
 
     $$
-    \zv = \Null
-    $$
+        \zv = \Null
+        $$
 
     <!--
     
@@ -11357,7 +11357,7 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='alternativeConstraints',
             defaultValue=False,
-            description=r"""this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: $\LU{0}{\tv}_{x0}\tp (\LU{0}{\tv}_{y1} \times \LU{0}{\tv}_{z0})$, $\LU{0}{\tv}_{y0}\tp (\LU{0}{\tv}_{z1} \times \LU{0}{\tv}_{x0})$, $\LU{0}{\tv}_{z0}\tp (\LU{0}{\tv}_{x1} \times \LU{0}{\tv}_{y0})$; this avoids 180\textdegree flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers"""),
+            description=r"""this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: $\LU{0}{\tv}_{x0}\tp (\LU{0}{\tv}_{y1} \times \LU{0}{\tv}_{z0})$, $\LU{0}{\tv}_{y0}\tp (\LU{0}{\tv}_{z1} \times \LU{0}{\tv}_{x0})$, $\LU{0}{\tv}_{z0}\tp (\LU{0}{\tv}_{x1} \times \LU{0}{\tv}_{y0})$; this avoids 180° flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers"""),
         ItemFunctionDef('HasUserFunction',
             implementation='return (parameters.offsetUserFunction!=0) || (parameters.offsetUserFunction_t!=0);'),
         ItemFunctionDef('GetMarkerNumbers',
@@ -11457,24 +11457,24 @@ definitions.append(ItemDefinition(
 
     #### Connector constraint equations
 
-    \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
+    **Equations for translational part (\texttt{activeConnector = True})**:\\
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     The translational index 3 constraints read,
 
 
     $$
-    \LU{0}{\Delta\pv} = \Null
-    $$
+        \LU{0}{\Delta\pv} = \Null
+        $$
 
     and the translational index 2 constraints read
 
 
     $$
-    \LU{0}{\Delta \vv} = \Null
-    $$
+        \LU{0}{\Delta \vv} = \Null
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
+    **Equations for rotational part (\texttt{activeConnector = True})**:\\
     Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointrevolutez-definitionofquantities),
     and they include the transformations by $\LU{m0,J0}{\Rot}$ and $\LU{m1,J1}{\Rot}$.
     <!-- -->
@@ -11488,14 +11488,14 @@ definitions.append(ItemDefinition(
     \end{aligned}
     $$ (eq-objectjointrevolutez-index3)
 
-    The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t.\ time, and are given in the C++ code.
+    The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t. time, and are given in the C++ code.
     <!-- -->
     if \texttt{activeConnector = False}, 
 
 
     $$
-    \zv = \Null
-    $$
+        \zv = \Null
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -11650,30 +11650,30 @@ definitions.append(ItemDefinition(
 
     #### Connector constraint equations
 
-    \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
+    **Equations for translational part (\texttt{activeConnector = True})**:\\
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     The two translational index 3 constraints for a free motion along the local $x$-axis read (in the coordinate system $J0$),
 
 
     $$
-    \begin{aligned}
-    \LU{J0}{\pv}_{y,m1} - \LU{J0}{\pv}_{y,m0} &= \Null \\
-          \LU{J0}{\pv}_{z,m1} - \LU{J0}{\pv}_{z,m0} &= \Null
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{J0}{\pv}_{y,m1} - \LU{J0}{\pv}_{y,m0} &= \Null \\
+              \LU{J0}{\pv}_{z,m1} - \LU{J0}{\pv}_{z,m0} &= \Null
+        \end{aligned}
+        $$
 
     and the translational index 2 constraints read
 
 
     $$
-    \begin{aligned}
-    \LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &= \Null \\
-          \LU{J0}{\vv}_{z,m1} - \LU{J0}{\vv}_{z,m0} &= \Null
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &= \Null \\
+              \LU{J0}{\vv}_{z,m1} - \LU{J0}{\vv}_{z,m0} &= \Null
+        \end{aligned}
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
+    **Equations for rotational part (\texttt{activeConnector = True})**:\\
     Note that the axes are always given in global coordinates, compare the table in 
     [](#sec-objectjointprismaticx-definitionofquantities).
     <!-- -->
@@ -11694,8 +11694,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \zv = \Null
-    $$
+        \zv = \Null
+        $$
 
     %%RSTCOMPATIBLE
 """,
@@ -11816,22 +11816,22 @@ definitions.append(ItemDefinition(
 
     #### Connector constraint equations
 
-    \paragraph{\texttt{activeConnector = True}:}
+    **\texttt{activeConnector = True}:**
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
     the translational index 3 constraints read
 
 
     $$
-    \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} = \Null
-    $$
+        \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} = \Null
+        $$
 
     and the translational index 2 constraints read
 
 
     $$
-    \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} = \Null
-    $$
+        \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} = \Null
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
@@ -11839,29 +11839,29 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    \LU{0}{\Delta p_k} &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
-          \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\Delta p_k} &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+              \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
+        \end{aligned}
+        $$
 
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{0}{\Delta\vv}$
 
 
     $$
-    \begin{aligned}
-    \LU{0}{\Delta v_k} &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
-          \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\Delta v_k} &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+              \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
+        \end{aligned}
+        $$
 
     <!-- -->
-    \paragraph{\texttt{activeConnector = False}:}
+    **\texttt{activeConnector = False}:**
 
 
     $$
-    \zv = \Null
-    $$
+        \zv = \Null
+        $$
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
@@ -11874,17 +11874,17 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LU{0}{\pv_0}(\pLocB_0) = \LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0, \quad
-          \LU{0}{\pv_1}(\pLocB_1) = \LU{0}{\rv_{\mathrm{ref},1}} + \LU{0}{\uv_{1}} + \LU{0b}{\Rot_1}\pLocB_1 \, .
-    $$
+        \LU{0}{\pv_0}(\pLocB_0) = \LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0, \quad
+              \LU{0}{\pv_1}(\pLocB_1) = \LU{0}{\rv_{\mathrm{ref},1}} + \LU{0}{\uv_{1}} + \LU{0b}{\Rot_1}\pLocB_1 \, .
+        $$
 
     From there, we can derive the 3 constraint equation
 
 
     $$
-    \LU{0}{\rv_{\mathrm{ref},1}} + \LU{0}{\uv_{1}} + \LU{0b}{\Rot_1}\pLocB_1 - 
-          \left(\LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0 \right) = \Null \, .
-    $$
+        \LU{0}{\rv_{\mathrm{ref},1}} + \LU{0}{\uv_{1}} + \LU{0b}{\Rot_1}\pLocB_1 - 
+              \left(\LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0 \right) = \Null \, .
+        $$
 
     The constraint jacobians simply follow from the position jacobians of the respective markers $\LU{0}{\Jm_\mathrm{pos,0}}$
     and  $\LU{0}{\Jm_\mathrm{pos,1}}$. 
@@ -12004,77 +12004,77 @@ definitions.append(ItemDefinition(
     #### Geometric relations
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    \noindent The main geometrical setup is shown in the following figure:
+     The main geometrical setup is shown in the following figure:
     First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
     With the helper vector,
 
 
     $$
-    \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
-    $$
+        \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
+        $$
 
     we obtain a disc coordinate system, representing the longitudinal direction,
 
 
     $$
-    \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv}
-    $$
+        \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv}
+        $$
 
     and the vector to the contact point,
 
 
     $$
-    \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
-    $$
+        \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
+        $$
 
     The contact point $C$ can be computed from
 
 
     $$
-    \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3
-    $$
+        \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3
+        $$
 
     The velocity of the contact point at the disc is computed from,
 
 
     $$
-    \LU{0}{\vv}_{Cm1} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
-    $$
+        \LU{0}{\vv}_{Cm1} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
+        $$
 
     If marker 0 body is (moving) rigid body instead of a ground body, the contact point $C$ is reconstructed in 
     body of marker 0,
 
 
     $$
-    \LU{m0}{\pv}_{C} = \LU{m0,0}{\Rot} (\LU{0}{\pv}_{C} - \LU{0}{\pv}_{m0})
-    $$
+        \LU{m0}{\pv}_{C} = \LU{m0,0}{\Rot} (\LU{0}{\pv}_{C} - \LU{0}{\pv}_{m0})
+        $$
 
     The velocity of the contact point at the marker 0 body reads
 
 
     $$
-    \LU{0}{\vv}_{Cm0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left( \LU{0,m0}{\Rot} \LU{m0}{\pv}_{C} \right)
-    $$
+        \LU{0}{\vv}_{Cm0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left( \LU{0,m0}{\Rot} \LU{m0}{\pv}_{C} \right)
+        $$
 
     <!-- -->
 
     #### Connector constraint equations
 
-    \noindent Constraints for \texttt{activeConnector = True}:\\
+     Constraints for \texttt{activeConnector = True}:\\
     <!-- -->
     The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
 
 
     $$
-    \LU{J1,0}{\Am} \left(\vr{\LU{0}{\vv}_{Cm1,x}}{\LU{0}{\vv}_{Cm1,y}}{\LU{0}{\vv}_{Cm1,z}} - \vr{\LU{0}{\vv}_{Cm0,x}}{\LU{0}{\vv}_{Cm0,y}}{\LU{0}{\vv}_{Cm0,z}} \right) = \Null
-    $$
+        \LU{J1,0}{\Am} \left(\vr{\LU{0}{\vv}_{Cm1,x}}{\LU{0}{\vv}_{Cm1,y}}{\LU{0}{\vv}_{Cm1,z}} - \vr{\LU{0}{\vv}_{Cm0,x}}{\LU{0}{\vv}_{Cm0,y}}{\LU{0}{\vv}_{Cm0,z}} \right) = \Null
+        $$
 
-    \noindent In case that \texttt{activeConnector = False}, the Lagrange multipliers are set to zero:
+     In case that \texttt{activeConnector = False}, the Lagrange multipliers are set to zero:
 
 
     $$
-    \zv = \Null
-    $$
+        \zv = \Null
+        $$
 
     Note that since version 1.8.27 the constraints can be turned on/off separately with \texttt{constrainedAxes=[b0,b1,b2]}, in which
     \texttt{b0} represents the flag for lateral motion, \texttt{b1} switches the constraint for forward motion and \texttt{b2} for motion in plane normal direction.
@@ -12253,14 +12253,14 @@ definitions.append(ItemDefinition(
 
 
     $$
-    (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0
-    $$
+        (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0
+        $$
   
 
 
     $$
-    (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0
-    $$
+        (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0
+        $$
  
     The Lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, 
     in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
@@ -12391,22 +12391,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    s_{el} = s + x_{data1} - d_{m1} = s_g - d_{m1}.
-    $$
+        s_{el} = s + x_{data1} - d_{m1} = s_g - d_{m1}.
+        $$
 
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ (=$\rv_{ANCF}$) positions reads
 
 
     $$
-    \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
-    $$
+        \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
+        $$
 
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ velocities reads
 
 
     $$
-    \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
-    $$
+        \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
+        $$
 
     <!--
     
@@ -12420,12 +12420,12 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    \LU{0}{\Delta\pv} \!&=\! \Null, \quad \mbox{... three index 3 eqs $\ra$ sliding body stays on cable}\\
-          \vr{\lambda_1}{\lambda_2}{\lambda_3} \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} \!&=\! 0, \quad \mbox{... three index 1 equ. 
-                                                   $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\Delta\pv} \!&=\! \Null, \quad \mbox{... three index 3 eqs $\ra$ sliding body stays on cable}\\
+              \vr{\lambda_1}{\lambda_2}{\lambda_3} \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} \!&=\! 0, \quad \mbox{... three index 1 equ. 
+                                                       $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
+        \end{aligned}
+        $$
 
     No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and ABRV:ODE2 coordinates read
     <!--
@@ -12440,13 +12440,13 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    \lambda_0 &= 0,   \\
-          \ldots && ,   \\
-          \lambda_5 &= 0,   \\
-          s &= 0
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \lambda_0 &= 0,   \\
+              \ldots && ,   \\
+              \lambda_5 &= 0,   \\
+              s &= 0
+        \end{aligned}
+        $$
 
     <!--
     +++++++++++++++++++++++++++++++++++++++++++++
@@ -12457,34 +12457,34 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \left[\lambda_3,\lambda_4,\lambda_5\right] = \Null
-    $$
+        \left[\lambda_3,\lambda_4,\lambda_5\right] = \Null
+        $$
 
     In case that any flag in \texttt{constrainRotations} is equal to 1, the constraints read 
     for \texttt{constrainRotations[0] = 1}:
 
 
     $$
-    \LURU{0}{\rv}{ANCF,y}{\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{0}{1} = 0
-    $$
+        \LURU{0}{\rv}{ANCF,y}{\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{0}{1} = 0
+        $$
 
     for \texttt{constrainRotations[1] = 1}:
 
 
     $$
-    \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{0}{1} = 0
-    $$
+        \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{0}{1} = 0
+        $$
 
     for \texttt{constrainRotations[2] = 0}:
 
 
     $$
-    \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{1}{0} = 0
-    $$
+        \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{1}{0} = 0
+        $$
 
 
     <!--
-    \noindent The index 2 case follows straightforward to
+     The index 2 case follows straightforward to
     \be
       \LURU{0}{\dot \rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1}  +
       \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \LU{0}{\tilde \tomega}_{m0} \vp{0}{1} = 0
@@ -12500,11 +12500,11 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    s_{el} < 0 \quad \ra \quad x_{data0}\;-\!\!=1 \\
-          s_{el} > L \quad \ra \quad x_{data0}\;+\!\!=1
-    \end{aligned}
-    $$
+        \begin{aligned}
+        s_{el} < 0 \quad \ra \quad x_{data0}\;-\!\!=1 \\
+              s_{el} > L \quad \ra \quad x_{data0}\;+\!\!=1
+        \end{aligned}
+        $$
 
     Furthermore, it is checked, if $x_{data0}$ becomes smaller than zero, which raises a warning and keeps $x_{data0}=0$.
     The same results if $x_{data0}\ge sn$, then $x_{data0} = sn$.
@@ -12512,8 +12512,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    x_{data1} \;+\!\!= s.
-    $$
+        x_{data1} \;+\!\!= s.
+        $$
 
     <!--the data coordinates are \be \qv_{Data} = [i_{marker} \;\; s_{0}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list and  $s_{0}$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step. -->
     %%RSTCOMPATIBLE
@@ -12683,22 +12683,22 @@ definitions.append(ItemDefinition(
 
 
     $$
-    s_{el} = s + x_{data1} - d_{m1} = s_g - d_{m1}.
-    $$
+        s_{el} = s + x_{data1} - d_{m1} = s_g - d_{m1}.
+        $$
 
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ (=$\rv_{ANCF}$) positions reads
 
 
     $$
-    \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
-    $$
+        \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
+        $$
 
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ velocities reads
 
 
     $$
-    \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
-    $$
+        \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
+        $$
 
     <!--
     
@@ -12712,36 +12712,36 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    \LU{0}{\Delta\pv} &= \Null, \quad \mbox{... two index 3 eqs $\ra$ sliding body stays on cable}\\
-          \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} &= 0, \quad \mbox{... one index 1 equ. 
-                                                   $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \LU{0}{\Delta\pv} &= \Null, \quad \mbox{... two index 3 eqs $\ra$ sliding body stays on cable}\\
+              \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} &= 0, \quad \mbox{... one index 1 equ. 
+                                                       $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
+        \end{aligned}
+        $$
 
     No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and ABRV:ODE2 coordinates read
 
 
     $$
-    \Jm_{AE} = \mr{0}{0}{r^\prime_0} {0}{0}{r^\prime_1} {r^\prime_0}{r^\prime_1}{r^{\prime\prime}_0\lambda_0 + r^{\prime\prime}_1\lambda_1}    %\LURU{0}{\rv}{ANCF}{\prime\prime \mathrm{T}} \vp{\lambda_0}{\lambda_1}}
-    $$
+        \Jm_{AE} = \mr{0}{0}{r^\prime_0} {0}{0}{r^\prime_1} {r^\prime_0}{r^\prime_1}{r^{\prime\prime}_0\lambda_0 + r^{\prime\prime}_1\lambda_1}    %\LURU{0}{\rv}{ANCF}{\prime\prime \mathrm{T}} \vp{\lambda_0}{\lambda_1}}
+        $$
 
 
 
     $$
-    \Jm_{ODE2} = \mp{-J_{pos,m0}}{\Sm(s_{el})} {\Null\tp}{\left[\lambda_0,\,\lambda_1\right]\cdot\Sm^\prime(s_{el}) }
-    $$
+        \Jm_{ODE2} = \mp{-J_{pos,m0}}{\Sm(s_{el})} {\Null\tp}{\left[\lambda_0,\,\lambda_1\right]\cdot\Sm^\prime(s_{el}) }
+        $$
 
     if \texttt{activeConnector = False}, the algebraic equations are changed to:
 
 
     $$
-    \begin{aligned}
-    \lambda_0 &= 0,   \\
-          \lambda_1 &= 0,   \\
-          s &= 0
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \lambda_0 &= 0,   \\
+              \lambda_1 &= 0,   \\
+              s &= 0
+        \end{aligned}
+        $$
 
     <!--
     the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint;
@@ -12755,30 +12755,30 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    \lambda_0 &= 0, \quad \mbox{... eq.~not necessary, but can be used for switching to other modes}  \\
-          \LU{0}{\Delta\pv\tp} \LU{0}{\nv} &= 0, \quad \mbox{... eq.~ensures that sliding body stays at cable centerline; index3}\\
-          \LU{0}{\Delta\pv\tp} \LURU{0}{\rv}{ANCF}{\prime} &= 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 eq.!}
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \lambda_0 &= 0, \quad \mbox{... eq.~not necessary, but can be used for switching to other modes}  \\
+              \LU{0}{\Delta\pv\tp} \LU{0}{\nv} &= 0, \quad \mbox{... eq.~ensures that sliding body stays at cable centerline; index3}\\
+              \LU{0}{\Delta\pv\tp} \LURU{0}{\rv}{ANCF}{\prime} &= 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 eq.!}
+        \end{aligned}
+        $$
 
     In the index 2 case, the second equation reads
 
 
     $$
-    \LU{0}{\Delta\vv\tp} \LU{0}{\nv}  + \LU{0}{\Delta\pv\tp} \LU{0}{\dot\nv}  = 0 \, .
-    $$
+        \LU{0}{\Delta\vv\tp} \LU{0}{\nv}  + \LU{0}{\Delta\pv\tp} \LU{0}{\dot\nv}  = 0 \, .
+        $$
 
     If \texttt{activeConnector = False}, the algebraic equations are changed to:
 
 
     $$
-    \begin{aligned}
-    \lambda_0 &= 0,   \\
-          \lambda_1 &= 0,   \\
-          s &= 0
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \lambda_0 &= 0,   \\
+              \lambda_1 &= 0,   \\
+              s &= 0
+        \end{aligned}
+        $$
    
     <!--
     the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint;
@@ -12791,16 +12791,16 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1} = 0
-    $$
+        \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1} = 0
+        $$
 
     The index 2 case follows straightforward to 
 
 
     $$
-    \LURU{0}{\dot \rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1}  + 
-          \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \LU{0}{\tilde \tomega}_{m0} \vp{0}{1} = 0
-    $$
+        \LURU{0}{\dot \rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1}  + 
+              \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \LU{0}{\tilde \tomega}_{m0} \vp{0}{1} = 0
+        $$
 
     again assuming, that $\LU{0}{\tilde \tomega}_{m0}$ is only a $2 \times 2$ matrix.
     <!--+++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -12812,11 +12812,11 @@ definitions.append(ItemDefinition(
 
 
     $$
-    \begin{aligned}
-    s_{el} < 0 \quad \ra \quad x_{data0}\;-\!\!=1 \\
-          s_{el} > L \quad \ra \quad x_{data0}\;+\!\!=1
-    \end{aligned}
-    $$
+        \begin{aligned}
+        s_{el} < 0 \quad \ra \quad x_{data0}\;-\!\!=1 \\
+              s_{el} > L \quad \ra \quad x_{data0}\;+\!\!=1
+        \end{aligned}
+        $$
 
     Furthermore, it is checked, if $x_{data0}$ becomes smaller than zero, which raises a warning and keeps $x_{data0}=0$.
     The same results if $x_{data0}\ge sn$, then $x_{data0} = sn$.
@@ -12824,8 +12824,8 @@ definitions.append(ItemDefinition(
 
 
     $$
-    x_{data1} \;+\!\!= s.
-    $$
+        x_{data1} \;+\!\!= s.
+        $$
 
     <!--the data coordinates are \be \qv_{Data} = [i_{marker} \;\; s_{0}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list and  $s_{0}$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step. -->
     %%RSTCOMPATIBLE
@@ -12989,15 +12989,15 @@ definitions.append(ItemDefinition(
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate
 
     $$
-    s_{el} = q_{ALE} + s_\mathrm{off} - d_{m1} = s_g - d_{m1}.
-    $$
+        s_{el} = q_{ALE} + s_\mathrm{off} - d_{m1} = s_g - d_{m1}.
+        $$
 
     For the description of the according quantities, see the description above. The distance $d_{m1}$ is obtained from the \texttt{slidingMarkerOffsets} list, using the current (local) index $x_{data0}$.
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ (=$\rv_{ANCF}$) positions reads
 
     $$
-    \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
-    $$
+        \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
+        $$
 
     Note that $\LU{0}{\pv}_{m0}$ represents the current position of the marker $m0$, which could represent the midpoint of a mass sliding along the beam.
     The position $\LUR{0}{\rv}{ANCF}$ is computed from the beam represented by marker $m1$, using the local beam coordinate $x=s_{el}$. 
@@ -13005,8 +13005,8 @@ definitions.append(ItemDefinition(
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ velocities reads
 
     $$
-    \LU{0}{\Delta\vv} = \LUR{0}{\vv}{ANCF} - \LU{0}{\vv}_{m0}
-    $$
+        \LU{0}{\Delta\vv} = \LUR{0}{\vv}{ANCF} - \LU{0}{\vv}_{m0}
+        $$
 
     <!--
     
@@ -13019,21 +13019,21 @@ definitions.append(ItemDefinition(
     The algebraic (index 3) equations read
 
     $$
-    \LU{0}{\Delta\pv} = 0
-    $$
+        \LU{0}{\Delta\pv} = 0
+        $$
 
     Note that the Lagrange multipliers $[\lambda_0,\,\lambda_1]\tp$are the global forces in the joint.
     In the index 2 case the algebraic equations read
 
     $$
-    \LU{0}{\Delta\vv} = 0
-    $$
+        \LU{0}{\Delta\vv} = 0
+        $$
 
     If \texttt{usePenalty = True}, the algebraic equations are changed to:
 
     $$
-    \LU{0}{\Delta \pv} - \frac 1 k \zv = 0.
-    $$
+        \LU{0}{\Delta \pv} - \frac 1 k \zv = 0.
+        $$
 
     <!--
     
@@ -13046,14 +13046,14 @@ definitions.append(ItemDefinition(
     Note that in this case, the Lagrange multipliers $[\lambda_0,\,\lambda_1]\tp$are the local ($m1$) forces in the joint.
     -->
 
-    \noindent If \texttt{activeConnector = False}, the algebraic equations are changed to:
+     If \texttt{activeConnector = False}, the algebraic equations are changed to:
 
     $$
-    \begin{aligned}
-    \lambda_0 &= 0,   \\
-          \lambda_1 &= 0.
-    \end{aligned}
-    $$
+        \begin{aligned}
+        \lambda_0 &= 0,   \\
+              \lambda_1 &= 0.
+        \end{aligned}
+        $$
    
     <!--
     
@@ -13066,19 +13066,19 @@ definitions.append(ItemDefinition(
     updates the marker $m1$ index if necessary.
 
     $$
-    \begin{aligned}
-    s_{el} < 0 \quad \ra \quad x_{data0} \;-\!\!=1 \\
-          s_{el} > L \quad \ra \quad x_{data0} \;+\!\!=1
-    \end{aligned}
-    $$
+        \begin{aligned}
+        s_{el} < 0 \quad \ra \quad x_{data0} \;-\!\!=1 \\
+              s_{el} > L \quad \ra \quad x_{data0} \;+\!\!=1
+        \end{aligned}
+        $$
 
     Furthermore, it is checked, if $x_{data0}$ becomes smaller than zero, which raises a warning and keeps $x_{data0}=0$.
     The same results if $x_{data0}\ge sn$, then $x_{data0} = sn$.
     Finally, the data coordinate is updated in order to provide the starting value for the next step,
 
     $$
-    x_{data1} \;+\!\!= s.
-    $$
+        x_{data1} \;+\!\!= s.
+        $$
 
     %%RSTCOMPATIBLE
 """,

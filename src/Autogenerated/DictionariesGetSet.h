@@ -23,7 +23,7 @@
 inline py::dict GetDictionaryWithTypeInfo(const PyBeamSection& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which X represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\\ bending; Y and Z are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.";
+    structureDict["structureDescription"] = "Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which X represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t. bending; Y and Z are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.";
     return structureDict;
 }
 
@@ -4344,7 +4344,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
     d["value"] = data.shadow;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "in OpenGL renderer, the shadow parameter \\in [0 ... 1] prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx.\\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself";
+    d["description"] = "in OpenGL renderer, the shadow parameter \\in [0 ... 1] prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx. 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself";
     structureDict["shadow"] = d;
 
     d = py::dict(); //reset local dict

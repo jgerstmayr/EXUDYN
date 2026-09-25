@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        PyBeamSection
-* @brief        Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which \f$X\f$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; \f$Y\f$ and \f$Z\f$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.
+* @brief        Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which \f$X\f$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t. bending; \f$Y\f$ and \f$Z\f$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-15 (last modfied)
+* @date         AUTO: 2026-09-25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
