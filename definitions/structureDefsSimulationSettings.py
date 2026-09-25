@@ -38,7 +38,7 @@ definitions.append(StructureDefinition(
     appendToFile=False,
     classDescription=r'General settings for exporting the solution (results) of a simulation.',
     sectionText=r"""
-%++++++++++++++++++++++++++++++++++++++
+<!--++++++++++++++++++++++++++++++++++++++ -->
 
 (sec-simulationsettingsmain)=
 ## Simulation settings

@@ -690,7 +690,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     needs a list of those names and reports the rest.
 
 <a id="rg3-17"></a>
-**RG3.17** *(group RG3; maintainer 2026-09-25)* **A comment in a description is an HTML comment**
+**RG3.17** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-17) — **A comment in a description is an HTML comment**
     (#2663). 513 lines of `definitions/` are nothing but a `%` comment and 7 more carry one after
     text; they become `<!-- ... -->`, which the converter removes so that it does not reach the page.
     **`%` survives inside mathematics and nowhere else**: MathJax and LaTeX both honour it there, so
@@ -1478,7 +1478,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.14 | #2655 | the item descriptions become Markdown: `definitions/` is free of structural LaTeX; .7 closes the gate |
 | RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
-| RG3.17 | #2663 | a comment in a description is an HTML comment |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |

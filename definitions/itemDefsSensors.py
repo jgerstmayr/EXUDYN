@@ -530,11 +530,11 @@ definitions.append(ItemDefinition(
     Note that the sensorNumbers and factors need to be consistent. 
     The return value of the user function is a list of \texttt{float} numbers which cast to a \texttt{std::vector} in pybind.
     This list can have arbitrary dimension, but should be kept constant during simulation.
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
     A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
     The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
-    %
+    <!-- -->
     The user function arguments are as follows:
 
     | arguments /  return | type or size | description |
@@ -546,7 +546,7 @@ definitions.append(ItemDefinition(
     | \texttt{configuration} | exudyn.ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
     | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |
 
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     *Example*:
     
 ```python

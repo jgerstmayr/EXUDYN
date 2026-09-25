@@ -104,21 +104,35 @@ def RestoreMath(text, pieces):
 #the passes
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+def StripMathComments(text):
+    """a '%' INSIDE mathematics comments out the rest of its line, which is what MathJax and LaTeX
+    both do with it - the line is removed here so that it does not travel into the published page as
+    dead LaTeX. A percent SIGN in mathematics is '\\%', as it is in LaTeX."""
+    def Strip(match):
+        return re.sub(r'(?<!\\)%[^\n]*', '', match.group(0))
+
+    for pattern in [r'(?<!\\)\$\$.*?\$\$', r'(?<!\\)\$(?:\\.|[^$\\])*\$']:
+        text = re.sub(pattern, Strip, text, flags=re.S)
+    return text
+
+
 def StripComments(text):
-    """remove LaTeX comments, keeping \\% ; a comment-only line disappears entirely"""
+    """remove the HTML comments; a comment-only line disappears entirely
+
+    A comment in a description is <!-- ... --> since revision2026b step RG3.17 (#2663). It is NOT a
+    LaTeX '%' any more, and that matters in both directions: this pass runs before the mathematics is
+    protected, so a '%' it treated as a comment truncated whatever followed it on the line, whether
+    that was a comment or the middle of a formula; and a '%' INSIDE mathematics is the engine's own
+    comment - MathJax and LaTeX both honour it - so it is carried over untouched, as the rest of the
+    mathematics is."""
+    text = re.sub(r'<!--.*?-->', '', text, flags=re.S)
+    text = StripMathComments(text)
     outLines = []
     for line in text.split('\n'):
-        result = ''
-        i = 0
-        while i < len(line):
-            if line[i] == '%' and (i == 0 or line[i - 1] != '\\'):
-                break
-            result += line[i]
-            i += 1
-        if result == '' and line.strip() != '':
-            continue            #a line that was nothing but a comment; a BLANK line is kept,
-                                #because in Markdown it separates paragraphs
-        outLines += [result.rstrip()]
+        if line.strip() == '' and line != '':
+            outLines += ['']    #a line that was nothing but a comment leaves a blank line, and in
+            continue            #Markdown a blank line separates paragraphs
+        outLines += [line.rstrip()]
     return '\n'.join(outLines)
 
 

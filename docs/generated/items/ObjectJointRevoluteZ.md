@@ -101,6 +101,7 @@ $$
 
 Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointrevolutez-definitionofquantities),
 and they include the transformations by $\LU{m0,J0}{\Rot}$ and $\LU{m1,J1}{\Rot}$.
+
 The index 3 constraint equations read
 
 $$
@@ -111,6 +112,7 @@ $$
 $$ (eq-objectjointrevolutez-index3)
 
 The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t. time, and are given in the C++ code.
+
 if `activeConnector = False`,
 
 $$

@@ -115,6 +115,7 @@ $$
 
 Note that $\pv_{ref}^{(i)}$ is not the reference position in the `ObjectFFRFreducedOrder` object, but it is relative to the midpoint reference position
 all marker nodes, given in $\LU{r}{\xv^\mathrm{avg}\cRef}$.
+
 Accordingly, the marker local angular velocity can be calculated as
 
 $$

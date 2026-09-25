@@ -207,6 +207,7 @@ $$
 Note that the `verticalOffset` from the cable center line, as defined in the related `MarkerBodyCable2DShape`,
 influences the behavior significantly, which is why we recommend to use `verticalOffset=0` whenever this is an
 appropriate assumption.
+
 Thus, the current sticking position $x_{curStick}$ is computed per segment as
 
 $$

@@ -109,6 +109,7 @@ $$
 $$
 
 If a `constraintUserFunction` is defined, it also requires an according `jacobianUserFunction` (and vice versa).
+
 **Userfunction**: `constraintUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
 A user function, which computes algebraic equations for the connector based on the marker coordinates stored in `q` and `q_t`.
 Depending on `velocityLevel`, the user function needs to compute either the position-level (`velocityLevel=False`) or

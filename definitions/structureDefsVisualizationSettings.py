@@ -40,7 +40,7 @@ definitions.append(StructureDefinition(
     cppText=r"""class VisualizationSettings; //! AUTO: forward declaration for backlink
 """,
     sectionText=r"""
-%++++++++++++++++++++++++++++++++++++++
+<!--++++++++++++++++++++++++++++++++++++++ -->
 
 (sec-visualizationsettingsmain)=
 ## Visualization settings

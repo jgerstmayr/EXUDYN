@@ -12,6 +12,8 @@
 #   - every ABRV:KEY names an abbreviation that the list actually has. The abbreviations are the
 #     dict in tools/generators/examplesDocsEmitter.py, which also writes
 #     docs/generated/abbreviations.md, so the key and its target cannot drift apart.
+#   - a comment is <!-- ... --> ; a '%' is a comment only inside mathematics, where the engine
+#     reads it, because this converter strips a '%' before the mathematics is protected.
 #   - a reference to an equation is the {eq} role: a Markdown link to one leaves the PDF as an
 #     undefined reference, and only the PDF says so.
 #   - a literal whose value carries a backslash or mathematics is written r'...', so that
@@ -195,6 +197,43 @@ def CheckEquationReferences(paths):
     return findings
 
 
+mathSpan = [r'(?<!\\)\$\$.*?\$\$', r'(?<!\\)\$(?:\\.|[^$\\])*\$']
+
+
+def CheckPercentComments(paths):
+    """a comment is <!-- ... --> ; a '%' is a comment only INSIDE mathematics (#2663, RG3.17)
+
+    The reason is StripComments: it runs before the mathematics is protected, so a '%' it took for a
+    comment truncated the rest of its line whatever that line was - which is how the marker velocity
+    row of MarkerSuperElementRigid lost the tail of its formula. Two spellings stay: the
+    %%RSTCOMPATIBLE marker that itemDocsEmitter splits the text on, and an escaped percent sign."""
+    findings = []
+    for path in paths:
+        for (keyword, text, lineno) in Descriptions(path):
+            if keyword in CODE_KEYWORDS:
+                continue
+            #a % inside an HTML comment is already commented out
+            spans = [(m.start(), m.end())
+                     for m in re.finditer(r'<!--.*?-->', text, flags=re.S)]
+            for pattern in mathSpan:
+                spans += [(m.start(), m.end()) for m in re.finditer(pattern, text, flags=re.S)]
+            for match in re.finditer('%', text):
+                index = match.start()
+                if index > 0 and text[index - 1] == chr(92):
+                    continue                     #an escaped percent sign
+                if any(start <= index < end for (start, end) in spans):
+                    continue                     #mathematics: the engine reads it
+                start = text.rfind(chr(10), 0, index) + 1
+                end = text.find(chr(10), index)
+                line = text[start:end if end != -1 else len(text)]
+                if 'RSTCOMPATIBLE' in line:
+                    continue
+                findings.append((path, lineno + text.count(chr(10), 0, index),
+                                 "a '%' outside mathematics: a comment is <!-- ... -->, and a "
+                                 'percent sign is written with a backslash before it'))
+    return findings
+
+
 def CheckRawStrings(paths):
     """a literal whose value carries a backslash or mathematics is written r'...'
 
@@ -246,6 +285,7 @@ def main():
     known = BibliographyKeys(os.path.join(root, 'docs', 'bibliographyDoc.bib'))
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
                 + CheckCitations(paths, known) + CheckRawStrings(paths)
+                + CheckPercentComments(paths)
                 + CheckEquationReferences(paths))
 
     if len(findings) == 0:

@@ -61,6 +61,7 @@ The item VObjectJointSpherical has the following parameters:
 #### Connector constraint equations
 
 **`activeConnector = True`:**
+
 If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
 the translational index 3 constraints read
 

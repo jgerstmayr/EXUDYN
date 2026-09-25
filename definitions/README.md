@@ -174,6 +174,13 @@ not in the list below reaches the page as itself and is a defect.
 - **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows
   `docs/figures/RevoluteJointZ.png`.
 
+- **A comment** is `<!-- like this -->`, on a line of its own or after text, and the
+  converter removes it so that it never reaches the page. A run of comment lines is one comment,
+  which is what a commented-out table or figure wants to be. **A `%` is a comment only inside
+  mathematics**, where MathJax and LaTeX are the ones that read it; anywhere else it is rejected,
+  because the converter strips a `%` before the mathematics is protected and would take the rest
+  of the line with it.
+
 ### How to check what you wrote
 
 ```

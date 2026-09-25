@@ -276,12 +276,14 @@ definitions.append(ItemDefinition(
     For creating a \texttt{NodeRigidBodyEP} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
     see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
-    %return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
-    %                                    -2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
-    %                                    -2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
-    %return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
-    %                                    -2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
-    %                                    -2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
+    <!--
+    return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
+                                        -2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
+                                        -2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+    return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
+                                        -2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
+                                        -2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
+    -->
 """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[

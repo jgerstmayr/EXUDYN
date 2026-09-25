@@ -3207,3 +3207,42 @@ Line*), and a leading marker is not the first word (*"(A) Solve for unknown acce
 
 All **353** headings of `docs/manual/`, `docs/dev/`, `docs/howTo/`, `index.md` and `CONTRIBUTING.md`
 pass it.
+
+<a id="rg3-17"></a>
+### RG3.17 — a comment in a description is an HTML comment (2026-09-25, #2663)
+
+The maintainer: *"In the itemDefs... files I still see `%` used for comments - latex style. Shouldn't
+we use `<!-- This is a single-line comment -->` comments? `%` could still survive as the `%` symbol,
+but maybe just inside a formula."*
+
+That is what it is now. **437 comments in 263 blocks** are `<!-- ... -->`, a run of consecutive comment
+lines being one comment - which is what a commented-out table wants to be - and `StripComments`
+removes them before anything else reads the text. Four spellings are left exactly as they were:
+
+- the **16 percent signs inside mathematics**, where MathJax and LaTeX are the ones that read them.
+  The new `StripMathComments` removes such a line from the *output* so that dead LaTeX does not
+  travel into the published page, but the source keeps it, and a writer commenting out a line of a
+  formula writes what a LaTeX author would write;
+- the **134 `%%RSTCOMPATIBLE`** lines, which are not comments but the marker `itemDocsEmitter` splits
+  the published part of a text on;
+- the one **escaped percent sign**;
+- everything in a value that is **Python rather than prose** - a `miniExample` has `#10% stretch` in a
+  comment of its own code.
+
+**The reason to change it is in `StripComments`**: it runs *before* the mathematics is protected, so a
+`%` it took for a comment truncated the rest of its line whatever that line was. That is not
+hypothetical - it is why the *marker velocity* row of `MarkerSuperElementRigid` has been published
+with its formula cut off: a `%` between two `$...$` segments of the row ended the cell.
+
+Two comments could not be classified automatically, and they are the same case: they sit between two
+`$...$` segments of what RG3.14.4 had made a single table-row line, and the number of dollar signs
+before them is odd, so the measuring pattern took them for mathematics. Converted by hand.
+
+`checkDefinitions` gained the rule: **a `%` outside mathematics is an error**, with the `%%RSTCOMPATIBLE`
+marker, an escaped percent sign and a `%` that already sits inside an HTML comment as its three
+exceptions.
+
+The pages move by **15 lines, all of them a blank line that is now there**: a comment-only line leaves
+a blank line, consistently - the old pass dropped the line when the `%` stood at column 0 and left a
+blank when it was indented, which is why a bold lead-in like `**Userfunction**:` was sometimes glued
+to the paragraph before it and sometimes not. It always starts its own paragraph now.

@@ -102,6 +102,7 @@ $$
 
 Note that the axes are always given in global coordinates, compare the table in
 [](#sec-objectjointprismaticx-definitionofquantities).
+
 The index 3 constraint equations read
 
 $$
@@ -113,6 +114,7 @@ $$
 $$ (eq-objectjointprismaticx-index3)
 
 The index 2 constraints follow from the derivative of {eq}`eq-objectjointprismaticx-index3` w.r.t., and are given in the C++ code.
+
 if `activeConnector = False`,
 
 $$

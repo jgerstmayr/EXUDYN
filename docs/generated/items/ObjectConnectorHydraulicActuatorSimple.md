@@ -93,6 +93,7 @@ $$
 The simple double-acting hydraulic actuator has two pressure chambers, one being denoted with 0 at the
 piston head (nut) and the other at the piston rod side denoted with 1. The pressure $p_0$ acts at the piston head at area $A_0$,
 while the pressure $p_1$ counteracts on the opposite side with (usually smaller) area $A_1$.
+
 If `activeConnector = True`, the scalar actuator force (tension = positive) is computed as
 
 $$

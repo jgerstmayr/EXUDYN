@@ -138,6 +138,7 @@ $$
 
 Note that due to the projection onto $\LU{0}{\vv_{PN}}$, this equation also works for inclined planes
 and reference points, that are not at $[0,0,0]\tp$.
+
 The inplane velocity in joint coordinates,
 
 $$

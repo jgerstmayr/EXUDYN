@@ -111,6 +111,7 @@ Note, however, that some functionality is considerably different for `ObjectGene
 #### Equations of motion
 
 The `KinematicTree` has one node of type `NodeGenericODE2` with $n$ coordinates.
+
 The equations of motion are built by special multibody algorithms, following Featherstone [Featherstone2008].
 For a short introduction into this topic, see Chapter 3 of [Siciliano2016].
 

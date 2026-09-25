@@ -44,11 +44,13 @@ definitions.append(ItemDefinition(
 
     The load vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
     The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
-    %
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--
+    
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    -->
     **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
     A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
-    %
+    <!-- -->
 
     | arguments / return | type or size | description |
     |---|---|---|
@@ -57,7 +59,7 @@ definitions.append(ItemDefinition(
     | \texttt{loadVector} | Vector3D | $\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Vector3D | computed force vector |
 
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     *Example*:
     
 ```python
@@ -135,11 +137,13 @@ definitions.append(ItemDefinition(
 
     The torque vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
     The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
-    %
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--
+    
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    -->
     **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
     A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
-    %
+    <!-- -->
 
     | arguments / return | type or size | description |
     |---|---|---|
@@ -148,7 +152,7 @@ definitions.append(ItemDefinition(
     | \texttt{loadVector} | Vector3D | $\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Vector3D | computed torque vector |
 
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     *Example*:
     
 ```python
@@ -226,11 +230,13 @@ definitions.append(ItemDefinition(
 
     The load applies a (translational) and distributed load proportional to the distributed body's density.
     The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
-    %
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--
+    
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    -->
     **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
     A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
-    %
+    <!-- -->
 
     | arguments / return | type or size | description |
     |---|---|---|
@@ -317,8 +323,10 @@ definitions.append(ItemDefinition(
     The scalar \texttt{load} is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., \texttt{MarkerNodeCoordinate}.
     This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
     on a rotation coordinate (but take care for its meaning).
-    %
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--
+    
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    -->
     **Userfunction**: `loadUserFunction(mbs, t, load)`
     A user function, which computes the scalar load depending on time and the object's \texttt{load} parameter.
 
@@ -329,7 +337,7 @@ definitions.append(ItemDefinition(
     | \texttt{load} | Real | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Real | computed load |
 
-    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     *Example*:
     
 ```python

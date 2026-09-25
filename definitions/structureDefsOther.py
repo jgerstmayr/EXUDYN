@@ -39,7 +39,7 @@ definitions.append(StructureDefinition(
 #include "Pymodules/PybindUtilities.h"
 """,
     sectionText=r"""
-%++++++++++++++++++++++++++++++++++++++
+<!--++++++++++++++++++++++++++++++++++++++ -->
 
 ## Structures for structural elements
 

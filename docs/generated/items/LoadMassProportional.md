@@ -35,6 +35,7 @@ The item VLoadMassProportional has the following parameters:
 
 The load applies a (translational) and distributed load proportional to the distributed body's density.
 The marker of type `MarkerBodyMass` transforms the loadVector via an according jacobian matrix to object coordinates.
+
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
 
