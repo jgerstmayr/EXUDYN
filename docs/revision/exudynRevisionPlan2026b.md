@@ -385,6 +385,15 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     when it changed, and which plan step changed it.
 
 
+<a id="rg3-13-1"></a>
+**RG3.13.1** *(group RG3; from RG3.13, 2026-09-24)* **235 references to the plan are left in
+    comments, each inside a sentence** (#2649). 652 of the 887 were parentheticals or appended
+    clauses and went by rule, keeping the issue number where there was one. The rest read like
+    *"step R4.3 is moving outputs from the old generators to separate emitters"* - a sentence has
+    to be written for each, which a pattern cannot do. **None is in a published page**: they are
+    comments in `src/`, `tools/` and `python/`, so this is tidiness rather than a defect, and it
+    is work for a session with nothing better to do.
+
 <a id="rg3-14"></a>
 **RG3.14** *(group RG3; maintainer 2026-09-25)* **The item and settings descriptions are written
     in LaTeX** (#2655). `definitions/` is the source of the reference manual, and a developer who
@@ -399,7 +408,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     | `$...$`, `\be..\ee`, `\bea..\eea` | 2897 / 372 / 45 | **the math - already native Markdown** (`dollarmath`), 166 macros declared to MathJax and to LaTeX by `conf.py` |
     | `\rowTable` / `\startTable` | 709 / 86 | the tables, in **7 header kinds**, two of which differ only in a space |
     | `\hac` / `\ac` | 160 / 17 | an abbreviation, linked to `docs/generated/abbreviations.md` |
-    | `\mysubsubsubsection(label)` | 127 / 6 | the only heading level an item uses; `\mysubsection` appears 4 times, in the four **structure** files |
+    | `\mysubsubsubsection(label)` | 127 / 6 | the only heading level an item uses; `\mysubsection(label)` appears 4 times, in the four **structure** files |
     | `\refSection` / `\eq` / `\eqs` / `\eqref` / `\fig` / `\ref` / `\label` | 69 / 37 / 3 / 2 / 16 / 17 / 55 | the references |
     | `\userFunction` / `\returnValue` / `\userFunctionExample` | 35 / 35 / 17 | a user function: signature, argument table, example |
     | `\onlyRST` / `\ignoreRST` | 11 / 13 | the two switches |
@@ -410,32 +419,64 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     MyST Markdown.** The math stays LaTeX, because that is what Markdown's math *is*. What goes is
     the structural LaTeX: the headings, the references, the tables, the user function blocks and
     the two switches. What replaces it is a **small documented set of `NAME:argument` macros** that
-    the converter expands, and **data in the definition dict** wherever the text was a table.
-    The converter, `tools/generators/latexToMarkdown.py`, keeps its LaTeX branch as long as the
-    hand-written chapters need it, and grows a check that the definitions no longer use it.
+    the converter expands, and **data in the definition dict** wherever the text was a table. When
+    the step is done, **a backslash outside math is an error** - see RG3.14.7 - so the writer is
+    not tempted to reach for the rest of LaTeX.
+
+    **Which strings are converted.** Every description text of `definitions/` reaches the same
+    function, `latexToMarkdown.ConvertText`, and all of them are in scope; measured by the keyword
+    each literal is passed to:
+
+    | file group | keyword | strings | reached through |
+    |---|---|---|---|
+    | `itemDefs*.py` | `equations` | 64 | `itemDocsEmitter.WriteFile` → `ConvertText`, then `NormalizeHeadings` in `itemDocsEmitter.WriteMarkdownPages` |
+    | `itemDefs*.py` | `classDescription` | 31 | the same |
+    | `itemDefs*.py`, `itemFunctions.py` | `description` of `ItemParameter` / `ItemFunction` | 52 | `autoGenerateHelper.PyLatexRST.ItemInterfaceWriteRow` → `ConvertText`, one table cell |
+    | `structureDefs*.py` | `description`, `classDescription`, `latexText` | 43 | `structureDocsEmitter.StructureDocs` and `PyLatexRST.SystemStructuresWriteDefRow` |
+    | `pybind*.py` | `description` | 6 with macros, and **163 non-raw strings with a backslash** | `pybindEmitter` replays the calls onto `PyLatexRST`, whose `AddDocu`, `AddDocuList`, `DefPyFunctionAccess` and `Table3WriteRow` call `ConvertText` |
+    | `outputVariableDescriptions.py`, `outputVariableTypes.py`, `enumTypes.py`, `definitionTypes.py` | - | **none** | they carry math only, or no text at all - the output variable table is **already** generated from data, which is the shape RG3.14.4 gives the others |
+
+    `miniExample` is Python, not prose, and is not converted. The same `ConvertText` also serves
+    the docstrings of `python/exudyn/` through `utilityDocsEmitter`; those are **not** in this step.
+
+    **Every sub-step ends by writing its rules into one place**, the new *"Writing a description"*
+    section of [`definitions/README.md`](../../definitions/README.md) (RG3.14.8). No rule is
+    copied anywhere else: the header of each definition file, `CLAUDE.md` and this step all
+    *point* at it.
 
     - **RG3.14.1** - **the abbreviations**: `ABRV:ODE2` in place of `\hac{ODE2}`, and `abrv:ODE2`
-      for the lower-case `\ac` form. 177 occurrences, 0 of which need an argument the macro cannot
-      carry. The list itself is already a Python dict - `abbreviations` in
-      `tools/generators/examplesDocsEmitter.py:35` - so the converter can **check the key** and
-      name the file and the line of a wrong one, which is what nothing does today.
+      for the lower-case `\ac` form. 177 occurrences, none of which needs an argument the macro
+      cannot carry. Converted in `latexToMarkdown.ConvertInline`, which handles all seven spellings
+      (`hac`, `hacs`, `acf`, `acl`, `acs`, `acp`, `ac`) today. The list itself is already a Python
+      dict - `abbreviations` in `tools/generators/examplesDocsEmitter.py`, written out by its
+      `WriteAbbreviations` - so the converter can **check the key** and name the file and the line
+      of a wrong one, which is what nothing does today.
     - **RG3.14.2** - **the heading levels, defined and checked.** An item page is
       `# <file>` / `## <item>` / `### DESCRIPTION of <item>`, and a `\mysubsubsubsection` becomes
-      `####`; the depth is implicit in the macro name and `NormalizeHeadings` silently repairs
-      whatever does not fit. In Markdown the writer writes `#### Equations` and the emitter checks
-      the level against the page it is placed in. The check has something to find: the 133 headings
+      `####`; the depth is implicit in the macro name (`latexToMarkdown.ConvertSections`) and
+      `latexToMarkdown.NormalizeHeadings` silently repairs whatever does not fit. In Markdown the
+      writer writes `#### Equations`, and the emitter that places the page -
+      `itemDocsEmitter.WriteMarkdownPages` and `structureDocsEmitter.StructureDocs` - checks the
+      level against the page it is placed in. The check has something to find: the 133 headings
       carry **49 distinct titles**, and two pairs differ only in case or spacing -
       *Connector forces* (11) against *Connector Forces* (3), *Post Newton Step* (3) against
       *PostNewtonStep* (1). A documented set of the recurring ones - *Definition of quantities*
       (37), *Equations of motion* (12), *Connector forces* (14), *Connector constraint equations*
       (9), *Geometric relations* (8), *Details* (4) - with free titles allowed below them.
     - **RG3.14.3** - **the references, in native Markdown.** `[](#sec:itemGround)` in place of
-      `\refSection{sec:itemGround}`, `[](#eq:ObjectGround:position)` in place of `\eq{...}`, and
-      `$$...$$ (eq:name)` in place of `\be ... \label{eq:name} ... \ee`. **Probed 2026-09-25**
-      against Sphinx 9.1.0 / myst-parser 5.1.0 with this project's `myst_enable_extensions`: a
-      target written `(sec:name)=` **on a heading** resolves from another page with and without
-      link text, and the text defaults to the heading; an equation label resolves from another page
-      and renders as its number. `\cite` (31) has no native form and stays a macro, `CITE:key`.
+      `\refSection{sec:itemGround}`, `[](#eq:ObjectGround:position)` in place of `\eq{...}`,
+      `[](#fig:ObjectSphereSphereContact)` in place of `\fig{...}`, and `$$...$$ (eq:name)` in
+      place of `\be ... \label{eq:name} ... \ee`. All of these live in
+      `latexToMarkdown.ConvertInline` (with `RefLabel` and `autoGenerateHelper.MarkdownLabel` for
+      the label spelling) and `latexToMarkdown.ConvertDisplayMath`. **Probed 2026-09-25** against
+      Sphinx 9.1.0 / myst-parser 5.1.0 with this project's `myst_enable_extensions`: a target
+      written `(sec:name)=` **on a heading**, an equation label, and a `{figure}` with `:name:` all
+      three resolve from another page, with and without link text, and the text defaults to the
+      heading or the caption. The 55 `\label`s are **45 equations, 10 figures and nothing else**,
+      and all 9 section labels are written as `\mysub...sectionlabel`, i.e. on their heading - so
+      every reference in `definitions/` can become a native link. `CITE:key` replaces `\cite{key}`
+      for the 31 citations, which is the answer to the maintainer's question: **nothing stays a
+      backslash command outside math.**
     - **RG3.14.4** - **the tables become data.** 74 of the 86 are one of two shapes, and both are a
       list of rows in the dict rather than text:
       - `quantities=[Quantity(name=..., symbol=r'$\pRefG$', description='...')]` - 39 tables,
@@ -446,7 +487,10 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       The remaining 12 - 5 *"output variables"*, 4 *"input parameter"*, 3 one-off output-variable
       tables - become an ordinary MyST pipe table in the text, which is what a reader of the
       source then sees. A cell keeps MyST text, because the description cells hold math and
-      references.
+      references. `latexToMarkdown.ConvertTables` loses the `\startTable` family, and the new data
+      is rendered where the generated tables already are:
+      `autoGenerateHelper.PyLatexRST.DefItemStartTable`, `Table3WriteRow` and
+      `DefLatexFinishTable`.
     - **RG3.14.5** - **a user function is a typed Python signature.** In place of
       `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}` followed by a table and a
       `\returnValue` row:
@@ -466,32 +510,63 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       that exist only because the text is LaTeX** - `q\_t` is `q_t` in Python. The 231 argument
       rows use **26 distinct types**, 14 of them plain names (`Real` 98, `MainSystem` 35,
       `Index` 29, `Vector3D` 16, `BodyGraphicsData` 5, ...). The 17 `\userFunctionExample` blocks
-      become ordinary fenced code.
-    - **RG3.14.6** - **the two RST switches go.** `ResolveRSTSwitches` keeps what `\onlyRST` holds
-      and **drops what `\ignoreRST` holds**, and `grep includegraphics docs/generated/` finds
-      nothing: all 13 `\ignoreRST` blocks are **dead text that reaches no builder**, because the
-      PDF is built by Sphinx from the same Markdown since RG3.3 (D17). Ten of the 11 `\onlyRST`
-      blocks hold an RST `.. figure::` that a MyST `{image}` says in three lines. So: **delete the
-      13, unwrap the 11, and delete the two macros and `ResolveRSTSwitches` with them.** The one
-      pair worth a decision is `ObjectKinematicTree`, where the `\ignoreRST` twin holds the two
-      LaTeX `algorithm` environments; RG3.8.2 already put the algorithms into the text as numbered
-      lists, so **there is no case left for keeping even one**, and the step may delete all 24.
+      become ordinary fenced code (`latexToMarkdown.ConvertListings` loses them).
+
+      **Duplication between items is intended and stays** (maintainer, 2026-09-25): two items can
+      share a signature and mean different things by it, and the argument and return descriptions
+      are what say so. What the step does remove is duplication **inside** one item: a user
+      function is documented once per item.
+    - **RG3.14.6** - **the two RST switches go.** `latexToMarkdown.ResolveRSTSwitches` keeps what
+      `\onlyRST` holds and **drops what `\ignoreRST` holds**, and `grep includegraphics
+      docs/generated/` finds nothing: all 13 `\ignoreRST` blocks are **dead text that reaches no
+      builder**, because the PDF is built by Sphinx from the same Markdown since RG3.3 (D17). Ten
+      of the 11 `\onlyRST` blocks hold an RST `.. figure::` that a MyST `{image}` says in three
+      lines. So: **delete the 13, unwrap the 11, and delete the two macros with
+      `ResolveRSTSwitches`, `DropLatexFigures`, `ConvertRSTFigures`, `ConvertRSTImages` and
+      `LatexRSTFigure`.** The one pair worth a decision is `ObjectKinematicTree`, where the
+      `\ignoreRST` twin holds the two LaTeX `algorithm` environments; RG3.8.2 already put the
+      algorithms into the text as numbered lists, so **there is no case left for keeping even
+      one**, and the step may delete all 24.
     - **RG3.14.7** - **the tail and the gate.** `\texttt{x}` is `` `x` ``, `\bf` is `**`,
-      `\bi/\item/\ei` is a Markdown list; the 32 macros that occur at most twice are rewritten one
-      by one. Then `tools/generators/generate.py` gains the check that closes the step: **a
-      backslash command in a `definitions/` description, outside math, is an error with the file,
-      the line and the name** - the same shape as `tools/checkMathMacros.py`, which already holds
-      the line between a math macro and a structural one.
+      `\bi/\item/\ei` is a Markdown list - all in `latexToMarkdown.ConvertInline` and
+      `ConvertLists`; the 32 macros that occur at most twice are rewritten one by one. Then
+      `tools/generators/generate.py` gains the check that closes the step: **a backslash command in
+      a `definitions/` description, outside math, is an error with the file, the line and the
+      name** - `latexToMarkdown.ReportUnknown` already finds them and only prints, and
+      `tools/checkMathMacros.py` already holds the line between a math macro and a structural one.
+    - **RG3.14.8** - **the one place the rules are written.** A new section of
+      `definitions/README.md`, which is published (`docs/dev/README.md` lists it) and today says
+      how a *member* is written but nothing about the description text. Its skeleton is written
+      **first** and each sub-step adds its own paragraph, so that no sub-step is done before its
+      rule is readable. Then, and this is the point of the step: the **header comment of every
+      `definitions/*.py` file** says *read `definitions/README.md` before writing a description*,
+      and **`CLAUDE.md` says the same** in its hard rules - a session that writes plain Markdown
+      where a `ABRV:` macro is meant, or LaTeX where the check will reject it, is a session that
+      did not read one file.
+    - **RG3.14.9** - **a description that carries math is an `r'...'` literal, and that is
+      checked.** Measured 2026-09-25 over `definitions/*.py`: **1128 string literals carry a `$` or
+      a backslash macro; 940 are already `r'...'`, 188 are not, and 163 of those 188 already hold a
+      doubled backslash** - `'\\item'`, `'  \\item Create \\texttt{Vector3DList}'`, `' \\\\ \\\\
+      Usage: \\bi'`, almost all in the `pybind*.py` files. So the escaping is already being paid
+      by hand, and one `\n` or `\t` written by accident is a bug nobody sees. The check is a file
+      check and needs no new machinery: `ast` gives each literal its line and column, and the
+      source at that column carries the prefix - the measurement script for this step is the check.
+      The 163 become raw literals and readable; the other 25 hold a `$` and no backslash and are
+      converted for the rule's sake.
 
     **What would not work today**, and is either solved inside the step or stated as its boundary:
 
-    - **A `(name)=` target that does not sit on a heading cannot be reached by `[](#name)`.** Probed
-      2026-09-25: a target on a paragraph, on a list item, as an inline `{#anchor}` and as a raw
-      `<a id>` all four warn `myst.xref_missing`, and only `` {ref}`text <name>` `` resolves them -
-      with the text, because `` {ref}`name` `` alone warns *"A title or caption not found"*. The
-      abbreviation list is exactly such a list of paragraph targets, so RG3.14.1's `ABRV:` cannot
-      expand to a native link; it expands to `{ref}`, which is what it does today. **This is the
-      reason the macro exists** rather than the writer writing the link.
+    - **A target that sits on neither a heading, an equation nor a named figure cannot be reached by
+      `[](#name)`.** Probed 2026-09-25: a target on a paragraph, on a list item, as an inline
+      `{#anchor}` and as a raw `<a id>` all four warn `myst.xref_missing`, and only
+      `` {ref}`text <name>` `` resolves them - with the text, because `` {ref}`name` `` alone warns
+      *"A title or caption not found"*. There is exactly one such place, and it is the reason
+      RG3.14.1 keeps a macro: the abbreviation list, section `sec:listofabbreviations` in
+      `docs/generated/abbreviations.md`, where each entry is a bare target above a paragraph -
+      `(ODE2)=` above `**ODE2**: second order ordinary differential equations`. `ABRV:ODE2`
+      therefore expands to `{ref}`ODE2 <ODE2>``, which is what `\hac` does today, and **the writer
+      never types the role**. Giving every abbreviation its own heading would make the native form
+      work and is not worth 90 headings in a list.
     - **An implicit heading anchor is same-page only.** `myst_heading_anchors = 3` generates a slug
       per heading, and `[](#a-sub-heading)` from another file warns. Every target that is
       referenced across pages has to be written as `(name)=`, which is what `\label` does today,
@@ -502,25 +577,20 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       rather than evaluating it. The block is therefore parsed with `ast`, not executed.
     - **The user function signature is declared in three places and this step unifies none of
       them**: the documentation block, the member's type (`PyFunctionGraphicsData`, and the
-      `std::function<...>` it maps to in `definitions/definitionTypes.py:419`) and the stub files.
+      `std::function<...>` it maps to in `definitions/definitionTypes.py`) and the stub files.
       Making the documented signature the source of all three is a step of its own and belongs to
       RG12, not here.
-    - **12 of the 35 user function blocks document a signature another item already documents**
-      (`graphicsDataUserFunction` 5 times, `forceUserFunction` 4, `loadVectorUserFunction` 3,
-      `massMatrixUserFunction` 3): 23 distinct signatures under 17 distinct names. A shared
-      registry would remove the copies, and the prose around them is **not** identical, so the step
-      converts in place and leaves the de-duplication to a later one.
-    - **`\cite` and the math macros stay LaTeX.** The bibliography is a Sphinx domain with no
-      Markdown form, and rewriting 2897 inline formulas is neither possible nor desirable: MyST's
-      math *is* LaTeX, and `checkMathMacros.py` already checks it.
-    - **The hand-written chapters of `docs/manual/` are not in scope.** They are Markdown already;
-      the LaTeX that the converter still handles for them comes from `docs/theDoc/` history and
-      dies with RG3.13.1 and its like, not here.
+    - **The math macros stay LaTeX**, and that is the decision, not a limitation: MyST's math *is*
+      LaTeX, `conf.py` declares the 166 macros to MathJax and to the LaTeX preamble, and
+      `tools/checkMathMacros.py` already checks that every one used is known. Rewriting 2897 inline
+      formulas would buy nothing.
+    - **The hand-written chapters of `docs/manual/` are not in scope**, nor are the docstrings of
+      `python/exudyn/`. `ConvertText` keeps its LaTeX branch for them; what this step adds is a
+      check that `definitions/` no longer uses it.
 
     The gate is the ordinary one, with one addition: the **generated pages must not change** except
     where a table gains a column or a heading is corrected, so the step is done in passes with
     `git diff docs/generated/` read after each.
-
 
 
 ## RG4 — Implementation problems and bugs
@@ -532,15 +602,6 @@ fix needs a plan of its own.
 
 Open in the tracker for this group: **#2423** (every C++ user error inspects the Python source to
 find its file and line, on every raise).
-
-<a id="rg3-13-1"></a>
-**RG3.13.1** *(group RG3; from RG3.13, 2026-09-24)* **235 references to the plan are left in
-    comments, each inside a sentence** (#2649). 652 of the 887 were parentheticals or appended
-    clauses and went by rule, keeping the issue number where there was one. The rest read like
-    *"step R4.3 is moving outputs from the old generators to separate emitters"* - a sentence has
-    to be written for each, which a pattern cannot do. **None is in a published page**: they are
-    comments in `src/`, `tools/` and `python/`, so this is tidiness rather than a defect, and it
-    is work for a session with nothing better to do.
 
 <a id="rg4-1"></a>
 **RG4.1** *(group RG4; revision2026 step R10.1)* **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
