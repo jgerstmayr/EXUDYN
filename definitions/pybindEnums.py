@@ -48,7 +48,9 @@ pb.CppCode('\n//        pybinding to enum classes:\n')
 pyClass = 'OutputVariableType'
 
 descriptionStr = 'The enumeration type  ' + pyClass + ' is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.\n\n'
-descriptionStr += 'Available output variables and the interpreation of the output variable can be found at the object definitions. \n The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \\{0,1,2\\}, representing \\{x,y,z\\} components (e.g., of displacements, velocities, ...), or \\{0,1,2,3,4,5\\} representing \\{xx,yy,zz,yz,xz,xy\\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)\n'
+descriptionStr += r"""Available output variables and the interpreation of the output variable can be found at the object definitions. 
+ The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \{0,1,2\}, representing \{x,y,z\} components (e.g., of displacements, velocities, ...), or \{0,1,2,3,4,5\} representing \{xx,yy,zz,yz,xz,xy\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)
+"""
 
 pb.DefStartEnumClass(className = pyClass, 
                         description=descriptionStr, 

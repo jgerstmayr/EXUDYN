@@ -96,7 +96,8 @@ not in the list below reaches the page as itself and is a defect.
 - **Write a description that carries mathematics or a backslash as a raw string**, `r'...'` or
   `r"""..."""`. Python reads `'\theta'` as a tab followed by `heta`; `r'\theta'` is the six
   characters MathJax needs. This is the one mistake that is silent, so it is the one rule with no
-  exception.
+  exception, and `tools/checkDefinitions.py` enforces it on the literal's own spelling. A text of
+  several lines is one `r"""..."""`, not a chain of one-line strings joined by `+`.
 - **Mathematics** is `$...$` inline and `$$...$$` on its own lines, with the macros that `conf.py`
   declares - `\LU{0}{\pv}`, `\Rcal`, `\eqDot`. `tools/checkMathMacros.py` fails on a macro it does
   not know, so a typo in one is found. Display mathematics stands on its own lines between `$$`

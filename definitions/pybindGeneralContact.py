@@ -113,7 +113,7 @@ pb.DefLatexDataAccess('minRelDistanceSpheresTriangles','(default=1e-10) toleranc
                        )
 
 pb.CppCode('        .def_property("frictionProportionalZone", &PyGeneralContact::GetFrictionProportionalZone, &PyGeneralContact::SetFrictionProportionalZone)\n') 
-pb.DefLatexDataAccess('frictionProportionalZone','(default=0.001) velocity $v_{\\mu,reg}$ upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force ',
+pb.DefLatexDataAccess('frictionProportionalZone',r"""(default=0.001) velocity $v_{\mu,reg}$ upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force """,
                        dataType='float',
                        )
 
@@ -181,7 +181,7 @@ pb.DefLatexDataAccess('parallelTaskSplitBoundingBoxesThreshold','(default=400) t
 #                                 description="WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!")
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetFrictionPairings', cName='SetFrictionPairings', 
                         argList=['frictionPairings'],
-                        example='#set 3 surface friction types, all being 0.1:\\\\gContact.SetFrictionPairings(0.1*np.ones((3,3)));',
+                        example=r"""#set 3 surface friction types, all being 0.1:\\gContact.SetFrictionPairings(0.1*np.ones((3,3)));""",
                         description="set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!",
                         argTypes=['ArrayLike'],
                         returnType='None',
@@ -205,7 +205,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetSearchTreeCellSize', cName='S
                                                    
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetSearchTreeBox', cName='SetSearchTreeBox', 
                         argList=['pMin','pMax'],
-                        example='gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\\\\ \\TAB pMax=[1,1,1])',
+                        example=r"""gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\\ \TAB pMax=[1,1,1])""",
                         description="set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly",
                         argTypes=[vector3D,vector3D],
                         returnType='None',
@@ -238,7 +238,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='AddTrianglesRigidBodyBased', cNa
 #access functions:
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetItemsInBox', cName='PyGetItemsInBox', 
                         argList=['pMin','pMax'],
-                        example='gContact.GetItemsInBox(pMin=[0,1,1],\\\\ \\TAB pMax=[2,3,2])',
+                        example=r"""gContact.GetItemsInBox(pMin=[0,1,1],\\ \TAB pMax=[2,3,2])""",
                         description="Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g., by GetMarkerBasedSphere(localIndex)",
                         argTypes=[vector3D,vector3D],
                         returnType='Union[dict,bool]',
@@ -298,7 +298,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='UpdateContacts', cName='PyUpdate
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetActiveContacts', cName='PyGetActiveContacts', 
                         argList=['typeIndex', 'itemIndex'],
-                        example='#if explicit solver is used, we first need to update contacts:\\\\gContact.UpdateContacts(mbs)\\\\#obtain active contacts of marker based sphere 42:\\\\gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)',
+                        example=r"""#if explicit solver is used, we first need to update contacts:\\gContact.UpdateContacts(mbs)\\#obtain active contacts of marker based sphere 42:\\gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)""",
                         description="Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; in case of itemIndex==-1, it will return the list of numbers of active contacts per item for the contact type; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function",
                         argTypes=['ContactTypeIndex','int'],
                         returnType='List[int]',

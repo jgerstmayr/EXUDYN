@@ -12,6 +12,8 @@
 #   - every ABRV:KEY names an abbreviation that the list actually has. The abbreviations are the
 #     dict in tools/generators/examplesDocsEmitter.py, which also writes
 #     docs/generated/abbreviations.md, so the key and its target cannot drift apart.
+#   - a literal whose value carries a backslash or mathematics is written r'...', so that
+#     Python does not read a backslash-t as a tab.
 #   - every heading is written at the level of the page it is placed in, and a title that means one
 #     of the recurring sections is spelled like it. The old \mysubsubsubsection said the level in
 #     its name and NormalizeHeadings quietly repaired whatever did not fit, so neither was checked.
@@ -162,6 +164,30 @@ def CheckCitations(paths, known):
     return findings
 
 
+def CheckRawStrings(paths):
+    """a literal whose value carries a backslash or mathematics is written r'...'
+
+    Python reads '\\theta' as a tab followed by "heta", and nothing says so: the page shows the tab
+    and the formula is gone. The writers of definitions/ paid for this by hand - 158 literals held
+    a DOUBLED backslash before RG3.14.9 - which works and is unreadable. The rule has no exception,
+    so the check is a rule about the source text, not about the value: the literal's own spelling."""
+    findings = []
+    for path in paths:
+        source = io.open(path, encoding='utf-8').read()
+        lines = source.split('\n')
+        for node in ast.walk(ast.parse(source)):
+            if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
+                continue
+            if '\\' not in node.value and '$' not in node.value:
+                continue
+            prefix = lines[node.lineno - 1][max(0, node.col_offset):node.col_offset + 2]
+            if prefix[:1].lower() == 'r':
+                continue
+            findings.append((path, node.lineno,
+                             "carries a backslash or mathematics and is not an r'...' literal"))
+    return findings
+
+
 def CheckAbbreviations(paths, declared):
     """ABRV:KEY with a key the list does not have"""
     findings = []
@@ -188,14 +214,15 @@ def main():
                                                   'examplesDocsEmitter.py'))
     known = BibliographyKeys(os.path.join(root, 'docs', 'bibliographyDoc.bib'))
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
-                + CheckCitations(paths, known))
+                + CheckCitations(paths, known) + CheckRawStrings(paths))
 
     if len(findings) == 0:
         if not args.quiet:
             print('OK: the descriptions of ' + str(len(paths)) + ' definition files use only the '
                   + str(len(declared)) + ' abbreviations that the list has,\n'
                   '    write every heading at the level of the page it is placed in,\n'
-                  '    and cite only keys of the ' + str(len(known)) + '-entry bibliography.')
+                  '    cite only keys of the ' + str(len(known)) + '-entry bibliography,\n'
+                  "    and write every literal that carries a backslash as r'...'.")
         return 0
 
     print('FINDINGS in definitions/ - see definitions/README.md, "Writing a description":')

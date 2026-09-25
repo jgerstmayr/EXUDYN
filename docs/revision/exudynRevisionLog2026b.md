@@ -2982,3 +2982,23 @@ and in the worst case the text was simply gone: the `PostNewtonStep` algorithm o
 formulas**, with step 2 glued into the parent bullet and steps 3 to 7 nowhere. Prose that follows a
 formula now stays after it. That is the whole of the 11 lines the pages move by: **one line
 replaced and ten restored.**
+
+<a id="rg3-14-9"></a>
+### RG3.14.9 — a description that carries a backslash is a raw string (2026-09-25, #2655)
+
+Python reads `'\theta'` as a tab followed by `heta`. Nothing says so: the page shows the tab, the
+formula is gone, and the build is green. The writers of `definitions/` had been paying for this by
+hand - measured before the step, **158 literals held a doubled backslash**, `'\\item'`,
+`' \\\\ \\\\ Usage:\n\\bi\n'` - which works and is unreadable, and 25 more carried a `$` in a
+non-raw literal, one `\n` away from the same accident.
+
+All 183 are `r"""..."""` now, and **the value did not move**: the rewrite evaluates each string
+expression with `ast` and writes the same value back as one raw literal, which was verified by
+comparing every string value of every call before and after, and then by the regeneration being
+byte-identical. A chain of one-line strings joined by `+` - which is how the `pybind*.py`
+descriptions were built, six of them with `\\` escapes on every line - becomes the multi-line text
+it always was.
+
+`checkDefinitions` now rejects a literal whose value carries a backslash or a `$` and which is not
+written `r'...'`. It is deliberately a rule about **the source text**, not about the value: by the
+time a wrong escape is a value, the evidence is gone.

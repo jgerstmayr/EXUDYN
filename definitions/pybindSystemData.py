@@ -181,7 +181,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='AddODE2LoadDependencies', cName=
                                 description="advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain global ODE2 coordinate indices; this list only affects implicit or static solvers if timeIntegration.computeLoadsJacobian or staticSolver.computeLoadsJacobian is set to 1 (ODE2) or 2 (ODE2 and ODE2_t dependencies); if set, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient. For more details, consider the file doublePendulum2DControl.py in the examples directory.",
                                 argList=['loadNumber','globalODE2coordinates'],
                                 defaultArgs=['',''],
-                                example = "mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])\\\\#add dependency of load 5 onto node 2 coordinates:\\\\nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)\\\\mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)",
+                                example = r"""mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])\\#add dependency of load 5 onto node 2 coordinates:\\nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)\\mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)""",
                                 argTypes=['float','List[int]'],
                                 returnType='None',
                                 )
@@ -221,7 +221,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2CoordinatesTotal', cName=
                                 argList=['configuration'],
                                 argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
-                                example = "uTotal = mbs.systemData.GetODE2CoordinatesTotal()\\\\#this is equivalent to:\\\\uTotal=mbs.systemData.GetODE2Coordinates()+mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Reference)",
+                                example = r"""uTotal = mbs.systemData.GetODE2CoordinatesTotal()\\#this is equivalent to:\\uTotal=mbs.systemData.GetODE2Coordinates()+mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Reference)""",
                                 returnType=returnedArray,
                                 )
 

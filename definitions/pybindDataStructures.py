@@ -309,14 +309,15 @@ pb.DefPyFinishClass('GraphicsMaterialList')
 
 classStr = 'PyVector3DList'
 pyClassStr = 'Vector3DList'
-pb.DefPyStartClass(classStr, pyClassStr, "The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++." +
-        ' \\\\ \\\\ Usage:\n\\bi\n'+
-        '  \\item Create empty \\texttt{Vector3DList} with \\texttt{x = Vector3DList()} \n'+
-        '  \\item Create \\texttt{Vector3DList} with list of numpy arrays:\\texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}\n'+
-        '  \\item Create \\texttt{Vector3DList} with list of lists \\texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}\n'+
-        '  \\item Append item: \\texttt{x.Append([0.,2.,4.])}\n'+
-        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
-        '\\ei\n', subSection=True)
+pb.DefPyStartClass(classStr, pyClassStr, r"""The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage:
+\bi
+  \item Create empty \texttt{Vector3DList} with \texttt{x = Vector3DList()} 
+  \item Create \texttt{Vector3DList} with list of numpy arrays:\texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}
+  \item Create \texttt{Vector3DList} with list of lists \texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}
+  \item Append item: \texttt{x.Append([0.,2.,4.])}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+\ei
+""", subSection=True)
 
 pb.DefLatexStartTable(pyClassStr)
 
@@ -383,15 +384,15 @@ pb.DefPyFinishClass('PyVector3DList')
 #documentation and pybindings for PyVector2DList
 classStr = 'PyVector2DList'
 pyClassStr = 'Vector2DList'
-pb.DefPyStartClass(classStr, pyClassStr, "The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++." +
-        ' \\\\ \\\\ Usage: \\bi\n'+
-        '  \\item Create empty \\texttt{Vector2DList} with \\texttt{x = Vector2DList()} \n'+
-        '  \\item Create \\texttt{Vector2DList} with list of numpy arrays:\\\\\\texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}\n'+
-        '  \\item Create \\texttt{Vector2DList} with list of lists \\texttt{x = Vector2DList([[1.,2.], [4.,5.]])}\n'+
-        '  \\item Append item: \\texttt{x.Append([0.,2.])}\n'+
-        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
-        '  \\item similar to Vector3DList !\n'+
-        '\\ei\n', subSection=True)
+pb.DefPyStartClass(classStr, pyClassStr, r"""The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector2DList} with \texttt{x = Vector2DList()} 
+  \item Create \texttt{Vector2DList} with list of numpy arrays:\\\texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}
+  \item Create \texttt{Vector2DList} with list of lists \texttt{x = Vector2DList([[1.,2.], [4.,5.]])}
+  \item Append item: \texttt{x.Append([0.,2.])}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+""", subSection=True)
 
 pb.DefLatexStartTable(pyClassStr)
 
@@ -452,12 +453,12 @@ pb.DefPyFinishClass('PyVector2DList')
 #documentation and pybindings for PyVector6DList
 classStr = 'PyVector6DList'
 pyClassStr = 'Vector6DList'
-pb.DefPyStartClass(classStr, pyClassStr, "The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++." +
-        ' \\\\ \\\\ Usage: \\bi\n'+
-        '  \\item Create empty \\texttt{Vector6DList} with \\texttt{x = Vector6DList()} \n'+
-        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
-        '  \\item similar to Vector3DList !\n'+
-        '\\ei\n', subSection=True)
+pb.DefPyStartClass(classStr, pyClassStr, r"""The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector6DList} with \texttt{x = Vector6DList()} 
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+""", subSection=True)
 
 pb.DefLatexStartTable(pyClassStr)
 
@@ -518,15 +519,15 @@ pb.DefPyFinishClass('PyVector6DList')
 #documentation and pybindings for PyMatrix3DList
 classStr = 'PyMatrix3DList'
 pyClassStr = 'Matrix3DList'
-pb.DefPyStartClass(classStr, pyClassStr, "The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++." +
-        ' \\\\ \\\\ Usage: \\bi\n'+
-        '  \\item Create empty \\texttt{Matrix3DList} with \\texttt{x = Matrix3DList()} \n'+
-        '  \\item Create \\texttt{Matrix3DList} with list of numpy arrays:\\\\\\texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}\n'+
-        '  \\item Create \\texttt{Matrix3DList} with one matrix \\texttt{x = Matrix3DList(13.*numpy.eye(3))} \n'+
-        '  \\item Append item: \\texttt{x.Append(numpy.eye(3))}\n'+
-        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
-        '  \\item similar to Vector3DList !\n'+
-        '\\ei\n', subSection=True)
+pb.DefPyStartClass(classStr, pyClassStr, r"""The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Matrix3DList} with \texttt{x = Matrix3DList()} 
+  \item Create \texttt{Matrix3DList} with list of numpy arrays:\\\texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}
+  \item Create \texttt{Matrix3DList} with one matrix \texttt{x = Matrix3DList(13.*numpy.eye(3))} 
+  \item Append item: \texttt{x.Append(numpy.eye(3))}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+""", subSection=True)
 
 pb.DefLatexStartTable(pyClassStr)
 
@@ -575,14 +576,14 @@ pb.DefPyFinishClass('PyMatrix3DList')
 #documentation and pybindings for PyMatrix6DList
 classStr = 'PyMatrix6DList'
 pyClassStr = 'Matrix6DList'
-pb.DefPyStartClass(classStr, pyClassStr, "The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++." +
-        ' \\\\ \\\\ Usage: \\bi\n'+
-        '  \\item Create empty \\texttt{Matrix6DList} with \\texttt{x = Matrix6DList()} \n'+
-        '  \\item Create \\texttt{Matrix6DList} with list of numpy arrays:\\\\\\texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}\n'+
-        '  \\item Append item: \\texttt{x.Append(numpy.eye(6))}\n'+
-        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
-        '  \\item similar to Matrix3DList !\n'+
-        '\\ei\n', subSection=True)
+pb.DefPyStartClass(classStr, pyClassStr, r"""The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Matrix6DList} with \texttt{x = Matrix6DList()} 
+  \item Create \texttt{Matrix6DList} with list of numpy arrays:\\\texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}
+  \item Append item: \texttt{x.Append(numpy.eye(6))}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Matrix3DList !
+\ei
+""", subSection=True)
 
 pb.DefLatexStartTable(pyClassStr)
 

@@ -34,11 +34,7 @@ pb = PybindInterface()
 pb.CreateNewRSTfile('MainSystem')
 classStr = 'MainSystem'
 pb.DefPyStartClass(classStr, classStr, 
-                    "MainSystem is the class which defines a (multibody) system and it's instance if usually called \\texttt{mbs}. "+
-                    "Interactions with the system are done via MainSystem, either through, e.g., \\texttt{mbs.AddObject(...)} or "+
-                    "with create functions, such as \\texttt{mbs.CreateRigidBody(...)}; States are accessible via \\texttt{mbs.systemData}. "+
-                    "The MainSystem shall only be created from a SystemContainer \\texttt{SC} using \\texttt{SC.AddSystem()}; do not use \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. "+
-                    "Having already a valid \\texttt{mbs}, you may use \\texttt{SC.Append(mbs).} ",
+                    r"""MainSystem is the class which defines a (multibody) system and it's instance if usually called \texttt{mbs}. Interactions with the system are done via MainSystem, either through, e.g., \texttt{mbs.AddObject(...)} or with create functions, such as \texttt{mbs.CreateRigidBody(...)}; States are accessible via \texttt{mbs.systemData}. The MainSystem shall only be created from a SystemContainer \texttt{SC} using \texttt{SC.AddSystem()}; do not use \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. Having already a valid \texttt{mbs}, you may use \texttt{SC.Append(mbs).} """,
                     forbidPythonConstructor=False)
 
 pb.AddDocu(
@@ -131,7 +127,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='Activ
 #USER FUNCTIONS
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
                         description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. Note that the time t in the args is already the end of the step, which allows to compute forces consistently with trapezoidal integrators; for higher order Runge-Kutta methods, step time will be available only in object-user functions. The PreStepUserFunction is recommended e.g., for prescribing forces or set values of actuators",
-                        example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPreStepUserFunction(PreStepUserFunction)',
+                        example = r"""def PreStepUserFunction(mbs, t):\\ \TAB print(mbs.systemData.NumberOfNodes())\\ \TAB if(t>1): \\ \TAB  \TAB return False \\ \TAB return True \\mbs.SetPreStepUserFunction(PreStepUserFunction)""",
                         argList=['value'],
                         argTypes=['Callable[["MainSystem", float],bool]'], #MainSystem not known at this point for .pyi
                         returnType='None',
@@ -147,7 +143,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetPreStepUserFunction', cName='
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetPostStepUserFunction', cName='PySetPostStepUserFunction', 
                         description="Sets a user function PostStepUserFunction(mbs, t) executed at end of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. The difference to PreStepUserFunction, the PostStepUserFunction is called after the step has been computed, AFTER the discontinuous iterations, just BEFORE writing solution file, sensors and visualization. This allows to change or evaluate results before they are stored (e.g., do some projection).",
-                        example = 'def PostStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPostStepUserFunction(PostStepUserFunction)',
+                        example = r"""def PostStepUserFunction(mbs, t):\\ \TAB print(mbs.systemData.NumberOfNodes())\\ \TAB if(t>1): \\ \TAB  \TAB return False \\ \TAB return True \\mbs.SetPostStepUserFunction(PostStepUserFunction)""",
                         argList=['value'],
                         argTypes=['Callable[["MainSystem", float],bool]'], #MainSystem not known at this point for .pyi
                         returnType='None',
@@ -163,7 +159,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetPostStepUserFunction', cName=
                                                       
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
                         description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function. Similar described by Flores and Ambrosio, https://doi.org/10.1007/s11044-010-9209-8",
-                        example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)',
+                        example = r"""def PostNewtonUserFunction(mbs, t):\\ \TAB if(t>1): \\ \TAB  \TAB return [0, 1e-6] \\ \TAB return [0,0] \\mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)""",
                         argList=['value'],
                         argTypes=['Callable[["MainSystem", float],[float,float]]'], #MainSystem not known at this point for .pyi
                         returnType='None',
@@ -180,7 +176,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetPostNewtonUserFunction', cNam
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetPreNewtonResidualUserFunction', cName='PySetPreNewtonResidualUserFunction', 
                         description="Sets a user function PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt) executed prior to computation of the Newton residual in implicit or static solvers. This function returns nothing. The arguments newtonIt and discontinuousIt may be used to distinguish if the call is done at the beginning of a discontinuous iteration (newtonIt=0) or during Newton iterations (newtonIt>0). The typical use case would be to modify objects or loads in every iteration. Note that this user function is not called during Jacobian computation. If needed, the jacobian can be modified with the user function set by SetSystemJacobianUserFunction.",
-                        example = 'def PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt):\\\\ \\TAB print("t=",t,", newtonIt=",newtonIt,", discIt=",discontinuousIt)\\\\mbs.SetPreNewtonResidualUserFunction(PreNewtonResidualUserFunction)',
+                        example = r"""def PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt):\\ \TAB print("t=",t,", newtonIt=",newtonIt,", discIt=",discontinuousIt)\\mbs.SetPreNewtonResidualUserFunction(PreNewtonResidualUserFunction)""",
                         argList=['value'],
                         argTypes=['Callable[["MainSystem", float, int, int],None]'], #MainSystem not known at this point for .pyi
                         returnType='None',
@@ -196,7 +192,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetPreNewtonResidualUserFunction
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetSystemJacobianUserFunction', cName='PySetSystemJacobianUserFunction', 
                         description="Sets a user function SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1) executed after computation of the Newton jacobian of a static solver or an implicit timeintegrator; The function shall return additional terms for the jacobian at RHS, e.g., related to dependencies that are added by the user in the PreNewtonResidualUserFunction; RHS means that for a spring with stiffness K, the jacobian would be -K as it is computed for the RHS, see the RHS-LHS convention. If you like to completely replace the jacobian, consider using the solver's user function SetUserFunctionComputeNewtonJacobian which can be used to replace the jacobian computation; the factors factorODE2, factorODE2_t, factorODE1 must be multiplied with quantities related to ODE2 coordinates (like stiffness terms), ODE2_t velocity coordinates (like damping terms) and ODE1 quantities. The functions returns a MatrixContainer, for which the sparse format is recommended for efficiency reasons.",
-                        example = 'def SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1):\\\\ \\TAB return MatrixContainer([[factorODE2*10,0],[0,0]])\\\\mbs.SetSystemJacobianUserFunction(SystemJacobianUserFunction)',
+                        example = r"""def SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1):\\ \TAB return MatrixContainer([[factorODE2*10,0],[0,0]])\\mbs.SetSystemJacobianUserFunction(SystemJacobianUserFunction)""",
                         argList=['value'],
                         argTypes=['Callable[["MainSystem", float, float, float, float],'+matrixContainerType+']'], #MainSystem not known at this point for .pyi
                         returnType='None',
@@ -283,7 +279,8 @@ pb.CppCode(pickleDictTemplateNew.replace('{ClassName}', classStr))
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #old version, with variables: pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nmainSystem:\\n  variables = " + EXUstd::ToString(ms.variables) + "\\n  sys = " + EXUstd::ToString(ms.systemVariables) + "\\n>\\n"; }', 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nFor details see mbs.systemData, mbs.sys and mbs.variables\\n>\\n"; }', 
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName=r"""[](const MainSystem &ms) {
+            return "<systemData: \n" + ms.GetMainSystemData().PyInfoSummary() + "\nFor details see mbs.systemData, mbs.sys and mbs.variables\n>\n"; }""", 
                         description="return the representation of the system, which can be, e.g., printed",
                         isLambdaFunction = True,
                         example = 'print(mbs)')
@@ -323,7 +320,7 @@ pb.DefLatexFinishTable()#only finalize latex table
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create extensions
-pb.DefLatexStartClass('MainSystem extensions (create)',"This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.misc.mainSystemExtensions} or \\texttt{exudyn.utilities}", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
+pb.DefLatexStartClass('MainSystem extensions (create)',r"""This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.misc.mainSystemExtensions} or \texttt{exudyn.utilities}""", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu           
@@ -344,7 +341,7 @@ pb.ExtensionMarkdown('MainSystemCreateExt') #written by tools/generators/mainSys
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #function extensions
-pb.DefLatexStartClass('MainSystem extensions (general)','This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.misc.mainSystemExtensions} or \\texttt{exudyn.utilities}', subSection=True,labelName='sec:mainsystem:pythonExtensions')
+pb.DefLatexStartClass('MainSystem extensions (general)',r"""This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.misc.mainSystemExtensions} or \texttt{exudyn.utilities}""", subSection=True,labelName='sec:mainsystem:pythonExtensions')
 
 pb.AddDocuCodeBlock(code="""
 #this example sketches the usage 
@@ -392,7 +389,7 @@ pb.DefLatexStartTable(classStr+':nodes')
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='AddMainNodePyClass', 
                                 description="add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...)",
                                 argList=['pyObject'],
-                                example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item) \\\\" + "nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\mbs.AddNode(nodeDict)",
+                                example = r"""item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\mbs.AddNode(item) \\nodeDict = {'nodeType': 'Point', \\'referenceCoordinates': [1.0, 0.0, 0.0], \\'initialCoordinates': [0.0, 2.0, 0.0], \\'name': 'example node'} \\mbs.AddNode(nodeDict)""",
                                 argTypes=[itemDict],
                                 returnType='NodeIndex',
                                 )
@@ -433,7 +430,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='ModifyNode', cName='PyModifyNode
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetNodeDefaults', cName='PyGetNodeDefaults', 
                                 description="get node's default values for a certain nodeType as (dictionary)",
                                 argList=['typeName'],
-                                example = "nodeType = 'Point'\\\\nodeDict = mbs.GetNodeDefaults(nodeType)",
+                                example = r"""nodeType = 'Point'\\nodeDict = mbs.GetNodeDefaults(nodeType)""",
                                 argTypes=['str'],
                                 returnType='dict',
                                 )
@@ -520,7 +517,7 @@ pb.DefLatexStartTable(classStr+':objects')
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='AddMainObjectPyClass', 
                                 description="add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object",
                                 argList=['pyObject'],
-                                example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item) \\\\" + "objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\mbs.AddObject(objectDict)",
+                                example = r"""item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\mbs.AddObject(item) \\objectDict = {'objectType': 'MassPoint', \\'physicsMass': 10, \\'nodeNumber': 0, \\'name': 'example object'} \\mbs.AddObject(objectDict)""",
                                 argTypes=[itemDict],
                                 returnType='ObjectIndex',
                                 )
@@ -563,7 +560,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectDefaults', cName='PyGet
                                 description="get object's default values for a certain objectType as (dictionary)",
                                 argList=['typeName'],
                                 argTypes=['str'],
-                                example = "objectType = 'MassPoint'\\\\objectDict = mbs.GetObjectDefaults(objectType)",
+                                example = r"""objectType = 'MassPoint'\\objectDict = mbs.GetObjectDefaults(objectType)""",
                                 returnType='dict',
                                 )
 
@@ -637,7 +634,7 @@ pb.DefLatexStartTable(classStr+':markers')
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='AddMainMarkerPyClass', 
                                 description="add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker",
                                 argList=['pyObject'],
-                                example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)\\\\" + "markerDict = {'markerType': 'NodePosition', \\\\  'nodeNumber': 0, \\\\  'name': 'position0'}\\\\mbs.AddMarker(markerDict)",
+                                example = r"""item = MarkerNodePosition(name='my marker',nodeNumber=1) \\mbs.AddMarker(item)\\markerDict = {'markerType': 'NodePosition', \\  'nodeNumber': 0, \\  'name': 'position0'}\\mbs.AddMarker(markerDict)""",
                                 argTypes=[itemDict],
                                 returnType='MarkerIndex',
                                 )
@@ -678,7 +675,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='ModifyMarker', cName='PyModifyMa
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerDefaults', cName='PyGetMarkerDefaults', 
                                 description="get marker's default values for a certain markerType as (dictionary)",
                                 argList=['typeName'],
-                                example = "markerType = 'NodePosition'\\\\markerDict = mbs.GetMarkerDefaults(markerType)",
+                                example = r"""markerType = 'NodePosition'\\markerDict = mbs.GetMarkerDefaults(markerType)""",
                                 argTypes=['str'],
                                 returnType='dict',
                                 )
@@ -734,7 +731,7 @@ pb.DefLatexStartTable(classStr+':loads')
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='AddMainLoadPyClass', 
                                 description="add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)\\\\" + "loadDict = {'loadType': 'ForceVector',\\\\  'markerNumber': 0,\\\\  'loadVector': [1.0, 0.0, 0.0],\\\\  'name': 'heavy load'} \\\\mbs.AddLoad(loadDict)",
+                                example = r"""item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\mbs.AddLoad(item)\\loadDict = {'loadType': 'ForceVector',\\  'markerNumber': 0,\\  'loadVector': [1.0, 0.0, 0.0],\\  'name': 'heavy load'} \\mbs.AddLoad(loadDict)""",
                                 argTypes=[itemDict],
                                 returnType='LoadIndex',
                                 )
@@ -775,7 +772,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='ModifyLoad', cName='PyModifyLoad
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetLoadDefaults', cName='PyGetLoadDefaults', 
                                 description="get load's default values for a certain loadType as (dictionary)",
                                 argList=['typeName'],
-                                example = "loadType = 'ForceVector'\\\\loadDict = mbs.GetLoadDefaults(loadType)",
+                                example = r"""loadType = 'ForceVector'\\loadDict = mbs.GetLoadDefaults(loadType)""",
                                 argTypes=['str'],
                                 returnType='dict',
                                 )
@@ -833,7 +830,7 @@ pb.DefLatexStartTable(classStr+':sensors')
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='AddMainSensorPyClass',
                                 description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)\\\\" + "sensorDict = {'sensorType': 'Node',\\\\  'nodeNumber': 0,\\\\  'fileName': 'sensor.txt',\\\\  'name': 'test sensor'} \\\\mbs.AddSensor(sensorDict)",
+                                example = r"""item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\mbs.AddSensor(item)\\sensorDict = {'sensorType': 'Node',\\  'nodeNumber': 0,\\  'fileName': 'sensor.txt',\\  'name': 'test sensor'} \\mbs.AddSensor(sensorDict)""",
                                 argTypes=[itemDict],
                                 returnType='SensorIndex',
                                 )
@@ -874,7 +871,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='ModifySensor', cName='PyModifySe
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSensorDefaults', cName='PyGetSensorDefaults', 
                                 description="get sensor's default values for a certain sensorType as (dictionary)",
                                 argList=['typeName'],
-                                example = "sensorType = 'Node'\\\\sensorDict = mbs.GetSensorDefaults(sensorType)",
+                                example = r"""sensorType = 'Node'\\sensorDict = mbs.GetSensorDefaults(sensorType)""",
                                 argTypes=['str'],
                                 returnType='dict',
                                 )

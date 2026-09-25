@@ -29,17 +29,10 @@ classStr = 'Main'+pyClassStr
 pb.BeginCppWrittenByHand() #systemcontainer manually added in C++
 
 pb.DefPyStartClass(classStr, pyClassStr, 
-                    'The SystemContainer is the top level of structures in \\codeName. '+
-                    "The container holds all (multibody) systems of type \\texttt{MainSystem} and the link to OpenGL renderers and raytracers (every SystemContainer has an independent rendering, while all MainSystems are rendered together)."+
-                    "Via the MainSystems it thus contains all computational data. "+
-                    "A SystemContainer is created by \\texttt{SC = exu.SystemContainer()}, understanding \\texttt{exu.SystemContainer} as a state machine where MainSystems are added and renderer state machines are processed, similar to the behavior of other Python packages. "+
-                    'Usually, only one container shall be used, while multiple containers are possible -- e.g., for reasons of significantly different behavior (drawing, etc.). '+
-                    "The SystemContainer contains \\texttt{visualizationSettings} to adjust all kinds of visualization appearance, windows and interactions."
+                    r"""The SystemContainer is the top level of structures in \codeName. The container holds all (multibody) systems of type \texttt{MainSystem} and the link to OpenGL renderers and raytracers (every SystemContainer has an independent rendering, while all MainSystems are rendered together).Via the MainSystems it thus contains all computational data. A SystemContainer is created by \texttt{SC = exu.SystemContainer()}, understanding \texttt{exu.SystemContainer} as a state machine where MainSystems are added and renderer state machines are processed, similar to the behavior of other Python packages. Usually, only one container shall be used, while multiple containers are possible -- e.g., for reasons of significantly different behavior (drawing, etc.). The SystemContainer contains \texttt{visualizationSettings} to adjust all kinds of visualization appearance, windows and interactions."""
                     )
 
-pb.AddDocu("The \\texttt{visualizationSettings}, see [](#sec-visualizationsettingsmain), can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. "
-            'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, '+
-            'see also the introduction of this chapter and this example:')
+pb.AddDocu(r"""The \texttt{visualizationSettings}, see [](#sec-visualizationsettingsmain), can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see also the introduction of this chapter and this example:""")
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu
@@ -84,7 +77,10 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem
                         returnType='MainSystem',
                         )
 
-pb.DefLatexDataAccess('visualizationSettings','this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  ',
+pb.DefLatexDataAccess('visualizationSettings',r"""this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
+    EXAMPLE:\tabnewline
+    SC = exu.SystemContainer()\tabnewline
+    SC.visualizationSettings.autoFitScene=False  """,
                        dataType = 'VisualizationSettings')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary', 

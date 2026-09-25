@@ -553,7 +553,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       and **`CLAUDE.md` says the same** in its hard rules - a session that writes plain Markdown
       where a `ABRV:` macro is meant, or LaTeX where the check will reject it, is a session that
       did not read one file.
-    - **RG3.14.9** - **a description that carries math is an `r'...'` literal, and that is
+    - **RG3.14.9** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-9) - **a description that carries math is an `r'...'` literal, and that is
       checked.** Measured 2026-09-25 over `definitions/*.py`: **1128 string literals carry a `$` or
       a backslash macro; 940 are already `r'...'`, 188 are not, and 163 of those 188 already hold a
       doubled backslash** - `'\\item'`, `'  \\item Create \\texttt{Vector3DList}'`, `' \\\\ \\\\

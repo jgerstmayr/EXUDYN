@@ -13,7 +13,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #used by 15 items
-OVDZeroVectorForCompleteness = '$[0,0,0]$ (only for completeness)'
+OVDZeroVectorForCompleteness = r"""$[0,0,0]$ (only for completeness)"""
 
 #used by 7 items
 OVDCoordinatesTotalNode = 'displacement plus reference coordinates of node'
