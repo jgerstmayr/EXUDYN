@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.68.dev1
 - last change = 2026-09-25
-- Number of issues = 2655
+- Number of issues = 2656
 - Number of resolved issues = 2382 (68 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` The item and settings descriptions are written in LaTeX, not in Markdown (#2655)
+  - description: The descriptions in definitions/ are the source of the reference manual, and a developer writing one meets 2684 LaTeX macro occurrences in 87 distinct macros: 709 rowTable, 160 hac, 127 mysubsubsubsection, 86 startTable, 69 refSection, 35 userFunction. The build converts them (tools/generators/latexToMarkdown.py) and the published pages are correct, so this is not a defect in the output - it is that the input is a language nobody writing an item description should have to know, and that nothing checks it. Replace the structural macros by a small documented set plus data in the definition dict, keep the math as it is, and remove the onlyRST/ignoreRST switches.
+  - date raised: 2026-09-25
 - `FIX` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` the item docstrings show addExampleImage{X} to a user of help() (#2652)
   - description: The classDescription of an item is the docstring of its class in python/exudyn/itemInterface.py, and the emitter drops the backslash of a LaTeX command instead of the command: help(ObjectJointRevoluteZ) ends with 'addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}'. It affects the six items that carry a picture (\#2651 added three of them, so the count went from three to six) and it is the same for any other command that is not translated. The emitter should drop the whole command - there is no image in a terminal - the way latexToMarkdown turns it into an image directive for the page.
   - date raised: 2026-09-25
