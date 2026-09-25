@@ -304,7 +304,7 @@ parseInfoTemplate = {'class':'',            # C++ class name
              'classDescription':'', #add a (brief, one line) description of class
              'addConstructor':'',   #code added at the end of default constructor
              'linkedClass':'',      #if not empty, this is a class member to which the python interface is linked
-             'latexText':'',        #text, which will be added before the class description (e.g., to start a new section)
+             'sectionText':'',      #the heading and the paragraph that open the section this group of structures forms
              'typicalPaths':None,   #comma-separated typical paths
              'cppText':''}          #code which is added before class definition
 lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface

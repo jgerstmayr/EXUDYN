@@ -37,7 +37,7 @@ definitions.append(StructureDefinition(
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r'Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.',
-    latexText=r"""
+    sectionText=r"""
 %++++++++++++++++++++++++++++++++++++++
 
 (sec-solversubstructures)=

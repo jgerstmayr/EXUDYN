@@ -22,6 +22,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import argparse
 import ast
+import difflib
 import glob
 import io
 import os
@@ -58,7 +59,7 @@ RECURRING_HEADINGS = [
 
 #the heading level a description is written at: an item's text sits under the item's DESCRIPTION
 #heading, a structure's introduction directly under the page title
-HEADING_LEVEL = {'latexText': 2}
+HEADING_LEVEL = {'sectionText': 2}
 DEFAULT_HEADING_LEVEL = 4
 
 #keywords whose value is Python, not prose - published as a code block, so a '#' is a comment
@@ -111,6 +112,40 @@ def CheckHeadings(paths):
     return findings
 
 
+#a citation is the bibliography key in square brackets, and conf.py appends a link definition for
+#every key, so [ZwoelferGerstmayr2021] resolves by itself. A MISTYPED key resolves to nothing and
+#renders as its own text, silently - and no pattern can tell a key from the other square brackets a
+#description is full of ([SI:kg], [0,0,0], [localIndex]). What can be told is a NEAR miss: measured
+#over definitions/, 38 bracketed word-like tokens, 30 of them keys, and the closest the other eight
+#come to a key is 0.59 - so 0.85 reports a typo and nothing else.
+CITATION_SIMILARITY = 0.85
+citationToken = re.compile(r'(?<!\])\[([A-Za-z][A-Za-z0-9_.\-]{3,60})\](?!\()')
+
+
+def BibliographyKeys(path):
+    return set(re.findall(r'@\w+\{([^,]+),', io.open(path, encoding='utf-8',
+                                                     errors='replace').read()))
+
+
+def CheckCitations(paths, known):
+    """a bracketed token that is nearly a bibliography key, and therefore probably meant to be one"""
+    findings = []
+    for path in paths:
+        for (keyword, text, lineno) in Descriptions(path):
+            if keyword in CODE_KEYWORDS:
+                continue
+            for match in citationToken.finditer(text):
+                token = match.group(1)
+                if token in known:
+                    continue
+                close = difflib.get_close_matches(token, known, n=1, cutoff=CITATION_SIMILARITY)
+                if close:
+                    findings.append((path, lineno + text.count('\n', 0, match.start()),
+                                     '[' + token + '] is in no bibliography entry; did you mean ['
+                                     + close[0] + ']?'))
+    return findings
+
+
 def CheckAbbreviations(paths, declared):
     """ABRV:KEY with a key the list does not have"""
     findings = []
@@ -135,13 +170,16 @@ def main():
     paths = sorted(glob.glob(os.path.join(root, 'definitions', '*.py')))
     declared = DeclaredAbbreviations(os.path.join(root, 'tools', 'generators',
                                                   'examplesDocsEmitter.py'))
-    findings = CheckAbbreviations(paths, declared) + CheckHeadings(paths)
+    known = BibliographyKeys(os.path.join(root, 'docs', 'bibliographyDoc.bib'))
+    findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
+                + CheckCitations(paths, known))
 
     if len(findings) == 0:
         if not args.quiet:
             print('OK: the descriptions of ' + str(len(paths)) + ' definition files use only the '
                   + str(len(declared)) + ' abbreviations that the list has,\n'
-                  '    and write every heading at the level of the page it is placed in.')
+                  '    write every heading at the level of the page it is placed in,\n'
+                  '    and cite only keys of the ' + str(len(known)) + '-entry bibliography.')
         return 0
 
     print('FINDINGS in definitions/ - see definitions/README.md, "Writing a description":')

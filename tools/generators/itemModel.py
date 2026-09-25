@@ -238,7 +238,7 @@ booleanHeaderKeys = set(['writePybindIncludes', 'appendToFile', 'addDictionaryAc
 mangleRules = {'items':      {'all': True, 'keys': set(), 'verbatim': set(['equations',
                                                                            'miniExample'])},
                 'structures': {'all': False, 'verbatim': set(),
-                               'keys': set(['classDescription', 'latexText', 'cppText'])}}
+                               'keys': set(['classDescription', 'sectionText', 'cppText'])}}
 
 BACKSLASH, NEWLINE = chr(92), chr(10)
 

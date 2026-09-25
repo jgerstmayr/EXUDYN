@@ -432,7 +432,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     | `itemDefs*.py` | `equations` | 64 | `itemDocsEmitter.WriteFile` → `ConvertText`, then `NormalizeHeadings` in `itemDocsEmitter.WriteMarkdownPages` |
     | `itemDefs*.py` | `classDescription` | 31 | the same |
     | `itemDefs*.py`, `itemFunctions.py` | `description` of `ItemParameter` / `ItemFunction` | 52 | `autoGenerateHelper.PyLatexRST.ItemInterfaceWriteRow` → `ConvertText`, one table cell |
-    | `structureDefs*.py` | `description`, `classDescription`, `latexText` | 43 | `structureDocsEmitter.StructureDocs` and `PyLatexRST.SystemStructuresWriteDefRow` |
+    | `structureDefs*.py` | `description`, `classDescription`, `sectionText` | 43 | `structureDocsEmitter.StructureDocs` and `PyLatexRST.SystemStructuresWriteDefRow` |
     | `pybind*.py` | `description` | 6 with macros, and **163 non-raw strings with a backslash** | `pybindEmitter` replays the calls onto `PyLatexRST`, whose `AddDocu`, `AddDocuList`, `DefPyFunctionAccess` and `Table3WriteRow` call `ConvertText` |
     | `outputVariableDescriptions.py`, `outputVariableTypes.py`, `enumTypes.py`, `definitionTypes.py` | - | **none** | they carry math only, or no text at all - the output variable table is **already** generated from data, which is the shape RG3.14.4 gives the others |
 
@@ -563,6 +563,14 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       source at that column carries the prefix - the measurement script for this step is the check.
       The 163 become raw literals and readable; the other 25 hold a `$` and no backslash and are
       converted for the rule's sake.
+
+    - **RG3.14.10** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-10) - **the
+      citations, and the field that was called `latexText`.** The 31 `\cite{key}` calls are
+      `[key]`, which is what they already rendered as, so the pages do not move; a citation is
+      checked in the only direction that works, as a **near miss** of a bibliography key, because
+      1228 bracketed tokens in `definitions/` are not citations and twelve of the 100 keys are not
+      shaped like one. And `StructureDefinition.latexText`, which is neither LaTeX nor written in
+      it, is `sectionText`: the heading and the paragraph that open a group of structures.
 
     **What would not work today**, and is either solved inside the step or stated as its boundary:
 

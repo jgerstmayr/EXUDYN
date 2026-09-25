@@ -38,7 +38,7 @@ definitions.append(StructureDefinition(
     cppText=r"""#include "Main/StructuralElementsDataStructures.h"
 #include "Pymodules/PybindUtilities.h"
 """,
-    latexText=r"""
+    sectionText=r"""
 %++++++++++++++++++++++++++++++++++++++
 
 ## Structures for structural elements

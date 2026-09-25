@@ -82,7 +82,7 @@ These are the fields that are descriptions, and all of them are converted the sa
 | `equations` | `ItemDefinition` | the *DESCRIPTION of \<item\>* part of the item page - the long text, with its own headings |
 | `description` | `ItemParameter`, `ItemFunction`, `StructureParameter`, `StructureFunction` | one cell of the parameter table |
 | `description` | the `pb....(...)` calls of the `pybind*.py` files | the text of the Python-C++ interface pages, and the docstring of the function |
-| `latexText` | `StructureDefinition` | the text that introduces a group of structures |
+| `sectionText` | `StructureDefinition` | the heading and the paragraph that open the section a group of structures forms |
 
 `miniExample` is not a description: it is Python, it is run by the test suite, and it is published
 as a code block.
@@ -122,8 +122,12 @@ not in the list below reaches the page as itself and is a defect.
   or a **named figure**; a target above a paragraph resolves in no link at all. A section target
   goes on the line above its heading, `(sec-item-objectground)=`.
 - **A citation** is the key of `docs/bibliographyDoc.bib` in square brackets, written directly:
-  `[ZwoelferGerstmayr2021]`. It becomes a link into the generated references page, and
-  `tools/generators/referencesDocsEmitter.py` reports a key that the bibliography does not have.
+  `[ZwoelferGerstmayr2021]`. `conf.py` appends a Markdown link definition for every key of the
+  bibliography, so the key becomes a link into the generated references page by itself - and a key
+  that is **not** in the bibliography stays plain text, silently. No pattern can tell a key from
+  the other square brackets a description is full of (`[SI:kg]`, `[0,0,0]`), so what
+  `tools/checkDefinitions.py` reports is a **near miss**: a bracketed word that is almost a key.
+  A key that is nothing like one is caught only by reading the page.
 - **A table** is `\startTable{header}{header}{header}` with a `\rowTable{}{}{}` per row and
   `\finishTable` at the end - three columns, always.
 - **A user function** is `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}`, followed

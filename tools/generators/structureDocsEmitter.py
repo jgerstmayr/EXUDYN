@@ -69,7 +69,7 @@ def ReadableDefault(value):
 def StructureDocs(parseInfo, parameterList):
     """returns [Markdown text, parameter changes list]"""
     plr = PyLatexRST()
-    plr.AddDocu(parseInfo['latexText']) #.replace('\\n','\n') #this is the string for latex documentation
+    plr.AddDocu(parseInfo['sectionText']) #.replace('\\n','\n') #this is the string for latex documentation
     
     parameterListSorted = SortedParameters(parameterList)
     hasPybindInterface = HasPybindInterface(parseInfo, parameterList)
@@ -203,7 +203,7 @@ def main():
         if fileName in markdownFileDict:
             markdownFileDict[fileName] += markdownStr
 
-    latexText = """
+    chapterIntro = """
 This section includes the reference manual for structures (such as for solvers, helper structures, etc.)
 and settings which are available in the python interface, e.g., simulation settings, visualization settings.
 The data is auto-generated from the according interfaces in order to keep fully up-to-date with changes.
@@ -224,7 +224,7 @@ The data is auto-generated from the according interfaces in order to keep fully 
 
     written = 0
     indexText = Banner('Structures and Settings')
-    indexText += LatexText2Markdown(latexText).strip() + '\n\n'
+    indexText += LatexText2Markdown(chapterIntro).strip() + '\n\n'
     indexText += '```{toctree}\n:maxdepth: 2\n\n'
 
     for key, value in markdownFileDict.items():

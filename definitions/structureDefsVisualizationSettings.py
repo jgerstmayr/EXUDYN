@@ -39,7 +39,7 @@ definitions.append(StructureDefinition(
     classDescription=r'General settings for visualization that influence all windows, default values, autofit, multithreading, etc.',
     cppText=r"""class VisualizationSettings; //! AUTO: forward declaration for backlink
 """,
-    latexText=r"""
+    sectionText=r"""
 %++++++++++++++++++++++++++++++++++++++
 
 (sec-visualizationsettingsmain)=

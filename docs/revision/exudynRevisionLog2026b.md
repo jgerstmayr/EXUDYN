@@ -2830,3 +2830,42 @@ literal `theDoc.pdf` and now names the section a reader can search for.
 
 The generated pages move by 246 lines, each one a role replaced by the link that resolves to the
 same target - and `exudev docs` under `-W` is what proves all 144 of them resolve.
+
+<a id="rg3-14-10"></a>
+### RG3.14.10 — a citation with no macro, and a field that says what it holds (2026-09-25, #2655)
+
+Two questions from the maintainer, one after the other.
+
+**"A citation needs no macro: so how are macros handled then? can they be checked?"**
+
+The 31 `\cite{key}` calls of `definitions/` are `[ZwoelferGerstmayr2021]` now, and the generated
+pages are **byte-identical** - because `\cite` already rendered as `[key]`, and the link is made by
+`conf.py`, which appends a Markdown link definition for every key of `docs/bibliographyDoc.bib` to
+every document Sphinx reads. So the macro was never doing the work.
+
+It can be checked, but only in one direction, and the measurement says why. A key that **is** in
+the bibliography resolves. A key that is **not** stays plain text and nothing fails - and no
+pattern can tell a citation from the other square brackets a description is full of: measured over
+`definitions/`, **1228 bracketed tokens**, of which `[0,0,0]`, `[SI:kg]`, `[localIndex]` and
+`[exu.JointType.RevoluteZ]` are typical. Twelve of the 100 bibliography keys are not even shaped
+like a key (`pybind11`, `EXUDYNgit`, `coumans2015bullet`), so a shape rule would miss them too.
+
+What can be told apart is a **near miss**. Of the 38 bracketed word-like tokens in `definitions/`,
+30 are keys, and the closest any of the other eight comes to a key is a similarity of **0.59**. A
+cutoff of 0.85 therefore reports a typo - `[ZwoelfrGerstmayr2021]` is 0.98 from
+`[ZwoelferGerstmayr2021]` - and reports nothing else. `checkDefinitions` does that, and says which
+key was probably meant. A key that is nothing like a real one is still caught only by reading the
+page, and `definitions/README.md` says so rather than promising more.
+
+**"The latexText in StructureDefinition: the field name obviously has to change."**
+
+It does: the field is neither LaTeX nor, since RG3.14.2, written in it. It holds the `##` heading
+and the paragraph that open the section a group of structures forms - four of them, one per
+`structureDefs*.py` file. It is **`sectionText`**, in the four files, in the template of
+`structureModel.py` (whose comment said *"text, which will be added before the class description
+(e.g., to start a new section)"* and now says what it holds), in `structureDocsEmitter`, in the
+mangle rules of `itemModel` and in the heading-level table of `checkDefinitions`. The local
+variable in `structureDocsEmitter` that carried the chapter's own introduction was called
+`latexText` too, and is `chapterIntro`.
+
+The regeneration is byte-identical.
