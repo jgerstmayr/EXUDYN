@@ -1760,6 +1760,17 @@ package).
     alone scrolls the tree, so it is `Ctrl` + wheel unless the maintainer prefers otherwise, and on
     macOS that is a different event name than on Windows and X11.
 
+<a id="rg12-8"></a>
+**RG12.8** *(group RG12; maintainer 2026-09-26)* **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-8) -
+    **One test for all user functions at once** (#2671). RG12.4 made one def the source of four
+    generated things - the documentation block, the entry of `userFunctionArgsDict`, the `Protocol`,
+    and the check against the C++ `std::function`. The generators compare them **while they run**;
+    nothing compared what was **shipped**, and the item test models exercise a handful of user
+    functions rather than the set. `python/testing/test_userFunctions.py` reads the installed package
+    only, so it fails when a generated file is stale, when a `Protocol` is missing from `__all__`, or
+    when an argument was renamed in one place and not the other. It runs no simulation: a model per
+    user function is what the test models are, and would be testing the solver.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where

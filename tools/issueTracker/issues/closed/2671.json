@@ -1,0 +1,17 @@
+{
+  "number": 2671,
+  "title": "One test for all user functions at once",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "Every user function is now a Python def in definitions/ (#2664), from which four things are generated: the documentation block, the entries of userFunctionArgsDict, the Protocol in itemInterface.py, and the check against the C++ std::function. Nothing tests that the four agree at runtime, and the item-by-item test models exercise a handful of user functions only. The maintainer asks for one test that covers all of them at once (2026-09-26).",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 01:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing",
+  "releaseNotes": "python/testing/test_userFunctions.py: 41 cases over all 34 (item, user function) pairs, reading only the installed package - every entry names a Protocol the module has and exports, the Protocol takes the registry's argument names in order, no argument is still arg0, the first is mbs of type MainSystem, every Protocol has a docstring, an item class keeps an ordinary function given for its user function, and every type is one the interface exchanges. No simulation: that is what the test models are for.",
+  "resolvedInVersion": "1.12.72"
+}

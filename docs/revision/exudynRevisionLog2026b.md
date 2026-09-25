@@ -3814,3 +3814,33 @@ integration writes.
 output with `OutputFilePath(...)` and never imported it (#2669). It is not in the example suite,
 which is why nothing noticed. One import line; found by running the tutorial to the end, which is
 what adding the monitor to it required.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.8 - one test for all user functions at once (2026-09-26, #2671)
+
+The maintainer, while RG12.4 was being finished: *"ideally there would be a test for all user
+functions at once"*. `python/testing/test_userFunctions.py` is it - **41 test cases, 0.1 seconds**,
+and not one of them runs a simulation.
+
+That is the point of it. A model per user function is what `python/TestModels/` is for, and it tests
+the solver; what had no test at all was whether the **four generated things still agree in the
+installed package**: the entry of `userFunctionArgsDict`, the `Protocol` class, the item class that
+takes the function, and the types the C++ interface exchanges. The generators compare them while they
+run - and a stale generated file, or one hand-edited, is exactly the case a generator cannot see.
+
+What it asserts, over all 34 (item, user function) pairs:
+
+- every entry names a `Protocol` that the module really has, and it is exported in `__all__`;
+- the `Protocol`'s `__call__` takes the argument **names** of the registry, in order, and there are
+  as many types as arguments;
+- no argument is still called `arg0` - the registry filled those in before RG12.4, and a leftover
+  would mean a user function whose def was not read;
+- the first argument is `mbs` of type `MainSystem`, which is what the C++ always passes;
+- every `Protocol` carries a docstring, because that is what an editor shows;
+- an item class **accepts an ordinary function** where its user function is and keeps it, which is
+  the thing an annotation could break by turning into a check;
+- every type in the registry is one of the fourteen the interface exchanges, so a new one cannot
+  arrive unnoticed.
+
+Checked that it bites rather than passes vacuously: renaming one argument in the registry at runtime
+fails `test_protocolAndRegistryAgreeOnTheArguments` with both spellings in the message.

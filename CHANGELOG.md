@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 70 | 1.12.71 |
+| 1.12 | Metheney | 71 | 1.12.72 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.72** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` One test for all user functions at once (#2671)
+  - description: Every user function is now a Python def in definitions/ (\#2664), from which four things are generated: the documentation block, the entries of userFunctionArgsDict, the Protocol in itemInterface.py, and the check against the C++ std::function. Nothing tests that the four agree at runtime, and the item-by-item test models exercise a handful of user functions only. The maintainer asks for one test that covers all of them at once (2026-09-26).
+  - **notes:** python/testing/test\_userFunctions.py: 41 cases over all 34 (item, user function) pairs, reading only the installed package - every entry names a Protocol the module has and exports, the Protocol takes the registry's argument names in order, no argument is still arg0, the first is mbs of type MainSystem, every Protocol has a docstring, an item class keeps an ordinary function given for its user function, and every type is one the interface exchanges. No simulation: that is what the test models are for.
+  - date resolved: **2026-09-26 01:31**, date raised: 2026-09-26
 - **1.12.71** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The results monitor beside a running simulation, in a second process (#2670)
   - description: RG11.1 (\#2610) evaluated the four ways to watch results while a simulation runs and recommended a second process: the solution file is already the protocol, python -m exudyn monitor already exists, nothing is shared so no backend, GIL or thread-safety question arises. MonitorResults blocks until its window closes, which is right in a console and wrong in a script that still has to run the simulation. This is the function that starts the monitor and returns at once.
   - **notes:** StartResultsMonitor(fileName, ...) starts python -m exudyn monitor in a second process and returns at once, so a script can watch its results while it computes them. The child is left running when the script ends, and the returned subprocess.Popen is the handle to stop it; nothing is started when windows are suppressed. Two examples use it, one on a sensor file and one on the coordinates solution (revision2026b step RG11.3).
