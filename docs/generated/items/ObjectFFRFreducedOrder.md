@@ -197,9 +197,7 @@ $$
 $$
 
 but they are implemented in predefined user functions, see `FEM.py`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions). In near future, these terms will be implemented in C++ and replace the user functions.)
-
 Note that in case of Euler parameters for the parameterization of rotations for the reference frame, the Euler parameter constraint equation is added automatically by this object.
-
 The single terms of the mass matrix are defined as[ZwoelferGerstmayr2021]
 
 $$

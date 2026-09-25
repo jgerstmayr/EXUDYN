@@ -2946,3 +2946,39 @@ sentence before it:
 That now reads *"...had different sign to current gap, set"*, the formula, *"while otherwise
 $\varepsilon^n_{PNS}=0$."* Four sentences in `ObjectContactFrictionCircleCable2D` and
 `ObjectGenericODE2` are put right this way.
+
+<a id="rg3-14-6"></a>
+### RG3.14.6 — the two RST switches, and two passes that were working by accident (2026-09-25, #2655)
+
+`\onlyRST{..}` kept its content and `\ignoreRST{..}` dropped it, which made every figure in
+`definitions/` a pair: an RST directive for the build and a LaTeX `figure` environment beside it
+for a PDF that has not been made from these sources since decision D8. **All 13 `\ignoreRST` blocks
+were text that reached no builder** - `grep includegraphics docs/generated` finds nothing - and they
+are deleted. The 11 `\onlyRST` blocks are replaced by what `ConvertRSTFigures` and `ConvertRSTImages
+` produced from them, so the pages keep their figures and the passes have nothing left to convert.
+`ResolveRSTSwitches`, `ConvertRSTFigures`, `ConvertRSTImages`, `LatexRSTFigure` and
+`DropLatexFigures` are gone with them; `latexToMarkdown.py` is 485 lines.
+
+The one pair worth a decision, the kinematic-tree algorithms, was decided by RG3.8.2, which put the
+algorithms into the text as numbered lists. There was no case left for keeping even one switch.
+
+**Two passes turned out to be working by accident, and the second one was hiding lost text.**
+
+`RemoveIndentation2` in `itemDocsEmitter` dedents a description by its **minimum** indentation, and
+it counted a line that is nothing but spaces. Several item descriptions have a stray one-space
+line, so the minimum was **1** where every real line is indented by 4 - the function printed
+`minIndent= 1` on every run, which is the author's own note that something was odd. The text was
+therefore dedented by one, everything downstream was off by three, and `ConvertRSTFigures` only
+worked because it did not care. A blank line has no indentation; it is skipped now.
+
+With the dedent right, `ConvertLists` showed what it had been doing. It collects an item's prose
+into **one** line and puts formulas and sub-blocks after it, so the sentence that explains a result
+was moved in front of the result:
+
+> *"...had different sign to current gap, set while otherwise $\varepsilon^n_{PNS}=0$."*
+
+and in the worst case the text was simply gone: the `PostNewtonStep` algorithm of
+`ObjectContactFrictionCircleCable2D` is seven numbered steps, and the page showed **step 1 and the
+formulas**, with step 2 glued into the parent bullet and steps 3 to 7 nowhere. Prose that follows a
+formula now stays after it. That is the whole of the 11 lines the pages move by: **one line
+replaced and ten restored.**

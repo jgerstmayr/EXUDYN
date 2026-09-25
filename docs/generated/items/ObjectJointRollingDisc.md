@@ -74,7 +74,6 @@ The item VObjectJointRollingDisc has the following parameters:
 #### Geometric relations
 
 The main geometrical setup is shown in the following figure:
-
 First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
 With the helper vector,
 

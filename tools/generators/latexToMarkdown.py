@@ -122,30 +122,6 @@ def StripComments(text):
     return '\n'.join(outLines)
 
 
-def ResolveRSTSwitches(text):
-    """\\onlyRST{..} keeps its content, \\ignoreRST{..} drops it - the LaTeX-only branch dies with
-    the PDF (info document D8)"""
-    text = ReplaceCommand(text, 'onlyRST', 1, lambda a: a)
-    text = ReplaceCommand(text, 'ignoreRST', 1, lambda a: '')
-    return text
-
-
-def DropLatexFigures(text):
-    """A \\begin{figure} .. \\end{figure} environment is the LaTeX half of a figure whose other
-    half is the RST/Markdown one in the \\onlyRST branch - in introduction.tex the tikz pictures
-    are written bare rather than inside \\ignoreRST. They are dropped, and each dropped caption is
-    PRINTED, because a figure that vanishes without a word is exactly the failure this tool must
-    not have. The tikz sources themselves go with step R7.1.9, which
-    replaces them by mermaid."""
-    def Drop(match):
-        caption = re.search(r'\\caption\{(.{0,60})', match.group(0), flags=re.S)
-        print('   dropped LaTeX figure: ' +
-              (caption.group(1).replace(chr(10), ' ') if caption is not None else '(no caption)'))
-        return ''
-
-    return re.sub(r'\\begin\{figure\}(?:\[[^\]]*\])?.*?\\end\{figure\}', Drop, text, flags=re.S)
-
-
 def ConvertSections(text):
     """\\mysectionlabel{T}{l} -> a MyST target plus a heading; the depth follows the macro name"""
     levels = [('mysubsubsubsection', 5), ('mysubsubsection', 4), ('mysubsection', 3),
@@ -189,7 +165,10 @@ def ConvertLists(text):
                 elif line.lstrip()[:2] in ['- ', '1.'] or (len(block) != 0 and line.startswith('  ')):
                     block += ['  ' + line.strip() if not line.startswith('  ') else '  ' + line]
                 elif line.strip() != '':
-                    own += [line.strip()]
+                    #prose AFTER a formula stays after it. Joining it into the item's text line put
+                    #the sentence that explains the result in front of the result, which is how
+                    #"..., set" and "while otherwise $\varepsilon=0$." became one sentence (#2593)
+                    (block if len(block) != 0 else own).append(line.strip())
             lines += [mark + ' ' + ' '.join(own)]
             if len(block) != 0:
                 lines += [''] + block + ['']
@@ -330,55 +309,6 @@ def ImagePath(image):
     return '/' + image
 
 
-def LatexRSTFigure(image, label, texWidth, pixels, caption):
-    """\\LatexRSTfigure{image}{label}{LaTeX width}{pixel width}{caption}: of the two widths only
-    the pixel one survives, the LaTeX one dies with the PDF (info document D8)"""
-    return (chr(10) + '(' + RefLabel(label) + ')=' + chr(10) +
-            '```{figure} ' + ImagePath(image) + chr(10) +
-            ':width: ' + pixels.strip() + chr(10) + chr(10) +
-            ' '.join(caption.split()) + chr(10) + '```' + chr(10))
-
-
-def ConvertRSTFigures(text):
-    """the \\onlyRST branches contain RST directives written by hand; a figure becomes the MyST
-    figure directive, with the label above it as a MyST target"""
-    def Block(match):
-        (label, image, options, caption) = match.groups()
-        lines = ['']
-        if label is not None:
-            lines += ['(' + RefLabel(label) + ')=']
-        lines += ['```{figure} ' + ImagePath(image)]
-        for option in re.findall(r':([a-z]+):\s*(\S+)', options or ''):
-            lines += [':' + option[0] + ': ' + option[1]]
-        lines += ['', caption.strip(), '```', '']
-        return chr(10).join(lines)
-
-    #the RST block may be indented - the description it comes from is indented, and whether that
-    #indentation is still there when this pass runs depends on the caller. Both line starts
-    #therefore allow it, rather than the pass working by accident of a dedent that happened first.
-    pattern = (r'(?m)(?:^[ \t]*\.\.\s+_([^:\n]+):\s*\n)?^[ \t]*\.\.\s+figure::\s*(\S+)\s*\n'
-               r'((?:\s+:[a-z]+:[^\n]*\n)*)\s*\n(\s+[^\n]+)\n')
-    return re.sub(pattern, Block, text)
-
-
-def ConvertRSTImages(text):
-    """The caption-less twin of ".. figure::"; one item description uses it of ".. figure::" and one item description uses it
-    (ObjectConnectorRollingDiscPenalty). Without this it stayed in the page as RST text, which
-    renders as literal ".. image:: docs/figures/..."."""
-    def Block(match):
-        (image, options) = match.groups()
-        lines = ['', '```{figure} ' + ImagePath(image)]
-        for option in re.findall(r':([a-z]+):\s*(\S+)', options or ''):
-            lines += [':' + option[0] + ': ' + option[1]]
-        lines += ['```', '']
-        return chr(10).join(lines)
-
-    newline = chr(10)
-    pattern = (r'\.\.\s+image::\s*(\S+)\s*' + newline
-               + r'((?:\s+:[a-z]+:[^' + newline + r']*' + newline + r')*)')
-    return re.sub(pattern, Block, text)
-
-
 def ConvertInline(text):
     """the one-argument text macros, and the ones that take none"""
     #the brace form of bold and italics, which the item definitions use: {\bf name}
@@ -422,9 +352,6 @@ def ConvertInline(text):
     text = ReplaceCommand(text, 'refSection', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
     text = re.sub(r'\\lbrack(?![A-Za-z])', '[', text)
     text = re.sub(r'\\rbrack(?![A-Za-z])', ']', text)
-    #\LatexRSTfigure{image}{label}{LaTeX width}{pixel width}{caption}: the two widths are for
-    #the two outputs, and only the pixel one survives
-    text = ReplaceCommand(text, 'LatexRSTfigure', 5, LatexRSTFigure)
     for name in ['eqq', 'eqref', 'eqs']:
         text = ReplaceCommand(text, name, 1, lambda a: '{eq}`' + RefLabel(a.strip()) + '`')
     text = ReplaceCommand(text, 'ref', 1, lambda a: '{ref}`' + RefLabel(a.strip()) + '`')
@@ -539,10 +466,6 @@ def ConvertText(text):
     Math is left alone (conf.py declares the macros to MathJax); everything else that the
     project writes in prose is turned into Markdown."""
     text = StripComments(text)
-    text = ResolveRSTSwitches(text)
-    #the item definitions put their figures into the \onlyRST branch, as RST directives
-    text = ConvertRSTFigures(text)
-    text = ConvertRSTImages(text)
     #a listing becomes a fenced block first: its content is code and no later pass may touch it
     text = ConvertListings(text)
     text = ConvertDisplayMath(text)

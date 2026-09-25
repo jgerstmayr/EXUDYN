@@ -2046,106 +2046,40 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note that $\cdot$ for multiplication of matrices and vectors is added for clarity, especially in case of left and right indices.
     The whole algorithm for forward and inverse dynamics is given in the following figures.
     
-    \ignoreRST{
-    \begin{algorithm}
-    \caption{Recursive Newton-Euler algorithm (acc.\ to Featherstone). The symbol '\#' represents comments.}
-    \begin{algorithmic}[1]
-    \REQUIRE RNEA($\qv$, $\dot \qv$, $\mathrm{MotionSubspace}(i)$, $\Xm_{L}$, $\LU{\mathrm{-1}}{\fv}^a_i$, assume $\dot\tPhi_i=0$)
-    \STATE $\vv_{\mathrm{-1}} = \Null$
-    \STATE $\av_{\mathrm{-1}} = -\gv$ \codeComment{\# gravity vector}
-    %
-    \STATE \codeComment{\# loop over $N_B$ bodies:}
-    \FOR{$i=0$ \TO $N_B-1$} 
-        \STATE \codeComment{\# compute forward transformations:}
-        \STATE $\Xm_J(i) = \Xm_{JT}(i, q_i)$
-        \STATE $\LU{i,p(i)}{\Xm} = \Xm_J(i) \, \Xm_{L}(i)$
-        \STATE $\tPhi_i = \mathrm{MotionSubspace}(i)$
-        \IF{$p(i) \neq \mathrm{-1}$}
-            \STATE $\LU{i,\mathrm{-1}}{\Xm} = \LU{i,p(i)}{\Xm} \cdot \LU{p(i),\mathrm{-1}}{\Xm}$
-        \ENDIF
-        \STATE \codeComment{\# compute forward kinematics:}
-        \STATE $\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \eqComma$
-        \STATE $\av_i = \av_{p(i)} + \vv_i \times \tPhi_i \, \dot q_i$ \codeComment{\#$\tPhi_i \, \ddot q_i$ put on RHS}
-        \STATE $\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a_i$
-    \ENDFOR
-    \STATE \codeComment{\#compute inverse dynamics}
-    \FOR{$i=N_B-1$ \TO $0$} 
-        \STATE $\tau_i = \tPhi_i\tp \cdot \fv_i$ \codeComment{\# joint $i$ force (torque)}
-        \IF{$p(i) \neq \mathrm{-1}$}
-            \STATE $\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i$
-        \ENDIF   
-    \ENDFOR
-    \RETURN $\tau$
-    \ENSURE 
-    \end{algorithmic}
-    \end{algorithm}
+     %ignoreRST
+    
 
-    \begin{algorithm}
-    \caption{Composite-rigid-body algorithm (acc.\ to Featherstone). The symbol '\#' represents comments.}
-    \begin{algorithmic}[1]
-    \REQUIRE MassMatrix($\tPhi_i$, $\LU{i,p(i)}{\Xm}$, $\Im_i$)
-    \STATE \codeComment{\# mass matrix:}
-    \STATE $\Mm_0 = \Null$
-    %
-    \FOR{$i=0$ \TO $N_B-1$} 
-        \STATE \codeComment{\# initialise 6D inertia tensors:}
-        \STATE $\Im_i^C = \Im_i$ 
-    \ENDFOR
-    \STATE \codeComment{\#recursively update inertias}
-    \FOR{$i=N_B-1$ \TO $0$} 
-        \STATE \codeComment{\# project inertia into motion subspace:}
-        \STATE $\Fm = \Im_i^C \, \tPhi_i$ 
-        \STATE $\Mm_{ii} = \tPhi_i\tp \, \Fm$ 
-         \IF{$p(i) \neq \mathrm{-1}$}
-            \STATE $\Im_{p(i)}^C \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \cdot \Im_i^C \cdot \LU{i,p(i)}{\Xm}$
-        \ENDIF
-        \STATE $j = i$
-        \STATE \codeComment{\# compute mass matrix terms:}
-        \WHILE{$p(j) \neq \mathrm{-1}$} 
-            \STATE $\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm$
-            \STATE $j = p(j)$
-            \STATE $\Mm_{ij} = \Fm\tp \, \tPhi_i $
-            \STATE $\Mm_{ji} = \Mm_{ij}$
-        \ENDWHILE
-    \ENDFOR
-    \RETURN $\Mm$
-    \ENSURE 
-    \end{algorithmic}
-    \end{algorithm}
-    } %ignoreRST
-    \onlyRST{
+        **Recursive Newton-Euler algorithm** (acc.\ to Featherstone). It returns the joint forces
+        $\tau$ for given $\qv$, $\dot \qv$, $\mathrm{MotionSubspace}(i)$, $\Xm_{L}$ and
+        $\LU{\mathrm{-1}}{\fv}^a_i$, assuming $\dot\tPhi_i=0$:
 
-    **Recursive Newton-Euler algorithm** (acc.\ to Featherstone). It returns the joint forces
-    $\tau$ for given $\qv$, $\dot \qv$, $\mathrm{MotionSubspace}(i)$, $\Xm_{L}$ and
-    $\LU{\mathrm{-1}}{\fv}^a_i$, assuming $\dot\tPhi_i=0$:
+        1. start with $\vv_{\mathrm{-1}} = \Null$ and $\av_{\mathrm{-1}} = -\gv$, the gravity vector.
+        2. **Forward pass** over the $N_B$ bodies, $i=0$ to $N_B-1$: the transformations
+           $\Xm_J(i) = \Xm_{JT}(i, q_i)$, $\LU{i,p(i)}{\Xm} = \Xm_J(i) \, \Xm_{L}(i)$ and
+           $\tPhi_i = \mathrm{MotionSubspace}(i)$, with
+           $\LU{i,\mathrm{-1}}{\Xm} = \LU{i,p(i)}{\Xm} \cdot \LU{p(i),\mathrm{-1}}{\Xm}$ if
+           $p(i) \neq \mathrm{-1}$; then the kinematics
+           $\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i$ and
+           $\av_i = \av_{p(i)} + \vv_i \times \tPhi_i \, \dot q_i$, where $\tPhi_i \, \ddot q_i$ is put
+           on the right hand side; then the forces
+           $\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a_i$.
+        3. **Backward pass**, $i=N_B-1$ down to $0$: the joint force (torque)
+           $\tau_i = \tPhi_i\tp \cdot \fv_i$, and
+           $\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i$ if $p(i) \neq \mathrm{-1}$.
 
-    1. start with $\vv_{\mathrm{-1}} = \Null$ and $\av_{\mathrm{-1}} = -\gv$, the gravity vector.
-    2. **Forward pass** over the $N_B$ bodies, $i=0$ to $N_B-1$: the transformations
-       $\Xm_J(i) = \Xm_{JT}(i, q_i)$, $\LU{i,p(i)}{\Xm} = \Xm_J(i) \, \Xm_{L}(i)$ and
-       $\tPhi_i = \mathrm{MotionSubspace}(i)$, with
-       $\LU{i,\mathrm{-1}}{\Xm} = \LU{i,p(i)}{\Xm} \cdot \LU{p(i),\mathrm{-1}}{\Xm}$ if
-       $p(i) \neq \mathrm{-1}$; then the kinematics
-       $\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i$ and
-       $\av_i = \av_{p(i)} + \vv_i \times \tPhi_i \, \dot q_i$, where $\tPhi_i \, \ddot q_i$ is put
-       on the right hand side; then the forces
-       $\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a_i$.
-    3. **Backward pass**, $i=N_B-1$ down to $0$: the joint force (torque)
-       $\tau_i = \tPhi_i\tp \cdot \fv_i$, and
-       $\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i$ if $p(i) \neq \mathrm{-1}$.
+        **Composite-rigid-body algorithm** (acc.\ to Featherstone). It returns the mass matrix $\Mm$
+        for given $\tPhi_i$, $\LU{i,p(i)}{\Xm}$ and $\Im_i$:
 
-    **Composite-rigid-body algorithm** (acc.\ to Featherstone). It returns the mass matrix $\Mm$
-    for given $\tPhi_i$, $\LU{i,p(i)}{\Xm}$ and $\Im_i$:
+        1. start with $\Mm_0 = \Null$ and the 6D inertia tensors $\Im_i^C = \Im_i$ for every body.
+        2. **Recursively update the inertias**, $i=N_B-1$ down to $0$: project the inertia into the
+           motion subspace, $\Fm = \Im_i^C \, \tPhi_i$ and $\Mm_{ii} = \tPhi_i\tp \, \Fm$; add it to
+           the parent, $\Im_{p(i)}^C \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \cdot \Im_i^C \cdot \LU{i,p(i)}{\Xm}$,
+           if $p(i) \neq \mathrm{-1}$.
+        3. **The mass matrix terms** of the same pass: with $j=i$, while $p(j) \neq \mathrm{-1}$, set
+           $\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm$, $j = p(j)$, $\Mm_{ij} = \Fm\tp \, \tPhi_i$ and
+           $\Mm_{ji} = \Mm_{ij}$.
 
-    1. start with $\Mm_0 = \Null$ and the 6D inertia tensors $\Im_i^C = \Im_i$ for every body.
-    2. **Recursively update the inertias**, $i=N_B-1$ down to $0$: project the inertia into the
-       motion subspace, $\Fm = \Im_i^C \, \tPhi_i$ and $\Mm_{ii} = \tPhi_i\tp \, \Fm$; add it to
-       the parent, $\Im_{p(i)}^C \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \cdot \Im_i^C \cdot \LU{i,p(i)}{\Xm}$,
-       if $p(i) \neq \mathrm{-1}$.
-    3. **The mass matrix terms** of the same pass: with $j=i$, while $p(j) \neq \mathrm{-1}$, set
-       $\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm$, $j = p(j)$, $\Mm_{ij} = \Fm\tp \, \tPhi_i$ and
-       $\Mm_{ji} = \Mm_{ij}$.
 
-    }
 
     #### Implementation and user functions
 
@@ -3139,22 +3073,15 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The notation of kinematics quantities follows the floating frame of reference idea with
     quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
     %++++++++++++++++++++++++
-    \ignoreRST{
-    \begin{figure}[tbph]
-      \begin{center}
-      \includegraphics[width=8cm]{figures/ObjectFFRFsketch.pdf}
-      \end{center}
-      \caption{Floating frame of reference with exemplary position of a mesh node $i$.}
-        (fig-objectffrfreducedorder-mesh)=
-    \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectffrfreducedorder-mesh:
-    .. figure:: docs/figures/ObjectFFRFsketch.png
-       :width: 400
+    
 
-       Floating frame of reference with exemplary position of a mesh node *i* 
-    }
+    (fig-objectffrfreducedorder-mesh)=
+    ```{figure} /docs/figures/ObjectFFRFsketch.png
+    :width: 400
+
+    Floating frame of reference with exemplary position of a mesh node *i*
+    ```
+
     %++++++++++++++++++++++++
 
                        
@@ -7909,25 +7836,15 @@ definitions.append(ItemDefinition(
     simple reeving systems in 3D.
     
     %++++++++++++++++++++++++
-    \ignoreRST{
-    \begin{figure}[tbph]
-      \begin{center}
-      \includegraphics[width=10cm]{figures/CommonTangents3D.pdf}
-      \end{center}
-      \caption{Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the 
-      normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the 
-      vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the 
-      angular velocities $\omega_A$ and $\omega_B$.}
-        (fig-reevingsystemsprings-tangents)=
-    \end{figure}
-    }
-    \onlyRST{
-    .. _fig-reevingsystemsprings-tangents:
-    .. figure:: docs/figures/CommonTangents3D.png
-       :width: 500
+    
 
-       Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.
-    }
+    (fig-reevingsystemsprings-tangents)=
+    ```{figure} /docs/figures/CommonTangents3D.png
+    :width: 500
+
+    Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.
+    ```
+
     %++++++++++++++++++++++++
 
     #### Common tangent of two circles in 3D
@@ -8872,16 +8789,13 @@ definitions.append(ItemDefinition(
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
-    \ignoreRST{
-    \begin{center}
-        \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
-    \end{center}
-    }
-    \onlyRST{
-    .. image:: docs/figures/ObjectJointRollingDiscSketch.png
-       :width: 600
+    
 
-    }
+    ```{figure} /docs/figures/ObjectJointRollingDiscSketch.png
+    :width: 600
+    ```
+
+
     First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
     With the helper vector,
 
@@ -9261,22 +9175,15 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     $$ (eq-fpencontact)
 
     acts against the penetration of the ground. The penetration depth $z_{\mathrm{pen}}$ is the z-component of the position vector of the contact point relative to the ground frame ${^0\pv_{\mathrm{C}}}$. 
-    \ignoreRST{
-    \begin{figure}[tbph]
-    \begin{center}
-            \includegraphics[width=10cm]{figures/ConvexRolling.pdf}
-            \caption{Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.}
-            (fig-objectcontactconvexroll-sketch)=
-    \end{center}
-    \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectcontactconvexroll-sketch:
-    .. figure:: docs/figures/ConvexRolling.png
-       :width: 600
+    
 
-       Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.
-    }
+    (fig-objectcontactconvexroll-sketch)=
+    ```{figure} /docs/figures/ConvexRolling.png
+    :width: 600
+
+    Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.
+    ```
+
 
     \noindent
     The revolution results in a velocity of 
@@ -9739,26 +9646,15 @@ definitions.append(ItemDefinition(
     %\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
     \finishTable
     %++++++++++++++++++++++++
-    \ignoreRST{
-    \begin{figure}[tbph]
-      \begin{center}
-      \includegraphics[width=12cm]{figures/ContactFrictionCircleCable2D.pdf}
-      \end{center}
-      \caption{Sketch of cable, contact segments and circle; showing case without contact, $|\dv_{g1}| > r$, 
-               while contact occurs with $|\dv_{g1}| \le r$; the shortest distance vector $\dv_{g1}$
-               is related to segment $s_1$ (which is perpendicular to the the segment line) and 
-               $\dv_{g2}$ is the shortest distance to the end point of segment $s_2$, not being
-               perpendicular.}
-        (fig-objectcontactfrictioncirclecable2d-sketch)=
-    \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectcontactfrictioncirclecable2d-sketch:
-    .. figure:: docs/figures/ContactFrictionCircleCable2D.*
-       :width: 600
+    
 
-       Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
-    }
+    (fig-objectcontactfrictioncirclecable2d-sketch)=
+    ```{figure} /docs/figures/ContactFrictionCircleCable2D.*
+    :width: 600
+
+    Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
+    ```
+
     %+++++++++++++++++++++++++++++++++++++++++++++++
 
     #### Connector forces: contact geometry
@@ -9890,22 +9786,15 @@ definitions.append(ItemDefinition(
     For a simple 1D example using this position based approach for friction, see \texttt{Examples/lugreFrictionText.py}, 
     which compares the traditional LuGre friction model [CITE:CanudasDeWitEtAl1993] with the position based model with tangential stiffness. 
     %++++++++++++++++++++++++
-    \ignoreRST{
-    \begin{figure}[tbph]
-      \begin{center}
-      \includegraphics[width=8cm]{figures/ContactFrictionCircleCable2DstickingPos.pdf}
-      \end{center}
-      \caption{Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.}
-        (fig-objectcontactfrictioncirclecable2d-stickingpos)=
-    \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectcontactfrictioncirclecable2d-stickingpos:
-    .. figure:: docs/figures/ContactFrictionCircleCable2DstickingPos.*
-       :width: 600
+    
 
-       Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.
-    }
+    (fig-objectcontactfrictioncirclecable2d-stickingpos)=
+    ```{figure} /docs/figures/ContactFrictionCircleCable2DstickingPos.*
+    :width: 600
+
+    Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.
+    ```
+
     %++++++++++++++++++++++++
     
     Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
@@ -10134,23 +10023,15 @@ definitions.append(ItemDefinition(
     We distinguish two cases SN and PWN. If \texttt{useSegmentNormals==True}, we use the SN case, while otherwise the PWN case is used, 
     compare [](#fig-objectcontactfrictioncirclecable2d-normals).
     %++++++++++++++++++++++++
-    \ignoreRST{
-    \begin{figure}[tbph]
-      \begin{center}
-      \includegraphics[width=16cm]{figures/ContactFrictionCircleCable2Dnormals.pdf}
-      \end{center}
-      \caption{Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; 
-      note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.}
-        (fig-objectcontactfrictioncirclecable2d-normals)=
-    \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectcontactfrictioncirclecable2d-normals:
-    .. figure:: docs/figures/ContactFrictionCircleCable2Dnormals.*
-       :width: 700
+    
 
-       Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.
-    }
+    (fig-objectcontactfrictioncirclecable2d-normals)=
+    ```{figure} /docs/figures/ContactFrictionCircleCable2Dnormals.*
+    :width: 700
+
+    Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.
+    ```
+
     %++++++++++++++++++++++++
     
     Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
@@ -10390,22 +10271,15 @@ definitions.append(ItemDefinition(
     \item tangential force due to a regularized friction law to model dry friction between the spheres; this type of force creates a torque acting on the spheres and is computed independently of the chosen impact model if $\mu_d\neq0$ is set. Note that in the implemented model, rolling deformations are not considered, i.e. the friction is only a function of the relative tangential velocity between the spheres at the contact point.
     \ei
 
-    \ignoreRST{
-        \begin{figure}[tbph]
-            \begin{center}
-                \includegraphics[width=8cm]{figures/SphereSphereContact.pdf}
-            \end{center}
-            \caption{Two spheres that are in contact. For illustration, a force due to the overlap $\delta$ acting in the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity. The respective opposing forces are imprinted on marker 0.}
-            (fig-objectspherespherecontact)=
-        \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectspherespherecontact:
-    .. figure:: docs/figures/SphereSphereContact.png
-        :width: 400
-        
-        Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
-    }
+    
+
+    (fig-objectspherespherecontact)=
+    ```{figure} /docs/figures/SphereSphereContact.png
+    :width: 400
+
+    Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
+    ```
+
     Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure [](#fig-objectspherespherecontact) the sphere sphere and in Figure [](#fig-objectspherehollowspherecontact) the sphere hollowsphere contact case are shown.
 
     For the following, the gap $g$ between the two spheres is computed as
@@ -10447,22 +10321,15 @@ definitions.append(ItemDefinition(
     $$ (eq-ossctangentialvelocity)
 
 
-    \ignoreRST{
-        \begin{figure}[tbph]
-            \begin{center}
-                \includegraphics[width=8cm]{figures/SphereHollowsphereContact.pdf}
-            \end{center}
-            \caption{One sphere and one hollowsphere that are in contact. For illustration, a force due to the overlap $\delta$ acting against the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity.}
-            (fig-objectspherehollowspherecontact)=
-        \end{figure}
-    }
-    \onlyRST{
-    .. _fig-objectspherehollowspherecontact:
-    .. figure:: docs/figures/SphereHollowsphereContact.png
-        :width: 400
-        
-        One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.
-    }
+    
+
+    (fig-objectspherehollowspherecontact)=
+    ```{figure} /docs/figures/SphereHollowsphereContact.png
+    :width: 400
+
+    One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.
+    ```
+
 
     To take the angular velocity of the spheres into account, the velocities $\LU{0}{\vv}_{a0}$ and $\LU{0}{\vv}_{a1}$ at the contact point are computed using Euler's theorem for kinematics:
 
@@ -12142,11 +12009,6 @@ definitions.append(ItemDefinition(
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
-    \ignoreRST{
-    \begin{center}
-        \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
-    \end{center}
-    }
     First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
     With the helper vector,
 
@@ -13134,15 +12996,6 @@ definitions.append(ItemDefinition(
     $$
 
     %
-    \ignoreRST{
-    \begin{figure}[tbh]
-        (fig-objectjointalemoving2d)=
-        \begin{center}
-            \includegraphics[height=4cm]{figures/ObjectJointALEmoving2D.pdf}
-        \end{center}
-        \caption{Geometrical relations for ALE sliding joint.}
-    \end{figure}
-    }
     %+++++++++++++++++++++++++++++++++++++++++++++
 
     #### Connector constraint equations

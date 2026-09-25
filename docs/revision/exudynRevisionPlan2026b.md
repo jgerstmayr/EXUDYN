@@ -526,7 +526,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       share a signature and mean different things by it, and the argument and return descriptions
       are what say so. What the step does remove is duplication **inside** one item: a user
       function is documented once per item.
-    - **RG3.14.6** - **the two RST switches go.** `latexToMarkdown.ResolveRSTSwitches` keeps what
+    - **RG3.14.6** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-6) - **the two RST switches go.** `latexToMarkdown.ResolveRSTSwitches` keeps what
       `\onlyRST` holds and **drops what `\ignoreRST` holds**, and `grep includegraphics
       docs/generated/` finds nothing: all 13 `\ignoreRST` blocks are **dead text that reaches no
       builder**, because the PDF is built by Sphinx from the same Markdown since RG3.3 (D17). Ten

@@ -69,17 +69,20 @@ def RemoveIndentation2(text, addSpaces = '', removeAllSpaces = True, removeInden
         del lines[-1]
     
     if not removeAllSpaces:
+        #a line that is nothing but spaces has no indentation: counting it made the minimum the
+        #length of the shortest stray blank line - one space in several item descriptions - so the
+        #text was dedented by one and everything that depends on the indentation was off (#2655)
         minIndent = 10000
         for line in lines:
-            if line != '':
+            if line.strip() != '':
                 nSpaces = len(line)-len(line.lstrip(' '))
                 minIndent=min(minIndent, nSpaces)
-        
+        if minIndent == 10000:
+            minIndent = 0
+
         if removeIndentation:
             for i, line in enumerate(lines):
                 lines[i] = line[minIndent:]
-        if minIndent < 4:
-            print('minIndent=', minIndent)
     else:
         for i, line in enumerate(lines):
             lines[i] = line.lstrip()

@@ -207,7 +207,6 @@ $$
 Note that the `verticalOffset` from the cable center line, as defined in the related `MarkerBodyCable2DShape`,
 influences the behavior significantly, which is why we recommend to use `verticalOffset=0` whenever this is an
 appropriate assumption.
-
 Thus, the current sticking position $x_{curStick}$ is computed per segment as
 
 $$
@@ -270,18 +269,22 @@ $x_{isSlipStick}$ defines the stick or slip case,
 The basic algorithm in the `PostNewtonStep`, with all operations given for any segment $s_i$, can be summarized as follows:
 
 - Evaluate gap per segment $g$ using [](#objectcontactfrictioncirclecable2d-gap) and store in data variable: $x_{gap} = g$
-- If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$): 2. Compute current sticking position $x_{curStick}$ according to [](#objectcontactfrictioncirclecable2d-lastcurstick) (terms are only evaluated if $\mu_k \neq 0$) 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$): 4. Compute linear tangential force for friction stiffness and velocity penalty: 5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$): 6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already, 7. In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
+- If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
 
 1. Compute contact force $f_n$ according to [](#objectcontactfrictioncirclecable2d-contactforce)
+2. Compute current sticking position $x_{curStick}$ according to [](#objectcontactfrictioncirclecable2d-lastcurstick) (terms are only evaluated if $\mu_k \neq 0$)
+3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$):
 $$
 \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
 \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
 $$
 
+4. Compute linear tangential force for friction stiffness and velocity penalty:
 $$
 f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 $$
 
+5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$):
 $$
 f_t =
 \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad
@@ -290,13 +293,16 @@ f_t =
 \end{cases}
 $$
 
+6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already,
 $$
 x_{lastStick} = x_{curStick} - \mathrm{Sign}(\Delta x_{stick}) \frac{\mu \cdot |f_n|}{\mu_k}, \quad
 x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
 $$
 
+7. In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
+
 - If $x_{gap} > 0$ or ($\mu_v == 0$ and $\mu_k == 0$), we set $x_{isSlipStick} = -2$ (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
-- Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`: 2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set
+- Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`:
 
 1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set
 $$
@@ -304,6 +310,7 @@ $$
 $$
 while otherwise $\varepsilon^n_{PNS}=0$.
 
+2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set
 $$
 \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
 $$
