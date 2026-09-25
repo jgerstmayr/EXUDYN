@@ -37,7 +37,7 @@ definitions.append(StructureDefinition(
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r"""PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \\ 
- \texttt{solver = MainSolverStatic()} \\ 
+ `solver = MainSolverStatic()` \\ 
 and hereafter you can access all data and functions via 'solver'.""",
     parentClass='MainSolverBase',
     writePybindIncludes=True,
@@ -322,7 +322,7 @@ definitions.append(StructureDefinition(
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r"""PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \\ 
- \texttt{solver = MainSolverImplicitSecondOrder()} \\ 
+ `solver = MainSolverImplicitSecondOrder()` \\ 
 and hereafter you can access all data and functions via 'solver'.
  In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction...(...), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.""",
     parentClass='MainSolverBase',
@@ -696,7 +696,7 @@ definitions.append(StructureDefinition(
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r"""PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write \\ 
- \texttt{solver = MainSolverExplicit()} \\ 
+ `solver = MainSolverExplicit()` \\ 
 and hereafter you can access all data and functions via 'solver'.
  In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme ...).""",
     parentClass='MainSolverBase',

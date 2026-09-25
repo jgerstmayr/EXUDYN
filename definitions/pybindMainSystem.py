@@ -34,7 +34,7 @@ pb = PybindInterface()
 pb.CreateNewRSTfile('MainSystem')
 classStr = 'MainSystem'
 pb.DefPyStartClass(classStr, classStr, 
-                    r"""MainSystem is the class which defines a (multibody) system and it's instance if usually called \texttt{mbs}. Interactions with the system are done via MainSystem, either through, e.g., \texttt{mbs.AddObject(...)} or with create functions, such as \texttt{mbs.CreateRigidBody(...)}; States are accessible via \texttt{mbs.systemData}. The MainSystem shall only be created from a SystemContainer \texttt{SC} using \texttt{SC.AddSystem()}; do not use \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. Having already a valid \texttt{mbs}, you may use \texttt{SC.Append(mbs).} """,
+                    r"""MainSystem is the class which defines a (multibody) system and it's instance if usually called `mbs`. Interactions with the system are done via MainSystem, either through, e.g., `mbs.AddObject(...)` or with create functions, such as `mbs.CreateRigidBody(...)`; States are accessible via `mbs.systemData`. The MainSystem shall only be created from a SystemContainer `SC` using `SC.AddSystem()`; do not use `exu.MainSystem()`, as the latter one would not be linked to a SystemContainer. Having already a valid `mbs`, you may use `SC.Append(mbs).` """,
                     forbidPythonConstructor=False)
 
 pb.AddDocu(
@@ -320,7 +320,7 @@ pb.DefLatexFinishTable()#only finalize latex table
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create extensions
-pb.DefLatexStartClass('MainSystem extensions (create)',r"""This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.misc.mainSystemExtensions} or \texttt{exudyn.utilities}""", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
+pb.DefLatexStartClass('MainSystem extensions (create)',r"""This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu           
@@ -341,7 +341,7 @@ pb.ExtensionMarkdown('MainSystemCreateExt') #written by tools/generators/mainSys
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #function extensions
-pb.DefLatexStartClass('MainSystem extensions (general)',r"""This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.misc.mainSystemExtensions} or \texttt{exudyn.utilities}""", subSection=True,labelName='sec:mainsystem:pythonExtensions')
+pb.DefLatexStartClass('MainSystem extensions (general)',r"""This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensions')
 
 pb.AddDocuCodeBlock(code="""
 #this example sketches the usage 

@@ -28,7 +28,7 @@ symbolicModule = PybindInterface()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pb.CreateNewRSTfile('Symbolic')
 
-pb.AddDocu(r"""The Symbolic sub-module in \texttt{exudyn.symbolic} allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, \mybold{always veryfy your symbolic expressions or user functions}, as behavior may be unexpected in some cases. """,
+pb.AddDocu(r"""The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, \mybold{always veryfy your symbolic expressions or user functions}, as behavior may be unexpected in some cases. """,
             section='Symbolic', sectionLevel=1,sectionLabel='sec:cinterface:symbolic')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -40,7 +40,7 @@ classStr = 'Symbolic::SReal'
 
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-symbolicModule.AddDocu(r"""The symbolic Real type allows to replace Python's float by a symbolic quantity. The \texttt{symbolic.Real} may be directly set to a float and be evaluated as float. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
+symbolicModule.AddDocu(r"""The symbolic Real type allows to replace Python's float by a symbolic quantity. The `symbolic.Real` may be directly set to a float and be evaluated as float. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
 symbolicModule.AddDocuCodeBlock(code="""
@@ -80,7 +80,7 @@ y = x/3.       #directly evaluates to 14
 esym.SetRecording(True)
 """)
 
-symbolicModule.AddDocu(r"""To create a symbolic Real, use \texttt{aa=symbolic.Real(1.23)} to build a Python object aa with value 1.23. In order to use a named value, use \texttt{pi=symbolic.Real('pi',3.14)}. Note that in the following, we use the abbreviation \texttt{SymReal=exudyn.symbolic.Real}. Member functions of \texttt{SymReal}, which are \mybold{not recorded}, are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are \mybold{not recorded}, are:""")
 
 symbolicModule.DefLatexStartTable(pyClassStr)
 
@@ -135,7 +135,7 @@ symbolicModule.DefLatexOperator('__repr__','representation of symbolic.Real in P
 symbolicModule.DefLatexFinishTable()#only finalize latex table
 
 
-symbolicModule.AddDocu(r"""The remaining operators and mathematical functions are recorded within expressions. Main mathematical operators for \texttt{SymReal} exist, similar to Python, such as:""")
+symbolicModule.AddDocu(r"""The remaining operators and mathematical functions are recorded within expressions. Main mathematical operators for `SymReal` exist, similar to Python, such as:""")
 
 symbolicModule.AddDocuCodeBlock(code="""
 a = SymReal(1)
@@ -165,7 +165,7 @@ c = (a >= b)
 c = a*7 + SymReal.sin(8)
 """)
 
-symbolicModule.AddDocu(r"""Mathematical functions may be called with an \texttt{SymReal} or with a \texttt{float}. Most standard mathematical functions exist for \texttt{symbolic}, e.g., as \texttt{symbolic.abs}. \mybold{HINT}: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:""")
+symbolicModule.AddDocu(r"""Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. \mybold{HINT}: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:""")
 
 symbolicModule.StubCode('\n#functions directly in symbolic module:\n')
 
@@ -196,7 +196,7 @@ symbolicModule.DefLatexFinishTable()#only finalize latex table
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-symbolicModule.AddDocu(r"""The following table lists special functions for \texttt{SymReal}: """)
+symbolicModule.AddDocu(r"""The following table lists special functions for `SymReal`: """)
 
 symbolicModule.DefLatexStartTable(pyClassStr)
 
@@ -275,7 +275,7 @@ classStr = 'Symbolic::SymbolicRealVector'
 
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The \texttt{symbolic.Vector} may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
+symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The `symbolic.Vector` may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
 symbolicModule.AddDocuCodeBlock(code="""
@@ -310,7 +310,7 @@ print('v1*v2: ',v1*v2,"=",(v1*v2).Evaluate()) #evaluate as Real
 print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 """)
 
-symbolicModule.AddDocu(r"""To create a symbolic Vector, use \texttt{aa=symbolic.Vector([3,4.2,5]} to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \texttt{v=symbolic.Vector('myVec',[3,4.2,5])}. Vectors can be also created from mixed symbolic expressions and numbers, such as \texttt{v=symbolic.Vector([x,x**2,3.14])}, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation \texttt{SymVector=exudyn.symbolic.Vector}. Note that only functions are able to be recorded. Member functions of \texttt{SymVector} are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
 
 symbolicModule.DefLatexStartTable(pyClassStr)
 
@@ -393,7 +393,7 @@ symbolicModule.DefLatexOperator('__repr__','representation of SymVector in Pytho
 symbolicModule.DefLatexFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-symbolicModule.AddDocu(r"""Standard vector operators are available for \texttt{SymVector}, see the following examples:""")
+symbolicModule.AddDocu(r"""Standard vector operators are available for `SymVector`, see the following examples:""")
 
 symbolicModule.AddDocuCodeBlock(code="""
 v = SymVector([1,3,2])
@@ -420,7 +420,7 @@ classStr = 'Symbolic::SymbolicRealMatrix'
 
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The \texttt{symbolic.Matrix} may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
+symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The `symbolic.Matrix` may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
 symbolicModule.AddDocuCodeBlock(code="""
@@ -451,7 +451,7 @@ print('m2: ',m2)
 
 """)
 
-symbolicModule.AddDocu(r"""To create a symbolic Matrix, use \texttt{aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]} to build a Python object aa. In order to use a named matrix, use \texttt{v=symbolic.Matrix('myMat',[3,4.2,5])}. Matrixs can be also created from mixed symbolic expressions and numbers, such as \texttt{v=symbolic.Matrix([x,x**2,3.14])}, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation \texttt{SymMatrix=exudyn.symbolic.Matrix}. Member functions of \texttt{SymMatrix} are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:""")
 
 symbolicModule.DefLatexStartTable(pyClassStr)
 
@@ -532,7 +532,7 @@ symbolicModule.DefLatexOperator('__repr__','representation of SymMatrix in Pytho
 symbolicModule.DefLatexFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-symbolicModule.AddDocu(r"""Standard Matrix operators are available for \texttt{SymMatrix}, see the following examples:""")
+symbolicModule.AddDocu(r"""Standard Matrix operators are available for `SymMatrix`, see the following examples:""")
 
 symbolicModule.AddDocuCodeBlock(code="""
 m1 = SymMatrix([[1,7],[4,5]])

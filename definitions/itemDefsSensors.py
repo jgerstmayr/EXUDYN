@@ -528,7 +528,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeSensor,
     equations=r"""    The sensor collects data via a user function, which completely describes the output itself.
     Note that the sensorNumbers and factors need to be consistent. 
-    The return value of the user function is a list of \texttt{float} numbers which cast to a \texttt{std::vector} in pybind.
+    The return value of the user function is a list of `float` numbers which cast to a `std::vector` in pybind.
     This list can have arbitrary dimension, but should be kept constant during simulation.
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     **Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
@@ -539,11 +539,11 @@ definitions.append(ItemDefinition(
 
     | arguments /  return | type or size | description |
     |---|---|---|
-    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which object belongs |
-    | \texttt{t} | Real | current time in mbs |
-    | \texttt{sensorNumbers} | Array $\in \Ncal^n$ | list of sensor numbers |
-    | \texttt{factors} | Vector $\in \Rcal^n$ | list of factors that can be freely used for the user function |
-    | \texttt{configuration} | exudyn.ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
+    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
+    | `t` | Real | current time in mbs |
+    | `sensorNumbers` | Array $\in \Ncal^n$ | list of sensor numbers |
+    | `factors` | Vector $\in \Rcal^n$ | list of factors that can be freely used for the user function |
+    | `configuration` | exudyn.ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
     | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->

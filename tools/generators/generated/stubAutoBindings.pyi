@@ -1319,21 +1319,21 @@ def DoRendererIdleTasks(waitSeconds=0, deprecationWarning=True) -> None:
     ...
 @overload
 def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), updateInitialValues=False, storeSolver=True) -> bool: 
-    r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvestatic; for background on solvers, see sec-solvers."""
+    """DEPRECATED; Static solver function, mapped from module `solver`, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvestatic; for background on solvers, see sec-solvers."""
     ...
 @overload
 def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), solverType: DynamicSolverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True) -> bool: 
-    r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvedynamic; for background on solvers, see sec-solvers."""
+    """DEPRECATED; Dynamic solver function, mapped from module `solver`, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvedynamic; for background on solvers, see sec-solvers."""
     ...
 @overload
 def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: 
-    r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see sec-mainsystemextensions-computeode2eigenvalues."""
+    """DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module `solver`; for details on the Python interface see sec-mainsystemextensions-computeode2eigenvalues."""
     ...
 @overload
 def RequireVersion(requiredVersionString: str) -> None: 
-    r"""Checks if the installed version is according to the required version.
+    """Checks if the installed version is according to the required version.
     
-    Major, micro and minor version must agree the required level. This function is defined in the \texttt{__init__.py} file
+    Major, micro and minor version must agree the required level. This function is defined in the `__init__.py` file
     
     Examples:
         exu.RequireVersion("1.0.31")
@@ -1341,7 +1341,7 @@ def RequireVersion(requiredVersionString: str) -> None:
     ...
 @overload
 def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False, flagFlushAlways=False) -> None: 
-    r"""Set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;.
+    """Set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write `exu.SetWriteToFile('', False)` to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;.
     
     Examples:
         exudyn.config.printToConsole = False #no output to console

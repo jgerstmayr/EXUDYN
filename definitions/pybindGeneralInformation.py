@@ -36,31 +36,31 @@ import exudyn as exu
 """)
 
 #pb.AddDocuList(itemList=['\\texttt{import exudyn as exu}'], itemText='[]')
-pb.AddDocu(r"""For compatibility with examples and other users, we recommend to use the \texttt{exu} abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:""")
+pb.AddDocu(r"""For compatibility with examples and other users, we recommend to use the `exu` abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:""")
 pb.AddDocuCodeBlock(code="""
 from exudyn.itemInterface import *
 """)
 #pb.AddDocuList(itemList=['\\texttt{from exudyn.itemInterface import *}'], itemText='[]')
-pb.AddDocu(r"""Note that including \texttt{exudyn.utilities} will cover \texttt{itemInterface}. Also note that \texttt{from ... import *} is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.""")
+pb.AddDocu(r"""Note that including `exudyn.utilities` will cover `itemInterface`. Also note that `from ... import *` is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.""")
 
-pb.AddDocu(r"""The general hub to multibody dynamics models is provided by the classes \texttt{SystemContainer} and \texttt{MainSystem}, except for some very basic system functionality (which is inside the Exudyn module). 
+pb.AddDocu(r"""The general hub to multibody dynamics models is provided by the classes `SystemContainer` and `MainSystem`, except for some very basic system functionality (which is inside the Exudyn module). 
 
-You can create a new \texttt{SystemContainer}, which is a class that is initialized by assigning a system container to a variable, usually denoted as \texttt{SC}:""")
+You can create a new `SystemContainer`, which is a class that is initialized by assigning a system container to a variable, usually denoted as `SC`:""")
 pb.AddDocuCodeBlock(code="""
 SC = exu.SystemContainer()
 """)
 #pb.AddDocuList(itemList=['\\texttt{SC = exu.SystemContainer()}'], itemText='[]')
-pb.AddDocu(r"""Note that creating a second \texttt{exu.SystemContainer()} will be independent of \texttt{SC} and therefore makes no sense if you do not intend to work with two different containers.
+pb.AddDocu(r"""Note that creating a second `exu.SystemContainer()` will be independent of `SC` and therefore makes no sense if you do not intend to work with two different containers.
 """)
 
-pb.AddDocu(r"""To add a MainSystem to system container \texttt{SC} and store as variable \texttt{mbs}, write:""")
+pb.AddDocu(r"""To add a MainSystem to system container `SC` and store as variable `mbs`, write:""")
 
 pb.AddDocuCodeBlock(code="""
 mbs = SC.AddSystem()
 """)
 #pb.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
 
-pb.AddDocu(r"""Furthermore, there are a couple of commands available directly in the \texttt{exudyn} module, given in the following subsections. Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see these examples:""")
+pb.AddDocu(r"""Furthermore, there are a couple of commands available directly in the `exudyn` module, given in the following subsections. Regarding the \mybold{(basic) module access}, functions are related to the `exudyn = exu` module, see these examples:""")
 
 pb.AddDocuCodeBlock(code="""
 #  import exudyn module:
@@ -78,7 +78,7 @@ exu.demos.Demo1()
 exu.demos.Demo2()
 """)
 
-pb.AddDocu(r"""Understanding the usage of functions for python object \texttt{SystemContainer} of the module \texttt{exudyn}, the following examples might help:""")
+pb.AddDocu(r"""Understanding the usage of functions for python object `SystemContainer` of the module `exudyn`, the following examples might help:""")
 pb.AddDocuCodeBlock(code="""
 #import exudyn module:
 import exudyn as exu
@@ -99,33 +99,33 @@ del mbs, mbs2
 #  reset system container (mbs becomes invalid):
 SC.Reset()
 """)
-pb.AddDocu(r"""If you run a parameter variation (check \texttt{Examples/parameterVariationExample.py}), you may reset or delete the created \texttt{MainSystem} \texttt{mbs} and the \texttt{SystemContainer} \texttt{SC} before creating new instances in order to avoid memory growth.""")
+pb.AddDocu(r"""If you run a parameter variation (check `Examples/parameterVariationExample.py`), you may reset or delete the created `MainSystem` `mbs` and the `SystemContainer` `SC` before creating new instances in order to avoid memory growth.""")
 
 #+++++++++++++++++++++++++++++++++++
 #ITEMINDEX
-pb.AddDocu(r"""Many functions will work with node numbers (\texttt{NodeIndex}), object numbers (\texttt{ObjectIndex}),marker numbers (\texttt{MarkerIndex}) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers. 
+pb.AddDocu(r"""Many functions will work with node numbers (`NodeIndex`), object numbers (`ObjectIndex`),marker numbers (`MarkerIndex`) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers. 
 
-For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}. For these indices, the following rules apply:""",
+For example, the command `mbs.AddNode(...)` returns a `NodeIndex`. For these indices, the following rules apply:""",
                 section='Item index', sectionLevel=2,sectionLabel='sec:itemIndex')
 pb.AddDocuList(itemList=[
-r"""\texttt{mbs.Add[Node|Object|...](...)} returns a specific \texttt{NodeIndex}, \texttt{ObjectIndex}, ...""",
-r"""You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}""",
+r"""`mbs.Add[Node|Object|...](...)` returns a specific `NodeIndex`, `ObjectIndex`, ...""",
+r"""You can create any item index, e.g., using `ni = NodeIndex(42)` or `oi = ObjectIndex(42)`""",
 'The benefit of these indices comes as they may not be mixed up, e.g., using an object index instead of a node index.',
-r"""You can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)} of \texttt{ni.GetIndex()}""",
-r"""Still, you can use integers as initialization for item numbers, e.g.:\\\texttt{mbs.AddObject(MassPoint(nodeNumber=13, ...))}\\However, it must be a pure integer type.""",
-r"""You can make integer calculations with such indices, e.g., \texttt{oi = 2*ObjectIndex(42)+1} restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a \texttt{int} type andoperating on mixed indices is not checked (but may raise exceptions in future).""",
-r"""You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default.""",
-r"""If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type."""
+r"""You can convert any item index, e.g., NodeIndex `ni` into an integer number using `int(ni)` of `ni.GetIndex()`""",
+r"""Still, you can use integers as initialization for item numbers, e.g.:\\`mbs.AddObject(MassPoint(nodeNumber=13, ...))`\\However, it must be a pure integer type.""",
+r"""You can make integer calculations with such indices, e.g., `oi = 2*ObjectIndex(42)+1` restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a `int` type andoperating on mixed indices is not checked (but may raise exceptions in future).""",
+r"""You can also print item indices, e.g., `print(ni)` as it converts to string by default.""",
+r"""If you are unsure about the type of an index, use `ni.GetTypeString()` to show the index type."""
     ], itemText='[]')
 
 pb.AddDocu(r"""As a key concept to working with Exudyn , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
 There are only a few very important cases where data is referenced in Exudyn , the main ones are 
-\texttt{SystemContainer}, 
-\texttt{MainSystem}, 
-\texttt{VisualizationSettings}, and
-\texttt{SimulationSettings} which are always references to internal C++ classes.
+`SystemContainer`, 
+`MainSystem`, 
+`VisualizationSettings`, and
+`SimulationSettings` which are always references to internal C++ classes.
 The following code snippets and comments should explain this behavior:
 """, section='Copying and referencing C++ objects', sectionLevel=2, sectionLabel='sec:generalPythonInterface:copyref')
 
@@ -155,10 +155,10 @@ del SC                             #references to SystemContainer deleted
 
 #+++++++++++++++++++++++++++++++++++
 #EXCEPTIONS
-pb.AddDocu(r"""There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called \texttt{ValueError}, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.""",
+pb.AddDocu(r"""There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called `ValueError`, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.""",
                 section='Exceptions and Error Messages', sectionLevel=2,sectionLabel='sec:cinterface:exceptions')
 
-pb.AddDocu(r"""As an example, a type conversion error is raised when providing wrong argument types, e.g., try \texttt{exu.config.Version('abc')}:""")
+pb.AddDocu(r"""As an example, a type conversion error is raised when providing wrong argument types, e.g., try `exu.config.Version('abc')`:""")
 
 pb.AddDocuCodeBlock(code=r"""
 Traceback (most recent call last):

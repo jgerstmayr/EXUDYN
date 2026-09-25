@@ -42,7 +42,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeLoad,
     equations=r"""    #### Details
 
-    The load vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
+    The load vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node. 
     The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     <!--
     
@@ -54,9 +54,9 @@ definitions.append(ItemDefinition(
 
     | arguments / return | type or size | description |
     |---|---|---|
-    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
-    | \texttt{t} | Real | current time in mbs |
-    | \texttt{loadVector} | Vector3D | $\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
+    | `t` | Real | current time in mbs |
+    | `loadVector` | Vector3D | $\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Vector3D | computed force vector |
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -135,7 +135,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeLoad,
     equations=r"""    #### Details
 
-    The torque vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
+    The torque vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node. 
     The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     <!--
     
@@ -147,9 +147,9 @@ definitions.append(ItemDefinition(
 
     | arguments / return | type or size | description |
     |---|---|---|
-    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
-    | \texttt{t} | Real | current time in mbs |
-    | \texttt{loadVector} | Vector3D | $\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
+    | `t` | Real | current time in mbs |
+    | `loadVector` | Vector3D | $\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Vector3D | computed torque vector |
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -229,7 +229,7 @@ definitions.append(ItemDefinition(
     equations=r"""    #### Details
 
     The load applies a (translational) and distributed load proportional to the distributed body's density.
-    The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
+    The marker of type `MarkerBodyMass` transforms the loadVector via an according jacobian matrix to object coordinates.
     <!--
     
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -240,12 +240,12 @@ definitions.append(ItemDefinition(
 
     | arguments / return | type or size | description |
     |---|---|---|
-    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
-    | \texttt{t} | Real | current time in mbs |
-    | \texttt{loadVector} | Vector3D | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
+    | `t` | Real | current time in mbs |
+    | `loadVector` | Vector3D | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Vector3D | computed load vector |
 
-    Example of user function: functionality same as in \texttt{LoadForceVector}
+    Example of user function: functionality same as in `LoadForceVector`
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
@@ -320,7 +320,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeLoad,
     equations=r"""    #### Details
 
-    The scalar \texttt{load} is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., \texttt{MarkerNodeCoordinate}.
+    The scalar `load` is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., `MarkerNodeCoordinate`.
     This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
     on a rotation coordinate (but take care for its meaning).
     <!--
@@ -328,13 +328,13 @@ definitions.append(ItemDefinition(
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     -->
     **Userfunction**: `loadUserFunction(mbs, t, load)`
-    A user function, which computes the scalar load depending on time and the object's \texttt{load} parameter.
+    A user function, which computes the scalar load depending on time and the object's `load` parameter.
 
     | arguments / return | type or size | description |
     |---|---|---|
-    | \texttt{mbs} | MainSystem | provides MainSystem mbs to which load belongs |
-    | \texttt{t} | Real | current time in mbs |
-    | \texttt{load} | Real | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
+    | `mbs` | MainSystem | provides MainSystem mbs to which load belongs |
+    | `t` | Real | current time in mbs |
+    | `load` | Real | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
     | **return value** | Real | computed load |
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->

@@ -27,7 +27,7 @@ pb = PybindInterface()
 pb.CreateNewRSTfile('Exudyn')
 pb.DefPyStartClass('','', '')
 
-pb.AddDocu(r"""These are the access functions to the Exudyn module. General usage is explained in [](#sec-generalpythoninterface) and examples are provided there. The C++ module \texttt{exudyn} is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as \texttt{exudynCPP.pyd} for the regular module, which is compiled for the baseline instruction set and runs on any 64-bit CPU, and \texttt{exudynCPPfast.pyd} for the optional module without range checks, which additionally uses the AVX2 vector extensions (may depend on your installation).""")
+pb.AddDocu(r"""These are the access functions to the Exudyn module. General usage is explained in [](#sec-generalpythoninterface) and examples are provided there. The C++ module `exudyn` is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as `exudynCPP.pyd` for the regular module, which is compiled for the baseline instruction set and runs on any 64-bit CPU, and `exudynCPPfast.pyd` for the optional module without range checks, which additionally uses the AVX2 vector extensions (may depend on your installation).""")
 
 pb.AddDocuCodeBlock(code="""
 #import exudyn module:
@@ -79,7 +79,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRende
 
 pb.BeginCppWrittenByHand()
 pb.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               description=r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvestatic); for background on solvers, see [](#sec-solvers)""",
+                               description=r"""DEPRECATED; Static solver function, mapped from module `solver`, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvestatic); for background on solvers, see [](#sec-solvers)""",
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True'],
                                argTypes=['MainSystem','SimulationSettings', '', ''],
@@ -88,7 +88,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic',
                                )
                 
 pb.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               description=r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvedynamic); for background on solvers, see [](#sec-solvers)""",
+                               description=r"""DEPRECATED; Dynamic solver function, mapped from module `solver`, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvedynamic); for background on solvers, see [](#sec-solvers)""",
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True'],
                                argTypes=['MainSystem','SimulationSettings', 'DynamicSolverType', '', ''],
@@ -97,7 +97,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic',
                                )
                 
 pb.DefPyFunctionAccess(cClass='', pyName='ComputeODE2Eigenvalues', cName='ComputeODE2Eigenvalues', 
-                               description=r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see [](#sec-mainsystemextensions-computeode2eigenvalues)""",
+                               description=r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module `solver`; for details on the Python interface see [](#sec-mainsystemextensions-computeode2eigenvalues)""",
                                argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False'],
                                #argTypes=['MainSystem','SimulationSettings', 'bool', 'int', 'bool', 'bool'],
@@ -110,7 +110,7 @@ pb.EndCppWrittenByHand()
 pb.BeginCppWrittenByHand()
 pb.DefPyFunctionAccess('', 'RequireVersion', '', 
                                argList=['requiredVersionString'],
-                               description = r"""Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. This function is defined in the \texttt{__init__.py} file""", 
+                               description = r"""Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. This function is defined in the `__init__.py` file""", 
                                example='exu.RequireVersion("1.0.31")',
                                argTypes=['str'],
                                returnType='None',
@@ -122,7 +122,7 @@ pb.EndCppWrittenByHand() #this function is defined in __init__.py ==> do not add
 
 
 pb.DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToFile', 
-                            description=r"""set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;""",
+                            description=r"""set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write `exu.SetWriteToFile('', False)` to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;""",
                             argList=['filename', 'flagWriteToFile', 'flagAppend', 'flagFlushAlways'],
                             defaultArgs=['', 'True', 'False', 'False'],
                             example=r"""exudyn.config.printToConsole = False #no output to console\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False, flagFlushAlways=False)\\exu.Print('print this to file')\\exu.SetWriteToFile('', False) #terminate writing to file which closes the file""",
