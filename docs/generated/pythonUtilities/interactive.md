@@ -14,7 +14,21 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 [`AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = '', runOnStart = False, runMode = 0, scaleAmplitude = 1, title = '', fontSize = 12, checkRenderEngineStopFlag = True, systemEigenVectors = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L598)
 
 - **function description**: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record frames' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
-- **input**: systemContainer: system container (usually SC) of your model, containing visualization settings mainSystem: system (usually mbs) containing your model nodeNumber: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...); if nodeNumber=None, then the systemEigenVectors list is used period: delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second stepsPerPeriod: number of steps into which the animation of one cycle of the mode is split into showTime: show a virtual time running from 0 to 2*pi during one mode cycle renderWindowText: additional text written into renderwindow before 'Mode X' (use $\backslash$n to add line breaks) runOnStart: immediately go into 'Run' mode runMode: 0=continuous run, 1=static continuous, 2=one cycle, 3=static (use slider/mouse to vary time steps) scaleAmplitude: additional scaling for amplitude if necessary fontSize: define font size for labels in InteractiveDialog title: if empty, it uses default; otherwise define specific title checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog systemEigenVectors: may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated
+- **input**:
+  - `systemContainer`: system container (usually SC) of your model, containing visualization settings
+  - `mainSystem`: system (usually mbs) containing your model
+  - `nodeNumber`: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...); if nodeNumber=None, then the systemEigenVectors list is used
+  - `period`: delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second
+  - `stepsPerPeriod`: number of steps into which the animation of one cycle of the mode is split into
+  - `showTime`: show a virtual time running from 0 to 2*pi during one mode cycle
+  - `renderWindowText`: additional text written into renderwindow before 'Mode X' (use $\backslash$n to add line breaks)
+  - `runOnStart`: immediately go into 'Run' mode
+  - `runMode`: 0=continuous run, 1=static continuous, 2=one cycle, 3=static (use slider/mouse to vary time steps)
+  - `scaleAmplitude`: additional scaling for amplitude if necessary
+  - `fontSize`: define font size for labels in InteractiveDialog
+  - `title`: if empty, it uses default; otherwise define specific title
+  - `checkRenderEngineStopFlag`: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+  - `systemEigenVectors`: may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated
 - **output**: opens interactive dialog with further settings
 - **notes**: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period. Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record frames' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see {ref}`sec-overview-basics-animations`); now deactivate 'Record frames' by pressing 'Off' and chose another mode
 
@@ -28,7 +42,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L798)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
-- **input**: mainSystem: the system used for visualization of solution (solution is loaded into visualization state of that system) solution: solution dictionary previously loaded with exudyn.utilities.LoadSolutionFile(...); will be played from first to last row; if solution==None, it tries to load the file coordinatesSolutionFileName as stored in mbs.sys['simulationSettings'], which are the simulationSettings of the previous simulation rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame) timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second runOnStart: immediately go into 'Run' mode runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps) fontSize: define font size for labels in InteractiveDialog title: if empty, it uses default; otherwise define specific title checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+- **input**:
+  - `mainSystem`: the system used for visualization of solution (solution is loaded into visualization state of that system)
+  - `solution`: solution dictionary previously loaded with exudyn.utilities.LoadSolutionFile(...); will be played from first to last row; if solution==None, it tries to load the file coordinatesSolutionFileName as stored in mbs.sys['simulationSettings'], which are the simulationSettings of the previous simulation
+  - `rowIncrement`: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+  - `timeout`: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+  - `runOnStart`: immediately go into 'Run' mode
+  - `runMode`: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
+  - `fontSize`: define font size for labels in InteractiveDialog
+  - `title`: if empty, it uses default; otherwise define specific title
+  - `checkRenderEngineStopFlag`: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 - **output**: (type: None) updates current visualization state, renders the scene continuously (after pressing button 'Run')
 
 *example*:
@@ -52,7 +75,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L975)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
-- **input**: workingDir: directory where images are stored and where animation is written to inputPattern: pattern of images; 'frame' is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png outputFile: filename and ending (.mp4 recommended) for generated video inputFrameRate: framerate for images relative to outputFrameRate: if inputFrameRate=50 and outputFrameRate=25, then only every second frame is used outputFrameRate: framerate for resulting video compressionCRF: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, >30 is very low quality startNumber: start index of first frame chosen for animation totalFrames: total number of frames (keep field empty to select all frames after startNumber)
+- **input**:
+  - `workingDir`: directory where images are stored and where animation is written to
+  - `inputPattern`: pattern of images; 'frame' is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png
+  - `outputFile`: filename and ending (.mp4 recommended) for generated video
+  - `inputFrameRate`: framerate for images relative to outputFrameRate: if inputFrameRate=50 and outputFrameRate=25, then only every second frame is used
+  - `outputFrameRate`: framerate for resulting video
+  - `compressionCRF`: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, >30 is very low quality
+  - `startNumber`: start index of first frame chosen for animation
+  - `totalFrames`: total number of frames (keep field empty to select all frames after startNumber)
 - **output**: None; writes animation when finished
 
 *example*:
@@ -139,7 +170,25 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`__init__(self, mbs, simulationSettings, simulationFunction, dialogItems, plots = None, period = 0.04, realtimeFactor = 1, userStartSimulation = None, title = '', showTime = False, fontSize = 12, doTimeIntegration = True, runOnStart = False, addLabelStringVariables = False, addSliderVariables = False, checkRenderEngineStopFlag = True, userOnChange = None, useSysVariables = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L85)
 
 - **class function description**: initialize an InteractiveDialog
-- **input**: mbs: a multibody system to be simulated simulationSettings: exudyn.SimulationSettings() according to user settings simulationFunction: a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self) dialogItems: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes} plots: list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None period: a simulation time span in seconds which is simulated with the simulationFunction in every iteration realtimeFactor: if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower userStartSimulation: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button "Run" has been pressed, flag = True, if "Stop" has been pressed title: title text for interactive dialog showTime: shows current time in dialog fontSize: adjust font size for all dialog items doTimeIntegration: performs internal time integration with given parameters runOnStart: immediately activate 'Run' button on start addLabelStringVariables: True: adds a list labelStringVariables containing the (modifiable) list of string variables for label (text) widgets addSliderVariables: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog userOnChange: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self) useSysVariables: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
+- **input**:
+  - `mbs`: a multibody system to be simulated
+  - `simulationSettings`: exudyn.SimulationSettings() according to user settings
+  - `simulationFunction`: a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)
+  - `dialogItems`: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes}
+  - `plots`: list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None
+  - `period`: a simulation time span in seconds which is simulated with the simulationFunction in every iteration
+  - `realtimeFactor`: if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower
+  - `userStartSimulation`: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button "Run" has been pressed, flag = True, if "Stop" has been pressed
+  - `title`: title text for interactive dialog
+  - `showTime`: shows current time in dialog
+  - `fontSize`: adjust font size for all dialog items
+  - `doTimeIntegration`: performs internal time integration with given parameters
+  - `runOnStart`: immediately activate 'Run' button on start
+  - `addLabelStringVariables`: True: adds a list labelStringVariables containing the (modifiable) list of string variables for label (text) widgets
+  - `addSliderVariables`: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method
+  - `checkRenderEngineStopFlag`: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+  - `userOnChange`: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
+  - `useSysVariables`: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
 - **notes**: detailed description of dialogItems and plots list/dictionary is given in commented the example below
 
 

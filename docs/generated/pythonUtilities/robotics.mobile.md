@@ -17,7 +17,10 @@ specific friction angle of rolling disc is used to model rolls of mecanum wheels
 [`MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers = True, *args, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L36)
 
 - **function description**: add items to existing mbs to build up a mobile robot platform, there are options that can be passed as args / kwargs, which can contains options as described below. The robot platform is built out of rigid bodies where the wheels can be modeled as rolling discs (mecanum wheel x/o configuration) or with a detailed mecanum wheel simulation approach
-- **input**: mbs: the multibody system which will be extended markerGround: a rigid body marker, at which the robot will be placed (usually ground) mobileRobot: a dictionary including all information about the mobile robot platform
+- **input**:
+  - `mbs`: the multibody system which will be extended
+  - `markerGround`: a rigid body marker, at which the robot will be placed (usually ground)
+  - `mobileRobot`: a dictionary including all information about the mobile robot platform
 - **output**: the function returns a dictionary containing nodes, body, object and marker numbers of individual mobile robot parts nPlatformList, bPlatformList, oPlatformList, mPlatformList; nodes, bodies, objects and marker of the platform [nPlattform] [bPlattform] [oPlattform]  [] oAxisList, mAxlesList; objects and marker of the axles  [a1, a2, a3, a4] nWheelsList, bWheelsList, oRollingDiscsList, mWheelsList; nodes, bodys, objects and markers of the four wheels [w1, w2, w3, w4]
 - **notes**: for coordinate system, see Python function definition
 
@@ -31,7 +34,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`Generatrix2Polynomial(param, GeneratrixFunction, tol = 1e-14, nFit = 101, nTest = 1001)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L415)
 
 - **function description**: create a polynomial describing a generatrix function
-- **input**: param: list containing data (lRoll, aPoly, ...)
+- **input**:
+  - `param`: list containing data (lRoll, aPoly, ...)
 - **author**: Peter Manzl
 - **notes**: create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction with a given tolerance. The error is measured as the Chebyshev distance.
 
@@ -42,7 +46,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`GeneratrixRoll(u, param)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L485)
 
 - **function description**: generatrix function for a roll of a Mecanum wheel
-- **input**: u: parameter, max. +- pi/2 param['r']: radius of the associated Mecanum wheel param['delta']: angle of the rolls rotation axis to the wheels rotation axis param['dRoll']: smallest distance of roll axis to the wheel axis
+- **input**:
+  - `u`: parameter, max. +- pi/2 param['r']: radius of the associated Mecanum wheel param['delta']: angle of the rolls rotation axis to the wheels rotation axis param['dRoll']: smallest distance of roll axis to the wheel axis
 - **output**: x and y values for the function in the local frame. The rotation around the local x-yxis creates the surface of the roll.
 - **author**: Peter Manzl
 - **notes**: parametric equation, x,y are the generatrix of the roll in its local frame with the axis of rotation x, see [Gfrerrer2008].
@@ -54,7 +59,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`FunDiffPoly(x, a)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L507)
 
 - **function description**: calculates the derivative of the polynomial $a0*x^n + ... $
-- **input**: x: value at which the polynomial is evaluated a: coefficients
+- **input**:
+  - `x`: value at which the polynomial is evaluated
+  - `a`: coefficients
 - **output**: f:
 - **author**: Peter Manzl
 - **notes**: helper function polynomial describing a generatrix function
@@ -66,7 +73,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`FunDDiffPoly(x, a)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L527)
 
 - **function description**: calculates the second derivative of a polynomial
-- **input**: x: value at which the polynomial is evaluated a: coefficients
+- **input**:
+  - `x`: value at which the polynomial is evaluated
+  - `a`: coefficients
 - **output**: f:
 - **author**: Peter Manzl
 - **notes**: helper function polynomial describing a generatrix function
@@ -86,7 +95,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`__init__(self, R, lx, ly, flagAdjusted = False, lcx = 0, lcy = 0, wheeltype = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L325)
 
 - **class function description**: initialize mobileKinematics class
-- **input**: R: wheel radius lx: wheel track width ly: wheel base wheeltype: 1=x-config (bad), 0=o-config (good)
+- **input**:
+  - `R`: wheel radius
+  - `lx`: wheel track width
+  - `ly`: wheel base
+  - `wheeltype`: 1=x-config (bad), 0=o-config (good)
 - **author**: Peter Manzl
 
 
@@ -96,7 +109,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`GetWheelVelocities(self, vDes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L361)
 
 - **class function description**: calculate wheel velocities from Cartesian velocities
-- **input**: vDes: desired velocity [vx, vy, omega] in the robot's local frame vx: platform  translational velocity in local x direction vy: platform translational velocity in local y direction omega: platform rotational velocity around local z axis
+- **input**:
+  - `vDes`: desired velocity [vx, vy, omega] in the robot's local frame
+  - `vx`: platform  translational velocity in local x direction
+  - `vy`: platform translational velocity in local y direction
+  - `omega`: platform rotational velocity around local z axis
 - **output**: w: wheel velocities w=[w0,w1,w2,w3]
 - **author**: Peter Manzl
 
@@ -107,7 +124,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 [`GetCartesianVelocities(self, w)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L388)
 
 - **class function description**: calculate Cartesian velocities from wheel velocities
-- **input**: w: wheel velocities w=[w0,w1,w2,w3]
+- **input**:
+  - `w`: wheel velocities w=[w0,w1,w2,w3]
 - **output**: v: Cartesian velocity [vx, vy, omega] in the robot's local frame vx: platform  translational velocity in local x direction vy: platform translational velocity in local y direction omega: platform rotational velocity around local z axis
 - **author**: Peter Manzl
 

@@ -765,6 +765,14 @@ Open in the tracker for this group: **#2423** (every C++ user error inspects the
 find its file and line, on every raise).
 
 <a id="rg4-1"></a>
+**RG3.19** *(group RG3; maintainer 2026-09-26)* **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-19) - **the arguments of
+    a documented function are one per line, with the name in code** (#2665). The `Args:` block of a
+    docstring was joined into one paragraph by `utilityDocsModel.Tags2Markdown`, so a function of ten
+    arguments was one wall of text and the names were in the body font - in the Python utility
+    functions and in the MainSystem extensions of the Python-C++ command interface, in the HTML and
+    in the PDF, because both are built from the same Markdown. The maintainer reported it with a
+    screenshot of the old RST pages, which had it right.
+
 **RG4.1** *(group RG4; revision2026 step R10.1)* **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
     on manylinux_2_28 / cp313 / numpy 2.4.6, against the Windows reference values (Linux tolerance
     `3e-11`), relative error:

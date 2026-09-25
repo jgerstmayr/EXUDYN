@@ -16,7 +16,8 @@ Note that since exudyn version 1.8.69 the mass and stiffness matrices in FEMinte
 [`CompressedRowSparseToDenseMatrix(sparseData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L86)
 
 - **function description**: convert zero-based sparse matrix data to dense numpy matrix
-- **input**: sparseData: format (per row): [row, column, value] ==> converted into dense format
+- **input**:
+  - `sparseData`: format (per row): [row, column, value] ==> converted into dense format
 - **output**: a dense matrix as np.array
 
 
@@ -190,7 +191,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`CMSObjectComputeNorm(mbs, objectNumber, outputVariableType, norm = 'max', nodeNumberList = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1184)
 
 - **function description**: compute current (max, min, ...) value for chosen ObjectFFRFreducedOrder object (CMSobject) with exu.OutputVariableType. The function operates on nodal values. This is a helper function, which can be used to conveniently compute output quantities of the CMSobject efficiently and to use it in sensors
-- **input**: mbs: MainSystem of objectNumber objectNumber: number of ObjectFFRFreducedOrder in mbs outputVariableType: a exu.OutputVariableType out of [StressLocal, DisplacementLocal, VelocityLocal] norm: string containing chosen norm to be computed, out of 'Mises', 'maxNorm', 'min', 'max'; 'max' will return maximum of all components (component wise), 'min' does same but for minimum; 'maxNorm' computes np.linalg.norm for every node and then takes maximum of all norms; Mises computes von-Mises stress for every node and then takes maximum of all nodes nodeNumberList: list of mesh node numbers (from FEMinterface); if empty [], all nodes are used; otherwise, only given nodes are evaluated
+- **input**:
+  - `mbs`: MainSystem of objectNumber
+  - `objectNumber`: number of ObjectFFRFreducedOrder in mbs
+  - `outputVariableType`: a exu.OutputVariableType out of [StressLocal, DisplacementLocal, VelocityLocal]
+  - `norm`: string containing chosen norm to be computed, out of 'Mises', 'maxNorm', 'min', 'max'; 'max' will return maximum of all components (component wise), 'min' does same but for minimum; 'maxNorm' computes np.linalg.norm for every node and then takes maximum of all norms; Mises computes von-Mises stress for every node and then takes maximum of all nodes
+  - `nodeNumberList`: list of mesh node numbers (from FEMinterface); if empty [], all nodes are used; otherwise, only given nodes are evaluated
 - **output**: return value or list of values according to chosen norm as np.array
 
 
@@ -232,7 +238,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`netgenSTLte
 [`__init__(self, youngsModulus = None, poissonsRatio = None, density = 0, materials = None, fes = None, planeStress = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L772)
 
 - **class function description**: add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
-- **input**: youngsModulus: Young's modulus for single domain and material; in case of multi-domain, it must be None poissonsRatio: Poisson's ratio for single domain and material; in case of multi-domain, it must be None density: density for for single domain and material; in case of multi-domain, it must be 0 or None materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see ImportMeshFromNGsolve fes: in case of materials dictionary, fes (as returned by ImportMeshFromNGsolve) has to be provided planeStress: set True for 2D materials (currently not used)
+- **input**:
+  - `youngsModulus`: Young's modulus for single domain and material; in case of multi-domain, it must be None
+  - `poissonsRatio`: Poisson's ratio for single domain and material; in case of multi-domain, it must be None
+  - `density`: density for for single domain and material; in case of multi-domain, it must be 0 or None
+  - `materials`: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see ImportMeshFromNGsolve
+  - `fes`: in case of materials dictionary, fes (as returned by ImportMeshFromNGsolve) has to be provided
+  - `planeStress`: set True for 2D materials (currently not used)
 
 
 (sec-fem-kirchhoffmaterial(materialbaseclass)-strain2stress)=
@@ -303,7 +315,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`AddObjectFFRF(self, exu, mbs, positionRef = [0,0,0], eulerParametersRef = [1,0,0,0], initialVelocity = [0,0,0], initialAngularVelocity = [0,0,0], gravity = [0,0,0], constrainRigidBodyMotion = True, massProportionalDamping = 0, stiffnessProportionalDamping = 0, color = [0.1,0.9,0.1,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1009)
 
 - **class function description**: add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
-- **input**: exu: the exudyn module mbs: a MainSystem object positionRef: reference position of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF) eulerParametersRef: reference euler parameters of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF) initialVelocity: initial velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF) initialAngularVelocity: initial angular velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF) gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise constrainRigidBodyMotion: set True in order to add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes color: provided as list of 4 RGBA values add object to mbs as well as according nodes
+- **input**:
+  - `exu`: the exudyn module
+  - `mbs`: a MainSystem object
+  - `positionRef`: reference position of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+  - `eulerParametersRef`: reference euler parameters of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+  - `initialVelocity`: initial velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+  - `initialAngularVelocity`: initial angular velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+  - `gravity`: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+  - `constrainRigidBodyMotion`: set True in order to add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes
+  - `color`: provided as list of 4 RGBA values add object to mbs as well as according nodes
 
 
 (sec-fem-objectffrfinterface-ufforce)=
@@ -337,7 +358,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`__init__(self, femInterface = None, rigidBodyNodeType = 'NodeType.RotationEulerParameters', roundMassMatrix = 1e-13, roundStiffnessMatrix = 1e-13)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1261)
 
 - **class function description**: initialize ObjectFFRFreducedOrderInterface with FEMinterface class initializes the ObjectFFRFreducedOrderInterface with nodes, modes, surface description and reduced system matrices from FEMinterface data is then transfered to mbs object with classFunction AddObjectFFRFreducedOrderWithUserFunctions(...)
-- **input**: femInterface: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness; if femInterface=None, an empty ObjectFFRFreducedOrderInterface instance is created which may be used to load data with LoadFromFile() roundMassMatrix: use this value to set entries of reduced mass matrix to zero which are below the treshold roundStiffnessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
+- **input**:
+  - `femInterface`: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness; if femInterface=None, an empty ObjectFFRFreducedOrderInterface instance is created which may be used to load data with LoadFromFile()
+  - `roundMassMatrix`: use this value to set entries of reduced mass matrix to zero which are below the treshold
+  - `roundStiffnessMatrix`: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
 
 
 (sec-fem-objectffrfreducedorderinterface-savetofile)=
@@ -346,7 +370,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`SaveToFile(self, fileName, fileVersion = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1416)
 
 - **class function description**: save all data to a data filename; can be used to avoid loading femInterface and FE data
-- **input**: fileName: string for path and file name without ending ==> ".npy" will be added fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0; the default value will change in future!
+- **input**:
+  - `fileName`: string for path and file name without ending ==> ".npy" will be added
+  - `fileVersion`: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0; the default value will change in future!
 - **output**: stores file
 
 
@@ -356,7 +382,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`LoadFromFile(self, fileName, mode = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1477)
 
 - **class function description**: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). this function is much faster than the text-based import functions
-- **input**: fileName: string for path and file name without ending ==> ".npy" will be added mode: choose between different file formats (NPY and NPZ); Note: NPY only works for Numpy 1.x, not for Numpy >= 2.0
+- **input**:
+  - `fileName`: string for path and file name without ending ==> ".npy" will be added
+  - `mode`: choose between different file formats (NPY and NPZ); Note: NPY only works for Numpy 1.x, not for Numpy >= 2.0
 - **output**: loads data into fem (note that existing values are not overwritten!)
 
 
@@ -366,7 +394,21 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, positionRef = [0,0,0], initialVelocity = [0,0,0], rotationMatrixRef = [], initialAngularVelocity = [0,0,0], gravity = [0,0,0], UFforce = 0, UFmassMatrix = 0, massProportionalDamping = 0, stiffnessProportionalDamping = 0, color = [0.1,0.9,0.1,1.], eulerParametersRef = [], name = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1549)
 
 - **class function description**: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function with userfunctions=0 in order to use internal C++ functionality, which is approx. 10x faster; implementation of userfunctions also available for rotation vector (Lie group formulation), which needs further testing
-- **input**: exu: the exudyn module mbs: a MainSystem object positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix) color: provided as list of 4 RGBA values name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
+- **input**:
+  - `exu`: the exudyn module
+  - `mbs`: a MainSystem object
+  - `positionRef`: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `initialVelocity`: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `rotationMatrixRef`: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
+  - `initialAngularVelocity`: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `eulerParametersRef`: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `gravity`: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+  - `UFforce`: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
+  - `UFmassMatrix`: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
+  - `massProportionalDamping`: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
+  - `stiffnessProportionalDamping`: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
+  - `color`: provided as list of 4 RGBA values
+  - `name`: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
 
 *example*:
 
@@ -403,7 +445,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`AddObjectFFRFreducedOrder(self, mbs, positionRef = [0,0,0], initialVelocity = [0,0,0], rotationMatrixRef = [], initialAngularVelocity = [0,0,0], massProportionalDamping = 0, stiffnessProportionalDamping = 0, gravity = [0,0,0], color = [0.1,0.9,0.1,1.], name = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L1860)
 
 - **class function description**: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function in order to use internal C++ functionality, which is approx. 10x faster than AddObjectFFRFreducedOrderWithUserFunctions(...)
-- **input**: exu: the exudyn module mbs: a MainSystem object positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder) massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise color: provided as list of 4 RGBA values name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
+- **input**:
+  - `exu`: the exudyn module
+  - `mbs`: a MainSystem object
+  - `positionRef`: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `initialVelocity`: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `rotationMatrixRef`: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
+  - `initialAngularVelocity`: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+  - `massProportionalDamping`: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
+  - `stiffnessProportionalDamping`: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
+  - `gravity`: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+  - `color`: provided as list of 4 RGBA values
+  - `name`: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`netgenSTLtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/netgenSTLtest.py) (Ex), [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolveFFRF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`NGsolveCMStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/NGsolveCMStest.py) (TM), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), ...
@@ -476,7 +529,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`SaveToFile(self, fileName, fileVersion = 4, mode = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2066)
 
 - **class function description**: save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions; note that HDF5 and PKL formats lead to smaller files
-- **input**: fileName: string for path and file name; if no ending is provided ==> ".npy" will be added and NumPy format will be used; alternatives: '.pkl' ending uses Python's pickle method (smaller files) and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed! fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0 mode: default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
+- **input**:
+  - `fileName`: string for path and file name; if no ending is provided ==> ".npy" will be added and NumPy format will be used; alternatives: '.pkl' ending uses Python's pickle method (smaller files) and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
+  - `fileVersion`: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
+  - `mode`: default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
 - **output**: stores file
 - **notes**: test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
 
@@ -487,7 +543,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`LoadFromFile(self, fileName, forceVersion = None, mode = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2128)
 
 - **class function description**: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). this function is much faster than the text-based import functions
-- **input**: fileName: string for path and file name; if no ending is provided ==> ".npz" will be added and NumPy format will be assumed; alternatives: '.pkl' ending uses Python's pickle method and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed! forceVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; for old files, use forceVersion=0
+- **input**:
+  - `fileName`: string for path and file name; if no ending is provided ==> ".npz" will be added and NumPy format will be assumed; alternatives: '.pkl' ending uses Python's pickle method and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
+  - `forceVersion`: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; for old files, use forceVersion=0
 - **output**: loads data into fem (note that existing values are not overwritten!); returns file version or None if version is not available
 
 
@@ -497,7 +555,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ImportFromAbaqusInputFile(self, fileName, typeName = 'Part', name = 'Part-1', verbose = False, createSurfaceTrigs = True, surfaceTrigsAll = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2195)
 
 - **class function description**: import nodes and elements from Abaqus input file and create surface elements; node numbers in elements are converted from 1-based indices to python's 0-based indices; This function can only import one part or instance; this means that you have to merge all instances or parts in order to use this function for import of flexible bodies for order reduction methods
-- **input**: fileName: file name incl. path typeName: this is what is searched for regarding nodes and elements, see your .inp file name: if there are several parts, this name should address the according part name verbose: use True for some debug information createSurfaceTrigs: if True, triangles are created for visualization (triangles both for Tet and Hex elements) surfaceTrigsAll: if False, visualization triangles are created at the surface; if True, surface triangles are created also for interior elements
+- **input**:
+  - `fileName`: file name incl. path
+  - `typeName`: this is what is searched for regarding nodes and elements, see your .inp file
+  - `name`: if there are several parts, this name should address the according part name
+  - `verbose`: use True for some debug information
+  - `createSurfaceTrigs`: if True, triangles are created for visualization (triangles both for Tet and Hex elements)
+  - `surfaceTrigsAll`: if False, visualization triangles are created at the surface; if True, surface triangles are created also for interior elements
 - **output**: return node numbers as numpy array
 - **notes**: only works for Hex8, Hex20, Tet4 and Tet10 (C3D4, C3D8, C3D8R, C3D10, C3D20, C3D20R) elements; some functionality is untested and works in limited cases; only works for one single part or instance
 
@@ -540,7 +604,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`CreateNGsolveBoundaryNodeSets(self, mesh, boundaryNamesList = None, warnNodeSets = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2435)
 
 - **class function description**: create node sets for given (or all) boundaries in NGsolve; node sets are added to existing node sets
-- **input**: mesh: a previously created `ngs.mesh` (NGsolve mesh, see examples) boundaryNamesList: a List of boundary names used to define mesh boundaries or None; if given, node sets are only created for the given boundary names
+- **input**:
+  - `mesh`: a previously created `ngs.mesh` (NGsolve mesh, see examples)
+  - `boundaryNamesList`: a List of boundary names used to define mesh boundaries or None; if given, node sets are only created for the given boundary names
 - **output**: list of nodeSets according to FEMinterface nodeSets structure, a dictionary with 'Name', 'NodeNumbers' and 'NodeWeights'
 
 
@@ -550,7 +616,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ImportMeshFromNGsolve(self, mesh, density = None, youngsModulus = None, poissonsRatio = None, materials = None, createBoundaryNodeSets = True, boundaryNamesList = None, verbose = False, meshOrder = 1, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2485)
 
 - **class function description**: import mesh from NETGEN/NGsolve and setup mechanical problem
-- **input**: mesh: a previously created `ngs.mesh` (NGsolve mesh, see examples) youngsModulus: In case of single material: Young's modulus used for mechanical model poissonsRatio: In case of single material: Poisson's ratio used for mechanical model density: In case of single material: density used for mechanical model materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see example createBoundaryNodeSets: if True, during import named boundaries conditions of the mesh are transformed into node sets for further use during mode creation, etc. boundaryNamesList: given as list of boundary names to be used for boundary node sets or None (creating node sets for all boundaries) meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!) verbose: set True to print out some status information
+- **input**:
+  - `mesh`: a previously created `ngs.mesh` (NGsolve mesh, see examples)
+  - `youngsModulus`: In case of single material: Young's modulus used for mechanical model
+  - `poissonsRatio`: In case of single material: Poisson's ratio used for mechanical model
+  - `density`: In case of single material: density used for mechanical model
+  - `materials`: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see example
+  - `createBoundaryNodeSets`: if True, during import named boundaries conditions of the mesh are transformed into node sets for further use during mode creation, etc.
+  - `boundaryNamesList`: given as list of boundary names to be used for boundary node sets or None (creating node sets for all boundaries)
+  - `meshOrder`: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
+  - `verbose`: set True to print out some status information
 - **output**: creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
 - **author**: Johannes Gerstmayr, Joachim Schöberl
 - **notes**: The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer of NETGEN/NGsolve [Schoeberl1997; NGsolve2014]; Thank's a lot! download NGsolve at: https://ngsolve.org/ NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version! note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base! setting ngsolve.SetNumThreads(nt) you can select the number of treads that are used for assemble or other functionality with NGsolve functionality
@@ -576,7 +651,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputeEigenmodesNGsolve(self, bfM, bfK, nModes, maxEigensolveIterations = 40, excludeRigidBodyModes = 0, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2685)
 
 - **class function description**: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
-- **input**: nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D) maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40 verbose: if True, output some relevant information during solving
+- **input**:
+  - `nModes`: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
+  - `excludeRigidBodyModes`: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+  - `maxEigensolveIterations`: maximum number of iterations for iterative eigensolver; default=40
+  - `verbose`: if True, output some relevant information during solving
 - **output**: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
 - **author**: Johannes Gerstmayr, Joachim Schöberl
 
@@ -587,7 +666,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputeHurtyCraigBamptonModesNGsolve(self, bfM, bfK, boundaryNodesList, nEigenModes, maxEigensolveIterations = 40, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2729)
 
 - **class function description**: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part {ref}`sec-theory-cms`. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
-- **input**: bfM: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...) bfK: bilinearform for stiffness matrix as retured in ImportMeshFromNGsolve(...) boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!) nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40 verbose: if True, output some relevant information during solving
+- **input**:
+  - `bfM`: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...)
+  - `bfK`: bilinearform for stiffness matrix as retured in ImportMeshFromNGsolve(...)
+  - `boundaryNodesList`: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
+  - `nEigenModes`: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
+  - `maxEigensolveIterations`: maximum number of iterations for iterative eigensolver; default=40
+  - `verbose`: if True, output some relevant information during solving
 - **output**: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
 - **author**: Johannes Gerstmayr, Joachim Schöberl
 
@@ -598,7 +683,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputePostProcessingModesNGsolve(self, fes, material = 0, outputVariableType = 'OutputVariableType.StressLocal', verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L2876)
 
 - **class function description**: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder; takes a NGsolve fes as input and uses internal NGsolve methods to efficiently compute stresses or strains
-- **input**: fes: finite element space as retured in ImportMeshFromNGsolve(...) material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains (material = 0) outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+- **input**:
+  - `fes`: finite element space as retured in ImportMeshFromNGsolve(...)
+  - `material`: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains (material = 0)
+  - `outputVariableType`: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
 - **output**: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
 - **author**: Johannes Gerstmayr, Joachim Schöberl
 - **notes**: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
@@ -724,7 +812,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`GetNodeWeightsFromSurfaceAreas(self, nodeList, normalizeWeights = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L3126)
 
 - **class function description**: return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
-- **input**: nodeList: list of local (Position) node numbers normalizeWeights: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
+- **input**:
+  - `nodeList`: list of local (Position) node numbers
+  - `normalizeWeights`: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
 - **output**: numpy array with weights according to indices in node list
 - **notes**: requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
 
@@ -799,7 +889,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`CreateLinearFEMObjectGenericODE2(self, mbs, color = [0.9,0.4,0.4,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L3436)
 
 - **class function description**: create GenericODE2 object out of (linear) FEM model; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic FEM subsystem undergoing small deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
-- **input**: mbs: multibody system to which the GenericODE2 is added
+- **input**:
+  - `mbs`: multibody system to which the GenericODE2 is added
 - **output**: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
 
 
@@ -809,7 +900,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`CreateNonlinearFEMObjectGenericODE2NGsolve(self, mbs, mesh, density, youngsModulus, poissonsRatio, meshOrder = 1, color = [0.9,0.4,0.4,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L3471)
 
 - **class function description**: create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
-- **input**: mbs: multibody system to which the GenericODE2 is added mesh: a previously created `ngs.mesh` (NGsolve mesh, see examples) youngsModulus: Young's modulus used for mechanical model poissonsRatio: Poisson's ratio used for mechanical model density: density used for mechanical model meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
+- **input**:
+  - `mbs`: multibody system to which the GenericODE2 is added
+  - `mesh`: a previously created `ngs.mesh` (NGsolve mesh, see examples)
+  - `youngsModulus`: Young's modulus used for mechanical model
+  - `poissonsRatio`: Poisson's ratio used for mechanical model
+  - `density`: density used for mechanical model
+  - `meshOrder`: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
 - **output**: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
 - **author**: Johannes Gerstmayr, Joachim Schöberl
 - **notes**: The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer of NETGEN/NGsolve [Schoeberl1997; NGsolve2014]; Thank's a lot! download NGsolve at: https://ngsolve.org/ NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version! note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
@@ -821,7 +918,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputeEigenmodes(self, nModes, excludeRigidBodyModes = 0, useSparseSolver = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L3589)
 
 - **class function description**: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
-- **input**: nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D) useSparseSolver: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+- **input**:
+  - `nModes`: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
+  - `excludeRigidBodyModes`: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+  - `useSparseSolver`: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
 - **output**: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
 - **notes**: for NGsolve / Netgen meshes, see the according ComputeEigenmodesNGsolve function, which is usually much faster
 
@@ -832,7 +932,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputeEigenModesWithBoundaryNodes(self, boundaryNodes, nEigenModes, useSparseSolver = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L3640)
 
 - **class function description**: compute eigenmodes, using a set of boundary nodes that are all fixed; very similar to ComputeEigenmodes, but with additional definition of (fixed) boundary nodes.
-- **input**: boundaryNodes: a list of boundary node indices, refering to 'Position' type nodes in FEMinterface; all coordinates of these nodes are fixed for the computation of the modes nEigenModes: prescribe the number of modes to be computed; only nEigenModes with smallest abs(eigenvalues) are considered and stored useSparseSolver: [yet NOT IMPLEMENTED] for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+- **input**:
+  - `boundaryNodes`: a list of boundary node indices, refering to 'Position' type nodes in FEMinterface; all coordinates of these nodes are fixed for the computation of the modes
+  - `nEigenModes`: prescribe the number of modes to be computed; only nEigenModes with smallest abs(eigenvalues) are considered and stored
+  - `useSparseSolver`: [yet NOT IMPLEMENTED] for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
 - **output**: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
 
 
@@ -842,7 +945,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputeHurtyCraigBamptonModes(self, boundaryNodesList, nEigenModes, useSparseSolver = True, computationMode = HCBstaticModeSelection.RBE2, boundaryNodesWeights = [], excludeRigidBodyMotion = True, RBE3secondMomentOfAreaWeighting = True, numberOfRigidBodyModes = None, verboseMode = False, timerTreshold = 20000)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L3722)
 
 - **class function description**: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part {ref}`sec-theory-cms`. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
-- **input**: boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!) nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2/RBE3 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver; dense mode not available for RBE3 computationMode: see class HCBstaticModeSelection for available modes; select RBE2 / RBE3 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary; RBE3 mode uses singular value decomposition, which requires full matrices for boundary nodes; this becomes slow in particular if the number of a single boundary node set gets larger than 500 nodes boundaryNodesWeights: according list of weights with same order as boundaryNodesList, as returned e.g. by FEMinterface.GetNodeWeightsFromSurfaceAreas(...) excludeRigidBodyMotion: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object RBE3secondMomentOfAreaWeighting: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used numberOfRigidBodyModes: only used in case that no boundary interfaces (node lists) exist, then the rigid body motion can be excluded using this number of rigid body modes (in 3D usually) verboseMode: if True, some additional output is printed timerTreshold: for more DOF than this number, CPU times are printed even with verboseMode=False
+- **input**:
+  - `boundaryNodesList`: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
+  - `nEigenModes`: number of eigen modes in addition to static modes (may be zero for RBE2/RBE3 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
+  - `useSparseSolver`: for more than approx.~500 nodes, it is recommended to use the sparse solver; dense mode not available for RBE3
+  - `computationMode`: see class HCBstaticModeSelection for available modes; select RBE2 / RBE3 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary; RBE3 mode uses singular value decomposition, which requires full matrices for boundary nodes; this becomes slow in particular if the number of a single boundary node set gets larger than 500 nodes
+  - `boundaryNodesWeights`: according list of weights with same order as boundaryNodesList, as returned e.g. by FEMinterface.GetNodeWeightsFromSurfaceAreas(...)
+  - `excludeRigidBodyMotion`: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
+  - `RBE3secondMomentOfAreaWeighting`: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
+  - `numberOfRigidBodyModes`: only used in case that no boundary interfaces (node lists) exist, then the rigid body motion can be excluded using this number of rigid body modes (in 3D usually)
+  - `verboseMode`: if True, some additional output is printed
+  - `timerTreshold`: for more DOF than this number, CPU times are printed even with verboseMode=False
 - **output**: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
 - **notes**: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
 
@@ -861,7 +974,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputePostProcessingModes(self, material = 0, outputVariableType = 'OutputVariableType.StressLocal', numberOfThreads = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L4213)
 
 - **class function description**: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
-- **input**: material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if __name__ == '__main__':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
+- **input**:
+  - `material`: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
+  - `outputVariableType`: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+  - `numberOfThreads`: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if __name__ == '__main__':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
 - **output**: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
 - **notes**: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
 
@@ -872,7 +988,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 [`ComputeCampbellDiagram(self, terminalFrequency, nEigenfrequencies = 10, frequencySteps = 25, rotationAxis = 2, plotDiagram = False, verbose = False, useCorotationalFrame = False, useSparseSolver = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/FEM.py#L4327)
 
 - **class function description**: compute Campbell diagram for given mechanical system create a first order system Axd + Bx = 0 with x= [q,qd]' and compute eigenvalues takes mass M, stiffness K and gyroscopic matrix G from FEMinterface currently only uses dense matrices, so it is limited to approx. 5000 unknowns!
-- **input**: terminalFrequency: frequency in Hz, up to which the campbell diagram is computed nEigenfrequencies: gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0 frequencySteps: gives the number of increments (gives frequencySteps+1 total points in campbell diagram) rotationAxis:[0,1,2] = [x,y,z] provides rotation axis plotDiagram: if True, plots diagram for nEigenfrequencies befor terminating verbose: if True, shows progress of computation; if verbose=2, prints also eigenfrequencies useCorotationalFrame: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well useSparseSolver: for larger systems, the sparse solver needs to be used for creation of system matrices and for the eigenvalue solver (uses a random number generator internally in ARPACK, therefore, results are not fully repeatable!!!)
+- **input**:
+  - `terminalFrequency`: frequency in Hz, up to which the campbell diagram is computed
+  - `nEigenfrequencies`: gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0
+  - `frequencySteps`: gives the number of increments (gives frequencySteps+1 total points in campbell diagram) rotationAxis:[0,1,2] = [x,y,z] provides rotation axis
+  - `plotDiagram`: if True, plots diagram for nEigenfrequencies befor terminating
+  - `verbose`: if True, shows progress of computation; if verbose=2, prints also eigenfrequencies
+  - `useCorotationalFrame`: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well
+  - `useSparseSolver`: for larger systems, the sparse solver needs to be used for creation of system matrices and for the eigenvalue solver (uses a random number generator internally in ARPACK, therefore, results are not fully repeatable!!!)
 - **output**: [listFrequencies, campbellFrequencies] listFrequencies: list of computed frequencies campbellFrequencies: array of campbell frequencies per eigenfrequency of system
 
 

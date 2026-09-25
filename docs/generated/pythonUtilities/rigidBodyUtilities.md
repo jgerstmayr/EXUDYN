@@ -129,7 +129,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePist
 [`AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L300)
 
 - **function description**: compute time derivative of Euler parameters from (global) angular velocity vector note that for Euler parameters $\pv$, we have $\tomega=\Gm \dot \pv$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \dot \pv$ ==> $\Gm^T \Gm=4(\Im_{4 \times 4} - \pv\cdot \pv^T)\dot\pv = 4 (\Im_{4x4}) \dot \pv$
-- **input**: angularVelocity: 3D vector of angular velocity in global frame, as lists or as np.array eulerParameters: vector of 4 eulerParameters as np.array or list
+- **input**:
+  - `angularVelocity`: 3D vector of angular velocity in global frame, as lists or as np.array
+  - `eulerParameters`: vector of 4 eulerParameters as np.array or list
 - **output**: vector of time derivatives of 4 eulerParameters as np.array
 
 
@@ -236,7 +238,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`RotXYZ2G_t(rot, rot_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L514)
 
 - **function description**: compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$)
-- **input**: rot: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant rot_t: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
+- **input**:
+  - `rot`: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+  - `rot_t`: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
 - **output**: 3x3 matrix G_t as np.array
 
 
@@ -256,7 +260,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`RotXYZ2GLocal_t(rot, rot_t)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L552)
 
 - **function description**: compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$)
-- **input**: rot: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant rot_t: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
+- **input**:
+  - `rot`: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+  - `rot_t`: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
 - **output**: 3x3 matrix GLocal_t as np.array
 
 
@@ -266,7 +272,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`AngularVelocity2RotXYZ_t(angularVelocity, rotation)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L576)
 
 - **function description**: compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
-- **input**: angularVelocity: global angular velocity vector as list or np.array rotation: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+- **input**:
+  - `angularVelocity`: global angular velocity vector as list or np.array
+  - `rotation`: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - **output**: time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
 
 
@@ -276,7 +284,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`RotXYZ2EulerParameters(alpha)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L599)
 
 - **function description**: compute four Euler parameters from given RotXYZ angles, see [Henderson1977]
-- **input**: alpha: 3D vector as np.array containing RotXYZ angles
+- **input**:
+  - `alpha`: 3D vector as np.array containing RotXYZ angles
 - **output**: 4D vector as np.array containing four Euler parameters entry zero of output represent the scalar part of Euler parameters
 
 
@@ -286,7 +295,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`RotationMatrix2RotZYZ(rotationMatrix, flip)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L633)
 
 - **function description**: convert rotation matrix to zyz Euler angles;  A=Az*Ay*Az;
-- **input**: rotationMatrix: 3x3 rotation matrix as list of lists or np.array flip:           argument to choose first Euler angle to be in quadrant 2 or 3.
+- **input**:
+  - `rotationMatrix`: 3x3 rotation matrix as list of lists or np.array
+  - `flip`: argument to choose first Euler angle to be in quadrant 2 or 3.
 - **output**: vector of Euler rotation parameters [Z,Y,Z] (in radiant) as np.array
 - **author**: Martin Sereinig
 - **notes**: tested (compared with Robotics, Vision and Control book of P. Corke)
@@ -552,7 +563,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`RotationTranslation2T66(A, v)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L925)
 
 - **function description**: convert rotation and translation into 6x6 coordinate transformation (Plücker transform)
-- **input**: A: 3x3 rotation matrix A v: 3D translation vector v
+- **input**:
+  - `A`: 3x3 rotation matrix A
+  - `v`: 3D translation vector v
 - **output**: return 6x6 transformation matrix 'T66'
 
 
@@ -562,7 +575,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`RotationTranslation2T66Inverse(A, v)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L939)
 
 - **function description**: convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)
-- **input**: A: 3x3 rotation matrix A v: 3D translation vector v
+- **input**:
+  - `A`: 3x3 rotation matrix A
+  - `v`: 3D translation vector v
 - **output**: return 6x6 transformation matrix 'T66'
 
 
@@ -575,7 +590,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`T66Inverse(T66)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L953)
 
 - **function description**: compute inverse of 6x6 coordinate transformation (Plücker transform)
-- **input**: T66: 6x6 coordinate transformation (Plücker transform)
+- **input**:
+  - `T66`: 6x6 coordinate transformation (Plücker transform)
 - **output**: return inverse 6x6 transformation matrix 'T66'
 - **notes**: Skew(A@v) = A@Skew(v)@A.T; v=ApB: -BRA@Skew(ApB) = Skew(BpA)@BRA
 
@@ -599,7 +615,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`HT2T66Inverse(T)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L995)
 
 - **function description**: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
-- **input**: T: 4x4 homogeneous transformation (numpy array)
+- **input**:
+  - `T`: 4x4 homogeneous transformation (numpy array)
 - **output**: T66 (6x6 numpy array)
 
 
@@ -637,7 +654,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 [`GetRigidBodyNode(nodeType, position = [0,0,0], velocity = [0,0,0], rotationMatrix = [], rotationParameters = [], angularVelocity = [0,0,0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1444)
 
 - **function description**: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
-- **input**: nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration) position: reference position as list or numpy array with 3 components (in global/world frame) velocity: initial translational velocity as list or numpy array with 3 components (in global/world frame) rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) rotationParameters: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) angularVelocity: initial angular velocity as list or numpy array with 3 components (in global/world frame)
+- **input**:
+  - `nodeType`: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
+  - `position`: reference position as list or numpy array with 3 components (in global/world frame)
+  - `velocity`: initial translational velocity as list or numpy array with 3 components (in global/world frame)
+  - `rotationMatrix`: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[])
+  - `rotationParameters`: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[])
+  - `angularVelocity`: initial angular velocity as list or numpy array with 3 components (in global/world frame)
 - **output**: returns list containing node number and body number: [nodeNumber, bodyNumber]
 
 
@@ -647,7 +670,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 [`AddRigidBody(mainSys, inertia, nodeType = exu.NodeType.RotationEulerParameters, position = [0,0,0], velocity = [0,0,0], rotationMatrix = [], rotationParameters = [], angularVelocity = [0,0,0], gravity = [0,0,0], graphicsDataList = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1537)
 
 - **function description**: DEPRECATED: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
-- **input**: inertia: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration) position: reference position as list or numpy array with 3 components (in global/world frame) velocity: initial translational velocity as list or numpy array with 3 components (in global/world frame) rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) rotationParameters: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) angularVelocity: initial angular velocity as list or numpy array with 3 components (in global/world frame) gravity: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity graphicsDataList: list of graphicsData objects to define appearance of body
+- **input**:
+  - `inertia`: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia
+  - `nodeType`: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
+  - `position`: reference position as list or numpy array with 3 components (in global/world frame)
+  - `velocity`: initial translational velocity as list or numpy array with 3 components (in global/world frame)
+  - `rotationMatrix`: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[])
+  - `rotationParameters`: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[])
+  - `angularVelocity`: initial angular velocity as list or numpy array with 3 components (in global/world frame)
+  - `gravity`: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity
+  - `graphicsDataList`: list of graphicsData objects to define appearance of body
 - **output**: returns list containing node number and body number: [nodeNumber, bodyNumber]
 - **notes**: DEPRECATED and will be removed; use MainSystem.CreateRigidBody(...) instead!
 
@@ -658,7 +690,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 [`AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1619)
 
 - **function description**: DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
-- **input**: mbs: the MainSystem to which the joint and markers shall be added body0: a object number for body0, must be rigid body or ground object body1: a object number for body1, must be rigid body or ground object point: a 3D vector as list or np.array containing the global center point of the joint in reference configuration axis: a 3D vector as list or np.array containing the global rotation axis of the joint in reference configuration useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
+- **input**:
+  - `mbs`: the MainSystem to which the joint and markers shall be added
+  - `body0`: a object number for body0, must be rigid body or ground object
+  - `body1`: a object number for body1, must be rigid body or ground object
+  - `point`: a 3D vector as list or np.array containing the global center point of the joint in reference configuration
+  - `axis`: a 3D vector as list or np.array containing the global rotation axis of the joint in reference configuration
+  - `useGlobalFrame`: if False, the point and axis vectors are defined in the local coordinate system of body0
 - **output**: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 - **notes**: DEPRECATED and will be removed; use MainSystem.CreateRevoluteJoint(...) instead!
 
@@ -669,7 +707,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 [`AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1708)
 
 - **function description**: DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
-- **input**: mbs: the MainSystem to which the joint and markers shall be added body0: a object number for body0, must be rigid body or ground object body1: a object number for body1, must be rigid body or ground object point: a 3D vector as list or np.array containing the global center point of the joint in reference configuration axis: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
+- **input**:
+  - `mbs`: the MainSystem to which the joint and markers shall be added
+  - `body0`: a object number for body0, must be rigid body or ground object
+  - `body1`: a object number for body1, must be rigid body or ground object
+  - `point`: a 3D vector as list or np.array containing the global center point of the joint in reference configuration
+  - `axis`: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration
+  - `useGlobalFrame`: if False, the point and axis vectors are defined in the local coordinate system of body0
 - **output**: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 - **notes**: DEPRECATED and will be removed; use MainSystem.CreatePrismaticJoint(...) instead!
 
@@ -698,7 +742,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 [`__init__(self, linkInertia, jointType = exu.JointType.RevoluteZ, jointHT = HT0(), parent = None, PDcontrol = None, graphicsDataList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1040)
 
 - **class function description**: initialize inertia
-- **input**: linkInertia: RigidBodyInertia class, containing mass, inertia, and COM jointHT: transformation from previous link to this link's joint parent: index to parent link; if parent link is ground, use -1; if all parents in a serial kinematic tree are None, parent indices are computed automatically PDcontrol: tuple of PD control parameters graphicsData: graphicsDataList link; None automatically adds a suitable graphical object from next joint to this joint; use empty list [] to add no graphics for link
+- **input**:
+  - `linkInertia`: RigidBodyInertia class, containing mass, inertia, and COM
+  - `jointHT`: transformation from previous link to this link's joint
+  - `parent`: index to parent link; if parent link is ground, use -1; if all parents in a serial kinematic tree are None, parent indices are computed automatically
+  - `PDcontrol`: tuple of PD control parameters
+  - `graphicsData`: graphicsDataList link; None automatically adds a suitable graphical object from next joint to this joint; use empty list [] to add no graphics for link
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py) (TM)
@@ -726,7 +775,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 [`__init__(self, mass = 0, inertiaTensor = np.zeros([3,3]), com = np.zeros(3), inertiaTensorAtCOM = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1077)
 
 - **class function description**: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
-- **input**: mass: mass of rigid body (dimensions need to be consistent, should be in SI-units) inertiaTensor: tensor given w.r.t. reference point, NOT w.r.t. center of mass! com: center of mass relative to reference point, in same coordinate system as inertiaTensor inertiaTensorAtCOM: bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass
+- **input**:
+  - `mass`: mass of rigid body (dimensions need to be consistent, should be in SI-units)
+  - `inertiaTensor`: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
+  - `com`: center of mass relative to reference point, in same coordinate system as inertiaTensor
+  - `inertiaTensorAtCOM`: bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass
 
 
 (sec-rigidbodyutilities-rigidbodyinertia---add--)=
@@ -766,7 +819,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createKinem
 [`SetWithCOMinertia(self, mass, inertiaTensorCOM, com)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1143)
 
 - **class function description**: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com
-- **input**: mass: mass of rigid body (dimensions need to be consistent, should be in SI-units) inertiaTensorCOM: tensor given w.r.t. reference point, NOT w.r.t. center of mass! com: center of mass relative to reference point, in same coordinate system as inertiaTensor
+- **input**:
+  - `mass`: mass of rigid body (dimensions need to be consistent, should be in SI-units)
+  - `inertiaTensorCOM`: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
+  - `com`: center of mass relative to reference point, in same coordinate system as inertiaTensor
 
 
 (sec-rigidbodyutilities-rigidbodyinertia-inertia)=

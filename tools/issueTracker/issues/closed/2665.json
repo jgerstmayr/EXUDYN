@@ -1,0 +1,17 @@
+{
+  "number": 2665,
+  "title": "The arguments of a documented function are one paragraph, not one per line",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "In the reference manual - the Python utility functions, and the MainSystem extensions of the Python-C++ command interface - the Args: block of a docstring is joined into a single paragraph, so a function of ten arguments is one wall of text and the argument names are in the body font. The old RST pages had one argument per line with the name in a monospace font. The HTML and the PDF are both affected, because both are built from the same generated Markdown. Reported by the maintainer with a screenshot of the old rendering, 2026-09-26.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 00:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/utilityDocsModel.py",
+  "releaseNotes": "The input tag of a documented function is a nested list now, one argument per line with its name as code, in the Python utility functions and in the MainSystem extensions alike; 30 pages. A tag that is prose rather than a list of arguments is written as it was.",
+  "resolvedInVersion": "1.12.69"
+}

@@ -40,7 +40,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`projectAngleToPMPi(q0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1112)
 
 - **function description**: This function projects an angle in the range $[-min_{float}, +max_{float}]$ fo the range $[-\pi, +\pi]$
-- **input**: q0: An angle either as scalar, list or array
+- **input**:
+  - `q0`: An angle either as scalar, list or array
 - **output**: qProj: The angle projected into the range $[-\pi to \pi]$
 - **author**: Peter Manzl
 
@@ -57,7 +58,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`__init__(self, jointRadius = 0.06, jointWidth = 0.12, linkWidth = 0.1, showMBSjoint = True, showCOM = True, linkColor = [0.4,0.4,0.4,1], graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L96)
 
 - **class function description**: initialize robot link with parameters, being self-explaining
-- **input**: jointRadius: radius of joint to draw jointWidth: length or width of joint (depending on type of joint) showMBSjoint: if False, joint is not drawn linkWidth: width of link for default drawing linkColor: color of link for default drawing showCOM: if True, center of mass is marked with cube graphicsData: list of GraphicsData to represent link; if list is empty, link graphics will be generated from link geometry data; otherwise, drawing will be taken from graphicsData, and only showMBSjoint and showCOM flags will add additional graphics
+- **input**:
+  - `jointRadius`: radius of joint to draw
+  - `jointWidth`: length or width of joint (depending on type of joint)
+  - `showMBSjoint`: if False, joint is not drawn
+  - `linkWidth`: width of link for default drawing
+  - `linkColor`: color of link for default drawing
+  - `showCOM`: if True, center of mass is marked with cube
+  - `graphicsData`: list of GraphicsData to represent link; if list is empty, link graphics will be generated from link geometry data; otherwise, drawing will be taken from graphicsData, and only showMBSjoint and showCOM flags will add additional graphics
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), ...
@@ -75,7 +83,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`__init__(self, mass, COM, inertia, localHT = erb.HT0(), jointType = 'Rz', parent = -2, preHT = erb.HT0(), PDcontrol = (None,None), visualization = VRobotLink())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L137)
 
 - **class function description**: initialize robot link
-- **input**: mass: mass of robot link COM: center of mass in link coordinate system inertia: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass localHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly preHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity jointType: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link PDcontrol: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D visualization: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
+- **input**:
+  - `mass`: mass of robot link
+  - `COM`: center of mass in link coordinate system
+  - `inertia`: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
+  - `localHT`: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
+  - `preHT`: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity
+  - `jointType`: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
+  - `parent`: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
+  - `PDcontrol`: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
+  - `visualization`: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
 
 
 (sec-roboticscore-robotlink-setpdcontrol)=
@@ -134,7 +151,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`__init__(self, HT = erb.HT0(), visualization = VRobotTool())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L206)
 
 - **class function description**: initialize robot tool
-- **input**: HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+- **input**:
+  - `HT`: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool
+  - `graphicsData`: dictionary containing a list of GraphicsData, same as in exudyn Objects
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), ...
@@ -169,7 +188,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`__init__(self, HT = erb.HT0(), visualization = VRobotBase())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L235)
 
 - **class function description**: initialize robot base
-- **input**: HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot) graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+- **input**:
+  - `HT`: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
+  - `graphicsData`: dictionary containing a list of GraphicsData, same as in exudyn Objects
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), ...
@@ -187,7 +208,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`__init__(self, gravity = [0,0,-9.81], base = RobotBase(), tool = RobotTool(), referenceConfiguration = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L261)
 
 - **class function description**: initialize robot class
-- **input**: base: definition of base using RobotBase() class tool: definition of tool using RobotTool() class gravity: a list or 3D numpy array defining gravity referenceConfiguration: a list of scalar quantities defining the parameters for reference configuration
+- **input**:
+  - `base`: definition of base using RobotBase() class
+  - `tool`: definition of tool using RobotTool() class
+  - `gravity`: a list or 3D numpy array defining gravity
+  - `referenceConfiguration`: a list of scalar quantities defining the parameters for reference configuration
 
 
 (sec-roboticscore-robot-addlink)=
@@ -292,7 +317,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`Jacobian(self, HT, toolPosition = [], mode = 'all', linkIndex = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L438)
 
 - **class function description**: compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
-- **input**: HT: list of homogeneous transformations per joint , as computed by Robot.JointHT(...) toolPosition: global position at which the jacobian is evaluated (e.g., COM); if empty [], it uses the origin of the last link mode: 'all'...translation and rotation jacobian, 'trans'...only translation part, 'rot': only rotation part linkIndex: link index for which the jacobian is evaluated; if linkIndex==None, it uses the last link provided in HT
+- **input**:
+  - `HT`: list of homogeneous transformations per joint , as computed by Robot.JointHT(...)
+  - `toolPosition`: global position at which the jacobian is evaluated (e.g., COM); if empty [], it uses the origin of the last link
+  - `mode`: 'all'...translation and rotation jacobian, 'trans'...only translation part, 'rot': only rotation part
+  - `linkIndex`: link index for which the jacobian is evaluated; if linkIndex==None, it uses the last link provided in HT
 - **output**: returns jacobian with translation and rotation parts in rows (3 or 6) according to mode, and one column per HT; in the kinematic tree the columns not related to linkIndex remain zero
 
 
@@ -302,7 +331,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L512)
 
 - **class function description**: Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class; Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object; Current implementation only works for serial robots; Control can be realized simply by adding PDcontrol to RobotLink structures, then modifying jointPositionOffsetVector and jointVelocityOffsetVector in ObjectKinematicTree; force offsets (e.g., static or dynamic torque compensation) can be added to KinematicTree jointForceVector; more general control can be added by using KinematicTree forceUserFunction; The coordinates in KinematicTree (as well as jointPositionOffsetVector, etc.) are sorted in the order as the RobotLinks are added to the Robot class; Note that the ObjectKinematicTree is still under development and interfaces may change.
-- **input**: mbs: the multibody system, which will be extended name: object name in KinematicTree; transferred to KinematicTree, default = '' forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
+- **input**:
+  - `mbs`: the multibody system, which will be extended
+  - `name`: object name in KinematicTree; transferred to KinematicTree, default = ''
+  - `forceUserFunction`: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
 - **output**: the function returns a dictionary containing 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None; further values will be added in future
 
 
@@ -312,7 +344,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList = [], jointLoadUserFunctionList = [], createJointTorqueLoads = True, rotationMarkerBase = None, rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L694)
 
 - **class function description**: Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body); The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints; Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(...) function; See several Python examples, e.g., `serialRobotTestTSD.py`, in Examples or TestModels; For more efficient models, use CreateKinematicTree(...) function!
-- **input**: mbs: the multibody system, which will be extended baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase jointSpringDamperUserFunctionList: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink jointLoadUserFunctionList: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list createJointTorqueLoads: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated) rigidBodyNodeType: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
+- **input**:
+  - `mbs`: the multibody system, which will be extended
+  - `baseMarker`: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
+  - `jointSpringDamperUserFunctionList`: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
+  - `jointLoadUserFunctionList`: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
+  - `createJointTorqueLoads`: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
+  - `rotationMarkerBase`: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
+  - `rigidBodyNodeType`: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
 - **output**: the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links
 
 
@@ -357,7 +396,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`__init__(self, robot, jointStiffness = 1e0, useRenderer = False, flagDebug = False, useAlternativeConstraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1141)
 
 - **class function description**: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
-- **input**: robot: robot class jointStiffness: the stiffness used for the robot's model joints useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end configuration of the robot using the graphics objects definded in the robot object
+- **input**:
+  - `robot`: robot class
+  - `jointStiffness`: the stiffness used for the robot's model joints
+  - `useRenderer`: when solving the inverse kinematics the renderer is used to show the starting/end configuration of the robot using the graphics objects definded in the robot object
 - **author**: Peter Manzl
 
 
@@ -375,7 +417,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1250)
 
 - **class function description**: 
-- **input**: T1: 4x4 homogeneous transformation matrix representing the first Pose T2: 4x4 homogeneous transformation matrix representing the second Pose rotStep: the max. size of steps to take for the orientation minSteps: minimum number of substeps to interpolate
+- **input**:
+  - `T1`: 4x4 homogeneous transformation matrix representing the first Pose
+  - `T2`: 4x4 homogeneous transformation matrix representing the second Pose
+  - `rotStep`: the max. size of steps to take for the orientation
+  - `minSteps`: minimum number of substeps to interpolate
 - **output**: T: a List of homogeneous Transformations for each step between
 - **author**: Peter Manzl
 - **notes**: still under development; interpolation may be changed to using logSE3
@@ -387,7 +433,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1296)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. This helps the function Solve() to find the correct solutions.
-- **input**: T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
+- **input**:
+  - `T`: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+  - `q0`: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
 - **output**: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None success: flag to indicate if method was successful
 - **author**: Peter Manzl, Johannes Gerstmayr
 - **notes**: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
@@ -399,7 +447,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1353)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. T his helps the fucntion Solve to find the correct solutions.
-- **input**: T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
+- **input**:
+  - `T`: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+  - `q0`: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
 - **output**: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
 - **author**: Peter Manzl, Johannes Gerstmayr
 - **notes**: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke

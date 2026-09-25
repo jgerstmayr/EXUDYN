@@ -63,7 +63,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactCurv
 [`GaussIntegrate(functionOfX, integrationOrder, a, b)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L143)
 
 - **function description**: compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
-- **input**: functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable) integrationOrder: odd number in {1,3,5,7,9}; currently maximum order is 9 a: integration range start b: integration range end
+- **input**:
+  - `functionOfX`: scalar, vector or matrix-valued function with scalar argument (X or other variable)
+  - `integrationOrder`: odd number in {1,3,5,7,9}; currently maximum order is 9
+  - `a`: integration range start
+  - `b`: integration range end
 - **output**: (scalar or vectorized) integral value
 
 
@@ -73,7 +77,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactCurv
 [`LobattoIntegrate(functionOfX, integrationOrder, a, b)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L183)
 
 - **function description**: compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
-- **input**: functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable) integrationOrder: odd number in {1,3,5}; currently maximum order is 5 a: integration range start b: integration range end
+- **input**:
+  - `functionOfX`: scalar, vector or matrix-valued function with scalar argument (X or other variable)
+  - `integrationOrder`: odd number in {1,3,5}; currently maximum order is 5
+  - `a`: integration range start
+  - `b`: integration range end
 - **output**: (scalar or vectorized) integral value
 
 
@@ -83,7 +91,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactCurv
 [`GetOtherMarker(mbs, bodyNumber, existingMarker, show = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L216)
 
 - **function description**: creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
-- **input**: mbs: multibody system where new marker is added to bodyNumber: body where new marker shall be attached to existingMarker: marker number which serves as a reference show: if True, marker is shown
+- **input**:
+  - `mbs`: multibody system where new marker is added to
+  - `bodyNumber`: body where new marker shall be attached to
+  - `existingMarker`: marker number which serves as a reference
+  - `show`: if True, marker is shown
 - **output**: returns marker number of new marker
 
 *example*:
@@ -107,7 +119,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveFFRF
 [`GetJointArgs(mbs, markerNumber0 = None, markerNumber1 = None, rotationMarker0 = None, rotationMarker1 = None, bodyNumber0 = None, bodyNumber1 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L253)
 
 - **function description**: creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
-- **input**: mbs: multibody system where new marker is added to markerNumber0: markerNumber of existing rigid body marker markerNumber1: markerNumber of existing rigid body marker rotationMarker0: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid) rotationMarker1: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid) bodyNumber0: existing body used to create new marker bodyNumber1: existing body used to create new marker
+- **input**:
+  - `mbs`: multibody system where new marker is added to
+  - `markerNumber0`: markerNumber of existing rigid body marker
+  - `markerNumber1`: markerNumber of existing rigid body marker
+  - `rotationMarker0`: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
+  - `rotationMarker1`: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
+  - `bodyNumber0`: existing body used to create new marker
+  - `bodyNumber1`: existing body used to create new marker
 - **output**: returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
 
 *example*:
@@ -134,7 +153,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`jointArgsTe
 [`ShowOnlyObjects(mbs, objectNumbers = [], showOthers = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L329)
 
 - **function description**: function to hide all objects in mbs except for those listed in objectNumbers
-- **input**: mbs: mbs containing object objectNumbers: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown showOthers: if True, then all other objects are shown again
+- **input**:
+  - `mbs`: mbs containing object
+  - `objectNumbers`: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
+  - `showOthers`: if True, then all other objects are shown again
 - **output**: changes all colors in mbs, which is NOT reversible
 
 
@@ -144,7 +166,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`jointArgsTe
 [`HighlightItem(SC, mbs, itemNumber, itemType = exudyn.ItemType.Object, showNumbers = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L357)
 
 - **function description**: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
-- **input**: mbs: mbs containing object itemNumbers: integer object/node/etc number to be highlighted itemType: type of items to be highlighted showNumbers: if True, then the numbers of these items are shown
+- **input**:
+  - `mbs`: mbs containing object
+  - `itemNumbers`: integer object/node/etc number to be highlighted
+  - `itemType`: type of items to be highlighted
+  - `showNumbers`: if True, then the numbers of these items are shown
 
 
 (sec-basicutilities-ufsensorrecord)=
@@ -162,7 +188,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`jointArgsTe
 [`AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize = 3)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L418)
 
 - **function description**: DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
-- **input**: mbs: mbs containing object sensorNumber: integer sensor number to be recorded endTime: end time of simulation, as given in simulationSettings.timeIntegration.endTime sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
+- **input**:
+  - `mbs`: mbs containing object
+  - `sensorNumber`: integer sensor number to be recorded
+  - `endTime`: end time of simulation, as given in simulationSettings.timeIntegration.endTime
+  - `sensorsWritePeriod`: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+  - `sensorOutputSize`: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
 - **output**: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
 - **notes**: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 
@@ -176,7 +207,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ComputeSens
 [`UIWindowSuppressed(kind, callerInfo = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L449)
 
 - **function description**: ask exudyn.special.userInterface whether this kind of window must not open (#2477)
-- **input**: kind: one of 'Renderer', 'SolutionViewer', 'Plots', 'Dialogs'; the name of the flag without the 'suppress' prefix callerInfo: name of the calling function, shown in the notice
+- **input**:
+  - `kind`: one of 'Renderer', 'SolutionViewer', 'Plots', 'Dialogs'; the name of the flag without the 'suppress' prefix
+  - `callerInfo`: name of the calling function, shown in the notice
 - **output**: True if the window must not be opened
 - **notes**: The flags are set for automated runs - test runners, CI, AI-assisted development - where a window that waits for a human stops everything. A suppressed call is a silent no-op, except that the FIRST suppression of each kind prints one line, so that a window-less session is never a mystery.
 
@@ -194,7 +227,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ComputeSens
 [`OutputFilePath(fileName, callerInfo = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L477)
 
 - **function description**: merge a local file name with the global exudyn.config.outputDirectory, exactly as the solver does when it writes solution, sensor, image and print files (#2454)
-- **input**: fileName: file name as given by the user or stored in a sensor or in the simulation settings callerInfo: name of the calling function, used in the error message
+- **input**:
+  - `fileName`: file name as given by the user or stored in a sensor or in the simulation settings
+  - `callerInfo`: name of the calling function, used in the error message
 - **output**: fileName unchanged if exudyn.config.outputDirectory is empty, otherwise the merged path
 - **notes**: The rule in Exudyn is: everything WRITTEN as output of a run follows exudyn.config.outputDirectory, and a file is READ from there only if its name comes from Exudyn itself - the simulation settings (SolutionViewer) or a sensor definition (PlotSensor). A file name that you pass to a function such as LoadSolutionFile is read exactly as given; wrap it in OutputFilePath(...) yourself if you want the output directory. Model data (mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile and LoadFromFile, SaveDictToHDF5/LoadDictFromHDF5) is never redirected.
 
@@ -216,7 +251,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 [`CreateDirectoryForFile(fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L519)
 
 - **function description**: create the directory a file is going to be written into, if it does not exist yet
-- **input**: fileName: file name including its path; a name without any path is left alone
+- **input**:
+  - `fileName`: file name including its path; a name without any path is left alone
 - **output**: fileName unchanged, so that the call can wrap the file name at the point of use
 - **notes**: Every Exudyn function that writes a file calls this first, so that a path such as 'solution/sensor.txt' - or anything under exudyn.config.outputDirectory - works without the caller having to create the directory. Failure is deliberately ignored: creating a directory can fail for reasons that do not stop the write (a read-only parent on a network share, a race with another process that just created it), and the write itself reports the real problem with a better message (#2493).
 
@@ -227,7 +263,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 [`LoadSolutionFile(fileName, safeMode = False, maxRows = -1, verbose = True, hasHeader = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L546)
 
 - **function description**: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
-- **input**: fileName: string containing directory and filename of stored coordinatesSolutionFile saveMode: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory! verbose: if True, some information is written when importing file (use for huge files to track progress) maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows hasHeader: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
+- **input**:
+  - `fileName`: string containing directory and filename of stored coordinatesSolutionFile
+  - `saveMode`: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
+  - `verbose`: if True, some information is written when importing file (use for huge files to track progress)
+  - `maxRows`: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+  - `hasHeader`: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
 - **output**: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
 
 
@@ -289,7 +330,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 [`LoadBinarySolutionFile(fileName, maxRows = -1, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L739)
 
 - **function description**: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
-- **input**: fileName: string containing directory and filename of stored coordinatesSolutionFile verbose: if True, some information is written when importing file (use for huge files to track progress) maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+- **input**:
+  - `fileName`: string containing directory and filename of stored coordinatesSolutionFile
+  - `verbose`: if True, some information is written when importing file (use for huge files to track progress)
+  - `maxRows`: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
 - **output**: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
 
 
@@ -299,7 +343,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 [`RecoverSolutionFile(fileName, newFileName, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L925)
 
 - **function description**: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
-- **input**: fileName: string containing directory and filename of stored coordinatesSolutionFile newFileName: string containing directory and filename of new coordinatesSolutionFile verbose: 0=no information, 1=basic information, 2=information per row
+- **input**:
+  - `fileName`: string containing directory and filename of stored coordinatesSolutionFile
+  - `newFileName`: string containing directory and filename of new coordinatesSolutionFile
+  - `verbose`: 0=no information, 1=basic information, 2=information per row
 - **output**: writes only consistent rows of file to file with name newFileName
 
 
@@ -309,7 +356,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 [`InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L984)
 
 - **function description**: recover initial coordinates, time, etc. from given restart file
-- **input**: mbs: MainSystem to be operated with simulationSettings: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...) restartFileName: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName verbose: False=no information, True=basic information
+- **input**:
+  - `mbs`: MainSystem to be operated with
+  - `simulationSettings`: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
+  - `restartFileName`: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+  - `verbose`: False=no information, True=basic information
 - **output**: modifies simulationSettings and sets according initial conditions in mbs
 
 
@@ -327,7 +378,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 [`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1086)
 
 - **function description**: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
-- **input**: mbs: the system used for animation solution: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame) timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second createImages: creates consecutively images from the animation, which can be converted into an animation runLoop: if True, the animation is played in a loop until 'q' is pressed in render window
+- **input**:
+  - `mbs`: the system used for animation
+  - `solution`: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
+  - `rowIncrement`: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+  - `timeout`: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+  - `createImages`: creates consecutively images from the animation, which can be converted into an animation
+  - `runLoop`: if True, the animation is played in a loop until 'q' is pressed in render window
 - **output**: renders the scene in mbs and changes the visualization state in mbs continuously
 
 

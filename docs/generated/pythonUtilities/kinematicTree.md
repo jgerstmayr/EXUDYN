@@ -17,7 +17,10 @@ The main formalisms are based on 6x6 matrices, so-called Pl\"ucker transformatio
 [`MassCOMinertia2T66(mass, centerOfMass, inertia)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L69)
 
 - **function description**: convert mass, COM and inertia into 6x6 inertia matrix
-- **input**: mass: scalar mass centerOfMass: 3D vector (list/array) inertia: 3x3 matrix (list of lists / 2D array) w.r.t. center of mass
+- **input**:
+  - `mass`: scalar mass
+  - `centerOfMass`: 3D vector (list/array)
+  - `inertia`: 3x3 matrix (list of lists / 2D array) w.r.t. center of mass
 - **output**: 6x6 numpy array for further use in minimal coordinates formulation
 
 
@@ -95,7 +98,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`__init__(self, listOfJointTypes, listOfRotations, listOfOffsets, listOfInertia3D, listOfCOM, listOfMass, listOfParents = [], gravity = [0,0,-9.81])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L176)
 
 - **class function description**: initialize kinematic tree
-- **input**: listOfJointTypes: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints listOfRotations: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6)) listOfOffsets: per link offset vector from pervious coordinate system to the joint coordinate system listOfInertia3D: per link 3D inertia matrix, w.r.t. reference point (not COM!) listOfCOM: per link vector from reference point to center of mass (COM), in link coordinates listOfMass: mass per link listOfParents: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame) gravity: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
+- **input**:
+  - `listOfJointTypes`: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
+  - `listOfRotations`: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6))
+  - `listOfOffsets`: per link offset vector from pervious coordinate system to the joint coordinate system
+  - `listOfInertia3D`: per link 3D inertia matrix, w.r.t. reference point (not COM!)
+  - `listOfCOM`: per link vector from reference point to center of mass (COM), in link coordinates
+  - `listOfMass`: mass per link
+  - `listOfParents`: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
+  - `gravity`: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
 
 
 (sec-kinematictree-kinematictree33-size)=
@@ -120,7 +131,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`ForwardDynamicsCRB(self, q = [], q_t = [], torques = [], forces = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L241)
 
 - **class function description**: compute forward dynamics using composite rigid body algorithm
-- **input**: q: joint space coordinates for the model at which the forward dynamics is evaluated q_t: joint space velocity coordinates for the model at which the forward dynamics is evaluated torques: a vector of torques applied at joint coordinates or list/array with zero length forces: forces acting on the bodies using special format
+- **input**:
+  - `q`: joint space coordinates for the model at which the forward dynamics is evaluated
+  - `q_t`: joint space velocity coordinates for the model at which the forward dynamics is evaluated
+  - `torques`: a vector of torques applied at joint coordinates or list/array with zero length
+  - `forces`: forces acting on the bodies using special format
 - **output**: returns acceleration vector q_tt of joint coordinates
 
 
@@ -130,7 +145,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`ComputeMassMatrixAndForceTerms(self, q, q_t, externalForces = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L264)
 
 - **class function description**: compute generalized mass matrix M and generalized force terms for kinematic tree, using current state (joint) variables q and joint velocities q_t. The generalized force terms f = fGeneralized contain Coriolis and gravity if given in the kinematicTree.
-- **input**: q: current joint coordinates q_t: current joint velocities externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
+- **input**:
+  - `q`: current joint coordinates
+  - `q_t`: current joint velocities
+  - `externalForces`: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - **output**: mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of `ComputeMassMatrixAndForceTerms`
 
 
@@ -150,7 +168,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`__init__(self, listOfJointTypes, listOfTransformations, listOfInertias, listOfParents = [], gravity = [0,0,-9.81])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L466)
 
 - **class function description**: initialize kinematic tree
-- **input**: listOfJointTypes: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints listOfTransformations: provide a list of Plücker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system listOfInertias: provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66 listOfParents: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame) gravity: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
+- **input**:
+  - `listOfJointTypes`: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
+  - `listOfTransformations`: provide a list of Plücker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
+  - `listOfInertias`: provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66
+  - `listOfParents`: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
+  - `gravity`: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
 
 
 (sec-kinematictree-kinematictree66-size)=
@@ -175,7 +198,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`ForwardDynamicsCRB(self, q = [], q_t = [], torques = [], forces = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L514)
 
 - **class function description**: compute forward dynamics using composite rigid body algorithm
-- **input**: q: joint space coordinates for the model at which the forward dynamics is evaluated q_t: joint space velocity coordinates for the model at which the forward dynamics is evaluated torques: a vector of torques applied at joint coordinates or list/array with zero length forces: forces acting on the bodies using special format
+- **input**:
+  - `q`: joint space coordinates for the model at which the forward dynamics is evaluated
+  - `q_t`: joint space velocity coordinates for the model at which the forward dynamics is evaluated
+  - `torques`: a vector of torques applied at joint coordinates or list/array with zero length
+  - `forces`: forces acting on the bodies using special format
 - **output**: returns acceleration vector q_tt of joint coordinates
 
 
@@ -185,7 +212,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`ComputeMassMatrixAndForceTerms(self, q, q_t, externalForces = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L537)
 
 - **class function description**: compute generalized mass matrix M and generalized force terms for kinematic tree, using current state (joint) variables q and joint velocities q_t. The generalized force terms f = fGeneralized contain Coriolis and gravity if given in the kinematicTree.
-- **input**: q: current joint coordinates q_t: current joint velocities externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
+- **input**:
+  - `q`: current joint coordinates
+  - `q_t`: current joint velocities
+  - `externalForces`: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - **output**: mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of `ComputeMassMatrixAndForceTerms`
 
 
@@ -195,7 +225,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTr
 [`AddExternalForces(self, Xup, fvp, externalForces = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/kinematicTree.py#L611)
 
 - **class function description**: add action of external forces to forces fvp and return new composed vector of forces fvp
-- **input**: Xup: 6x6 transformation matrices per joint; as computed in ComputeMassMatrixAndForceTerms fvp: force (torque) per joint, as computed in ComputeMassMatrixAndForceTerms externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
+- **input**:
+  - `Xup`: 6x6 transformation matrices per joint; as computed in ComputeMassMatrixAndForceTerms
+  - `fvp`: force (torque) per joint, as computed in ComputeMassMatrixAndForceTerms
+  - `externalForces`: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex)

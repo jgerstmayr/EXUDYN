@@ -18,7 +18,17 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 [`Sphere(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, addFaces = True, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L121)
 
 - **function description**: generate graphics data for a sphere with point p and radius
-- **input**: point: center of sphere (3D list or np.array) radius: positive value color: provided as list of 4 RGBA values nTiles: used to determine resolution of sphere >=2; represents resolution of a half-circle; use larger values for finer resolution addEdges: True or number of edges along sphere shell (under development); for optimal drawing, nTiles shall be multiple of 4 or 8 edgeColor: optional color for edges addFaces: if False, no faces are added (only edges); ignored in case of hollow sphere majorAngleMin: starting angle for sphere to be drawn; if > -0.5*pi, it will be shortened at -Z coordinate majorAngleMax: final angle for sphere to be drawn; if < 0.5*pi, it will be shortened at +Z coordinate innerRadius: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values
+- **input**:
+  - `point`: center of sphere (3D list or np.array)
+  - `radius`: positive value
+  - `color`: provided as list of 4 RGBA values
+  - `nTiles`: used to determine resolution of sphere >=2; represents resolution of a half-circle; use larger values for finer resolution
+  - `addEdges`: True or number of edges along sphere shell (under development); for optimal drawing, nTiles shall be multiple of 4 or 8
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges); ignored in case of hollow sphere
+  - `majorAngleMin`: starting angle for sphere to be drawn; if > -0.5*pi, it will be shortened at -Z coordinate
+  - `majorAngleMax`: final angle for sphere to be drawn; if < 0.5*pi, it will be shortened at +Z coordinate
+  - `innerRadius`: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -31,7 +41,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 [`Lines(pList, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L359)
 
 - **function description**: generate graphics data for lines, given by list of points and color; transforms to GraphicsData dictionary
-- **input**: pList: list of 3D numpy arrays or lists (to achieve closed curve, set last point equal to first point) color: provided as list of 4 RGBA values
+- **input**:
+  - `pList`: list of 3D numpy arrays or lists (to achieve closed curve, set last point equal to first point)
+  - `color`: provided as list of 4 RGBA values
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 *example*:
@@ -52,7 +64,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 [`Circle(point = [0,0,0], radius = 1, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L382)
 
 - **function description**: generate graphics data for a single circle; currently the plane normal = [0,0,1], just allowing to draw planar circles -- this may be extended in future!
-- **input**: point: center point of circle radius: radius of circle color: provided as list of 4 RGBA values
+- **input**:
+  - `point`: center point of circle
+  - `radius`: radius of circle
+  - `color`: provided as list of 4 RGBA values
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 - **notes**: the tiling (number of segments to draw circle) can be adjusted by visualizationSettings.general.circleTiling
 
@@ -66,7 +81,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 [`Text(point = [0,0,0], text = '', color = [0.,0.,0.,1.], fontSize = 0., offset = [0.,0.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L400)
 
 - **function description**: generate graphics data for a text drawn at a 3D position
-- **input**: point: position of text text: string representing text; multiline texts can be written with line breaks color: provided as list of 4 RGBA values fontSize: scalar fontSize or 0. for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize) offset: offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals to offset of one character moved right and up)
+- **input**:
+  - `point`: position of text
+  - `text`: string representing text; multiline texts can be written with line breaks
+  - `color`: provided as list of 4 RGBA values
+  - `fontSize`: scalar fontSize or 0. for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize)
+  - `offset`: offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals to offset of one character moved right and up)
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 - **notes**: text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 
@@ -80,7 +100,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 [`Cuboid(pList, color = [0.,0.,0.,1.], faces = [1,1,1,1,1,1], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L424)
 
 - **function description**: generate graphics data for general block with endpoints, according to given vertex definition
-- **input**: pList: is a list of points [[x0,y0,z0],[x1,y1,z1],...] color: provided as list of 4 RGBA values faces: includes the list of six binary values (0/1), denoting active faces (value=1); set index to zero to hide face addNormals: if True, normals are added and there are separate points for every triangle addEdges: if True, edges are added in TriangleList of GraphicsData edgeColor: optional color for edges addFaces: if False, no faces are added (only edges)
+- **input**:
+  - `pList`: is a list of points [[x0,y0,z0],[x1,y1,z1],...]
+  - `color`: provided as list of 4 RGBA values
+  - `faces`: includes the list of six binary values (0/1), denoting active faces (value=1); set index to zero to hide face
+  - `addNormals`: if True, normals are added and there are separate points for every triangle
+  - `addEdges`: if True, edges are added in TriangleList of GraphicsData
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -104,7 +131,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`geneticOpti
 [`Brick(centerPoint = [0,0,0], size = [0.1,0.1,0.1], color = [0.,0.,0.,1.], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True, roundness = 0, nTiles = 12)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L546)
 
 - **function description**: generate graphics data for orthogonal 3D box with center point and size; using roundness=1, it draws an ellipsoid inside the box and in case 0 < roundness < 1, it draws a body blended between box and ellipsoid
-- **input**: centerPoint: center of box as 3D list or np.array size: size as 3D list or np.array color: list of 4 RGBA values addNormals: add face normals to triangle information addEdges: if True, edges are added in TriangleList of GraphicsData edgeColor: optional color for edges addFaces: if False, no faces are added (only edges) roundness: if > 0, it draws an ellipsoid, using nTiles for drawing; edges are not available if roundness > 0 nTiles: only apply if roundness > 0; discretization of whole ellipsoid; should be multiple of 4 to avoid artifacts
+- **input**:
+  - `centerPoint`: center of box as 3D list or np.array
+  - `size`: size as 3D list or np.array
+  - `color`: list of 4 RGBA values
+  - `addNormals`: add face normals to triangle information
+  - `addEdges`: if True, edges are added in TriangleList of GraphicsData
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
+  - `roundness`: if > 0, it draws an ellipsoid, using nTiles for drawing; edges are not available if roundness > 0
+  - `nTiles`: only apply if roundness > 0; discretization of whole ellipsoid; should be multiple of 4 to avoid artifacts
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects; if addEdges=True, it returns a list of two dictionaries
 
 
@@ -117,7 +153,20 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 [`Cylinder(pAxis = [0,0,0], vAxis = [0,0,1], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 16, radiusInner = None, angleRange = [0,2*pi], lastFace = True, cutPlain = True, addEdges = False, edgeColor = color.black, addFaces = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L661)
 
 - **function description**: generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3)
-- **input**: pAxis: axis point of one face of cylinder (3D list or np.array) vAxis: vector representing the cylinder's axis (3D list or np.array) radius: positive value representing radius of cylinder color: provided as list of 4 RGBA values nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution radiusInner: if not equal 0, this represents the inner radius of a hollow cylinder; some options like angleRange, lastFace, etc. do not work in this case angleRange: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi] lastFace: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True cutPlain: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ... addEdges: if True, edges are added in TriangleList of GraphicsData; if addEdges is integer, additional int(addEdges) lines are added on the cylinder mantle edgeColor: optional color for edges addFaces: if False, no faces are added (only edges) alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
+- **input**:
+  - `pAxis`: axis point of one face of cylinder (3D list or np.array)
+  - `vAxis`: vector representing the cylinder's axis (3D list or np.array)
+  - `radius`: positive value representing radius of cylinder
+  - `color`: provided as list of 4 RGBA values
+  - `nTiles`: used to determine resolution of cylinder >=3; use larger values for finer resolution
+  - `radiusInner`: if not equal 0, this represents the inner radius of a hollow cylinder; some options like angleRange, lastFace, etc. do not work in this case
+  - `angleRange`: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]
+  - `lastFace`: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True
+  - `cutPlain`: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
+  - `addEdges`: if True, edges are added in TriangleList of GraphicsData; if addEdges is integer, additional int(addEdges) lines are added on the cylinder mantle
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
+  - `alternatingColor`: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -130,7 +179,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 [`Tube(points, axes, radius = 0.1, color = [0.,0.,0.,1.], nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L876)
 
 - **function description**: generate graphics data for a tube with given list of points and axes, radius and color; nTiles gives the number of tiles (minimum=3)
-- **input**: points: list of 3D vectors (or numpy arrays) representing the center points of the tube line axes: list of 3D vectors (or numpy arrays) representing the axis according to the points radius: positive value representing radius of tube color: provided as list of 4 RGBA values nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution
+- **input**:
+  - `points`: list of 3D vectors (or numpy arrays) representing the center points of the tube line
+  - `axes`: list of 3D vectors (or numpy arrays) representing the axis according to the points
+  - `radius`: positive value representing radius of tube
+  - `color`: provided as list of 4 RGBA values
+  - `nTiles`: used to determine resolution of cylinder >=3; use larger values for finer resolution
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -140,7 +194,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 [`Torus(point, axis, radiusMajor = 0.5, radiusMinor = 0.1, color = [0., 0., 0., 1.], nTilesMajor = 24, nTilesMinor = 12, minorAngleStart = 0, minorAngleEnd = 2*np.pi, smoothNormals = True, invert = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L973)
 
 - **function description**: generate graphics data for a torus with given major and minor radius, center point and axis
-- **input**: point: 3D vector (or numpy array) representing the center point of the torus axis: 3D vector (or numpy array) representing the axis of revolution of the torus radiusMajor: major radius of torus radiusMinor: minor radius of torus color: provided as list of 4 RGBA values nTilesMajor: used to for resolution of tube with major radius; use larger values for finer resolution nTilesMinor: used to for resolution of circle with minor radius; use larger values for finer resolution minorAngleStart: starting angle for minor radius; 0 is the angle at outmost radius of torus, pi is at inside minorAngleEnd: end angle for minor radius; use -0.5*pi / 0.5*pi to draw only the outer half of the torus smoothNormals: if True, the normals are added to create a smooth contour, otherwise triangles are flat invert: if False, the outside faces are visible; if invert=True, the inside faces are visible (influences reflections, light, etc.)
+- **input**:
+  - `point`: 3D vector (or numpy array) representing the center point of the torus
+  - `axis`: 3D vector (or numpy array) representing the axis of revolution of the torus
+  - `radiusMajor`: major radius of torus
+  - `radiusMinor`: minor radius of torus
+  - `color`: provided as list of 4 RGBA values
+  - `nTilesMajor`: used to for resolution of tube with major radius; use larger values for finer resolution
+  - `nTilesMinor`: used to for resolution of circle with minor radius; use larger values for finer resolution
+  - `minorAngleStart`: starting angle for minor radius; 0 is the angle at outmost radius of torus, pi is at inside
+  - `minorAngleEnd`: end angle for minor radius; use -0.5*pi / 0.5*pi to draw only the outer half of the torus
+  - `smoothNormals`: if True, the normals are added to create a smooth contour, otherwise triangles are flat
+  - `invert`: if False, the outside faces are visible; if invert=True, the inside faces are visible (influences reflections, light, etc.)
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -150,7 +215,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 [`RigidLink(p0, p1, axis0 = [0,0,0], axis1 = [0,0,0], radius = [0.1,0.1], thickness = 0.05, width = [0.05,0.05], color = [0.,0.,0.,1.], nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1071)
 
 - **function description**: generate graphics data for a planar Link between the two joint positions, having two axes
-- **input**: p0: joint0 center position p1: joint1 center position axis0: direction of rotation axis at p0, if drawn as a cylinder; [0,0,0] otherwise axis1: direction of rotation axis of p1, if drawn as a cylinder; [0,0,0] otherwise radius: list of two radii [radius0, radius1], being the two radii of the joints drawn by a cylinder or sphere width: list of two widths [width0, width1], being the two widths of the joints drawn by a cylinder; ignored for sphere thickness: the thickness of the link (shaft) between the two joint positions; thickness in z-direction or diameter (cylinder) color: provided as list of 4 RGBA values nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution
+- **input**:
+  - `p0`: joint0 center position
+  - `p1`: joint1 center position
+  - `axis0`: direction of rotation axis at p0, if drawn as a cylinder; [0,0,0] otherwise
+  - `axis1`: direction of rotation axis of p1, if drawn as a cylinder; [0,0,0] otherwise
+  - `radius`: list of two radii [radius0, radius1], being the two radii of the joints drawn by a cylinder or sphere
+  - `width`: list of two widths [width0, width1], being the two widths of the joints drawn by a cylinder; ignored for sphere
+  - `thickness`: the thickness of the link (shaft) between the two joint positions; thickness in z-direction or diameter (cylinder)
+  - `color`: provided as list of 4 RGBA values
+  - `nTiles`: used to determine resolution of cylinder >=3; use larger values for finer resolution
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -163,7 +237,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 [`SolidOfRevolution(pAxis, vAxis, contour, color = [0.,0.,0.,1.], nTiles = 16, smoothContour = False, addEdges = False, edgeColor = color.black, addFaces = True, smoothingAngle = 2*np.pi, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1137)
 
 - **function description**: generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color;
-- **input**: pAxis: axis point of one face of solid of revolution (3D list or np.array) vAxis: vector representing the solid of revolution's axis (3D list or np.array) contour: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]] color: provided as list of 4 RGBA values nTiles: used to determine resolution of solid; use larger values for finer resolution smoothContour: if True, the contour is made smooth by auto-computing normals to the contour addEdges: True or number of edges along revolution mantle; for optimal drawing, nTiles shall be multiple addEdges edgeColor: optional color for edges addFaces: if False, no faces are added (only edges) smoothingAngle: if angle between two edges is smaller than smoothingAngle, smoothing is applied alternatingColor: add a second color, which enables to see the rotation of the solid
+- **input**:
+  - `pAxis`: axis point of one face of solid of revolution (3D list or np.array)
+  - `vAxis`: vector representing the solid of revolution's axis (3D list or np.array)
+  - `contour`: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]]
+  - `color`: provided as list of 4 RGBA values
+  - `nTiles`: used to determine resolution of solid; use larger values for finer resolution
+  - `smoothContour`: if True, the contour is made smooth by auto-computing normals to the contour
+  - `addEdges`: True or number of edges along revolution mantle; for optimal drawing, nTiles shall be multiple addEdges
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
+  - `smoothingAngle`: if angle between two edges is smaller than smoothingAngle, smoothing is applied
+  - `alternatingColor`: add a second color, which enables to see the rotation of the solid
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 *example*:
@@ -198,7 +283,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 [`Arrow(pAxis, vAxis, radius, color = [0.,0.,0.,1.], headFactor = 2, headStretch = 4, nTiles = 12)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1313)
 
 - **function description**: generate graphics data for an arrow with given origin, axis, shaft radius, optional size factors for head and color; nTiles gives the number of tiles (minimum=3)
-- **input**: pAxis: axis point of the origin (base) of the arrow (3D list or np.array) vAxis: vector representing the vector pointing from the origin to the tip (head) of the error (3D list or np.array) radius: positive value representing radius of shaft cylinder headFactor: positive value representing the ratio between head's radius and the shaft radius headStretch: positive value representing the ratio between the head's radius and the head's length color: provided as list of 4 RGBA values nTiles: used to determine resolution of arrow (of revolution object) >=3; use larger values for finer resolution
+- **input**:
+  - `pAxis`: axis point of the origin (base) of the arrow (3D list or np.array)
+  - `vAxis`: vector representing the vector pointing from the origin to the tip (head) of the error (3D list or np.array)
+  - `radius`: positive value representing radius of shaft cylinder
+  - `headFactor`: positive value representing the ratio between head's radius and the shaft radius
+  - `headStretch`: positive value representing the ratio between the head's radius and the head's length
+  - `color`: provided as list of 4 RGBA values
+  - `nTiles`: used to determine resolution of arrow (of revolution object) >=3; use larger values for finer resolution
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -211,7 +303,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 [`Basis(origin = [0,0,0], rotationMatrix = np.eye(3), length = 1, colors = [color.red, color.green, color.blue], headFactor = 2, headStretch = 4, nTiles = 12, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1334)
 
 - **function description**: generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
-- **input**: origin: point of the origin of the base (3D list or np.array) rotationMatrix: optional transformation, which rotates the basis vectors length: positive value representing lengths of arrows for basis colors: provided as list of 3 colors (list of 4 RGBA values) headFactor: positive value representing the ratio between head's radius and the shaft radius headStretch: positive value representing the ratio between the head's radius and the head's length nTiles: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution radius: positive value representing radius of arrows; default: radius = 0.01*length labels: a list of 3 strings written to the three axes (X, Y, Z); in this case, the result is returned as list of GraphicsData!
+- **input**:
+  - `origin`: point of the origin of the base (3D list or np.array)
+  - `rotationMatrix`: optional transformation, which rotates the basis vectors
+  - `length`: positive value representing lengths of arrows for basis
+  - `colors`: provided as list of 3 colors (list of 4 RGBA values)
+  - `headFactor`: positive value representing the ratio between head's radius and the shaft radius
+  - `headStretch`: positive value representing the ratio between the head's radius and the head's length
+  - `nTiles`: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
+  - `radius`: positive value representing radius of arrows; default: radius = 0.01*length
+  - `labels`: a list of 3 strings written to the three axes (X, Y, Z); in this case, the result is returned as list of GraphicsData!
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -224,7 +325,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 [`Frame(HT = np.eye(4), length = 1, colors = [color.red, color.green, color.blue], headFactor = 2, headStretch = 4, nTiles = 12, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1374)
 
 - **function description**: generate graphics data for frame (similar to Basis), showing three arrows representing an orthogonal basis for the homogeneous transformation HT; optional shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
-- **input**: HT: homogeneous transformation representing frame length: positive value representing lengths of arrows for basis colors: provided as list of 3 colors (list of 4 RGBA values) headFactor: positive value representing the ratio between head's radius and the shaft radius headStretch: positive value representing the ratio between the head's radius and the head's length nTiles: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution radius: positive value representing radius of arrows; default: radius = 0.01*length
+- **input**:
+  - `HT`: homogeneous transformation representing frame
+  - `length`: positive value representing lengths of arrows for basis
+  - `colors`: provided as list of 3 colors (list of 4 RGBA values)
+  - `headFactor`: positive value representing the ratio between head's radius and the shaft radius
+  - `headStretch`: positive value representing the ratio between the head's radius and the head's length
+  - `nTiles`: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
+  - `radius`: positive value representing radius of arrows; default: radius = 0.01*length
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -237,7 +345,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`Quad(pList, color = [0.,0.,0.,1.], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1405)
 
 - **function description**: generate graphics data for simple quad with option for checkerboard pattern; points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
-- **input**: pList: list of 4 quad points [[x0,y0,z0],[x1,y1,z1],...] color: provided as list of 4 RGBA values alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor nTiles: number of tiles for checkerboard pattern (default: 10) nTilesY: if defined, use number of tiles in y-direction different from x-direction (=nTiles)
+- **input**:
+  - `pList`: list of 4 quad points [[x0,y0,z0],[x1,y1,z1],...]
+  - `color`: provided as list of 4 RGBA values
+  - `alternatingColor`: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
+  - `nTiles`: number of tiles for checkerboard pattern (default: 10)
+  - `nTilesY`: if defined, use number of tiles in y-direction different from x-direction (=nTiles)
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 *example*:
@@ -261,7 +374,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`massSpringF
 [`CheckerBoard(point = [0,0,0], normal = [0,0,1], size = 1, color = color.lightgrey, alternatingColor = color.lightgrey2, nTiles = 10, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1483)
 
 - **function description**: function to generate checkerboard background; points are arranged counter-clock-wise, e.g.:
-- **input**: point: midpoint of pattern provided as list or np.array normal: normal to plane provided as list or np.array size: dimension of first side length of quad size2: dimension of second side length of quad color: provided as list of 4 RGBA values alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor nTiles: number of tiles for checkerboard pattern in first direction nTiles2: number of tiles for checkerboard pattern in second direction; default: nTiles materialIndex: use special graphics material for both colors
+- **input**:
+  - `point`: midpoint of pattern provided as list or np.array
+  - `normal`: normal to plane provided as list or np.array
+  - `size`: dimension of first side length of quad
+  - `size2`: dimension of second side length of quad
+  - `color`: provided as list of 4 RGBA values
+  - `alternatingColor`: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
+  - `nTiles`: number of tiles for checkerboard pattern in first direction
+  - `nTiles2`: number of tiles for checkerboard pattern in second direction; default: nTiles
+  - `materialIndex`: use special graphics material for both colors
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 *example*:
@@ -283,7 +405,19 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFrotatin
 [`SolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0,0,0], relRot = np.diag([1,1,1]), relOff = [0,0,0], color = [0,0,0,1], smoothNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1531)
 
 - **function description**: create graphicsData for solid extrusion based on 2D points and segments; by default, the extrusion is performed in z-direction; additional transformations are possible to translate and rotate the extruded body;
-- **input**: vertices: list of pairs of coordinates of vertices in mesh [x,y], see ComputeTriangularMesh(...) segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh; the ordering of the nodes is such that left triangle = inside, right triangle = outside; see ComputeTriangularMesh(...) height:   height of extruded object rot:      rotation matrix, which the whole extruded object point coordinates are multiplied with before adding offset pOff:     3D offset vector added to all extruded coordinates (both planes); the z-coordinate of the extrusion object obtains 0 for the base plane, z=height for the top plane relRot: rotation matrix for transformation of top (second) plane of extrusion object relOff: 3D offset vector added top (second) plane of extrusion object; the z-coordinate is added to height, which is the base z-value color: provided as list of 4 RGBA values smoothNormals: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally addEdges: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included edgeColor: optional color for edges addFaces: if False, no faces are added (only edges)
+- **input**:
+  - `vertices`: list of pairs of coordinates of vertices in mesh [x,y], see ComputeTriangularMesh(...)
+  - `segments`: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh; the ordering of the nodes is such that left triangle = inside, right triangle = outside; see ComputeTriangularMesh(...)
+  - `height`: height of extruded object
+  - `rot`: rotation matrix, which the whole extruded object point coordinates are multiplied with before adding offset
+  - `pOff`: 3D offset vector added to all extruded coordinates (both planes); the z-coordinate of the extrusion object obtains 0 for the base plane, z=height for the top plane
+  - `relRot`: rotation matrix for transformation of top (second) plane of extrusion object
+  - `relOff`: 3D offset vector added top (second) plane of extrusion object; the z-coordinate is added to height, which is the base z-value
+  - `color`: provided as list of 4 RGBA values
+  - `smoothNormals`: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally
+  - `addEdges`: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 *example*:
@@ -309,7 +443,21 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveE
 [`LinkedCylinders(point0, point1, axisCylinder, radius0, radius1, radiusInner0 = 0, radiusInner1 = 0, nTiles = 32, color = [0,0,0,1], addEdges = 0, edgeColor = color.black, addFaces = True, smoothNormals = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1678)
 
 - **function description**: generate graphics data for an extrusion solid linking two circles by their external tangents in a plane; the shape is extruded along axisCylinder with height equal to its norm; nTiles controls circle tessellation
-- **input**: point0: center of the first circle and base point of the extrusion (3D list or np.array) point1: a point whose projection into the plane through point0 with normal axisCylinder defines the direction to the second circle center (3D list or np.array) axisCylinder: vector normal to the circle plane and extrusion direction; extrusion height is ||axisCylinder|| (3D list or np.array) radius0: radius of the first circle (positive float) radius1: radius of the second circle (positive float) radiusInner0: if > 0, radius of bore of the first circle radiusInner1: if > 0, radius of bore of the second circle nTiles: tiling used for a full circle (>=3); partial arcs are sampled proportionally color: provided as list of 4 RGBA values addEdges: if True, edges are added in TriangleList of GraphicsData; if addEdges is integer, additional int(addEdges) lines are added on the extrusion edgeColor: optional color for edges addFaces: if False, no faces are added (only edges) smoothNormals: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally kwargs: forwarded to graphics.SolidExtrusion
+- **input**:
+  - `point0`: center of the first circle and base point of the extrusion (3D list or np.array)
+  - `point1`: a point whose projection into the plane through point0 with normal axisCylinder defines the direction to the second circle center (3D list or np.array)
+  - `axisCylinder`: vector normal to the circle plane and extrusion direction; extrusion height is ||axisCylinder|| (3D list or np.array)
+  - `radius0`: radius of the first circle (positive float)
+  - `radius1`: radius of the second circle (positive float)
+  - `radiusInner0`: if > 0, radius of bore of the first circle
+  - `radiusInner1`: if > 0, radius of bore of the second circle
+  - `nTiles`: tiling used for a full circle (>=3); partial arcs are sampled proportionally
+  - `color`: provided as list of 4 RGBA values
+  - `addEdges`: if True, edges are added in TriangleList of GraphicsData; if addEdges is integer, additional int(addEdges) lines are added on the extrusion
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
+  - `smoothNormals`: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally
+  - `kwargs`: forwarded to graphics.SolidExtrusion
 - **output**: graphicsData dictionary, to be used in visualization of Exudyn objects
 
 *example*:
@@ -329,7 +477,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveE
 [`BallBearingRings(axis, outsideDiameter, boreDiameter, width, radiusCage, innerRingShoulderRadius, outerRingShoulderRadius, widthCage, heightCage, innerEdgeChamfer, outerEdgeChamfer, innerGrooveRadius, outerGrooveRadius, innerGrooveTorusRadius, outerGrooveTorusRadius, nTilesRings = 32, nTilesGrooves = 12, colorCage = [0.6,0.5,0.5,0.4], colorInnerRing = [0.5,0.5,0.5,0.5], colorOuterRing = [0.5,0.5,0.5,0.5], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1814)
 
 - **function description**: generate graphics for ball bearing rings, in particular for inner and outer rings; note that base parameters are identical as in function GetBallBearingData, assuming that the dictionary of the latter function is used as input for BallBearingRings
-- **input**: innerGrooveTorusRadius: major radius of torus for inner groove outerGrooveTorusRadius: major radius of torus for outer groove nTilesRings: circumferential tiling of rings nTilesGrooves: tiling of grooves colorCage: cage RGBA color colorInnerRing: inner ring RGBA color colorOuterRing: outer ring RGBA color
+- **input**:
+  - `innerGrooveTorusRadius`: major radius of torus for inner groove
+  - `outerGrooveTorusRadius`: major radius of torus for outer groove
+  - `nTilesRings`: circumferential tiling of rings
+  - `nTilesGrooves`: tiling of grooves
+  - `colorCage`: cage RGBA color
+  - `colorInnerRing`: inner ring RGBA color
+  - `colorOuterRing`: outer ring RGBA color
 - **output**: dictionary of graphics data containing 'innerRingGraphics', 'outerRingGraphics' and 'cageGraphics'; Note: graphics data is in the local bearing coordinate system, which should align with inner ring, outer ring and cage bodies!
 
 *example*:
@@ -354,7 +509,19 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 [`InvoluteGear(involuteGear, width, centerPoint = np.zeros(3), rotationMatrix = np.eye(3), helixAngleDeg = 0, radius = 0, relativeAngleOffset = 0, color = [0,0,0,1], nTilesCylinder = 32, smoothNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1919)
 
 - **function description**: create graphics for involute gear, using data from machines.InvoluteGear
-- **input**: involuteGear: an instance of the class machines.InvoluteGear, containing gear data width: width of gear centerPoint: used to shift the center point of the gear; if 0, the center is in the middle of the gear rotationMatrix: the gear is constructed in the x-y plane, with the gear axis [0,0,1]; to get any other axis, provide the rotation matrix helixAngleDeg: optional angle for helix gears in degree; note that this is only an approximation to real helical gear geometry! radius: in case of internal gear, this is the outer radius; for regular gear, this is the bore radius relativeAngleOffset: angular offset (about gear wheel axis) relative to the angle of one tooth and gap; 0.5 means that the tooth goes to the position of the gap color: provided as list of 4 RGBA values smoothNormals: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally addEdges: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included edgeColor: optional color for edges addFaces: if False, no faces are added (only edges)
+- **input**:
+  - `involuteGear`: an instance of the class machines.InvoluteGear, containing gear data
+  - `width`: width of gear
+  - `centerPoint`: used to shift the center point of the gear; if 0, the center is in the middle of the gear
+  - `rotationMatrix`: the gear is constructed in the x-y plane, with the gear axis [0,0,1]; to get any other axis, provide the rotation matrix
+  - `helixAngleDeg`: optional angle for helix gears in degree; note that this is only an approximation to real helical gear geometry!
+  - `radius`: in case of internal gear, this is the outer radius; for regular gear, this is the bore radius
+  - `relativeAngleOffset`: angular offset (about gear wheel axis) relative to the angle of one tooth and gap; 0.5 means that the tooth goes to the position of the gap
+  - `color`: provided as list of 4 RGBA values
+  - `smoothNormals`: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally
+  - `addEdges`: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
 - **output**: single graphics data for gear
 
 
@@ -367,7 +534,20 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 [`ToothedRack(module, nTeeth, width, toothHeight, rackBaseHeight, pressureAngleDeg = 20, centerPoint = np.zeros(3), rotationMatrix = np.eye(3), color = [0,0,0,1], nTilesCylinder = 32, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1980)
 
 - **function description**: create graphics for toothed rack
-- **input**: module: the module in m; thus, m*pi represents the mid-distance of one tooth to the next one width: width of gear nTeeth: number of teeth used; this gives the length; if this is a float number, only part of the last root or tooth are drawn accordingly toothHeight: height of tooth from root to head rackBaseHeight: height of rack below root pressureAngleDeg: pressure angle in degree for tooth shape centerPoint: used to shift the center point of the gear; if 0, the center is at the start point of the generated toothed rack (x=0,y=0), z=0 is in the middle of the rack rotationMatrix: the gear is constructed in the x-y plane, with width along z-axis color: provided as list of 4 RGBA values smoothNormals: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally addEdges: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included edgeColor: optional color for edges addFaces: if False, no faces are added (only edges)
+- **input**:
+  - `module`: the module in m; thus, m*pi represents the mid-distance of one tooth to the next one
+  - `width`: width of gear
+  - `nTeeth`: number of teeth used; this gives the length; if this is a float number, only part of the last root or tooth are drawn accordingly
+  - `toothHeight`: height of tooth from root to head
+  - `rackBaseHeight`: height of rack below root
+  - `pressureAngleDeg`: pressure angle in degree for tooth shape
+  - `centerPoint`: used to shift the center point of the gear; if 0, the center is at the start point of the generated toothed rack (x=0,y=0), z=0 is in the middle of the rack
+  - `rotationMatrix`: the gear is constructed in the x-y plane, with width along z-axis
+  - `color`: provided as list of 4 RGBA values
+  - `smoothNormals`: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally
+  - `addEdges`: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included
+  - `edgeColor`: optional color for edges
+  - `addFaces`: if False, no faces are added (only edges)
 - **output**: single graphics data for gear
 
 
@@ -380,7 +560,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 [`BoundingBoxSingle(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2050)
 
 - **function description**: compute bounding box of single graphicsData
-- **input**: graphicsData: a single Exudyn GraphicsData object
+- **input**:
+  - `graphicsData`: a single Exudyn GraphicsData object
 - **output**: (type: list) [bmin, bmax]; tuple of np.array shape (3,), or (None, None) if no points.
 
 
@@ -390,7 +571,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 [`BoundingBox(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2101)
 
 - **function description**: compute bounding box of single GraphicsData or list of GraphicsData
-- **input**: graphicsData: a single Exudyn GraphicsData object or list
+- **input**:
+  - `graphicsData`: a single Exudyn GraphicsData object or list
 - **output**: (type: list) [bmin, bmax]; tuple of np.array shape (3,), or (None, None) if no points.
 
 
@@ -400,7 +582,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 [`FromPointsAndTrigs(points, triangles, color = [0.,0.,0.,1.], normals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2131)
 
 - **function description**: convert triangles and points as returned from graphics.ToPointsAndTrigs(...) to GraphicsData; additionally, normals and color(s) can be provided
-- **input**: points: list or np.array with np rows of 3 columns (floats) per point (with np points) triangles: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles) color: provided as list of 4 RGBA values or single list of (np)*[4 RGBA values] normals: if not None, they have to be provided per point (as matrix, list of lists or flattened) and will be added to returned GraphicsData
+- **input**:
+  - `points`: list or np.array with np rows of 3 columns (floats) per point (with np points)
+  - `triangles`: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles)
+  - `color`: provided as list of 4 RGBA values or single list of (np)*[4 RGBA values]
+  - `normals`: if not None, they have to be provided per point (as matrix, list of lists or flattened) and will be added to returned GraphicsData
 - **output**: returns GraphicsData with type TriangleList
 
 
@@ -426,7 +612,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 [`Transform(graphicsData, translation = None, rotation = None, scale = 1, normalizeNormals = False, invertNormals = False, invertTriangles = False, warn = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2198)
 
 - **function description**: transform a GraphicsData object in several ways: move, rotate, scale; furthermore, normals can be fixed and inverted, etc.
-- **input**: g: graphicsData to be transformed translation: 3D offset as list or numpy.array added to rotated points; if pOff=None, no translation is applied rotation: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001*np.eye(3), you can also scale the coordinates; if Aoff=None, no rotation is performed scale: scaling of position coordinates normalizeNormals: if True, normals are scaled such that length=1 (or zero for zero-normals) invertTriangles: if True, it inverts the triangle orientation (changing vertex index 0 and 1) invertNormals: if True, the direction of normal is flipped
+- **input**:
+  - `g`: graphicsData to be transformed
+  - `translation`: 3D offset as list or numpy.array added to rotated points; if pOff=None, no translation is applied
+  - `rotation`: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001*np.eye(3), you can also scale the coordinates; if Aoff=None, no rotation is performed
+  - `scale`: scaling of position coordinates
+  - `normalizeNormals`: if True, normals are scaled such that length=1 (or zero for zero-normals)
+  - `invertTriangles`: if True, it inverts the triangle orientation (changing vertex index 0 and 1)
+  - `invertNormals`: if True, the direction of normal is flipped
 - **output**: returns new graphcsData object to be used for drawing in objects
 - **notes**: the rigid body transformation corresponds to HomogeneousTransformation(rotation, translation), transforming original coordinates v into vNew = translation + rotation @ v
 
@@ -437,7 +630,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 [`Move(g, pOff, Aoff = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2304)
 
 - **function description**: add rigid body transformation and possible scaling to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
-- **input**: g: graphicsData to be transformed pOff: 3D offset as list or numpy.array added to rotated points Aoff: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if Aoff=None, no rotation is performed
+- **input**:
+  - `g`: graphicsData to be transformed
+  - `pOff`: 3D offset as list or numpy.array added to rotated points
+  - `Aoff`: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if Aoff=None, no rotation is performed
 - **output**: returns new graphcsData object to be used for drawing in objects
 - **notes**: transformation corresponds to HomogeneousTransformation(Aoff, pOff), transforming original coordinates v into vNew = pOff + Aoff @ v
 
@@ -464,7 +660,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 [`InvertTriangles(graphicsData, invertTriangles = True, invertNormals = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2376)
 
 - **function description**: invert triangle orientation and triangle normals (or only one of these tasks); can also check consistency of normals
-- **input**: graphicsData: graphicsData as returned e.g. from graphics.Sphere invertTriangles: if True, it inverts the triangle orientation (changing vertex index 0 and 1) invertNormals: if True, the direction of normal is flipped
+- **input**:
+  - `graphicsData`: graphicsData as returned e.g. from graphics.Sphere
+  - `invertTriangles`: if True, it inverts the triangle orientation (changing vertex index 0 and 1)
+  - `invertNormals`: if True, the direction of normal is flipped
 - **output**: returns new graphicsData (copy) with modified triangles and normals
 
 
@@ -474,7 +673,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 [`InconsistentTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2427)
 
 - **function description**: check consistency of orientation of triangles and vertex (point) normals
-- **input**: graphicsData: graphicsData as returned e.g. from graphics.Sphere
+- **input**:
+  - `graphicsData`: graphicsData as returned e.g. from graphics.Sphere
 - **output**: returns number of cases in which triangle normals and vertex normals are inconsistent (scalar product is negative)
 
 
@@ -487,7 +687,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 [`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2457)
 
 - **function description**: convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
-- **input**: mesh: a ngsolve mesh; having a geometry geo = OCCGeometry(...), mesh is returned from ngsolve.Mesh(geo.GenerateMesh(...)) ngMesh: a netgen mesh; having a geometry geo = OCCGeometry(...), ngMesh is returned from geo.GenerateMesh(...) meshOrder: either 1 (linear, flat triangles) or 2 (quadratic, smooth triangles) scale: additional scaling factor for geometry, as it is recommended to define netgen geometries in mm due to tolerances addNormals: if True, it computes and adds normals verbose: print debug information
+- **input**:
+  - `mesh`: a ngsolve mesh; having a geometry geo = OCCGeometry(...), mesh is returned from ngsolve.Mesh(geo.GenerateMesh(...))
+  - `ngMesh`: a netgen mesh; having a geometry geo = OCCGeometry(...), ngMesh is returned from geo.GenerateMesh(...)
+  - `meshOrder`: either 1 (linear, flat triangles) or 2 (quadratic, smooth triangles)
+  - `scale`: additional scaling factor for geometry, as it is recommended to define netgen geometries in mm due to tolerances
+  - `addNormals`: if True, it computes and adds normals
+  - `verbose`: print debug information
 - **output**: [points, triangles] or if addNormals=True, [points, triangles, normals] for further usage in graphics.FromPointsAndTrigs(...)
 
 *example*:
@@ -516,7 +722,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCb
 [`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2584)
 
 - **function description**: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
-- **input**: fileName: string containing directory and filename of STL-file (in text / SCII format) to load color: provided as list of 4 RGBA values verbose: if True, useful information is provided during reading invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+- **input**:
+  - `fileName`: string containing directory and filename of STL-file (in text / SCII format) to load
+  - `color`: provided as list of 4 RGBA values
+  - `verbose`: if True, useful information is provided during reading
+  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+  - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
 - **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
 
 
@@ -529,7 +740,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCg
 [`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2682)
 
 - **function description**: generate graphics data from any file that can be loaded with PyMeshLab (in particular .obj, .dae and .stl); either use defaultColor or given color in mesh.
-- **input**: fileName: string containing directory and filename of geometry file defaultColor: provided as list of 4 RGBA values; used only if meshlab cannot load valid color or if file does not include color (e.g., STL) verbose: if True, some information is logged during file import invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn invertTriangles: if True: triangle orientation (based on local indices) is inverted for compatibility in Exudyn normalizeNormals: if True, normals are scaled such that length=1 (or zero for zero-normals) useDefaultColor: if True: ignores colors of the loaded mesh and uses defaultColor
+- **input**:
+  - `fileName`: string containing directory and filename of geometry file
+  - `defaultColor`: provided as list of 4 RGBA values; used only if meshlab cannot load valid color or if file does not include color (e.g., STL)
+  - `verbose`: if True, some information is logged during file import
+  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+  - `invertTriangles`: if True: triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+  - `normalizeNormals`: if True, normals are scaled such that length=1 (or zero for zero-normals)
+  - `useDefaultColor`: if True: ignores colors of the loaded mesh and uses defaultColor
 - **output**: (type: dict) graphicsData in Exudyn dictionary format
 - **notes**: requires pymeshlab to be installed (pip install pymeshlab); materials and textures are currently not considered in the import functionality!
 
@@ -543,7 +761,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
 [`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2762)
 
 - **function description**: generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
-- **input**: fileName: string containing directory and filename of STL-file (in text / SCII format) to load color: provided as list of 4 RGBA values verbose: if True, useful information is provided during reading density: if given and if verbose, mass, volume, inertia, etc. are computed scale: point coordinates are transformed by scaling factor invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+- **input**:
+  - `fileName`: string containing directory and filename of STL-file (in text / SCII format) to load
+  - `color`: provided as list of 4 RGBA values
+  - `verbose`: if True, useful information is provided during reading
+  - `density`: if given and if verbose, mass, volume, inertia, etc. are computed
+  - `scale`: point coordinates are transformed by scaling factor
+  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+  - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
 - **output**: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
 - **notes**: the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed!
 
@@ -570,7 +795,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 [`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3009)
 
 - **function description**: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
-- **input**: graphicsData: a single GraphicsData dictionary with type='TriangleList', no list of GraphicsData fileName: file name including (local) path to export STL file solidName: optional name used in STL file invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+- **input**:
+  - `graphicsData`: a single GraphicsData dictionary with type='TriangleList', no list of GraphicsData
+  - `fileName`: file name including (local) path to export STL file
+  - `solidName`: optional name used in STL file
+  - `invertNormals`: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+  - `invertTriangles`: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCgeometry.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveOCCgeometry.py) (Ex), [`stlFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stlFileImport.py) (Ex)

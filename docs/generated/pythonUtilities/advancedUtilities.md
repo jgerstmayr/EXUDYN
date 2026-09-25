@@ -62,7 +62,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`IsListOrArray(data, checkIfNoneEmpty = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L107)
 
 - **function description**: checks, if data is of type list or np.array; used in functions to check input data
-- **input**: data: any type, preferrably list or numpy.array checkIfNoneEmpty: if True, function only returns True if type is list or array AND if length is non-zero
+- **input**:
+  - `data`: any type, preferrably list or numpy.array
+  - `checkIfNoneEmpty`: if True, function only returns True if type is list or array AND if length is non-zero
 - **output**: returns True/False
 
 
@@ -217,7 +219,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 [`FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L332)
 
 - **function description**: fill submatrix into given destinationMatrix; all matrices must be numpy arrays
-- **input**: subMatrix: input matrix, which is filled into destinationMatrix destinationMatrix: the subMatrix is entered here destRow: row destination of subMatrix destColumn: column destination of subMatrix
+- **input**:
+  - `subMatrix`: input matrix, which is filled into destinationMatrix
+  - `destinationMatrix`: the subMatrix is entered here
+  - `destRow`: row destination of subMatrix
+  - `destColumn`: column destination of subMatrix
 - **output**: destinationMatrix is changed after function call
 - **notes**: may be erased in future!
 
@@ -231,7 +237,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 [`SweepSin(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L358)
 
 - **function description**: compute sin sweep at given time t
-- **input**: t: evaluate of sweep at time t t1: end time of sweep frequency range f0: start of frequency interval [f0,f1] in Hz f1: end of frequency interval [f0,f1] in Hz
+- **input**:
+  - `t`: evaluate of sweep at time t
+  - `t1`: end time of sweep frequency range
+  - `f0`: start of frequency interval [f0,f1] in Hz
+  - `f1`: end of frequency interval [f0,f1] in Hz
 - **output**: evaluation of sin sweep (in range -1..+1)
 
 
@@ -244,7 +254,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectGener
 [`SweepCos(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L373)
 
 - **function description**: compute cos sweep at given time t
-- **input**: t: evaluate of sweep at time t t1: end time of sweep frequency range f0: start of frequency interval [f0,f1] in Hz f1: end of frequency interval [f0,f1] in Hz
+- **input**:
+  - `t`: evaluate of sweep at time t
+  - `t1`: end time of sweep frequency range
+  - `f0`: start of frequency interval [f0,f1] in Hz
+  - `f1`: end of frequency interval [f0,f1] in Hz
 - **output**: evaluation of cos sweep (in range -1..+1)
 
 
@@ -257,7 +271,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidRotor3
 [`FrequencySweep(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L388)
 
 - **function description**: frequency according to given sweep functions SweepSin, SweepCos
-- **input**: t: evaluate of frequency at time t t1: end time of sweep frequency range f0: start of frequency interval [f0,f1] in Hz f1: end of frequency interval [f0,f1] in Hz
+- **input**:
+  - `t`: evaluate of frequency at time t
+  - `t1`: end time of sweep frequency range
+  - `f0`: start of frequency interval [f0,f1] in Hz
+  - `f1`: end of frequency interval [f0,f1] in Hz
 - **output**: frequency in Hz
 
 
@@ -270,7 +288,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectGener
 [`SmoothStep(x, x0, x1, value0, value1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L402)
 
 - **function description**: step function with smooth transition from value0 to value1; transition is computed with cos function
-- **input**: x: argument at which function is evaluated x0: start of step (f(x) = value0) x1: end of step (f(x) = value1) value0: value before smooth step value1: value at end of smooth step
+- **input**:
+  - `x`: argument at which function is evaluated
+  - `x0`: start of step (f(x) = value0)
+  - `x1`: end of step (f(x) = value1)
+  - `value0`: value before smooth step
+  - `value1`: value at end of smooth step
 - **output**: returns f(x)
 
 
@@ -283,7 +306,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beamTutoria
 [`SmoothStepDerivative(x, x0, x1, value0, value1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L425)
 
 - **function description**: derivative of SmoothStep using same arguments
-- **input**: x: argument at which function is evaluated x0: start of step (f(x) = value0) x1: end of step (f(x) = value1) value0: value before smooth step value1: value at end of smooth step
+- **input**:
+  - `x`: argument at which function is evaluated
+  - `x0`: start of step (f(x) = value0)
+  - `x1`: end of step (f(x) = value1)
+  - `value0`: value before smooth step
+  - `value1`: value at end of smooth step
 - **output**: returns d/dx(f(x))
 
 
@@ -296,7 +324,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 [`IndexFromValue(data, value, tolerance = 1e-7, assumeConstantSampleRate = False, rangeWarning = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L445)
 
 - **function description**: get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!
-- **input**: data: containing (almost) equidistant values of time value: e.g., time to be found in data tolerance: tolerance, which is accepted (default: tolerance=1e-7) rangeWarning: warn, if index returns out of range; if warning is deactivated, function uses the closest value
+- **input**:
+  - `data`: containing (almost) equidistant values of time
+  - `value`: e.g., time to be found in data
+  - `tolerance`: tolerance, which is accepted (default: tolerance=1e-7)
+  - `rangeWarning`: warn, if index returns out of range; if warning is deactivated, function uses the closest value
 - **output**: index
 - **notes**: to obtain the interpolated value of a time-signal array, use GetInterpolatedSignalValue() in exudyn.signalProcessing
 
@@ -333,7 +365,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 [`SaveDictToHDF5(fileName, dataDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L527)
 
 - **function description**: recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
-- **input**: fileName: file name (possibly including path) for HDF5 file, including file ending dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function
+- **input**:
+  - `fileName`: file name (possibly including path) for HDF5 file, including file ending
+  - `dataDict`: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function
 - **output**: None
 
 
@@ -346,7 +380,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePist
 [`LoadDictFromHDF5(fileName, callerGlobals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L640)
 
 - **function description**: recursively loads a hierarchical dictionary from a HDF5 file with given fileName
-- **input**: fileName: file name (possibly including path) for HDF5 file, including file ending callerGlobals: optional: if your data contains functions, the callerGlobals must contain, e.g., globals() of the caller, where the Python functions are defined at which the HDF5 function refers to
+- **input**:
+  - `fileName`: file name (possibly including path) for HDF5 file, including file ending
+  - `callerGlobals`: optional: if your data contains functions, the callerGlobals must contain, e.g., globals() of the caller, where the Python functions are defined at which the HDF5 function refers to
 - **output**: dict which contains loaded data
 
 
@@ -359,7 +395,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L762)
 
 - **function description**: Internal function to convert a Python user function into a dictionary containing the symbolic representation; this function is under development and should be used with care
-- **input**: mbs: MainSystem, needed currently for interface function: Python function with interface according to desired user function itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished verbose: if > 0, according output is printed
+- **input**:
+  - `mbs`: MainSystem, needed currently for interface
+  - `function`: Python function with interface according to desired user function
+  - `itemIndex`: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+  - `itemTypeName`: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
+  - `itemIndex`: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
+  - `userFunctionName`: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
+  - `verbose`: if > 0, according output is printed
 - **output**: return dictionary with 'functionName', 'argList', and 'returnList'
 
 
@@ -369,7 +412,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L887)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
-- **input**: mbs: MainSystem, needed currently for interface function: Python function with interface according to desired user function itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished verbose: if > 0, according output may be printed
+- **input**:
+  - `mbs`: MainSystem, needed currently for interface
+  - `function`: Python function with interface according to desired user function
+  - `itemIndex`: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+  - `itemTypeName`: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
+  - `userFunctionName`: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
+  - `verbose`: if > 0, according output may be printed
 - **output**: returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
 - **notes**: keep the return value alive in a variable (or list), as it contains the expression tree which must exist for the lifetime of the user function
 
@@ -401,7 +450,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 [`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L944)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
-- **input**: sendSize: number of double values to be sent to TCPIP client receiveSize: number of double values to be received from TCPIP client IPaddress: string containing IP address of client (e.g., '127.0.0.1') port: port for communication with client bigEndian: if True, it uses bigEndian, otherwise littleEndian is used for byte order
+- **input**:
+  - `sendSize`: number of double values to be sent to TCPIP client
+  - `receiveSize`: number of double values to be received from TCPIP client
+  - `IPaddress`: string containing IP address of client (e.g., '127.0.0.1')
+  - `port`: port for communication with client
+  - `bigEndian`: if True, it uses bigEndian, otherwise littleEndian is used for byte order
 - **output**: returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
 
 *example*:
@@ -452,7 +506,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 [`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1015)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
-- **input**: TCPIPobject: the object returned by CreateTCPIPconnection(...) sendData: numpy array containing data (double array) to be sent; must agree with sendSize
+- **input**:
+  - `TCPIPobject`: the object returned by CreateTCPIPconnection(...)
+  - `sendData`: numpy array containing data (double array) to be sent; must agree with sendSize
 - **output**: returns array as received from TCPIP
 
 *example*:

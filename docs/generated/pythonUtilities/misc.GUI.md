@@ -40,7 +40,8 @@ Helper functions and classes for graphical interaction with Exudyn
 [`DialogFontSize(fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L145)
 
 - **function description**: the point size the tree, its headings and its tags use
-- **input**: fontFactor: the multiplier DialogScaling returned
+- **input**:
+  - `fontFactor`: the multiplier DialogScaling returned
 - **output**: the size in points, never below 6
 
 
@@ -50,7 +51,9 @@ Helper functions and classes for graphical interaction with Exudyn
 [`DialogRowMetrics(root, fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L157)
 
 - **function description**: how tall a row must be and how much wider the columns must be, MEASURED Both used to be computed from systemScaling, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display, so at dialogs.fontScaling=1 the rows were 13 pixels tall for a font with a linespace of 16 to 18 and the text was clipped, while the column factor max(1,int(round(systemScaling))) stayed at 1 for every value below 1.5 (#2631). The font is asked instead, which is right at any scaling and on any platform.
-- **input**: root: the tkinter root, which the fonts are measured against fontFactor: the multiplier DialogScaling returned
+- **input**:
+  - `root`: the tkinter root, which the fonts are measured against
+  - `fontFactor`: the multiplier DialogScaling returned
 - **output**: [rowHeight in pixels, columnScale relative to the unscaled font]
 
 
@@ -60,7 +63,8 @@ Helper functions and classes for graphical interaction with Exudyn
 [`GetExudynDisplayScaling(root = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L194)
 
 - **function description**: the display scaling the dialogs size themselves by The renderer knows it and reports it in its state. Without a renderer this used to return 1, so a dialog opened from the command line came out at a different size than the same dialog opened with V in the render window (#2634); tkinter is asked instead, which knows it once MakeProcessDpiAware has been called.
-- **input**: root: a tkinter root to ask when there is no renderer; without one the answer is 1
+- **input**:
+  - `root`: a tkinter root to ask when there is no renderer; without one the answer is 1
 - **output**: the scaling, 1 if nothing knows better
 
 
@@ -70,7 +74,8 @@ Helper functions and classes for graphical interaction with Exudyn
 [`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L235)
 
 - **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602).
-- **input**: root: the tkinter root window, which knows the display scaling
+- **input**:
+  - `root`: the tkinter root window, which knows the display scaling
 - **output**: [systemScaling, fontFactor]
 
 
@@ -80,7 +85,10 @@ Helper functions and classes for graphical interaction with Exudyn
 [`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1155)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
-- **input**: settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings exu: exudyn module dictionaryName: name displayed in dialog
+- **input**:
+  - `settingsStructure`: hierarchical settings structure, e.g., SC.visualizationSettings
+  - `exu`: exudyn module
+  - `dictionaryName`: name displayed in dialog
 - **output**: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
 
 
@@ -90,7 +98,10 @@ Helper functions and classes for graphical interaction with Exudyn
 [`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1487)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
-- **input**: tkWindow: the window to configure alwaysTopmost: None takes dialogs.alwaysTopmost; True or False overrides it alphaTransparency: None takes dialogs.alphaTransparency; a float overrides it
+- **input**:
+  - `tkWindow`: the window to configure
+  - `alwaysTopmost`: None takes dialogs.alwaysTopmost; True or False overrides it
+  - `alphaTransparency`: None takes dialogs.alphaTransparency; a float overrides it
 - **output**: None
 
 

@@ -56,7 +56,9 @@ includes functionality like mesh manipulation and some helper functions
 [`RefineMesh(points, triangles)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L211)
 
 - **function description**: refine triangle mesh; every triangle is subdivided into 4 triangles
-- **input**: points: list of np.array with 3 floats per point triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
+- **input**:
+  - `points`: list of np.array with 3 floats per point
+  - `triangles`: list of np.array with 3 int per triangle (0-based indices to triangles)
 - **output**: returns [points2, triangles2] containing the refined mesh; if the original mesh is consistent, no points are duplicated; if the mesh is not consistent, some mesh points are duplicated!
 - **notes**: becomes slow for meshes with more than 5000 points
 
@@ -70,7 +72,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`particleClu
 [`ShrinkMeshNormalToSurface(points, triangles, distance)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L268)
 
 - **function description**: shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
-- **input**: points: list of np.array with 3 floats per point triangles: list of np.array with 3 int per triangle (0-based indices to triangles) distance: float value of minimum distance
+- **input**:
+  - `points`: list of np.array with 3 floats per point
+  - `triangles`: list of np.array with 3 int per triangle (0-based indices to triangles)
+  - `distance`: float value of minimum distance
 - **output**: returns [points2, triangles2] containing the refined mesh; currently the points of the subdivided triangles are duplicated!
 - **notes**: ONLY works for consistent meshes (no duplicated points!)
 
@@ -84,7 +89,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 [`ComputeTriangularMesh(vertices, segments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L305)
 
 - **function description**: helper function to compute triangular mesh from list of vertices (=points) and segments; computes triangular meshes for non-convex case. In order to make it efficient, it first computes neighbors and then defines triangles at segments to be inside/outside. Finally neighboring relations are used to define all triangles inside/outside finally only returns triangles that are inside the segments
-- **input**: vertices: list of pairs of coordinates of vertices in mesh [x,y] segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh; the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]: inside V1         V2 O----------O outside
+- **input**:
+  - `vertices`: list of pairs of coordinates of vertices in mesh [x,y]
+  - `segments`: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh; the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]: inside V1         V2 O----------O outside
 - **output**: triangulation structure of Delaunay(...), see scipy.spatial.Delaunaystructure, containing all simplices (=triangles)
 - **notes**: Delauney will not work if points are duplicated; you must first create point lists without duplicated points!
 
@@ -107,7 +114,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 [`SegmentsFromPoints(points, pointIndexOffset = 0, invert = False, closeCurve = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L397)
 
 - **function description**: convert point list into segments (indices to points); point indices start with pointIndexOffset
-- **input**: invert: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry pointIndexOffset: point indices start with pointIndexOffset
+- **input**:
+  - `invert`: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry
+  - `pointIndexOffset`: point indices start with pointIndexOffset
 - **output**: return segments, containing list of lists of point indices for segments
 
 
@@ -117,7 +126,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 [`CirclePointsAndSegments(center = [0,0], radius = 0.1, invert = False, pointIndexOffset = 0, nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L424)
 
 - **function description**: create points and segments, used in SolidExtrusion(...) for circle with given parameters
-- **input**: center: 2D center point (list/numpy array) for circle center radius: radius of circle invert: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry pointIndexOffset: point indices start with pointIndexOffset nTiles: number of tiles/segments for circle creation (higher is finer)
+- **input**:
+  - `center`: 2D center point (list/numpy array) for circle center
+  - `radius`: radius of circle
+  - `invert`: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry
+  - `pointIndexOffset`: point indices start with pointIndexOffset
+  - `nTiles`: number of tiles/segments for circle creation (higher is finer)
 - **output**: return [points, segments], both containing lists of lists
 - **notes**: geometries may not intersect!
 

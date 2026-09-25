@@ -73,7 +73,16 @@ For standard machine learning algorithms, install e.g. stable_baselines3 using '
 [`TestModel(self, numberOfSteps = 500, seed = 0, model = None, solutionFileName = None, useRenderer = True, sleepTime = 0.01, stopIfDone = False, showTimeSpent = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/artificialIntelligence.py#L124)
 
 - **class function description**: test model by running in simulation environment having several options
-- **input**: numberOfSteps: number of steps to test MBS and model (with or without learned model); with renderer, press 'Q' in render window to stop simulation seed: seed value for reset function; this value initializes the randomizer; use e.g. time to obtain non-reproducible results model: either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(...) and A2C.load(...) for storing and retrieving models solutionFileName: if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod useRenderer: if set True, the internal renderer is used and model updates are shown in visualization of Exudyn return_info: internal value in reset function sleepTime: sleep time between time steps to obtain certain frame rate for visualization stopIfDone: if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True showTimeSpent: if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)
+- **input**:
+  - `numberOfSteps`: number of steps to test MBS and model (with or without learned model); with renderer, press 'Q' in render window to stop simulation
+  - `seed`: seed value for reset function; this value initializes the randomizer; use e.g. time to obtain non-reproducible results
+  - `model`: either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(...) and A2C.load(...) for storing and retrieving models
+  - `solutionFileName`: if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod
+  - `useRenderer`: if set True, the internal renderer is used and model updates are shown in visualization of Exudyn
+  - `return_info`: internal value in reset function
+  - `sleepTime`: sleep time between time steps to obtain certain frame rate for visualization
+  - `stopIfDone`: if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True
+  - `showTimeSpent`: if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)
 
 
 (sec-artificialintelligence-openaigyminterfaceenv(env)-setsolver)=

@@ -489,8 +489,43 @@ def Tags2Markdown(itemDict, tags):
             if tagType is not None:
                 content = '(type: ' + tagType + ')' + content
 
+        if tag == 'input':
+            arguments = ArgumentEntries(content)
+            if arguments is not None:
+                #one argument per line, its name as code: the Args: block of the docstring is a list
+                #and was joined into one paragraph, which made a function of ten arguments one wall
+                #of text (maintainer, 2026-09-26, #2665)
+                text += '- **' + name + '**:' + chr(10)
+                for (argument, description) in arguments:
+                    text += ('  - `' + argument + '`: '
+                             + LatexText2Markdown(description).replace(chr(10), ' ').strip()
+                             + chr(10))
+                continue
+
         text += '- **' + name + '**: ' + LatexText2Markdown(content).replace(chr(10), ' ') + chr(10)
     return text
+
+
+#an argument of an Args: block, as the docstring writes it and Markdown2Latex left it: a name, a
+#colon, and the description, which may go on over the lines that follow it
+_argumentLine = re.compile(r'^([A-Za-z_][A-Za-z0-9_]*(?:\\_[A-Za-z0-9_]*)*)\s*:\s(.*)$')
+
+
+def ArgumentEntries(content):
+    """[(argument, description)] of an input tag that lists its arguments, or None
+
+    None means the tag is prose and is written as it always was - an input that does not begin with
+    an argument, or has none at all, is left alone rather than guessed at (#2665)."""
+    entries = []
+    for line in content.split(chr(10)):
+        match = _argumentLine.match(line.strip())
+        if match is not None:
+            entries.append([match.group(1).replace(chr(92) + '_', '_'), match.group(2).strip()])
+        elif len(entries) != 0 and line.strip() != '':
+            entries[-1][1] += ' ' + line.strip()          #a description that went on to the next line
+        elif line.strip() != '':
+            return None                                  #prose before the first argument
+    return [tuple(entry) for entry in entries] if len(entries) != 0 else None
 
 
 def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 67 | 1.12.68 |
+| 1.12 | Metheney | 68 | 1.12.69 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.69** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The arguments of a documented function are one paragraph, not one per line (#2665)
+  - description: In the reference manual - the Python utility functions, and the MainSystem extensions of the Python-C++ command interface - the Args: block of a docstring is joined into a single paragraph, so a function of ten arguments is one wall of text and the argument names are in the body font. The old RST pages had one argument per line with the name in a monospace font. The HTML and the PDF are both affected, because both are built from the same generated Markdown. Reported by the maintainer with a screenshot of the old rendering, 2026-09-26.
+  - **notes:** The input tag of a documented function is a nested list now, one argument per line with its name as code, in the Python utility functions and in the MainSystem extensions alike; 30 pages. A tag that is prose rather than a list of arguments is written as it was.
+  - date resolved: **2026-09-26 00:30**, date raised: 2026-09-26
 - **1.12.68** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the command window of the renderer lost the model scope (#2654)
   - description: Pressing X in the render window opens a command window whose label says it 'operates in global scope of you Python model' - mbs, SC and everything else the script defined. It does not any more: the command runs in the namespace of exudyn.misc.GUI, so 'mbs' is a NameError. Cause, found in the history: until revision2026b step RG6.2.1 (\#2595) the dialog was a Python string inside src/Main/rendererPythonInterface.cpp, and the C++ executed every such string with py::object scope = py::module::import('\_\_main\_\_').attr('\_\_dict\_\_') - a line whose own comment says 'use this to enable access to mbs and other variables of global scope'. The dialog's exec(commandString, globals(), locals()) therefore saw \_\_main\_\_. Now the dialog is a function of a module, the C++ still executes its one-line wrapper in \_\_main\_\_, and globals() inside that function is the module's namespace. Second, smaller fault in the same line: exec(..., globals(), locals()) puts an assignment into the local scope of the nested handler, so 'k = 5000' is forgotten as soon as it returns - the command window is meant for changing a running model.
   - **notes:** The command window of the render window runs in the scope of the model again: exudyn.misc.GUI.ModelScope() returns vars(\_\_main\_\_) and the command is executed in it, so mbs, SC and everything the script defined are there. One dictionary and not two, so an assignment survives the command - the window offers to change a running model. Until revision2026b step RG6.2.1 the dialog was a Python string that the C++ executed in \_\_main\_\_; as a function of a module, globals() was the module. Three tests pin it without opening a window. revision2026b step RG6.2.27.

@@ -14,7 +14,13 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities
 [`StribeckFunction(vel, muDynamic, muStaticOffset, muViscous = 0, expVel = 1e-3, regVel = 1e-3)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/physics.py#L25)
 
 - **function description**: describes regularized Stribeck function with optial viscous part for given velocity, $f(v) = \begin{cases} (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| <= v_{reg}\\ \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}\end{cases}$
-- **input**: vel: input velocity $v$ muDynamic: dynamic friction coefficient $\mu_d$ muStaticOffset: $\mu_{s_{off}}$, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset muViscous: $\mu_v$, viscous part, acting proportional to velocity except for regVel regVel: $v_{reg}$,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged) expVel: $v_{exp}$,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8%)
+- **input**:
+  - `vel`: input velocity $v$
+  - `muDynamic`: dynamic friction coefficient $\mu_d$
+  - `muStaticOffset`: $\mu_{s_{off}}$, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset
+  - `muViscous`: $\mu_v$, viscous part, acting proportional to velocity except for regVel
+  - `regVel`: $v_{reg}$,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)
+  - `expVel`: $v_{exp}$,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8%)
 - **output**: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 - **notes**: see Isermann (2008) and Armstrong-Helouvry (1991)
 
@@ -36,7 +42,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`massSpringF
 [`RegularizedFriction(vel, muDynamic, muStaticOffset, velStatic, velDynamic, muViscous = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/physics.py#L62)
 
 - **function description**: describes regularized friction function, with increased static friction, dynamic friction and optional viscous part
-- **input**: vel: input velocity muDynamic: dynamic friction coefficient muStaticOffset: offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset muViscous: viscous part, acting proportional to velocity for velocities larger than velDynamic; extension to mentioned references velStatic: small regularization velocity at which exactly the staticFriction is reached; for smaller velocities, the friction is smooth and zero-crossing (unphysical!) (e.g., to get Newton converged) velDynamic: velocity at which muDynamic is reached for first time
+- **input**:
+  - `vel`: input velocity
+  - `muDynamic`: dynamic friction coefficient
+  - `muStaticOffset`: offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset
+  - `muViscous`: viscous part, acting proportional to velocity for velocities larger than velDynamic; extension to mentioned references
+  - `velStatic`: small regularization velocity at which exactly the staticFriction is reached; for smaller velocities, the friction is smooth and zero-crossing (unphysical!) (e.g., to get Newton converged)
+  - `velDynamic`: velocity at which muDynamic is reached for first time
 - **output**: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 - **notes**: see references: Flores et al. [Flores2008], Qian et al. [Qian2018]
 
@@ -50,7 +62,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`massSpringF
 [`VonMisesStress(stress6D)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/physics.py#L92)
 
 - **function description**: compute equivalent von-Mises stress given 6 stress components or list of stress6D (or stress6D in rows of np.array)
-- **input**: stress6D: 6 stress components as list or np.array, using ordering $[\sigma_{xx}$, $\sigma_{yy}$, $\sigma_{zz}$, $\sigma_{yz}$, $\sigma_{xz}$, $\sigma_{xy}]$
+- **input**:
+  - `stress6D`: 6 stress components as list or np.array, using ordering $[\sigma_{xx}$, $\sigma_{yy}$, $\sigma_{zz}$, $\sigma_{yz}$, $\sigma_{xz}$, $\sigma_{xy}]$
 - **output**: returns scalar equivalent von-Mises stress or np.array of von-Mises stresses for all stress6D
 
 

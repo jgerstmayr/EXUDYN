@@ -14,7 +14,8 @@ For advanced demos, see python/Examples and python/TestModels
 [`DemoSolutionFile(name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/demos.py#L30)
 
 - **function description**: The solution file of a demo, in a directory that is created if it does not exist.
-- **input**: name: the file name, e.g. 'demo1.txt'
+- **input**:
+  - `name`: the file name, e.g. 'demo1.txt'
 - **output**: the path the demo writes to
 
 

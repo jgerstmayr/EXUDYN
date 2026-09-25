@@ -15,7 +15,17 @@ Beam utility functions, e.g. for creation of sequences of straight or curved bea
 [`GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate, massProportionalLoad = [0,0,0], fixedConstraintsNode0 = [0,0,0,0], fixedConstraintsNode1 = [0,0,0,0], nodeNumber0 = -1, nodeNumber1 = -1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L30)
 
 - **function description**: DEPRECATED: generate 2D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
-- **input**: mbs: the system where ANCF cables are added positionOfNode0: 3D position (list or np.array) for starting point of line positionOfNode1: 3D position (list or np.array) for end point of line numberOfElements: for discretization of line cableTemplate: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically massProportionalLoad: a 3D list or np.array, containing the gravity vector or zero fixedConstraintsNode0: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope); use None in order to apply no constraints fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope); use None in order to apply no constraints nodeNumber0: if set other than -1, this node number defines the node that shall be used at positionOfNode0 nodeNumber1: if set other than -1, this node number defines the node that shall be used at positionOfNode1
+- **input**:
+  - `mbs`: the system where ANCF cables are added
+  - `positionOfNode0`: 3D position (list or np.array) for starting point of line
+  - `positionOfNode1`: 3D position (list or np.array) for end point of line
+  - `numberOfElements`: for discretization of line
+  - `cableTemplate`: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically
+  - `massProportionalLoad`: a 3D list or np.array, containing the gravity vector or zero
+  - `fixedConstraintsNode0`: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope); use None in order to apply no constraints
+  - `fixedConstraintsNode1`: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope); use None in order to apply no constraints
+  - `nodeNumber0`: if set other than -1, this node number defines the node that shall be used at positionOfNode0
+  - `nodeNumber1`: if set other than -1, this node number defines the node that shall be used at positionOfNode1
 - **output**: returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 - **notes**: use GenerateStraightBeam instead
 
@@ -36,7 +46,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 [`GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate, massProportionalLoad = [0,0,0], fixedConstraintsNode0 = [0,0,0, 0,0,0], fixedConstraintsNode1 = [0,0,0, 0,0,0], nodeNumber0 = -1, nodeNumber1 = -1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L65)
 
 - **function description**: DEPRECATED: generate 3D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
-- **input**: mbs: the system where ANCF cables are added positionOfNode0: 3D position (list or np.array) for starting point of line positionOfNode1: 3D position (list or np.array) for end point of line numberOfElements: for discretization of line cableTemplate: a ObjectANCFCable object, containing the desired cable properties; cable length and node numbers are set automatically massProportionalLoad: a 3D list or np.array, containing the gravity vector or zero fixedConstraintsNode0: a list of binary values, indicating the coordinate contraints on the first node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node; use None in order to apply no constraints fixedConstraintsNode1: a list of binary values, indicating the coordinate contraints on the last node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node; use None in order to apply no constraints nodeNumber0: if set other than -1, this node number defines the node that shall be used at positionOfNode0 nodeNumber1: if set other than -1, this node number defines the node that shall be used at positionOfNode1
+- **input**:
+  - `mbs`: the system where ANCF cables are added
+  - `positionOfNode0`: 3D position (list or np.array) for starting point of line
+  - `positionOfNode1`: 3D position (list or np.array) for end point of line
+  - `numberOfElements`: for discretization of line
+  - `cableTemplate`: a ObjectANCFCable object, containing the desired cable properties; cable length and node numbers are set automatically
+  - `massProportionalLoad`: a 3D list or np.array, containing the gravity vector or zero
+  - `fixedConstraintsNode0`: a list of binary values, indicating the coordinate contraints on the first node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node; use None in order to apply no constraints
+  - `fixedConstraintsNode1`: a list of binary values, indicating the coordinate contraints on the last node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node; use None in order to apply no constraints
+  - `nodeNumber0`: if set other than -1, this node number defines the node that shall be used at positionOfNode0
+  - `nodeNumber1`: if set other than -1, this node number defines the node that shall be used at positionOfNode1
 - **output**: returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
 *example*:
@@ -56,7 +76,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCa
 [`GenerateBeamElementsAlongLine(mbs, positionStart, positionEnd, numberOfElements, beamTemplate = None, gravity = [0,0,0], groundConstraintsStart = None, groundConstraintsEnd = None, nodeNumberStart = None, nodeNumberEnd = None, EI = None, EA = None, GA = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L95)
 
 - **function description**: new generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal ground constraints
-- **input**: mbs: the system where beam elements are added positionStart: 3D position (list or np.array) for starting point of line positionEnd: 3D position (list or np.array) for end point of line numberOfElements: for discretization of line beamTemplate: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; for Beam2D the size of nodeNumbers in the template defines the order (2=linear, 3=quadratic); finite (beam) element length and node numbers are filled automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten gravity: a 3D list or np.array, containing the gravity vector or zero groundConstraintsStart: a list of True/False values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints groundConstraintsEnd: a list of True/False values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints nodeNumberStart: if not None, this node number defines the node that shall be used at positionStart; allow to connect with other beams nodeNumberEnd: if not None, this node number defines the node that shall be used at positionEnd; allow to connect with other beams
+- **input**:
+  - `mbs`: the system where beam elements are added
+  - `positionStart`: 3D position (list or np.array) for starting point of line
+  - `positionEnd`: 3D position (list or np.array) for end point of line
+  - `numberOfElements`: for discretization of line
+  - `beamTemplate`: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; for Beam2D the size of nodeNumbers in the template defines the order (2=linear, 3=quadratic); finite (beam) element length and node numbers are filled automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten
+  - `gravity`: a 3D list or np.array, containing the gravity vector or zero
+  - `groundConstraintsStart`: a list of True/False values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
+  - `groundConstraintsEnd`: a list of True/False values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
+  - `nodeNumberStart`: if not None, this node number defines the node that shall be used at positionStart; allow to connect with other beams
+  - `nodeNumberEnd`: if not None, this node number defines the node that shall be used at positionEnd; allow to connect with other beams
 - **output**: returns a dict containing created items {'nodes', 'elements', 'nodePositions', constraintObjects', 'loads'}
 
 
@@ -66,7 +96,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCa
 [`GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements, beamTemplate, gravity = [0,0,0], fixedConstraintsNode0 = None, fixedConstraintsNode1 = None, nodeNumber0 = -1, nodeNumber1 = -1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L136)
 
 - **function description**: DEPRECATED: generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
-- **input**: mbs: the system where beam elements are added positionOfNode0: 3D position (list or np.array) for starting point of line positionOfNode1: 3D position (list or np.array) for end point of line numberOfElements: for discretization of line beamTemplate: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; for Beam2D the size of nodeNumbers in the template defines the order (2=linear, 3=quadratic); finite (beam) element length and node numbers are filled automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten gravity: a 3D list or np.array, containing the gravity vector or zero fixedConstraintsNode0: a list of binary values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints fixedConstraintsNode1: a list of binary values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints nodeNumber0: if set other than -1, this node number defines the node that shall be used at positionOfNode0 nodeNumber1: if set other than -1, this node number defines the node that shall be used at positionOfNode1
+- **input**:
+  - `mbs`: the system where beam elements are added
+  - `positionOfNode0`: 3D position (list or np.array) for starting point of line
+  - `positionOfNode1`: 3D position (list or np.array) for end point of line
+  - `numberOfElements`: for discretization of line
+  - `beamTemplate`: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; for Beam2D the size of nodeNumbers in the template defines the order (2=linear, 3=quadratic); finite (beam) element length and node numbers are filled automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten
+  - `gravity`: a 3D list or np.array, containing the gravity vector or zero
+  - `fixedConstraintsNode0`: a list of binary values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
+  - `fixedConstraintsNode1`: a list of binary values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
+  - `nodeNumber0`: if set other than -1, this node number defines the node that shall be used at positionOfNode0
+  - `nodeNumber1`: if set other than -1, this node number defines the node that shall be used at positionOfNode1
 - **output**: returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
 *example*:
@@ -102,7 +142,21 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beamTutoria
 [`GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arcAngle, numberOfElements, cableTemplate, massProportionalLoad = [0,0,0], fixedConstraintsNode0 = [0,0,0,0], fixedConstraintsNode1 = [0,0,0,0], nodeNumber0 = -1, nodeNumber1 = -1, setCurvedReferenceConfiguration = True, verboseMode = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L319)
 
 - **function description**: generate cable elements along circular arc with given start point, radius, start angle (measured relative to $x$-axis, in positive rotation sense) and angle of arc
-- **input**: mbs: the system where ANCF cables are added positionOfNode0: 3D position (list or np.array) for starting point of line radius: radius of arc startAngle: start angle of arc in radians  ($0 \ldots 2 \pi$), defines the direction of the slope vector, measured relative to $x$-axis, in positive rotation sense arcAngle: total angle of arc in radians ($0 \ldots 2 \pi$), measured in positive rotation sense (negative angle reverts curvature and center point of circle) numberOfElements: for discretization of arc cableTemplate: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically massProportionalLoad: a 3D list or np.array, containing the gravity vector or zero fixedConstraintsNode0: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope) fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope) nodeNumber0: if set other than -1, this node number defines the node that shall be used at positionOfNode0 nodeNumber1: if set other than -1, this node number defines the node that shall be used at positionOfNode1 setCurvedReferenceConfiguration: if True, the curvature +/-(1/radius) is set as a reference configuration (sign depends on arcAngle); if False, the reference configuration is straight verboseMode: if True, prints out information on created nodes
+- **input**:
+  - `mbs`: the system where ANCF cables are added
+  - `positionOfNode0`: 3D position (list or np.array) for starting point of line
+  - `radius`: radius of arc
+  - `startAngle`: start angle of arc in radians  ($0 \ldots 2 \pi$), defines the direction of the slope vector, measured relative to $x$-axis, in positive rotation sense
+  - `arcAngle`: total angle of arc in radians ($0 \ldots 2 \pi$), measured in positive rotation sense (negative angle reverts curvature and center point of circle)
+  - `numberOfElements`: for discretization of arc
+  - `cableTemplate`: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically
+  - `massProportionalLoad`: a 3D list or np.array, containing the gravity vector or zero
+  - `fixedConstraintsNode0`: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)
+  - `fixedConstraintsNode1`: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
+  - `nodeNumber0`: if set other than -1, this node number defines the node that shall be used at positionOfNode0
+  - `nodeNumber1`: if set other than -1, this node number defines the node that shall be used at positionOfNode1
+  - `setCurvedReferenceConfiguration`: if True, the curvature +/-(1/radius) is set as a reference configuration (sign depends on arcAngle); if False, the reference configuration is straight
+  - `verboseMode`: if True, prints out information on created nodes
 - **output**: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
 
@@ -115,7 +169,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFbeltDri
 [`CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes = -1, removeLastLine = False, removeFirstLine = False, radialOffset = 0., closedCurve = False, graphicsElementsPerCircle = 64, graphicsNodeSize = 0, colorCircles = [0.,0.5,1.,1.], colorLines = [1.,0.5,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L466)
 
 - **function description**: CreateReevingCurve for creating the geometry of a reeving system based on circles with radius and left/right side of passing the circles; left/right is seen in the direction passing from one to the next circle
-- **input**: circleList: list containing center position, radius and 'L' (left) or 'R' (right) passing of circle radialOffset: additional offset added to circles to account for half height of rope or beam closedCurve: if True, the system adds circleList[0] and  circleList[1] at end of list and sets removeLastLine=True and removeFirstLine=False, in order to generate a closed curve according to given circles; furthermore, the number of nodes becomes equal to the number of elements in this case drawingLinesPerCircle: number of lines in lineData per one revolution numberOfANCFnodes: if not -1, function also generates nodes with equidistant distribution along curve! graphicsElementsPerCircle: number of drawing lines generated in graphicsDataLines per circle revolution (larger generates better approximation of circles) graphicsNodeSize: if not 0, addes graphics representation of nodes generated; for check if mesh is correct removeFirstLine: removes first line generated, which may be unwanted removeLastLine: removes last line generated, which may be unwanted colorCircles: RGBA color for circles colorLines: RGBA color for lines
+- **input**:
+  - `circleList`: list containing center position, radius and 'L' (left) or 'R' (right) passing of circle
+  - `radialOffset`: additional offset added to circles to account for half height of rope or beam
+  - `closedCurve`: if True, the system adds circleList[0] and  circleList[1] at end of list and sets removeLastLine=True and removeFirstLine=False, in order to generate a closed curve according to given circles; furthermore, the number of nodes becomes equal to the number of elements in this case
+  - `drawingLinesPerCircle`: number of lines in lineData per one revolution
+  - `numberOfANCFnodes`: if not -1, function also generates nodes with equidistant distribution along curve!
+  - `graphicsElementsPerCircle`: number of drawing lines generated in graphicsDataLines per circle revolution (larger generates better approximation of circles)
+  - `graphicsNodeSize`: if not 0, addes graphics representation of nodes generated; for check if mesh is correct
+  - `removeFirstLine`: removes first line generated, which may be unwanted
+  - `removeLastLine`: removes last line generated, which may be unwanted
+  - `colorCircles`: RGBA color for circles
+  - `colorLines`: RGBA color for lines
 - **output**: return a dictionary with {'ancfPointsSlopes':ancfPointsSlopes, 'elementLengths':elementLengths, 'elementCurvatures':elementCurvatures, 'totalLength':totalLength, 'circleData':circle2D, 'graphicsDataLines':graphicsDataLines, 'graphicsDataCircles':graphicsDataCircles }; 'ancfPointsSlopes' denotes 4-dimensional vector with (x/y) position and (x/y) slope coordinates in a row; 'elementLengths' is the list of curved lengths for elements between nodes (size is 1 smaller than number of nodes), 'elementCurvatures' is the list of scalar curvatures between nodes (according to list of elementLengths), 'totalLength' is the total length of the reeving line, 'circleData' represents the lines and arcs calculated for the reeving system, 'graphicsDataLines' is the graphicsData for the lines and 'graphicsDataCircles' represents the graphicsData for the circles
 
 *example*:
@@ -145,7 +210,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 [`PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemplate, massProportionalLoad = [0,0,0], fixedConstraintsNode0 = [0,0,0,0], fixedConstraintsNode1 = [0,0,0,0], firstNodeIsLastNode = True, elementCurvatures = [], graphicsSizeConstraints = -1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/beams.py#L712)
 
 - **function description**: Create nodes and ANCFCable2D elements in MainSystem mbs from a given set of nodes, elements lengths and a template for the cable, based on output of function CreateReevingCurve(...); function works similar to GenerateStraightLineANCFCable2D, but for arbitrary geometry (curved elements); optionally add loads and constraints
-- **input**: mbs: the system where ANCF elements and nodes are added ancfPointsSlopes: list of position and slopes for nodes, provided as 4D numpy arrays, as returned by CreateReevingCurve(...) elementLengths: list of element lengths per element, as returned by CreateReevingCurve(...) cableTemplate: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically massProportionalLoad: a 3D list or np.array, containing the gravity vector to be applied to all elements or zero fixedConstraintsNode0: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope) fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope) firstNodeIsLastNode: if True, then the last node is using the node number of the first node and the curve is closed; otherwise, the first and last nodes are different, and the curve is open elementCurvatures: optional list of pre-curvatures of elements, used to override the cableTemplate entry 'physicsReferenceCurvature'; use 0. for straight lines! graphicsSizeConstraints: if set other than -1, it will be used as the size for drawing applied coordinate constraints
+- **input**:
+  - `mbs`: the system where ANCF elements and nodes are added
+  - `ancfPointsSlopes`: list of position and slopes for nodes, provided as 4D numpy arrays, as returned by CreateReevingCurve(...)
+  - `elementLengths`: list of element lengths per element, as returned by CreateReevingCurve(...)
+  - `cableTemplate`: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically
+  - `massProportionalLoad`: a 3D list or np.array, containing the gravity vector to be applied to all elements or zero
+  - `fixedConstraintsNode0`: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)
+  - `fixedConstraintsNode1`: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
+  - `firstNodeIsLastNode`: if True, then the last node is using the node number of the first node and the curve is closed; otherwise, the first and last nodes are different, and the curve is open
+  - `elementCurvatures`: optional list of pre-curvatures of elements, used to override the cableTemplate entry 'physicsReferenceCurvature'; use 0. for straight lines!
+  - `graphicsSizeConstraints`: if set other than -1, it will be used as the size for drawing applied coordinate constraints
 - **output**: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
 

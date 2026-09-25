@@ -37,7 +37,8 @@ Lie group methods and formulas for Lie group integration.
 [`R3xSO3Matrix2RotationMatrix(G)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L76)
 
 - **function description**: computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see [Bruels2011]
-- **input**: G: 7x7 matrix as np.array
+- **input**:
+  - `G`: 7x7 matrix as np.array
 - **output**: 3x3 rotation matrix as np.array
 - **author**: Stefan Holzinger
 
@@ -48,7 +49,8 @@ Lie group methods and formulas for Lie group integration.
 [`R3xSO3Matrix2Translation(G)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L89)
 
 - **function description**: computes translation part of R3xSO(3) matrix, see [Bruels2011]
-- **input**: G: 7x7 matrix as np.array
+- **input**:
+  - `G`: 7x7 matrix as np.array
 - **output**: 3D vector as np.array containg translational part of R3xSO(3)
 - **author**: Stefan Holzinger
 
@@ -59,7 +61,9 @@ Lie group methods and formulas for Lie group integration.
 [`R3xSO3Matrix(x, R)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L102)
 
 - **function description**: builds 7x7 matrix as element of the Lie group R3xSO(3), see [Bruels2011]
-- **input**: x: 3D vector as np.array representing the translation part corresponding to R3 R: 3x3 rotation matrix as np.array
+- **input**:
+  - `x`: 3D vector as np.array representing the translation part corresponding to R3
+  - `R`: 3x3 rotation matrix as np.array
 - **output**: 7x7 matrix as np.array
 - **author**: Stefan Holzinger
 
@@ -214,7 +218,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L455)
 
 - **function description**: compute composition operation for pairs in the Lie group R3xS3
-- **input**: q0: 7D vector as np.array containing position coordinates and Euler parameters incrementalMotionVector: 6D incremental motion vector as np.array
+- **input**:
+  - `q0`: 7D vector as np.array containing position coordinates and Euler parameters
+  - `incrementalMotionVector`: 6D incremental motion vector as np.array
 - **output**: 7D vector as np.array containing composed position coordinates and composed Euler parameters
 - **author**: Stefan Holzinger
 
@@ -225,7 +231,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L482)
 
 - **function description**: compute composition operation for pairs in the Lie group R3 semiTimes S3 (corresponds to SE(3))
-- **input**: q0: 7D vector as np.array containing position coordinates and Euler parameters incrementalMotionVector: 6D incremental motion vector as np.array
+- **input**:
+  - `q0`: 7D vector as np.array containing position coordinates and Euler parameters
+  - `incrementalMotionVector`: 6D incremental motion vector as np.array
 - **output**: 7D vector as np.array containing composed position coordinates and composed Euler parameters
 - **author**: Stefan Holzinger
 
@@ -236,7 +244,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L510)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see [HolzingerGerstmayr2020] the rotation vector is used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
-- **input**: q0: 6D vector as np.array containing position coordinates and rotation vector incrementalMotionVector: 6D incremental motion vector as np.array
+- **input**:
+  - `q0`: 6D vector as np.array containing position coordinates and rotation vector
+  - `incrementalMotionVector`: 6D incremental motion vector as np.array
 - **output**: 7D vector as np.array containing composed position coordinates and composed rotation vector
 - **author**: Stefan Holzinger
 
@@ -247,7 +257,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L539)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. the rotation vector is used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
-- **input**: q0: 6D vector as np.array containing position coordinates and rotation vector incrementalMotionVector: 6D incremental motion vector as np.array
+- **input**:
+  - `q0`: 6D vector as np.array containing position coordinates and rotation vector
+  - `incrementalMotionVector`: 6D incremental motion vector as np.array
 - **output**: 6D vector as np.array containing composed position coordinates and composed rotation vector
 - **author**: Stefan Holzinger
 
@@ -258,7 +270,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L569)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
-- **input**: q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles incrementalMotionVector: 6D incremental motion vector as np.array
+- **input**:
+  - `q0`: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
+  - `incrementalMotionVector`: 6D incremental motion vector as np.array
 - **output**: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
 - **author**: Stefan Holzinger
 
@@ -269,7 +283,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L598)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
-- **input**: q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles incrementalMotionVector: 6D incremental motion vector as np.array
+- **input**:
+  - `q0`: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
+  - `incrementalMotionVector`: 6D incremental motion vector as np.array
 - **output**: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
 - **author**: Stefan Holzinger
 
@@ -280,7 +296,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleForEulerParameters(q, p)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L628)
 
 - **function description**: compute composition operation for Euler parameters (unit quaternions) this composition operation is quaternion multiplication, see [Terze2016]
-- **input**: q: 4D vector as np.array containing Euler parameters p: 4D vector as np.array containing Euler parameters
+- **input**:
+  - `q`: 4D vector as np.array containing Euler parameters
+  - `p`: 4D vector as np.array containing Euler parameters
 - **output**: 4D vector as np.array containing composed (multiplied) Euler parameters
 - **author**: Stefan Holzinger
 
@@ -291,7 +309,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`CompositionRuleForRotationVectors(v0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L649)
 
 - **function description**: compute composition operation for rotation vectors v0 and Omega, see [Holzinger2021] The composed vector is NOT mapped into the principal range: its norm lies in [0, 2*pi] and may therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended rotation matrix - but it need not be the shortest representative of it. Composing pi*n with itself, for example, gives a vector of norm 2*pi rather than 0; both are the identity rotation. This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h), which is the verified one used by the Lie group integrator, and is a deliberate decision (#2494): the formulas accept and pass on such noise rather than snapping to a boundary, which keeps every existing result unchanged. A caller who needs the principal range must map it - for a norm w > pi, use (2*pi - w) about the negated axis. Note also that accuracy degrades towards w = 2*pi, which is the singularity of the tangent operator: TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the axis - composing pi*n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about 4e-8 for n = [0,0,1].
-- **input**: v0: 3D rotation vector as np.array Omega: 3D (incremental) rotation vector as np.array
+- **input**:
+  - `v0`: 3D rotation vector as np.array
+  - `Omega`: 3D (incremental) rotation vector as np.array
 - **output**: 3D vector as np.array containing composed rotation vector v; norm in [0, 2*pi], see above
 - **author**: Stefan Holzinger
 
@@ -305,6 +325,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupInt
 [`CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L696)
 
 - **function description**: compute composition operation for RotXYZ angles, see [Holzinger2021]
-- **input**: alpha0: 3D vector as np.array containing RotXYZ angles Omega:  3D vector as np.array containing the (incremental) rotation vector
+- **input**:
+  - `alpha0`: 3D vector as np.array containing RotXYZ angles
+  - `Omega`: 3D vector as np.array containing the (incremental) rotation vector
 - **output**: 3D vector as np.array containing composed RotXYZ angles
 - **author**: Stefan Holzinger

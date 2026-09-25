@@ -14,7 +14,9 @@ path planning and motion
 
 **class description**: class to create a constant acceleration (optimal) PTP trajectory; trajectory ignores global max. velocities and accelerations
 
-- **input**: finalCoordinates: list or numpy array with final coordinates for profile duration: duration (time) for profile
+- **input**:
+  - `finalCoordinates`: list or numpy array with final coordinates for profile
+  - `duration`: duration (time) for profile
 - **output**: returns profile object, which is then used to compute interpolated trajectory
 
 (sec-motion-profileconstantacceleration---init--)=
@@ -41,7 +43,8 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 
 **class description**: class to create a linear acceleration PTP profile, using a list of accelerations to define the profile; the (joint) coordinates and velocities are computed relative to values of previous profiles; ignores global max. accelerations and velocities of Trajectory
 
-- **input**: accelerationList: list of tuples (relativeTime, accelerationVector) in which relativeTime is the time relative to the start of the profile (first time must be zero!) and accelerationVector is the list of accelerations of this time point, which is then linearly interpolated
+- **input**:
+  - `accelerationList`: list of tuples (relativeTime, accelerationVector) in which relativeTime is the time relative to the start of the profile (first time must be zero!) and accelerationVector is the list of accelerations of this time point, which is then linearly interpolated
 - **output**: returns profile object, which is then used to compute interpolated trajectory in class Trajectory
 
 *example*:
@@ -72,7 +75,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 
 **class description**: class to create a synchronous motion PTP trajectory, using max. accelerations and max velocities; duration automatically computed
 
-- **input**: finalCoordinates: list or numpy array with final coordinates for profile maxVelocities: list or numpy array with maximum velocities; may be empty list []; used if smaller than globalMaxVelocities maxAccelerations: list or numpy array with maximum accelerations; may be empty list []; used if smaller than globalMaxAccelerations
+- **input**:
+  - `finalCoordinates`: list or numpy array with final coordinates for profile
+  - `maxVelocities`: list or numpy array with maximum velocities; may be empty list []; used if smaller than globalMaxVelocities
+  - `maxAccelerations`: list or numpy array with maximum accelerations; may be empty list []; used if smaller than globalMaxAccelerations
 - **output**: returns profile object, which is then used to compute interpolated trajectory
 
 (sec-motion-profileptp---init--)=
@@ -121,7 +127,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 [`__init__(self, initialCoordinates, initialTime = 0, maxVelocities = [], maxAccelerations = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/motion.py#L313)
 
 - **class function description**: initialize robot link with parameters, being self-explaining
-- **input**: initialTime: initial time for initial coordinates initialCoordinates: initial coordinates for profile maxVelocities: list or numpy array to describe global maximum velocities per coordinate maxAccelerations: list or numpy array to describe global maximum accelerations per coordinate
+- **input**:
+  - `initialTime`: initial time for initial coordinates
+  - `initialCoordinates`: initial coordinates for profile
+  - `maxVelocities`: list or numpy array to describe global maximum velocities per coordinate
+  - `maxAccelerations`: list or numpy array to describe global maximum accelerations per coordinate
 
 
 (sec-motion-trajectory-getfinalcoordinates)=
