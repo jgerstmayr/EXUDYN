@@ -122,7 +122,7 @@ The returned vector of `constraintUserFunction` must have size `nAE`.
 Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
 | `t` | Real | current time in mbs |
@@ -137,7 +137,7 @@ A user function, which computes the jacobian of the algebraic equations w.r.t. t
 The jacobian needs to exactly represent the derivative of the constraintUserFunction.
 The returned matrix of `jacobianUserFunction` must have `nAE` rows and `len(q)` columns.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
 | `t` | Real | current time in mbs |

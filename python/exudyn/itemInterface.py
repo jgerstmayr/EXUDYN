@@ -18,41 +18,49 @@ __all__ = [
     'CopyDictLevel1', 'IIDiagMatrix', 'CheckForValidUInt', 'CheckForValidPInt',
     'CheckForValidUReal', 'CheckForValidPReal', 'IsValidNumber', 'CheckForValidNumpyArray',
     'userFunctionArgsDict', 'ObjectGroundGraphicsDataUserFunction',
-    'LoadForceVectorLoadVectorUserFunction', 'LoadTorqueVectorLoadVectorUserFunction',
-    'LoadMassProportionalLoadVectorUserFunction', 'LoadCoordinateLoadUserFunction',
-    'SensorUserFunctionSensorUserFunction', 'VNodePoint', 'NodePoint', 'Point', 'VPoint',
-    'VNodePoint2D', 'NodePoint2D', 'Point2D', 'VPoint2D', 'VNodeRigidBodyEP', 'NodeRigidBodyEP',
-    'RigidEP', 'VRigidEP', 'VNodeRigidBodyRxyz', 'NodeRigidBodyRxyz', 'RigidRxyz', 'VRigidRxyz',
-    'VNodeRigidBodyRotVecLG', 'NodeRigidBodyRotVecLG', 'RigidRotVecLG', 'VRigidRotVecLG',
-    'VNodeRigidBody2D', 'NodeRigidBody2D', 'Rigid2D', 'VRigid2D', 'VNode1D', 'Node1D',
-    'VNodePoint2DSlope1', 'NodePoint2DSlope1', 'Point2DS1', 'VPoint2DS1', 'VNodePointSlope1',
-    'NodePointSlope1', 'VNodePointSlope12', 'NodePointSlope12', 'VNodePointSlope23',
-    'NodePointSlope23', 'VNodeGenericODE2', 'NodeGenericODE2', 'VNodeGenericODE1',
-    'NodeGenericODE1', 'VNodeGenericAE', 'NodeGenericAE', 'VNodeGenericData', 'NodeGenericData',
-    'VNodePointGround', 'NodePointGround', 'PointGround', 'VPointGround', 'VObjectGround',
-    'ObjectGround', 'VObjectMassPoint', 'ObjectMassPoint', 'MassPoint', 'VMassPoint',
-    'VObjectMassPoint2D', 'ObjectMassPoint2D', 'MassPoint2D', 'VMassPoint2D', 'VObjectMass1D',
-    'ObjectMass1D', 'Mass1D', 'VMass1D', 'VObjectRotationalMass1D', 'ObjectRotationalMass1D',
-    'Rotor1D', 'VRotor1D', 'VObjectRigidBody', 'ObjectRigidBody', 'RigidBody', 'VRigidBody',
-    'VObjectRigidBody2D', 'ObjectRigidBody2D', 'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2',
-    'ObjectGenericODE2', 'VObjectGenericODE1', 'ObjectGenericODE1', 'VObjectKinematicTree',
-    'ObjectKinematicTree', 'KinematicTree', 'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF',
-    'VObjectFFRFreducedOrder', 'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject',
-    'VObjectANCFCable', 'ObjectANCFCable', 'Cable', 'VCable', 'VObjectANCFCable2D',
-    'ObjectANCFCable2D', 'Cable2D', 'VCable2D', 'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D',
-    'ALECable2D', 'VALECable2D', 'VObjectANCFBeam', 'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam',
-    'VObjectBeamGeometricallyExact2D', 'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D',
-    'VObjectBeamGeometricallyExact', 'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D',
-    'VObjectANCFThinPlate', 'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper',
-    'ObjectConnectorSpringDamper', 'SpringDamper', 'VSpringDamper',
-    'VObjectConnectorCartesianSpringDamper', 'ObjectConnectorCartesianSpringDamper',
-    'CartesianSpringDamper', 'VCartesianSpringDamper', 'VObjectConnectorRigidBodySpringDamper',
-    'ObjectConnectorRigidBodySpringDamper', 'RigidBodySpringDamper', 'VRigidBodySpringDamper',
-    'VObjectConnectorLinearSpringDamper', 'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper',
-    'VLinearSpringDamper', 'VObjectConnectorTorsionalSpringDamper',
-    'ObjectConnectorTorsionalSpringDamper', 'TorsionalSpringDamper', 'VTorsionalSpringDamper',
-    'VObjectConnectorCoordinateSpringDamper', 'ObjectConnectorCoordinateSpringDamper',
-    'CoordinateSpringDamper', 'VCoordinateSpringDamper',
+    'ObjectConnectorSpringDamperSpringForceUserFunction',
+    'ObjectConnectorCartesianSpringDamperSpringForceUserFunction',
+    'ObjectConnectorLinearSpringDamperSpringForceUserFunction',
+    'ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction',
+    'ObjectConnectorCoordinateSpringDamperSpringForceUserFunction',
+    'ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction',
+    'ObjectConnectorCoordinateOffsetUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction_t',
+    'ObjectConnectorCoordinateVectorConstraintUserFunction',
+    'ObjectConnectorCoordinateVectorJacobianUserFunction', 'LoadForceVectorLoadVectorUserFunction',
+    'LoadTorqueVectorLoadVectorUserFunction', 'LoadMassProportionalLoadVectorUserFunction',
+    'LoadCoordinateLoadUserFunction', 'SensorUserFunctionSensorUserFunction', 'VNodePoint',
+    'NodePoint', 'Point', 'VPoint', 'VNodePoint2D', 'NodePoint2D', 'Point2D', 'VPoint2D',
+    'VNodeRigidBodyEP', 'NodeRigidBodyEP', 'RigidEP', 'VRigidEP', 'VNodeRigidBodyRxyz',
+    'NodeRigidBodyRxyz', 'RigidRxyz', 'VRigidRxyz', 'VNodeRigidBodyRotVecLG',
+    'NodeRigidBodyRotVecLG', 'RigidRotVecLG', 'VRigidRotVecLG', 'VNodeRigidBody2D',
+    'NodeRigidBody2D', 'Rigid2D', 'VRigid2D', 'VNode1D', 'Node1D', 'VNodePoint2DSlope1',
+    'NodePoint2DSlope1', 'Point2DS1', 'VPoint2DS1', 'VNodePointSlope1', 'NodePointSlope1',
+    'VNodePointSlope12', 'NodePointSlope12', 'VNodePointSlope23', 'NodePointSlope23',
+    'VNodeGenericODE2', 'NodeGenericODE2', 'VNodeGenericODE1', 'NodeGenericODE1', 'VNodeGenericAE',
+    'NodeGenericAE', 'VNodeGenericData', 'NodeGenericData', 'VNodePointGround', 'NodePointGround',
+    'PointGround', 'VPointGround', 'VObjectGround', 'ObjectGround', 'VObjectMassPoint',
+    'ObjectMassPoint', 'MassPoint', 'VMassPoint', 'VObjectMassPoint2D', 'ObjectMassPoint2D',
+    'MassPoint2D', 'VMassPoint2D', 'VObjectMass1D', 'ObjectMass1D', 'Mass1D', 'VMass1D',
+    'VObjectRotationalMass1D', 'ObjectRotationalMass1D', 'Rotor1D', 'VRotor1D', 'VObjectRigidBody',
+    'ObjectRigidBody', 'RigidBody', 'VRigidBody', 'VObjectRigidBody2D', 'ObjectRigidBody2D',
+    'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2', 'ObjectGenericODE2', 'VObjectGenericODE1',
+    'ObjectGenericODE1', 'VObjectKinematicTree', 'ObjectKinematicTree', 'KinematicTree',
+    'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF', 'VObjectFFRFreducedOrder',
+    'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject', 'VObjectANCFCable', 'ObjectANCFCable',
+    'Cable', 'VCable', 'VObjectANCFCable2D', 'ObjectANCFCable2D', 'Cable2D', 'VCable2D',
+    'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D', 'ALECable2D', 'VALECable2D', 'VObjectANCFBeam',
+    'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam', 'VObjectBeamGeometricallyExact2D',
+    'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D', 'VObjectBeamGeometricallyExact',
+    'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D', 'VObjectANCFThinPlate',
+    'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper', 'ObjectConnectorSpringDamper',
+    'SpringDamper', 'VSpringDamper', 'VObjectConnectorCartesianSpringDamper',
+    'ObjectConnectorCartesianSpringDamper', 'CartesianSpringDamper', 'VCartesianSpringDamper',
+    'VObjectConnectorRigidBodySpringDamper', 'ObjectConnectorRigidBodySpringDamper',
+    'RigidBodySpringDamper', 'VRigidBodySpringDamper', 'VObjectConnectorLinearSpringDamper',
+    'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper', 'VLinearSpringDamper',
+    'VObjectConnectorTorsionalSpringDamper', 'ObjectConnectorTorsionalSpringDamper',
+    'TorsionalSpringDamper', 'VTorsionalSpringDamper', 'VObjectConnectorCoordinateSpringDamper',
+    'ObjectConnectorCoordinateSpringDamper', 'CoordinateSpringDamper', 'VCoordinateSpringDamper',
     'VObjectConnectorCoordinateSpringDamperExt', 'ObjectConnectorCoordinateSpringDamperExt',
     'CoordinateSpringDamperExt', 'VCoordinateSpringDamperExt', 'VObjectConnectorGravity',
     'ObjectConnectorGravity', 'ConnectorGravity', 'VConnectorGravity',
@@ -186,18 +194,18 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectFFRFreducedOrder,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['NumpyMatrix']],
         'ObjectANCFCable2D,axialForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10'], ['Real']],
         'ObjectANCFCable2D,bendingMomentUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10'], ['Real']],
-        'ObjectConnectorSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
-        'ObjectConnectorCartesianSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['StdVector3D']],
+        'ObjectConnectorSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'deltaL', 'deltaL_t', 'stiffness', 'damping', 'force'], ['Real']],
+        'ObjectConnectorCartesianSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['StdVector3D']],
         'ObjectConnectorRigidBodySpringDamper,springForceTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdMatrix6D', 'StdMatrix6D', 'StdMatrix3D', 'StdMatrix3D', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10'], ['StdVector6D']],
         'ObjectConnectorRigidBodySpringDamper,postNewtonStepUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdMatrix6D', 'StdMatrix6D', 'StdMatrix3D', 'StdMatrix3D', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10', 'arg11'], ['StdVector']],
-        'ObjectConnectorLinearSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
-        'ObjectConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
-        'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
-        'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10', 'arg11', 'arg12'], ['Real']],
-        'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2'], ['Real']],
-        'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2'], ['Real']],
-        'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4'], ['StdVector']],
-        'ObjectConnectorCoordinateVector,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4'], ['py::object']],
+        'ObjectConnectorLinearSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real']],
+        'ObjectConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'rotation', 'angularVelocity', 'stiffness', 'damping', 'offset'], ['Real']],
+        'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real']],
+        'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'fDynamicFriction', 'fStaticFrictionOffset', 'exponentialDecayStatic', 'fViscousFriction', 'frictionProportionalZone'], ['Real']],
+        'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real']],
+        'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real']],
+        'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['StdVector']],
+        'ObjectConnectorCoordinateVector,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['py::object']],
         'ObjectJointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector6D']],
         'ObjectJointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector6D']],
         'LoadForceVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D']],
@@ -224,6 +232,313 @@ class ObjectGroundGraphicsDataUserFunction(Protocol):
         list: list of ``GraphicsData`` dictionaries, see Section sec-graphicsdata
     """
     def __call__(self, mbs: exudyn.MainSystem, itemNumber: int) -> list: ...
+
+class ObjectConnectorSpringDamperSpringForceUserFunction(Protocol):
+    r"""A user function, which computes the spring force depending on time, object variables (deltaL, deltaL_t) and.
+    
+    object parameters (stiffness, damping, force).
+    The object variables are provided to the function using the current values of the SpringDamper object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        deltaL (float): :math:`L-L_0`, spring elongation
+
+        deltaL_t (float): :math:`(\dot L - \dot L_0)`, spring velocity, including offset
+
+        stiffness (float): copied from object
+
+        damping (float): copied from object
+
+        force (float): copied from object; constant force
+
+    Returns:
+        float: scalar value of computed spring force
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, deltaL: float, deltaL_t: float, stiffness: float, damping: float, force: float) -> float: ...
+
+class ObjectConnectorCartesianSpringDamperSpringForceUserFunction(Protocol):
+    r"""A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL_t) and object parameters.
+    
+    (stiffness, damping, force).
+    The object variables are provided to the function using the current values of the SpringDamper object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        displacement (np.ndarray): :math:`\Delta\! {}^{0}{\mathbf{p}}`
+
+        velocity (np.ndarray): :math:`\Delta\! {}^{0}{\vv}`
+
+        stiffness (np.ndarray): copied from object
+
+        damping (np.ndarray): copied from object
+
+        offset (np.ndarray): copied from object
+
+    Returns:
+        np.ndarray: list or numpy array of computed spring force
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: np.ndarray, velocity: np.ndarray, stiffness: np.ndarray, damping: np.ndarray, offset: np.ndarray) -> np.ndarray: ...
+
+class ObjectConnectorLinearSpringDamperSpringForceUserFunction(Protocol):
+    r"""A user function, which computes the scalar torque depending on mbs, time, local quantities.
+    
+    (relative displacement, relative velocity), which are evaluated at current time.
+    Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Detailed description of the arguments and local quantities:
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        displacement (float): :math:`\Delta x`
+
+        velocity (float): :math:`\Delta v`
+
+        stiffness (float): copied from object
+
+        damping (float): copied from object
+
+        offset (float): copied from object
+
+    Returns:
+        float: computed force
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float) -> float: ...
+
+class ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction(Protocol):
+    r"""A user function, which computes the scalar torque depending on mbs, time, local quantities.
+    
+    (relative rotation, relative angularVelocity), which are evaluated at current time.
+    Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Detailed description of the arguments and local quantities:
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        rotation (float): :math:`\Delta \theta`
+
+        angularVelocity (float): :math:`\Delta \omega`
+
+        stiffness (float): copied from object
+
+        damping (float): copied from object
+
+        offset (float): copied from object
+
+    Returns:
+        float: computed torque
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, rotation: float, angularVelocity: float, stiffness: float, damping: float, offset: float) -> float: ...
+
+class ObjectConnectorCoordinateSpringDamperSpringForceUserFunction(Protocol):
+    r"""A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity).
+    
+    and object parameters .
+    The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        displacement (float): :math:`\Delta q`
+
+        velocity (float): :math:`\Delta v`
+
+        stiffness (float): copied from object
+
+        damping (float): copied from object
+
+        offset (float): copied from object
+
+    Returns:
+        float: scalar value of computed force
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float) -> float: ...
+
+class ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction(Protocol):
+    r"""A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity).
+    
+    and several object parameters.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Only a subset of object variables is passed to the function using the current values of the CoordinateSpringDamperExt object.
+    For parameters that are not passed via the user function interface, use mbs.GetObject(itemNumber) or, e.g.,
+    mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters inside the user function.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        displacement (float): :math:`\Delta q`
+
+        velocity (float): :math:`\Delta v`
+
+        stiffness (float): copied from object
+
+        damping (float): copied from object
+
+        offset (float): copied from object
+
+        velocityOffset (float): copied from object
+
+        fDynamicFriction (float): copied from object
+
+        fStaticFrictionOffset (float): copied from object
+
+        exponentialDecayStatic (float): copied from object
+
+        fViscousFriction (float): copied from object
+
+        frictionProportionalZone (float): copied from object, also called regularization velocity or regVel
+
+    Returns:
+        float: scalar value of computed force
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float, velocityOffset: float, fDynamicFriction: float, fStaticFrictionOffset: float, exponentialDecayStatic: float, fViscousFriction: float, frictionProportionalZone: float) -> float: ...
+
+class ObjectConnectorCoordinateOffsetUserFunction(Protocol):
+    r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
+    
+    It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
+    either zero or compatible initial offset-velocity, and no initial accelerations.
+    The ``offsetUserFunction`` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
+    In order to be on the safe side, provide both  ``offsetUserFunction`` and  ``offsetUserFunction_t``.
+    
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    The user function gets time and the offset parameter as an input and returns the computed offset:
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        lOffset (float): :math:`l_\mathrm{off}`
+
+    Returns:
+        float: computed offset for given time
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, lOffset: float) -> float: ...
+
+class ObjectConnectorCoordinateOffsetUserFunction_t(Protocol):
+    r"""A user function, which computes scalar offset **velocity** for the coordinate constraint.
+    
+    It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
+    The ``offsetUserFunction_t`` is used instead of ``offsetUserFunction`` in case of ``velocityLevel = True``,
+    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
+    
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    The user function gets time and the offset parameter as an input and returns the computed offset velocity:
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs in which underlying item is defined
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        lOffset (float): :math:`l_\mathrm{off}`
+
+    Returns:
+        float: computed offset velocity for given time
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, lOffset: float) -> float: ...
+
+class ObjectConnectorCoordinateVectorConstraintUserFunction(Protocol):
+    """A user function, which computes algebraic equations for the connector based on the marker coordinates stored in ``q`` and ``q_t``.
+    
+    Depending on ``velocityLevel``, the user function needs to compute either the position-level (``velocityLevel=False``) or
+    the velocity level (``velocityLevel=True``) constraint equations.
+    Note that for Index 2 solvers, the ``constraintUserFunction`` may be called with ``velocityLevel=True`` but ``jacobianUserFunction``
+    is called with ``velocityLevel=False``.
+    To define the number of algebraic equations, set ``scalingMarker0`` as a ``numpy.zeros((nAE,1))`` array with ``nAE`` being the number algebraic equations.
+    The returned vector of ``constraintUserFunction`` must have size ``nAE``.
+    
+    Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
+    ``mbs.GetObjectParameter(itemNumber, ...)``, see the according description of ``GetObjectParameter``.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs to
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        q (np.ndarray): connector coordinates, subsequently for marker :math:`m0` and marker :math:`m1`, in current configuration
+
+        q_t (np.ndarray): connector velocity coordinates in current configuration
+
+        velocityLevel (bool): velocityLevel as currently stored in connector
+
+    Returns:
+        np.ndarray: returns vector (numpy array or list) of evaluated constraint equations for connector
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, velocityLevel: bool) -> np.ndarray: ...
+
+class ObjectConnectorCoordinateVectorJacobianUserFunction(Protocol):
+    """A user function, which computes the jacobian of the algebraic equations w.r.t. the ODE2 coordiantes (ODE2_t velocity coordinates if ``velocityLevel=True``).
+    
+    The jacobian needs to exactly represent the derivative of the constraintUserFunction.
+    The returned matrix of ``jacobianUserFunction`` must have ``nAE`` rows and ``len(q)`` columns.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs to
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+
+        q (np.ndarray): connector coordinates, subsequently for marker :math:`m0` and marker :math:`m1`, in current configuration
+
+        q_t (np.ndarray): connector velocity coordinates in current configuration
+
+        velocityLevel (bool): velocityLevel as currently stored in connector
+
+    Returns:
+        exudyn.MatrixContainer: returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values!
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray, velocityLevel: bool) -> exudyn.MatrixContainer: ...
 
 class LoadForceVectorLoadVectorUserFunction(Protocol):
     r"""A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
@@ -291,6 +606,7 @@ class SensorUserFunctionSensorUserFunction(Protocol):
     """A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
     
     The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
+    
     The user function arguments are as follows:
     
     Args:
@@ -3017,7 +3333,7 @@ class ObjectConnectorSpringDamper:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.referenceLength = referenceLength
@@ -3101,7 +3417,7 @@ class ObjectConnectorCartesianSpringDamper:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction: Union[ObjectConnectorCartesianSpringDamperSpringForceUserFunction, int] = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = np.array(stiffness)
@@ -3297,7 +3613,7 @@ class ObjectConnectorLinearSpringDamper:
         Requested Marker type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [1,0,0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'drawAsCylinder': False, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [1,0,0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorLinearSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'drawAsCylinder': False, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = stiffness
@@ -3398,7 +3714,7 @@ class ObjectConnectorTorsionalSpringDamper:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., velocityOffset = 0., torque = 0., activeConnector = True, springTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., velocityOffset = 0., torque = 0., activeConnector = True, springTorqueUserFunction: Union[ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -3490,7 +3806,7 @@ class ObjectConnectorCoordinateSpringDamper:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = stiffness
@@ -3606,7 +3922,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., fDynamicFriction = 0., fStaticFrictionOffset = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 0.001, fViscousFriction = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., fDynamicFriction = 0., fStaticFrictionOffset = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 0.001, fViscousFriction = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -4147,7 +4463,7 @@ class ObjectConnectorCoordinate:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction: Union[ObjectConnectorCoordinateOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectConnectorCoordinateOffsetUserFunction_t, int] = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.offset = offset
@@ -4235,7 +4551,7 @@ class ObjectConnectorCoordinateVector:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, constraintUserFunction = 0, jacobianUserFunction = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, constraintUserFunction: Union[ObjectConnectorCoordinateVectorConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectConnectorCoordinateVectorJacobianUserFunction, int] = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.scalingMarker0 = CheckForValidNumpyArray(scalingMarker0)

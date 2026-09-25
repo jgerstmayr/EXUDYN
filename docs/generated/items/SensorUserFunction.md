@@ -36,6 +36,7 @@ This list can have arbitrary dimension, but should be kept constant during simul
 **Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
 A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
 The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
+
 The user function arguments are as follows:
 
 | arguments / return | type or size | description |

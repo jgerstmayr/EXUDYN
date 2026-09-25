@@ -97,7 +97,6 @@ $$
 $$
 
 **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, lOffset)`
-
 A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
 It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
 either zero or compatible initial offset-velocity, and no initial accelerations.
@@ -118,7 +117,6 @@ The user function gets time and the offset parameter as an input and returns the
 | **return value** | Real | computed offset for given time |
 
 **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, lOffset)`
-
 A user function, which computes scalar offset **velocity** for the coordinate constraint.
 It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
 The `offsetUserFunction_t` is used instead of `offsetUserFunction` in case of `velocityLevel = True`,
@@ -159,7 +157,6 @@ mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker],
                                    offset = 0.1,
                                    offsetUserFunction = UFoffset,
                                    offsetUserFunction_t = UFoffset_t))
-
 ```
 
 (miniexample-objectconnectorcoordinate)=

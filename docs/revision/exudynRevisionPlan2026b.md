@@ -1604,10 +1604,11 @@ package).
           vocabulary of sizes (`Vector6D`, `Matrix3D`, `Array`, and a size that is not fixed as the
           leading `$\in ...$` of the argument's description), and the five items of
           `itemDefsLoads.py` and `itemDefsSensors.py`: six user functions of 23.
-        - **RG12.4.5.2** — the connectors of `itemDefsObjects.py`: `ObjectConnectorSpringDamper`,
-          `CartesianSpringDamper`, `RigidBodySpringDamper`, `LinearSpringDamper`,
-          `TorsionalSpringDamper`, `CoordinateSpringDamper`, `CoordinateSpringDamperExt`,
-          `Coordinate`, `CoordinateVector` - nine items, several with two blocks.
+        - **RG12.4.5.2** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-5-2) - the
+          connectors of `itemDefsObjects.py`: eight items, ten user functions, of which two
+          documented arguments that do not exist and one was written over two lines.
+          `ObjectConnectorRigidBodySpringDamper` is **not** among them - its second block does not
+          list its arguments at all - and goes with RG12.4.5.3.
         - **RG12.4.5.3** — the bodies and the rest: `ObjectGenericODE2` (four blocks),
           `ObjectGenericODE1`, `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`,
           `ObjectANCFCable2D`, `ObjectRigidBody`, `ObjectRigidBody2D`, `ObjectJointGeneric`.

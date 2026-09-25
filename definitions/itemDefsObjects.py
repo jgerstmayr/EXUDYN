@@ -5267,6 +5267,31 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorSpringDamper   +++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorSpringDamper_springForceUserFunction(mbs: MainSystem, t: Real,
+                                                        itemNumber: Index, deltaL: Real,
+                                                        deltaL_t: Real, stiffness: Real,
+                                                        damping: Real, force: Real) -> Real:
+    r"""A user function, which computes the spring force depending on time, object variables (deltaL, deltaL\_t) and
+
+    object parameters (stiffness, damping, force).
+    The object variables are provided to the function using the current values of the SpringDamper object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        deltaL: $L-L_0$, spring elongation
+        deltaL_t: $(\dot L - \dot L_0)$, spring velocity, including offset
+        stiffness: copied from object
+        damping: copied from object
+        force: copied from object; constant force
+    Returns:
+        scalar value of computed spring force
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorSpringDamper',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -5458,44 +5483,7 @@ definitions.append(ItemDefinition(
     The latter term is currently neglected.
     
     Jacobians for markers $m1$ and mixed $m0$/$m1$ terms follow analogously.
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)`
-    A user function, which computes the spring force depending on time, object variables (deltaL, deltaL\_t) and 
-    object parameters (stiffness, damping, force).
-    The object variables are provided to the function using the current values of the SpringDamper object.
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!-- -->
 
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `deltaL` | Real | $L-L_0$, spring elongation |
-    | `deltaL_t` | Real | $(\dot L - \dot L_0)$, spring velocity, including offset |
-    | `stiffness` | Real | copied from object |
-    | `damping` | Real | copied from object |
-    | `force` | Real | copied from object; constant force |
-    | **return value** | Real | scalar value of computed spring force |
-
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    *Example*:
-    
-```python
-#define nonlinear force
-def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
-    return k*u + d*v + F0
-#markerNumbers taken from mini example
-mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-                                          referenceLength = 1, 
-                                          stiffness = 100, damping = 1,
-                                          springForceUserFunction = UFforce))
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
@@ -5562,7 +5550,18 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar5, destination=DestComp+DestParam,
             pythonName='springForceUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below""",
+            userFunction=ObjectConnectorSpringDamper_springForceUserFunction,
+            userFunctionExample=r'''
+#define nonlinear force
+def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
+    return k*u + d*v + F0
+#markerNumbers taken from mini example
+mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                                          referenceLength = 1, 
+                                          stiffness = 100, damping = 1,
+                                          springForceUserFunction = UFforce))
+'''),
         ItemFunctionDef('HasUserFunction',
             implementation='return (parameters.springForceUserFunction!=0);'),
         ItemFunctionDef('GetMarkerNumbers',
@@ -5618,6 +5617,34 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorCartesianSpringDamper   ++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorCartesianSpringDamper_springForceUserFunction(mbs: MainSystem, t: Real,
+                                                                 itemNumber: Index,
+                                                                 displacement: Vector3D,
+                                                                 velocity: Vector3D,
+                                                                 stiffness: Vector3D,
+                                                                 damping: Vector3D,
+                                                                 offset: Vector3D) -> Vector3D:
+    r"""A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL\_t) and object parameters
+
+    (stiffness, damping, force).
+    The object variables are provided to the function using the current values of the SpringDamper object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        displacement: $\Delta\! \LU{0}{\pv}$
+        velocity: $\Delta\! \LU{0}{\vv}$
+        stiffness: copied from object
+        damping: copied from object
+        offset: copied from object
+    Returns:
+        list or numpy array of computed spring force
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorCartesianSpringDamper',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -5733,42 +5760,6 @@ definitions.append(ItemDefinition(
 
     in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in {eq}`eq-objectcartesianspringdamper-jacderiv` are evaluated by setting $\fv' = const$.
 
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
-    A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL\_t) and object parameters 
-    (stiffness, damping, force).
-    The object variables are provided to the function using the current values of the SpringDamper object.
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `displacement` | Vector3D | $\Delta\! \LU{0}{\pv}$ |
-    | `velocity` | Vector3D | $\Delta\! \LU{0}{\vv}$ |
-    | `stiffness` | Vector3D | copied from object |
-    | `damping` | Vector3D | copied from object |
-    | `offset` | Vector3D | copied from object |
-    | **return value** | Vector3D | list or numpy array of computed spring force |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#define simple force for spring-damper:
-def UFforce(mbs, t, itemNumber, u, v, k, d, offset): 
-    return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
-
-#markerNumbers and parameters taken from mini example
-mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
-                                    stiffness = [k,k,k], 
-                                    damping = [0,k*0.05,0], offset = [0,0,0],
-                                    springForceUserFunction = UFforce))
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #example with mass at [1,1,0], 5kg under load 5N in -y direction
@@ -5823,7 +5814,19 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass],
         ItemParameter(type=TPyFunctionVector3DmbsScalarIndexScalar4Vector3D, destination=DestComp+DestParam,
             pythonName='springForceUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below""",
+            userFunction=ObjectConnectorCartesianSpringDamper_springForceUserFunction,
+            userFunctionExample=r'''
+#define simple force for spring-damper:
+def UFforce(mbs, t, itemNumber, u, v, k, d, offset): 
+    return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
+                                    stiffness = [k,k,k], 
+                                    damping = [0,k*0.05,0], offset = [0,0,0],
+                                    springForceUserFunction = UFforce))
+'''),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -6169,6 +6172,34 @@ mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorLinearSpringDamper   +++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorLinearSpringDamper_springForceUserFunction(mbs: MainSystem, t: Real,
+                                                              itemNumber: Index,
+                                                              displacement: Real, velocity: Real,
+                                                              stiffness: Real, damping: Real,
+                                                              offset: Real) -> Real:
+    r"""A user function, which computes the scalar torque depending on mbs, time, local quantities
+
+    (relative displacement, relative velocity), which are evaluated at current time.
+    Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    Detailed description of the arguments and local quantities:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        displacement: $\Delta x$
+        velocity: $\Delta v$
+        stiffness: copied from object
+        damping: copied from object
+        offset: copied from object
+    Returns:
+        computed force
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorLinearSpringDamper',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -6218,46 +6249,7 @@ definitions.append(ItemDefinition(
                         $$
 
     and `iN` represents the itemNumber (=objectNumber).
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
-    A user function, which computes the scalar torque depending on mbs, time, local quantities 
-    (relative displacement, relative velocity), which are evaluated at current time. 
-    Furthermore, the user function contains object parameters (stiffness, damping, offset).
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    
-    Detailed description of the arguments and local quantities:
-    <!-- -->
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `displacement` | Real | $\Delta x$ |
-    | `velocity` | Real | $\Delta v$ |
-    | `stiffness` | Real | copied from object |
-    | `damping` | Real | copied from object |
-    | `offset` | Real | copied from object |
-    | **return value** | Real | computed force |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#define simple cubic force for spring-damper:
-def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
-    k = stiffness #passed as list
-    return k*displacement + 0.1*k* displacement**3
-
-#markerNumbers and parameters taken from mini example
-mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
-                                 stiffness = k, 
-                                 damping = k*0.01, 
-                                 offset = 0,
-                                 springForceUserFunction = UFforce))
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #example with rigid body at [0,0,0], with torsional load
@@ -6331,7 +6323,21 @@ mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody],
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar5, destination=DestComp+DestParam,
             pythonName='springForceUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below""",
+            userFunction=ObjectConnectorLinearSpringDamper_springForceUserFunction,
+            userFunctionExample=r'''
+#define simple cubic force for spring-damper:
+def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
+    k = stiffness #passed as list
+    return k*displacement + 0.1*k* displacement**3
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
+                                 stiffness = k, 
+                                 damping = k*0.01, 
+                                 offset = 0,
+                                 springForceUserFunction = UFforce))
+'''),
         ItemFunctionDef('HasUserFunction',
             implementation='return (parameters.springForceUserFunction!=0);'),
         ItemFunctionDef('GetMarkerNumbers',
@@ -6391,6 +6397,35 @@ mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorTorsionalSpringDamper   ++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorTorsionalSpringDamper_springTorqueUserFunction(mbs: MainSystem, t: Real,
+                                                                  itemNumber: Index,
+                                                                  rotation: Real,
+                                                                  angularVelocity: Real,
+                                                                  stiffness: Real, damping: Real,
+                                                                  offset: Real) -> Real:
+    r"""A user function, which computes the scalar torque depending on mbs, time, local quantities
+
+    (relative rotation, relative angularVelocity), which are evaluated at current time.
+    Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    Detailed description of the arguments and local quantities:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        rotation: $\Delta \theta$
+        angularVelocity: $\Delta \omega$
+        stiffness: copied from object
+        damping: copied from object
+        offset: copied from object
+    Returns:
+        computed torque
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorTorsionalSpringDamper',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -6436,47 +6471,7 @@ definitions.append(ItemDefinition(
                         $$
 
     and `iN` represents the itemNumber (=objectNumber).
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)`
-    A user function, which computes the scalar torque depending on mbs, time, local quantities 
-    (relative rotation, relative angularVelocity), which are evaluated at current time. 
-    Furthermore, the user function contains object parameters (stiffness, damping, offset).
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    
-    Detailed description of the arguments and local quantities:
-    <!-- -->
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `rotation` | Real | $\Delta \theta$ |
-    | `angularVelocity` | Real | $\Delta \omega$ |
-    | `stiffness` | Real | copied from object |
-    | `damping` | Real | copied from object |
-    | `offset` | Real | copied from object |
-    | **return value** | Real | computed torque |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#define simple cubic force for spring-damper:
-def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
-    k = stiffness #passed as list
-    u = rotation
-    return k*u + 0.1*k*u**3
-
-#markerNumbers and parameters taken from mini example
-mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
-                                    stiffness = k, 
-                                    damping = k*0.01, 
-                                    offset = 0,
-                                    springTorqueUserFunction = UFforce))
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #example with rigid body at [0,0,0], with torsional load
@@ -6558,7 +6553,22 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar5, destination=DestComp+DestParam,
             pythonName='springTorqueUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below""",
+            userFunction=ObjectConnectorTorsionalSpringDamper_springTorqueUserFunction,
+            userFunctionExample=r'''
+#define simple cubic force for spring-damper:
+def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
+    k = stiffness #passed as list
+    u = rotation
+    return k*u + 0.1*k*u**3
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                    stiffness = k, 
+                                    damping = k*0.01, 
+                                    offset = 0,
+                                    springTorqueUserFunction = UFforce))
+'''),
         ItemFunctionDef('HasUserFunction',
             implementation='return (parameters.springTorqueUserFunction!=0);'),
         ItemFunctionDef('GetMarkerNumbers',
@@ -6626,6 +6636,33 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorCoordinateSpringDamper   +++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorCoordinateSpringDamper_springForceUserFunction(mbs: MainSystem, t: Real,
+                                                                  itemNumber: Index,
+                                                                  displacement: Real,
+                                                                  velocity: Real,
+                                                                  stiffness: Real, damping: Real,
+                                                                  offset: Real) -> Real:
+    r"""A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
+
+    and object parameters .
+    The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        displacement: $\Delta q$
+        velocity: $\Delta v$
+        stiffness: copied from object
+        damping: copied from object
+        offset: copied from object
+    Returns:
+        scalar value of computed force
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinateSpringDamper',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -6683,39 +6720,7 @@ definitions.append(ItemDefinition(
     - keep every other friction, sticking and contact variables in CoordinateSpringDamperExt as default values
     - user functions obtained a new interface in CoordinateSpringDamperExt, which just needs to be adapted
 }
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)`
-    A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
-    and object parameters .
-    The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!-- -->
 
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `displacement` | Real | $\Delta q$ |
-    | `velocity` | Real | $\Delta v$ |
-    | `stiffness` | Real | copied from object |
-    | `damping` | Real | copied from object |
-    | `offset` | Real | copied from object |
-    | **return value** | Real | scalar value of computed force |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#see also mini example! NOTE changes above since 2023-01-23
-def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
-    return k*(u-offset) + d*v
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #define user function:
@@ -6779,7 +6784,13 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar5, destination=DestComp+DestParam,
             pythonName='springForceUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below""",
+            userFunction=ObjectConnectorCoordinateSpringDamper_springForceUserFunction,
+            userFunctionExample=r'''
+#see also mini example! NOTE changes above since 2023-01-23
+def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
+    return k*(u-offset) + d*v
+'''),
         ItemFunctionDef('HasUserFunction',
             implementation='return (parameters.springForceUserFunction!=0);'),
         ItemFunctionDef('GetMarkerNumbers',
@@ -6835,6 +6846,48 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorCoordinateSpringDamperExt   ++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorCoordinateSpringDamperExt_springForceUserFunction(mbs: MainSystem, t: Real,
+                                                                     itemNumber: Index,
+                                                                     displacement: Real,
+                                                                     velocity: Real,
+                                                                     stiffness: Real,
+                                                                     damping: Real, offset: Real,
+                                                                     velocityOffset: Real,
+                                                                     fDynamicFriction: Real,
+                                                                     fStaticFrictionOffset: Real,
+                                                                     exponentialDecayStatic: Real,
+                                                                     fViscousFriction: Real,
+                                                                     frictionProportionalZone: Real) -> Real:
+    r"""A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
+
+    and several object parameters.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    Only a subset of object variables is passed to the function using the current values of the CoordinateSpringDamperExt object.
+    For parameters that are not passed via the user function interface, use mbs.GetObject(itemNumber) or, e.g.,
+    mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters inside the user function.
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        displacement: $\Delta q$
+        velocity: $\Delta v$
+        stiffness: copied from object
+        damping: copied from object
+        offset: copied from object
+        velocityOffset: copied from object
+        fDynamicFriction: copied from object
+        fStaticFrictionOffset: copied from object
+        exponentialDecayStatic: copied from object
+        fViscousFriction: copied from object
+        frictionProportionalZone: copied from object, also called regularization velocity or regVel
+    Returns:
+        scalar value of computed force
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinateSpringDamperExt',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -6974,51 +7027,7 @@ definitions.append(ItemDefinition(
     force on 'slower' coordinates for certain gear ratios.
 
     If `activeConnector = False`, $f_{SD}$ is set to zero.
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, 
-    fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)`
-    A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
-    and several object parameters.
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 
-    Only a subset of object variables is passed to the function using the current values of the CoordinateSpringDamperExt object.
-    For parameters that are not passed via the user function interface, use mbs.GetObject(itemNumber) or, e.g.,
-    mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters inside the user function.
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `displacement` | Real | $\Delta q$ |
-    | `velocity` | Real | $\Delta v$ |
-    | `stiffness` | Real | copied from object |
-    | `damping` | Real | copied from object |
-    | `offset` | Real | copied from object |
-    | `velocityOffset` | Real | copied from object |
-    | `fDynamicFriction` | Real | copied from object |
-    | `fStaticFrictionOffset` | Real | copied from object |
-    | `exponentialDecayStatic` | Real | copied from object |
-    | `fViscousFriction` | Real | copied from object |
-    | `frictionProportionalZone` | Real | copied from object, also called regularization velocity or regVel |
-    | **return value** | Real | scalar value of computed force |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#see also mini example! 
-#For further parameters, use mbs.GetObject(itemNumber) or 
-#  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
-def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
-    return k*(u-offset) + d*v
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
@@ -7121,7 +7130,15 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStatic
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar11, destination=DestComp+DestParam,
             pythonName='springForceUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below""",
+            userFunction=ObjectConnectorCoordinateSpringDamperExt_springForceUserFunction,
+            userFunctionExample=r'''
+#see also mini example! 
+#For further parameters, use mbs.GetObject(itemNumber) or 
+#  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
+def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
+    return k*(u-offset) + d*v
+'''),
         ItemFunctionDef('GetNodeNumber',
             implementation="""CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
         return parameters.nodeNumber;"""),
@@ -8184,6 +8201,52 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorCoordinate   +++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorCoordinate_offsetUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                 lOffset: Real) -> Real:
+    r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
+
+    It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
+    either zero or compatible initial offset-velocity, and no initial accelerations.
+    The `offsetUserFunction` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
+    In order to be on the safe side, provide both  `offsetUserFunction` and  `offsetUserFunction_t`.
+    
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    The user function gets time and the offset parameter as an input and returns the computed offset:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        lOffset: $l_\mathrm{off}$
+    Returns:
+        computed offset for given time
+    """
+
+def ObjectConnectorCoordinate_offsetUserFunction_t(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                   lOffset: Real) -> Real:
+    r"""A user function, which computes scalar offset **velocity** for the coordinate constraint.
+
+    It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
+    The `offsetUserFunction_t` is used instead of `offsetUserFunction` in case of `velocityLevel = True`,
+    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
+    
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    The user function gets time and the offset parameter as an input and returns the computed offset velocity:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        lOffset: $l_\mathrm{off}$
+    Returns:
+        computed offset velocity for given time
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinate',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -8240,85 +8303,6 @@ definitions.append(ItemDefinition(
                         \cv(\lambda_0) = \lambda_0 = 0
                         $$
 
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, lOffset)`
-    <!-- -->
-    A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
-    It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies, 
-    either zero or compatible initial offset-velocity, and no initial accelerations.
-    The `offsetUserFunction` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
-    In order to be on the safe side, provide both  `offsetUserFunction` and  `offsetUserFunction_t`.
-
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-
-    The user function gets time and the offset parameter as an input and returns the computed offset:
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `lOffset` | Real | $l_\mathrm{off}$ |
-    | **return value** | Real | computed offset for given time |
-
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, lOffset)`
-    <!-- -->
-    A user function, which computes scalar offset **velocity** for the coordinate constraint.
-    It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
-    The `offsetUserFunction_t` is used instead of `offsetUserFunction` in case of `velocityLevel = True`, 
-    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
-
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-
-    The user function gets time and the offset parameter as an input and returns the computed offset velocity:
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `lOffset` | Real | $l_\mathrm{off}$ |
-    | **return value** | Real | computed offset velocity for given time |
-
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    *Example*:
-    
-```python
-#see also mini example!
-from math import sin, cos, pi
-def UFoffset(mbs, t, itemNumber, lOffset): 
-    return 0.5*lOffset*(1-cos(0.5*pi*t))
-
-def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
-    return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
-
-nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
-
-groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
-nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
-
-#Spring-Damper between two marker coordinates
-mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
-                                   offset = 0.1, 
-                                   offsetUserFunction = UFoffset, 
-                                   offsetUserFunction_t = UFoffset_t)) 
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
@@ -8374,11 +8358,34 @@ mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker],
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar, destination=DestComp+DestParam,
             pythonName='offsetUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent offset; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent offset; see description below""",
+            userFunction=ObjectConnectorCoordinate_offsetUserFunction),
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar, destination=DestComp+DestParam,
             pythonName='offsetUserFunction_t',
             defaultValue=0,
-            description=r"""$\mathrm{UF}_t \in \Rcal$time derivative of offsetUserFunction; needed for velocity level constraints; see description below"""),
+            description=r"""$\mathrm{UF}_t \in \Rcal$time derivative of offsetUserFunction; needed for velocity level constraints; see description below""",
+            userFunction=ObjectConnectorCoordinate_offsetUserFunction_t,
+            userFunctionExample=r'''
+#see also mini example!
+from math import sin, cos, pi
+def UFoffset(mbs, t, itemNumber, lOffset): 
+    return 0.5*lOffset*(1-cos(0.5*pi*t))
+
+def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
+    return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
+
+nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+
+groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+
+#Spring-Damper between two marker coordinates
+mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
+                                   offset = 0.1, 
+                                   offsetUserFunction = UFoffset, 
+                                   offsetUserFunction_t = UFoffset_t)) 
+'''),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -8444,6 +8451,52 @@ mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorCoordinateVector   +++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorCoordinateVector_constraintUserFunction(mbs: MainSystem, t: Real,
+                                                           itemNumber: Index, q: Vector,
+                                                           q_t: Vector, velocityLevel: Bool) -> Vector:
+    r"""A user function, which computes algebraic equations for the connector based on the marker coordinates stored in `q` and `q_t`.
+
+    Depending on `velocityLevel`, the user function needs to compute either the position-level (`velocityLevel=False`) or
+    the velocity level (`velocityLevel=True`) constraint equations.
+    Note that for Index 2 solvers, the `constraintUserFunction` may be called with `velocityLevel=True` but `jacobianUserFunction`
+    is called with `velocityLevel=False`.
+    To define the number of algebraic equations, set `scalingMarker0` as a `numpy.zeros((nAE,1))` array with `nAE` being the number algebraic equations.
+    The returned vector of `constraintUserFunction` must have size `nAE`.
+    
+    Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs to
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration
+        q_t: $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ connector velocity coordinates in current configuration
+        velocityLevel: velocityLevel as currently stored in connector
+    Returns:
+        $\in \Rcal^{n_{ae}}$ returns vector (numpy array or list) of evaluated constraint equations for connector
+    """
+
+def ObjectConnectorCoordinateVector_jacobianUserFunction(mbs: MainSystem, t: Real,
+                                                         itemNumber: Index, q: Vector,
+                                                         q_t: Vector, velocityLevel: Bool) -> MatrixContainer:
+    r"""A user function, which computes the jacobian of the algebraic equations w.r.t. the ODE2 coordiantes (ODE2\_t velocity coordinates if `velocityLevel=True`).
+
+    The jacobian needs to exactly represent the derivative of the constraintUserFunction.
+    The returned matrix of `jacobianUserFunction` must have `nAE` rows and `len(q)` columns.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs to
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration
+        q_t: $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ connector velocity coordinates in current configuration
+        velocityLevel: velocityLevel as currently stored in connector
+    Returns:
+        $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$ returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values!
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinateVector',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -8530,49 +8583,7 @@ definitions.append(ItemDefinition(
     
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     -->
-    **Userfunction**: `constraintUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
-    A user function, which computes algebraic equations for the connector based on the marker coordinates stored in `q` and `q_t`.
-    Depending on `velocityLevel`, the user function needs to compute either the position-level (`velocityLevel=False`) or
-    the velocity level (`velocityLevel=True`) constraint equations.
-    Note that for Index 2 solvers, the `constraintUserFunction` may be called with `velocityLevel=True` but `jacobianUserFunction` 
-    is called with `velocityLevel=False`.
-    To define the number of algebraic equations, set `scalingMarker0` as a `numpy.zeros((nAE,1))` array with `nAE` being the number algebraic equations. 
-    The returned vector of `constraintUserFunction` must have size `nAE`.
 
-    Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration |
-    | `q_t` | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector velocity coordinates in current configuration |
-    | `velocityLevel` | Bool | velocityLevel as currently stored in connector |
-    | **return value** | Vector $\in \Rcal^{n_{ae}}$ | returns vector (numpy array or list) of evaluated constraint equations for connector |
-
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
-    A user function, which computes the jacobian of the algebraic equations w.r.t. the ODE2 coordiantes (ODE2\_t velocity coordinates if `velocityLevel=True`).
-    The jacobian needs to exactly represent the derivative of the constraintUserFunction.
-    The returned matrix of `jacobianUserFunction` must have `nAE` rows and `len(q)` columns.
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration |
-    | `q_t` | Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$ | connector velocity coordinates in current configuration |
-    | `velocityLevel` | Bool | velocityLevel as currently stored in connector |
-    | **return value** | MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$ | returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values! |
-
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConstraint,
@@ -8620,11 +8631,13 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2VectorBool, destination=DestComp+DestParam,
             pythonName='constraintUserFunction',
             defaultValue=0,
-            description=r"""$\cv_{user} \in \Rcal^{n_{ae}}$A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below"""),
+            description=r"""$\cv_{user} \in \Rcal^{n_{ae}}$A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below""",
+            userFunction=ObjectConnectorCoordinateVector_constraintUserFunction),
         ItemParameter(type=TPyFunctionMatrixContainerMbsScalarIndex2VectorBool, destination=DestComp+DestParam,
             pythonName='jacobianUserFunction',
             defaultValue=0,
-            description=r"""$\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"""),
+            description=r"""$\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below""",
+            userFunction=ObjectConnectorCoordinateVector_jacobianUserFunction),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,

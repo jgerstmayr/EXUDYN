@@ -189,8 +189,7 @@ force on 'slower' coordinates for certain gear ratios.
 
 If `activeConnector = False`, $f_{SD}$ is set to zero.
 
-**Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset,
-fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)`
+**Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)`
 A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
 and several object parameters.
 Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
@@ -226,7 +225,6 @@ mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters
 #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
 def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
     return k*(u-offset) + d*v
-
 ```
 
 

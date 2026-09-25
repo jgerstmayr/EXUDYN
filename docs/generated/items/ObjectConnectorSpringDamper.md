@@ -232,7 +232,7 @@ The object variables are provided to the function using the current values of th
 Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
@@ -255,7 +255,6 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
                                           referenceLength = 1,
                                           stiffness = 100, damping = 1,
                                           springForceUserFunction = UFforce))
-
 ```
 
 (miniexample-objectconnectorspringdamper)=

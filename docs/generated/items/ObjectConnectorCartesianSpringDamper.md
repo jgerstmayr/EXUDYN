@@ -182,7 +182,6 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass],
                                     stiffness = [k,k,k],
                                     damping = [0,k*0.05,0], offset = [0,0,0],
                                     springForceUserFunction = UFforce))
-
 ```
 
 (miniexample-objectconnectorcartesianspringdamper)=

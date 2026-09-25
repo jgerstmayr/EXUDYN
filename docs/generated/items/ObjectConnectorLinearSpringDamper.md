@@ -120,7 +120,6 @@ mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody],
                                  damping = k*0.01,
                                  offset = 0,
                                  springForceUserFunction = UFforce))
-
 ```
 
 (miniexample-objectconnectorlinearspringdamper)=

@@ -96,7 +96,7 @@ In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDam
 - user functions obtained a new interface in CoordinateSpringDamperExt, which just needs to be adapted
 }
 
-**Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)`
+**Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
 A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
 and object parameters .
 The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
@@ -121,7 +121,6 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 #see also mini example! NOTE changes above since 2023-01-23
 def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
     return k*(u-offset) + d*v
-
 ```
 
 (miniexample-objectconnectorcoordinatespringdamper)=

@@ -124,7 +124,6 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
                                     damping = k*0.01,
                                     offset = 0,
                                     springTorqueUserFunction = UFforce))
-
 ```
 
 (miniexample-objectconnectortorsionalspringdamper)=

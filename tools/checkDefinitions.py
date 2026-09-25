@@ -74,7 +74,8 @@ HEADING_LEVEL = {'sectionText': 2}
 DEFAULT_HEADING_LEVEL = 4
 
 #keywords whose value is Python, not prose - published as a code block, so a '#' is a comment
-CODE_KEYWORDS = set(['code', 'miniExample', 'example', 'implementation', 'addProtectedC',
+CODE_KEYWORDS = set(['code', 'miniExample', 'example', 'userFunctionExample', 'implementation',
+                     'addProtectedC',
                      'addPublicC', 'addIncludesC', 'cName', 'cplusplusName',
                      'addConstructor', 'cppText'])
 

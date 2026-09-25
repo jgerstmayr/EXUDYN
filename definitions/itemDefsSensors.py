@@ -527,6 +527,7 @@ def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, sensorNumber
     r"""A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
 
     The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
+
     The user function arguments are as follows:
 
     Args:

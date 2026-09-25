@@ -3665,3 +3665,45 @@ code path and came with them - `mbs.CreateMassPoint` now lists its thirteen argu
 follows, because it is built from this Markdown.
 
 **Gates**: 11/11 checks, the wheel, the full suite, the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.4.5.2 - the connectors, and two signatures that were wrong (2026-09-26, #2664)
+
+Eight connector items, ten user functions: 16 of 23 are defs now. The pages change in the header
+spacing, in a blank line here and there - and in two places where they were **wrong**, which is the
+part of this step that matters:
+
+- `ObjectConnectorCoordinateSpringDamper.springForceUserFunction` advertised
+  `..., offset, dryFriction, dryFrictionProportionalZone)`. Those two parameters were **removed on
+  2023-01-21**, in V1.5.76: the item's own description says so, the argument table below it lists
+  eight arguments, and the C++ `std::function` takes eight. Only the signature line still said ten,
+  and it had said it for three and a half years. A reader who followed it wrote a user function that
+  is never called with what it declares.
+- `ObjectConnectorCoordinateSpringDamperExt.springForceUserFunction` has fourteen arguments and the
+  signature was written over two source lines, so the page broke it mid-signature, in code font,
+  after `velocityOffset,`. It is one line now.
+
+Neither was found by reading: the first stopped the conversion because the table does not describe
+`dryFriction`, the second because the signature did not parse. **That is what a generated block is
+for** - a signature that is prose can disagree with the argument table beside it, and nothing notices.
+
+**Three findings about the conversion itself**, each fixed in the script and each affecting the pages:
+
+- a comment in `definitions/` that **holds content** is not a separator.
+  `ObjectConnectorCoordinateVector` has a commented-out equation above its user function block, and
+  the first cut walked through its `-->` and left the `<!--` open, which put a LaTeX equation on the
+  page. The rule is now: a comment is walked over only when the whole of it is blank or `+++`.
+- a comment line **inside** the prose is a paragraph break. `<!-- -->` renders as a blank line, and
+  the writers of `ObjectConnectorCoordinate` used it as one; dropping it welded four paragraphs into
+  two. `SensorUserFunction`, converted in RG12.4.5.1, lost a break the same way and gets it back
+  here.
+- a signature written over two lines is one signature.
+
+`userFunctionExample` joined `CODE_KEYWORDS` in `tools/checkDefinitions.py`: the example of
+`ObjectConnectorCoordinateSpringDamperExt` has a `#### ` comment in its Python, and a check for
+heading levels read it as a heading. An example is code, like `miniExample` beside it.
+
+**Gates**: 11/11 checks, the wheel, the full suite, the strict HTML build. The checks run **after** the
+build when the interface has changed - `checkPython --stubs` compares the stubs with the *imported*
+module, so running it against a wheel that is one step behind is a false failure, which is what it
+reported here before the rebuild.
