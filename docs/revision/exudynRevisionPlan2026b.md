@@ -1465,37 +1465,63 @@ whether it becomes a step.
 | RG4 | #2423 | every C++ user error inspects the Python source to find its file and line |
 | RG10 | #2541 | `exudyn.config` and `exudyn.special` are in no stub file |
 | RG12 | #2497 | 59 bare `except:` remain in the shipped package |
-| maintainer, 2026-09-25 | #2657 | the visualization documentation is spread over three chapters with no structure - a structure is proposed below |
+| maintainer, 2026-09-25 | #2657 | the chapters of the user manual are restructured - the table of contents is **decided**, see below |
 | maintainer, 2026-09-25 | #2659 | the simulation settings section does not mention `python -m exudyn dialogs sim` |
 | maintainer, 2026-09-25 | #2660 | six pages of the C++ interface repeat their own title as the first section |
 | maintainer, 2026-09-25 | #2661 | the command line and the results monitor belong in *Advanced topics* |
+| maintainer, 2026-09-25 | #2662 | the manual mixes sentence case and Title Case in its headings |
 
-### The visualization chapter, as proposed for #2657
+### The chapters of the user manual, as decided for #2657 and #2662
 
-*The maintainer asked for a structure, 2026-09-25. Measured the same day: **eleven** visualization
-sections sit in `introductionBasics.md`, five in `GUI.md` and one in `introductionAdvanced.md`.*
+*The maintainer's table of contents, 2026-09-25, answering the proposal above it. Measured the same
+day: **eleven** visualization sections sit in `introductionBasics.md`, five in `GUI.md` and one in
+`introductionAdvanced.md`.*
 
-**`docs/manual/GUI.md` - "Graphics and visualization"**, in four parts instead of five topics at one
-level:
+```
+Exudyn
+Installation and getting started
+Overview on Exudyn
+Exudyn basics
+Renderer, graphics and visualization
+    The renderer window
+    The model view
+    Images, animations and the solution viewer
+    How to add graphics
+Performance, errors and solver failures
+    Errors: what Exudyn raises, and what to do about it
+    Removing convergence problems and solver failures
+    Performance and ways to speed up computations
+Advanced topics
+    ...
+Notation
+Theory
+Solver
+Python-C++ command interface
+```
 
-| part | from |
+**Renderer, graphics and visualization** is `docs/manual/GUI.md`, in four sections built from what is
+spread over three chapters today:
+
+| section | gathers |
 |---|---|
-| **1 The renderer window** - starting and stopping it; mouse input (with the 6D mouse); keyboard input; the visualization settings dialog; the command and help windows | *Renderer and 3D graphics*, *Mouse input*, *Keyboard input*, *Visualization settings dialog*, *Execute Command and Help* |
-| **2 The model view** - the render state; storing and restoring a view; a camera that follows an object | *Render state*, *Storing the model view*, *Camera following objects* (today in *Advanced topics*) |
-| **3 Images, animations and the solution viewer** - the solution viewer; saving images; software rendering; making an animation | *Solution viewer*, *Storing images and generating animations*, *Software rendering*, *Generating Animations* |
-| **4 Drawing your own** - graphics user functions; colour, RGBA and transparency; character encoding | *Graphics user functions via Python*, *Color, RGBA and alpha-transparency*, *Character encoding: UTF-8* |
+| **The renderer window** | starting and stopping it, mouse input (with the 6D mouse), keyboard input, the visualization settings dialog, the command and help windows - and a link to *Advanced topics* for the raytracer, which draws offline |
+| **The model view** | the render state, storing and restoring a view, a camera that follows an object (today in *Advanced topics*) |
+| **Images, animations and the solution viewer** | the solution viewer, saving images, software rendering, making an animation |
+| **How to add graphics** | graphics user functions, colour, RGBA and transparency, character encoding - and a link to *Advanced topics* for the `GraphicsData` reference |
 
-**`introductionBasics.md`** keeps **one** section, *Seeing the model*: the three lines that start the
-renderer, and a link to the chapter. Everything else on the list above leaves it, which also removes
-the reason a reader has to open three chapters to find one answer.
+**Performance, errors and solver failures** is a chapter of its own, out of *Exudyn basics*: the
+three sections are already written and already belong together, and none of them is a basic.
 
-**`introductionAdvanced.md`** takes what is internals or reference rather than use: the **graphics
-pipeline**, **raytracing**, and the **`GraphicsData` reference** with its six sub-sections
-(the maintainer's own suggestion) - a dictionary format is looked up, not read.
+**`introductionBasics.md`** keeps one visualization section, *Seeing the model*: the lines that start
+the renderer, and a link.
 
-With #2661 the same chapter gains *The command line* and *The results monitor*, so *Advanced topics*
-becomes what its name says and the top level of the manual is: getting started, overview, basics,
-tutorial, graphics, advanced, notation, theory, solver.
+**`introductionAdvanced.md`** takes what is internals or reference rather than use - the **graphics
+pipeline**, **raytracing** and the **`GraphicsData` reference** with its six sub-sections - and, with
+#2661, *the command line* and *the results monitor*.
+
+**Every heading is sentence case** (#2662): *"This is a heading"*. About fifteen are Title Case
+today, and two of them are chapter titles the table of contents above already spells the new way -
+*Installation and getting started*, *Exudyn basics*.
 
 ### Recommended next
 

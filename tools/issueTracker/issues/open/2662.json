@@ -1,0 +1,13 @@
+{
+  "number": 2662,
+  "title": "The manual mixes sentence case and Title Case in its headings",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Measured 2026-09-25 over docs/manual/*.md and index.md: 116 of the 189 headings are sentence case - 'Mouse input', 'Render state' - and the rest are not. Filtering out the proper nouns (Runge-Kutta, Newmark, Generalized-alpha, Hurty-Craig-Bampton, Lagrange-d'Alembert, Tait-Bryan, Ubuntu) and the code names that are capitalised because the code is (GraphicsData: Line, Items: Nodes, Objects, ...), about fifteen are Title Case and should not be: Installation and Getting Started, Exudyn Basics, Execute Command and Help, Generating Animations, Parameter Variation, Genetic Optimization, Modeling of Contact in Exudyn, Sphere-sphere contact: Equations, Sphere-triangle contact: Equations, Dynamics: Mechanical principles, Generalized Principle of Virtual Work, Generalized Forces, Lagrange's Equations of Motion, Euler's and Chasles's Theorems, Install from specific Wheel. The maintainer decided 2026-09-25: sentence case - 'This is a heading' - everywhere. A checker can report a mid-heading capital that is not in a list of names, which is how the fifteen were found.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "file": "docs/manual/gettingStarted.md"
+}

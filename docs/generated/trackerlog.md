@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.68.dev1
 - last change = 2026-09-25
-- Number of issues = 2662
+- Number of issues = 2663
 - Number of resolved issues = 2382 (68 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The manual mixes sentence case and Title Case in its headings (#2662)
+  - description: Measured 2026-09-25 over docs/manual/\*.md and index.md: 116 of the 189 headings are sentence case - 'Mouse input', 'Render state' - and the rest are not. Filtering out the proper nouns (Runge-Kutta, Newmark, Generalized-alpha, Hurty-Craig-Bampton, Lagrange-d'Alembert, Tait-Bryan, Ubuntu) and the code names that are capitalised because the code is (GraphicsData: Line, Items: Nodes, Objects, ...), about fifteen are Title Case and should not be: Installation and Getting Started, Exudyn Basics, Execute Command and Help, Generating Animations, Parameter Variation, Genetic Optimization, Modeling of Contact in Exudyn, Sphere-sphere contact: Equations, Sphere-triangle contact: Equations, Dynamics: Mechanical principles, Generalized Principle of Virtual Work, Generalized Forces, Lagrange's Equations of Motion, Euler's and Chasles's Theorems, Install from specific Wheel. The maintainer decided 2026-09-25: sentence case - 'This is a heading' - everywhere. A checker can report a mid-heading capital that is not in a list of names, which is how the fifteen were found.
+  - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The command line and the results monitor are chapters of their own, between the manual and the theory (#2661)
   - description: index.md lists docs/manual/commandLine and docs/manual/resultsMonitor as top-level chapters, between the graphics chapter and the notation. Neither is something a reader needs before writing a first model: 'python -m exudyn' is five verbs for looking things up and reporting a bug, and the results monitor is a second process watching a running simulation. Both belong in Advanced topics, as sections or as sub-pages of it.
   - date raised: 2026-09-25
