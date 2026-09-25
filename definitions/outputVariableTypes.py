@@ -7,6 +7,10 @@
 # those four were kept in step by hand, and they had drifted - CoordinatesTotal had no string
 # (issue #2408) and the two energies never reached Python.
 #
+#           DESCRIPTIONS: read definitions/README.md, section "Writing a
+#           description", before writing or changing one - what the text may
+#           contain, and how it is checked.
+#
 # bit:  the position in the 64 bit mask. ALLOCATED ONCE AND NEVER REUSED, so a value written
 #       to a file by an older version keeps its meaning. Add a new variable with the next free
 #       bit; the emitter refuses duplicates and anything >= 64.

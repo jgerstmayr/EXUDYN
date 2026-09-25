@@ -7,6 +7,10 @@
 #           tools/generators/pybindEmitter.py into pybind_manual_classes.h, the stub fragments and
 #           the Python-C++ interface documentation.
 #
+#           DESCRIPTIONS: read definitions/README.md, section "Writing a
+#           description", before writing or changing one - what the text may
+#           contain, and how it is checked.
+#
 # Author:   Johannes Gerstmayr
 # Date:     2018-05-18 (created in autoGeneratePyBindings.py), 2026-09-14 (moved to definitions/)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'

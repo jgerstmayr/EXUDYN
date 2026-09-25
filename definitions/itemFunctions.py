@@ -25,6 +25,10 @@
 #           (ComputeMassMatrix takes massMatrixC here and massMatrix there), so deriving would
 #           change the generated headers. The base header is a CHECK instead - see the CHECK it raises.
 #
+#           DESCRIPTIONS: read definitions/README.md, section "Writing a
+#           description", before writing or changing one - what the text may
+#           contain, and how it is checked.
+#
 # Author:   Johannes Gerstmayr
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

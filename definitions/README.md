@@ -66,3 +66,69 @@ An item does not restate a declaration it shares with other items: it writes
 - The library states what the C++ base headers (`src/System/CObject*.h`, `CNode*.h`, `CMarker*.h`,
   …) declare. **Change both together** - `tools/generators/definitionValidator.py`, run by
   `tools/regenerate.py`, fails when they disagree.
+
+## Writing a description
+
+**Read this before writing or changing a description.** A description is not free text: it is the
+source of a page of the reference manual, and it is converted, checked and published. The rules are
+here and nowhere else - a definition file's header points at this section, and so does `CLAUDE.md`.
+
+These are the fields that are descriptions, and all of them are converted the same way, by
+`ConvertText` in `tools/generators/latexToMarkdown.py`:
+
+| field | where | becomes |
+|---|---|---|
+| `classDescription` | `ItemDefinition`, `StructureDefinition` | the paragraph under the item's or structure's heading |
+| `equations` | `ItemDefinition` | the *DESCRIPTION of \<item\>* part of the item page - the long text, with its own headings |
+| `description` | `ItemParameter`, `ItemFunction`, `StructureParameter`, `StructureFunction` | one cell of the parameter table |
+| `description` | the `pb....(...)` calls of the `pybind*.py` files | the text of the Python-C++ interface pages, and the docstring of the function |
+| `latexText` | `StructureDefinition` | the text that introduces a group of structures |
+
+`miniExample` is not a description: it is Python, it is run by the test suite, and it is published
+as a code block.
+
+### The text
+
+The text is **Markdown** - MyST Markdown, as the hand-written chapters in `docs/manual/` are - with
+**LaTeX for the mathematics**. Nothing else is supported: a construct that works in LaTeX but is
+not in the list below reaches the page as itself and is a defect.
+
+- **Write a description that carries mathematics or a backslash as a raw string**, `r'...'` or
+  `r"""..."""`. Python reads `'\theta'` as a tab followed by `heta`; `r'\theta'` is the six
+  characters MathJax needs. This is the one mistake that is silent, so it is the one rule with no
+  exception.
+- **Mathematics** is `$...$` inline and `$$...$$` on its own lines, with the macros that `conf.py`
+  declares - `\LU{0}{\pv}`, `\Rcal`, `\eqDot`. `tools/checkMathMacros.py` fails on a macro it does
+  not know, so a typo in one is found. Display mathematics inside a definition is written
+  `\be ... \ee` (one equation) or `\bea ... \eea` (several, aligned).
+- **A heading** inside `equations` is `\mysubsubsubsection{Equations of motion}`, which becomes a
+  fourth-level heading of the item page. Use `\mysubsubsubsectionlabel{Title}{label}` where
+  something refers to it.
+- **Inline code** - a parameter name, a Python call, a type - is `\texttt{mbs.Assemble()}`.
+- **A list** is `\bi ... \item ... \ei` (bulleted) or `\ben ... \item ... \een` (numbered).
+- **An abbreviation** is `\hac{ODE2}`, which links to the list of abbreviations. The keys are the
+  `abbreviations` dict in `tools/generators/examplesDocsEmitter.py`; add one there before using it.
+- **A reference** to a section is `\refSection{sec:itemGround}`, to an equation `\eq{eq:name}`, to
+  a figure `\fig{fig:name}`. The label is written with `\label{...}` at the target.
+- **A citation** is the key of `docs/bibliographyDoc.bib` in square brackets, written directly:
+  `[ZwoelferGerstmayr2021]`. It becomes a link into the generated references page, and
+  `tools/generators/referencesDocsEmitter.py` reports a key that the bibliography does not have.
+- **A table** is `\startTable{header}{header}{header}` with a `\rowTable{}{}{}` per row and
+  `\finishTable` at the end - three columns, always.
+- **A user function** is `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}`, followed
+  by prose, a table of its arguments and return value, and optionally `\userFunctionExample{}` with
+  a `lstlisting` block.
+- **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows
+  `docs/figures/RevoluteJointZ.png`.
+
+### How to check what you wrote
+
+```
+python tools/regenerate.py --check          # in venvExuP313: converts and regenerates
+exudev generate --all-checks                # the same, plus the eight checks
+exudev docs                                 # the HTML, strict: a reference to nothing fails
+```
+
+Then read the page: `docs/generated/items/<Item>.md` for an item, `docs/generated/structures/` for
+a structure, `docs/generated/cInterface/` for a `pybind*` text. A macro that is none of the above is
+carried through silently, so the page is the only place a mistake shows.

@@ -16,6 +16,10 @@
 #           value used here with no constant there stops the emit and says what to
 #           add, so the two can never drift apart silently.
 #
+#           DESCRIPTIONS: read definitions/README.md, section "Writing a
+#           description", before writing or changing one - what the text may
+#           contain, and how it is checked.
+#
 # Contents: VSettingsGeneral, VSettingsContourAdvanced, VSettingsContour, VSettingsNodes, VSettingsBeams, VSettingsShells, ...
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'

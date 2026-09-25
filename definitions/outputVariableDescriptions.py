@@ -5,6 +5,10 @@
 # constant costs the reader more than the repetition does - naming all 69 repeated texts
 # would save 130 lines but force a lookup to read any single description.
 #
+#           DESCRIPTIONS: read definitions/README.md, section "Writing a
+#           description", before writing or changing one - what the text may
+#           contain, and how it is checked.
+#
 # Author:   Johannes Gerstmayr
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

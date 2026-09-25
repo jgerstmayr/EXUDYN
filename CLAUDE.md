@@ -97,6 +97,12 @@ version.txt                               version — an OUTPUT of issueTracker.
    reason for a change goes **last** and stays to one clause. What changed between releases is
    said once, for users, in `docs/manual/revisions.md`. (Maintainer, 2026-09-24, #2646;
    `CODING_STYLE.md` §6.)
+6b. **A description in `definitions/` is written by the rules of
+   [`definitions/README.md`](definitions/README.md) §*Writing a description*, and by no others.**
+   That text is the source of a reference manual page: it is Markdown with LaTeX mathematics, it
+   goes through one converter, and only the listed constructs survive it. Plain Markdown where a
+   macro is meant, or LaTeX beyond the list, reaches the page as itself. Read the section before
+   writing or changing one; every definition file's header says the same. (#2655, RG3.14.)
 7. **Match the local style of the file you are editing** — see `CODING_STYLE.md`. Parts of the
    documented convention (Doxygen, the `#**` doc comments) are deprecated or mid-migration; do not
    propagate them into files that do not already use them, and do not migrate them outside a
