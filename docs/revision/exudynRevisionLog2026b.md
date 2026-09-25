@@ -3401,3 +3401,36 @@ What the gate does not look at, because it is not a description:
 
 **RG3.14.7 is closed: 1005 macros, none left.** `definitions/` is Markdown with LaTeX mathematics,
 and it stays that way now by a check rather than by attention.
+
+<a id="rg12-4-1"></a>
+### RG12.4.1 - a user function is a Python function (2026-09-25, #2664)
+
+The maintainer rejected the string the plan had proposed: *"I wanted it ... not to be given in a
+string, but defined in the Python code ... because this avoids problems in the definition itself and
+immediately becomes Python"*. It is a real `def` now, and this sub-step is the vocabulary that
+makes one possible.
+
+**In `definitions/definitionTypes.py`**: the names an annotation is written with - `Real`, `Index`,
+`Bool`, `MainSystem`, `BodyGraphicsData`, `MatrixContainer`, `ConfigurationType` and numpy for
+`np.ndarray`. They are names, not re-implementations: the real `MainSystem` is in the compiled module.
+They have to exist because `definitionLoader` **imports** a definition file, so an annotation is
+evaluated - and because `ruff` lints only `python/exudyn`, nothing in the gate would have caught an
+undefined name here. `ItemParameter` takes `userFunction=`, the function itself.
+
+**In `tools/generators/userFunctionModel.py`**: the reader. `ReadUserFunction` returns the argument
+names with their annotations **as written**, the return annotation, the summary, and the `Args:` and
+`Returns:` lines of a Google-style docstring - the same shape `docstringText` already parses for the
+stub files, so a writer meets one convention and not two. **Nothing is executed**: the function
+object is used only to find its source, which is read with `ast`, so `np.ndarray` stays `np.ndarray`.
+It raises where a docstring describes an argument the signature does not have.
+
+The `def` is named `<Item>_<parameter>`: one definition file holds 35 user functions and four of them
+are `forceUserFunction`, which at module level would shadow each other in silence. The name the
+documentation prints is the parameter's `pythonName`, so that is not visible on a page.
+
+It reads **0 user functions** today, which is the point: nothing changes until a definition carries
+one. RG12.4.2 is the first, and it needs one decision first - **where a generated block goes**. The
+four user function blocks of `ObjectGenericODE2` sit at the end of its equations text, but they are
+followed by an `*Example*:` and a code block that belongs to the first of them, so generating them at
+the end would reorder the page. An item with **one** user function and no trailing example -
+`ObjectGround.graphicsDataUserFunction` - is the cleaner first end-to-end test.

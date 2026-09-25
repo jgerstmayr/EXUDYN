@@ -1530,24 +1530,35 @@ package).
     `arg0` for `t` and `StdVector` for a numpy array. That is the thing to fix, and the rest follows
     from it.
 
-    **The source becomes one typed Python function in the `ItemDefinition`**, parsed with `ast` and
-    never executed:
+    **The source is an ordinary Python function**, not a string - the maintainer, 2026-09-25:
+    *"I wanted it ... not to be given in a string, but defined in the Python code ... because this
+    avoids problems in the definition itself and immediately becomes Python"*. It stands in the
+    definition file immediately above the `definitions.append(...)` it belongs to, and is passed to
+    its parameter by object:
 
     ```python
-    ItemUserFunction(r'''
-        def forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
-                              q: np.ndarray, q_t: np.ndarray) -> np.ndarray:
-            """compute the generalized user force vector for the ODE2 equations
+    def ObjectGenericODE2_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                           q: np.ndarray, q_t: np.ndarray) -> np.ndarray:
+        r"""compute the generalized user force vector for the ODE2 equations
 
-            Args:
-                t: current time
-                q: generalized coordinates, $\qv \in \Rcal^{n_{ODE2}}$
-                q_t: their time derivatives, $\dot\qv \in \Rcal^{n_{ODE2}}$
-            Returns:
-                the force vector, $\fv_{user} \in \Rcal^{n_{ODE2}}$
-            """
-        ''')
+        Args:
+            t: current time
+            q: generalized coordinates, $\qv \in \Rcal^{n_{ODE2}}$
+        Returns:
+            the force vector, $\fv_{user} \in \Rcal^{n_{ODE2}}$
+        """
+
+    ... ItemParameter(..., pythonName='forceUserFunction',
+                      userFunction=ObjectGenericODE2_forceUserFunction)
     ```
+
+    The `def` is named `<Item>_<parameter>` because one definition file holds 35 of them and four
+    are called `forceUserFunction`; **the name the documentation prints is the parameter's**
+    **`pythonName`**, so a page still reads `forceUserFunction(mbs, t, itemNumber, q, q_t)`. The
+    annotation types - `Real`, `Index`, `MainSystem`, `np.ndarray` and five more - are ordinary
+    Python names in `definitions/definitionTypes.py`, so a definition file stays importable and
+    readable in an editor. Nothing is executed: the function object is used only to find its source,
+    which is read with `ast`, so an annotation is reported **as it is written**.
 
     Note what moved: the **size of an argument is a formula in its description**, not part of its
     type. That is the maintainer's own correction of the idea and it is what makes the whole thing
@@ -1555,7 +1566,7 @@ package).
     the size as a formula, and a formula does not render inside one. Typed as `np.ndarray` and
     described as $\qv \in \Rcal^{n_{ODE2}}$, both halves are in the right place.
 
-    - **RG12.4.1** — the vocabulary: `ItemUserFunction` in `definitions/definitionTypes.py`, and the
+    - **RG12.4.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-1) - the vocabulary: the annotation types and `userFunction=` in `definitions/definitionTypes.py`, and the
       reader that turns one into names, Python types, the docstring and the `Args:`/`Returns:` lines.
       `ast` only: the block is parsed, never run, so a type may be a name that does not exist at
       generation time.

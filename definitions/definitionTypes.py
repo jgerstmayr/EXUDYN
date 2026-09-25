@@ -264,6 +264,44 @@ TOutputVariableType                = TypeSpec('OutputVariableType')
 TResizableVector                   = TypeSpec('ResizableVector')
 
 
+
+#--------------------------------------------------------------------- the types of a user function
+#A user function is written in a definition file as an ordinary Python function - a real def, with
+#real annotations and a real docstring - and passed to the ItemParameter it belongs to
+#(revision2026b step RG12.4, #2664). These names exist so that such a file stays ordinary Python:
+#importable, readable in an editor, and not a string that has to be escaped.
+#
+#They are NOT re-implementations. The real MainSystem is in the compiled module; this is a name for
+#an annotation, and what the documentation prints is the annotation as it is WRITTEN, read from the
+#source with ast. The SIZE of an argument is not part of its type: it belongs in the argument's line
+#of the docstring, as a formula, where it renders (maintainer, 2026-09-25).
+import numpy as np                                                    # noqa: E402
+
+Real = float
+Index = int
+Bool = bool
+
+
+class MainSystem:
+    """the MainSystem a user function is called with; the class itself is in the compiled module"""
+
+
+class BodyGraphicsData:
+    """the list of graphics dictionaries a graphics user function returns"""
+
+
+class MatrixContainer:
+    """a dense or sparse matrix, as the C++ interface exchanges it"""
+
+
+class ConfigurationType:
+    """exudyn.ConfigurationType"""
+
+
+#numpy is imported for np.ndarray in an annotation; it is the package's only mandatory dependency
+_ndarray = np.ndarray
+
+
 #%%************************************************************************************************
 def _member(kind, fields):
     """Common body: check the required fields, record which constructor was used, and default
@@ -443,7 +481,10 @@ userFunctionSignatures = {'KeyPressUserFunction': 'std::function<bool(int, int, 
 def ItemParameter(type=Required, destination=Required, pythonName=Required,
                   defaultValue=Required, description=Required,
                   cFlags='', size='', args='', cplusplusName='',
-                  fromParent=False, deprecated=None):
+                  fromParent=False, deprecated=None, userFunction=None):
+    #userFunction: for a parameter that IS a user function, the Python def that says what its
+    #arguments are called, what they are, and what they mean - see the header of
+    #tools/generators/userFunctionModel.py (revision2026b step RG12.4, #2664)
     return _member('ItemParameter', locals())
 
 
