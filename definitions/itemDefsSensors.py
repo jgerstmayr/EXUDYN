@@ -582,8 +582,6 @@ if False:
     PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
 
 ```
-
-    %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,

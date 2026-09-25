@@ -1246,7 +1246,7 @@ class SystemContainer:
         """Obtain multibody systems with index from system container."""
         ...
     visualizationSettings:VisualizationSettings
-    """this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. ; ; EXAMPLE:; ; SC = exu.SystemContainer(); ; SC.visualizationSettings.autoFitScene=False."""
+    """this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: ``SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False``."""
     @overload
     def GetDictionary(self) -> dict: 
         """[UNDER DEVELOPMENT]: return the dictionary of the system container data, e.g., to copy the system or for pickling."""

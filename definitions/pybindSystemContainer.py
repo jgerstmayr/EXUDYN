@@ -77,10 +77,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem
                         returnType='MainSystem',
                         )
 
-pb.DefLatexDataAccess('visualizationSettings',r"""this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
-    EXAMPLE:\tabnewline
-    SC = exu.SystemContainer()\tabnewline
-    SC.visualizationSettings.autoFitScene=False  """,
+pb.DefLatexDataAccess('visualizationSettings',r"""this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: `SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False`""",
                        dataType = 'VisualizationSettings')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary', 

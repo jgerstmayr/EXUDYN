@@ -4,7 +4,7 @@
 (sec-item-objectjointspherical)=
 ## ObjectJointSpherical
 
-A spherical joint, which constrains the relative translation between two position based markers. 
+A spherical joint, which constrains the relative translation between two position based markers.
 
 ```{image} /docs/figures/SphericalJoint.png
 :width: 400

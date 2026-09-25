@@ -1879,7 +1879,7 @@ class VSettingsInteractive:
     ignoreKeys: bool
     """True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used!"""
     keyPressUserFunction: Any
-    """add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: ; def f(key, action, mods):; print('key=',key);; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)."""
+    """add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: ``def f(key, action, mods): print('key=',key)``; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)."""
     logMouseCoordinates: bool
     """True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane."""
     useJoystickInput: bool
@@ -3884,7 +3884,7 @@ class SystemContainer:
         """Obtain multibody systems with index from system container."""
         ...
     visualizationSettings:VisualizationSettings
-    """this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. ; ; EXAMPLE:; ; SC = exu.SystemContainer(); ; SC.visualizationSettings.autoFitScene=False."""
+    """this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: ``SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False``."""
     @overload
     def GetDictionary(self) -> dict: 
         """[UNDER DEVELOPMENT]: return the dictionary of the system container data, e.g., to copy the system or for pickling."""

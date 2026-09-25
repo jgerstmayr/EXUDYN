@@ -572,7 +572,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
         This is the one that rewrites lines, and `ConvertLists` indents a block inside an item by two
         while `DedentOutsideCode` keeps that indentation inside a fence - so it is done alone, with
         the byte-identical comparison read per file.
-      - **RG3.14.7.5** - what is not a `\name`: the **41 LaTeX line breaks** `\\` (21 in
+      - **RG3.14.7.5** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-5) - what is not a `\name`: the **41 LaTeX line breaks** `\\` (21 in
         `itemDefs`, 14 in `pybind`, 6 in `structureDefs`), the 6 `\tabnewline` of the pybind tables,
         the **67 `%%RSTCOMPATIBLE` markers** - 65 of which have nothing after them at all - and the
         six `\n` in pybind descriptions that reach the page as two characters, because the old

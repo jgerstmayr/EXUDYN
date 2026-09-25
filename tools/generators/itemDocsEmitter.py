@@ -300,12 +300,13 @@ def WriteFile(parseInfo, parameterList):
         #the equations; everything before the %%RSTCOMPATIBLE marker is what the web
         #documentation shows, and the marker is the author's own judgement of where the LaTeX
         #stops carrying over
+        #the equations. A %%RSTCOMPATIBLE marker used to say where the published part ended,
+        #and it decided more than it said: this emission sat inside "if the marker is present",
+        #so an item without one published no description at all. The whole text is published
+        #now and the markers are gone (revision2026b step RG3.14.7.5, #2655).
         if len(parseInfo['equations']) != 0:
-            eqText = parseInfo['equations']
-            if '%%RSTCOMPATIBLE' in eqText:
-                pEnd = eqText.find('%%RSTCOMPATIBLE')
-                plrAdd.sMarkdown += LatexText2Markdown(
-                    RemoveIndentation2(eqText[:pEnd], removeAllSpaces=False)) + '\n\n'
+            plrAdd.sMarkdown += LatexText2Markdown(
+                RemoveIndentation2(parseInfo['equations'], removeAllSpaces=False)) + '\n\n'
                 
         if len(parseInfo['miniExample']) != 0:
             plrAdd.AddDocu('', section='MINI EXAMPLE for ' + parseInfo['class'], sectionLevel=3, 

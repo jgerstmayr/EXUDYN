@@ -68,8 +68,6 @@ def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
 
 ```
-
-    %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
     pythonShortName='Force',
@@ -161,8 +159,6 @@ def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
 
 ```
-
-    %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
     pythonShortName='Torque',
@@ -246,7 +242,6 @@ definitions.append(ItemDefinition(
     | **return value** | Vector3D | computed load vector |
 
     Example of user function: functionality same as in `LoadForceVector`
-    %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
@@ -353,8 +348,6 @@ mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
                            loadUserFunction = UFload))
 
 ```
-
-    %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainLoad,
     visuParentClass=VisuParentClassVisualizationLoad,

@@ -114,7 +114,9 @@ r"""You can create any item index, e.g., using `ni = NodeIndex(42)` or `oi = Obj
 r"""You can convert any item index, e.g., NodeIndex `ni` into an integer number using `int(ni)` of `ni.GetIndex()`""",
 r"""Still, you can use integers as initialization for item numbers, e.g.:
 
-`mbs.AddObject(MassPoint(nodeNumber=13, ...))`\\However, it must be a pure integer type.""",
+`mbs.AddObject(MassPoint(nodeNumber=13, ...))`
+
+However, it must be a pure integer type.""",
 r"""You can make integer calculations with such indices, e.g., `oi = 2*ObjectIndex(42)+1` restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a `int` type andoperating on mixed indices is not checked (but may raise exceptions in future).""",
 r"""You can also print item indices, e.g., `print(ni)` as it converts to string by default.""",
 r"""If you are unsure about the type of an index, use `ni.GetTypeString()` to show the index type."""

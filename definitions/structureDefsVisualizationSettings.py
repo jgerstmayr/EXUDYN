@@ -2142,7 +2142,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TKeyPressUserFunction, 
             pythonName='keyPressUserFunction',
             defaultValue=0,
-            description=r"""add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline  print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"""),
+            description=r"""add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: `def f(key, action, mods): print('key=',key)`; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"""),
         StructureParameter(type=Tbool, cFlags=SFDeprecated,
             pythonName='lockModelView',
             deprecated=Deprecated('1.10.80', 2030),

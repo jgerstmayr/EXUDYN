@@ -3348,3 +3348,35 @@ Three things had to be arranged, and each of them was a wrong page first.
 
 What is left: six `\addExampleImage`, six `\tabnewline` of the one pybind example that used to be a
 table cell, and the `\n` family, which is C++ in a `cName` lambda and not a description at all.
+
+<a id="rg3-14-7-5"></a>
+### RG3.14.7.5 - the last eighteen, and a marker that was not a marker (2026-09-25, #2655)
+
+**`%%RSTCOMPATIBLE` is not a relic; it is the switch that publishes an item's description.**
+The plan said to remove the 67 markers, and removing them deleted **4221 lines of the pages**. The
+reason is in `itemDocsEmitter`: the emission sat inside `if '%%RSTCOMPATIBLE' in eqText`, so the
+marker did two things at once - it said where the published part ended **and whether there was one
+at all**. The whole text is published now, unconditionally, and the markers are gone with the dead
+LaTeX that stood after them.
+
+**Two items got their description back**: `ObjectContactCircleCable2D` had written a *Connector
+equations* section and `ObjectJointPrismatic2D` a *Geometric relations* section of thirteen lines,
+and neither was on its page, because neither text carried a marker. Nobody had a way to notice.
+
+**The two examples the maintainer pointed at.** `\tabnewline` was deleted by the converter, so the
+example of `visualizationSettings` read
+
+    EXAMPLE:SC = exu.SystemContainer()SC.visualizationSettings.autoFitScene=False
+
+They cannot become a fenced block, which is what the maintainer expected: both are rendered into
+**one line** - one as a bullet of the C++ interface page, one as a table cell - and
+`PyLatexRST.MarkdownEntry` replaces every newline of a description by a space. So each is a code span
+with `;` where the breaks were: *EXAMPLE: `SC = exu.SystemContainer(); 
+SC.visualizationSettings.autoFitScene=False`*.
+
+The six `\addExampleImage` are the `{image}` directive the converter wrote from them, and the one
+`\\` that RG3.14.7.4 could not see - it sits against a word, `\\However` - is a paragraph break.
+
+What is left in `definitions/` is **five backslashes in one place**: the `\n` of a C++ lambda passed
+as `cName` in `pybindMainSystem`. That is code, not a description, and RG3.14.7.6 has to know the
+keyword rather than convert it.

@@ -36,5 +36,23 @@ The item VObjectJointPrismatic2D has the following parameters:
 (description-objectjointprismatic2d)=
 ### DESCRIPTION of ObjectJointPrismatic2D
 
+#### Geometric relations
+
+The vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis.
+The vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis.
+Using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and
+the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as
+
+$$
+(\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0
+$$
+
+$$
+(\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0
+$$
+
+The Lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$,
+in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`PARTS_ATEs_moving.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/PARTS_ATEs_moving.py) (TM), [`scissorPrismaticRevolute2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/scissorPrismaticRevolute2D.py) (TM), [`sliderCrankFloatingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrankFloatingTest.py) (TM)

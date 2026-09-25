@@ -1,10 +1,20 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectJointRevoluteZ
-* @brief        A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint \f$z\f$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). \addExampleImage{RevoluteJointZ} \addExampleImage{RevoluteJointZ2}
+* @brief        A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint \f$z\f$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground).
+
+```{image} /docs/figures/RevoluteJointZ.png
+:width: 400
+```
+
+
+```{image} /docs/figures/RevoluteJointZ2.png
+:width: 400
+```
+
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:44:02 (last modified)
+* @date         2026-09-25  20:44:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

@@ -1540,7 +1540,11 @@ class VObjectRigidBody:
 class ObjectRigidBody:
     """A 3D rigid body which is attached to a 3D rigid body node.
     
-    The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see sec-rigidbodyutilities-rigidbodyinertia---init-- and ``CreateRigidBody(...)``, see sec-mainsystemextensions-createrigidbody, of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass. addExampleImage{ObjectRigidBody}
+    The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see sec-rigidbodyutilities-rigidbodyinertia---init-- and ``CreateRigidBody(...)``, see sec-mainsystemextensions-createrigidbody, of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass.
+    
+    ```{image} /docs/figures/ObjectRigidBody.png
+    :width: 400
+    ```
     
     Args:
         name: objects's unique name; type: str
@@ -5128,7 +5132,11 @@ class VObjectJointGeneric:
 class ObjectJointGeneric:
     r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers.
     
-    An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. addExampleImage{UniversalJoint}
+    An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
+    
+    ```{image} /docs/figures/UniversalJoint.png
+    :width: 400
+    ```
     
     Args:
         name: constraints's unique name
@@ -5227,7 +5235,16 @@ class VObjectJointRevoluteZ:
 class ObjectJointRevoluteZ:
     """A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint :math:`z`-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate.
     
-    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), sec-rigidbodyutilities-addrevolutejoint, for two rigid bodies (or ground). addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}
+    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), sec-rigidbodyutilities-addrevolutejoint, for two rigid bodies (or ground).
+    
+    ```{image} /docs/figures/RevoluteJointZ.png
+    :width: 400
+    ```
+    
+    
+    ```{image} /docs/figures/RevoluteJointZ2.png
+    :width: 400
+    ```
     
     Args:
         name: constraints's unique name
@@ -5306,7 +5323,11 @@ class VObjectJointPrismaticX:
 class ObjectJointPrismaticX:
     """A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t.
     
-    the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), sec-rigidbodyutilities-addprismaticjoint, for two rigid bodies (or ground). addExampleImage{PrismaticJointX}
+    the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), sec-rigidbodyutilities-addprismaticjoint, for two rigid bodies (or ground).
+    
+    ```{image} /docs/figures/PrismaticJointX.png
+    :width: 400
+    ```
     
     Args:
         name: constraints's unique name
@@ -5381,7 +5402,9 @@ class VObjectJointSpherical:
 class ObjectJointSpherical:
     """A spherical joint, which constrains the relative translation between two position based markers.
     
-    addExampleImage{SphericalJoint}
+    ```{image} /docs/figures/SphericalJoint.png
+    :width: 400
+    ```
     
     Args:
         name: constraints's unique name

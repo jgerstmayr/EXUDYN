@@ -39,5 +39,10 @@ The item VObjectContactCircleCable2D has the following parameters:
 (description-objectcontactcirclecable2d)=
 ### DESCRIPTION of ObjectContactCircleCable2D
 
+#### Connector equations
+
+Geometry and equations are very similar to `ObjectContactFrictionCircleCable2D`, while friction is not used and no torque
+is transferred to the circle object.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM)

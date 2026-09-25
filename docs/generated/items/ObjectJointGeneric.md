@@ -4,7 +4,7 @@
 (sec-item-objectjointgeneric)=
 ## ObjectJointGeneric
 
-A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. 
+A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
 
 ```{image} /docs/figures/UniversalJoint.png
 :width: 400

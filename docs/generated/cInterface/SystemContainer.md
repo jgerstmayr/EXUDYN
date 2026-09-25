@@ -23,7 +23,7 @@ The class **SystemContainer** has the following **functions and structures**:
 - **`Append(mainSystem)`**: append an exsiting computational system to the system container; returns the number of MainSystem in system container
 - **`NumberOfSystems()`**: obtain number of multibody systems available in system container
 - **`GetSystem(systemNumber)`**: obtain multibody systems with index from system container
-- **`visualizationSettings`**: this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE:SC = exu.SystemContainer()SC.visualizationSettings.autoFitScene=False
+- **`visualizationSettings`**: this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: `SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False`
 - **`GetDictionary()`**: [UNDER DEVELOPMENT]: return the dictionary of the system container data, e.g., to copy the system or for pickling
 - **`SetDictionary(systemDict)`**: [UNDER DEVELOPMENT]: set system container data from given dictionary; used for pickling
 - **`renderer`**: The substructure in SystemContainer responsible for rendering (except visualizationSettings)
