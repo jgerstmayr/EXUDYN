@@ -333,7 +333,7 @@ The class **MainSystemData** has the following **functions and structures** rega
 
 
 
-This section provides access functions the {ref}`LTG <LTG>`-lists for every object (body, constraint, ...) in the system. For details on the {ref}`LTG <LTG>` mapping, see {ref}`sec-overview-ltgmapping`.
+This section provides access functions the {ref}`LTG <LTG>`-lists for every object (body, constraint, ...) in the system. For details on the {ref}`LTG <LTG>` mapping, see [](#sec-overview-ltgmapping).
 
 The class **MainSystemData** has the following **functions and structures** regarding **object LTG coordinate mappings**:
 

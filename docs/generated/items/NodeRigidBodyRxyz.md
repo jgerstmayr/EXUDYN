@@ -73,7 +73,7 @@ $$
 \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
 $$
 
-see {ref}`sec-symbolsitems` for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
+see [](#sec-symbolsitems) for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
 
 The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
 
@@ -85,7 +85,7 @@ $$
 $$
 
 For creating a `NodeRigidBodyRxyz` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see {ref}`sec-mainsystemextensions-createrigidbody`, which simplifies the setup of a rigid body significantely!
+see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`performanceMultiThreadingNG.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/performanceMultiThreadingNG.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), [`heavyTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py) (TM), [`connectorRigidBodySpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorRigidBodySpringDamperTest.py) (TM)

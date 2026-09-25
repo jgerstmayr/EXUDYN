@@ -43,7 +43,7 @@ definitions.append(ItemDefinition(
     Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
 
-    \noindent {\bf Example} for NodePoint: see ObjectMassPoint, \refSection{sec:item:ObjectMassPoint}
+    \noindent {\bf Example} for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -134,7 +134,7 @@ definitions.append(ItemDefinition(
     Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \vspace{6pt}\\
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
     
-    \noindent {\bf Example} for NodePoint2D: see ObjectMassPoint2D, \refSection{sec:item:ObjectMassPoint2D}
+    \noindent {\bf Example} for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -228,7 +228,7 @@ definitions.append(ItemDefinition(
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The first 3 equations are residuals of translational forces in global coordinates,
     while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
-    global torques left-multiplied with $\LU{0}{\Gm\tp}$, see \eq{eq_nodeRigidBodyEP_Gm}, compare the equations of motion of
+    global torques left-multiplied with $\LU{0}{\Gm\tp}$, see [](#eq-noderigidbodyep-gm), compare the equations of motion of
     the rigid body.
     
     There is one additional (algebraic) constraint equation for the quaternions.
@@ -257,7 +257,7 @@ definitions.append(ItemDefinition(
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     \eea
     For creating a \texttt{NodeRigidBodyEP} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
-    see \refSection{sec:mainsystemextensions:CreateRigidBody}, which simplifies the setup of a rigid body significantely!
+    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
     %return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
     %                                    -2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
@@ -404,7 +404,7 @@ definitions.append(ItemDefinition(
     \be
       \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
     \ee
-    see \refSection{sec:symbolsItems} for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
+    see [](#sec-symbolsitems) for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
     
     The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
     \bea
@@ -413,7 +413,7 @@ definitions.append(ItemDefinition(
     \eea
     
     For creating a \texttt{NodeRigidBodyRxyz} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
-    see \refSection{sec:mainsystemextensions:CreateRigidBody}, which simplifies the setup of a rigid body significantely!
+    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
@@ -543,7 +543,7 @@ definitions.append(ItemDefinition(
     \be
       \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc} 
     \ee
-    Note that $\Rot(\tnu)$ is defined in function \texttt{ RotationVector2RotationMatrix}, see \refSection{sec:rigidBodyUtilities:RotationVector2RotationMatrix}.
+    Note that $\Rot(\tnu)$ is defined in function \texttt{ RotationVector2RotationMatrix}, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
     
     A Lie group integrator must be used with this node, which is why the is used, the 
     rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
@@ -556,7 +556,7 @@ definitions.append(ItemDefinition(
     implicit time integration performance.
     
     For creating a \texttt{NodeRigidBodyRotVecLG} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
-    see \refSection{sec:mainsystemextensions:CreateRigidBody}, which simplifies the setup of a rigid body significantely!
+    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,

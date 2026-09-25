@@ -117,18 +117,18 @@ $$
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.
-The function can be used to generate any `BodyGraphicsData`, see Section {ref}`sec-graphicsdata`.
-Use `exudyn.graphics` functions, see Section {ref}`sec-module-graphics`, to create more complicated objects.
+The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
 Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
 inefficient and only designed to enable simpler tests, but not large scale problems.
 
-For an example for `graphicsDataUserFunction` see ObjectGround, {ref}`sec-item-objectground`.
+For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
 
 | arguments /  return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
 | `itemNumber` | int | integer number of the object in mbs, allowing easy access |
-| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section {ref}`sec-graphicsdata` |
+| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
 (miniexample-objectrigidbody2d)=
 #### MINI EXAMPLE for ObjectRigidBody2D

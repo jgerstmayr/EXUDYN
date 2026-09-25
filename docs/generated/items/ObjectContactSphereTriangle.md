@@ -23,8 +23,8 @@ The item **ObjectContactSphereTriangle** with type = 'ContactSphereTriangle' has
 | **radiusSphere** $r_S$ | PReal |  | 0. | radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
 | **trianglePoints** $[\LU{m_1}{\pv}_0,\LU{m_1}{\pv}_1,\LU{m_1}{\pv}_2]$ | Vector3DList |  | [] | triangle points, defined in marker 1 local coordinates |
 | **includeEdges** | UInt |  | 7 | Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1 |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, {ref}`sec-module-physics` |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), {ref}`sec-module-physics` |
+| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** $k_c$ | UReal |  | 0. | normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
 | **contactDamping** $d_c$ | UReal |  | 0. | linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
 | **contactStiffnessExponent** $n_\mathrm{exp}$ | PReal |  | 1. | exponent in normal contact model [SI:1] |

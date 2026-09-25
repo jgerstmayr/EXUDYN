@@ -14,7 +14,7 @@ The item **SensorSuperElement** with type = 'SuperElement' has the following par
 | **meshNodeNumber** | UInt |  | invalid (-1) | mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder; **must be given**: the default is only a placeholder |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
 | **fileName** | String |  | '' | directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist |
-| **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, {ref}`sec-objectffrfreducedorder-superelementoutput`) |
+| **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, [](#sec-objectffrfreducedorder-superelementoutput)) |
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorSuperElement |  |  | parameters for visualization of item |
 

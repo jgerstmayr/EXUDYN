@@ -122,7 +122,7 @@ $$
 **Equations for rotational part (`activeConnector = True`)**:  
 
 The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
-Note that the axes are always given in global coordinates, compare the table in {ref}`sec-objectjointgeneric-definitionofquantities`.
+Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointgeneric-definitionofquantities).
 
 Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
 In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(mbs, t, \pv_{par}))$, in which the three components of

@@ -159,7 +159,7 @@ $$ (eq-hydraulicactuator-effbulkmodulus)
 
 where we use a slightly different approach from [RahikainenGonzalezNayaEtAl2020] when computing the volume for the cylinder bulk modulus term for $k=1$.
 
-Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in {eq}`eq-hydraulicactuator-effbulkmodulus`
+Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in [](#eq-hydraulicactuator-effbulkmodulus)
 are set to zero (which other wise would give infinity).
 
 Otherwise, if `useChamberVolumeChange == False`, $V_{0,cur}=V_{h,0}$, $V_{1,cur}=V_{h,1}$ and $K_{k,eff} = K_{oil}$ for chambers $k \in {0,1}$.

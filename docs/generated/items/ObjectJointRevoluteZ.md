@@ -4,7 +4,7 @@
 (sec-item-objectjointrevolutez)=
 ## ObjectJointRevoluteZ
 
-A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), {ref}`sec-rigidbodyutilities-addrevolutejoint`, for two rigid bodies (or ground). 
+A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/RevoluteJointZ.png
 :width: 400
@@ -99,7 +99,7 @@ $$
 
 **Equations for rotational part (`activeConnector = True`)**:  
 
-Note that the axes are always given in global coordinates, compare the table in {ref}`sec-objectjointrevolutez-definitionofquantities`,
+Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointrevolutez-definitionofquantities),
 and they include the transformations by $\LU{m0,J0}{\Rot}$ and $\LU{m1,J1}{\Rot}$.
 The index 3 constraint equations read
 
@@ -110,7 +110,7 @@ $$
 \end{aligned}
 $$ (eq-objectjointrevolutez-index3)
 
-The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t. time, and are given in the C++ code.
+The index 2 constraints follow from the derivative of [](#eq-objectjointrevolutez-index3) w.r.t. time, and are given in the C++ code.
 if `activeConnector = False`,
 
 $$

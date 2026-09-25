@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-25  09:44:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,8 +33,8 @@ public: // AUTO:
     Real torusMajorRadius;                        //!< AUTO: must be > 0;  major radius of torus [SI:m], representing center of rotated circle
     Real torusMinorRadius;                        //!< AUTO: must be > 0;  minor radius of torus [SI:m], representing radius of circle of ring
     Vector3D torusAxis;                           //!< AUTO: Vector containing rotation axis of torus; must be a unit vector.
-    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
-    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}
+    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
+    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
     Real contactDamping;                          //!< AUTO: must be >= 0; linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
     Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in normal contact model [SI:1]

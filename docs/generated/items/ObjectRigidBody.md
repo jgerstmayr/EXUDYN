@@ -4,7 +4,7 @@
 (sec-item-objectrigidbody)=
 ## ObjectRigidBody
 
-A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see {ref}`sec-rigidbodyutilities-rigidbodyinertia---init--` and `CreateRigidBody(...)`, see {ref}`sec-mainsystemextensions-createrigidbody`, of `exudyn.rigidBodyUtilities` to handle inertia, {ref}`COM <COM>` and mass. 
+A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and `CreateRigidBody(...)`, see [](#sec-mainsystemextensions-createrigidbody), of `exudyn.rigidBodyUtilities` to handle inertia, {ref}`COM <COM>` and mass. 
 
 ```{image} /docs/figures/ObjectRigidBody.png
 :width: 400
@@ -131,7 +131,7 @@ $$
 \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
 $$
 
-which is inserted into the first line of {eq}`eq-objectrigidbody-eomcom0`. Additionally, the second line of {eq}`eq-objectrigidbody-eomcom0`
+which is inserted into the first line of [](#eq-objectrigidbody-eomcom0). Additionally, the second line of [](#eq-objectrigidbody-eomcom0)
 (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to {ref}`COM <COM>`, using the well known relation
 
 $$
@@ -149,7 +149,7 @@ $$
 $$ (eq-objectrigidbody-eomarbitrary)
 
 in which $\Jm$ is the inertia tensor w.r.t. the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
-{eq}`eq-objectrigidbody-eomarbitrary` can be written in the global frame (0),
+[](#eq-objectrigidbody-eomarbitrary) can be written in the global frame (0),
 
 $$
 \mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} =
@@ -157,10 +157,10 @@ $$
 {-\LU{0}{\tilde \tomega} \LU{0}{\Jm} \LU{0}{\tomega}} + \vp{\LU{0}{\fv_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{\fv_\lambda}}{\LU{0}{\ttau_\lambda}} \, .
 $$ (eq-objectrigidbody-eomglobal)
 
-Expressing the translational part (first line) of {eq}`eq-objectrigidbody-eomglobal` in the global frame (0), using local coordinates (b) for
+Expressing the translational part (first line) of [](#eq-objectrigidbody-eomglobal) in the global frame (0), using local coordinates (b) for
 quantities that are constant in the body-fixed frame, $\LU{b}{\Jm}$ and $\LU{b}{\bv_{COM}}$, thus expressing also the
 angular velocity $\LU{b}{\tomega}$ in the body-fixed frame,
-applying {eq}`eq-objectrigidbody-omegalocal` and {eq}`eq-objectrigidbody-alpha`, and using the relations
+applying [](#eq-objectrigidbody-omegalocal) and [](#eq-objectrigidbody-alpha), and using the relations
 
 $$
 \begin{aligned}
@@ -204,7 +204,7 @@ $$
 \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
 $$ (eq-objectrigidbody-eulerparametersvel)
 
-Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint {eq}`eq-objectrigidbody-eulerparameters`, the constraint reaction forces in {eq}`eq-objectrigidbody-eom` then read
+Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint [](#eq-objectrigidbody-eulerparameters), the constraint reaction forces in [](#eq-objectrigidbody-eom) then read
 
 $$
 \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
@@ -212,21 +212,21 @@ $$
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.
-The function can be used to generate any `BodyGraphicsData`, see Section {ref}`sec-graphicsdata`.
-Use `exudyn.graphics` functions, see Section {ref}`sec-module-graphics`, to create more complicated objects.
+The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
 Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
 inefficient and only designed to enable simpler tests, but not large scale problems.
 
-For an example for `graphicsDataUserFunction` see ObjectGround, {ref}`sec-item-objectground`.
+For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
 
 | arguments /  return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
 | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
-| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section {ref}`sec-graphicsdata` |
+| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
 For creating a `ObjectRigidBody`, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see {ref}`sec-mainsystemextensions-createrigidbody`, which simplifies the setup of a rigid body significantely!
+see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...

@@ -47,7 +47,7 @@ $$
 \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
 $$
 
-As an example of the `ObjectRigidBody2D`, see {ref}`sec-item-objectrigidbody2d`, the position and velocity are computed as
+As an example of the `ObjectRigidBody2D`, see [](#sec-item-objectrigidbody2d), the position and velocity are computed as
 
 $$
 \LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \, ,

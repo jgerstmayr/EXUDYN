@@ -51,6 +51,14 @@ def RemoveIndentation(text, addSpaces = '', removeAllSpaces = True, removeIndent
 
 
 #for text in .pyi (stub) files, some characters and strings make problems
+def PlainTextLinks(text):
+    """a Markdown link into the documentation reads as its own text in a docstring, where there is
+    no page to link to: [](#sec-solvers) is the anchor a reader can search for, and
+    [the solvers](#sec-solvers) is what the writer wanted to say (#2655)"""
+    text = re.sub(r'\[([^\]]+)\]\(#([^)]+)\)', r'\1', text)
+    return re.sub(r'\[\]\(#([^)]+)\)', r'\1', text)
+
+
 def StripAbbreviations(text):
     """ABRV:ODE2 links to the list of abbreviations on a page; in a docstring, where there is no
     page to link to, the abbreviation reads as itself (#2655)"""
@@ -80,7 +88,7 @@ def CleanStringForPyiDescription(text, enforcePeriod=False):
 
     
     text = re.sub(r'\\refSection\{(.*?)\}', 'theDoc.pdf', text) #eliminate
-    text = StripAbbreviations(text)
+    text = StripAbbreviations(PlainTextLinks(text))
     text = re.sub(r'\\acp\{(.*?)\}', r'\1', text) #convert to readable text
     text = re.sub(r'\\ac\{(.*?)\}', r'\1', text) #convert to readable text
     text = re.sub(r'\\hac\{(.*?)\}', r'\1', text) #convert to readable text

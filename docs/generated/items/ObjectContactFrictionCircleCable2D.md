@@ -97,7 +97,7 @@ $$
 \rho = \frac{n}{d}
 $$
 
-We distinguish 3 cases (see also {ref}`fig-objectcontactfrictioncirclecable2d-sketch` for cases 1 and 2):
+We distinguish 3 cases (see also [](#fig-objectcontactfrictioncirclecable2d-sketch) for cases 1 and 2):
 
 1. If $\rho \le 0$, the shortest distance would be the distance to point $\pv_p=\pv_i$, reading
 
@@ -123,7 +123,7 @@ d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
 $$
 
 Here, the shortest distance vector for every segment results from the projected point $\pv_p$
-of the above mentioned cases, see also {ref}`fig-objectcontactfrictioncirclecable2d-sketch`,
+of the above mentioned cases, see also [](#fig-objectcontactfrictioncirclecable2d-sketch),
 with the relation
 
 $$
@@ -186,7 +186,7 @@ Calculation of last sticking position; blue parts mark the sticking position cal
 Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
 the following strategy is used.
 In case of sliding (which could be the last time sliding before sticking),
-we compute the **current sticking position**, see {ref}`fig-objectcontactfrictioncirclecable2d-stickingpos`, as the sum of the relative position at the segment $s$
+we compute the **current sticking position**, see [](#fig-objectcontactfrictioncirclecable2d-stickingpos), as the sum of the relative position at the segment $s$
 
 $$
 x_{s,curStick} = \rho \cdot L_{seg}
@@ -199,7 +199,7 @@ $$
 x_{c,curStick} = \alpha \cdot r
 $$
 
-We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in {ref}`fig-objectcontactfrictioncirclecable2d-stickingpos`.),
+We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in [](#fig-objectcontactfrictioncirclecable2d-stickingpos).),
 
 $$
 x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.
@@ -244,7 +244,7 @@ $$
 
 #### Post Newton Step
 
-In general, see the solver flow chart for the `DiscontinuousIteration`, see {ref}`fig-solver-discontinuous-iteration`, should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
+In general, see the solver flow chart for the `DiscontinuousIteration`, see [](#fig-solver-discontinuous-iteration), should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
 
 The `PostNewtonStep` computes 3 values per segment, which are used for computation of contact forces, irrespectively of the
 current geometryof the contact.
@@ -260,7 +260,7 @@ $$
 $$
 
 Here, $x_{gap}$ contains the gap of the segment ($\le 0$ means contact), $x_{lastStick}$ is described in
-{eq}`objectcontactfrictioncirclecable2d-curstick`, and
+[](#objectcontactfrictioncirclecable2d-curstick), and
 $x_{isSlipStick}$ defines the stick or slip case,
 
 - $x_{isSlipStick} = -2$: undefined, used for initialization
@@ -269,10 +269,10 @@ $x_{isSlipStick}$ defines the stick or slip case,
 
 The basic algorithm in the `PostNewtonStep`, with all operations given for any segment $s_i$, can be summarized as follows:
 
-- Evaluate gap per segment $g$ using {eq}`objectcontactfrictioncirclecable2d-gap` and store in data variable: $x_{gap} = g$
-- If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$): 2. Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick` (terms are only evaluated if $\mu_k \neq 0$) 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$): 4. Compute linear tangential force for friction stiffness and velocity penalty: 5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$): 6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already, 7. In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
+- Evaluate gap per segment $g$ using [](#objectcontactfrictioncirclecable2d-gap) and store in data variable: $x_{gap} = g$
+- If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$): 2. Compute current sticking position $x_{curStick}$ according to [](#objectcontactfrictioncirclecable2d-lastcurstick) (terms are only evaluated if $\mu_k \neq 0$) 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$): 4. Compute linear tangential force for friction stiffness and velocity penalty: 5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$): 6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already, 7. In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
 
-1. Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
+1. Compute contact force $f_n$ according to [](#objectcontactfrictioncirclecable2d-contactforce)
 $$
 \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
 \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
@@ -318,17 +318,17 @@ For efficiency, the LHS computation is only performed, if the `PostNewtonStep` d
 The operations are similar to the `PostNewtonStep`, but without switching. The following operations are performed for each segment $s_i$, if
 $x_{gap, s_i} <= 0$:
 
-- Compute contact force $f_n$, {eq}`objectcontactfrictioncirclecable2d-contactforce`.
+- Compute contact force $f_n$, [](#objectcontactfrictioncirclecable2d-contactforce).
 - In case of sticking ($|x_{isSlipStick}|\neq 1$):
 
-- the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.):
+- the current sticking position $x_{curStick}$ is computed from [](#objectcontactfrictioncirclecable2d-lastcurstick), and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.):
 $$
 \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
 \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
 $$
 
 - if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
-- using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit)
+- using the tangential velocity from [](#objectcontactfrictioncirclecable2d-vtangent), the tangent force follows as (even if it is larger than the sticking limit)
 $$
 f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 $$
@@ -348,7 +348,7 @@ If `activeConnector = True`,
 contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
 For every contact computation, first all contact forces at segment points are set to zero.
 We distinguish two cases SN and PWN. If `useSegmentNormals==True`, we use the SN case, while otherwise the PWN case is used,
-compare {ref}`fig-objectcontactfrictioncirclecable2d-normals`.
+compare [](#fig-objectcontactfrictioncirclecable2d-normals).
 
 (fig-objectcontactfrictioncirclecable2d-normals)=
 ```{figure} /docs/figures/ContactFrictionCircleCable2Dnormals.*
@@ -360,7 +360,7 @@ Choice of normals and tangent vectors for calculation of normal contact forces a
 Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
 
 - **CASE SN**: use **S**egment **N**ormals  
-If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see {ref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), contact forces $\fv_{s_i}$ are computed per segment, and added to every force at segment points according to while in case $x_{gap}  > 0$ nothing is added.
+If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment, and added to every force at segment points according to while in case $x_{gap}  > 0$ nothing is added.
 
 $$
 \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
@@ -373,7 +373,7 @@ $$
 $$
 
 - **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)  
-If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see {ref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point, while in case $x_{gap}  > 0$ nothing is added.
+If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point, while in case $x_{gap}  > 0$ nothing is added.
 
 $$
 \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
@@ -407,7 +407,7 @@ $$
 
 During Newton iterations, the contact forces for segment $s_i$ are considered only, if
 $x_i <= 0$. The dataCoordinate $x_i$ is not modified during Newton iterations, but computed
-during the DiscontinuousIteration, see {ref}`fig-solver-discontinuous-iteration` in the solver description.
+during the DiscontinuousIteration, see [](#fig-solver-discontinuous-iteration) in the solver description.
 
 If `activeConnector = False`, all contact and friction forces on the cable and the force and torque on the
 circle's marker are set to zero.

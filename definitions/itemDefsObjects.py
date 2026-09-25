@@ -57,15 +57,15 @@ definitions.append(ItemDefinition(
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
+    Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     %
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
       \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
@@ -738,7 +738,7 @@ definitions.append(ItemDefinition(
     static constexpr Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{CreateRigidBody(...)}, see \refSection{sec:mainsystemextensions:CreateRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, ABRV:COM and mass. \addExampleImage{ObjectRigidBody}""",
+    classDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and \texttt{CreateRigidBody(...)}, see [](#sec-mainsystemextensions-createrigidbody), of \texttt{exudyn.rigidBodyUtilities} to handle inertia, ABRV:COM and mass. \addExampleImage{ObjectRigidBody}""",
     classType=ClassTypeObject,
     equations=r"""    %++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -814,7 +814,7 @@ definitions.append(ItemDefinition(
     \be
       \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \eqComma
     \ee
-    which is inserted into the first line of \eq{eq:ObjectRigidBody:EOMcom0}. Additionally, the second line of \eq{eq:ObjectRigidBody:EOMcom0}
+    which is inserted into the first line of [](#eq-objectrigidbody-eomcom0). Additionally, the second line of [](#eq-objectrigidbody-eomcom0)
     (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to ABRV:COM, using the well known relation
     \be
       m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
@@ -829,16 +829,16 @@ definitions.append(ItemDefinition(
       \vp{-m \tilde \tomega \tilde \tomega \bv_{COM} }{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda} \eqComma
     \ee
     in which $\Jm$ is the inertia tensor w.r.t.\ the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
-    \eq{eq:ObjectRigidBody:EOMarbitrary} can be written in the global frame (0),
+    [](#eq-objectrigidbody-eomarbitrary) can be written in the global frame (0),
     \be \label{eq:ObjectRigidBody:EOMglobal}
       \mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} = 
       \vp{-m \LU{0}{\tilde \tomega} \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}} }
       {-\LU{0}{\tilde \tomega} \LU{0}{\Jm} \LU{0}{\tomega}} + \vp{\LU{0}{\fv_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{\fv_\lambda}}{\LU{0}{\ttau_\lambda}} \eqDot
     \ee
-    Expressing the translational part (first line) of \eq{eq:ObjectRigidBody:EOMglobal} in the global frame (0), using local coordinates (b) for 
+    Expressing the translational part (first line) of [](#eq-objectrigidbody-eomglobal) in the global frame (0), using local coordinates (b) for 
     quantities that are constant in the body-fixed frame, $\LU{b}{\Jm}$ and $\LU{b}{\bv_{COM}}$, thus expressing also the 
     angular velocity $\LU{b}{\tomega}$ in the body-fixed frame,
-    applying \eq{eq:ObjectRigidBody:omegaLocal} and \eq{eq:ObjectRigidBody:alpha}, and using the relations
+    applying [](#eq-objectrigidbody-omegalocal) and [](#eq-objectrigidbody-alpha), and using the relations
     \bea 
       \LU{0}{\tilde \tomega}  \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}}
       &=& \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \tomega} \LU{b}{\bv_{COM}} = - \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega} 
@@ -871,7 +871,7 @@ definitions.append(ItemDefinition(
     \be \label{eq:ObjectRigidBody:eulerParametersVel}
       \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
     \ee
-    Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint \eqref{eq:ObjectRigidBody:eulerParameters}, the constraint reaction forces in \eq{eq:ObjectRigidBody:EOM} then read
+    Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint [](#eq-objectrigidbody-eulerparameters), the constraint reaction forces in [](#eq-objectrigidbody-eom) then read
     \be
       \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp 
     \ee
@@ -879,21 +879,21 @@ definitions.append(ItemDefinition(
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
+    Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     
-    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
       \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
     \finishTable
     
     For creating a \texttt{ObjectRigidBody}, there is a \texttt{rigidBodyUtilities} function \texttt{CreateRigidBody}, 
-    see \refSection{sec:mainsystemextensions:CreateRigidBody}, which simplifies the setup of a rigid body significantely!
+    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -1067,17 +1067,17 @@ definitions.append(ItemDefinition(
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
+    Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
 
-    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
       \rowTable{\texttt{itemNumber}}{int}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
     \finishTable
     %%RSTCOMPATIBLE
 """,
@@ -1216,8 +1216,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     classType=ClassTypeObject,
     equations=r"""    #### Additional output variables for superelement node access
 
-    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
-    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see [](#sec-mainsystem-object), 
+    or \texttt{SensorSuperElement}, see [](#sec-mainsystem-sensor), directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
     Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
 
@@ -1242,12 +1242,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \ee
     Note that the user function $\fv_{user}(mbs, t, i_N,\qv,\dot \qv)$ may be empty (=0), and \texttt{iN} represents the itemNumber (=objectNumber). 
     
-    In case that a user mass matrix is specified, \eq{eq_ObjectGenericODE2_EOM} is replaced with
+    In case that a user mass matrix is specified, [](#eq-objectgenericode2-eom) is replaced with
     \be
       \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
     \ee
 
-    The (internal) Jacobian $\Jm$ of \eq{eq_ObjectGenericODE2_EOM} (assuming $\fv$ to be constant!) reads
+    The (internal) Jacobian $\Jm$ of [](#eq-objectgenericode2-eom) (assuming $\fv$ to be constant!) reads
     \be
       \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
             f_{ODE2_t} \left(\Dm - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right) + 
@@ -1256,7 +1256,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in \codeName\ -- computed 
     by means of numerical differentiation.
-    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of \eq{eq_ObjectGenericODE2_EOM} 
+    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of [](#eq-objectgenericode2-eom) 
     without $\Km$ and $\Dm$ (these matrices are added internally),
     \be \label{eq_ObjectGenericODE2_Jac}
       \Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
@@ -1306,8 +1306,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\texttt{fODE2}}{Real}{factor to be multiplied with the position level jacobian, see \eq{eq_ObjectGenericODE2_Jac}}
-      \rowTable{\texttt{fODE2\_t}}{Real}{factor to be multiplied with the velocity level jacobian, see \eq{eq_ObjectGenericODE2_Jac}}
+      \rowTable{\texttt{fODE2}}{Real}{factor to be multiplied with the position level jacobian, see [](#eq-objectgenericode2-jac)}
+      \rowTable{\texttt{fODE2\_t}}{Real}{factor to be multiplied with the velocity level jacobian, see [](#eq-objectgenericode2-jac)}
       \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{n \times n}$}{returns special jacobian for object, as exu.MatrixContainer, 
                               numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations;
                               NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix;
@@ -1317,17 +1317,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
+    Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
 
-    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
       \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
-      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
@@ -1612,16 +1612,16 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     %\userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     %A user function, which is called by the visualization thread in order to draw user-defined objects.
-    %The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    %Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
+    %The function can be used to generate any \texttt{BodyGraphicsData}, see Section [](#sec-graphicsdata).
+    %Use \texttt{exudyn.graphics} functions, see Section [](#sec-module-graphics), to create more complicated objects. 
     %Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     %inefficient and only designed to enable simpler tests, but not large scale problems.
     %
-    %For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    %For an example for \texttt{graphicsDataUserFunction} see ObjectGround, [](#sec-item-objectground).
     %\startTable{arguments /  return}{type or size}{description}
     %  \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
     %  \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access}
-    % \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+    % \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section [](#sec-graphicsdata)}
     %\finishTable
     %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
@@ -1831,8 +1831,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition \cite{Siciliano2016}.
 
-    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
-    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see [](#sec-mainsystem-object), 
+    or \texttt{SensorSuperElement}, see [](#sec-mainsystem-sensor), directly access special output variables
     (\texttt{OutputVariableType}) of the (mesh) nodes of the superelement. The mesh nodes are the links of the
     \texttt{KinematicTree}.
     
@@ -2405,8 +2405,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     classType=ClassTypeObject,
     equations=r"""    #### Additional output variables for superelement node access
 
-    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
-    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see [](#sec-mainsystem-object), 
+    or \texttt{SensorSuperElement}, see [](#sec-mainsystem-sensor), directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes $n_i$ of the superelement.
     Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
     %
@@ -2478,7 +2478,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \be \label{eq:ObjectFFRF:coordinatesSplitting}
       \LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \eqDot
     \ee
-    which are written in global coordinates in \eq{eq:ObjectFFRF:coordinatesSplitting} but will be transformed to other coordinates later on.
+    which are written in global coordinates in [](#eq-objectffrf-coordinatessplitting) but will be transformed to other coordinates later on.
     
     In the present formulation of \texttt{ObjectFFRF}, we use the following set of object coordinates (unknowns)
     \be
@@ -2543,11 +2543,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \be \label{eq:ObjectFFRF:Leq}
       \Lm\tp \Mm \Lm \ddot \qv + \Lm\tp \Mm \dot \Lm \dot \qv + \hat \Km \qv + \frac{\partial \gv}{\partial \qv\tp} \tlambda = \Lm\tp \fv
     \ee
-    with $\Mm = \LU{b}{\Mm}$ and $\hat \Km$ becoming obvious in \eq{eq:ObjectFFRF:eom}. 
-    Note that \eq{eq:ObjectFFRF:Leq} is given in global coordinates for the translational part, in terms of rotation parameters
+    with $\Mm = \LU{b}{\Mm}$ and $\hat \Km$ becoming obvious in [](#eq-objectffrf-eom). 
+    Note that [](#eq-objectffrf-leq) is given in global coordinates for the translational part, in terms of rotation parameters
     for the rotation part and in body-fixed coordinates for the flexible part of the equations.
     
-    In case that \texttt{computeFFRFterms = True}, \eqs{eq:ObjectFFRF:Leq} can be transformed into the equations of motion,
+    In case that \texttt{computeFFRFterms = True}, [](#eq-objectffrf-leq) can be transformed into the equations of motion,
     \be \label{eq:ObjectFFRF:eom}
         \left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
                     {\mathrm{sym.}}{}{\LU{b}{\Mm}} \right) \ddot \qv + 
@@ -2564,7 +2564,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \Mm\indrf &=& - \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \eqDot
     \eea
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt, \Mm\indtr, \Mm\indtf, \Mm\indrr, 
-    \Mm\indrf, \LU{b}{\Mm}$ in \eq{eq:ObjectFFRF:eom} are set to zero (and not computed) and
+    \Mm\indrf, \LU{b}{\Mm}$ in [](#eq-objectffrf-eom) are set to zero (and not computed) and
     the quadratic velocity vector $\fv_{v} = \Null$.
     Note that the user functions $\fv_{user}(mbs, t, i_N, \qv,\dot \qv)$ and $\Mm_{user}(mbs, t, i_N, \qv,\dot \qv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2020}.
@@ -2858,15 +2858,15 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.""",
+    classDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in [](#sec-fem-feminterface---init--). It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions).""",
     classType=ClassTypeObject,
     equations=r"""    %+++++++++++++++++++++++++++++++++++++
 
     (sec-objectffrfreducedorder-superelementoutput)=
     #### Super element output variables
 
-    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
-    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see [](#sec-mainsystem-object), 
+    or \texttt{SensorSuperElement}, see [](#sec-mainsystem-sensor), directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
     Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2917,10 +2917,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #### Modal reduction and reduced inertia matrices
 
     The formulation is based on the EOM of \texttt{ObjectFFRF}, {\bf also regarding parts of notation} 
-    and some input parameters, \refSection{sec:item:ObjectFFRF}, and 
+    and some input parameters, [](#sec-item-objectffrf), and 
     can be found in Zwölfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
     The notation of kinematics quantities follows the floating frame of reference idea with
-    quantities given in the tables above and sketched in \fig{fig:ObjectFFRFreducedOrder:mesh}.
+    quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
     %++++++++++++++++++++++++
     \ignoreRST{
     \begin{figure}[tbph]
@@ -2928,7 +2928,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \includegraphics[width=8cm]{figures/ObjectFFRFsketch.pdf}
       \end{center}
       \caption{Floating frame of reference with exemplary position of a mesh node $i$.}
-        \label{fig:ObjectFFRFreducedOrder:mesh}
+        (fig-objectffrfreducedorder-mesh)=
     \end{figure}
     }
     \onlyRST{
@@ -2949,17 +2949,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The mode basis $\LU{b}{\tPsi}$ contains so-called mode shape vectors in its columns, which may be computed from eigen analysis, static computation or more advanced techniques, 
     see the helper functions in module \texttt{exudyn.FEM}, within the class \text{FEMinterface}.
     To compute eigen modes, use \texttt{FEMinterface.ComputeEigenmodes(...)} or
-    \texttt{FEMinterface.ComputeHurtyCraigBamptonModes(...)}. For details on model order reduction and component mode synthesis, see \refSection{sec:theory:CMS}.
+    \texttt{FEMinterface.ComputeHurtyCraigBamptonModes(...)}. For details on model order reduction and component mode synthesis, see [](#sec-theory-cms).
     In many applications, $n_m$ typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
     
-    The \texttt{ObjectFFRF} coordinates and \eqs{eq:ObjectFFRF:eom}\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
+    The \texttt{ObjectFFRF} coordinates and [](#eq-objectffrf-eom)\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
     \be
       \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
         = \Hm \, \qv
     \ee
     with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
     
-    The reduced equations follow from the reduction of system matrices in \eqs{eq:ObjectFFRF:eom},
+    The reduced equations follow from the reduction of system matrices in [](#eq-objectffrf-eom),
     \bea
       \Km\indred &=& \LU{b}{\tPsi}\tp \LU{b}{\Km} \LU{b}{\tPsi} \eqComma \\
       \Mm\indred &=& \LU{b}{\tPsi}\tp \LU{b}{\Mm} \LU{b}{\tPsi} \eqComma \\
@@ -2968,7 +2968,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \bea
       \LU{b}{\tTheta}\indu &=& \LUX{b}{\tilde \xv}{\cRef\tp} \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
     \eea
-    the center of mass (and according tilde matrix), using $\tPhi\indt$ from \eq{eq:ObjectFFRF:Phit},
+    the center of mass (and according tilde matrix), using $\tPhi\indt$ from [](#eq-objectffrf-phit),
     \bea
       \LU{b}{\tchi}\indu &=& \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\xv\cRef}\\
       \LU{b}{\tilde \tchi\indu} &=& \frac{1}{m} \tPhi\tp\indt \LU{b}{\Mm} \LU{b}{\tilde \xv\cRef}\\
@@ -2978,7 +2978,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \Mm_{AB} = \Am\tp \LU{b}{\Mm} \Bm, \quad \mathrm{using} \quad \Am\Bm \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; 
         \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
     \ee
-    Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of \eq{eq:ObjectFFRF:specialTilde} is frequently used.
+    Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of [](#eq-objectffrf-specialtilde) is frequently used.
     
     
     %+++++++++++++++++++++++++
@@ -3000,7 +3000,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} = \Null \quad \mathrm{and} \quad
         \fv_v(\qv,\dot \qv) = \Null \eqComma
     \ee
-    but they are implemented in predefined user functions, see \texttt{FEM.py}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}. In near future, these terms will be implemented in C++ and replace the user functions.}
+    but they are implemented in predefined user functions, see \texttt{FEM.py}, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions). In near future, these terms will be implemented in C++ and replace the user functions.}
     %
     Note that in case of Euler parameters for the parameterization of rotations for the reference frame, the Euler parameter constraint equation is added automatically by this object.
     %
@@ -3736,7 +3736,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \be \label{eq_ANCFCable_ipTransform}
       x_{ip} = \frac{L}{2}\xi_{ip} + \frac{L}{2} \eqDot
     \ee
-    Here, we use the Gauss integration rule with order 7, having $n_{ip}=4$ Gauss points, see \refSection{sec:integrationPoints}. 
+    Here, we use the Gauss integration rule with order 7, having $n_{ip}=4$ Gauss points, see [](#sec-integrationpoints). 
     Due to the third order polynomials, the integration is exact up to round-off errors.
             
     #### Elastic forces
@@ -3792,7 +3792,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     in which $K_0$ includes the (pre-)curvature of the undeformed beam and
     $K\cRef$ includes the curvature of the reference configuration, multiplied with the factor $f\cRef=1$, see the axial strain above.
 
-    Using the latter definitions, the elastic forces follow from \eq{eq:cable2D:elasticForces}.
+    Using the latter definitions, the elastic forces follow from [](#eq-cable2d-elasticforces).
     
     The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
     \be
@@ -3839,7 +3839,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \Qm_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta \qv} \right)
                    + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
     \ee
-    with the integration points $x_{ip}$ as defined in \eq{eq_ANCFCable_ipTransform} and integration rules from \refSection{sec:integrationPoints}.
+    with the integration points $x_{ip}$ as defined in [](#eq-ancfcable-iptransform) and integration rules from [](#sec-integrationpoints).
     There are 3 different options for integration rules depending on the flag \texttt{useReducedOrderIntegration}:
     \bn
       \item \texttt{useReducedOrderIntegration} = 0: $n_{ip}^\varepsilon = 5$ (Gauss order 9), $n_{ip}^K = 3$ (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.
@@ -5376,7 +5376,7 @@ definitions.append(ItemDefinition(
       \fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \eqDot
     \ee
     The ABRV:LHS equation parts are added accordingly using the ABRV:LTG mapping.
-    Note that the different signs result from the signs in \eq{eq_ObjectCartesianSpringDamper_deltaPos}.
+    Note that the different signs result from the signs in [](#eq-objectcartesianspringdamper-deltapos).
 
     The connector also provides an analytic jacobian, which is used if \texttt{newton.numericalDifferentiation.forODE2 = False} 
     and if there is no springForceUserFunction (otherwise numerical differentiation is used).
@@ -5416,7 +5416,7 @@ definitions.append(ItemDefinition(
       \Jm_{CSD'} = \mp{-f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m0}\tp} \fv' \right)}{\partial \qv_{m0}}}{\Null}{\Null}
                       { f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m1}\tp} \fv' \right)}{\partial \qv_{m1}}}
     \ee
-    in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in \eq{eq_ObjectCartesianSpringDamper_jacDeriv} are evaluated by setting $\fv' = const$.
+    in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in [](#eq-objectcartesianspringdamper-jacderiv) are evaluated by setting $\fv' = const$.
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)}
@@ -7093,7 +7093,7 @@ definitions.append(ItemDefinition(
     \ee
     where we use a slightly different approach from \cite{RahikainenGonzalezNayaEtAl2020} when computing the volume for the cylinder bulk modulus term for $k=1$.
     
-    Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in \eq{eq:hydraulicActuator:effBulkModulus}  
+    Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in [](#eq-hydraulicactuator-effbulkmodulus)  
     are set to zero (which other wise would give infinity).
 
     Otherwise, if \texttt{useChamberVolumeChange == False}, $V_{0,cur}=V_{h,0}$, $V_{1,cur}=V_{h,1}$ and $K_{k,eff} = K_{oil}$ for chambers $k \in {0,1}$.
@@ -7336,7 +7336,7 @@ definitions.append(ItemDefinition(
       normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the 
       vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the 
       angular velocities $\omega_A$ and $\omega_B$.}
-        \label{fig:ReevingSystemSprings:tangents}
+        (fig-reevingsystemsprings-tangents)=
     \end{figure}
     }
     \onlyRST{
@@ -7351,7 +7351,7 @@ definitions.append(ItemDefinition(
     #### Common tangent of two circles in 3D
 
     In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
-    Considering \fig{fig:ReevingSystemSprings:tangents}, the relations are based on the
+    Considering [](#fig-reevingsystemsprings-tangents), the relations are based on the
     center points of the circles $\pv_A$ and $\pv_B$, the radii $R_A$ and $R_B$ as well as
     the axis vectors $\av_A$ and $\av_B$, the latter vectors also defining the side at which the tangent contacts.
     For the definition of the tangent, the vectors $\rv_A$ and $\rv_B$ need to be computed.
@@ -7400,8 +7400,8 @@ definitions.append(ItemDefinition(
       \quad \mathrm{and} \quad 
       \rv_B\tp \cv - \rv_B\tp\rv_A + R_B^2 = 0 \eqDot
     \ee
-    The relations \eq{eq:ReevingSystemSprings:Newton} reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
-    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of \eq{eq:ReevingSystemSprings:Newton} w.r.t.\ the 
+    The relations [](#eq-reevingsystemsprings-newton) reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
+    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of [](#eq-reevingsystemsprings-newton) w.r.t.\ the 
     unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
     \be
       \varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,
@@ -8336,7 +8336,7 @@ definitions.append(ItemDefinition(
     \be
       \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
     \ee
-    Note that if \texttt{activeConnector = False}, we replace \eq{eq:ConnectorRollingDiscPenalty:forces} with
+    Note that if \texttt{activeConnector = False}, we replace [](#eq-connectorrollingdiscpenalty-forces) with
     \be
       \LU{J1}{\fv} = \Null
     \ee
@@ -8527,12 +8527,12 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     #### Geometric relations
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    The geometrical setup is shown in \fig{fig:ObjectContactConvexRoll:sketch}. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
+    The geometrical setup is shown in [](#fig-objectcontactconvexroll-sketch). To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
     \be
     \mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i} \label{eq:ConnectorConvexRolling:polynomial}
     \ee
     with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker \texttt{m1} in the bodies local frame and transformed accordingly. 
-    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in \fig{fig:ObjectContactConvexRoll:sketch}, explained in detail in \cite{ManzlGerstmayr2021}. 
+    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in [](#fig-objectcontactconvexroll-sketch), explained in detail in \cite{ManzlGerstmayr2021}. 
     At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp$  with 
     \be
     \mathrm{f}_{\mathrm{N}} = \begin{cases}
@@ -8546,7 +8546,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     \begin{center}
             \includegraphics[width=10cm]{figures/ConvexRolling.pdf}
             \caption{Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.}
-            \label{fig:ObjectContactConvexRoll:sketch}
+            (fig-objectcontactconvexroll-sketch)=
     \end{center}
     \end{figure}
     }
@@ -8579,7 +8579,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     \be
       ^0\fv_{\mathrm{s}} = \mu(\left\lVert\LU{}{^0\vv_{\mathrm{s}}}\right\rVert)  \, \mathrm{f}_{\mathrm{N}} \, {^0\rv_\mathrm{s}}
     \ee
-    and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see \refSection{sec:module:physics}. 
+    and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see [](#sec-module-physics). 
     The torque 
     \be
       ^0\ttau = {^0\pv_{\mathrm{m1,\,C}}} \times (^0\fv_{\mathrm{N}} + {^0\fv_{\mathrm{s}}})
@@ -8620,23 +8620,23 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
-            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='staticFrictionOffset',
             defaultValue=0.,
-            description=r"""$\mu_{s_off}$static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_{s_off}$static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='viscousFriction',
             defaultValue=0.,
-            description=r"""$\mu_v$viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_v$viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
             pythonName='exponentialDecayStatic',
             defaultValue=0.001,
-            description=r"""$v_{exp}$exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), \refSection{sec:module:physics}"""),
+            description=r"""$v_{exp}$exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.001,
-            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}"""),
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='rollLength',
             defaultValue=0.,
@@ -9011,7 +9011,7 @@ definitions.append(ItemDefinition(
                is related to segment $s_1$ (which is perpendicular to the the segment line) and 
                $\dv_{g2}$ is the shortest distance to the end point of segment $s_2$, not being
                perpendicular.}
-        \label{fig:ObjectContactFrictionCircleCable2D:sketch}
+        (fig-objectcontactfrictioncirclecable2d-sketch)=
     \end{figure}
     }
     \onlyRST{
@@ -9049,7 +9049,7 @@ definitions.append(ItemDefinition(
     \be
       \rho = \frac{n}{d}
     \ee
-    We distinguish 3 cases (see also \fig{fig:ObjectContactFrictionCircleCable2D:sketch} for cases 1 and 2):
+    We distinguish 3 cases (see also [](#fig-objectcontactfrictioncirclecable2d-sketch) for cases 1 and 2):
         \bn
         \item If $\rho \le 0$, the shortest distance would be the distance to point $\pv_p=\pv_i$,
         reading 
@@ -9072,7 +9072,7 @@ definitions.append(ItemDefinition(
         \ee
     \en
     Here, the shortest distance vector for every segment results from the projected point $\pv_p$ 
-    of the above mentioned cases, see also \fig{fig:ObjectContactFrictionCircleCable2D:sketch},
+    of the above mentioned cases, see also [](#fig-objectcontactfrictioncirclecable2d-sketch),
     with the relation
     \be
       \dv_g = \dv_{g,s_i}= \pv_{m0} - \pv_p \eqDot
@@ -9122,7 +9122,7 @@ definitions.append(ItemDefinition(
       \includegraphics[width=8cm]{figures/ContactFrictionCircleCable2DstickingPos.pdf}
       \end{center}
       \caption{Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.}
-        \label{fig:ObjectContactFrictionCircleCable2D:stickingPos}
+        (fig-objectcontactfrictioncirclecable2d-stickingpos)=
     \end{figure}
     }
     \onlyRST{
@@ -9137,7 +9137,7 @@ definitions.append(ItemDefinition(
     Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
     the following strategy is used.
     In case of sliding (which could be the last time sliding before sticking), 
-    we compute the {\bf current sticking position}, see \fig{fig:ObjectContactFrictionCircleCable2D:stickingPos}, as the sum of the relative position at the segment $s$
+    we compute the {\bf current sticking position}, see [](#fig-objectcontactfrictioncirclecable2d-stickingpos), as the sum of the relative position at the segment $s$
     \be
       x_{s,curStick} = \rho \cdot L_{seg}
     \ee
@@ -9146,7 +9146,7 @@ definitions.append(ItemDefinition(
     \be
       x_{c,curStick} = \alpha \cdot r
     \ee
-    We immediately see, that under pure rolling\footnote{neglecting the effects of small penetration, usually much smaller than shown for visibility in \fig{fig:ObjectContactFrictionCircleCable2D:stickingPos}.},
+    We immediately see, that under pure rolling\footnote{neglecting the effects of small penetration, usually much smaller than shown for visibility in [](#fig-objectcontactfrictioncirclecable2d-stickingpos).},
     \be
       x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.
     \ee
@@ -9191,7 +9191,7 @@ definitions.append(ItemDefinition(
 
     #### Post Newton Step
 
-    In general, see the solver flow chart for the \texttt{DiscontinuousIteration}, see \fig{fig_solver_discontinuous_iteration}, should be considered when reading this description. Every step is started with values \texttt{startOfStep}, while current values are iterated and updated in the Newton or \texttt{DiscontinuousIteration}.
+    In general, see the solver flow chart for the \texttt{DiscontinuousIteration}, see [](#fig-solver-discontinuous-iteration), should be considered when reading this description. Every step is started with values \texttt{startOfStep}, while current values are iterated and updated in the Newton or \texttt{DiscontinuousIteration}.
     
     The \texttt{PostNewtonStep} computes 3 values per segment, which are used for computation of contact forces, irrespectively of the 
     current geometryof the contact. 
@@ -9205,7 +9205,7 @@ definitions.append(ItemDefinition(
       [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]
     \ee
     Here, $x_{gap}$ contains the gap of the segment ($\le 0$ means contact), $x_{lastStick}$ is described in 
-    \eq{ObjectContactFrictionCircleCable2D:curStick}, and 
+    [](#objectcontactfrictioncirclecable2d-curstick), and 
     $x_{isSlipStick}$ defines the stick or slip case,
     \bi
       \item $x_{isSlipStick} = -2$: undefined, used for initialization
@@ -9215,12 +9215,12 @@ definitions.append(ItemDefinition(
     
     The basic algorithm in the \texttt{PostNewtonStep}, with all operations given for any segment $s_i$, can be summarized as follows:
     \bi
-      \item[I.] Evaluate gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
+      \item[I.] Evaluate gap per segment $g$ using [](#objectcontactfrictioncirclecable2d-gap) and store in data variable: 
             $x_{gap} = g$
       \item[II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
       \bn
-        \item Compute contact force $f_n$ according to \eq{ObjectContactFrictionCircleCable2D:contactForce}
-        \item Compute current sticking position $x_{curStick}$ according to \eq{ObjectContactFrictionCircleCable2D:lastCurStick}\footnote{terms are only evaluated if $\mu_k \neq 0$}
+        \item Compute contact force $f_n$ according to [](#objectcontactfrictioncirclecable2d-contactforce)
+        \item Compute current sticking position $x_{curStick}$ according to [](#objectcontactfrictioncirclecable2d-lastcurstick)\footnote{terms are only evaluated if $\mu_k \neq 0$}
         \item Retrieve \texttt{startOfStep} sticking position\footnote{Importantly, the \texttt{PostNewtonStep} always refers to the \texttt{startOfStep} state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step} in $x^{startOfStep}_{lastStick}$ and compute and normalize
         difference in sticking position\footnote{in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$}:
         \be
@@ -9278,16 +9278,16 @@ definitions.append(ItemDefinition(
     The operations are similar to the \texttt{PostNewtonStep}, but without switching. The following operations are performed for each segment $s_i$, if 
     $x_{gap, s_i} <= 0$:
     \bi
-      \item[I.] Compute contact force $f_n$, \eq{ObjectContactFrictionCircleCable2D:contactForce}.
+      \item[I.] Compute contact force $f_n$, [](#objectcontactfrictioncirclecable2d-contactforce).
       \item[II.] In case of sticking ($|x_{isSlipStick}|\neq 1$):
       \bi
-        \item[II.1] the current sticking position $x_{curStick}$ is computed from \eq{ObjectContactFrictionCircleCable2D:lastCurStick}, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
+        \item[II.1] the current sticking position $x_{curStick}$ is computed from [](#objectcontactfrictioncirclecable2d-lastcurstick), and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
         \be
           \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
           \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
         \ee
         \item[II.2] if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
-        \item[II.3] using the tangential velocity from \eq{ObjectContactFrictionCircleCable2D:vTangent}, the tangent force follows as (even if it is larger than the sticking limit)
+        \item[II.3] using the tangential velocity from [](#objectcontactfrictioncirclecable2d-vtangent), the tangent force follows as (even if it is larger than the sticking limit)
         \be
           f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
         \ee
@@ -9307,7 +9307,7 @@ definitions.append(ItemDefinition(
     contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
     For every contact computation, first all contact forces at segment points are set to zero. 
     We distinguish two cases SN and PWN. If \texttt{useSegmentNormals==True}, we use the SN case, while otherwise the PWN case is used, 
-    compare \fig{fig:ObjectContactFrictionCircleCable2D:normals}.
+    compare [](#fig-objectcontactfrictioncirclecable2d-normals).
     %++++++++++++++++++++++++
     \ignoreRST{
     \begin{figure}[tbph]
@@ -9316,7 +9316,7 @@ definitions.append(ItemDefinition(
       \end{center}
       \caption{Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; 
       note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.}
-        \label{fig:ObjectContactFrictionCircleCable2D:normals}
+        (fig-objectcontactfrictioncirclecable2d-normals)=
     \end{figure}
     }
     \onlyRST{
@@ -9331,7 +9331,7 @@ definitions.append(ItemDefinition(
     Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
     \bi
     \item[] \mybold{CASE SN}: use \mybold{S}egment \mybold{N}ormals\\
-    If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see \fig{fig:ObjectContactFrictionCircleCable2D:sketch}(right), contact forces $\fv_{s_i}$ are computed per segment,
+    If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment,
     \be
       \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
     \ee
@@ -9344,7 +9344,7 @@ definitions.append(ItemDefinition(
     %     
     \item[] \mybold{CASE PWN}: use \mybold{P}oint \mybold{W}ise \mybold{N}ormals (at segment points)\\
     If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, 
-    see \fig{fig:ObjectContactFrictionCircleCable2D:sketch}(right), 
+    see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), 
     intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
       \be
         \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
@@ -9375,7 +9375,7 @@ definitions.append(ItemDefinition(
     %    
     During Newton iterations, the contact forces for segment $s_i$ are considered only, if 
     $x_i <= 0$. The dataCoordinate $x_i$ is not modified during Newton iterations, but computed
-    during the DiscontinuousIteration, see \fig{fig_solver_discontinuous_iteration} in the solver description. 
+    during the DiscontinuousIteration, see [](#fig-solver-discontinuous-iteration) in the solver description. 
     %
     \vspace{12pt}\\
     If \texttt{activeConnector = False}, all contact and friction forces on the cable and the force and torque on the 
@@ -9551,7 +9551,7 @@ definitions.append(ItemDefinition(
                 \includegraphics[width=8cm]{figures/SphereSphereContact.pdf}
             \end{center}
             \caption{Two spheres that are in contact. For illustration, a force due to the overlap $\delta$ acting in the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity. The respective opposing forces are imprinted on marker 0.}
-            \label{fig:ObjectSphereSphereContact}
+            (fig-objectspherespherecontact)=
         \end{figure}
     }
     \onlyRST{
@@ -9561,7 +9561,7 @@ definitions.append(ItemDefinition(
         
         Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
     }
-    Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure \ref{fig:ObjectSphereSphereContact} the sphere sphere and in Figure \ref{fig:ObjectSphereHollowsphereContact} the sphere hollowsphere contact case are shown.
+    Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure [](#fig-objectspherespherecontact) the sphere sphere and in Figure [](#fig-objectspherehollowspherecontact) the sphere hollowsphere contact case are shown.
 
     For the following, the gap $g$ between the two spheres is computed as
     \be
@@ -9593,7 +9593,7 @@ definitions.append(ItemDefinition(
                 \includegraphics[width=8cm]{figures/SphereHollowsphereContact.pdf}
             \end{center}
             \caption{One sphere and one hollowsphere that are in contact. For illustration, a force due to the overlap $\delta$ acting against the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity.}
-            \label{fig:ObjectSphereHollowsphereContact}
+            (fig-objectspherehollowspherecontact)=
         \end{figure}
     }
     \onlyRST{
@@ -9659,7 +9659,7 @@ definitions.append(ItemDefinition(
         \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} & \text{if } e_\mathrm{res} > 0 \\
     \end{cases}\eqDot
     \ee
-    The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation \eqref{eq:OSSCTangentialVelocity}. Thus, the tangential force for marker 1 is computed as
+    The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation [](#eq-ossctangentialvelocity). Thus, the tangential force for marker 1 is computed as
     \be
     \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot
     \begin{cases}
@@ -9718,11 +9718,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
-            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.001,
-            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}"""),
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='contactStiffness',
             defaultValue=0.,
@@ -9906,11 +9906,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
-            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.001,
-            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}"""),
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='contactStiffness',
             defaultValue=0.,
@@ -10072,11 +10072,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
-            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.001,
-            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}"""),
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='contactStiffness',
             defaultValue=0.,
@@ -10239,11 +10239,11 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
-            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}"""),
+            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.001,
-            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}"""),
+            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='contactStiffness',
             defaultValue=0.,
@@ -10417,7 +10417,7 @@ definitions.append(ItemDefinition(
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
-    Note that the axes are always given in global coordinates, compare the table in \refSection{sec:ObjectJointGeneric:DefinitionOfQuantities}.
+    Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointgeneric-definitionofquantities).
     
     Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
     In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(mbs, t, \pv_{par}))$, in which the three components of 
@@ -10628,7 +10628,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), \refSection{sec:rigidBodyUtilities:AddRevoluteJoint}, for two rigid bodies (or ground). \addExampleImage{RevoluteJointZ} \addExampleImage{RevoluteJointZ2}""",
+    classDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). \addExampleImage{RevoluteJointZ} \addExampleImage{RevoluteJointZ2}""",
     classType=ClassTypeObject,
     equations=r"""    (sec-objectjointrevolutez-definitionofquantities)=
     #### Definition of quantities
@@ -10671,7 +10671,7 @@ definitions.append(ItemDefinition(
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
-    Note that the axes are always given in global coordinates, compare the table in \refSection{sec:ObjectJointRevoluteZ:DefinitionOfQuantities},
+    Note that the axes are always given in global coordinates, compare the table in [](#sec-objectjointrevolutez-definitionofquantities),
     and they include the transformations by $\LU{m0,J0}{\Rot}$ and $\LU{m1,J1}{\Rot}$.
     %
     The index 3 constraint equations read
@@ -10679,7 +10679,7 @@ definitions.append(ItemDefinition(
        \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &=& 0 \\
        \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &=& 0
     \eea
-    The index 2 constraints follow from the derivative of \eq{eq:ObjectJointRevoluteZ:index3} w.r.t.\ time, and are given in the C++ code.
+    The index 2 constraints follow from the derivative of [](#eq-objectjointrevolutez-index3) w.r.t.\ time, and are given in the C++ code.
     %    
     if \texttt{activeConnector = False}, 
     \be
@@ -10808,7 +10808,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), \refSection{sec:rigidBodyUtilities:AddPrismaticJoint}, for two rigid bodies (or ground). \addExampleImage{PrismaticJointX}""",
+    classDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). \addExampleImage{PrismaticJointX}""",
     classType=ClassTypeObject,
     equations=r"""    (sec-objectjointprismaticx-definitionofquantities)=
     #### Definition of quantities
@@ -10853,7 +10853,7 @@ definitions.append(ItemDefinition(
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
     Note that the axes are always given in global coordinates, compare the table in 
-    \refSection{sec:ObjectJointPrismaticX:DefinitionOfQuantities}.
+    [](#sec-objectjointprismaticx-definitionofquantities).
     %
     The index 3 constraint equations read
     \bea \label{eq:ObjectJointPrismaticX:index3}
@@ -10861,7 +10861,7 @@ definitions.append(ItemDefinition(
        \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &=& 0 \\
        \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0
     \eea
-    The index 2 constraints follow from the derivative of \eq{eq:ObjectJointPrismaticX:index3} w.r.t., and are given in the C++ code.
+    The index 2 constraints follow from the derivative of [](#eq-objectjointprismaticx-index3) w.r.t., and are given in the C++ code.
     %    
     if \texttt{activeConnector = False}, 
     \be
@@ -11019,8 +11019,8 @@ definitions.append(ItemDefinition(
     #### Example for body position marker
 
     %
-    In this example, we study the constraint equations for two body position marker, see \refSection{sec:item:MarkerBodyPosition},
-    based on rigid bodies, see \refSection{sec:item:ObjectRigidBody}. 
+    In this example, we study the constraint equations for two body position marker, see [](#sec-item-markerbodyposition),
+    based on rigid bodies, see [](#sec-item-objectrigidbody). 
     The markers $m_0$ and $m_1$ have the positions
     \be
       \LU{0}{\pv_0}(\pLocB_0) = \LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0, \quad
@@ -12013,7 +12013,7 @@ definitions.append(ItemDefinition(
     %
     \ignoreRST{
     \begin{figure}[tbh]
-        \label{fig:ObjectJointALEmoving2D}
+        (fig-objectjointalemoving2d)=
         \begin{center}
             \includegraphics[height=4cm]{figures/ObjectJointALEmoving2D.pdf}
         \end{center}

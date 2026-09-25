@@ -14,7 +14,7 @@ import os
 import re
 
 from docstringText import CleanStringForPyiDescription, DocStringGoogleFromPlainText, RemoveIndentation,\
-    GoogleDocstringRenderer, SplitSummaryDescription, StripAbbreviations
+    GoogleDocstringRenderer, SplitSummaryDescription, StripAbbreviations, PlainTextLinks
 
 #lists that are created during parsing
 #will be used for pygments
@@ -895,7 +895,7 @@ class PyLatexRST:
                 self.sPyi += argString.replace('\\_','_').replace('invalid (-1)','exudyn.InvalidIndex()')
                 self.sPyi += ') -> '+returnType+': '
                 if ADD_DOCSTRINGS: #requires always indentation; for functions->
-                    (pyiSummary,pyiDescription) = SplitSummaryDescription(StripAbbreviations(description))
+                    (pyiSummary,pyiDescription) = SplitSummaryDescription(StripAbbreviations(PlainTextLinks(description)))
                     data = {
                     "kind": "function",
                     "summary": pyiSummary,

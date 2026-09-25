@@ -99,7 +99,7 @@ $$
 $$
 
 The {ref}`LHS <LHS>` equation parts are added accordingly using the {ref}`LTG <LTG>` mapping.
-Note that the different signs result from the signs in {eq}`eq-objectcartesianspringdamper-deltapos`.
+Note that the different signs result from the signs in [](#eq-objectcartesianspringdamper-deltapos).
 
 The connector also provides an analytic jacobian, which is used if `newton.numericalDifferentiation.forODE2 = False`
 and if there is no springForceUserFunction (otherwise numerical differentiation is used).
@@ -149,7 +149,7 @@ $$
 { f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m1}\tp} \fv' \right)}{\partial \qv_{m1}}}
 $$ (eq-objectcartesianspringdamper-jacderiv)
 
-in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in {eq}`eq-objectcartesianspringdamper-jacderiv` are evaluated by setting $\fv' = const$.
+in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in [](#eq-objectcartesianspringdamper-jacderiv) are evaluated by setting $\fv' = const$.
 
 **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
 A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL_t) and object parameters

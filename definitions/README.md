@@ -114,8 +114,13 @@ not in the list below reaches the page as itself and is a defect.
   abbreviations. The key ends where the word ends. The keys are the `abbreviations` dict in
   `tools/generators/examplesDocsEmitter.py`, which also writes the list; add one there before using
   it. `tools/checkDefinitions.py` names the file and the line of a key that does not exist.
-- **A reference** to a section is `\refSection{sec:itemGround}`, to an equation `\eq{eq:name}`, to
-  a figure `\fig{fig:name}`. The label is written with `\label{...}` at the target.
+- **A reference** is a Markdown link to the target: `[](#sec-item-objectground)` for a section,
+  `[](#eq-objectground-position)` for an equation, `[](#fig-objectsphereshpherecontact)` for a
+  figure. Leave the text empty and the page supplies it - the heading, the equation number, the
+  figure caption - or write your own, `[the ground object](#sec-item-objectground)`. The target
+  name is lower case with `-` between the parts, and it must sit on a **heading**, an **equation**
+  or a **named figure**; a target above a paragraph resolves in no link at all. A section target
+  goes on the line above its heading, `(sec-item-objectground)=`.
 - **A citation** is the key of `docs/bibliographyDoc.bib` in square brackets, written directly:
   `[ZwoelferGerstmayr2021]`. It becomes a link into the generated references page, and
   `tools/generators/referencesDocsEmitter.py` reports a key that the bibliography does not have.

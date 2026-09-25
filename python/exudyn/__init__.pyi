@@ -73,15 +73,15 @@ def DoRendererIdleTasks(waitSeconds=0, deprecationWarning=True) -> None:
     ...
 @overload
 def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), updateInitialValues=False, storeSolver=True) -> bool: 
-    r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveStatic}; for background on solvers, see \refSection{sec:solvers}."""
+    r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvestatic; for background on solvers, see sec-solvers."""
     ...
 @overload
 def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), solverType: DynamicSolverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True) -> bool: 
-    r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}."""
+    r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvedynamic; for background on solvers, see sec-solvers."""
     ...
 @overload
 def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: 
-    r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}."""
+    r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see sec-mainsystemextensions-computeode2eigenvalues."""
     ...
 @overload
 def RequireVersion(requiredVersionString: str) -> None: 
@@ -789,7 +789,7 @@ class SolutionSettings:
     sensorsWritePeriod: float
     """time span (period), determines how often the sensor output is written to file or internal storage during a simulation."""
     solutionInformation: str
-    """special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in theDoc.pdf, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)."""
+    """special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in sec-utf8, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)."""
     solutionWritePeriod: float
     """time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation."""
     solverInformationFileName: str
@@ -911,7 +911,7 @@ class ExplicitIntegrationSettings:
     computeMassMatrixInversePerBody: bool
     """If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)."""
     dynamicSolverType: DynamicSolverType
-    """selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, theDoc.pdf, but only referring to explicit solvers."""
+    """selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, sec-dynamicsolvertype, but only referring to explicit solvers."""
     eliminateConstraints: bool
     """True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!"""
     useLieGroupIntegration: bool
@@ -931,7 +931,7 @@ class TimeIntegrationSettings:
     newton: NewtonSettings
     """parameters for Newton method; used for implicit time integration methods only."""
     absoluteTolerance: float
-    """: if automaticStepSize=True, absolute tolerance for the error control; must fulfill :math:`a_{tol} > 0`; see theDoc.pdf."""
+    """: if automaticStepSize=True, absolute tolerance for the error control; must fulfill :math:`a_{tol} > 0`; see sec-explicitsolver."""
     adaptiveStep: bool
     """True: the step size may be reduced if step fails; no automatic stepsize control."""
     adaptiveStepDecrease: float
@@ -959,7 +959,7 @@ class TimeIntegrationSettings:
     realtimeWaitMicroseconds: int
     """if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy."""
     relativeTolerance: float
-    r""": if automaticStepSize=True, relative tolerance for the error control; must fulfill :math:`r_{tol} \ge 0`; see theDoc.pdf."""
+    r""": if automaticStepSize=True, relative tolerance for the error control; must fulfill :math:`r_{tol} \ge 0`; see sec-explicitsolver."""
     reuseConstantMassMatrix: bool
     """True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)."""
     simulateInRealtime: bool
@@ -969,9 +969,9 @@ class TimeIntegrationSettings:
     stepInformation: int
     """add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days."""
     stepSizeMaxIncrease: float
-    """: if automaticStepSize=True, maximum increase of step size per step, see theDoc.pdf; make this factor smaller (but :math:`> 1`) if too many rejected steps."""
+    """: if automaticStepSize=True, maximum increase of step size per step, see sec-explicitsolver; make this factor smaller (but :math:`> 1`) if too many rejected steps."""
     stepSizeSafety: float
-    """: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see theDoc.pdf. Make this factor smaller if many steps are rejected."""
+    """: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see sec-explicitsolver. Make this factor smaller if many steps are rejected."""
     verboseMode: int
     """0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)."""
     verboseModeFile: int

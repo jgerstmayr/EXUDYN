@@ -4,7 +4,7 @@
 (sec-visualizationsettingsmain)=
 ## Visualization settings
 
-This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see {ref}`sec-overview-basics-visualizationsettings`.
+This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see [](#sec-overview-basics-visualizationsettings).
 
 (sec-vsettingsgeneral)=
 ### VSettingsGeneral

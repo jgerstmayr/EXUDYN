@@ -40,7 +40,7 @@ $$
 
 For details, see the respective definition of the node and the C++ implementation.
 
-In examplary case of a `NodeRigidBody2D`,  see {ref}`sec-item-noderigidbody2d`, its coordinates are
+In examplary case of a `NodeRigidBody2D`,  see [](#sec-item-noderigidbody2d), its coordinates are
 $\qv_\mathrm{n}=[q_0,\;q_1,\;\psi_0,\;]\tp$, where $q_0$ represents the $x$-displacement
 and $q_1$ represents the $y$-displacement, such that the jacobian for the 3D position vector reads
 

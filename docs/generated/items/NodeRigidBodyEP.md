@@ -56,7 +56,7 @@ The item VNodeRigidBodyEP has the following parameters:
 All coordinates $\cv\cConfig$ lead to second order differential equations.
 The first 3 equations are residuals of translational forces in global coordinates,
 while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
-global torques left-multiplied with $\LU{0}{\Gm\tp}$, see {eq}`eq-noderigidbodyep-gm`, compare the equations of motion of
+global torques left-multiplied with $\LU{0}{\Gm\tp}$, see [](#eq-noderigidbodyep-gm), compare the equations of motion of
 the rigid body.
 
 There is one additional (algebraic) constraint equation for the quaternions.
@@ -97,7 +97,7 @@ $$
 $$ (eq-noderigidbodyep-gm)
 
 For creating a `NodeRigidBodyEP` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see {ref}`sec-mainsystemextensions-createrigidbody`, which simplifies the setup of a rigid body significantely!
+see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`rigidRotor3DFWBW.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DFWBW.py) (Ex), [`rigidRotor3Dnutation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3Dnutation.py) (Ex), [`rigidRotor3Drunup.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3Drunup.py) (Ex), [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...

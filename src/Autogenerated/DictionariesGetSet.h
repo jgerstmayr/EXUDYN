@@ -217,7 +217,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
     d["value"] = data.solutionInformation;
     d["type"] = "String";
     d["size"] = std::vector<int>{1};
-    d["description"] = "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \\refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)";
+    d["description"] = "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)";
     structureDict["solutionInformation"] = d;
 
     d = py::dict(); //reset local dict
@@ -794,7 +794,7 @@ inline py::dict GetDictionaryWithTypeInfo(const ExplicitIntegrationSettings& dat
     d["value"] = data.dynamicSolverType;
     d["type"] = "DynamicSolverType";
     d["size"] = std::vector<int>{1};
-    d["description"] = "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, \\refSection{sec:DynamicSolverType}, but only referring to explicit solvers.";
+    d["description"] = "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, [](#sec-dynamicsolvertype), but only referring to explicit solvers.";
     structureDict["dynamicSolverType"] = d;
 
     d = py::dict(); //reset local dict
@@ -850,7 +850,7 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
     d["value"] = data.absoluteTolerance;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
-    d["description"] = "a_{tol}: if automaticStepSize=True, absolute tolerance for the error control; must fulfill a_{tol} > 0; see \\refSection{sec:ExplicitSolver}";
+    d["description"] = "a_{tol}: if automaticStepSize=True, absolute tolerance for the error control; must fulfill a_{tol} > 0; see [](#sec-explicitsolver)";
     structureDict["absoluteTolerance"] = d;
 
     d = py::dict(); //reset local dict
@@ -962,7 +962,7 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
     d["value"] = data.relativeTolerance;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
-    d["description"] = "r_{tol}: if automaticStepSize=True, relative tolerance for the error control; must fulfill r_{tol} \\ge 0; see \\refSection{sec:ExplicitSolver}";
+    d["description"] = "r_{tol}: if automaticStepSize=True, relative tolerance for the error control; must fulfill r_{tol} \\ge 0; see [](#sec-explicitsolver)";
     structureDict["relativeTolerance"] = d;
 
     d = py::dict(); //reset local dict
@@ -1002,7 +1002,7 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
     d["value"] = data.stepSizeMaxIncrease;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
-    d["description"] = "f_{maxInc}: if automaticStepSize=True, maximum increase of step size per step, see \\refSection{sec:ExplicitSolver}; make this factor smaller (but > 1) if too many rejected steps";
+    d["description"] = "f_{maxInc}: if automaticStepSize=True, maximum increase of step size per step, see [](#sec-explicitsolver); make this factor smaller (but > 1) if too many rejected steps";
     structureDict["stepSizeMaxIncrease"] = d;
 
     d = py::dict(); //reset local dict
@@ -1010,7 +1010,7 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
     d["value"] = data.stepSizeSafety;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
-    d["description"] = "r_{sfty}: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \\refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.";
+    d["description"] = "r_{sfty}: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see [](#sec-explicitsolver). Make this factor smaller if many steps are rejected.";
     structureDict["stepSizeSafety"] = d;
 
     d = py::dict(); //reset local dict

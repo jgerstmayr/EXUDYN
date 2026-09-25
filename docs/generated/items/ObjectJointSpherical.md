@@ -101,8 +101,8 @@ $$
 
 #### Example for body position marker
 
-In this example, we study the constraint equations for two body position marker, see {ref}`sec-item-markerbodyposition`,
-based on rigid bodies, see {ref}`sec-item-objectrigidbody`.
+In this example, we study the constraint equations for two body position marker, see [](#sec-item-markerbodyposition),
+based on rigid bodies, see [](#sec-item-objectrigidbody).
 The markers $m_0$ and $m_1$ have the positions
 
 $$

@@ -42,7 +42,7 @@ The item VMarkerSuperElementRigid has the following parameters:
 | mesh node local displacement | $\LU{r}{\uv^{(i)}}$ | current local (within reference frame $r$) displacement of mesh node $k_i$ in object $n_b$ |
 | mesh node local position | $\LU{r}{\pv^{(i)}} = \LU{r}{\xv^{(i)}\cRef} + \LU{r}{\uv^{(i)}}$ | current local (within reference frame $r$, which is the body frame $b$ ,e.g., in `ObjectFFRFreducedOrder`) position of mesh node $k_i$ in object $n_b$ |
 | mesh node local reference position | $\LU{r}{\xv^{(i)}\cRef}$ | local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$, see e.g. `ObjectFFRFreducedOrder` |
-| averaged local reference position | $\LU{r}{\xv^\mathrm{avg}\cRef} = \sum_i w_i \LU{r}{\xv^{(i)}\cRef}$ | midpoint reference position of marker; averaged local reference positions of all mesh nodes $k_i$, using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see {ref}`fig-markersuperelementrigid-sketch` |
+| averaged local reference position | $\LU{r}{\xv^\mathrm{avg}\cRef} = \sum_i w_i \LU{r}{\xv^{(i)}\cRef}$ | midpoint reference position of marker; averaged local reference positions of all mesh nodes $k_i$, using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see [](#fig-markersuperelementrigid-sketch) |
 | marker centered mesh node local reference position | $\LU{r}{\pv^{(i)}\cRef} = \LU{r}{\xv^{(i)}\cRef}- \LU{r}{\xv^\mathrm{avg}\cRef}$ | local reference position of mesh node $k_i$ relative to the center position of marker |
 | mesh node local velocity | $\LU{r}{\vv^{(i)}}$ | current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$ |
 | super element reference point | $\LU{0}{\pv}_r$ ($=\LU{0}{\pv}\indt$ in `ObjectFFRFreduced- Order`) | current position (origin) of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2) |
@@ -61,7 +61,7 @@ The marker allows to realize a multi-point constraint (assuming that the marker 
 connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g. [HeirmanDesmet2010].
 However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for `ObjectFFRFreducedOrder` objects.
 
-For more information on the various quantities and their coordinate systems, see table above and {ref}`fig-markersuperelementrigid-sketch`.
+For more information on the various quantities and their coordinate systems, see table above and [](#fig-markersuperelementrigid-sketch).
 
 (fig-markersuperelementrigid-sketch)=
 ```{figure} /docs/figures/MarkerSuperElementRigid.png
@@ -173,7 +173,7 @@ $$
 \LU{r}{\vv^\mathrm{avg}} = \sum_i  w_i \LU{r}{\vv^{(i)}} \, ,
 $$
 
-similar to the averaged local reference position $\LU{r}{\xv^\mathrm{avg}\cRef}$ given in the table above, see also {ref}`fig-markersuperelementrigid-sketch`.
+similar to the averaged local reference position $\LU{r}{\xv^\mathrm{avg}\cRef}$ given in the table above, see also [](#fig-markersuperelementrigid-sketch).
 
 In the alternative approach, thus the marker local rotations read
 
@@ -207,7 +207,7 @@ $$
 \LU{0r}{\Rot} \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}} \right]
 $$
 
-see also the descriptions given after {eq}`eq-markersuperelementrigid-jacrotstandard` in the 'standard' approach.
+see also the descriptions given after [](#eq-markersuperelementrigid-jacrotstandard) in the 'standard' approach.
 
 **EXAMPLE for marker on body 4, mesh nodes 10,11,12,13**:  
 

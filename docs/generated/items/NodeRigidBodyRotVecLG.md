@@ -76,7 +76,7 @@ $$
 \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
 $$
 
-Note that $\Rot(\tnu)$ is defined in function ` RotationVector2RotationMatrix`, see {ref}`sec-rigidbodyutilities-rotationvector2rotationmatrix`.
+Note that $\Rot(\tnu)$ is defined in function ` RotationVector2RotationMatrix`, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
 
 A Lie group integrator must be used with this node, which is why the is used, the
 rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the
@@ -89,7 +89,7 @@ for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
 implicit time integration performance.
 
 For creating a `NodeRigidBodyRotVecLG` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see {ref}`sec-mainsystemextensions-createrigidbody`, which simplifies the setup of a rigid body significantely!
+see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM)

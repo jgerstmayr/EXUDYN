@@ -4,7 +4,7 @@
 (sec-item-objectjointprismaticx)=
 ## ObjectJointPrismaticX
 
-A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), {ref}`sec-rigidbodyutilities-addprismaticjoint`, for two rigid bodies (or ground). 
+A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/PrismaticJointX.png
 :width: 400
@@ -101,7 +101,7 @@ $$
 **Equations for rotational part (`activeConnector = True`)**:  
 
 Note that the axes are always given in global coordinates, compare the table in
-{ref}`sec-objectjointprismaticx-definitionofquantities`.
+[](#sec-objectjointprismaticx-definitionofquantities).
 The index 3 constraint equations read
 
 $$
@@ -112,7 +112,7 @@ $$
 \end{aligned}
 $$ (eq-objectjointprismaticx-index3)
 
-The index 2 constraints follow from the derivative of {eq}`eq-objectjointprismaticx-index3` w.r.t., and are given in the C++ code.
+The index 2 constraints follow from the derivative of [](#eq-objectjointprismaticx-index3) w.r.t., and are given in the C++ code.
 if `activeConnector = False`,
 
 $$

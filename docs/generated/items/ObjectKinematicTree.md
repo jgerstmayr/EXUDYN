@@ -101,8 +101,8 @@ can be addressed directly -- controllers or sensors are generally simpler.
 
 The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition [Siciliano2016].
 
-Functions like `GetObjectOutputSuperElement(...)`, see {ref}`sec-mainsystem-object`,
-or `SensorSuperElement`, see {ref}`sec-mainsystem-sensor`, directly access special output variables
+Functions like `GetObjectOutputSuperElement(...)`, see [](#sec-mainsystem-object),
+or `SensorSuperElement`, see [](#sec-mainsystem-sensor), directly access special output variables
 (`OutputVariableType`) of the (mesh) nodes of the superelement. The mesh nodes are the links of the
 `KinematicTree`.
 

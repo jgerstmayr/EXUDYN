@@ -269,7 +269,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
-            description=r"""OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, \refSection{sec:objectffrfreducedorder:superelementoutput})"""),
+            description=r"""OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, [](#sec-objectffrfreducedorder-superelementoutput))"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='storeInternal',
             defaultValue=False,

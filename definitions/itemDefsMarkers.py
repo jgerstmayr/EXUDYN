@@ -99,7 +99,7 @@ definitions.append(ItemDefinition(
       \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
     \ee
 
-    As an example of the \texttt{ObjectRigidBody2D}, see \refSection{sec:item:ObjectRigidBody2D}, the position and velocity are computed as
+    As an example of the \texttt{ObjectRigidBody2D}, see [](#sec-item-objectrigidbody2d), the position and velocity are computed as
     \be
       \LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \eqComma
     \ee
@@ -232,7 +232,7 @@ definitions.append(ItemDefinition(
     \ee
     For details, see the respective definition of the node and the C++ implementation.
     
-    In examplary case of a \texttt{NodeRigidBody2D},  see \refSection{sec:item:NodeRigidBody2D}, its coordinates are 
+    In examplary case of a \texttt{NodeRigidBody2D},  see [](#sec-item-noderigidbody2d), its coordinates are 
     $\qv_\mathrm{n}=[q_0,\;q_1,\;\psi_0,\;]\tp$, where $q_0$ represents the $x$-displacement 
     and $q_1$ represents the $y$-displacement, such that the jacobian for the 3D position vector reads
     \be
@@ -883,7 +883,7 @@ definitions.append(ItemDefinition(
     \rowTable{mesh node local position}{$\LU{r}{\pv^{(i)}} = \LU{r}{\xv^{(i)}\cRef} + \LU{r}{\uv^{(i)}}$}{current local (within reference frame $r$, which is the body frame $b$ ,e.g., in \texttt{ObjectFFRFreducedOrder}) position of mesh node $k_i$ in object $n_b$}
     \rowTable{mesh node local reference position}{$\LU{r}{\xv^{(i)}\cRef}$}{local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$, see e.g.\ \texttt{ObjectFFRFreducedOrder}}
     \rowTable{averaged local reference position}{$\LU{r}{\xv^\mathrm{avg}\cRef} = \sum_i w_i \LU{r}{\xv^{(i)}\cRef}$}{midpoint reference position of marker; averaged local reference positions of all mesh nodes $k_i$, 
-              using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see \fig{fig:MarkerSuperElementRigid:sketch}}
+              using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see [](#fig-markersuperelementrigid-sketch)}
     \rowTable{marker centered mesh node local reference position}{$\LU{r}{\pv^{(i)}\cRef} = \LU{r}{\xv^{(i)}\cRef}- \LU{r}{\xv^\mathrm{avg}\cRef}$}{local reference position of mesh node $k_i$ relative to the center position of marker}
     \rowTable{mesh node local velocity}{$\LU{r}{\vv^{(i)}}$}{current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$}
     %
@@ -916,7 +916,7 @@ definitions.append(ItemDefinition(
     connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g.\ \cite{HeirmanDesmet2010}. 
     However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for \texttt{ObjectFFRFreducedOrder} objects.
 
-    For more information on the various quantities and their coordinate systems, see table above and \fig{fig:MarkerSuperElementRigid:sketch}.
+    For more information on the various quantities and their coordinate systems, see table above and [](#fig-markersuperelementrigid-sketch).
     %++++++++++++++++++++++++
     \ignoreRST{
     \begin{figure}[tbph]
@@ -926,7 +926,7 @@ definitions.append(ItemDefinition(
       \caption{Sketch of marker nodes, exemplary node $i$, reference coordinates and marker coordinate system; 
                note the difference of the center of the marker `surface' (rectangle) marked with the red cross, 
                and the averaged of the averaged local reference position.}
-        \label{fig:MarkerSuperElementRigid:sketch}
+        (fig-markersuperelementrigid-sketch)=
     \end{figure}
     }
     \onlyRST{
@@ -1040,7 +1040,7 @@ definitions.append(ItemDefinition(
     \be
       \LU{r}{\vv^\mathrm{avg}} = \sum_i  w_i \LU{r}{\vv^{(i)}} \eqComma
     \ee
-    similar to the averaged local reference position $\LU{r}{\xv^\mathrm{avg}\cRef}$ given in the table above, see also \fig{fig:MarkerSuperElementRigid:sketch}.
+    similar to the averaged local reference position $\LU{r}{\xv^\mathrm{avg}\cRef}$ given in the table above, see also [](#fig-markersuperelementrigid-sketch).
 
     In the alternative approach, thus the marker local rotations read
     \be
@@ -1067,7 +1067,7 @@ definitions.append(ItemDefinition(
       \LU{0}{\Jm_{m,rot,alt}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{\Gm_{local}},\; 
                                                 \LU{0r}{\Rot} \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}} \right]
     \ee
-    see also the descriptions given after \eq{eq:MarkerSuperElementRigid:jacRotStandard} in the 'standard' approach.
+    see also the descriptions given after [](#eq-markersuperelementrigid-jacrotstandard) in the 'standard' approach.
     %
     \vspace{12pt}\\
     \noindent {\bf EXAMPLE for marker on body 4, mesh nodes 10,11,12,13}:\vspace{6pt}\\

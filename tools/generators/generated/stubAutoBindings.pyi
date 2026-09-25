@@ -1319,15 +1319,15 @@ def DoRendererIdleTasks(waitSeconds=0, deprecationWarning=True) -> None:
     ...
 @overload
 def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), updateInitialValues=False, storeSolver=True) -> bool: 
-    r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveStatic}; for background on solvers, see \refSection{sec:solvers}."""
+    r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvestatic; for background on solvers, see sec-solvers."""
     ...
 @overload
 def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), solverType: DynamicSolverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True) -> bool: 
-    r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}."""
+    r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvedynamic; for background on solvers, see sec-solvers."""
     ...
 @overload
 def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: 
-    r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}."""
+    r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see sec-mainsystemextensions-computeode2eigenvalues."""
     ...
 @overload
 def RequireVersion(requiredVersionString: str) -> None: 

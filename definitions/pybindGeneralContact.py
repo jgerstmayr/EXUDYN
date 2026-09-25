@@ -48,7 +48,7 @@ pb.DefPyStartClass(classStr, pyClassStr,
                     forbidPythonConstructor=True)
 
 pb.AddDocu(
-            'For further explanations and theoretical backgrounds, see \\refSection{secContactTheory}. '+
+            'For further explanations and theoretical backgrounds, see [](#seccontacttheory). '+
             'Internally, the contacts are stored with global indices, which are in the following list: '+
             '[numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see also'+
             'the output of GetPythonObject().')

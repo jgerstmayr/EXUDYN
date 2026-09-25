@@ -4,7 +4,7 @@
 (sec-item-objectffrfreducedorder)=
 ## ObjectFFRFreducedOrder
 
-This object is used to represent modally reduced flexible bodies using the {ref}`FFRF <FFRF>` and the {ref}`CMS <CMS>`. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in {ref}`sec-fem-feminterface---init--`. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, {ref}`sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions`.
+This object is used to represent modally reduced flexible bodies using the {ref}`FFRF <FFRF>` and the {ref}`CMS <CMS>`. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in [](#sec-fem-feminterface---init--). It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions).
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 
@@ -68,8 +68,8 @@ The item VObjectFFRFreducedOrder has the following parameters:
 (sec-objectffrfreducedorder-superelementoutput)=
 #### Super element output variables
 
-Functions like `GetObjectOutputSuperElement(...)`, see {ref}`sec-mainsystem-object`,
-or `SensorSuperElement`, see {ref}`sec-mainsystem-sensor`, directly access special output variables
+Functions like `GetObjectOutputSuperElement(...)`, see [](#sec-mainsystem-object),
+or `SensorSuperElement`, see [](#sec-mainsystem-sensor), directly access special output variables
 (`OutputVariableType`) of the mesh nodes of the superelement.
 Additionally, the contour drawing of the object can make use the `OutputVariableType` of the meshnodes.
 
@@ -108,10 +108,10 @@ Additionally, the contour drawing of the object can make use the `OutputVariable
 #### Modal reduction and reduced inertia matrices
 
 The formulation is based on the EOM of `ObjectFFRF`, **also regarding parts of notation**
-and some input parameters, {ref}`sec-item-objectffrf`, and
+and some input parameters, [](#sec-item-objectffrf), and
 can be found in Zwölfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
 The notation of kinematics quantities follows the floating frame of reference idea with
-quantities given in the tables above and sketched in {ref}`fig-objectffrfreducedorder-mesh`.
+quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
 
 (fig-objectffrfreducedorder-mesh)=
 ```{figure} /docs/figures/ObjectFFRFsketch.png
@@ -130,10 +130,10 @@ $$
 The mode basis $\LU{b}{\tPsi}$ contains so-called mode shape vectors in its columns, which may be computed from eigen analysis, static computation or more advanced techniques,
 see the helper functions in module `exudyn.FEM`, within the class FEMinterface.
 To compute eigen modes, use `FEMinterface.ComputeEigenmodes(...)` or
-`FEMinterface.ComputeHurtyCraigBamptonModes(...)`. For details on model order reduction and component mode synthesis, see {ref}`sec-theory-cms`.
+`FEMinterface.ComputeHurtyCraigBamptonModes(...)`. For details on model order reduction and component mode synthesis, see [](#sec-theory-cms).
 In many applications, $n_m$ typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
 
-The `ObjectFFRF` coordinates and {eq}`eq-objectffrf-eom` (this is not done for user functions and `forceVector`) can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
+The `ObjectFFRF` coordinates and [](#eq-objectffrf-eom) (this is not done for user functions and `forceVector`) can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
 
 $$
 \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
@@ -142,7 +142,7 @@ $$
 
 with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
 
-The reduced equations follow from the reduction of system matrices in {eq}`eq-objectffrf-eom`,
+The reduced equations follow from the reduction of system matrices in [](#eq-objectffrf-eom),
 
 $$
 \begin{aligned}
@@ -159,7 +159,7 @@ $$
 \end{aligned}
 $$
 
-the center of mass (and according tilde matrix), using $\tPhi\indt$ from {eq}`eq-objectffrf-phit`,
+the center of mass (and according tilde matrix), using $\tPhi\indt$ from [](#eq-objectffrf-phit),
 
 $$
 \begin{aligned}
@@ -175,7 +175,7 @@ $$
 \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
 $$
 
-Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of {eq}`eq-objectffrf-specialtilde` is frequently used.
+Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of [](#eq-objectffrf-specialtilde) is frequently used.
 
 #### Equations of motion
 
@@ -196,7 +196,7 @@ $$
 \fv_v(\qv,\dot \qv) = \Null \, ,
 $$
 
-but they are implemented in predefined user functions, see `FEM.py`, {ref}`sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions`. In near future, these terms will be implemented in C++ and replace the user functions.)
+but they are implemented in predefined user functions, see `FEM.py`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions). In near future, these terms will be implemented in C++ and replace the user functions.)
 Note that in case of Euler parameters for the parameterization of rotations for the reference frame, the Euler parameter constraint equation is added automatically by this object.
 The single terms of the mass matrix are defined as[ZwoelferGerstmayr2021]
 

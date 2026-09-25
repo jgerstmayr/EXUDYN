@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  21:59:30 (last modified)
+* @date         2026-09-25  09:44:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,8 +31,8 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated.
     Vector2D spheresRadii;                        //!< AUTO: list containing radius of sphere 0 and radius of sphere 1 [SI:m].
     bool isHollowSphere1;                         //!< AUTO: flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.
-    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
-    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}
+    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
+    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
     Real contactDamping;                          //!< AUTO: must be >= 0; linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
     Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in normal contact model [SI:1]

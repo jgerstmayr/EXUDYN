@@ -22,11 +22,11 @@ The item **ObjectContactConvexRoll** with type = 'ContactConvexRoll' has the fol
 | **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
 | **contactStiffness** $k_c$ | Real |  | 0. | normal contact stiffness [SI:N/m] |
 | **contactDamping** $d_c$ | Real |  | 0. | normal contact damping [SI:N/(m s)] |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, {ref}`sec-module-physics` |
-| **staticFrictionOffset** $\mu_{s_off}$ | UReal |  | 0. | static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, {ref}`sec-module-physics` |
-| **viscousFriction** $\mu_v$ | UReal |  | 0. | viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, {ref}`sec-module-physics` |
-| **exponentialDecayStatic** $v_{exp}$ | PReal |  | 0.001 | exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), {ref}`sec-module-physics` |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), {ref}`sec-module-physics` |
+| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **staticFrictionOffset** $\mu_{s_off}$ | UReal |  | 0. | static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **viscousFriction** $\mu_v$ | UReal |  | 0. | viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **exponentialDecayStatic** $v_{exp}$ | PReal |  | 0.001 | exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), [](#sec-module-physics) |
+| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **rollLength** $L$ | UReal |  | 0. | roll length [m], symmetric w.r.t. centerpoint |
 | **coefficientsHull** $\kv \in \Rcal^{n_p}$ | NumpyVector |  | [] | a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; $\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x + k_{n_p-1}$ |
 | **coefficientsHullDerivative** $\kv^\prime \in \Rcal^{n_p}$ | NumpyVector |  | [] | polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$ |
@@ -73,14 +73,14 @@ The item VObjectContactConvexRoll has the following parameters:
 
 #### Geometric relations
 
-The geometrical setup is shown in {ref}`fig-objectcontactconvexroll-sketch`. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
+The geometrical setup is shown in [](#fig-objectcontactconvexroll-sketch). To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
 
 $$
 \mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i}
 $$ (eq-connectorconvexrolling-polynomial)
 
 with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker `m1` in the bodies local frame and transformed accordingly.
-The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in {ref}`fig-objectcontactconvexroll-sketch`, explained in detail in [ManzlGerstmayr2021].
+The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in [](#fig-objectcontactconvexroll-sketch), explained in detail in [ManzlGerstmayr2021].
 At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp$  with
 
 $$
@@ -129,7 +129,7 @@ $$
 ^0\fv_{\mathrm{s}} = \mu(\left\lVert\LU{}{^0\vv_{\mathrm{s}}}\right\rVert)  \, \mathrm{f}_{\mathrm{N}} \, {^0\rv_\mathrm{s}}
 $$
 
-and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see {ref}`sec-module-physics`.
+and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see [](#sec-module-physics).
 The torque
 
 $$

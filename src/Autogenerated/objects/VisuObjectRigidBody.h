@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectRigidBody
-* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{CreateRigidBody(...)}, see \refSection{sec:mainsystemextensions:CreateRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, ABRV:COM and mass. \addExampleImage{ObjectRigidBody}
+* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and \texttt{CreateRigidBody(...)}, see [](#sec-mainsystemextensions-createrigidbody), of \texttt{exudyn.rigidBodyUtilities} to handle inertia, ABRV:COM and mass. \addExampleImage{ObjectRigidBody}
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-09-25  09:44:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

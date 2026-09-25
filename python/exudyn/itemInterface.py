@@ -1540,7 +1540,7 @@ class VObjectRigidBody:
 class ObjectRigidBody:
     """A 3D rigid body which is attached to a 3D rigid body node.
     
-    The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see theDoc.pdf and ``CreateRigidBody(...)``, see theDoc.pdf, of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass. addExampleImage{ObjectRigidBody}
+    The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see sec-rigidbodyutilities-rigidbodyinertia---init-- and ``CreateRigidBody(...)``, see sec-mainsystemextensions-createrigidbody, of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass. addExampleImage{ObjectRigidBody}
     
     Args:
         name: objects's unique name; type: str
@@ -2077,7 +2077,7 @@ class VObjectFFRFreducedOrder:
 class ObjectFFRFreducedOrder:
     r"""This object is used to represent modally reduced flexible bodies using the FFRF and the CMS.
     
-    It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the ``FEMinterface`` in theDoc.pdf. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class ``ObjectFFRFreducedOrderInterface``, especially the user functions ``UFmassFFRFreducedOrder`` and ``UFforceFFRFreducedOrder``, theDoc.pdf.
+    It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the ``FEMinterface`` in sec-fem-feminterface---init--. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class ``ObjectFFRFreducedOrderInterface``, especially the user functions ``UFmassFFRFreducedOrder`` and ``UFforceFFRFreducedOrder``, sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions.
     
     Args:
         name: objects's unique name; type: str
@@ -4314,15 +4314,15 @@ class ObjectContactConvexRoll:
 
         contactDamping: normal contact damping [SI:N/(m s)]; type: float
 
-        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        staticFrictionOffset: static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        staticFrictionOffset: static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        viscousFriction: viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        viscousFriction: viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        exponentialDecayStatic: exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), theDoc.pdf; type: float
+        exponentialDecayStatic: exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), sec-module-physics; type: float
 
-        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
 
         rollLength: roll length [m], symmetric w.r.t. centerpoint; type: float
 
@@ -4693,9 +4693,9 @@ class ObjectContactSphereSphere:
 
         isHollowSphere1: flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.; type: bool
 
-        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
@@ -4816,9 +4816,9 @@ class ObjectContactSphereTorus:
 
         torusAxis: Vector containing rotation axis of torus; must be a unit vector.; type: [float,float,float]
 
-        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
@@ -4925,9 +4925,9 @@ class ObjectContactSphereTriangle:
 
         includeEdges: Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1; type: int
 
-        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
 
         contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
@@ -5034,9 +5034,9 @@ class ObjectContactCurveCircles:
 
         rotationMarker0: local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the :math:`x-y`-plane; type: array_like
 
-        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
-        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
 
         contactStiffness: normal contact stiffness [SI:N/(m*m)]; type: float
 
@@ -5227,7 +5227,7 @@ class VObjectJointRevoluteZ:
 class ObjectJointRevoluteZ:
     """A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint :math:`z`-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate.
     
-    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), theDoc.pdf, for two rigid bodies (or ground). addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}
+    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), sec-rigidbodyutilities-addrevolutejoint, for two rigid bodies (or ground). addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}
     
     Args:
         name: constraints's unique name
@@ -5306,7 +5306,7 @@ class VObjectJointPrismaticX:
 class ObjectJointPrismaticX:
     """A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t.
     
-    the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), theDoc.pdf, for two rigid bodies (or ground). addExampleImage{PrismaticJointX}
+    the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), sec-rigidbodyutilities-addprismaticjoint, for two rigid bodies (or ground). addExampleImage{PrismaticJointX}
     
     Args:
         name: constraints's unique name
@@ -7285,7 +7285,7 @@ class SensorSuperElement:
 
         fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType: OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, theDoc.pdf)
+        outputVariableType: OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, sec-objectffrfreducedorder-superelementoutput)
 
         storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
 

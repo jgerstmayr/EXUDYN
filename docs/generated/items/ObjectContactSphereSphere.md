@@ -22,8 +22,8 @@ The item **ObjectContactSphereSphere** with type = 'ContactSphereSphere' has the
 | **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated. |
 | **spheresRadii** $[r_0,r_1]\tp$ | Vector2D | 2 | [-1.,-1.] | list containing radius of sphere 0 and radius of sphere 1 [SI:m]. |
 | **isHollowSphere1** | Bool |  | False | flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere. |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, {ref}`sec-module-physics` |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), {ref}`sec-module-physics` |
+| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** $k_c$ | UReal |  | 0. | normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
 | **contactDamping** $d_c$ | UReal |  | 0. | linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
 | **contactStiffnessExponent** $n_\mathrm{exp}$ | PReal |  | 1. | exponent in normal contact model [SI:1] |
@@ -88,7 +88,7 @@ This section outlines the computation of the forces acting on the two spheres wh
 Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
 ```
 
-Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure {ref}`fig-objectspherespherecontact` the sphere sphere and in Figure {ref}`fig-objectspherehollowspherecontact` the sphere hollowsphere contact case are shown.
+Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure [](#fig-objectspherespherecontact) the sphere sphere and in Figure [](#fig-objectspherehollowspherecontact) the sphere hollowsphere contact case are shown.
 
 For the following, the gap $g$ between the two spheres is computed as
 
@@ -203,7 +203,7 @@ $$
 \end{cases}\, .
 $$
 
-The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation {eq}`eq-ossctangentialvelocity`. Thus, the tangential force for marker 1 is computed as
+The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation [](#eq-ossctangentialvelocity). Thus, the tangential force for marker 1 is computed as
 
 $$
 \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot

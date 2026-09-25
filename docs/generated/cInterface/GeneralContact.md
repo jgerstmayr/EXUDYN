@@ -6,7 +6,7 @@
 
 Structure to define general and highly efficient contact functionality in multibody systems, allowing millions of particles, using search trees and parallelized contact computations, mainly intended for explicit solvers.
 
-For further explanations and theoretical backgrounds, see {ref}`seccontacttheory`. Internally, the contacts are stored with global indices, which are in the following list: [numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see alsothe output of GetPythonObject().
+For further explanations and theoretical backgrounds, see [](#seccontacttheory). Internally, the contacts are stored with global indices, which are in the following list: [numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see alsothe output of GetPythonObject().
 
 ```python
 #...

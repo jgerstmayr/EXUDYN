@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-25  09:44:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,11 +34,11 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m]
     Real contactDamping;                          //!< AUTO: normal contact damping [SI:N/(m s)]
-    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
-    Real staticFrictionOffset;                    //!< AUTO: must be >= 0; static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
-    Real viscousFriction;                         //!< AUTO: must be >= 0; viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
-    Real exponentialDecayStatic;                  //!< AUTO: must be > 0; exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), \refSection{sec:module:physics}
-    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}
+    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
+    Real staticFrictionOffset;                    //!< AUTO: must be >= 0; static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics)
+    Real viscousFriction;                         //!< AUTO: must be >= 0; viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
+    Real exponentialDecayStatic;                  //!< AUTO: must be > 0; exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), [](#sec-module-physics)
+    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real rollLength;                              //!< AUTO: must be >= 0; roll length [m], symmetric w.r.t.\ centerpoint
     Vector coefficientsHull;                      //!< AUTO: a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; \f$\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x  + k_{n_p-1}\f$
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint

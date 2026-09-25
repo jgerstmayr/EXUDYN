@@ -37,7 +37,7 @@ pb.DefPyStartClass(classStr, pyClassStr,
                     "The SystemContainer contains \\texttt{visualizationSettings} to adjust all kinds of visualization appearance, windows and interactions."
                     )
 
-pb.AddDocu("The \\texttt{visualizationSettings}, see \\refSection{sec:VisualizationSettingsMain}, can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. "
+pb.AddDocu("The \\texttt{visualizationSettings}, see [](#sec-visualizationsettingsmain), can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. "
             'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, '+
             'see also the introduction of this chapter and this example:')
 

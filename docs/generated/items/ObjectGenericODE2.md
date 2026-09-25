@@ -55,8 +55,8 @@ The item VObjectGenericODE2 has the following parameters:
 
 #### Additional output variables for superelement node access
 
-Functions like `GetObjectOutputSuperElement(...)`, see {ref}`sec-mainsystem-object`,
-or `SensorSuperElement`, see {ref}`sec-mainsystem-sensor`, directly access special output variables
+Functions like `GetObjectOutputSuperElement(...)`, see [](#sec-mainsystem-object),
+or `SensorSuperElement`, see [](#sec-mainsystem-sensor), directly access special output variables
 (`OutputVariableType`) of the mesh nodes of the superelement.
 Additionally, the contour drawing of the object can make use the `OutputVariableType` of the meshnodes.
 
@@ -83,13 +83,13 @@ $$ (eq-objectgenericode2-eom)
 
 Note that the user function $\fv_{user}(mbs, t, i_N,\qv,\dot \qv)$ may be empty (=0), and `iN` represents the itemNumber (=objectNumber).
 
-In case that a user mass matrix is specified, {eq}`eq-objectgenericode2-eom` is replaced with
+In case that a user mass matrix is specified, [](#eq-objectgenericode2-eom) is replaced with
 
 $$
 \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
 $$
 
-The (internal) Jacobian $\Jm$ of {eq}`eq-objectgenericode2-eom` (assuming $\fv$ to be constant!) reads
+The (internal) Jacobian $\Jm$ of [](#eq-objectgenericode2-eom) (assuming $\fv$ to be constant!) reads
 
 $$
 \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) +
@@ -100,7 +100,7 @@ Chosing $f_{ODE2} = 1$ and $f_{ODE2_t}=0$ would immediately give the jacobian of
 
 If no `jacobianUserFunction` is specified, the jacobian is -- as with many objects in Exudyn -- computed
 by means of numerical differentiation.
-In case that a `jacobianUserFunction` is specified, it must represent the jacobian of the {ref}`LHS <LHS>` of {eq}`eq-objectgenericode2-eom`
+In case that a `jacobianUserFunction` is specified, it must represent the jacobian of the {ref}`LHS <LHS>` of [](#eq-objectgenericode2-eom)
 without $\Km$ and $\Dm$ (these matrices are added internally),
 
 $$
@@ -150,24 +150,24 @@ Can be used to create any kind of mechanical system by using the object states.
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
 | `q` | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
-| `fODE2` | Real | factor to be multiplied with the position level jacobian, see {eq}`eq-objectgenericode2-jac` |
-| `fODE2_t` | Real | factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac` |
+| `fODE2` | Real | factor to be multiplied with the position level jacobian, see [](#eq-objectgenericode2-jac) |
+| `fODE2_t` | Real | factor to be multiplied with the velocity level jacobian, see [](#eq-objectgenericode2-jac) |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.
-The function can be used to generate any `BodyGraphicsData`, see Section {ref}`sec-graphicsdata`.
-Use `exudyn.graphics` functions, see Section {ref}`sec-module-graphics`, to create more complicated objects.
+The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
 Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
 inefficient and only designed to enable simpler tests, but not large scale problems.
 
-For an example for `graphicsDataUserFunction` see ObjectGround, {ref}`sec-item-objectground`.
+For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
 
 | arguments /  return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
 | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
-| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section {ref}`sec-graphicsdata` |
+| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
 *Example*:
 

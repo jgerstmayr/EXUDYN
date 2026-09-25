@@ -28,7 +28,7 @@ pb.CreateNewRSTfile('Exudyn')
 pb.DefPyStartClass('','', '')
 
 pb.AddDocu('These are the access functions to the \\codeName\\ module. General usage is explained '+
-                'in \\refSection{sec:generalPythonInterface} and examples are provided there. '+
+                'in [](#sec-generalpythoninterface) and examples are provided there. '+
                 'The C++ module \\texttt{exudyn} is the root level object linked between Python and C++.'+
                 'In the installed site-packages, the according file is usually denoted as \\texttt{exudynCPP.pyd} for the regular module, '+
                 'which is compiled for the baseline instruction set and runs on any 64-bit CPU, and '+
@@ -85,7 +85,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRende
 
 pb.BeginCppWrittenByHand()
 pb.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               description='DEPRECATED; Static solver function, mapped from module \\texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:mainsystemextensions:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='DEPRECATED; Static solver function, mapped from module \\texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvestatic); for background on solvers, see [](#sec-solvers)',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True'],
                                argTypes=['MainSystem','SimulationSettings', '', ''],
@@ -94,7 +94,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic',
                                )
                 
 pb.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               description='DEPRECATED; Dynamic solver function, mapped from module \\texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:mainsystemextensions:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='DEPRECATED; Dynamic solver function, mapped from module \\texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvedynamic); for background on solvers, see [](#sec-solvers)',
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True'],
                                argTypes=['MainSystem','SimulationSettings', 'DynamicSolverType', '', ''],
@@ -103,7 +103,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic',
                                )
                 
 pb.DefPyFunctionAccess(cClass='', pyName='ComputeODE2Eigenvalues', cName='ComputeODE2Eigenvalues', 
-                               description='DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}',
+                               description='DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the Python interface see [](#sec-mainsystemextensions-computeode2eigenvalues)',
                                argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False'],
                                #argTypes=['MainSystem','SimulationSettings', 'bool', 'int', 'bool', 'bool'],

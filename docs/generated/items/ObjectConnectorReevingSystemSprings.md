@@ -69,7 +69,7 @@ Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R
 #### Common tangent of two circles in 3D
 
 In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
-Considering {ref}`fig-reevingsystemsprings-tangents`, the relations are based on the
+Considering [](#fig-reevingsystemsprings-tangents), the relations are based on the
 center points of the circles $\pv_A$ and $\pv_B$, the radii $R_A$ and $R_B$ as well as
 the axis vectors $\av_A$ and $\av_B$, the latter vectors also defining the side at which the tangent contacts.
 For the definition of the tangent, the vectors $\rv_A$ and $\rv_B$ need to be computed.
@@ -134,8 +134,8 @@ $$
 \rv_B\tp \cv - \rv_B\tp\rv_A + R_B^2 = 0 \, .
 $$ (eq-reevingsystemsprings-newton)
 
-The relations {eq}`eq-reevingsystemsprings-newton` reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
-The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of {eq}`eq-reevingsystemsprings-newton` w.r.t. the
+The relations [](#eq-reevingsystemsprings-newton) reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
+The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of [](#eq-reevingsystemsprings-newton) w.r.t. the
 unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
 
 $$

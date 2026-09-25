@@ -24,8 +24,8 @@ The item **ObjectContactSphereTorus** with type = 'ContactSphereTorus' has the f
 | **torusMajorRadius** $r_{M}$ | PReal |  | 0. | major radius of torus [SI:m], representing center of rotated circle; **must be given**: the default is only a placeholder |
 | **torusMinorRadius** $r_{m}$ | PReal |  | 0. | minor radius of torus [SI:m], representing radius of circle of ring; **must be given**: the default is only a placeholder |
 | **torusAxis** $\vv_{axis}$ | Vector3D | 3 | [0,0,0] | Vector containing rotation axis of torus; must be a unit vector. |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, {ref}`sec-module-physics` |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), {ref}`sec-module-physics` |
+| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** $k_c$ | UReal |  | 0. | normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
 | **contactDamping** $d_c$ | UReal |  | 0. | linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
 | **contactStiffnessExponent** $n_\mathrm{exp}$ | PReal |  | 1. | exponent in normal contact model [SI:1] |
