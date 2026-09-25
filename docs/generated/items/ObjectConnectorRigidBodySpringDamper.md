@@ -168,7 +168,7 @@ mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody],
 ```
 
 (miniexample-objectconnectorrigidbodyspringdamper)=
-### MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper
+#### MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper
 
 
 ```python

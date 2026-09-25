@@ -40,7 +40,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     classDescription=r'A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Equations}
+    equations=r"""    #### Equations
+
     ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. 
     The object does not move (in general) and forces or torques do not have an effect.
     However, the reference position and rotation may be changed over time. This may prescribe
@@ -194,7 +195,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     classDescription=r'A 3D mass point which is attached to a position-based node, usually NodePoint.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{node position}{$\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of mass point which is provided by node $n_0$ in any configuration}
       \rowTable{node displacement}{$\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of mass point which is provided by node $n_0$ in any configuration}
@@ -204,7 +206,8 @@ definitions.append(ItemDefinition(
       \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
     \finishTable
 
-    \mysubsubsubsection{Equations of motion}
+    #### Equations of motion
+
     \be 
       \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
     \ee
@@ -318,7 +321,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     classDescription=r'A 2D mass point which is attached to a position-based 2D node.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{node position}{$\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of mass point which is provided by node $n_0$ in any configuration (except reference)}
       \rowTable{node displacement}{$\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of mass point which is provided by node $n_0$ in any configuration}
@@ -328,7 +332,9 @@ definitions.append(ItemDefinition(
       \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
     \finishTable
     %
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     \be 
       \mp{m}{0} {0}{m} \vp{\ddot q_0}{\ddot q_1} = \vp{f_0}{f_1}.
     \ee
@@ -443,7 +449,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     classDescription=r'A 1D (translational) mass which is attached to Node1D. Note, that the mass does not need to have the interpretation as a translational mass.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{position coordinate}{${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$}{position coordinate of node (nodal coordinate $c_0$) in any configuration}
       \rowTable{displacement coordinate}{${u_0}\cConfig = {c_0}\cConfig$}{displacement coordinate of mass node in any configuration}
@@ -460,7 +467,8 @@ definitions.append(ItemDefinition(
     A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
     However, torques will have no effect and forces will only have effect in 'direction' of the coordinate.
 
-    \mysubsubsubsection{Equations of motion}
+    #### Equations of motion
+
     \be 
       m \cdot \ddot q_0 = f.
     \ee
@@ -583,7 +591,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     classDescription=r'A 1D rotational inertia (mass) which is attached to Node1D.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{position coordinate}{${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $}{total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
       \rowTable{displacement coordinate}{${\psi_0}\cConfig = {c_0}\cConfig$}{change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
@@ -603,7 +612,8 @@ definitions.append(ItemDefinition(
     A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
     However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
 
-    \mysubsubsubsection{Equations of motion}
+    #### Equations of motion
+
     \be 
       J \cdot \ddot \psi_0 = \tau.
     \ee
@@ -731,7 +741,9 @@ definitions.append(ItemDefinition(
     classDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{CreateRigidBody(...)}, see \refSection{sec:mainsystemextensions:CreateRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, ABRV:COM and mass. \addExampleImage{ObjectRigidBody}""",
     classType=ClassTypeObject,
     equations=r"""    %++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Definition of quantities}
+
+    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     %
         \rowTable{inertia tensor}{$\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$}{symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t.\ body's reference point}
@@ -759,7 +771,9 @@ definitions.append(ItemDefinition(
         \rowTable{constraint reaction torques}{$\LU{0}{\ttau}_\lambda = [\tau_{\lambda 0},\;\tau_{\lambda 1},\;\tau_{\lambda 2}]\tp$}{calculated from joints or constraints}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Rotation parametrization}
+
+    #### Rotation parametrization
+
     The equations of motion of the rigid body build upon a specific parameterization of the rigid body coordinates.
     Rigid body coordinates are defined by the underlying node given by \texttt{nodeNumber} $n0$.
     Appropriate nodes are 
@@ -788,7 +802,9 @@ definitions.append(ItemDefinition(
     $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$.
     
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Equations of motion for ABRV:COM}
+
+    #### Equations of motion for ABRV:COM
+
     The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point $=$ ABRV:COM and split for translations and rotations, using a coordinate-free notation,
     \be \label{eq:ObjectRigidBody:EOMcom0}
       \mp{m \ImThree}{\Null}{\Null}{\Jm} \vp{\av_{COM}}{\talpha} = \vp{\Null}{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda}
@@ -804,7 +820,8 @@ definitions.append(ItemDefinition(
       m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
     \ee
     
-    \mysubsubsubsection{Equations of motion for arbitrary reference point}
+    #### Equations of motion for arbitrary reference point
+
     This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point ($\neq$ ABRV:COM), 
     see e.g.\ \cite{woernle2016}(page 258ff.), which have the general coordinate-free form
     \be \label{eq:ObjectRigidBody:EOMarbitrary}
@@ -844,7 +861,8 @@ definitions.append(ItemDefinition(
     the last line has been pre-multiplied with $\LU{b}{\Gm_{rp}\tp}$ (in order to make the mass matrix symmetric) and that
     $\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null$ in case of Euler parameters and the Lie-group rotation vector .
     
-    \mysubsubsubsection{Euler parameters}
+    #### Euler parameters
+
     In case of Euler parameters, a constraint equation is automatically added, reading for the index 3 case
     \be \label{eq:ObjectRigidBody:eulerParameters}
       g_\theta(\ttheta) = \theta_0^2 + \theta_1^2 + \theta_2^2 + \theta_3^2 - 1 = 0
@@ -995,7 +1013,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     classDescription=r'A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{reference position}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{reference point, only equal to the position of ABRV:COM if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference)}
       \rowTable{reference point displacement}{$\LU{0}{\uv}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of reference point which is provided by node $n_0$ in any configuration; NOTE that for configurations other than reference, it is follows that $\pRefG\cRef - \pRefG\cConfig$}
@@ -1010,7 +1029,9 @@ definitions.append(ItemDefinition(
       \rowTable{applied torques}{$\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$}{applied torques (loads, connectors, joint reaction forces, ...)}
     \finishTable
     %
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     The equations of motion in case that \texttt{physicsCenterOfMass}=$\Null$ read:
     \be 
       \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
@@ -1193,7 +1214,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObjectSuperElement,
     classDescription=r"""A system of $n$ second order ordinary differential equations (ABRV:ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Additional output variables for superelement node access}
+    equations=r"""    #### Additional output variables for superelement node access
+
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
     or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
@@ -1202,14 +1224,18 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     For this object, all nodes of \texttt{ObjectGenericODE2} map their \texttt{OutputVariableType} to the meshnode $\ra$
     see at the according node for the list of \texttt{OutputVariableType}.
     %
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
     \be
       n = \sum_{i} n_{c_i},
     \ee
     which is used throughout the description of this object.
     %
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     The equations of motion read,
     \be \label{eq_ObjectGenericODE2_EOM}
       \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
@@ -1551,14 +1577,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObject,
     classDescription=r"""A system of $n$ ABRV:ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ABRV:ODE1 systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Equations of motion}
+    equations=r"""    #### Equations of motion
+
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
     \be
       n = \sum_{i} n_{c_i},
     \ee
     which is used throughout the description of this object.
     %
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     \be \label{eq_ObjectGenericODE1_EOM}
       \dot \qv = \fv + \fv_{user}(mbs, t, i_N, \qv)
     \ee
@@ -1753,7 +1782,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     classDescription=r"""A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.""",
     classType=ClassTypeObject,
     equations=r"""    %
-    \mysubsubsubsectionlabel{SensorKinematicTree output variables}{sec:kinematictree:additionaloutput}
+
+    (sec-kinematictree-additionaloutput)=
+    #### SensorKinematicTree output variables
+
     %
     The following output variables are available with \texttt{SensorKinematicTree} for a specific link.
     Within the link $n_i$, a local position $\LU{n_i}{\pv_{n_i}}$ is required. All output variables are available for different
@@ -1779,7 +1811,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \rowTable{AngularAccelerationLocal}{$\LU{n_i}{\talpha_{n_i}}$}{local angular acceleration of local position at link $n_i$}
     \finishTable
     %
-    \mysubsubsubsection{General notes}
+
+    #### General notes
+
     The \texttt{KinematicTree} object is used to represent the equations of motion of a (open) tree-structured multibody system
     using a minimal set of coordinates. Even though that \codeName\ is based on redundant coordinates,
     the \texttt{KinematicTree} allows to efficiently model standard multibody models based on revolute and prismatic joints.
@@ -1792,7 +1826,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     do not include constraints, so they can be solved with explicit solvers. Furthermore, the joint values (angels)
     can be addressed directly -- controllers or sensors are generally simpler.
     %
-    \mysubsubsubsection{General}
+
+    #### General
+
     The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition \cite{Siciliano2016}.
 
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
@@ -1803,7 +1839,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note, however, that some functionality is considerably different for \texttt{ObjectGenericODE2}.
     
     %
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     The \texttt{KinematicTree} has one node of type \texttt{NodeGenericODE2} with $n$ coordinates.
     %
     The equations of motion are built by special multibody algorithms, following Featherstone \cite{Featherstone2008}. 
@@ -1964,7 +2002,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     }
 
-    \mysubsubsubsection{Implementation and user functions}
+    #### Implementation and user functions
+
     Currently, there is only the so-called Composite-Rigid-Body (CRB) algorithm implemented.
     This algorithm does not show the highest performance, but creates the mass matrix $\Mm_{CRB}$ and forces $\fv_{CRB}$
     in a conventional form. The equations read
@@ -2364,13 +2403,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObjectSuperElement,
     classDescription=r"""This object is used to represent equations modelled by the ABRV:FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the ABRV:FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Additional output variables for superelement node access}
+    equations=r"""    #### Additional output variables for superelement node access
+
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
     or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes $n_i$ of the superelement.
     Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
     %
-    \mysubsubsubsectionlabel{Super element output variables}{sec:objectffrf:superelementoutput}
+
+    (sec-objectffrf-superelementoutput)=
+    #### Super element output variables
+
     %
     \startTable{super element output variables}{symbol}{description}
       \rowTable{Position}{$\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\pRef\cConfig} + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$}{global position of mesh node $n_i$ including rigid body motion and flexible deformation}
@@ -2390,7 +2433,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \finishTable
     %
     %
-    \mysubsubsubsection{Definition of quantities}
+
+    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{object coordinates}{$\qv = [\qv\indt\tp,\;\qv\indr\tp,\;\qv\indf\tp]\tp$}{object coordinates}
       \rowTable{rigid body coordinates}{$\qv\indrigid = [\qv\indt\tp,\;\qv\indr\tp]\tp =  [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp$}{rigid body coordinates in case of Euler parameters}
@@ -2405,7 +2450,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \finishTable
     %++++++++++++++++++++++++++++++++++++++
     The derivations follow Zwölfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
-    \mysubsubsubsection{Nodal coordinates}
+
+    #### Nodal coordinates
+
     Consider an object with $n = 1 + n_\mathrm{nf}$ nodes, $n_\mathrm{nf}$ being the number of 'flexible' nodes and one additional node is the rigid body node for the reference frame.
     The list if node numbers is $[n_0,\,\ldots,\,n_{n_\mathrm{nf}}]$ and the according numbers of 
     nodal coordinates are $[n_{c_0},\,\ldots,\,n_{c_n}]$, where $n_0$ denotes the rigid body node.
@@ -2423,7 +2470,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $n_{c\indr}=6$ coordinates for Euler angles and $n_{c\indr}=7$ coordinates in case of Euler parameters; currently only the Euler parameter
     case is implemented.}. 
     
-    \mysubsubsubsection{Kinematics}
+    #### Kinematics
+
     We assume a finite element mesh with 
     The kinematics of the ABRV:FFRF is based on a splitting of 
     translational ($\cv_t \in \Rcal^{n\indf}$), rotational ($\cv\indr \in \Rcal^{n\indf}$) and flexible ($\cv\indf \in \Rcal^{n\indf}$) nodal displacements, 
@@ -2470,7 +2518,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \ee
     with the tilde operator for a $\pv^{(i)} \in \Rcal^{3}$ defined in the common notations section.
     %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     %
     We use the Lagrange equations extended for constraint $\gv$,
     \be
@@ -2811,13 +2861,16 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     classDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.""",
     classType=ClassTypeObject,
     equations=r"""    %+++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsectionlabel{Super element output variables}{sec:objectffrfreducedorder:superelementoutput}
+
+    (sec-objectffrfreducedorder-superelementoutput)=
+    #### Super element output variables
+
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
     or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
     Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
-    %\mysubsubsubsection{Definition of quantities}
+    %#### Definition of quantities
     %The object additionally provides the following output variables for mesh nodes (use \texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
     \startTable{super element output variables}{symbol}{description}
         \rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$}{local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement}
@@ -2860,7 +2913,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         %\rowTable{local mesh position}{$\LU{b}{\pv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
     \finishTable
     %
-    \mysubsubsubsection{Modal reduction and reduced inertia matrices}
+
+    #### Modal reduction and reduced inertia matrices
+
     The formulation is based on the EOM of \texttt{ObjectFFRF}, {\bf also regarding parts of notation} 
     and some input parameters, \refSection{sec:item:ObjectFFRF}, and 
     can be found in Zwölfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
@@ -2930,7 +2985,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %+++++++++++++++++++++++++
     %+++++++++++++++++++++++++
     %+++++++++++++++++++++++++
-    \mysubsubsubsection{Equations of motion}
+
+    #### Equations of motion
+
     Equations of motion, in case that \texttt{computeFFRFterms = True}:
     \bea
         \left(\Mm_{user}(mbs, t,\qv,\dot \qv) + 
@@ -3007,7 +3064,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     %+++++++++++++++++++++++++
     %+++++++++++++++++++++++++
-    \mysubsubsubsection{Position Jacobian}
+
+    #### Position Jacobian
+
     For joints and loads, the position jacobian of a node is needed in order to compute forces applied to averaged displacements and 
     rotations at nodes.
     Recall that the modal coordinates $\tzeta$ are transformed to node coordinates by means of the mode basis  $\LU{b}{\tPsi}$,
@@ -3043,7 +3102,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     %+++++++++++++++++++++++++
     %+++++++++++++++++++++++++
-    \mysubsubsubsection{Joints and Loads}
+
+    #### Joints and Loads
+
     Use special \texttt{MarkerSuperElementPosition} to apply forces, SpringDampers or spherical joints. This marker can be attached to a single node of the underlying
     mesh or to a set of nodes, which is then averaged, see the according marker description.
     
@@ -3588,7 +3649,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObjectANCFCable2DBase,
     classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{beam height}{$h$}{beam height used in several definitions, but effectively undefined. The geometry of the cross section has no influence except for drawing or contact.}
       \rowTable{local beam position}{$\pLocB=[x,\, y,\, 0]\tp$}{local position at axial coordinate $x \in [0,L]$ and cross section coordinate $y \in [-h/2, h/2]$. }
@@ -3604,7 +3666,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     The Bernoulli-Euler beam is capable of large axial and bendig deformation as it employs the material measure of curvature for the bending.
     %
-    \mysubsubsubsection{Kinematics and interpolation}
+
+    #### Kinematics and interpolation
+
     %
     Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the $z$-coordinate.
     %
@@ -3656,7 +3720,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \frac{\partial \rv}{\partial t} = \dot \rv = \Sm \dot \qv.
     \ee
     %
-    \mysubsubsubsection{Mass matrix}
+
+    #### Mass matrix
+
     The mass matrix is constant and therefore precomputed at the first time it is needed (e.g., during computation of initial accelerations).
     The analytical form of the mass matrix reads
     \be
@@ -3673,7 +3739,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Here, we use the Gauss integration rule with order 7, having $n_{ip}=4$ Gauss points, see \refSection{sec:integrationPoints}. 
     Due to the third order polynomials, the integration is exact up to round-off errors.
             
-    \mysubsubsubsection{Elastic forces}
+    #### Elastic forces
+
     The elastic forces $\Qm_e$ are implicitly defined by the relation to the 
     virtual work of elastic forces, $\delta W_e$, of applied forces, $\delta W_a$ and of viscous forces, $\delta W_v$, 
     \be \label{eq:cable2D:elasticForces}
@@ -3761,7 +3828,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
       \delta \rv= \Sm\, \delta \qv
     \ee
 
-    \mysubsubsubsection{Numerical integration of Elastic Forces}
+    #### Numerical integration of Elastic Forces
+
     The numerical integration of elastic forces $\Qm_e$ is split into terms due to $\delta \varepsilon$ and $\delta K$,
     \be
       \Qm_e = \int_0^L \left(\bullet(x) \frac{\partial \delta \varepsilon}{\partial \delta \qv} + \bullet(x) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
@@ -3780,7 +3848,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \en
     Note that the Jacobian of elastic forces is computed using automatic differentiation.
     
-    \mysubsubsubsection{Access functions}
+    #### Access functions
+
     For application of forces and constraints at any local beam position $\pLocB=[x,\, y,\, 0]\tp$, the position / velocity Jacobian reads
     \be
       \frac{\partial \LU{0}{\vv(x)}}{\dot \qv} = \Sm(x) + \left[ -y \cdot n_x S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, 
@@ -4958,7 +5027,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'An simple spring-damper element with additional force, connecting to position-based markers.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
@@ -4974,7 +5044,9 @@ definitions.append(ItemDefinition(
     \finishTable
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     %
     The unit vector in force direction reads (raises SysError if $L=0$),
     \be
@@ -5019,7 +5091,9 @@ definitions.append(ItemDefinition(
     \ee
     where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t.\ its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
     %
-    \mysubsubsubsection{Connector Jacobian}
+
+    #### Connector Jacobian
+
     The position-level jacobian for the connector, involving all coordinates associated with markers $m0$ and $m1$, follows from 
     \be
       \Jm_{SD} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}}}
@@ -5259,7 +5333,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
@@ -5267,7 +5342,9 @@ definitions.append(ItemDefinition(
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
     \finishTable
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     Connector forces are based on relative displacements and relative veolocities in global coordinates.
     Relative displacement between marker m0 to marker m1 positions is given by
     \be \label{eq_ObjectCartesianSpringDamper_deltaPos}
@@ -5496,7 +5573,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{input parameter}{symbol}{description}
     \rowTable{stiffness}{$\kv \in \mathbb{R}^{6\times 6}$}{stiffness in $J0$ coordinates}
     \rowTable{damping}{$\dv \in \mathbb{R}^{6\times 6}$}{damping in $J0$ coordinates}
@@ -5528,7 +5606,8 @@ definitions.append(ItemDefinition(
     %\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
     \finishTable
 
-    \mysubsubsubsection{Connector forces}
+    #### Connector forces
+
     If \texttt{activeConnector = True}, the vector spring force is computed as
     \be
       \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) + 
@@ -5770,7 +5849,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system. It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{input parameter}{symbol}{description}
     %\rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
     %\rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
@@ -5789,7 +5869,8 @@ definitions.append(ItemDefinition(
     \rowTable{relative velocity}{$\Delta v = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\vv_{m1}} - \LU{0}{\vv_{m0}})$}{scalar relative velocity; note that this only corresponds to the time derivative of $\Delta x$ if the markers only move along the axis (in a prismatic joint)}
     \finishTable
 
-    \mysubsubsubsection{Connector forces}
+    #### Connector forces
+
     If \texttt{activeConnector = True}, the vector spring force is computed as
     \be
       f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
@@ -5980,7 +6061,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (\texttt{OutputVariableType.Rotation}).""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{input parameter}{symbol}{description}
     \rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
     \rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
@@ -5998,7 +6080,8 @@ definitions.append(ItemDefinition(
     \rowTable{AngularVelocityLocal}{$\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$}{angular velocity around joint0 Z-axis}
     \finishTable
 
-    \mysubsubsubsection{Connector forces}
+    #### Connector forces
+
     If \texttt{activeConnector = True}, the vector spring force is computed as
     \be
       \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
@@ -6206,14 +6289,17 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
     \rowTable{marker m1 coordinate}{$q_{m1}$}{}
     \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
     \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
     \finishTable
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
     \be
       \Delta q= q_{m1} - q_{m0}
@@ -6401,14 +6487,17 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
     \rowTable{marker m1 coordinate}{$q_{m1}$}{}
     \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
     \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
     \finishTable
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
     \be
       q= f_1 \cdot q_{m1} - f_0 \cdot q_{m0}
@@ -6734,7 +6823,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
@@ -6749,7 +6839,9 @@ definitions.append(ItemDefinition(
     \finishTable
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     %
     The unit vector in force direction reads (if $L=0$, singularity can be avoided using regularization),
     \be
@@ -6919,7 +7011,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the \texttt{MainSystem} \texttt{PreStepUserFunction(...)}.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
@@ -6933,7 +7026,9 @@ definitions.append(ItemDefinition(
     \finishTable
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     %
     The unit vector in force direction reads (raises SysError if $L=0$),
     \be
@@ -6964,7 +7059,9 @@ definitions.append(ItemDefinition(
     \ee    
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Pressure build up equations}
+
+    #### Pressure build up equations
+
     %
     The hydraulics model consists of a double-acting piston. It follows the paper of \cite{RahikainenGonzalezNayaEtAl2020} 
     except for the friction and the additional valve, which are not available here.
@@ -7214,13 +7311,15 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .""",
     classType=ClassTypeObject,
-    equations=r"""    %\mysubsubsubsection{Definition of quantities}
+    equations=r"""    %#### Definition of quantities
     %\startTable{input parameter}{symbol}{description}
     %\rowTable{stiffness}{$\kv \in \mathbb{R}^{6\times 6}$}{stiffness in $J0$ coordinates}
     %\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
     %\finishTable
     %
-    \mysubsubsubsection{General model assumptions}
+
+    #### General model assumptions
+
     The \texttt{ConnectorReevingSystemSprings} model is based on a linear elastic, visco-elastic, and mass-less spring which
     is tangent to a list of rolls. The contact with the rolls is friction-less, causing no torque w.r.t.\ the rolling axis of the sheave.
     The force in the rope results from the difference of the total length $L$ compared to the reference length or the rope, which 
@@ -7248,7 +7347,9 @@ definitions.append(ItemDefinition(
        Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.
     }
     %++++++++++++++++++++++++
-    \mysubsubsubsection{Common tangent of two circles in 3D}
+
+    #### Common tangent of two circles in 3D
+
     In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
     Considering \fig{fig:ReevingSystemSprings:tangents}, the relations are based on the
     center points of the circles $\pv_A$ and $\pv_B$, the radii $R_A$ and $R_B$ as well as
@@ -7307,7 +7408,8 @@ definitions.append(ItemDefinition(
     \ee
     and iterate until the error is below a certain tolerance, for details see the implementation in \texttt{Geometry.h}.
     
-    \mysubsubsubsection{Connector forces}
+    #### Connector forces
+
     The current rope length results from the configuration of sheaves, including start and end position:
     \be
       L = d_{m_0-m_1} + C_{m_1} + d_{m_1-m_2} + C_{m_2} + \ldots  + d_{m_{nr-2}-m_{nr-1}}
@@ -7475,7 +7577,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'Connector which enforces constant or prescribed distance between two bodies/nodes.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
         \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
         \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
@@ -7488,7 +7591,8 @@ definitions.append(ItemDefinition(
         \rowTable{algebraicVariable}{$\lambda_0$}{Lagrange multiplier = force in constraint}
     \finishTable
 
-    \mysubsubsubsection{Connector forces constraint equations}
+    #### Connector forces constraint equations
+
     If \texttt{activeConnector = True}, the index 3 algebraic equation reads
     \be
       \left|\LU{0}{\Delta\pv}\right| - d_0 = 0
@@ -7609,7 +7713,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
     \rowTable{marker m1 coordinate}{$q_{m1}$}{}
@@ -7618,7 +7723,9 @@ definitions.append(ItemDefinition(
     \rowTable{difference of coordinates}{$\Delta q = q_{m1} - q_{m0}$}{Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates)}
     \rowTable{difference of velocity coordinates}{$\Delta v= v_{m1} - v_{m0}$}{}
     \finishTable
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     If \texttt{activeConnector = True}, the index 3 algebraic equation reads
     \be
       \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} - l_\mathrm{off} = 0
@@ -7845,7 +7952,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r"""A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects ABRV:LTG-lists to build the according coordinate mappings.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate vector}{$\qv_{m0} \in \Rcal^{n_{q_{m0}}}$}{coordinate vector provided by marker $m0$; depending on the marker, the coordinates may or may not include reference coordinates}
     \rowTable{marker m1 coordinate vector}{$\qv_{m1} \in \Rcal^{n_{q_{m1}}}$}{coordinate vector provided by marker $m1$; depending on the marker, the coordinates may or may not include reference coordinates}
@@ -7857,7 +7965,9 @@ definitions.append(ItemDefinition(
     \rowTable{difference of velocity coordinates}{$\Delta \vv= \dot \qv_{m1} - \dot \qv_{m0}$}{}
     \finishTable
     %
-    \mysubsubsubsection{Remarks}
+
+    #### Remarks
+
     The number of algebraic equations depends on the maximum number of rows in $\Xm_{m0}$, $\Ym_{m0}$, $\Xm_{m1}$ and $\Ym_{m1}$. 
     The number of rows of the latter matrices must either be zero or the maximum of these rows.
 
@@ -7871,7 +7981,8 @@ definitions.append(ItemDefinition(
     %larger than the total number of coordinates ( $\qv_{m0}$ and  $\qv_{m1}$), the algebraic equations are 
     %underdetermined and probably not solvable.
 
-    \mysubsubsubsection{Connector constraint equations}
+    #### Connector constraint equations
+
     If \texttt{activeConnector = True} and no \texttt{constraintUserFunction} is defined, the index 3 algebraic equations
     \be
       \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} 
@@ -8073,7 +8184,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference point; currently unused}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
@@ -8099,7 +8211,8 @@ definitions.append(ItemDefinition(
     \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
     \finishTable
     
-    \mysubsubsubsection{Geometric relations}
+    #### Geometric relations
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
     \ignoreRST{
@@ -8141,7 +8254,8 @@ definitions.append(ItemDefinition(
     Note that {\bf in the case that} the rolling axis $\LU{0}{\wv}_1$ lies in the rolling plane, we obtain the special case
     $\LU{0}{\wv}_{lat} = \LU{0}{\wv}_1$ and $\LU{0}{\wv}_3 = -\LU{0}{\vv}_{PN}$.
                                                                      
-    \mysubsubsubsection{Computation of normal and tangential forces}
+    #### Computation of normal and tangential forces
+
     The connector forces at the contact point $C$ are computed as follows. 
     The normal contact force reads
     \be
@@ -8201,7 +8315,9 @@ definitions.append(ItemDefinition(
       \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
     \ee
     %
-    \mysubsubsubsection{Connector forces}
+
+    #### Connector forces
+
     Finally, the connector forces read in joint coordinates
     \be \label{eq:ConnectorRollingDiscPenalty:forces}
       \LU{J1}{\fv} = \vr{f_{t,x}}{f_{t,y}}{f_n}
@@ -8378,7 +8494,8 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A contact connector representing a convex roll (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference point; currently unused}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
@@ -8406,7 +8523,9 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     %    \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
     \finishTable
     %
-    \mysubsubsubsection{Geometric relations}
+
+    #### Geometric relations
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     The geometrical setup is shown in \fig{fig:ObjectContactConvexRoll:sketch}. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
     \be
@@ -8739,7 +8858,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Connector equations}
+    equations=r"""    #### Connector equations
+
     Geometry and equations are very similar to \texttt{ObjectContactFrictionCircleCable2D}, while friction is not used and no torque
     is transferred to the circle object.
 %
@@ -8868,7 +8988,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r"""A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{represents current global position of the circle's centerpoint}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
@@ -8901,7 +9022,9 @@ definitions.append(ItemDefinition(
        Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
     }
     %+++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector forces: contact geometry}
+
+    #### Connector forces: contact geometry
+
     %
     The connector represents a force element between a 'circle' (or cylinder) represented by a marker $m0$, which has position and orientation,
     and an \texttt{ANCFCable2D} beam element (denoted as 'cable') represented by a \texttt{MarkerBodyCable2DShape} $m1$.
@@ -8961,7 +9084,9 @@ definitions.append(ItemDefinition(
     using $d_g = |\dv_g|$.
     
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Contact frame and relative motion}
+
+    #### Contact frame and relative motion
+
     %FRAME
     Irrespective of the choice of \texttt{useSegmentNormals}, the contact normal vector $\nv_{s_i}$ and tangential vector $\tv_{s_i}$ are defined per segment as
     \be
@@ -9046,7 +9171,9 @@ definitions.append(ItemDefinition(
     In the \texttt{PostNewtonStep}, the last sticking position is computed, $x_{lastStick} = x_{curStick}$, and it is also available in the \texttt{startOfStep} state.
 
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Contact forces: definition}
+
+    #### Contact forces: definition
+
     %FORCES
     The contact force $f_n$ is zero for $g > 0$ and otherwise computed from 
     \be \label{ObjectContactFrictionCircleCable2D:contactForce}
@@ -9061,7 +9188,9 @@ definitions.append(ItemDefinition(
       f_t^{(lin)} = \mu_v \cdot v_t \eqComma
     \ee    
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{PostNewtonStep}
+
+    #### Post Newton Step
+
     In general, see the solver flow chart for the \texttt{DiscontinuousIteration}, see \fig{fig_solver_discontinuous_iteration}, should be considered when reading this description. Every step is started with values \texttt{startOfStep}, while current values are iterated and updated in the Newton or \texttt{DiscontinuousIteration}.
     
     The \texttt{PostNewtonStep} computes 3 values per segment, which are used for computation of contact forces, irrespectively of the 
@@ -9139,7 +9268,9 @@ definitions.append(ItemDefinition(
     Note that the \texttt{PostNewtonStep} is iterated and the data variables are updated continuously until convergence, or until a max.\ number of iterations is reached. If \texttt{ignoreMaxIterations} == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare. 
 
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Computation of connector forces in Newton}
+
+    #### Computation of connector forces in Newton
+
     The computation of LHS terms, the action of forces produced by the contact-friction element, is done during Newton iterations and may not have
     discontinuous behavior, thus relating computations to data variables computed in the \texttt{PostNewtonStep}.
     For efficiency, the LHS computation is only performed, if the \texttt{PostNewtonStep} determined contact in any segment.
@@ -9169,7 +9300,9 @@ definitions.append(ItemDefinition(
     Note that in the Newton method, the tangential force may be inconsistent with the Kuhn-Tucker conditions. However,
     the \texttt{PostNewtonStep} resolves this inconsistency.
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Computation of LHS terms for circle and ANCF cable element}
+
+    #### Computation of LHS terms for circle and ANCF cable element
+
     If \texttt{activeConnector = True}, 
     contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
     For every contact computation, first all contact forces at segment points are set to zero. 
@@ -9390,7 +9523,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of sphere 0 center as provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -9402,7 +9536,9 @@ definitions.append(ItemDefinition(
     \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
     \finishTable
-    \mysubsubsubsection{Connector Forces}
+
+    #### Connector forces
+
     This section outlines the computation of the forces acting on the two spheres when they are in contact with each other. Two types of forces can act on the spheres due to the connector:
     \bi
     \item normal force computed according to the chosen impact model $m_\mathrm{impact}$ and with contact damping if $d_c\neq0$; this type of force does not create a torque acting on the spheres.
@@ -9706,7 +9842,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of torus 0 center as provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -9718,7 +9855,9 @@ definitions.append(ItemDefinition(
     \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
     \finishTable
-    \mysubsubsubsection{Connector Forces}
+
+    #### Connector forces
+
     TBD
     %%RSTCOMPATIBLE
 """,
@@ -9875,7 +10014,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of torus 0 center as provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -9887,7 +10027,9 @@ definitions.append(ItemDefinition(
     \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
     \finishTable
-    \mysubsubsubsection{Connector Forces}
+
+    #### Connector forces
+
     TBD
     %%RSTCOMPATIBLE
 """,
@@ -10039,7 +10181,8 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     cParentClass=ParentClassCObjectConnector,
     classDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of sphere 0 center as provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -10048,7 +10191,9 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\, \ldots]\tp$}{data coordinates per number of circle markers}
     \finishTable
     %
-    \mysubsubsubsection{Geometric relations}
+
+    #### Geometric relations
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     tbd
     %%RSTCOMPATIBLE
@@ -10215,7 +10360,9 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. \addExampleImage{UniversalJoint}',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointGeneric:DefinitionOfQuantities}
+    equations=r"""    (sec-objectjointgeneric-definitionofquantities)=
+    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -10239,7 +10386,9 @@ definitions.append(ItemDefinition(
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
     %
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
@@ -10481,7 +10630,9 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), \refSection{sec:rigidBodyUtilities:AddRevoluteJoint}, for two rigid bodies (or ground). \addExampleImage{RevoluteJointZ} \addExampleImage{RevoluteJointZ2}""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}
+    equations=r"""    (sec-objectjointrevolutez-definitionofquantities)=
+    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -10505,7 +10656,9 @@ definitions.append(ItemDefinition(
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
     %
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     The translational index 3 constraints read,
@@ -10657,7 +10810,9 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), \refSection{sec:rigidBodyUtilities:AddPrismaticJoint}, for two rigid bodies (or ground). \addExampleImage{PrismaticJointX}""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointPrismaticX:DefinitionOfQuantities}
+    equations=r"""    (sec-objectjointprismaticx-definitionofquantities)=
+    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -10680,7 +10835,9 @@ definitions.append(ItemDefinition(
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
     %
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     The two translational index 3 constraints for a free motion along the local $x$-axis read (in the coordinate system $J0$),
@@ -10813,7 +10970,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A spherical joint, which constrains the relative translation between two position based markers. \addExampleImage{SphericalJoint}',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker $m0$}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{current global position which is provided by marker $m1$}
@@ -10825,7 +10983,9 @@ definitions.append(ItemDefinition(
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
     %
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     \paragraph{\texttt{activeConnector = True}:}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
@@ -10855,7 +11015,9 @@ definitions.append(ItemDefinition(
       \zv = \Null
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Example for body position marker}
+
+    #### Example for body position marker
+
     %
     In this example, we study the constraint equations for two body position marker, see \refSection{sec:item:MarkerBodyPosition},
     based on rigid bodies, see \refSection{sec:item:ObjectRigidBody}. 
@@ -10956,7 +11118,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position of marker $m0$; needed only if body $m0$ is not a ground body}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
@@ -10984,7 +11147,9 @@ definitions.append(ItemDefinition(
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
     %
-    \mysubsubsubsection{Geometric relations}
+
+    #### Geometric relations
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
     \ignoreRST{
@@ -11023,7 +11188,9 @@ definitions.append(ItemDefinition(
       \LU{0}{\vv}_{Cm0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left( \LU{0,m0}{\Rot} \LU{m0}{\pv}_{C} \right)
     \ee
     %
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     \noindent Constraints for \texttt{activeConnector = True}:\\
     %
     The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
@@ -11202,7 +11369,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Geometric relations}
+    equations=r"""    #### Geometric relations
+
     The vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis.
     The vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis.
     Using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and 
@@ -11302,7 +11470,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
@@ -11330,7 +11499,8 @@ definitions.append(ItemDefinition(
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
 
-    \mysubsubsubsection{Geometric relations}
+    #### Geometric relations
+
     %cable
     Assume we have given the sliding coordinate $s$ (e.g., as a guess of the Newton method or beginning of the time step). 
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed as
@@ -11347,7 +11517,9 @@ definitions.append(ItemDefinition(
     \ee
     %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector constraint equations} % (classicalFormulation=True)
+
+    #### Connector constraint equations (classicalFormulation=True)
+
     The 3D sliding joint is implemented having 7 equations, using the special algebraic coordinates $\zv$.
     The algebraic equations read
     \bea
@@ -11397,7 +11569,9 @@ definitions.append(ItemDefinition(
     %\ee
     %again assuming, that $\LU{0}{\tilde \tomega}_{m0}$ is only a $2 \times 2$ matrix.
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Post Newton Step}
+
+    #### Post Newton Step
+
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
     updates the marker $m1$ index if necessary.
     \bea
@@ -11538,7 +11712,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
@@ -11569,7 +11744,8 @@ definitions.append(ItemDefinition(
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
 
-    \mysubsubsubsection{Geometric relations}
+    #### Geometric relations
+
     %cable
     Assume we have given the sliding coordinate $s$ (e.g., as a guess of the Newton method or beginning of the time step). 
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed as
@@ -11586,7 +11762,9 @@ definitions.append(ItemDefinition(
     \ee
     %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector constraint equations (classicalFormulation=True)}
+
+    #### Connector constraint equations (classicalFormulation=True)
+
     The 2D sliding joint is implemented having 3 equations (4 if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
     The algebraic equations read
     \bea
@@ -11609,7 +11787,9 @@ definitions.append(ItemDefinition(
     \eea
     %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector constraint equations (classicalFormulation=False)}
+
+    #### Connector constraint equations (classicalFormulation=False)
+
     The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated; 4 equations if constrainRotation==True, see below), using the special algebraic coordinates $\zv$. 
     The algebraic equations read
     \bea
@@ -11643,7 +11823,9 @@ definitions.append(ItemDefinition(
     \ee
     again assuming, that $\LU{0}{\tilde \tomega}_{m0}$ is only a $2 \times 2$ matrix.
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Post Newton Step}
+
+    #### Post Newton Step
+
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
     updates the marker $m1$ index if necessary.
     \bea
@@ -11780,7 +11962,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     classDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,
-    equations=r"""    \mysubsubsubsection{Definition of quantities}
+    equations=r"""    #### Definition of quantities
+
     %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{generic data node}{$\xv=[x_{data0}]\tp$}{coordinates of node with node number $n_{GD}$}
@@ -11809,7 +11992,8 @@ definitions.append(ItemDefinition(
     %\rowTable{Force}{$\fv$}{see below}
     %\finishTable
 
-    \mysubsubsubsection{Geometric relations}
+    #### Geometric relations
+
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate
     \be
       s_{el} = q_{ALE} + s_\mathrm{off} - d_{m1} = s_g - d_{m1}.
@@ -11837,7 +12021,9 @@ definitions.append(ItemDefinition(
     \end{figure}
     }
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Connector constraint equations}
+
+    #### Connector constraint equations
+
     The 2D sliding joint is implemented having 2 equations, using the Lagrange multipliers $\zv$. 
     The algebraic (index 3) equations read
     \be
@@ -11868,7 +12054,9 @@ definitions.append(ItemDefinition(
     \eea   
     %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Post Newton Step}
+
+    #### Post Newton Step
+
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
     updates the marker $m1$ index if necessary.
     \bea

@@ -122,7 +122,7 @@ mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody],
 ```
 
 (miniexample-objectconnectorlinearspringdamper)=
-### MINI EXAMPLE for ObjectConnectorLinearSpringDamper
+#### MINI EXAMPLE for ObjectConnectorLinearSpringDamper
 
 
 ```python

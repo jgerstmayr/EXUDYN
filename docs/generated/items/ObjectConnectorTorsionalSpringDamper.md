@@ -126,7 +126,7 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
 ```
 
 (miniexample-objectconnectortorsionalspringdamper)=
-### MINI EXAMPLE for ObjectConnectorTorsionalSpringDamper
+#### MINI EXAMPLE for ObjectConnectorTorsionalSpringDamper
 
 
 ```python

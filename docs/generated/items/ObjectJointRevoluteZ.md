@@ -118,7 +118,7 @@ $$
 $$
 
 (miniexample-objectjointrevolutez)=
-### MINI EXAMPLE for ObjectJointRevoluteZ
+#### MINI EXAMPLE for ObjectJointRevoluteZ
 
 
 ```python

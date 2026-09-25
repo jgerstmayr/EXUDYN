@@ -101,9 +101,13 @@ not in the list below reaches the page as itself and is a defect.
   declares - `\LU{0}{\pv}`, `\Rcal`, `\eqDot`. `tools/checkMathMacros.py` fails on a macro it does
   not know, so a typo in one is found. Display mathematics inside a definition is written
   `\be ... \ee` (one equation) or `\bea ... \eea` (several, aligned).
-- **A heading** inside `equations` is `\mysubsubsubsection{Equations of motion}`, which becomes a
-  fourth-level heading of the item page. Use `\mysubsubsubsectionlabel{Title}{label}` where
-  something refers to it.
+- **A heading** is the Markdown heading it becomes, and the level is fixed by the page it lands in:
+  `#### Equations of motion` inside `equations`, which sits under the item's *DESCRIPTION* heading,
+  and `## Title` inside `latexText`, which sits under the page title. Where something refers to a
+  heading, the MyST target goes on the line above it: `(sec-objectjointgeneric-quantities)=`.
+  Use the recurring title where it fits - the list is `RECURRING_HEADINGS` in
+  `tools/checkDefinitions.py`, which rejects both a wrong level and a recurring title spelled
+  differently.
 - **Inline code** - a parameter name, a Python call, a type - is `\texttt{mbs.Assemble()}`.
 - **A list** is `\bi ... \item ... \ei` (bulleted) or `\ben ... \item ... \een` (numbered).
 - **An abbreviation** is `ABRV:ODE2` - no backslash, no braces - which links to the list of

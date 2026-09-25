@@ -185,7 +185,7 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass],
 ```
 
 (miniexample-objectconnectorcartesianspringdamper)=
-### MINI EXAMPLE for ObjectConnectorCartesianSpringDamper
+#### MINI EXAMPLE for ObjectConnectorCartesianSpringDamper
 
 
 ```python

@@ -48,7 +48,7 @@ A user function, which computes the mass proporitional load vector depending on 
 Example of user function: functionality same as in `LoadForceVector`
 
 (miniexample-loadmassproportional)=
-### MINI EXAMPLE for LoadMassProportional
+#### MINI EXAMPLE for LoadMassProportional
 
 
 ```python

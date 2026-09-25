@@ -70,7 +70,7 @@ The item VObjectContactSphereTriangle has the following parameters:
 | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
 | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
 
-#### Connector Forces
+#### Connector forces
 
 TBD
 

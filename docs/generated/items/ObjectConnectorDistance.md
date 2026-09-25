@@ -83,7 +83,7 @@ $$
 $$
 
 (miniexample-objectconnectordistance)=
-### MINI EXAMPLE for ObjectConnectorDistance
+#### MINI EXAMPLE for ObjectConnectorDistance
 
 
 ```python

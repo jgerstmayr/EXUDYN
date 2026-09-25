@@ -40,7 +40,9 @@ definitions.append(StructureDefinition(
 """,
     latexText=r"""
 %++++++++++++++++++++++++++++++++++++++
-\mysubsection{Structures for structural elements}
+
+## Structures for structural elements
+
 This section includes data structures for structural elements, such as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.
 """,
     parentClass='BeamSection',

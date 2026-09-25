@@ -95,7 +95,7 @@ $$
 \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
 $$
 
-#### Connector constraint equations
+#### Connector constraint equations (classicalFormulation=True)
 
 The 3D sliding joint is implemented having 7 equations, using the special algebraic coordinates $\zv$.
 The algebraic equations read

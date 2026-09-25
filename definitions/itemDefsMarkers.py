@@ -762,7 +762,9 @@ definitions.append(ItemDefinition(
     %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Marker quantities}
+
+    #### Marker quantities
+
     The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
     object velocity coordinates $\dot \qv_{n_b}$,
     \be
@@ -907,7 +909,9 @@ definitions.append(ItemDefinition(
     %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Marker background}
+
+    #### Marker background
+
     The marker allows to realize a multi-point constraint (assuming that the marker is used in a joint constraint), 
     connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g.\ \cite{HeirmanDesmet2010}. 
     However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for \texttt{ObjectFFRFreducedOrder} objects.
@@ -934,7 +938,9 @@ definitions.append(ItemDefinition(
     }
     %++++++++++++++++++++++++
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Marker quantities}
+
+    #### Marker quantities
+
     The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the 
     object velocity coordinates $\dot \qv_{n_b}$,
     \be
@@ -965,7 +971,9 @@ definitions.append(ItemDefinition(
     In \texttt{ObjectFFRFreducedOrder}, the jacobian usually affects all reduced coordinates.
     
     %++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Standard approach for computation of rotation (\texttt{useAlternativeApproach = False})}
+
+    #### Standard approach for computation of rotation (\texttt{useAlternativeApproach = False})
+
     %
     As compared to \texttt{MarkerSuperElementPosition}, \texttt{MarkerSuperElementRigid} also links the marker to the orientation of 
     the set of nodes provided. For this reason, the check performed in \texttt{mbs.assemble()} will take care that the nodes are capable
@@ -1010,7 +1018,9 @@ definitions.append(ItemDefinition(
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
-    \mysubsubsubsection{Alternative computation of rotation (\texttt{useAlternativeApproach = True})}
+
+    #### Alternative computation of rotation (\texttt{useAlternativeApproach = True})
+
     Note that this approach is {\bf still under development} and needs further validation. 
     However, tests show that this model is superior to the standard approach, as it improves the averaging of motion w.r.t.\ rotations
     at the marker nodes.
@@ -1169,7 +1179,9 @@ definitions.append(ItemDefinition(
     %
     %    \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Marker quantities}
+
+    #### Marker quantities
+
     More information will be added later. The marker computes jacobians according to \texttt{Jacobian} in \texttt{class Robot}.
     %%RSTCOMPATIBLE
     %    The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the 

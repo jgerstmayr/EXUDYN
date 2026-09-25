@@ -74,7 +74,7 @@ The item VObjectContactSphereSphere has the following parameters:
 | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
 | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
 
-#### Connector Forces
+#### Connector forces
 
 This section outlines the computation of the forces acting on the two spheres when they are in contact with each other. Two types of forces can act on the spheres due to the connector:
 

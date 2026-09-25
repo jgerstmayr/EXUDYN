@@ -41,7 +41,10 @@ definitions.append(StructureDefinition(
 """,
     latexText=r"""
 %++++++++++++++++++++++++++++++++++++++
-\mysubsectionlabel{Visualization settings}{sec:VisualizationSettingsMain}
+
+(sec-visualizationsettingsmain)=
+## Visualization settings
+
 This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.
 """,
     typicalPaths='SC.visualizationSettings',

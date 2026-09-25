@@ -64,7 +64,7 @@ Note that $\Jm_{m,pos}$ is actually computed by the
 `ObjectSuperElement` within the function `GetAccessFunctionSuperElement`.
 
 (miniexample-markersuperelementposition)=
-### MINI EXAMPLE for MarkerSuperElementPosition
+#### MINI EXAMPLE for MarkerSuperElementPosition
 
 
 ```python

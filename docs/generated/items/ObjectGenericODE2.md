@@ -200,7 +200,7 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
 ```
 
 (miniexample-objectgenericode2)=
-### MINI EXAMPLE for ObjectGenericODE2
+#### MINI EXAMPLE for ObjectGenericODE2
 
 
 ```python

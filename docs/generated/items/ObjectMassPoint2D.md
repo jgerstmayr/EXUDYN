@@ -80,7 +80,7 @@ $$
 $$
 
 (miniexample-objectmasspoint2d)=
-### MINI EXAMPLE for ObjectMassPoint2D
+#### MINI EXAMPLE for ObjectMassPoint2D
 
 
 ```python

@@ -124,7 +124,7 @@ $$
 where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t. its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
 
 (miniexample-objectconnectorgravity)=
-### MINI EXAMPLE for ObjectConnectorGravity
+#### MINI EXAMPLE for ObjectConnectorGravity
 
 
 ```python

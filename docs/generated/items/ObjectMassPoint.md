@@ -77,7 +77,7 @@ $$
 $$
 
 (miniexample-objectmasspoint)=
-### MINI EXAMPLE for ObjectMassPoint
+#### MINI EXAMPLE for ObjectMassPoint
 
 
 ```python

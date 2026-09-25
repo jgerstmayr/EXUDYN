@@ -39,7 +39,10 @@ definitions.append(StructureDefinition(
     classDescription=r'Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.',
     latexText=r"""
 %++++++++++++++++++++++++++++++++++++++
-\mysubsectionlabel{Solver substructures}{sec:solverSubstructures}
+
+(sec-solversubstructures)=
+## Solver substructures
+
 This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.
 There is plenty of possibilities to interact with the solvers, being it the extraction of data at the end (such as .it or .conv), computation of mass matrix or system matrices, and finally the modification of solver structures (which may have effect or not). In any case, there is no full description for all these methods and the user must always consider the according C++ function to verify the desired behavior.
 """,

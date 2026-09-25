@@ -123,7 +123,7 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
 ```
 
 (miniexample-objectconnectorcoordinatespringdamper)=
-### MINI EXAMPLE for ObjectConnectorCoordinateSpringDamper
+#### MINI EXAMPLE for ObjectConnectorCoordinateSpringDamper
 
 
 ```python

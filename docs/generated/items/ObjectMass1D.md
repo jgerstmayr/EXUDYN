@@ -84,7 +84,7 @@ $$
 $$
 
 (miniexample-objectmass1d)=
-### MINI EXAMPLE for ObjectMass1D
+#### MINI EXAMPLE for ObjectMass1D
 
 
 ```python

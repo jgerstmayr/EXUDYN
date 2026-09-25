@@ -266,7 +266,7 @@ Note that itemNumber represents the index of the ObjectKinematicTree object in m
 | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
 (miniexample-objectkinematictree)=
-### MINI EXAMPLE for ObjectKinematicTree
+#### MINI EXAMPLE for ObjectKinematicTree
 
 
 ```python

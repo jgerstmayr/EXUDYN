@@ -140,7 +140,7 @@ def WriteFile(parseInfo, parameterList):
 
         plr.AddDocu(text=descriptionStr,
                     section=parseInfo['class'],
-                    sectionLevel=2,
+                    sectionLevel=1,
                     sectionLabel='sec:item:' + parseInfo['class'])
 
 
@@ -317,7 +317,7 @@ def WriteFile(parseInfo, parameterList):
         #DESCRIPTION heading
         if len(plrAdd.sMarkdown.strip()) != 0:
             plr.sMarkdown += '\n' + MarkdownLabel('description_'+parseInfo['class']) + '\n'
-            plr.sMarkdown += MarkdownHeading('DESCRIPTION of ' + parseInfo['class'], 3) + '\n\n'
+            plr.sMarkdown += MarkdownHeading('DESCRIPTION of ' + parseInfo['class'], 2) + '\n\n'
             plr.sMarkdown += plrAdd.sMarkdown
 
     return [classTypeStr, plr.sMarkdown]

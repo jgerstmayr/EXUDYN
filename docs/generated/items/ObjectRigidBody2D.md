@@ -131,7 +131,7 @@ For an example for `graphicsDataUserFunction` see ObjectGround, {ref}`sec-item-o
 | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section {ref}`sec-graphicsdata` |
 
 (miniexample-objectrigidbody2d)=
-### MINI EXAMPLE for ObjectRigidBody2D
+#### MINI EXAMPLE for ObjectRigidBody2D
 
 
 ```python

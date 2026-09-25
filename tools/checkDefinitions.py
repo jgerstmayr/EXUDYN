@@ -8,9 +8,13 @@
 # the converter does not recognise is carried through to the page as itself - no warning, no
 # failure, and the page builds. This is the check that names the file and the line instead.
 #
-# What it checks today: every ABRV:KEY names an abbreviation that the list actually has. The
-# abbreviations are the dict in tools/generators/examplesDocsEmitter.py, which also writes
-# docs/generated/abbreviations.md, so the key and its target cannot drift apart.
+# What it checks today:
+#   - every ABRV:KEY names an abbreviation that the list actually has. The abbreviations are the
+#     dict in tools/generators/examplesDocsEmitter.py, which also writes
+#     docs/generated/abbreviations.md, so the key and its target cannot drift apart.
+#   - every heading is written at the level of the page it is placed in, and a title that means one
+#     of the recurring sections is spelled like it. The old \mysubsubsubsection said the level in
+#     its name and NormalizeHeadings quietly repaired whatever did not fit, so neither was checked.
 #
 # Usage:
 #   python tools/checkDefinitions.py            #report
@@ -36,18 +40,82 @@ def DeclaredAbbreviations(path):
     raise ValueError(path + ': no "abbreviations" dict found')
 
 
+#the headings that recur - a title that means one of these is spelled like it, so that the same
+#section does not appear as "Connector forces" on one page and "Connector Forces" on the next.
+#A title of its own is allowed; it must only not be one of these in different clothes.
+RECURRING_HEADINGS = [
+    'Definition of quantities',
+    'Equations of motion',
+    'Connector forces',
+    'Connector constraint equations',
+    'Geometric relations',
+    'Details',
+    'Marker quantities',
+    'Post Newton Step',
+    'Super element output variables',
+    'Additional output variables for superelement node access',
+    ]
+
+#the heading level a description is written at: an item's text sits under the item's DESCRIPTION
+#heading, a structure's introduction directly under the page title
+HEADING_LEVEL = {'latexText': 2}
+DEFAULT_HEADING_LEVEL = 4
+
+#keywords whose value is Python, not prose - published as a code block, so a '#' is a comment
+CODE_KEYWORDS = set(['code', 'miniExample', 'example', 'implementation', 'addProtectedC',
+                     'addPublicC', 'addIncludesC'])
+
+
 def Descriptions(path):
-    """every string literal of a definition file, with the line it starts on"""
-    for node in ast.walk(ast.parse(io.open(path, encoding='utf-8').read())):
+    """every string literal of a definition file, with the keyword it is passed to and the line it
+    starts on; the keyword is None for a positional argument or a plain assignment"""
+    tree = ast.parse(io.open(path, encoding='utf-8').read())
+    keywordOf = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.keyword) and isinstance(node.value, ast.Constant):
+            keywordOf[id(node.value)] = node.arg
+    for node in ast.walk(tree):
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            yield (node.value, node.lineno)
+            yield (keywordOf.get(id(node), None), node.value, node.lineno)
+
+
+def CheckHeadings(paths):
+    """the level a heading is written at, and the spelling of a recurring title"""
+    spellings = dict((title.casefold(), title) for title in RECURRING_HEADINGS)
+    findings = []
+    for path in paths:
+        for (keyword, text, lineno) in Descriptions(path):
+            if keyword in CODE_KEYWORDS:
+                continue                     #Python, not prose: a '#' there is a comment
+            wanted = HEADING_LEVEL.get(keyword, DEFAULT_HEADING_LEVEL)
+            inCode = False
+            for (offset, line) in enumerate(text.split('\n')):
+                stripped = line.strip()
+                listing = re.search(r'\\(begin|end)\{lstlisting\}', stripped)
+                if stripped.startswith('```') or listing is not None:
+                    inCode = not inCode if listing is None else listing.group(1) == 'begin'
+                    continue
+                match = None if inCode else re.match(r'^\s*(#+) (.*)$', line)
+                if match is None or line.lstrip().startswith('#' * 7):
+                    continue
+                (level, title) = (len(match.group(1)), match.group(2).strip())
+                where = (path, lineno + offset)
+                if level != wanted:
+                    findings.append(where + ('a heading of ' + str(keyword) + ' is written with '
+                                             + str(wanted) + ' "#", not ' + str(level)
+                                             + ': ' + title,))
+                known = spellings.get(title.casefold())
+                if known is not None and known != title:
+                    findings.append(where + ('the heading "' + title + '" is the recurring "'
+                                             + known + '" spelled differently',))
+    return findings
 
 
 def CheckAbbreviations(paths, declared):
     """ABRV:KEY with a key the list does not have"""
     findings = []
     for path in paths:
-        for (text, lineno) in Descriptions(path):
+        for (_, text, lineno) in Descriptions(path):
             for match in re.finditer(r'\bABRV:([A-Za-z0-9]+)', text):
                 if match.group(1) in declared:
                     continue
@@ -67,12 +135,13 @@ def main():
     paths = sorted(glob.glob(os.path.join(root, 'definitions', '*.py')))
     declared = DeclaredAbbreviations(os.path.join(root, 'tools', 'generators',
                                                   'examplesDocsEmitter.py'))
-    findings = CheckAbbreviations(paths, declared)
+    findings = CheckAbbreviations(paths, declared) + CheckHeadings(paths)
 
     if len(findings) == 0:
         if not args.quiet:
             print('OK: the descriptions of ' + str(len(paths)) + ' definition files use only the '
-                  + str(len(declared)) + ' abbreviations that the list has.')
+                  + str(len(declared)) + ' abbreviations that the list has,\n'
+                  '    and write every heading at the level of the page it is placed in.')
         return 0
 
     print('FINDINGS in definitions/ - see definitions/README.md, "Writing a description":')

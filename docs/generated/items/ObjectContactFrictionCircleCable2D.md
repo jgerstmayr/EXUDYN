@@ -242,7 +242,7 @@ $$
 f_t^{(lin)} = \mu_v \cdot v_t \, ,
 $$
 
-#### PostNewtonStep
+#### Post Newton Step
 
 In general, see the solver flow chart for the `DiscontinuousIteration`, see {ref}`fig-solver-discontinuous-iteration`, should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
 

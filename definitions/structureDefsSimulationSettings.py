@@ -39,7 +39,10 @@ definitions.append(StructureDefinition(
     classDescription=r'General settings for exporting the solution (results) of a simulation.',
     latexText=r"""
 %++++++++++++++++++++++++++++++++++++++
-\mysubsectionlabel{Simulation settings}{sec:SimulationSettingsMain}
+
+(sec-simulationsettingsmain)=
+## Simulation settings
+
 This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.
 """,
     typicalPaths='simulationSettings',

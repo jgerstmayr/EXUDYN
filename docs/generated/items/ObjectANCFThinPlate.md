@@ -57,7 +57,7 @@ The item VObjectANCFThinPlate has the following parameters:
 Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
 
 (miniexample-objectancfthinplate)=
-### MINI EXAMPLE for ObjectANCFThinPlate
+#### MINI EXAMPLE for ObjectANCFThinPlate
 
 
 ```python

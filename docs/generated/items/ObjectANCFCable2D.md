@@ -414,7 +414,7 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
 ```
 
 (miniexample-objectancfcable2d)=
-### MINI EXAMPLE for ObjectANCFCable2D
+#### MINI EXAMPLE for ObjectANCFCable2D
 
 
 ```python

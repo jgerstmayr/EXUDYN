@@ -40,7 +40,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     classDescription=r'Load with (3D) force vector; attached to position-based marker.',
     classType=ClassTypeLoad,
-    equations=r"""    \mysubsubsubsection{Details}
+    equations=r"""    #### Details
+
     The load vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
     The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     %
@@ -125,7 +126,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     classDescription=r'Load with (3D) torque vector; attached to rigidbody-based marker.',
     classType=ClassTypeLoad,
-    equations=r"""    \mysubsubsubsection{Details}
+    equations=r"""    #### Details
+
     The torque vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
     The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     %
@@ -210,7 +212,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     classDescription=r'Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).',
     classType=ClassTypeLoad,
-    equations=r"""    \mysubsubsubsection{Details}
+    equations=r"""    #### Details
+
     The load applies a (translational) and distributed load proportional to the distributed body's density.
     The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
     %
@@ -297,7 +300,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     classDescription=r'Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.',
     classType=ClassTypeLoad,
-    equations=r"""    \mysubsubsubsection{Details}
+    equations=r"""    #### Details
+
     The scalar \texttt{load} is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., \texttt{MarkerNodeCoordinate}.
     This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
     on a rotation coordinate (but take care for its meaning).

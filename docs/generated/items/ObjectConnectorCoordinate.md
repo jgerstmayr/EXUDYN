@@ -160,7 +160,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker],
 ```
 
 (miniexample-objectconnectorcoordinate)=
-### MINI EXAMPLE for ObjectConnectorCoordinate
+#### MINI EXAMPLE for ObjectConnectorCoordinate
 
 
 ```python
