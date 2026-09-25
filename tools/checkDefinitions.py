@@ -308,7 +308,7 @@ def CheckUserFunctions(root):
         if directory not in sys.path:
             sys.path.insert(0, directory)
     import definitionLoader                                  #the list of modules, in emit order
-    from itemModel import pyFunctionTypeConversion, TypeName
+    from itemModel import pyFunctionTypeConversion, TypeName, IsInterfaceParameter
     from userFunctionModel import ReadUserFunction, CheckAgainstCpp
 
     findings = []
@@ -317,6 +317,13 @@ def CheckUserFunctions(root):
             for member in definition['members']:
                 function = member.get('userFunction')
                 if function is None:
+                    #every parameter that IS a user function carries its def since revision2026b
+                    #step RG12.4.5; a new one cannot be written as prose again (#2664)
+                    if IsInterfaceParameter(member) and 'PyFunction' in TypeName(member):
+                        findings.append((inspect.getsourcefile(type(definition)) or moduleName, 0,
+                                         definition['className'] + '.' + member['pythonName']
+                                         + ': a user function without a def - see '
+                                         'definitions/README.md'))
                     continue
                 userFunction = ReadUserFunction(function, member['pythonName'])
                 for finding in CheckAgainstCpp(userFunction,

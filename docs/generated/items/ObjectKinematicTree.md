@@ -257,7 +257,7 @@ A user function, which computes a force vector applied to the joint coordinates 
 Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |

@@ -125,30 +125,12 @@ Detailed description of the arguments and local quantities:
 | `rotation` | Vector3D | $\LU{J0}{\ttheta}$ |
 | `velocity` | Vector3D | $\LU{J0}{\Delta\vv}$ |
 | `angularVelocity` | Vector3D | $\LU{J0}{\Delta\tomega}$ |
-| `stiffness` | Vector6D | copied from object |
-| `damping` | Vector6D | copied from object |
+| `stiffness` | Matrix6D | copied from object |
+| `damping` | Matrix6D | copied from object |
 | `rotJ0` | Matrix3D | rotationMarker0 copied from object |
 | `rotJ1` | Matrix3D | rotationMarker1 copied from object |
 | `offset` | Vector6D | copied from object |
 | **return value** | Vector6D | list or numpy array of computed spring force-torque |
-
-**Userfunction**: `postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
-A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size)
-and the updated dataCoordinates $\dv^k$ of `NodeGenericData` $n_d$.
-Except from `dataCoordinates`, the arguments are the same as in `springForceTorqueUserFunction`.
-The `postNewtonStepUserFunction` should be used together with the dataCoordinates in order to implement a active set or switching strategy
-for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
-
-Detailed description of the arguments and local quantities:
-
-| arguments / return | type or size | description |
-|---|---|---|
-| `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-| `t` | Real | current time in mbs |
-| `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-| `dataCoordinates` | Vector | $\dv^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]$ for previous post Newton step $k-1$ |
-| ... | ... | other arguements see `springForceTorqueUserFunction` |
-| **return value** | Vector | $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step |
 
 *Example*:
 
@@ -166,8 +148,33 @@ mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody],
                                     damping = np.diag([0,k*0.01,0, 0,0,0]),
                                     offset = [0,0,0, 0,0,0],
                                     springForceTorqueUserFunction = UFforce))
-
 ```
+
+**Userfunction**: `postNewtonStepUserFunction(mbs, t, itemNumber, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
+A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size)
+and the updated dataCoordinates $\dv^k$ of `NodeGenericData` $n_d$.
+Except from `dataCoordinates`, the arguments are the same as in `springForceTorqueUserFunction`.
+The `postNewtonStepUserFunction` should be used together with the dataCoordinates in order to implement a active set or switching strategy
+for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
+
+Detailed description of the arguments and local quantities:
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+| `dataCoordinates` | Vector | $\dv^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]$ for previous post Newton step $k-1$ |
+| `displacement` | Vector3D | $\LU{J0}{\Delta\pv}$ |
+| `rotation` | Vector3D | $\LU{J0}{\ttheta}$ |
+| `velocity` | Vector3D | $\LU{J0}{\Delta\vv}$ |
+| `angularVelocity` | Vector3D | $\LU{J0}{\Delta\tomega}$ |
+| `stiffness` | Matrix6D | copied from object |
+| `damping` | Matrix6D | copied from object |
+| `rotJ0` | Matrix3D | rotationMarker0 copied from object |
+| `rotJ1` | Matrix3D | rotationMarker1 copied from object |
+| `offset` | Vector6D | copied from object |
+| **return value** | Vector | $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step |
 
 (miniexample-objectconnectorrigidbodyspringdamper)=
 #### MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper

@@ -773,6 +773,24 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectRigidBody   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectRigidBody_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index) -> BodyGraphicsData:
+    r"""A user function, which is called by the visualization thread in order to draw user-defined objects.
+
+    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
+    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+    
+    For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
+
+    Args:
+        mbs: provides reference to mbs, which can be used in user function to access all data of the object
+        itemNumber: integer number of the object in mbs, allowing easy access
+    Returns:
+        list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata)
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectRigidBody',
     addProtectedC=r"""    static constexpr Index nDim3D = 3; //used to avoid pure 3 in code where dimensionality applies
@@ -953,27 +971,6 @@ definitions.append(ItemDefinition(
                         \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
                         $$
 
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
-    A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
-    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects. 
-    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
-    inefficient and only designed to enable simpler tests, but not large scale problems.
-    
-    For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
-    | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
-
-    
     For creating a `ObjectRigidBody`, there is a `rigidBodyUtilities` function `CreateRigidBody`, 
     see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
 """,
@@ -1076,7 +1073,8 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TPyFunctionGraphicsData, destination=DestVisu,
             pythonName='graphicsDataUserFunction',
             defaultValue=0,
-            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates'),
+            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates',
+            userFunction=ObjectRigidBody_graphicsDataUserFunction),
         ItemParameter(type=TBodyGraphicsData, destination=DestVisu,
             pythonName='graphicsData',
             defaultValue=NoDefaultValue,
@@ -1087,6 +1085,24 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectRigidBody2D   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectRigidBody2D_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index) -> BodyGraphicsData:
+    r"""A user function, which is called by the visualization thread in order to draw user-defined objects.
+
+    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
+    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+    
+    For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
+
+    Args:
+        mbs: provides reference to mbs, which can be used in user function to access all data of the object
+        itemNumber: integer number of the object in mbs, allowing easy access
+    Returns:
+        list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata)
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectRigidBody2D',
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 3;
@@ -1160,22 +1176,6 @@ definitions.append(ItemDefinition(
                         \Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
                         $$
 
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
-    A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
-    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects. 
-    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
-    inefficient and only designed to enable simpler tests, but not large scale problems.
-
-    For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
-    | `itemNumber` | int | integer number of the object in mbs, allowing easy access |
-    | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
@@ -1287,7 +1287,8 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TPyFunctionGraphicsData, destination=DestVisu,
             pythonName='graphicsDataUserFunction',
             defaultValue=0,
-            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates'),
+            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates',
+            userFunction=ObjectRigidBody2D_graphicsDataUserFunction),
         ItemParameter(type=TBodyGraphicsData, destination=DestVisu,
             pythonName='graphicsData',
             defaultValue=NoDefaultValue,
@@ -1298,6 +1299,74 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectGenericODE2   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectGenericODE2_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector,
+                                        q_t: Vector) -> Vector:
+    r"""A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+    Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+        q_t: $\in \Rcal^n$ object velocity coordinates (time derivative of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n}$ returns force vector for object
+    """
+
+def ObjectGenericODE2_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                             q: Vector, q_t: Vector) -> MatrixContainer:
+    r"""A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs to
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+        q_t: $\in \Rcal^n$ object velocity coordinates (time derivative of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n \times n}$ returns mass matrix for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations.
+    """
+
+def ObjectGenericODE2_jacobianUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                           q: Vector, q_t: Vector, fODE2: Real, fODE2_t: Real) -> MatrixContainer:
+    r"""A user function, which computes the jacobian of the ABRV:LHS of the equations of motion, depending on current time, states of object and two
+
+    factors which are used to distinguish between position level and velocity level derivatives.
+    Can be used to create any kind of mechanical system by using the object states.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs to
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+        q_t: $\in \Rcal^n$ object velocity coordinates (time derivative of `q`) in current configuration
+        fODE2: factor to be multiplied with the position level jacobian, see {eq}`eq-objectgenericode2-jac`
+        fODE2_t: factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac`
+    Returns:
+        $\in \Rcal^{n \times n}$ returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values!
+    """
+
+def ObjectGenericODE2_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index) -> BodyGraphicsData:
+    r"""A user function, which is called by the visualization thread in order to draw user-defined objects.
+
+    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
+    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
+    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+    
+    For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
+
+    Args:
+        mbs: provides reference to mbs, which can be used in user function to access all data of the object
+        itemNumber: integer number of the object in mbs, allowing easy access
+    Returns:
+        list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata)
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectGenericODE2',
     addIncludesC=r"""//#include <pybind11/numpy.h>//for NumpyMatrix
@@ -1371,108 +1440,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     For clarification also see the **example** in `TestModels/linearFEMgenericODE2.py`.
     
     CoordinateLoads are added for the respective ABRV:ODE2 coordinate on the RHS of the latter equation.
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-    Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!--
-    
-    The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
-    -->
 
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
-    | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
-    | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns mass matrix for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations. |
-
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t)`
-    A user function, which computes the jacobian of the ABRV:LHS of the equations of motion, depending on current time, states of object and two
-    factors which are used to distinguish between position level and velocity level derivatives. 
-    Can be used to create any kind of mechanical system by using the object states.
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
-    | `fODE2` | Real | factor to be multiplied with the position level jacobian, see {eq}`eq-objectgenericode2-jac` |
-    | `fODE2_t` | Real | factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac` |
-    | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
-
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
-    A user function, which is called by the visualization thread in order to draw user-defined objects.
-    The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
-    Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects. 
-    Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
-    inefficient and only designed to enable simpler tests, but not large scale problems.
-
-    For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
-    | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
-KD = numpy.diag([200,100])
-#nonlinear force example; this force is added to right-hand-side ==> negative sign!
-def UFforce(mbs, t, itemNumber, q, q_t): 
-    return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
-
-#non-constant mass matrix:
-def UFmass(mbs, t, itemNumber, q, q_t): 
-    return (q[0]+1)*M #uses mass matrix from mini example
-
-#non-constant mass matrix:
-def UFgraphics(mbs, itemNumber):
-    t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-    p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
-                                        meshNodeNumber = 0, #get first node's position 
-                                        configuration = exu.ConfigurationType.Visualization)
-    graphics1=graphics.Sphere(point=p,radius=0.1, color=graphics.color.red)
-        graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':graphics.color.blue}
-    return [graphics1, graphics2] 
-
-#now add object instead of object in mini-example:
-oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
-                   massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
-                   forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
-                   visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
-
-```
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
@@ -1544,15 +1512,18 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below"""),
+            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below""",
+            userFunction=ObjectGenericODE2_forceUserFunction),
         ItemParameter(type=TPyFunctionMatrixContainerMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
-            description=r"""$\Mm_{user} \in \Rcal^{n\times n}$A Python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below"""),
+            description=r"""$\Mm_{user} \in \Rcal^{n\times n}$A Python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below""",
+            userFunction=ObjectGenericODE2_massMatrixUserFunction),
         ItemParameter(type=TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar, destination=DestComp+DestParam,
             pythonName='jacobianUserFunction',
             defaultValue=0,
-            description=r"""$\Jm_{user} \in \Rcal^{n\times n}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"""),
+            description=r"""$\Jm_{user} \in \Rcal^{n\times n}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below""",
+            userFunction=ObjectGenericODE2_jacobianUserFunction),
         ItemParameter(type=TArrayIndex, destination=DestComp+DestParam, cFlags=CFReadOnly,
             pythonName='coordinateIndexPerNode',
             defaultValue='ArrayIndex()',
@@ -1673,13 +1644,58 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
         ItemParameter(type=TPyFunctionGraphicsData, destination=DestVisu,
             pythonName='graphicsDataUserFunction',
             defaultValue=0,
-            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization'),
+            description=r'A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization',
+            userFunction=ObjectGenericODE2_graphicsDataUserFunction,
+            userFunctionExample=r'''
+#user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
+KD = numpy.diag([200,100])
+#nonlinear force example; this force is added to right-hand-side ==> negative sign!
+def UFforce(mbs, t, itemNumber, q, q_t): 
+    return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
+
+#non-constant mass matrix:
+def UFmass(mbs, t, itemNumber, q, q_t): 
+    return (q[0]+1)*M #uses mass matrix from mini example
+
+#non-constant mass matrix:
+def UFgraphics(mbs, itemNumber):
+    t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+    p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
+                                        meshNodeNumber = 0, #get first node's position 
+                                        configuration = exu.ConfigurationType.Visualization)
+    graphics1=graphics.Sphere(point=p,radius=0.1, color=graphics.color.red)
+        graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':graphics.color.blue}
+    return [graphics1, graphics2] 
+
+#now add object instead of object in mini-example:
+oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                   massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
+                   forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
+                   visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
+'''),
         ],
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectGenericODE1   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectGenericODE1_rhsUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector) -> Vector:
+    r"""A user function, which computes a RHS vector depending on current time and states of the object.
+
+    Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
+    Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates (composed from ABRV:ODE1 nodal coordinates) in current configuration, without reference values
+    Returns:
+        $\in \Rcal^{n}$ returns force vector for object
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectGenericODE1',
     addIncludesC=r"""#include <pybind11/numpy.h>//for NumpyMatrix
@@ -1711,24 +1727,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), and that `iN` represents the itemNumber (=objectNumber). 
 
     CoordinateLoads are added for the respective ABRV:ODE1 coordinate on the RHS of the latter equation.
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q)`
-    A user function, which computes a RHS vector depending on current time and states of the object. 
-    Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
-    Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n$ | object coordinates (composed from ABRV:ODE1 nodal coordinates) in current configuration, without reference values |
-    | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
     <!--
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1818,7 +1816,8 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
         ItemParameter(type=TPyFunctionVectorMbsScalarIndexVector, destination=DestComp+DestParam,
             pythonName='rhsUserFunction',
             defaultValue=0,
-            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below"""),
+            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below""",
+            userFunction=ObjectGenericODE1_rhsUserFunction),
         ItemParameter(type=TArrayIndex, destination=DestComp+DestParam, cFlags=CFReadOnly,
             pythonName='coordinateIndexPerNode',
             defaultValue='ArrayIndex()',
@@ -1889,6 +1888,24 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectKinematicTree   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectKinematicTree_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector,
+                                          q_t: Vector) -> Vector:
+    r"""A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object.
+
+    Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+        q_t: $\in \Rcal^n$ object velocity coordinates (time derivative of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n}$ returns force vector for object
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectKinematicTree',
     addIncludesC=r"""#include "Linalg/KinematicsBasics.h"//for transformations
@@ -2109,27 +2126,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
     especially for describing the kinematic chain as well as the inertial parameters.
 
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object. 
-    Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!--
-    
-    The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
-    -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
-    | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
-
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #build 1R mechanism (pendulum)
@@ -2249,7 +2245,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below"""),
+            description=r"""$\fv_{user} \in \Rcal^{n}$A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below""",
+            userFunction=ObjectKinematicTree_forceUserFunction),
         ItemParameter(type=TResizableVector, destination=DestComp, cFlags=CFMutable+CFNoInterface,
             pythonName='tempVector',
             defaultValue='ResizableVector()',
@@ -2461,6 +2458,35 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectFFRF   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectFFRF_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector,
+                                 q_t: Vector) -> Vector:
+    r"""A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n_c$ object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values
+        q_t: $\in \Rcal^n_c$ object velocity coordinates (time derivative of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n_c}$ returns force vector for object
+    """
+
+def ObjectFFRF_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector,
+                                      q_t: Vector) -> NumpyMatrix:
+    r"""A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n_c$ object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values
+        q_t: $\in \Rcal^n_c$ object velocity coordinates (time derivative of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n_c \times n_c}$ returns mass matrix for object
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectFFRF',
     addIncludesC=r"""#include <pybind11/numpy.h>//for NumpyMatrix
@@ -2728,42 +2754,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
                         \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
                         $$
 
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-    <!--
-    
-    The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
-    -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n_c$ | object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of `q`) in current configuration |
-    | **return value** | Vector $\in \Rcal^{n_c}$ | returns force vector for object |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n_c$ | object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of `q`) in current configuration |
-    | **return value** | NumpyMatrix $\in \Rcal^{n_c \times n_c}$ | returns mass matrix for object |
-
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
@@ -2802,11 +2792,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv_{user} =  [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q\_t; see description below"""),
+            description=r"""$\fv_{user} =  [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q\_t; see description below""",
+            userFunction=ObjectFFRF_forceUserFunction),
         ItemParameter(type=TPyFunctionMatrixMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
-            description=r"""$\Mm_{user} \in \Rcal^{n_c\times n_c}$A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the ABRV:FFRF mass matrix; see description below"""),
+            description=r"""$\Mm_{user} \in \Rcal^{n_c\times n_c}$A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the ABRV:FFRF mass matrix; see description below""",
+            userFunction=ObjectFFRF_massMatrixUserFunction),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='computeFFRFterms',
             defaultValue=True,
@@ -2972,6 +2964,38 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectFFRFreducedOrder   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectFFRFreducedOrder_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                             q: Vector, q_t: Vector) -> Vector:
+    r"""A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+    Note that itemNumber represents the index of the ObjectFFRFreducedOrder object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n_{ODE2}$ ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values
+        q_t: $\in \Rcal^n_{ODE2}$ object velocity coordinates (time derivatives of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n_{ODE2}}$ returns force vector for object
+    """
+
+def ObjectFFRFreducedOrder_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                  q: Vector, q_t: Vector) -> NumpyMatrix:
+    r"""A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n_{ODE2}$ ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values
+        q_t: $\in \Rcal^n_{ODE2}$ object velocity coordinates (time derivatives of `q`) in current configuration
+    Returns:
+        $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$ returns mass matrix for object
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectFFRFreducedOrder',
     addIncludesC=r"""#include <pybind11/numpy.h>//for NumpyMatrix
@@ -3295,40 +3319,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     results depend strongly on the choice of the reference frame (or the underlying mode shapes).
     
     CoordinateLoads are added for each ABRV:ODE2 coordinate on the RHS of the equations of motion. 
-    <!--++++++++++++++++++++++++++++++++++++++++ -->
-    
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-    Note that itemNumber represents the index of the ObjectFFRFreducedOrder object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    <!-- -->
 
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n_{ODE2}$ | ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of `q`) in current configuration |
-    | **return value** | Vector $\in \Rcal^{n_{ODE2}}$ | returns force vector for object |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
-    A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `q` | Vector $\in \Rcal^n_{ODE2}$ | ABRV:FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values |
-    | `q_t` | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of `q`) in current configuration |
-    | **return value** | NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$ | returns mass matrix for object |
-
-    
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
@@ -3363,11 +3354,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='forceUserFunction',
             defaultValue=0,
-            description=r"""$\fv\induser \in \Rcal^{n_{ODE2}}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below"""),
+            description=r"""$\fv\induser \in \Rcal^{n_{ODE2}}$A Python user function which computes the generalized user force vector for the ABRV:ODE2 equations; see description below""",
+            userFunction=ObjectFFRFreducedOrder_forceUserFunction),
         ItemParameter(type=TPyFunctionMatrixMbsScalarIndex2Vector, destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
-            description=r"""$\Mm\induser \in \Rcal^{n_{ODE2}\times n_{ODE2}}$A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below"""),
+            description=r"""$\Mm\induser \in \Rcal^{n_{ODE2}\times n_{ODE2}}$A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below""",
+            userFunction=ObjectFFRFreducedOrder_massMatrixUserFunction),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='computeFFRFterms',
             defaultValue=True,
@@ -3818,6 +3811,69 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectANCFCable2D   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectANCFCable2D_axialForceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                             axialPositionNormalized: Real, axialStrain: Real,
+                                             axialStrain_t: Real, axialStrainRef: Real,
+                                             physicsAxialStiffness: Real,
+                                             physicsAxialDamping: Real, curvature: Real,
+                                             curvature_t: Real, curvatureRef: Real) -> Real:
+    r"""A user function, which computes the axial force depending on time, strains and curvatures and
+
+    object parameters (stiffness, damping).
+    The object variables are provided to the function using the current values of the ANCFCable2D object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    **NOTE:** this function has a different interface as compared to the bending moment function.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        axialPositionNormalized: axial position at the cable where the user function is evaluated; range is [0,1]
+        axialStrain: $\varepsilon$
+        axialStrain_t: $\varepsilon_t$
+        axialStrainRef: $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$
+        physicsAxialStiffness: as given in object parameters
+        physicsAxialDamping: as given in object parameters
+        curvature: $K$
+        curvature_t: $\dot K$
+        curvatureRef: $K_0 + f\cRef \cdot K\cRef$
+    Returns:
+        scalar value of computed axial force
+    """
+
+def ObjectANCFCable2D_bendingMomentUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                                axialPositionNormalized: Real, curvature: Real,
+                                                curvature_t: Real, curvatureRef: Real,
+                                                physicsBendingStiffness: Real,
+                                                physicsBendingDamping: Real, axialStrain: Real,
+                                                axialStrain_t: Real, axialStrainRef: Real) -> Real:
+    r"""A user function, which computes the bending moment depending on time, strains and curvatures and
+
+    object parameters (stiffness, damping).
+    The object variables are provided to the function using the current values of the ANCFCable2D object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    **NOTE:** this function has a different interface as compared to the axial force function.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        axialPositionNormalized: axial position at the cable where the user function is evaluated; range is [0,1]
+        curvature: $K$
+        curvature_t: $\dot K$
+        curvatureRef: $K_0 + f\cRef \cdot K\cRef$
+        physicsBendingStiffness: as given in object parameters
+        physicsBendingDamping: as given in object parameters
+        axialStrain: $\varepsilon$
+        axialStrain_t: $\varepsilon_t$
+        axialStrainRef: $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$
+    Returns:
+        scalar value of computed bending moment
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectANCFCable2D',
     addIncludesC=r"""#include "ImplObjects/CObjectANCFCable2DBase.h"
@@ -4111,99 +4167,6 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
                               -r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
                         $$
 
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature_t, curvatureRef)`
-    A user function, which computes the axial force depending on time, strains and curvatures and 
-    object parameters (stiffness, damping).
-    The object variables are provided to the function using the current values of the ANCFCable2D object.
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    **NOTE:** this function has a different interface as compared to the bending moment function.
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `axialPositionNormalized` | Real | axial position at the cable where the user function is evaluated; range is [0,1] |
-    | `axialStrain` | Real | $\varepsilon$ |
-    | `axialStrain_t` | Real | $\varepsilon_t$ |
-    | `axialStrainRef` | Real | $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$ |
-    | `physicsAxialStiffness` | Real | as given in object parameters |
-    | `physicsAxialDamping` | Real | as given in object parameters |
-    | `curvature` | Real | $K$ |
-    | `curvature_t` | Real | $\dot K$ |
-    | `curvatureRef` | Real | $K_0 + f\cRef \cdot K\cRef$ |
-    | **return value** | Real | scalar value of computed axial force |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef)`
-    A user function, which computes the bending moment depending on time, strains and curvatures and 
-    object parameters (stiffness, damping).
-    The object variables are provided to the function using the current values of the ANCFCable2D object.
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    **NOTE:** this function has a different interface as compared to the axial force function.
-    <!-- -->
-
-    | arguments /  return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `axialPositionNormalized` | Real | axial position at the cable where the user function is evaluated; range is [0,1] |
-    | `curvature` | Real | $K$ |
-    | `curvature_t` | Real | $\dot K$ |
-    | `curvatureRef` | Real | $K_0 + f\cRef \cdot K\cRef$ |
-    | `physicsBendingStiffness` | Real | as given in object parameters |
-    | `physicsBendingDamping` | Real | as given in object parameters |
-    | `axialStrain` | Real | $\varepsilon$ |
-    | `axialStrain_t` | Real | $\varepsilon_t$ |
-    | `axialStrainRef` | Real | $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$ |
-    | **return value** | Real | scalar value of computed bending moment |
-
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    *Example*:
-    
-```python
-#define some material parameters
-rhoA = 100.
-EA =   1e7.
-EI =   1e5
-
-#example of bending moment user function
-def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-           curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
-           physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
-    fact = min(1,t) #runs from 0 to 1
-    #change reference curvature of beam over time:
-    kappa=(curvature-curvatureRef*fact) 
-    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
-
-def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
-           physicsAxialDamping, curvature, curvature_t, curvatureRef):
-    fact = min(1,t) #runs from 0 to 1
-    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
-            physicsAxialDamping*axialStrain_t)
-
-cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsBendingDamping = EI*0.1,
-                physicsAxialStiffness=EA,
-                physicsAxialDamping=EA*0.05,
-                physicsReferenceAxialStrain=0.1, #10 <!-- stretch -->
-                physicsReferenceCurvature=1,     #radius=1
-                bendingMomentUserFunction=bendingMomentUserFunction,
-                axialForceUserFunction=axialForceUserFunction,
-                )
-#use  cable with GenerateStraightLineANCFCable(...)
-
-```
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    rhoA = 78.
@@ -4301,11 +4264,47 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar9, destination=DestComp+DestParam,
             pythonName='axialForceUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below""",
+            userFunction=ObjectANCFCable2D_axialForceUserFunction),
         ItemParameter(type=TPyFunctionMbsScalarIndexScalar9, destination=DestComp+DestParam,
             pythonName='bendingMomentUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below""",
+            userFunction=ObjectANCFCable2D_bendingMomentUserFunction,
+            userFunctionExample=r'''
+#define some material parameters
+rhoA = 100.
+EA =   1e7.
+EI =   1e5
+
+#example of bending moment user function
+def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+           curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
+           physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+    fact = min(1,t) #runs from 0 to 1
+    #change reference curvature of beam over time:
+    kappa=(curvature-curvatureRef*fact) 
+    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+
+def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
+           physicsAxialDamping, curvature, curvature_t, curvatureRef):
+    fact = min(1,t) #runs from 0 to 1
+    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+            physicsAxialDamping*axialStrain_t)
+
+cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                physicsBendingStiffness=EI, 
+                physicsBendingDamping = EI*0.1,
+                physicsAxialStiffness=EA,
+                physicsAxialDamping=EA*0.05,
+                physicsReferenceAxialStrain=0.1, #10 <!-- stretch -->
+                physicsReferenceCurvature=1,     #radius=1
+                bendingMomentUserFunction=bendingMomentUserFunction,
+                axialForceUserFunction=axialForceUserFunction,
+                )
+#use  cable with GenerateStraightLineANCFCable(...)
+'''),
         ItemFunctionDef('GetLength',
             implementation='return parameters.physicsLength;'),
         ItemFunctionDef('GetMassPerLength',
@@ -5886,6 +5885,73 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorRigidBodySpringDamper   ++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorRigidBodySpringDamper_springForceTorqueUserFunction(
+        mbs: MainSystem, t: Real, itemNumber: Index, displacement: Vector3D,
+        rotation: Vector3D, velocity: Vector3D, angularVelocity: Vector3D,
+        stiffness: Matrix6D, damping: Matrix6D, rotJ0: Matrix3D, rotJ1: Matrix3D,
+        offset: Vector6D) -> Vector6D:
+    r"""A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities
+
+    (displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between
+    both markers and which are defined in joint J0 coordinates.
+    As relative rotations are defined by Tait-Bryan rotation parameters, it is recommended to use this connector for small relative rotations only
+    (except for rotations about one axis).
+    Furthermore, the user function contains object parameters (stiffness, damping, rotationMarker0/1, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+    Detailed description of the arguments and local quantities:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        displacement: $\LU{J0}{\Delta\pv}$
+        rotation: $\LU{J0}{\ttheta}$
+        velocity: $\LU{J0}{\Delta\vv}$
+        angularVelocity: $\LU{J0}{\Delta\tomega}$
+        stiffness: copied from object
+        damping: copied from object
+        rotJ0: rotationMarker0 copied from object
+        rotJ1: rotationMarker1 copied from object
+        offset: copied from object
+    Returns:
+        list or numpy array of computed spring force-torque
+    """
+
+def ObjectConnectorRigidBodySpringDamper_postNewtonStepUserFunction(
+        mbs: MainSystem, t: Real, itemNumber: Index, dataCoordinates: Vector,
+        displacement: Vector3D, rotation: Vector3D, velocity: Vector3D,
+        angularVelocity: Vector3D, stiffness: Matrix6D, damping: Matrix6D,
+        rotJ0: Matrix3D, rotJ1: Matrix3D, offset: Vector6D) -> Vector:
+    r"""A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size)
+
+    and the updated dataCoordinates $\dv^k$ of `NodeGenericData` $n_d$.
+    Except from `dataCoordinates`, the arguments are the same as in `springForceTorqueUserFunction`.
+    The `postNewtonStepUserFunction` should be used together with the dataCoordinates in order to implement a active set or switching strategy
+    for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
+
+    Detailed description of the arguments and local quantities:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        dataCoordinates: $\dv^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]$ for previous post Newton step $k-1$
+        displacement: $\LU{J0}{\Delta\pv}$
+        rotation: $\LU{J0}{\ttheta}$
+        velocity: $\LU{J0}{\Delta\vv}$
+        angularVelocity: $\LU{J0}{\Delta\tomega}$
+        stiffness: copied from object
+        damping: copied from object
+        rotJ0: rotationMarker0 copied from object
+        rotJ1: rotationMarker1 copied from object
+        offset: copied from object
+    Returns:
+        $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectConnectorRigidBodySpringDamper',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -5949,75 +6015,6 @@ definitions.append(ItemDefinition(
                         $$
 
     and `iN` represents the itemNumber (=objectNumber).
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
-    A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities 
-    (displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between 
-    both markers and which are defined in joint J0 coordinates. 
-    As relative rotations are defined by Tait-Bryan rotation parameters, it is recommended to use this connector for small relative rotations only 
-    (except for rotations about one axis).
-    Furthermore, the user function contains object parameters (stiffness, damping, rotationMarker0/1, offset).
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-    
-    Detailed description of the arguments and local quantities:
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `displacement` | Vector3D | $\LU{J0}{\Delta\pv}$ |
-    | `rotation` | Vector3D | $\LU{J0}{\ttheta}$ |
-    | `velocity` | Vector3D | $\LU{J0}{\Delta\vv}$ |
-    | `angularVelocity` | Vector3D | $\LU{J0}{\Delta\tomega}$ |
-    | `stiffness` | Vector6D | copied from object |
-    | `damping` | Vector6D | copied from object |
-    | `rotJ0` | Matrix3D | rotationMarker0 copied from object |
-    | `rotJ1` | Matrix3D | rotationMarker1 copied from object |
-    | `offset` | Vector6D | copied from object |
-    | **return value** | Vector6D | list or numpy array of computed spring force-torque |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    **Userfunction**: `postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`
-    A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size) 
-    and the updated dataCoordinates $\dv^k$ of `NodeGenericData` $n_d$.
-    Except from `dataCoordinates`, the arguments are the same as in `springForceTorqueUserFunction`.
-    The `postNewtonStepUserFunction` should be used together with the dataCoordinates in order to implement a active set or switching strategy
-    for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
-    
-    Detailed description of the arguments and local quantities:
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `dataCoordinates` | Vector | $\dv^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]$ for previous post Newton step $k-1$ |
-    | ... | ... | other arguements see `springForceTorqueUserFunction` |
-    | **return value** | Vector | $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step |
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#define simple force for spring-damper:
-def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
-            stiffness, damping, rotJ0, rotJ1, offset): 
-    k = stiffness #passed as list
-    u = displacement
-    return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
-
-#markerNumbers and parameters taken from mini example
-mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
-                                    stiffness = np.diag([k,k,k, 0,0,0]), 
-                                    damping = np.diag([0,k*0.01,0, 0,0,0]), 
-                                    offset = [0,0,0, 0,0,0],
-                                    springForceTorqueUserFunction = UFforce))
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #example with rigid body at [0,0,0], 1kg under initial velocity
@@ -6096,11 +6093,28 @@ mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody],
         ItemParameter(type=TPyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D, destination=DestComp+DestParam,
             pythonName='springForceTorqueUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^6$A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below"""),
+            description=r"""$\mathrm{UF} \in \Rcal^6$A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below""",
+            userFunction=ObjectConnectorRigidBodySpringDamper_springForceTorqueUserFunction,
+            userFunctionExample=r'''
+#define simple force for spring-damper:
+def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
+            stiffness, damping, rotJ0, rotJ1, offset): 
+    k = stiffness #passed as list
+    u = displacement
+    return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
+
+#markerNumbers and parameters taken from mini example
+mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                    stiffness = np.diag([k,k,k, 0,0,0]), 
+                                    damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                    offset = [0,0,0, 0,0,0],
+                                    springForceTorqueUserFunction = UFforce))
+'''),
         ItemParameter(type=TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D, destination=DestComp+DestParam,
             pythonName='postNewtonStepUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF}_{PN} \in \Rcal$A Python function which computes the error of the PostNewtonStep; see description below"""),
+            description=r"""$\mathrm{UF}_{PN} \in \Rcal$A Python function which computes the error of the PostNewtonStep; see description below""",
+            userFunction=ObjectConnectorRigidBodySpringDamper_postNewtonStepUserFunction),
         ItemFunctionDef('GetMarkerNumbers',
             cFlags=CFConst,
             implementation='return parameters.markerNumbers;'),
@@ -11034,6 +11048,55 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectJointGeneric   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectJointGeneric_offsetUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                          offsetUserFunctionParameters: Vector6D) -> Vector6D:
+    r"""A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint,
+
+    e.g., in order to move or rotate a body on a prescribed trajectory.
+    It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies,
+    either zero or compatible initial offset-velocity, and no initial accelerations.
+    The `offsetUserFunction` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
+    In order to be on the safe side, provide both  `offsetUserFunction` and  `offsetUserFunction_t`.
+    
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset vector
+    for all relative translational and rotational joint coordinates:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        offsetUserFunctionParameters: $\pv_{par}$, set of parameters which can be freely used in user function
+    Returns:
+        computed offset vector for given time
+    """
+
+def ObjectJointGeneric_offsetUserFunction_t(mbs: MainSystem, t: Real, itemNumber: Index,
+                                            offsetUserFunctionParameters: Vector6D) -> Vector6D:
+    r"""A user function, which computes an offset **velocity** vector for the GenericJoint.
+
+    It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
+    The `offsetUserFunction_t` is used instead of `offsetUserFunction` in case of `velocityLevel = True`,
+    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
+    
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+    
+    The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset velocity vector
+    for all relative translational and rotational joint coordinates:
+
+    Args:
+        mbs: provides MainSystem mbs in which underlying item is defined
+        t: current time in mbs
+        itemNumber: integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        offsetUserFunctionParameters: $\pv_{par}$, set of parameters which can be freely used in user function
+    Returns:
+        computed offset velocity vector for given time
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectJointGeneric',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -11165,72 +11228,6 @@ definitions.append(ItemDefinition(
                         \zv = \Null
                         $$
 
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)`
-    <!-- -->
-    A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint, 
-    e.g., in order to move or rotate a body on a prescribed trajectory.
-    It is NECESSARY to use sufficiently smooth functions, having **initial offsets** consistent with **initial configuration** of bodies, 
-    either zero or compatible initial offset-velocity, and no initial accelerations.
-    The `offsetUserFunction` is **ONLY used** in case of static computation or index3 (generalizedAlpha) time integration.
-    In order to be on the safe side, provide both  `offsetUserFunction` and  `offsetUserFunction_t`.
-
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-
-    The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset vector 
-    for all relative translational and rotational joint coordinates:
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `offsetUserFunctionParameters` | Real | $\pv_{par}$, set of parameters which can be freely used in user function |
-    | **return value** | Real | computed offset vector for given time |
-
-    <!--
-    
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    -->
-    **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, offsetUserFunctionParameters)`
-    <!-- -->
-    A user function, which computes an offset **velocity** vector for the GenericJoint.
-    It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
-    The `offsetUserFunction_t` is used instead of `offsetUserFunction` in case of `velocityLevel = True`, 
-    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
-
-    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
-    `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-
-    The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset velocity vector 
-    for all relative translational and rotational joint coordinates:
-    <!-- -->
-
-    | arguments / return | type or size | description |
-    |---|---|---|
-    | `mbs` | MainSystem | provides MainSystem mbs in which underlying item is defined |
-    | `t` | Real | current time in mbs |
-    | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-    | `offsetUserFunctionParameters` | Real | $\pv_{par}$, set of parameters which can be freely used in user function |
-    | **return value** | Real | computed offset velocity vector for given time |
-
-    <!-- -->
-
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    *Example*:
-    
-```python
-#simple example, computing only the translational offset for x-coordinate
-from math import sin, cos, pi
-def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters): 
-    return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
-
-```
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
@@ -11278,11 +11275,19 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
         ItemParameter(type=TPyFunctionVector6DmbsScalarIndexVector6D, destination=DestComp+DestParam,
             pythonName='offsetUserFunction',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^6$A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)"""),
+            description=r"""$\mathrm{UF} \in \Rcal^6$A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)""",
+            userFunction=ObjectJointGeneric_offsetUserFunction),
         ItemParameter(type=TPyFunctionVector6DmbsScalarIndexVector6D, destination=DestComp+DestParam,
             pythonName='offsetUserFunction_t',
             defaultValue=0,
-            description=r"""$\mathrm{UF} \in \Rcal^6$(NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters"""),
+            description=r"""$\mathrm{UF} \in \Rcal^6$(NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters""",
+            userFunction=ObjectJointGeneric_offsetUserFunction_t,
+            userFunctionExample=r'''
+#simple example, computing only the translational offset for x-coordinate
+from math import sin, cos, pi
+def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters): 
+    return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
+'''),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='alternativeConstraints',
             defaultValue=False,

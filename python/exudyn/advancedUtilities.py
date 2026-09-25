@@ -826,8 +826,15 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             sep = ', '
         sFunctionInterface += ')\n'
 
+        #the Protocol of this user function is generated into itemInterface.py from the same
+        #definition as this dictionary, and it is what an editor checks against (#2664)
+        sProtocol = ''
+        if len(functionArgs) > 3:
+            sProtocol = ('\nan editor checks a user function against exudyn.itemInterface.'
+                         + functionArgs[3][0])
+
         raise ValueError('ConvertFunctionToSymbolic: function "'+fnName+'" does not meet correct number of arguments; '+
-                         'user function should read:\n'+sFunctionInterface+sReturn)
+                         'user function should read:\n'+sFunctionInterface+sReturn+sProtocol)
     
     for i in range(nArgs):
         varType = functionArgs[0][i]

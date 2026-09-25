@@ -3707,3 +3707,48 @@ heading levels read it as a heading. An example is code, like `miniExample` besi
 build when the interface has changed - `checkPython --stubs` compares the stubs with the *imported*
 module, so running it against a wheel that is one step behind is a false failure, which is what it
 reported here before the rebuild.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.4.5.3, .5.4 and RG12.4.6 - all 34 user functions, the gate, and what became redundant (2026-09-26, #2664)
+
+**Every user function of every item is a Python def.** 34 of them; the 35th block is commented out in
+`ObjectGenericODE1` and has no parameter, so it was left commented out. `tools/checkDefinitions.py`
+now reports a parameter of a `PyFunction...` type that carries no def, and reports **none** today.
+
+**Four more things the pages said that were not true**, all found by the conversion refusing to
+believe a signature:
+
+| item | what it said | what it is |
+|---|---|---|
+| `ObjectConnectorRigidBodySpringDamper.postNewtonStepUserFunction` | `(mbs, t, Index itemIndex, ...)` | C++ in a Python signature; the table below it says `itemNumber` |
+| the same function's table | four rows and `\| ... \| ... \| other arguements see springForceTorqueUserFunction \|` | it has **thirteen** arguments, and the page now names all of them |
+| `stiffness`, `damping` in **both** of its tables | `Vector6D` | the C++ takes `StdMatrix6D`, and the item's own example passes `np.diag([...])` - a 6x6 matrix |
+| `ObjectJointGeneric.offsetUserFunction` and `_t` | `offsetUserFunctionParameters` and the return as `Real` | `StdVector6D`; the prose one line above says "offset vector for all relative translational and rotational joint coordinates" |
+| `ObjectRigidBody2D.graphicsDataUserFunction` | `itemNumber` as `int` | `Index`, as on every other page |
+
+Two blocks moved, and nothing else did: `ObjectRigidBody`'s note about `CreateRigidBody` is about the
+**item**, so it stays in the description and the generated block follows it; and the example of
+`ObjectConnectorRigidBodySpringDamper` sets `springForceTorqueUserFunction`, so it belongs to that
+user function and now stands with it, above the `postNewtonStep` block instead of below it.
+
+**Three more rules the converter needed**, each of which had put something wrong on a page before the
+diff caught it:
+
+- a signature **inside a comment** is commented out. `ObjectGenericODE1` has a whole block in one,
+  with the `\startTable` LaTeX of before RG3.14 still in it.
+- a comment over several lines is a **separator** only when it holds nothing but blanks and `+++`.
+  One that holds text ends the block, and the text stays in the description.
+- prose **after** the table is about the item, not about the user function, and stays.
+
+**RG12.4.6 - what became redundant.** The argument table is now an output for all 34; the `\_`
+escapes went with RG3.14; and the third question - whether `advancedUtilities`' hand-built `F(...)`
+string can be replaced by the `Protocol` - is answered: it is not replaced, it is **joined**.
+`userFunctionArgsDict` carries the Protocol's name as a fourth entry, and the error a user gets when
+their function has the wrong number of arguments now ends with
+
+    an editor checks a user function against exudyn.itemInterface.ObjectGenericODE2ForceUserFunction
+
+so the message points at the thing that would have prevented it. Replacing the string entirely would
+cost a user the signature in the message, which is what they are looking at when they read it.
+
+**Gates**: 11/11 checks, the wheel, the full suite, the strict HTML build.

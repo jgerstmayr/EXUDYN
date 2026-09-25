@@ -211,6 +211,9 @@ $$
 \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
 $$
 
+For creating a `ObjectRigidBody`, there is a `rigidBodyUtilities` function `CreateRigidBody`,
+see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
+
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.
 The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
@@ -220,14 +223,11 @@ inefficient and only designed to enable simpler tests, but not large scale probl
 
 For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
 | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
 | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
-
-For creating a `ObjectRigidBody`, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...

@@ -118,7 +118,7 @@ A user function, which computes a force vector depending on current time and sta
 Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
@@ -130,7 +130,7 @@ Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs
 **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
 | `t` | Real | current time in mbs |
@@ -144,7 +144,7 @@ A user function, which computes the jacobian of the {ref}`LHS <LHS>` of the equa
 factors which are used to distinguish between position level and velocity level derivatives.
 Can be used to create any kind of mechanical system by using the object states.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs to |
 | `t` | Real | current time in mbs |
@@ -164,7 +164,7 @@ inefficient and only designed to enable simpler tests, but not large scale probl
 
 For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
 | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
@@ -198,7 +198,6 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
                    massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
                    forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
                    visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
-
 ```
 
 (miniexample-objectgenericode2)=

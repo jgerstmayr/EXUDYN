@@ -124,10 +124,10 @@ inefficient and only designed to enable simpler tests, but not large scale probl
 
 For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
-| `itemNumber` | int | integer number of the object in mbs, allowing easy access |
+| `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
 | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
 (miniexample-objectrigidbody2d)=

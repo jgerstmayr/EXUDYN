@@ -1609,11 +1609,15 @@ package).
           documented arguments that do not exist and one was written over two lines.
           `ObjectConnectorRigidBodySpringDamper` is **not** among them - its second block does not
           list its arguments at all - and goes with RG12.4.5.3.
-        - **RG12.4.5.3** — the bodies and the rest: `ObjectGenericODE2` (four blocks),
-          `ObjectGenericODE1`, `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`,
-          `ObjectANCFCable2D`, `ObjectRigidBody`, `ObjectRigidBody2D`, `ObjectJointGeneric`.
-        - **RG12.4.5.4** — the gate: every parameter of a `TPyFunction...` type carries a def, so
-          a new user function cannot be written as prose again.
+        - **RG12.4.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-5-3) - the
+          bodies, the joint and the rigid body spring damper: **all 34 user functions are defs**.
+        - **RG12.4.5.4** **DONE 2026-09-26** - the gate: `tools/checkDefinitions.py` reports a
+          parameter of a `PyFunction...` type that carries no def, so a new user function cannot be
+          written as prose again.
+    - **RG12.4.6** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-6) - what became
+      redundant: the argument table is generated for every user function, the `\_` escapes are
+      gone with RG3.14, and `advancedUtilities`' hand-built `F(...)` message now also names the
+      generated `Protocol`, which is carried in `userFunctionArgsDict` as a fourth entry.
     - **RG12.4.6** — what becomes redundant then: the argument table in the prose (generated), the
       `\_` escapes (gone with RG3.14.5), and the question whether `advancedUtilities`' hand-built
       `F(...)` string can be replaced by the generated `Protocol`.

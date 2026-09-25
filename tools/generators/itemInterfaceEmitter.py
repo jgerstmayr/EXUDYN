@@ -92,6 +92,7 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
         fcnType = pyFunctionTypeConversion[pyUserFunctionType].split('(')[0].split('<')[1].strip()
         fcnArgsList = ['mbs']
         fcnTypesList = ['MainSystem']
+        protocolName = None
 
         cnt = 0
         for arg in fcnArgs[1:]: #omit MainSystem
@@ -110,8 +111,14 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
                 raise ValueError(classType + itemType + '.' + userFunctionName + ': the Python def '
                                  + '; '.join(findings))
             fcnArgsList = [name for (name, _) in userFunction.arguments]
+            protocolName = ProtocolName(classType + itemType, userFunctionName)
 
-        userFunctionArgsDict[classType+itemType+','+userFunctionName] = [fcnTypesList,fcnArgsList,[fcnType]]
+        entry = [fcnTypesList, fcnArgsList, [fcnType]]
+        if protocolName is not None:
+            #the Protocol an editor checks against; advancedUtilities names it when a user function
+            #has the wrong number of arguments (revision2026b step RG12.4.6, #2664)
+            entry.append([protocolName])
+        userFunctionArgsDict[classType+itemType+','+userFunctionName] = entry
 
     return userFunctionArgsDict
 

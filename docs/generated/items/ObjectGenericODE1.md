@@ -62,20 +62,6 @@ Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), an
 
 CoordinateLoads are added for the respective {ref}`ODE1 <ODE1>` coordinate on the RHS of the latter equation.
 
-**Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q)`
-A user function, which computes a RHS vector depending on current time and states of the object.
-Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
-Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs, which can be used to retrieve additional data from the object through
-`mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
-
-| arguments /  return | type or size | description |
-|---|---|---|
-| `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-| `t` | Real | current time in mbs |
-| `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-| `q` | Vector $\in \Rcal^n$ | object coordinates (composed from {ref}`ODE1 <ODE1>` nodal coordinates) in current configuration, without reference values |
-| **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
-
 *Example*:
 
 ```python
@@ -92,6 +78,20 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
                    rhsUserFunction=UFrhs))
 
 ```
+
+**Userfunction**: `rhsUserFunction(mbs, t, itemNumber, q)`
+A user function, which computes a RHS vector depending on current time and states of the object.
+Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
+Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs, which can be used to retrieve additional data from the object through
+`mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
+| `t` | Real | current time in mbs |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
+| `q` | Vector $\in \Rcal^n$ | object coordinates (composed from {ref}`ODE1 <ODE1>` nodal coordinates) in current configuration, without reference values |
+| **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
 (miniexample-objectgenericode1)=
 #### MINI EXAMPLE for ObjectGenericODE1

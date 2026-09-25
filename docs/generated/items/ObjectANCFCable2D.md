@@ -337,7 +337,7 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 **NOTE:** this function has a different interface as compared to the bending moment function.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
@@ -361,7 +361,7 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 **NOTE:** this function has a different interface as compared to the axial force function.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
@@ -412,7 +412,6 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
                 axialForceUserFunction=axialForceUserFunction,
                 )
 #use  cable with GenerateStraightLineANCFCable(...)
-
 ```
 
 (miniexample-objectancfcable2d)=

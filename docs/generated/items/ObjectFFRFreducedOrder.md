@@ -334,7 +334,7 @@ A user function, which computes a force vector depending on current time and sta
 Note that itemNumber represents the index of the ObjectFFRFreducedOrder object in mbs, which can be used to retrieve additional data from the object through
 `mbs.GetObjectParameter(itemNumber, ...)`, see the according description of `GetObjectParameter`.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
@@ -346,7 +346,7 @@ Note that itemNumber represents the index of the ObjectFFRFreducedOrder object i
 **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 
-| arguments /  return | type or size | description |
+| arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
