@@ -3531,3 +3531,60 @@ generated file changed, so what was built and tested in RG12.4.2 is still what i
 
 Two of 23 signatures' worth of machinery is now in place; what is missing for a user is RG12.4.4,
 the `Protocol`.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.4.4 - the Protocol, which is the part a user feels (2026-09-25, #2664)
+
+`python/exudyn/itemInterface.py` now carries a `Protocol` per user function that is written as a def,
+before the classes that use it:
+
+```python
+class ObjectGroundGraphicsDataUserFunction(Protocol):
+    """A user function, which is called by the visualization thread in order to draw user-defined objects.
+
+    Args:
+        mbs (exudyn.MainSystem): provides reference to mbs, which can be used in user function ...
+        itemNumber (int): integer number of the object in mbs, allowing easy access
+    Returns:
+        list: list of ``GraphicsData`` dictionaries, see Section sec-graphicsdata
+    """
+    def __call__(self, mbs: exudyn.MainSystem, itemNumber: int) -> list: ...
+```
+
+**The annotation on the parameter is the half that matters.** A Protocol a user never names does
+nothing for them, so `VObjectGround.__init__` states it:
+
+```python
+def __init__(self, show = True,
+             graphicsDataUserFunction: Union[ObjectGroundGraphicsDataUserFunction, int] = 0, ...)
+```
+
+The `Union` with `int` is not decoration: `0` is the value that means *no user function*, and typing
+the parameter as the Protocol alone would make the default a type error in the generated file. This
+is the first annotation of any kind in a generated item constructor; the other parameters have none.
+
+The docstring is rendered by the same `GoogleDocstringRenderer` and cleaned by the same
+`CleanStringForPyiDescription` as every other docstring of the file, so a Markdown link reads as its
+anchor and inline code as an RST literal, exactly as in the rest of the module. The runtime types come
+from `userFunctionModel.annotationToPython`: `MainSystem` is `exudyn.MainSystem` - the class in the
+compiled module, not the annotation name of the definition file - and an annotation missing from that
+table stops the emit.
+
+**One test model had to change, and finding it was worth the step.**
+`python/TestModels/parameterConversionTest.py` walks `inspect.getmembers(itemInterface,
+inspect.isclass)` and creates every class whose name starts with `Object`, `Node`, `Marker` ... -
+which now includes `ObjectGroundGraphicsDataUserFunction`, an item type `GroundGraphicsDataUserFunction`
+that does not exist. The suite said so at once (`1 TestModel TEST(S) OUT OF 126 FAILED`), and the
+model now skips a class whose `_is_protocol` is true. Any generated type that is not an item will meet
+the same walk, so the skip is the general fix and not a patch for this one class.
+
+`__all__` needed nothing: `publicApi.PublicNames` reads the emitted source, so the Protocol is
+exported by the same rule as everything else - which is also why the diff of `__all__` is large while
+one name was added.
+
+**Gates**: 11/11 checks, the wheel, the full suite (`PASSED: no reproducible test failed`), pytest
+(404 passed, 2 skipped) and the strict HTML build.
+
+**Not yet said to users.** `definitions/README.md` tells a developer that the Protocol exists; the
+manual does not, because one user function of 23 has one and "annotate your function with its
+Protocol" would be wrong for the other 22. It is said once they all have one - RG12.4.6.

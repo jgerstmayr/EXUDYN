@@ -194,6 +194,12 @@ not in the list below reaches the page as itself and is a defect.
   formula renders in a table cell and not inside a code block. That is what lets the arguments
   be a real signature.
 
+  **What a user gets from the def**: `python/exudyn/itemInterface.py` carries a
+  `Protocol` per user function - `class ObjectGroundGraphicsDataUserFunction(Protocol)` with a typed
+  `__call__` and the docstring - and the parameter of the item class is annotated with it, so an
+  editor completes the arguments of the function being written and marks a wrong one. A Protocol is
+  never instantiated and nothing inherits from it: it costs nothing at runtime.
+
   The user functions still written as a hand-made block in a description are being converted
   item by item (revision2026b step RG12.4); a new one is written as a def.
 - **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows

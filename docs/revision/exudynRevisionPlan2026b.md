@@ -454,6 +454,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     copied anywhere else: the header of each definition file, `CLAUDE.md` and this step all
     *point* at it.
 
+
     - **RG3.14.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-1) - **the abbreviations**: `ABRV:ODE2` in place of the seven
       LaTeX spellings (`\hac`, `\hacs`, `\acf`, `\acl`, `\acs`, `\acp`, `\ac`), which
       `latexToMarkdown.ConvertInline` rendered identically - so they were one macro under seven
@@ -1582,10 +1583,11 @@ package).
       `definitionTypes.userFunctionSignatures` maps the parameter's type to. A size is not
       compared, because a size is not in the type. `tools/checkDefinitions.py` reports a finding
       with the file and the line, and the generator refuses to emit.
-    - **RG12.4.4** — a **`Protocol` per user function** in `itemInterface.py`, generated from the
-      same source: `class ObjectGenericODE2ForceUserFunction(Protocol)` with `__call__` typed. An
-      editor then completes the arguments and marks a wrong one, at no runtime cost. This is the part
-      a user feels, so it is worth doing on the one function of RG12.4.2 before the rest.
+    - **RG12.4.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-4) - a `Protocol`
+      per user function in `itemInterface.py`, generated from the def, **and** the parameter of
+      the item class annotated with it - `Union[ObjectGroundGraphicsDataUserFunction, int]`,
+      because 0 is the value that means no user function. Without the annotation an editor has
+      nothing to complete at the place where a user writes the function.
     - **RG12.4.5** — the remaining 22 signatures, in the order of the item files; **23 distinct
       signatures under 17 names in 35 blocks**, so two thirds of the work is naming arguments that
       are already written down in the prose.

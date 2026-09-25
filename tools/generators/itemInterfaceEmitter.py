@@ -27,7 +27,7 @@ if toolsDirectory not in sys.path:
 import itemModel as im                                                              # noqa: E402
 import typeModel as tm                                                              # noqa: E402
 import publicApi                                                                     # noqa: E402
-from userFunctionModel import ReadUserFunction, CheckAgainstCpp                     # noqa: E402
+from userFunctionModel import ReadUserFunction, CheckAgainstCpp, PythonType          # noqa: E402
 from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
                        IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
                        possibleTypes)
@@ -37,6 +37,41 @@ from autoGenerateHelper import (DefaultValue2Python, GetTypesStringLatex,       
 
 ADD_DOCSTRINGS = True
 space4 = '    '
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def ProtocolName(className, pythonName):
+    """the name of the Protocol of one user function: ObjectGroundGraphicsDataUserFunction"""
+    return className + pythonName[0].upper() + pythonName[1:]
+
+
+def ProtocolText(className, pythonName, userFunction):
+    """the Protocol of one user function: what an editor completes and checks a function against
+
+    It costs nothing at runtime - a Protocol is never instantiated and nothing inherits from it - and
+    it is the part of RG12.4 a user feels: with the parameter annotated, an editor completes the
+    arguments of the function that is being written and marks a wrong one (#2664)."""
+    arguments = [(name, PythonType(annotation)) for (name, annotation) in userFunction.arguments]
+    docstring = {'kind': 'class',
+                 'summary': CleanStringForPyiDescription(userFunction.summary),
+                 'description': CleanStringForPyiDescription(userFunction.details),
+                 'inputs': [{'name': name,
+                             'type_hint': pythonType,
+                             'description': CleanStringForPyiDescription(
+                                 userFunction.argumentText.get(name, ''))}
+                            for ((name, _), (_, pythonType))
+                            in zip(userFunction.arguments, arguments)],
+                 'output': {'type_hint': PythonType(userFunction.returnType),
+                            'description': CleanStringForPyiDescription(userFunction.returnText)},
+                 'notes': [], 'examples': [], 'author': None, 'date': None, 'belongs_to': None}
+
+    s = 'class ' + ProtocolName(className, pythonName) + '(Protocol):\n'
+    s += GoogleDocstringRenderer().render(docstring, indent=space4) + '\n'
+    s += space4 + 'def __call__(self'
+    for (name, pythonType) in arguments:
+        s += ', ' + name + ': ' + pythonType
+    s += ') -> ' + PythonType(userFunction.returnType) + ': ...\n\n'
+    return s
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -187,6 +222,11 @@ def ItemClasses(definition):
             #write item interface class initialization, constructor and iterator doc:
             tempVPythonDict = "'" + pythonName + "': "
             tempPythonClass = ', ' + pythonName
+            #a parameter that is a user function is annotated with its Protocol, which is what makes
+            #an editor complete the function being written. The 0 is in the annotation because it is
+            #the value that means "no user function" (revision2026b step RG12.4, #2664)
+            if member.get('userFunction') is not None:
+                tempPythonClass += (': Union[' + ProtocolName(className, pythonName) + ', int]')
             if len(defaultValueStr) != 0:
                 tempPythonClass += ' = ' + defaultValueStr
                 tempVPythonDict += defaultValueStr
@@ -271,6 +311,14 @@ def EmitItemInterface(definitions):
     s = fileHeader
     s += '\nuserFunctionArgsDict = ' + str(userFunctionArgsDict).replace(']],',']],\n       ') + '\n\n\n'
 
+    #one Protocol per user function that is written as a Python def, before the classes that use it
+    #(revision2026b step RG12.4, #2664)
+    for definition in definitions:
+        for member in definition['members']:
+            if member.get('userFunction') is not None:
+                s += ProtocolText(definition['className'], member['pythonName'],
+                                  ReadUserFunction(member['userFunction'], member['pythonName']))
+
     for classType in im.itemTypeOrder:
         s += '#+++++++++++++++++++++++++++++++\n#' + classType.upper() + '\n'
         for definition in definitions:
@@ -294,7 +342,8 @@ fileHeader = '''#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper
 import numpy as np
-import copy \n
+import copy
+from typing import Protocol, Union \n
 
 #helper function for level-1 copy of dicts (for visualization default args!)
 #visualization dictionaries (which may be huge, are only flat copied, which is sufficient)

@@ -9,46 +9,47 @@
 
 import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper
 import numpy as np
-import copy 
+import copy
+from typing import Protocol, Union 
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'CopyDictLevel1', 'IIDiagMatrix', 'CheckForValidUInt', 'CheckForValidPInt',
     'CheckForValidUReal', 'CheckForValidPReal', 'IsValidNumber', 'CheckForValidNumpyArray',
-    'userFunctionArgsDict', 'VNodePoint', 'NodePoint', 'Point', 'VPoint', 'VNodePoint2D',
-    'NodePoint2D', 'Point2D', 'VPoint2D', 'VNodeRigidBodyEP', 'NodeRigidBodyEP', 'RigidEP',
-    'VRigidEP', 'VNodeRigidBodyRxyz', 'NodeRigidBodyRxyz', 'RigidRxyz', 'VRigidRxyz',
-    'VNodeRigidBodyRotVecLG', 'NodeRigidBodyRotVecLG', 'RigidRotVecLG', 'VRigidRotVecLG',
-    'VNodeRigidBody2D', 'NodeRigidBody2D', 'Rigid2D', 'VRigid2D', 'VNode1D', 'Node1D',
-    'VNodePoint2DSlope1', 'NodePoint2DSlope1', 'Point2DS1', 'VPoint2DS1', 'VNodePointSlope1',
-    'NodePointSlope1', 'VNodePointSlope12', 'NodePointSlope12', 'VNodePointSlope23',
-    'NodePointSlope23', 'VNodeGenericODE2', 'NodeGenericODE2', 'VNodeGenericODE1',
-    'NodeGenericODE1', 'VNodeGenericAE', 'NodeGenericAE', 'VNodeGenericData', 'NodeGenericData',
-    'VNodePointGround', 'NodePointGround', 'PointGround', 'VPointGround', 'VObjectGround',
-    'ObjectGround', 'VObjectMassPoint', 'ObjectMassPoint', 'MassPoint', 'VMassPoint',
-    'VObjectMassPoint2D', 'ObjectMassPoint2D', 'MassPoint2D', 'VMassPoint2D', 'VObjectMass1D',
-    'ObjectMass1D', 'Mass1D', 'VMass1D', 'VObjectRotationalMass1D', 'ObjectRotationalMass1D',
-    'Rotor1D', 'VRotor1D', 'VObjectRigidBody', 'ObjectRigidBody', 'RigidBody', 'VRigidBody',
-    'VObjectRigidBody2D', 'ObjectRigidBody2D', 'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2',
-    'ObjectGenericODE2', 'VObjectGenericODE1', 'ObjectGenericODE1', 'VObjectKinematicTree',
-    'ObjectKinematicTree', 'KinematicTree', 'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF',
-    'VObjectFFRFreducedOrder', 'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject',
-    'VObjectANCFCable', 'ObjectANCFCable', 'Cable', 'VCable', 'VObjectANCFCable2D',
-    'ObjectANCFCable2D', 'Cable2D', 'VCable2D', 'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D',
-    'ALECable2D', 'VALECable2D', 'VObjectANCFBeam', 'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam',
-    'VObjectBeamGeometricallyExact2D', 'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D',
-    'VObjectBeamGeometricallyExact', 'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D',
-    'VObjectANCFThinPlate', 'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper',
-    'ObjectConnectorSpringDamper', 'SpringDamper', 'VSpringDamper',
-    'VObjectConnectorCartesianSpringDamper', 'ObjectConnectorCartesianSpringDamper',
-    'CartesianSpringDamper', 'VCartesianSpringDamper', 'VObjectConnectorRigidBodySpringDamper',
-    'ObjectConnectorRigidBodySpringDamper', 'RigidBodySpringDamper', 'VRigidBodySpringDamper',
-    'VObjectConnectorLinearSpringDamper', 'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper',
-    'VLinearSpringDamper', 'VObjectConnectorTorsionalSpringDamper',
-    'ObjectConnectorTorsionalSpringDamper', 'TorsionalSpringDamper', 'VTorsionalSpringDamper',
-    'VObjectConnectorCoordinateSpringDamper', 'ObjectConnectorCoordinateSpringDamper',
-    'CoordinateSpringDamper', 'VCoordinateSpringDamper',
+    'userFunctionArgsDict', 'ObjectGroundGraphicsDataUserFunction', 'VNodePoint', 'NodePoint',
+    'Point', 'VPoint', 'VNodePoint2D', 'NodePoint2D', 'Point2D', 'VPoint2D', 'VNodeRigidBodyEP',
+    'NodeRigidBodyEP', 'RigidEP', 'VRigidEP', 'VNodeRigidBodyRxyz', 'NodeRigidBodyRxyz',
+    'RigidRxyz', 'VRigidRxyz', 'VNodeRigidBodyRotVecLG', 'NodeRigidBodyRotVecLG', 'RigidRotVecLG',
+    'VRigidRotVecLG', 'VNodeRigidBody2D', 'NodeRigidBody2D', 'Rigid2D', 'VRigid2D', 'VNode1D',
+    'Node1D', 'VNodePoint2DSlope1', 'NodePoint2DSlope1', 'Point2DS1', 'VPoint2DS1',
+    'VNodePointSlope1', 'NodePointSlope1', 'VNodePointSlope12', 'NodePointSlope12',
+    'VNodePointSlope23', 'NodePointSlope23', 'VNodeGenericODE2', 'NodeGenericODE2',
+    'VNodeGenericODE1', 'NodeGenericODE1', 'VNodeGenericAE', 'NodeGenericAE', 'VNodeGenericData',
+    'NodeGenericData', 'VNodePointGround', 'NodePointGround', 'PointGround', 'VPointGround',
+    'VObjectGround', 'ObjectGround', 'VObjectMassPoint', 'ObjectMassPoint', 'MassPoint',
+    'VMassPoint', 'VObjectMassPoint2D', 'ObjectMassPoint2D', 'MassPoint2D', 'VMassPoint2D',
+    'VObjectMass1D', 'ObjectMass1D', 'Mass1D', 'VMass1D', 'VObjectRotationalMass1D',
+    'ObjectRotationalMass1D', 'Rotor1D', 'VRotor1D', 'VObjectRigidBody', 'ObjectRigidBody',
+    'RigidBody', 'VRigidBody', 'VObjectRigidBody2D', 'ObjectRigidBody2D', 'RigidBody2D',
+    'VRigidBody2D', 'VObjectGenericODE2', 'ObjectGenericODE2', 'VObjectGenericODE1',
+    'ObjectGenericODE1', 'VObjectKinematicTree', 'ObjectKinematicTree', 'KinematicTree',
+    'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF', 'VObjectFFRFreducedOrder',
+    'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject', 'VObjectANCFCable', 'ObjectANCFCable',
+    'Cable', 'VCable', 'VObjectANCFCable2D', 'ObjectANCFCable2D', 'Cable2D', 'VCable2D',
+    'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D', 'ALECable2D', 'VALECable2D', 'VObjectANCFBeam',
+    'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam', 'VObjectBeamGeometricallyExact2D',
+    'ObjectBeamGeometricallyExact2D', 'Beam2D', 'VBeam2D', 'VObjectBeamGeometricallyExact',
+    'ObjectBeamGeometricallyExact', 'Beam3D', 'VBeam3D', 'VObjectANCFThinPlate',
+    'ObjectANCFThinPlate', 'VObjectConnectorSpringDamper', 'ObjectConnectorSpringDamper',
+    'SpringDamper', 'VSpringDamper', 'VObjectConnectorCartesianSpringDamper',
+    'ObjectConnectorCartesianSpringDamper', 'CartesianSpringDamper', 'VCartesianSpringDamper',
+    'VObjectConnectorRigidBodySpringDamper', 'ObjectConnectorRigidBodySpringDamper',
+    'RigidBodySpringDamper', 'VRigidBodySpringDamper', 'VObjectConnectorLinearSpringDamper',
+    'ObjectConnectorLinearSpringDamper', 'LinearSpringDamper', 'VLinearSpringDamper',
+    'VObjectConnectorTorsionalSpringDamper', 'ObjectConnectorTorsionalSpringDamper',
+    'TorsionalSpringDamper', 'VTorsionalSpringDamper', 'VObjectConnectorCoordinateSpringDamper',
+    'ObjectConnectorCoordinateSpringDamper', 'CoordinateSpringDamper', 'VCoordinateSpringDamper',
     'VObjectConnectorCoordinateSpringDamperExt', 'ObjectConnectorCoordinateSpringDamperExt',
     'CoordinateSpringDamperExt', 'VCoordinateSpringDamperExt', 'VObjectConnectorGravity',
     'ObjectConnectorGravity', 'ConnectorGravity', 'VConnectorGravity',
@@ -202,6 +203,24 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'LoadCoordinate,loadUserFunction': [['MainSystem', 'Real', 'Real'], ['mbs', 'arg0', 'arg1'], ['Real']],
         'SensorUserFunction,sensorUserFunction': [['MainSystem', 'Real', 'StdArrayIndex', 'StdVector', 'ConfigurationType'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']]}
 
+
+class ObjectGroundGraphicsDataUserFunction(Protocol):
+    """A user function, which is called by the visualization thread in order to draw user-defined objects.
+    
+    The function can be used to generate any ``BodyGraphicsData``, see Section sec-graphicsdata.
+    Use ``exudyn.graphics`` functions, see Section sec-module-graphics, to create more complicated objects.
+    Note that ``graphicsDataUserFunction`` needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides reference to mbs, which can be used in user function to access all data of the object
+
+        itemNumber (int): integer number of the object in mbs, allowing easy access
+
+    Returns:
+        list: list of ``GraphicsData`` dictionaries, see Section sec-graphicsdata
+    """
+    def __call__(self, mbs: exudyn.MainSystem, itemNumber: int) -> list: ...
 
 #+++++++++++++++++++++++++++++++
 #NODE
@@ -1210,7 +1229,7 @@ class VObjectGround:
         graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
-    def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
+    def __init__(self, show = True, graphicsDataUserFunction: Union[ObjectGroundGraphicsDataUserFunction, int] = 0, graphicsData = []):
         self.show = show
         self.graphicsDataUserFunction = graphicsDataUserFunction
         self.graphicsData = copy.copy(graphicsData)

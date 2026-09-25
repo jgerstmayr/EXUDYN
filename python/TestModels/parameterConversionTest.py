@@ -114,6 +114,8 @@ for className, itemClass in inspect.getmembers(itemInterface, inspect.isclass):
     kind = [k for k in itemKinds if className.startswith(k)]
     if not kind or className.startswith('V'):
         continue
+    if getattr(itemClass, '_is_protocol', False):
+        continue    #the Protocol of a user function is a type, not an item: ObjectGround... (#2664)
     kind = kind[0]
     typeKey = kind.lower() + 'Type'
     itemType = className[len(kind):]

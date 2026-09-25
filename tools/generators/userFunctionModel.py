@@ -148,6 +148,28 @@ cppToAnnotation = {'MainSystem': ['MainSystem'],
                    }
 
 
+#the runtime Python type of an annotation, for the generated Protocol in itemInterface.py: there the
+#name has to exist when the module is imported, so it is exudyn's own class or a builtin. A
+#definition file's MainSystem is a name for an annotation; exudyn.MainSystem is the class itself.
+annotationToPython = {'MainSystem': 'exudyn.MainSystem',
+                      'Real': 'float',
+                      'Index': 'int',
+                      'Bool': 'bool',
+                      'np.ndarray': 'np.ndarray',
+                      'BodyGraphicsData': 'list',
+                      'MatrixContainer': 'exudyn.MatrixContainer',
+                      'ConfigurationType': 'exudyn.ConfigurationType',
+                      }
+
+
+def PythonType(annotation):
+    """the runtime type the generated Protocol uses for an annotation of a definition file"""
+    if annotation not in annotationToPython:
+        raise ValueError('PythonType: ' + repr(annotation) + ' has no runtime type - add it to '
+                         'userFunctionModel.annotationToPython')
+    return annotationToPython[annotation]
+
+
 def CppSignatureTypes(stdFunction):
     """([argument types], return type) of a std::function<...> as definitionTypes.py writes it
 
