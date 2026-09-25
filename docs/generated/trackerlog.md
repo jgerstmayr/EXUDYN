@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.68.dev1
 - last change = 2026-09-25
-- Number of issues = 2657
+- Number of issues = 2662
 - Number of resolved issues = 2382 (68 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The command line and the results monitor are chapters of their own, between the manual and the theory (#2661)
+  - description: index.md lists docs/manual/commandLine and docs/manual/resultsMonitor as top-level chapters, between the graphics chapter and the notation. Neither is something a reader needs before writing a first model: 'python -m exudyn' is five verbs for looking things up and reporting a bug, and the results monitor is a second process watching a running simulation. Both belong in Advanced topics, as sections or as sub-pages of it.
+  - date raised: 2026-09-25
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Six pages of the Python-C++ command interface repeat their own title as the first section (#2660)
+  - description: 12.3 SystemContainer / 12.3.1 SystemContainer, 12.4 Renderer / 12.4.1 Renderer, and the same for MainSystem, SystemData, Symbolic and GeneralContact - in the PDF and in the HTML sidebar alike. The page title comes from markdownPageTitles in pybindEmitter.WriteMarkdownPages and the section from the class's own DefPyStartClass, and for these six the two are the same word. The section heading carries the target a reference points to, so it cannot simply be deleted: the label has to move to the page title. The item pages of the reference manual have the same shape - '\# ObjectGround' then '\#\# ObjectGround' - and should be looked at in the same step.
+  - date raised: 2026-09-25
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
+  - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
+  - date raised: 2026-09-25
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The visualization documentation is spread over three chapters with no structure (#2657)
+  - description: Measured 2026-09-25. docs/manual/GUI.md, the chapter Graphics and visualization, holds mouse input, keyboard input, render state, the GraphicsData reference and UTF-8 encoding - five topics at one level. Exudyn Basics holds ten more visualization sections between the non-visualization ones: Renderer and 3D graphics, Visualization settings dialog, Execute Command and Help, Graphics pipeline, Raytracing, Storing the model view, Graphics user functions via Python, Color RGBA and alpha-transparency, Solution viewer, Storing images and generating animations. Advanced topics holds an eleventh, Camera following objects and interacting with model view. A reader looking for how to turn the renderer on has to know which of three chapters to open. Proposal: the visualization chapter becomes the one place, with four parts - the renderer window, the model view, images and animations, and writing your own graphics - and Exudyn Basics keeps one short section that points at it; the internals (Graphics pipeline, Raytracing) and the GraphicsData reference move to Advanced topics.
+  - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Five hand-written docstrings still send the reader to theDoc.pdf (#2656)
   - description: theDoc.pdf has not existed since decision D8. The generators no longer produce the name - revision2026b step RG3.14.10 made a section reference name its section - but five docstrings in the shipped package say it in their own text: python/exudyn/solver.py (3, two of which also carry a Markdown link written \[Section\](\#sec:solverSubstructures), whose target spelling is the LaTeX one and not the MyST one), python/exudyn/misc/mainSystemExtensions.py (1) and the module header of python/exudyn/\_\_init\_\_.py, which links to the file on GitHub. They are hand-written, so no regeneration reaches them.
   - date raised: 2026-09-25
@@ -8374,6 +8386,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `LOW EFF` `raised by: Claude-JG` exudev docs --pdf needs Perl and does not say so (#2658)
+  - description: The third stage runs latexmk, which is a Perl script: MiKTeX answers "MiKTeX could not find the script engine 'perl' which is required to execute 'latexmk'" and the stage fails in 0.4 s. It succeeds in a Git Bash shell and fails in PowerShell on the same machine for one reason: Git for Windows ships perl in its usr/bin, which Git Bash puts on PATH and PowerShell deliberately does not. So the PDF build has never depended on the TeX installation alone - it depended on which shell it was started from, and nothing said so. Two fixes, and the second is the one worth having: prepend the directory of any perl that can be found to the PATH of the latexmk subprocess, which needs no installation; or run xelatex directly - three passes plus makeindex - which is what latexmk automates and needs no Perl at all. Either way the stage must say what is missing instead of failing with a MiKTeX message in the user's system language.
+  - date raised: 2026-09-25
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

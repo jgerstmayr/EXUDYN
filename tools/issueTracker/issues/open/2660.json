@@ -1,0 +1,13 @@
+{
+  "number": 2660,
+  "title": "Six pages of the Python-C++ command interface repeat their own title as the first section",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "12.3 SystemContainer / 12.3.1 SystemContainer, 12.4 Renderer / 12.4.1 Renderer, and the same for MainSystem, SystemData, Symbolic and GeneralContact - in the PDF and in the HTML sidebar alike. The page title comes from markdownPageTitles in pybindEmitter.WriteMarkdownPages and the section from the class's own DefPyStartClass, and for these six the two are the same word. The section heading carries the target a reference points to, so it cannot simply be deleted: the label has to move to the page title. The item pages of the reference manual have the same shape - '# ObjectGround' then '## ObjectGround' - and should be looked at in the same step.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "file": "tools/generators/pybindEmitter.py"
+}

@@ -1,0 +1,13 @@
+{
+  "number": 2659,
+  "title": "The simulation settings section does not mention that the settings can be browsed before writing a model",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.",
+  "dateRaised": "2026-09-25",
+  "deadline": "2027-03-24",
+  "file": "docs/manual/introductionBasics.md"
+}
