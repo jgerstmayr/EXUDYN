@@ -83,13 +83,13 @@ $$ (eq-objectgenericode2-eom)
 
 Note that the user function $\fv_{user}(mbs, t, i_N,\qv,\dot \qv)$ may be empty (=0), and `iN` represents the itemNumber (=objectNumber).
 
-In case that a user mass matrix is specified, [](#eq-objectgenericode2-eom) is replaced with
+In case that a user mass matrix is specified, {eq}`eq-objectgenericode2-eom` is replaced with
 
 $$
 \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
 $$
 
-The (internal) Jacobian $\Jm$ of [](#eq-objectgenericode2-eom) (assuming $\fv$ to be constant!) reads
+The (internal) Jacobian $\Jm$ of {eq}`eq-objectgenericode2-eom` (assuming $\fv$ to be constant!) reads
 
 $$
 \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) +
@@ -100,7 +100,7 @@ Chosing $f_{ODE2} = 1$ and $f_{ODE2_t}=0$ would immediately give the jacobian of
 
 If no `jacobianUserFunction` is specified, the jacobian is -- as with many objects in Exudyn -- computed
 by means of numerical differentiation.
-In case that a `jacobianUserFunction` is specified, it must represent the jacobian of the {ref}`LHS <LHS>` of [](#eq-objectgenericode2-eom)
+In case that a `jacobianUserFunction` is specified, it must represent the jacobian of the {ref}`LHS <LHS>` of {eq}`eq-objectgenericode2-eom`
 without $\Km$ and $\Dm$ (these matrices are added internally),
 
 $$
@@ -151,8 +151,8 @@ Can be used to create any kind of mechanical system by using the object states.
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
 | `q` | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
-| `fODE2` | Real | factor to be multiplied with the position level jacobian, see [](#eq-objectgenericode2-jac) |
-| `fODE2_t` | Real | factor to be multiplied with the velocity level jacobian, see [](#eq-objectgenericode2-jac) |
+| `fODE2` | Real | factor to be multiplied with the position level jacobian, see {eq}`eq-objectgenericode2-jac` |
+| `fODE2_t` | Real | factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac` |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`

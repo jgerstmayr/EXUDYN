@@ -133,7 +133,7 @@ To compute eigen modes, use `FEMinterface.ComputeEigenmodes(...)` or
 `FEMinterface.ComputeHurtyCraigBamptonModes(...)`. For details on model order reduction and component mode synthesis, see [](#sec-theory-cms).
 In many applications, $n_m$ typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
 
-The `ObjectFFRF` coordinates and [](#eq-objectffrf-eom) (this is not done for user functions and `forceVector`) can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
+The `ObjectFFRF` coordinates and {eq}`eq-objectffrf-eom` (this is not done for user functions and `forceVector`) can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
 
 $$
 \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
@@ -142,7 +142,7 @@ $$
 
 with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
 
-The reduced equations follow from the reduction of system matrices in [](#eq-objectffrf-eom),
+The reduced equations follow from the reduction of system matrices in {eq}`eq-objectffrf-eom`,
 
 $$
 \begin{aligned}
@@ -159,7 +159,7 @@ $$
 \end{aligned}
 $$
 
-the center of mass (and according tilde matrix), using $\tPhi\indt$ from [](#eq-objectffrf-phit),
+the center of mass (and according tilde matrix), using $\tPhi\indt$ from {eq}`eq-objectffrf-phit`,
 
 $$
 \begin{aligned}
@@ -175,7 +175,7 @@ $$
 \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
 $$
 
-Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of [](#eq-objectffrf-specialtilde) is frequently used.
+Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of {eq}`eq-objectffrf-specialtilde` is frequently used.
 
 #### Equations of motion
 

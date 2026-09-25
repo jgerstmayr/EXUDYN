@@ -117,12 +117,17 @@ not in the list below reaches the page as itself and is a defect.
   `tools/generators/examplesDocsEmitter.py`, which also writes the list; add one there before using
   it. `tools/checkDefinitions.py` names the file and the line of a key that does not exist.
 - **A reference** is a Markdown link to the target: `[](#sec-item-objectground)` for a section,
-  `[](#eq-objectground-position)` for an equation, `[](#fig-objectsphereshpherecontact)` for a
-  figure. Leave the text empty and the page supplies it - the heading, the equation number, the
-  figure caption - or write your own, `[the ground object](#sec-item-objectground)`. The target
-  name is lower case with `-` between the parts, and it must sit on a **heading**, an **equation**
-  or a **named figure**; a target above a paragraph resolves in no link at all. A section target
-  goes on the line above its heading, `(sec-item-objectground)=`.
+  `[](#fig-objectspheresphrecontact)` for a figure. Leave the text empty and the page supplies it -
+  the heading, the figure caption - or write your own,
+  `[the ground object](#sec-item-objectground)`. The target name is lower case with `-` between the
+  parts, and it must sit on a **heading** or a **named figure**; a target above a paragraph resolves
+  in no link at all. A section target goes on the line above its heading,
+  `(sec-item-objectground)=`.
+- **A reference to an equation** is the role, `` {eq}`eq-objectground-position` ``, and not a link.
+  The two render the same number in the HTML, but the LaTeX writer gives a link to an equation an
+  anchor that does not match the label it writes on the equation itself, so all 42 of them came out
+  of the PDF as undefined references. `tools/checkDefinitions.py` rejects a link whose target is an
+  equation label.
 - **A citation** is `[CITE:ZwoelferGerstmayr2021]`, with a key of `docs/bibliographyDoc.bib`. The
   converter drops the marker and `conf.py` does the rest: it appends a Markdown link definition for
   every key of the bibliography, so `[Key]` becomes a link into the generated references page. The

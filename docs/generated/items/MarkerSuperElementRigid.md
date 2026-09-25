@@ -207,7 +207,7 @@ $$
 \LU{0r}{\Rot} \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}} \right]
 $$
 
-see also the descriptions given after [](#eq-markersuperelementrigid-jacrotstandard) in the 'standard' approach.
+see also the descriptions given after {eq}`eq-markersuperelementrigid-jacrotstandard` in the 'standard' approach.
 
 **EXAMPLE for marker on body 4, mesh nodes 10,11,12,13**:  
 

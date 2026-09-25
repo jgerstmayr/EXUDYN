@@ -134,8 +134,8 @@ $$
 \rv_B\tp \cv - \rv_B\tp\rv_A + R_B^2 = 0 \, .
 $$ (eq-reevingsystemsprings-newton)
 
-The relations [](#eq-reevingsystemsprings-newton) reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
-The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of [](#eq-reevingsystemsprings-newton) w.r.t. the
+The relations {eq}`eq-reevingsystemsprings-newton` reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
+The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of {eq}`eq-reevingsystemsprings-newton` w.r.t. the
 unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
 
 $$

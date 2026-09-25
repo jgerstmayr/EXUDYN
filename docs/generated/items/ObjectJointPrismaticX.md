@@ -112,7 +112,7 @@ $$
 \end{aligned}
 $$ (eq-objectjointprismaticx-index3)
 
-The index 2 constraints follow from the derivative of [](#eq-objectjointprismaticx-index3) w.r.t., and are given in the C++ code.
+The index 2 constraints follow from the derivative of {eq}`eq-objectjointprismaticx-index3` w.r.t., and are given in the C++ code.
 if `activeConnector = False`,
 
 $$

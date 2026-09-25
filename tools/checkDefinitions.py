@@ -12,6 +12,8 @@
 #   - every ABRV:KEY names an abbreviation that the list actually has. The abbreviations are the
 #     dict in tools/generators/examplesDocsEmitter.py, which also writes
 #     docs/generated/abbreviations.md, so the key and its target cannot drift apart.
+#   - a reference to an equation is the {eq} role: a Markdown link to one leaves the PDF as an
+#     undefined reference, and only the PDF says so.
 #   - a literal whose value carries a backslash or mathematics is written r'...', so that
 #     Python does not read a backslash-t as a tab.
 #   - every heading is written at the level of the page it is placed in, and a title that means one
@@ -164,6 +166,35 @@ def CheckCitations(paths, known):
     return findings
 
 
+equationLabel = re.compile(r'(?m)^\s*\$\$\s*\(([^)]+)\)\s*$')
+markdownLink = re.compile(r'\[[^\]]*\]\(#([^)]+)\)')
+
+
+def CheckEquationReferences(paths):
+    """a reference to an equation is the {eq} role, not a Markdown link
+
+    Both render the same number in the HTML. The LaTeX writer, however, gives a link to an equation
+    the anchor "<document>:equation-<label>" while it labels the equation itself
+    "equation:<document>:<label>" - so every such link left the PDF as an undefined reference, 42 of
+    them, and only the PDF said so (#2655, RG3.14.3)."""
+    labels = set()
+    for path in paths:
+        labels |= set(equationLabel.findall(io.open(path, encoding='utf-8').read()))
+
+    findings = []
+    for path in paths:
+        for (keyword, text, lineno) in Descriptions(path):
+            if keyword in CODE_KEYWORDS:
+                continue
+            for match in markdownLink.finditer(text):
+                if match.group(1) not in labels:
+                    continue
+                findings.append((path, lineno + text.count('\n', 0, match.start()),
+                                 match.group(0) + ' points at an equation; write it as the role, '
+                                 '{eq}`' + match.group(1) + '`'))
+    return findings
+
+
 def CheckRawStrings(paths):
     """a literal whose value carries a backslash or mathematics is written r'...'
 
@@ -214,7 +245,8 @@ def main():
                                                   'examplesDocsEmitter.py'))
     known = BibliographyKeys(os.path.join(root, 'docs', 'bibliographyDoc.bib'))
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
-                + CheckCitations(paths, known) + CheckRawStrings(paths))
+                + CheckCitations(paths, known) + CheckRawStrings(paths)
+                + CheckEquationReferences(paths))
 
     if len(findings) == 0:
         if not args.quiet:

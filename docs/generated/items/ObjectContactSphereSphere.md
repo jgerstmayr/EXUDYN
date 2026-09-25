@@ -203,7 +203,7 @@ $$
 \end{cases}\, .
 $$
 
-The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation [](#eq-ossctangentialvelocity). Thus, the tangential force for marker 1 is computed as
+The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation {eq}`eq-ossctangentialvelocity`. Thus, the tangential force for marker 1 is computed as
 
 $$
 \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot

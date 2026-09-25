@@ -236,7 +236,7 @@ $$ (eq-m)
 in which $K_0$ includes the (pre-)curvature of the undeformed beam and
 $K\cRef$ includes the curvature of the reference configuration, multiplied with the factor $f\cRef=1$, see the axial strain above.
 
-Using the latter definitions, the elastic forces follow from [](#eq-cable2d-elasticforces).
+Using the latter definitions, the elastic forces follow from {eq}`eq-cable2d-elasticforces`.
 
 The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
 
@@ -298,7 +298,7 @@ $$
 + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
 $$
 
-with the integration points $x_{ip}$ as defined in [](#eq-ancfcable-iptransform) and integration rules from [](#sec-integrationpoints).
+with the integration points $x_{ip}$ as defined in {eq}`eq-ancfcable-iptransform` and integration rules from [](#sec-integrationpoints).
 There are 3 different options for integration rules depending on the flag `useReducedOrderIntegration`:
 
 1. `useReducedOrderIntegration` = 0: $n_{ip}^\varepsilon = 5$ (Gauss order 9), $n_{ip}^K = 3$ (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.

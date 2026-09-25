@@ -259,7 +259,7 @@ $$
 $$
 
 Here, $x_{gap}$ contains the gap of the segment ($\le 0$ means contact), $x_{lastStick}$ is described in
-[](#objectcontactfrictioncirclecable2d-curstick), and
+{eq}`objectcontactfrictioncirclecable2d-curstick`, and
 $x_{isSlipStick}$ defines the stick or slip case,
 
 - $x_{isSlipStick} = -2$: undefined, used for initialization
@@ -268,11 +268,11 @@ $x_{isSlipStick}$ defines the stick or slip case,
 
 The basic algorithm in the `PostNewtonStep`, with all operations given for any segment $s_i$, can be summarized as follows:
 
-- Evaluate gap per segment $g$ using [](#objectcontactfrictioncirclecable2d-gap) and store in data variable: $x_{gap} = g$
+- Evaluate gap per segment $g$ using {eq}`objectcontactfrictioncirclecable2d-gap` and store in data variable: $x_{gap} = g$
 - If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
 
-1. Compute contact force $f_n$ according to [](#objectcontactfrictioncirclecable2d-contactforce)
-2. Compute current sticking position $x_{curStick}$ according to [](#objectcontactfrictioncirclecable2d-lastcurstick) (terms are only evaluated if $\mu_k \neq 0$)
+1. Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
+2. Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick` (terms are only evaluated if $\mu_k \neq 0$)
 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$):
 $$
 \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
@@ -327,17 +327,17 @@ For efficiency, the LHS computation is only performed, if the `PostNewtonStep` d
 The operations are similar to the `PostNewtonStep`, but without switching. The following operations are performed for each segment $s_i$, if
 $x_{gap, s_i} <= 0$:
 
-- Compute contact force $f_n$, [](#objectcontactfrictioncirclecable2d-contactforce).
+- Compute contact force $f_n$, {eq}`objectcontactfrictioncirclecable2d-contactforce`.
 - In case of sticking ($|x_{isSlipStick}|\neq 1$):
 
-- the current sticking position $x_{curStick}$ is computed from [](#objectcontactfrictioncirclecable2d-lastcurstick), and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.):
+- the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.):
 $$
 \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
 \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
 $$
 
 - if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
-- using the tangential velocity from [](#objectcontactfrictioncirclecable2d-vtangent), the tangent force follows as (even if it is larger than the sticking limit)
+- using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit)
 $$
 f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 $$

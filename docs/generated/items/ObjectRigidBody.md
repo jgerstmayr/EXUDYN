@@ -131,7 +131,7 @@ $$
 \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
 $$
 
-which is inserted into the first line of [](#eq-objectrigidbody-eomcom0). Additionally, the second line of [](#eq-objectrigidbody-eomcom0)
+which is inserted into the first line of {eq}`eq-objectrigidbody-eomcom0`. Additionally, the second line of {eq}`eq-objectrigidbody-eomcom0`
 (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to {ref}`COM <COM>`, using the well known relation
 
 $$
@@ -149,7 +149,7 @@ $$
 $$ (eq-objectrigidbody-eomarbitrary)
 
 in which $\Jm$ is the inertia tensor w.r.t. the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
-[](#eq-objectrigidbody-eomarbitrary) can be written in the global frame (0),
+{eq}`eq-objectrigidbody-eomarbitrary` can be written in the global frame (0),
 
 $$
 \mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} =
@@ -157,10 +157,10 @@ $$
 {-\LU{0}{\tilde \tomega} \LU{0}{\Jm} \LU{0}{\tomega}} + \vp{\LU{0}{\fv_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{\fv_\lambda}}{\LU{0}{\ttau_\lambda}} \, .
 $$ (eq-objectrigidbody-eomglobal)
 
-Expressing the translational part (first line) of [](#eq-objectrigidbody-eomglobal) in the global frame (0), using local coordinates (b) for
+Expressing the translational part (first line) of {eq}`eq-objectrigidbody-eomglobal` in the global frame (0), using local coordinates (b) for
 quantities that are constant in the body-fixed frame, $\LU{b}{\Jm}$ and $\LU{b}{\bv_{COM}}$, thus expressing also the
 angular velocity $\LU{b}{\tomega}$ in the body-fixed frame,
-applying [](#eq-objectrigidbody-omegalocal) and [](#eq-objectrigidbody-alpha), and using the relations
+applying {eq}`eq-objectrigidbody-omegalocal` and {eq}`eq-objectrigidbody-alpha`, and using the relations
 
 $$
 \begin{aligned}
@@ -205,7 +205,7 @@ $$
 \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
 $$ (eq-objectrigidbody-eulerparametersvel)
 
-Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint [](#eq-objectrigidbody-eulerparameters), the constraint reaction forces in [](#eq-objectrigidbody-eom) then read
+Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint {eq}`eq-objectrigidbody-eulerparameters`, the constraint reaction forces in {eq}`eq-objectrigidbody-eom` then read
 
 $$
 \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp

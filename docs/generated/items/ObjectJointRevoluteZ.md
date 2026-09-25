@@ -110,7 +110,7 @@ $$
 \end{aligned}
 $$ (eq-objectjointrevolutez-index3)
 
-The index 2 constraints follow from the derivative of [](#eq-objectjointrevolutez-index3) w.r.t. time, and are given in the C++ code.
+The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t. time, and are given in the C++ code.
 if `activeConnector = False`,
 
 $$

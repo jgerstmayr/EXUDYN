@@ -873,7 +873,7 @@ definitions.append(ItemDefinition(
     \av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
     $$
 
-    which is inserted into the first line of [](#eq-objectrigidbody-eomcom0). Additionally, the second line of [](#eq-objectrigidbody-eomcom0)
+    which is inserted into the first line of {eq}`eq-objectrigidbody-eomcom0`. Additionally, the second line of {eq}`eq-objectrigidbody-eomcom0`
     (second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, $\bv_{COM}$ denoting the vector from the body reference point to ABRV:COM, using the well known relation
 
     $$
@@ -892,7 +892,7 @@ definitions.append(ItemDefinition(
     $$ (eq-objectrigidbody-eomarbitrary)
 
     in which $\Jm$ is the inertia tensor w.r.t.\ the chosen reference point (which has local coordinates $\LU{b}{[0,0,0]\tp}$).
-    [](#eq-objectrigidbody-eomarbitrary) can be written in the global frame (0),
+    {eq}`eq-objectrigidbody-eomarbitrary` can be written in the global frame (0),
 
     $$
     \mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} = 
@@ -900,10 +900,10 @@ definitions.append(ItemDefinition(
           {-\LU{0}{\tilde \tomega} \LU{0}{\Jm} \LU{0}{\tomega}} + \vp{\LU{0}{\fv_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{\fv_\lambda}}{\LU{0}{\ttau_\lambda}} \, .
     $$ (eq-objectrigidbody-eomglobal)
 
-    Expressing the translational part (first line) of [](#eq-objectrigidbody-eomglobal) in the global frame (0), using local coordinates (b) for 
+    Expressing the translational part (first line) of {eq}`eq-objectrigidbody-eomglobal` in the global frame (0), using local coordinates (b) for 
     quantities that are constant in the body-fixed frame, $\LU{b}{\Jm}$ and $\LU{b}{\bv_{COM}}$, thus expressing also the 
     angular velocity $\LU{b}{\tomega}$ in the body-fixed frame,
-    applying [](#eq-objectrigidbody-omegalocal) and [](#eq-objectrigidbody-alpha), and using the relations
+    applying {eq}`eq-objectrigidbody-omegalocal` and {eq}`eq-objectrigidbody-alpha`, and using the relations
 
     $$
     \begin{aligned}
@@ -948,7 +948,7 @@ definitions.append(ItemDefinition(
     \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
     $$ (eq-objectrigidbody-eulerparametersvel)
 
-    Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint [](#eq-objectrigidbody-eulerparameters), the constraint reaction forces in [](#eq-objectrigidbody-eom) then read
+    Given a Lagrange parameter (algebraic variable) $\lambda_\theta$ related to the Euler parameter constraint {eq}`eq-objectrigidbody-eulerparameters`, the constraint reaction forces in {eq}`eq-objectrigidbody-eom` then read
 
     $$
     \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
@@ -1344,13 +1344,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     Note that the user function $\fv_{user}(mbs, t, i_N,\qv,\dot \qv)$ may be empty (=0), and \texttt{iN} represents the itemNumber (=objectNumber). 
     
-    In case that a user mass matrix is specified, [](#eq-objectgenericode2-eom) is replaced with
+    In case that a user mass matrix is specified, {eq}`eq-objectgenericode2-eom` is replaced with
 
     $$
     \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
     $$
 
-    The (internal) Jacobian $\Jm$ of [](#eq-objectgenericode2-eom) (assuming $\fv$ to be constant!) reads
+    The (internal) Jacobian $\Jm$ of {eq}`eq-objectgenericode2-eom` (assuming $\fv$ to be constant!) reads
 
     $$
     \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
@@ -1361,7 +1361,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in \codeName\ -- computed 
     by means of numerical differentiation.
-    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of [](#eq-objectgenericode2-eom) 
+    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the ABRV:LHS of {eq}`eq-objectgenericode2-eom` 
     without $\Km$ and $\Dm$ (these matrices are added internally),
 
     $$
@@ -1418,8 +1418,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     | \texttt{itemNumber} | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
     | \texttt{q} | Vector $\in \Rcal^n$ | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values |
     | \texttt{q\_t} | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of \texttt{q}) in current configuration |
-    | \texttt{fODE2} | Real | factor to be multiplied with the position level jacobian, see [](#eq-objectgenericode2-jac) |
-    | \texttt{fODE2\_t} | Real | factor to be multiplied with the velocity level jacobian, see [](#eq-objectgenericode2-jac) |
+    | \texttt{fODE2} | Real | factor to be multiplied with the position level jacobian, see {eq}`eq-objectgenericode2-jac` |
+    | \texttt{fODE2\_t} | Real | factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac` |
     | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
 
     \vspace{12pt}
@@ -2553,7 +2553,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \, .
     $$ (eq-objectffrf-coordinatessplitting)
 
-    which are written in global coordinates in [](#eq-objectffrf-coordinatessplitting) but will be transformed to other coordinates later on.
+    which are written in global coordinates in {eq}`eq-objectffrf-coordinatessplitting` but will be transformed to other coordinates later on.
     
     In the present formulation of \texttt{ObjectFFRF}, we use the following set of object coordinates (unknowns)
 
@@ -2642,11 +2642,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \Lm\tp \Mm \Lm \ddot \qv + \Lm\tp \Mm \dot \Lm \dot \qv + \hat \Km \qv + \frac{\partial \gv}{\partial \qv\tp} \tlambda = \Lm\tp \fv
     $$ (eq-objectffrf-leq)
 
-    with $\Mm = \LU{b}{\Mm}$ and $\hat \Km$ becoming obvious in [](#eq-objectffrf-eom). 
-    Note that [](#eq-objectffrf-leq) is given in global coordinates for the translational part, in terms of rotation parameters
+    with $\Mm = \LU{b}{\Mm}$ and $\hat \Km$ becoming obvious in {eq}`eq-objectffrf-eom`. 
+    Note that {eq}`eq-objectffrf-leq` is given in global coordinates for the translational part, in terms of rotation parameters
     for the rotation part and in body-fixed coordinates for the flexible part of the equations.
     
-    In case that \texttt{computeFFRFterms = True}, [](#eq-objectffrf-leq) can be transformed into the equations of motion,
+    In case that \texttt{computeFFRFterms = True}, {eq}`eq-objectffrf-leq` can be transformed into the equations of motion,
 
     $$
     \left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
@@ -2669,7 +2669,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
 
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt, \Mm\indtr, \Mm\indtf, \Mm\indrr, 
-    \Mm\indrf, \LU{b}{\Mm}$ in [](#eq-objectffrf-eom) are set to zero (and not computed) and
+    \Mm\indrf, \LU{b}{\Mm}$ in {eq}`eq-objectffrf-eom` are set to zero (and not computed) and
     the quadratic velocity vector $\fv_{v} = \Null$.
     Note that the user functions $\fv_{user}(mbs, t, i_N, \qv,\dot \qv)$ and $\Mm_{user}(mbs, t, i_N, \qv,\dot \qv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in [CITE:ZwoelferGerstmayr2020].
@@ -3064,7 +3064,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \texttt{FEMinterface.ComputeHurtyCraigBamptonModes(...)}. For details on model order reduction and component mode synthesis, see [](#sec-theory-cms).
     In many applications, $n_m$ typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
     
-    The \texttt{ObjectFFRF} coordinates and [](#eq-objectffrf-eom)\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
+    The \texttt{ObjectFFRF} coordinates and {eq}`eq-objectffrf-eom`\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
 
     $$
     \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
@@ -3073,7 +3073,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
     
-    The reduced equations follow from the reduction of system matrices in [](#eq-objectffrf-eom),
+    The reduced equations follow from the reduction of system matrices in {eq}`eq-objectffrf-eom`,
 
     $$
     \begin{aligned}
@@ -3090,7 +3090,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     \end{aligned}
     $$
 
-    the center of mass (and according tilde matrix), using $\tPhi\indt$ from [](#eq-objectffrf-phit),
+    the center of mass (and according tilde matrix), using $\tPhi\indt$ from {eq}`eq-objectffrf-phit`,
 
     $$
     \begin{aligned}
@@ -3106,7 +3106,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
     $$
 
-    Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of [](#eq-objectffrf-specialtilde) is frequently used.
+    Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of {eq}`eq-objectffrf-specialtilde` is frequently used.
     
     
     %+++++++++++++++++++++++++
@@ -3996,7 +3996,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     in which $K_0$ includes the (pre-)curvature of the undeformed beam and
     $K\cRef$ includes the curvature of the reference configuration, multiplied with the factor $f\cRef=1$, see the axial strain above.
 
-    Using the latter definitions, the elastic forces follow from [](#eq-cable2d-elasticforces).
+    Using the latter definitions, the elastic forces follow from {eq}`eq-cable2d-elasticforces`.
     
     The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
 
@@ -4059,7 +4059,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
                        + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
     $$
 
-    with the integration points $x_{ip}$ as defined in [](#eq-ancfcable-iptransform) and integration rules from [](#sec-integrationpoints).
+    with the integration points $x_{ip}$ as defined in {eq}`eq-ancfcable-iptransform` and integration rules from [](#sec-integrationpoints).
     There are 3 different options for integration rules depending on the flag \texttt{useReducedOrderIntegration}:
     \bn
       \item \texttt{useReducedOrderIntegration} = 0: $n_{ip}^\varepsilon = 5$ (Gauss order 9), $n_{ip}^K = 3$ (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.
@@ -5663,7 +5663,7 @@ definitions.append(ItemDefinition(
     $$
 
     The ABRV:LHS equation parts are added accordingly using the ABRV:LTG mapping.
-    Note that the different signs result from the signs in [](#eq-objectcartesianspringdamper-deltapos).
+    Note that the different signs result from the signs in {eq}`eq-objectcartesianspringdamper-deltapos`.
 
     The connector also provides an analytic jacobian, which is used if \texttt{newton.numericalDifferentiation.forODE2 = False} 
     and if there is no springForceUserFunction (otherwise numerical differentiation is used).
@@ -5713,7 +5713,7 @@ definitions.append(ItemDefinition(
                           { f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m1}\tp} \fv' \right)}{\partial \qv_{m1}}}
     $$ (eq-objectcartesianspringdamper-jacderiv)
 
-    in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in [](#eq-objectcartesianspringdamper-jacderiv) are evaluated by setting $\fv' = const$.
+    in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in {eq}`eq-objectcartesianspringdamper-jacderiv` are evaluated by setting $\fv' = const$.
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     **Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)`
@@ -7516,7 +7516,7 @@ definitions.append(ItemDefinition(
 
     where we use a slightly different approach from [CITE:RahikainenGonzalezNayaEtAl2020] when computing the volume for the cylinder bulk modulus term for $k=1$.
     
-    Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in [](#eq-hydraulicactuator-effbulkmodulus)  
+    Note that in case of $K_{cyl}=0$ and/or $K_{hose}=0$, the according fractions in {eq}`eq-hydraulicactuator-effbulkmodulus`  
     are set to zero (which other wise would give infinity).
 
     Otherwise, if \texttt{useChamberVolumeChange == False}, $V_{0,cur}=V_{h,0}$, $V_{1,cur}=V_{h,1}$ and $K_{k,eff} = K_{oil}$ for chambers $k \in {0,1}$.
@@ -7844,8 +7844,8 @@ definitions.append(ItemDefinition(
           \rv_B\tp \cv - \rv_B\tp\rv_A + R_B^2 = 0 \, .
     $$ (eq-reevingsystemsprings-newton)
 
-    The relations [](#eq-reevingsystemsprings-newton) reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
-    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of [](#eq-reevingsystemsprings-newton) w.r.t.\ the 
+    The relations {eq}`eq-reevingsystemsprings-newton` reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
+    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of {eq}`eq-reevingsystemsprings-newton` w.r.t.\ the 
     unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
 
     $$
@@ -8875,7 +8875,7 @@ definitions.append(ItemDefinition(
     \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
     $$
 
-    Note that if \texttt{activeConnector = False}, we replace [](#eq-connectorrollingdiscpenalty-forces) with
+    Note that if \texttt{activeConnector = False}, we replace {eq}`eq-connectorrollingdiscpenalty-forces` with
 
 
     $$
@@ -9805,7 +9805,7 @@ definitions.append(ItemDefinition(
     $$
 
     Here, $x_{gap}$ contains the gap of the segment ($\le 0$ means contact), $x_{lastStick}$ is described in 
-    [](#objectcontactfrictioncirclecable2d-curstick), and 
+    {eq}`objectcontactfrictioncirclecable2d-curstick`, and 
     $x_{isSlipStick}$ defines the stick or slip case,
     \bi
       \item $x_{isSlipStick} = -2$: undefined, used for initialization
@@ -9815,12 +9815,12 @@ definitions.append(ItemDefinition(
     
     The basic algorithm in the \texttt{PostNewtonStep}, with all operations given for any segment $s_i$, can be summarized as follows:
     \bi
-      \item[I.] Evaluate gap per segment $g$ using [](#objectcontactfrictioncirclecable2d-gap) and store in data variable: 
+      \item[I.] Evaluate gap per segment $g$ using {eq}`objectcontactfrictioncirclecable2d-gap` and store in data variable: 
             $x_{gap} = g$
       \item[II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
       \bn
-        \item Compute contact force $f_n$ according to [](#objectcontactfrictioncirclecable2d-contactforce)
-        \item Compute current sticking position $x_{curStick}$ according to [](#objectcontactfrictioncirclecable2d-lastcurstick)\footnote{terms are only evaluated if $\mu_k \neq 0$}
+        \item Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
+        \item Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick`\footnote{terms are only evaluated if $\mu_k \neq 0$}
         \item Retrieve \texttt{startOfStep} sticking position\footnote{Importantly, the \texttt{PostNewtonStep} always refers to the \texttt{startOfStep} state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step} in $x^{startOfStep}_{lastStick}$ and compute and normalize
         difference in sticking position\footnote{in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$}:
 
@@ -9896,10 +9896,10 @@ definitions.append(ItemDefinition(
     The operations are similar to the \texttt{PostNewtonStep}, but without switching. The following operations are performed for each segment $s_i$, if 
     $x_{gap, s_i} <= 0$:
     \bi
-      \item[I.] Compute contact force $f_n$, [](#objectcontactfrictioncirclecable2d-contactforce).
+      \item[I.] Compute contact force $f_n$, {eq}`objectcontactfrictioncirclecable2d-contactforce`.
       \item[II.] In case of sticking ($|x_{isSlipStick}|\neq 1$):
       \bi
-        \item[II.1] the current sticking position $x_{curStick}$ is computed from [](#objectcontactfrictioncirclecable2d-lastcurstick), and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
+        \item[II.1] the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
 
 
         $$
@@ -9908,7 +9908,7 @@ definitions.append(ItemDefinition(
         $$
 
         \item[II.2] if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
-        \item[II.3] using the tangential velocity from [](#objectcontactfrictioncirclecable2d-vtangent), the tangent force follows as (even if it is larger than the sticking limit)
+        \item[II.3] using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit)
 
 
         $$
@@ -10328,7 +10328,7 @@ definitions.append(ItemDefinition(
         \end{cases}\, .
     $$
 
-    The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation [](#eq-ossctangentialvelocity). Thus, the tangential force for marker 1 is computed as
+    The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation {eq}`eq-ossctangentialvelocity`. Thus, the tangential force for marker 1 is computed as
 
 
     $$
@@ -11408,7 +11408,7 @@ definitions.append(ItemDefinition(
     \end{aligned}
     $$ (eq-objectjointrevolutez-index3)
 
-    The index 2 constraints follow from the derivative of [](#eq-objectjointrevolutez-index3) w.r.t.\ time, and are given in the C++ code.
+    The index 2 constraints follow from the derivative of {eq}`eq-objectjointrevolutez-index3` w.r.t.\ time, and are given in the C++ code.
     %    
     if \texttt{activeConnector = False}, 
 
@@ -11608,7 +11608,7 @@ definitions.append(ItemDefinition(
     \end{aligned}
     $$ (eq-objectjointprismaticx-index3)
 
-    The index 2 constraints follow from the derivative of [](#eq-objectjointprismaticx-index3) w.r.t., and are given in the C++ code.
+    The index 2 constraints follow from the derivative of {eq}`eq-objectjointprismaticx-index3` w.r.t., and are given in the C++ code.
     %    
     if \texttt{activeConnector = False}, 
 

@@ -230,7 +230,7 @@ $$
 \LU{0}{\ttau_{m0}} = \LU{0}{\pv}_{C} \times \LU{0}{\fv}
 $$
 
-Note that if `activeConnector = False`, we replace [](#eq-connectorrollingdiscpenalty-forces) with
+Note that if `activeConnector = False`, we replace {eq}`eq-connectorrollingdiscpenalty-forces` with
 
 $$
 \LU{J1}{\fv} = \Null

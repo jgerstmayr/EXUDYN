@@ -132,7 +132,7 @@ $$
 \LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \, .
 $$ (eq-objectffrf-coordinatessplitting)
 
-which are written in global coordinates in [](#eq-objectffrf-coordinatessplitting) but will be transformed to other coordinates later on.
+which are written in global coordinates in {eq}`eq-objectffrf-coordinatessplitting` but will be transformed to other coordinates later on.
 
 In the present formulation of `ObjectFFRF`, we use the following set of object coordinates (unknowns)
 
@@ -219,11 +219,11 @@ $$
 \Lm\tp \Mm \Lm \ddot \qv + \Lm\tp \Mm \dot \Lm \dot \qv + \hat \Km \qv + \frac{\partial \gv}{\partial \qv\tp} \tlambda = \Lm\tp \fv
 $$ (eq-objectffrf-leq)
 
-with $\Mm = \LU{b}{\Mm}$ and $\hat \Km$ becoming obvious in [](#eq-objectffrf-eom).
-Note that [](#eq-objectffrf-leq) is given in global coordinates for the translational part, in terms of rotation parameters
+with $\Mm = \LU{b}{\Mm}$ and $\hat \Km$ becoming obvious in {eq}`eq-objectffrf-eom`.
+Note that {eq}`eq-objectffrf-leq` is given in global coordinates for the translational part, in terms of rotation parameters
 for the rotation part and in body-fixed coordinates for the flexible part of the equations.
 
-In case that `computeFFRFterms = True`, [](#eq-objectffrf-leq) can be transformed into the equations of motion,
+In case that `computeFFRFterms = True`, {eq}`eq-objectffrf-leq` can be transformed into the equations of motion,
 
 $$
 \left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf}
@@ -246,7 +246,7 @@ $$
 $$
 
 In case that `computeFFRFterms = False`, the mass terms $\Mm\indtt, \Mm\indtr, \Mm\indtf, \Mm\indrr,
-\Mm\indrf, \LU{b}{\Mm}$ in [](#eq-objectffrf-eom) are set to zero (and not computed) and
+\Mm\indrf, \LU{b}{\Mm}$ in {eq}`eq-objectffrf-eom` are set to zero (and not computed) and
 the quadratic velocity vector $\fv_{v} = \Null$.
 Note that the user functions $\fv_{user}(mbs, t, i_N, \qv,\dot \qv)$ and $\Mm_{user}(mbs, t, i_N, \qv,\dot \qv)$ may be empty (=0).
 The detailed equations of motion for this element can be found in [ZwoelferGerstmayr2020].

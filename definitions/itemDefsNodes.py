@@ -228,7 +228,7 @@ definitions.append(ItemDefinition(
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The first 3 equations are residuals of translational forces in global coordinates,
     while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
-    global torques left-multiplied with $\LU{0}{\Gm\tp}$, see [](#eq-noderigidbodyep-gm), compare the equations of motion of
+    global torques left-multiplied with $\LU{0}{\Gm\tp}$, see {eq}`eq-noderigidbodyep-gm`, compare the equations of motion of
     the rigid body.
     
     There is one additional (algebraic) constraint equation for the quaternions.
