@@ -444,14 +444,14 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     copied anywhere else: the header of each definition file, `CLAUDE.md` and this step all
     *point* at it.
 
-    - **RG3.14.1** - **the abbreviations**: `ABRV:ODE2` in place of `\hac{ODE2}`, and `abrv:ODE2`
-      for the lower-case `\ac` form. 177 occurrences, none of which needs an argument the macro
-      cannot carry. Converted in `latexToMarkdown.ConvertInline`, which handles all seven spellings
-      (`hac`, `hacs`, `acf`, `acl`, `acs`, `acp`, `ac`) today. The list itself is already a Python
-      dict - `abbreviations` in `tools/generators/examplesDocsEmitter.py`, written out by its
-      `WriteAbbreviations` - so the converter can **check the key** and name the file and the line
-      of a wrong one, which is what nothing does today.
-    - **RG3.14.2** - **the heading levels, defined and checked.** An item page is
+    - **RG3.14.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-1) - **the abbreviations**: `ABRV:ODE2` in place of the seven
+      LaTeX spellings (`\hac`, `\hacs`, `\acf`, `\acl`, `\acs`, `\acp`, `\ac`), which
+      `latexToMarkdown.ConvertInline` rendered identically - so they were one macro under seven
+      names. 178 occurrences, and none needs an argument the macro cannot carry. The list is
+      already a Python dict, `abbreviations` in `tools/generators/examplesDocsEmitter.py`, written
+      out by its `WriteAbbreviations`, so the new `tools/checkDefinitions.py` **checks the key** and
+      names the file and the line of a wrong one.
+    - **RG3.14.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-2) - **the heading levels, defined and checked.** An item page is
       `# <file>` / `## <item>` / `### DESCRIPTION of <item>`, and a `\mysubsubsubsection` becomes
       `####`; the depth is implicit in the macro name (`latexToMarkdown.ConvertSections`) and
       `latexToMarkdown.NormalizeHeadings` silently repairs whatever does not fit. In Markdown the
@@ -463,7 +463,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       *PostNewtonStep* (1). A documented set of the recurring ones - *Definition of quantities*
       (37), *Equations of motion* (12), *Connector forces* (14), *Connector constraint equations*
       (9), *Geometric relations* (8), *Details* (4) - with free titles allowed below them.
-    - **RG3.14.3** - **the references, in native Markdown.** `[](#sec:itemGround)` in place of
+    - **RG3.14.3** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-3) - **the references, in native Markdown.** `[](#sec:itemGround)` in place of
       `\refSection{sec:itemGround}`, `[](#eq:ObjectGround:position)` in place of `\eq{...}`,
       `[](#fig:ObjectSphereSphereContact)` in place of `\fig{...}`, and `$$...$$ (eq:name)` in
       place of `\be ... \label{eq:name} ... \ee`. All of these live in
@@ -474,9 +474,19 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       three resolve from another page, with and without link text, and the text defaults to the
       heading or the caption. The 55 `\label`s are **45 equations, 10 figures and nothing else**,
       and all 9 section labels are written as `\mysub...sectionlabel`, i.e. on their heading - so
-      every reference in `definitions/` can become a native link. `CITE:key` replaces `\cite{key}`
-      for the 31 citations, which is the answer to the maintainer's question: **nothing stays a
-      backslash command outside math.**
+      every reference in `definitions/` can become a native link. A citation needs **no macro at all**: `conf.py`
+      appends a Markdown link definition for every key of the bibliography, so
+      `[ZwoelferGerstmayr2021]` written directly is already a link, and all 31 `\cite` calls are
+      single-key. So the answer to the maintainer's question is the strongest one available:
+      **nothing stays a backslash command outside math.**
+
+      - **RG3.14.3.1** *(from RG3.14.3, 2026-09-25)* **the display math.** The 372 `\be .. \ee` and
+        45 `\bea .. \eea` blocks become `$$ ... $$` and `$$ \begin{aligned} ... \end{aligned} $$`,
+        which is what `latexToMarkdown.ConvertDisplayMath` already writes, and the **45 equation
+        labels inside them** become the MyST form `$$ ... $$ (eq-name)`. The mathematics itself does
+        not change: `\be` and `\ee` are Exudyn's own delimiters, not LaTeX's, and `$$` is what
+        Markdown's display math is. With them go `\eqComma` and `\eqDot`, which the converter
+        already spells out, and `\nonumber`, which numbers nothing in an `aligned` block.
     - **RG3.14.4** - **the tables become data.** 74 of the 86 are one of two shapes, and both are a
       list of rows in the dict rather than text:
       - `quantities=[Quantity(name=..., symbol=r'$\pRefG$', description='...')]` - 39 tables,
@@ -534,7 +544,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       a `definitions/` description, outside math, is an error with the file, the line and the
       name** - `latexToMarkdown.ReportUnknown` already finds them and only prints, and
       `tools/checkMathMacros.py` already holds the line between a math macro and a structural one.
-    - **RG3.14.8** - **the one place the rules are written.** A new section of
+    - **RG3.14.8** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-8) - **the one place the rules are written.** A new section of
       `definitions/README.md`, which is published (`docs/dev/README.md` lists it) and today says
       how a *member* is written but nothing about the description text. Its skeleton is written
       **first** and each sub-step adds its own paragraph, so that no sub-step is done before its
@@ -1369,7 +1379,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8 | #2594 | place or drop the figures that no page references |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: macros, headings, references, tables, user functions |
+| RG3.14 | #2655 | the item descriptions become Markdown: .1 to .3 and .8 done; display math, tables, user functions, the switches |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |

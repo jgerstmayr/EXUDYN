@@ -2704,3 +2704,129 @@ model and writes one back, and the module namespace is not the model namespace.
 `tools/checkExtras.py` had to learn one thing for it: `__main__` is not in
 `sys.stdlib_module_names`, because that lists the modules that come as files, so `import
 __main__` looked like a package to install.
+
+<a id="rg3-14-8"></a>
+### RG3.14.8 — the rules for a description, in one place (2026-09-25, #2655)
+
+`definitions/README.md` said how a member is written and nothing about the text inside it, so the
+conventions of the reference manual's source lived only in the existing descriptions, and a
+developer learned them by copying a neighbour. A new section, **"Writing a description"**, says
+which five fields are descriptions and what each becomes, that the text is Markdown with LaTeX
+mathematics and that nothing else is supported, gives one line per construct, and ends with the
+three commands that check it.
+
+The pointer to it, and nothing else, is repeated: the header of all **24** definition files that
+carry a description names the section, and `CLAUDE.md` rule **6b** does the same for a Claude
+session. This is the shape the rest of RG3.14 uses - each sub-step rewrites its own line of that
+section and no rule is written twice.
+
+Two facts found while writing it, and stated as they are:
+
+- **A citation needs no macro.** `conf.py` appends a Markdown link definition for every key of
+  `docs/bibliographyDoc.bib`, so `[ZwoelferGerstmayr2021]` written directly in the text already
+  becomes a link into the generated references page. All 31 `\cite` calls in `definitions/` are
+  single-key, so there is nothing the native form cannot say.
+- **`latexToMarkdown.ReportUnknown` is called by nothing.** It would name a macro the converter
+  does not recognise; it is dead code, so an unknown macro reaches the page silently today. That
+  is what RG3.14.7 changes, and the new section says plainly that the page is the only place a
+  mistake shows until then.
+
+<a id="rg3-14-1"></a>
+### RG3.14.1 — an abbreviation is ABRV:ODE2 (2026-09-25, #2655)
+
+The 178 abbreviation calls of `definitions/` were written in **seven** LaTeX spellings - `\hac`,
+`\hacs`, `\acf`, `\acl`, `\acs`, `\acp`, `\ac` - and `ConvertInline` rendered all seven
+identically, as `` {ref}`KEY <KEY>` ``. Seven names for one macro. They are now one form with no
+backslash and no braces:
+
+```
+ABRV:ODE2
+```
+
+The key ends where the word ends, and no delimiter is needed: measured over `definitions/`, **not
+one** of the 178 was followed by an alphanumeric character. The LaTeX spellings stay in the
+converter, because the hand-written chapters of `docs/manual/` still use them.
+
+**`tools/checkDefinitions.py` is new** and runs in `exudev generate --all-checks` as the tenth
+check: it names the file and the line of an `ABRV:` key the abbreviations list does not have. It
+found the first one immediately - `\hac{ODE2t}`, twice in `itemFunctions.py`, a key that has never
+been in the list, in a description that reaches no page, so nothing ever said so. Those two read
+*"ODE2 time derivatives"* now.
+
+Two more things came out of the conversion:
+
+- **Three calls were written `\\hac{...}` in a non-raw string** - the doubled backslash is the
+  writer paying for the escape by hand, which is the case RG3.14.9 is about. They are plain
+  `ABRV:` now.
+- **`\acf`, one of the seven, was never handled by the docstring cleaner.** `ObjectGenericODE1`'s
+  docstring in `itemInterface.py` read *"a system of acf{ODE1}"* - the backslash-stripping pass
+  removed the backslash and left the rest. It reads `ODE1` now, through the new
+  `docstringText.StripAbbreviations`, which the pybind stub path calls as well. The wider leak in
+  that path is recorded on **#2652** rather than fixed here, because the cleaner also rewrites
+  `\refSection{...}` to the literal `theDoc.pdf`, a document that has not existed since D8.
+
+`docs/generated` is **byte-identical**: the conversion is equivalent, which is the point.
+
+<a id="rg3-14-2"></a>
+### RG3.14.2 — a heading is the heading it becomes (2026-09-25, #2655)
+
+A heading in a description was `\mysubsubsubsection{Equations of motion}`, and the level was hidden
+twice over. The macro meant five `#`, `ConvertSections` emitted five, and `NormalizeHeadings`
+quietly compressed the page's source levels **1, 3, 4, 5** to the rendered **1, 2, 3, 4**. Nothing
+could be checked, because the number the writer wrote was never the number the reader saw.
+
+The 135 headings are now written as what they become - `#### Equations of motion` in an item's
+`equations` text, `## Title` in a structure's `latexText` - and `itemDocsEmitter` emits the item
+and *DESCRIPTION* headings at their final levels too, so `NormalizeHeadings` has nothing left to
+repair on an item page. A labelled heading carries its MyST target on the line above it.
+
+`checkDefinitions` gained the check: **a heading at the wrong level, and a title that means one of
+the ten recurring sections but is spelled differently.** It had four to find:
+
+| found | against |
+|---|---|
+| *Connector Forces*, 3 times | *Connector forces*, 11 times |
+| *PostNewtonStep* | *Post Newton Step*, 3 times |
+| a heading whose `(classicalFormulation=True)` was commented out with a `%` | its sibling, which kept it - so two sections of one item had the same title |
+
+One more thing came out of giving the emitter the real levels: **MINI EXAMPLE was a sibling of
+DESCRIPTION rather than of Equations**, on all 23 item pages that have one. It is a `####` now.
+
+The generated pages move by exactly **28 lines, each one a replacement**: the four corrected
+titles and the 23 MINI EXAMPLE headings.
+
+<a id="rg3-14-3"></a>
+### RG3.14.3 — a reference is a Markdown link (2026-09-25, #2655)
+
+The 144 references of `definitions/` were written in **nine** macros - `\refSection`,
+`\refSectionA`, `\refChapter`, `\ref`, `\fig`, `\eq`, `\eqs`, `\eqq`, `\eqref` - which the
+converter turned into a `{ref}` or an `{eq}` role with the same target name. They are
+
+```
+[](#sec-item-objectground)     [](#eq-objectground-position)     [](#fig-objectspheresphrecontact)
+```
+
+now, and the **empty text is the point**: the page supplies the heading, the equation number or the
+figure caption, exactly as the role did. The ten figure labels are the MyST targets they already
+became.
+
+**Probed against Sphinx 9.1.0 / myst-parser 5.1.0 with this project's settings, before converting
+anything.** Four target forms resolve from another page, with and without link text: a `(name)=`
+above a heading, an equation label written `$$...$$ (name)`, a `{figure}` with `:name:`, and a
+`(name)=` above a `{figure}`. A target above a **paragraph** resolves in nothing - not as
+`(name)=`, not as an inline `{#name}`, not as a raw `<a id>` - and only `` {ref}`text <name>` ``
+reaches it, with the text, because `` {ref}`name` `` alone warns *"A title or caption not found"*.
+That is the whole reason RG3.14.1 keeps a macro for the abbreviations, whose list is exactly such a
+list of paragraph targets. And it is the whole set: the 55 `\label`s of `definitions/` are **45
+equations and 10 figures**, with every section label written as a `...sectionlabel` macro on its
+heading.
+
+The 45 equation labels stay inside `\be .. \ee` for now: the display math is the other half of this
+step, and a label is converted with the delimiters that hold it.
+
+**In a docstring there is no page to link to**, so `docstringText.PlainTextLinks` renders the link
+as its own text. Eight docstrings improve by it, because `\refSection` used to be rewritten to the
+literal `theDoc.pdf` and now names the section a reader can search for.
+
+The generated pages move by 246 lines, each one a role replaced by the link that resolves to the
+same target - and `exudev docs` under `-W` is what proves all 144 of them resolve.
