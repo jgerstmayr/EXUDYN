@@ -487,20 +487,19 @@ gaps it names are the first candidates. The maintainer's own findings go here as
         not change: `\be` and `\ee` are Exudyn's own delimiters, not LaTeX's, and `$$` is what
         Markdown's display math is. With them go `\eqComma` and `\eqDot`, which the converter
         already spells out, and `\nonumber`, which numbers nothing in an `aligned` block.
-    - **RG3.14.4** - **the tables become data.** 74 of the 86 are one of two shapes, and both are a
-      list of rows in the dict rather than text:
-      - `quantities=[Quantity(name=..., symbol=r'$\pRefG$', description='...')]` - 39 tables,
-        *"Definition of quantities"*, which is also 37 of the headings, so the heading comes with
-        the data and is not written at all;
-      - the user function argument tables - 35, and they belong to RG3.14.5.
+    - **RG3.14.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-4) - **a table
+      is a Markdown table.** The 48 tables that are not a user function's argument list are pipe
+      tables, written where they stand in the text; the 34 argument tables belong to RG3.14.5 and
+      four more `\startTable`s are commented out and already dead. The pages are byte-identical.
 
-      The remaining 12 - 5 *"output variables"*, 4 *"input parameter"*, 3 one-off output-variable
-      tables - become an ordinary MyST pipe table in the text, which is what a reader of the
-      source then sees. A cell keeps MyST text, because the description cells hold math and
-      references. `latexToMarkdown.ConvertTables` loses the `\startTable` family, and the new data
-      is rendered where the generated tables already are:
-      `autoGenerateHelper.PyLatexRST.DefItemStartTable`, `Table3WriteRow` and
-      `DefLatexFinishTable`.
+      **The dict was measured and not used.** `quantities=[Quantity(name, symbol, description)]` was
+      the plan for the 39 *"Definition of quantities"* tables, but **32 of the 39 open the
+      `equations` text and 7 do not** - three items carry a second one, and one sits under the
+      sentence that introduces it. A field in the dict says what a table holds and not where it goes,
+      so those seven would move on the page or the text would need a placement marker: more
+      machinery than the table. A pipe table says both, in one place, in native Markdown. Making the
+      **symbol column** data, so that a checker can say whether every symbol is a declared math
+      macro, is worth a step of its own and is not this one.
     - **RG3.14.5** - **a user function is a typed Python signature.** In place of
       `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}` followed by a table and a
       `\returnValue` row:

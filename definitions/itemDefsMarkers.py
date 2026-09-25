@@ -808,14 +808,16 @@ definitions.append(ItemDefinition(
     classDescription=r'A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.',
     classType=ClassTypeMarker,
     equations=r"""    {\bf Definition of marker quantities}:
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
-    \rowTable{mesh node number}{$i = k_i$}{abbreviation}
-    \rowTable{mesh node points}{$\LU{0}{\pv}_{i}$}{position of mesh node $k_i$ in object $n_b$}
-    \rowTable{mesh node velocities}{$\LU{0}{\vv}_{i}$}{velocity of mesh node $i$ in object $n_b$}
-    \rowTable{marker position}{$\LU{0}{\pv}_{m} = \sum_i w_i \cdot \LU{0}{\pv_i}$}{current global position which is provided by marker}
-    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \sum_i w_i \cdot \LU{0}{\vv_i}$}{current global velocity which is provided by marker}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | number of mesh nodes | $n_m$ | size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object |
+    | mesh node number | $i = k_i$ | abbreviation |
+    | mesh node points | $\LU{0}{\pv}_{i}$ | position of mesh node $k_i$ in object $n_b$ |
+    | mesh node velocities | $\LU{0}{\vv}_{i}$ | velocity of mesh node $i$ in object $n_b$ |
+    | marker position | $\LU{0}{\pv}_{m} = \sum_i w_i \cdot \LU{0}{\pv_i}$ | current global position which is provided by marker |
+    | marker velocity | $\LU{0}{\vv}_{m} = \sum_i w_i \cdot \LU{0}{\vv_i}$ | current global velocity which is provided by marker |
+
     %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -939,36 +941,31 @@ definitions.append(ItemDefinition(
     classDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
     classType=ClassTypeMarker,
     equations=r"""    {\bf Definition of marker quantities}:
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
-    \rowTable{mesh node number}{$i = k_i$}{abbreviation, runs over all marker mesh nodes}
-    \rowTable{mesh node local displacement}{$\LU{r}{\uv^{(i)}}$}{current local (within reference frame $r$) displacement of mesh node $k_i$ in object $n_b$}
-    \rowTable{mesh node local position}{$\LU{r}{\pv^{(i)}} = \LU{r}{\xv^{(i)}\cRef} + \LU{r}{\uv^{(i)}}$}{current local (within reference frame $r$, which is the body frame $b$ ,e.g., in \texttt{ObjectFFRFreducedOrder}) position of mesh node $k_i$ in object $n_b$}
-    \rowTable{mesh node local reference position}{$\LU{r}{\xv^{(i)}\cRef}$}{local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$, see e.g.\ \texttt{ObjectFFRFreducedOrder}}
-    \rowTable{averaged local reference position}{$\LU{r}{\xv^\mathrm{avg}\cRef} = \sum_i w_i \LU{r}{\xv^{(i)}\cRef}$}{midpoint reference position of marker; averaged local reference positions of all mesh nodes $k_i$, 
-              using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see [](#fig-markersuperelementrigid-sketch)}
-    \rowTable{marker centered mesh node local reference position}{$\LU{r}{\pv^{(i)}\cRef} = \LU{r}{\xv^{(i)}\cRef}- \LU{r}{\xv^\mathrm{avg}\cRef}$}{local reference position of mesh node $k_i$ relative to the center position of marker}
-    \rowTable{mesh node local velocity}{$\LU{r}{\vv^{(i)}}$}{current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$}
-    %
-    \rowTable{super element reference point}{$\LU{0}{\pv}_r$ ($=\LU{0}{\pv}\indt$ in \texttt{ObjectFFRFreduced- Order})}{current position (origin) of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
-    \rowTable{super element rotation matrix}{$\LU{0r}{\Rot}$}{current rigid body transformation matrix of super element's floating frame (r), which is the identity matrix, if the object does not provide a reference frame (such as GenericODE2)}
-    \rowTable{super element angular velocity}{$\LU{r}{\tomega_r}$}{current local angular velocity of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
+    %\rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} +
+    %\LU{0r}{\Rot} \left(\sum_i (w_i \cdot \LU{r}{\vv^{(i)}}) + \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\uv^{(i)}}) \right)$}
+    %{current global velocity which is provided by marker}
+    %\rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1}{\theta_2}{1}{-\theta_0}{-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
 
-    \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}{
-              current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
-    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r $ $+ \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right) + \right.$
-                                                  $\left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}{current global velocity which is provided by marker}
-                %\rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} +
-                %\LU{0r}{\Rot} \left(\sum_i (w_i \cdot \LU{r}{\vv^{(i)}}) + \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\uv^{(i)}}) \right)$}
-                %{current global velocity which is provided by marker}
-                %
-                %\rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1}{\theta_2}{1}{-\theta_0}{-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
-    \rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector}
-    \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m}$}{current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach}
-    %    
-    \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m}$}{local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach}
-    \rowTable{marker global angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current global angular velocity}
-    \finishTable
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | number of mesh nodes | $n_m$ | size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object |
+    | mesh node number | $i = k_i$ | abbreviation, runs over all marker mesh nodes |
+    | mesh node local displacement | $\LU{r}{\uv^{(i)}}$ | current local (within reference frame $r$) displacement of mesh node $k_i$ in object $n_b$ |
+    | mesh node local position | $\LU{r}{\pv^{(i)}} = \LU{r}{\xv^{(i)}\cRef} + \LU{r}{\uv^{(i)}}$ | current local (within reference frame $r$, which is the body frame $b$ ,e.g., in \texttt{ObjectFFRFreducedOrder}) position of mesh node $k_i$ in object $n_b$ |
+    | mesh node local reference position | $\LU{r}{\xv^{(i)}\cRef}$ | local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$, see e.g.\ \texttt{ObjectFFRFreducedOrder} |
+    | averaged local reference position | $\LU{r}{\xv^\mathrm{avg}\cRef} = \sum_i w_i \LU{r}{\xv^{(i)}\cRef}$ | midpoint reference position of marker; averaged local reference positions of all mesh nodes $k_i$, using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see [](#fig-markersuperelementrigid-sketch) |
+    | marker centered mesh node local reference position | $\LU{r}{\pv^{(i)}\cRef} = \LU{r}{\xv^{(i)}\cRef}- \LU{r}{\xv^\mathrm{avg}\cRef}$ | local reference position of mesh node $k_i$ relative to the center position of marker |
+    | mesh node local velocity | $\LU{r}{\vv^{(i)}}$ | current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$ |
+    | super element reference point | $\LU{0}{\pv}_r$ ($=\LU{0}{\pv}\indt$ in \texttt{ObjectFFRFreduced- Order}) | current position (origin) of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2) |
+    | super element rotation matrix | $\LU{0r}{\Rot}$ | current rigid body transformation matrix of super element's floating frame (r), which is the identity matrix, if the object does not provide a reference frame (such as GenericODE2) |
+    | super element angular velocity | $\LU{r}{\tomega_r}$ | current local angular velocity of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2) |
+    | marker position | $\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$ | current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes |
+    | marker velocity | $\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r $ $+ \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right) + \right.$ $\left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$ | current global velocity which is provided by marker |
+    | marker rotation matrix | $\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$ | current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector |
+    | marker local rotation | $\LU{r}{\ttheta}_{m}$ | current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach |
+    | marker local angular velocity | $\LU{r}{\tomega}_{m}$ | local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach |
+    | marker global angular velocity | $\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$ | current global angular velocity |
+
     %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

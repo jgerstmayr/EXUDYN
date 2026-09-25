@@ -130,11 +130,23 @@ not in the list below reaches the page as itself and is a defect.
   bibliography does not have, and a key written **without** the marker - and a `[CITE:` left in a
   generated page is a conversion that did not happen. Without it nothing could be told apart: a
   description is full of square brackets that are not citations (`[SI:kg]`, `[0,0,0]`).
-- **A table** is `\startTable{header}{header}{header}` with a `\rowTable{}{}{}` per row and
-  `\finishTable` at the end - three columns, always.
+- **A table** is a Markdown pipe table, written where it belongs in the text:
+
+  ```
+  | intermediate variables | symbol | description |
+  |---|---|---|
+  | body's reference point | $\pRefG$ | position of the body's reference point |
+  ```
+
+  The header row says what the columns are - *intermediate variables | symbol | description* for the
+  quantities of an item, *output variables | symbol | formula*, *input parameter | symbol |
+  description* - and a cell may hold mathematics, a link or inline code, as any other text may.
+  A `|` inside a cell is written `\|`; inside `$...$` it needs nothing.
 - **A user function** is `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}`, followed
-  by prose, a table of its arguments and return value, and optionally `\userFunctionExample{}` with
-  a `lstlisting` block.
+  by prose, a table of its arguments and return value written with `\startTable{arguments / return}`
+  and one `\rowTable{}{}{}` per argument, and optionally `\userFunctionExample{}` with a
+  `lstlisting` block. **This is the one construct that is still LaTeX**, and the whole block becomes
+  a typed Python signature in revision2026b step RG3.14.5.
 - **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows
   `docs/figures/RevoluteJointZ.png`.
 

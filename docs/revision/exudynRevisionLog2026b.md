@@ -3002,3 +3002,34 @@ it always was.
 `checkDefinitions` now rejects a literal whose value carries a backslash or a `$` and which is not
 written `r'...'`. It is deliberately a rule about **the source text**, not about the value: by the
 time a wrong escape is a value, the evidence is gone.
+
+<a id="rg3-14-4"></a>
+### RG3.14.4 — a table is a Markdown table (2026-09-25, #2655)
+
+The 48 tables of `definitions/` that are not a user function's argument list are Markdown pipe
+tables now, written where they stand in the text, and the generated pages are **byte-identical**:
+the conversion is the converter's own `ConvertTables`, applied in place. The 34 argument tables stay
+for RG3.14.5, which turns the whole user function block into a typed Python signature; four more
+`\startTable`s are commented out and therefore already dead.
+
+**Why the pipe table and not the dict.** The plan proposed `quantities=[Quantity(name, symbol,
+description)]` in the item's dict for the 39 *"Definition of quantities"* tables, which the
+maintainer had asked for: *"there could be just an additional structure in the definition of an item
+which contains a list per row"*. Measured before doing it: **32 of the 39 open the `equations` text,
+and 7 do not** - three items carry a second one further down, and in `MarkerSuperElementRigid` the
+table sits under a sentence that introduces it. A field in the dict says *what* the table holds but
+not *where* it goes, so those seven would move on the page, or the dict would need a placement
+marker in the text - more machinery than the table itself. **A pipe table says both, in one place,
+and it is native Markdown**, which is what the hand-written chapters use. If the symbols should
+become data later - so that a checker can say whether every symbol is a declared math macro - that
+is a step of its own, and it is worth doing for the symbol column alone rather than for the table.
+
+Two things had to be arranged so that nothing was lost:
+
+- **A LaTeX comment inside a table block is kept, above the table.** `StripComments` runs before
+  `ConvertTables`, so a commented-out `\rowTable` is not a row - `ObjectRigidBody` has two, and a
+  first attempt that replaced the block wholesale both put them into the page and deleted them from
+  the source. 33 comment lines are kept.
+- **The work is done per string value, through `ast`, never on the file text.** A table pattern let
+  loose on a file matches from one item's `\startTable` to the *next* item's `\finishTable`: the
+  first attempt gave `ObjectRigidBody` two rows belonging to `ObjectRigidBody2D`.

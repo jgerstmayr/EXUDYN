@@ -200,14 +200,16 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{node position}{$\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of mass point which is provided by node $n_0$ in any configuration}
-      \rowTable{node displacement}{$\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of mass point which is provided by node $n_0$ in any configuration}
-      \rowTable{node velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of mass point which is provided by node $n_0$ in any configuration}
-      \rowTable{transformation matrix}{$\LU{0b}{\Rot} = \ImThree$}{transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point}
-      \rowTable{residual forces}{$\LU{0}{\fv} = [f_0,\;f_1,\;f_2]\tp$}{residual of all forces on mass point }
-      \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | node position | $\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$ | position of mass point which is provided by node $n_0$ in any configuration |
+    | node displacement | $\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of mass point which is provided by node $n_0$ in any configuration |
+    | node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of mass point which is provided by node $n_0$ in any configuration |
+    | transformation matrix | $\LU{0b}{\Rot} = \ImThree$ | transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point |
+    | residual forces | $\LU{0}{\fv} = [f_0,\;f_1,\;f_2]\tp$ | residual of all forces on mass point |
+    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
+
 
     #### Equations of motion
 
@@ -335,14 +337,16 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{node position}{$\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of mass point which is provided by node $n_0$ in any configuration (except reference)}
-      \rowTable{node displacement}{$\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of mass point which is provided by node $n_0$ in any configuration}
-      \rowTable{node velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of mass point which is provided by node $n_0$ in any configuration}
-      \rowTable{transformation matrix}{$\LU{0b}{\Rot} = \ImThree$}{transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point}
-      \rowTable{residual forces}{$\LU{0}{\fv} = [f_0,\;f_1]\tp$}{residual of all forces on mass point}
-      \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | node position | $\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$ | position of mass point which is provided by node $n_0$ in any configuration (except reference) |
+    | node displacement | $\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of mass point which is provided by node $n_0$ in any configuration |
+    | node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of mass point which is provided by node $n_0$ in any configuration |
+    | transformation matrix | $\LU{0b}{\Rot} = \ImThree$ | transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point |
+    | residual forces | $\LU{0}{\fv} = [f_0,\;f_1]\tp$ | residual of all forces on mass point |
+    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
+
     %
 
     #### Equations of motion
@@ -472,18 +476,19 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{position coordinate}{${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$}{position coordinate of node (nodal coordinate $c_0$) in any configuration}
-      \rowTable{displacement coordinate}{${u_0}\cConfig = {c_0}\cConfig$}{displacement coordinate of mass node in any configuration}
-      \rowTable{velocity coordinate}{${u_0}\cConfig$}{velocity coordinate of mass node in any configuration}
-      \rowTable{Position}{$\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$}{(translational) position of mass object in any configuration}
-      \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{q_0}{0}{0}}\cConfig$}{(translational) displacement of mass object in any configuration}
-      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot q_0}{0}{0}}\cConfig$}{(translational) velocity of mass object in any configuration}
-    %
-      \rowTable{residual force}{$f$}{residual of all forces on mass object}
-      \rowTable{applied force}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{3D applied force (loads, connectors, joint reaction forces, ...)}
-      \rowTable{applied torque}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{3D applied torque (loads, connectors, joint reaction forces, ...)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | position coordinate | ${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | position coordinate of node (nodal coordinate $c_0$) in any configuration |
+    | displacement coordinate | ${u_0}\cConfig = {c_0}\cConfig$ | displacement coordinate of mass node in any configuration |
+    | velocity coordinate | ${u_0}\cConfig$ | velocity coordinate of mass node in any configuration |
+    | Position | $\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$ | (translational) position of mass object in any configuration |
+    | Displacement | $\LU{0}{\uv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{q_0}{0}{0}}\cConfig$ | (translational) displacement of mass object in any configuration |
+    | Velocity | $\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot q_0}{0}{0}}\cConfig$ | (translational) velocity of mass object in any configuration |
+    | residual force | $f$ | residual of all forces on mass object |
+    | applied force | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | 3D applied force (loads, connectors, joint reaction forces, ...) |
+    | applied torque | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | 3D applied torque (loads, connectors, joint reaction forces, ...) |
+
     %
     A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
     However, torques will have no effect and forces will only have effect in 'direction' of the coordinate.
@@ -623,21 +628,22 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{position coordinate}{${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $}{total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
-      \rowTable{displacement coordinate}{${\psi_0}\cConfig = {c_0}\cConfig$}{change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
-      \rowTable{velocity coordinate}{${\dot \psi_{0\cConfig}}$}{rotation velocity coordinate of mass node (e.g., Node1D) in any configuration}
-      \rowTable{Position}{$\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0}$}{constant (translational) position of mass object in any configuration}
-      \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [0,0,0]\tp$}{(translational) displacement of mass object in any configuration}
-      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [0,0,0]\tp$}{(translational) velocity of mass object in any configuration}
-      \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$}{}
-      \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$}{}
-      \rowTable{RotationMatrix}{$\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$}{transformation of local body ($b$) coordinates to global (0) coordinates}
-    %
-      \rowTable{residual force}{$\tau$}{residual of all forces on mass object}
-      \rowTable{applied force}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{3D applied force (loads, connectors, joint reaction forces, ...)}
-      \rowTable{applied torque}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{3D applied torque (loads, connectors, joint reaction forces, ...)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | position coordinate | ${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $ | total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$) |
+    | displacement coordinate | ${\psi_0}\cConfig = {c_0}\cConfig$ | change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$) |
+    | velocity coordinate | ${\dot \psi_{0\cConfig}}$ | rotation velocity coordinate of mass node (e.g., Node1D) in any configuration |
+    | Position | $\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0}$ | constant (translational) position of mass object in any configuration |
+    | Displacement | $\LU{0}{\uv}\cConfig = [0,0,0]\tp$ | (translational) displacement of mass object in any configuration |
+    | Velocity | $\LU{0}{\vv}\cConfig = [0,0,0]\tp$ | (translational) velocity of mass object in any configuration |
+    | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$ |  |
+    | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$ |  |
+    | RotationMatrix | $\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$ | transformation of local body ($b$) coordinates to global (0) coordinates |
+    | residual force | $\tau$ | residual of all forces on mass object |
+    | applied force | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | 3D applied force (loads, connectors, joint reaction forces, ...) |
+    | applied torque | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | 3D applied torque (loads, connectors, joint reaction forces, ...) |
+
     %
     A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
     However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
@@ -783,32 +789,32 @@ definitions.append(ItemDefinition(
 
     #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    %
-        \rowTable{inertia tensor}{$\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$}{symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t.\ body's reference point}
-        \rowTable{reference coordinates}{$\qv\cRef = [\pRef\tp\cRef,\,\tpsi\tp\cRef]\tp$}{defines reference configuration, {\bf DIFFERENT} meaning from body's reference point!}
-        \rowTable{(relative) current coordinates}{$\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp$}{unknowns in solver; {\bf relative} to the reference coordinates; current coordinates at initial configuration = initial coordinates $\qv\cIni$}
-        \rowTable{current velocity coordinates}{$\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp$}{current velocity coordinates}
-    %
-        \rowTable{body's reference point}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of {\bf body's reference point} provided by node $n_0$ in any configuration except for reference; if $\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp$, this position becomes equal to the ABRV:COM position}
-        \rowTable{reference body's reference point}{$\pRefG\cRef = \LU{0}{\pv}(n_0)\cRef$}{position of {\bf body's reference point} in reference configuration}
-        \rowTable{body's reference point displacement}{$\LU{0}{\uv}\cConfig = \pRefG\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
-        \rowTable{body's reference point velocity}{$\LU{0}{\vv}\cConfig = \dot \pRefG\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
-        \rowTable{body's reference point acceleration}{$\LU{0}{\av}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$}{acceleration of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
-        \rowTable{rotation coordinates}{$\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$}{(total) rotation parameters of body as provided by node $n_0$ in any configuration}
-        \rowTable{rotation parameters}{$\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$}{(total) rotation parameters of body as provided by node $n_0$ in any configuration}
-        \rowTable{body rotation matrix}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$}{rotation matrix which transforms local to global coordinates as given by node}
-        \rowTable{local position}{$\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,\LU{b}{b_2}]\tp$}{local position as used by markers or sensors}
-        \rowTable{angular velocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,\omega_1(n_0),\,\omega_2(n_0)]}\cConfig\tp$}{global angular velocity of body as provided by node $n_0$ in any configuration}
-        \rowTable{local angular velocity}{$\LU{b}{\tomega}\cConfig$}{local angular velocity of body as provided by node $n_0$ in any configuration}
-        \rowTable{body angular acceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{\dot \tomega}\cConfig$}{angular acceleratoin of body as provided by node $n_0$ in any configuration}
-        %\rowTable{(generalized) coordinates}{$\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$}{generalized coordinates of body (= coordinates of node)}
-        %\rowTable{generalized forces}{$\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$}{generalized forces applied to body}
-        \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{calculated from loads, connectors, ...}
-        \rowTable{applied torques}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{calculated from loads, connectors, ...}
-        \rowTable{constraint reaction forces}{$\LU{0}{\fv}_\lambda = [f_{\lambda 0},\;f_{\lambda 1},\;f_{\lambda 2}]\tp$}{calculated from joints or constraint)}
-        \rowTable{constraint reaction torques}{$\LU{0}{\ttau}_\lambda = [\tau_{\lambda 0},\;\tau_{\lambda 1},\;\tau_{\lambda 2}]\tp$}{calculated from joints or constraints}
-    \finishTable
+    %\rowTable{(generalized) coordinates}{$\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$}{generalized coordinates of body (= coordinates of node)}
+    %\rowTable{generalized forces}{$\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$}{generalized forces applied to body}
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | inertia tensor | $\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$ | symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t.\ body's reference point |
+    | reference coordinates | $\qv\cRef = [\pRef\tp\cRef,\,\tpsi\tp\cRef]\tp$ | defines reference configuration, {\bf DIFFERENT} meaning from body's reference point! |
+    | (relative) current coordinates | $\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp$ | unknowns in solver; {\bf relative} to the reference coordinates; current coordinates at initial configuration = initial coordinates $\qv\cIni$ |
+    | current velocity coordinates | $\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp$ | current velocity coordinates |
+    | body's reference point | $\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$ | position of {\bf body's reference point} provided by node $n_0$ in any configuration except for reference; if $\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp$, this position becomes equal to the ABRV:COM position |
+    | reference body's reference point | $\pRefG\cRef = \LU{0}{\pv}(n_0)\cRef$ | position of {\bf body's reference point} in reference configuration |
+    | body's reference point displacement | $\LU{0}{\uv}\cConfig = \pRefG\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of {\bf body's reference point} which is provided by node $n_0$ in any configuration |
+    | body's reference point velocity | $\LU{0}{\vv}\cConfig = \dot \pRefG\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of {\bf body's reference point} which is provided by node $n_0$ in any configuration |
+    | body's reference point acceleration | $\LU{0}{\av}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$ | acceleration of {\bf body's reference point} which is provided by node $n_0$ in any configuration |
+    | rotation coordinates | $\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$ | (total) rotation parameters of body as provided by node $n_0$ in any configuration |
+    | rotation parameters | $\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$ | (total) rotation parameters of body as provided by node $n_0$ in any configuration |
+    | body rotation matrix | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$ | rotation matrix which transforms local to global coordinates as given by node |
+    | local position | $\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,\LU{b}{b_2}]\tp$ | local position as used by markers or sensors |
+    | angular velocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,\omega_1(n_0),\,\omega_2(n_0)]}\cConfig\tp$ | global angular velocity of body as provided by node $n_0$ in any configuration |
+    | local angular velocity | $\LU{b}{\tomega}\cConfig$ | local angular velocity of body as provided by node $n_0$ in any configuration |
+    | body angular acceleration | $\LU{0}{\talpha}\cConfig = \LU{0}{\dot \tomega}\cConfig$ | angular acceleratoin of body as provided by node $n_0$ in any configuration |
+    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | calculated from loads, connectors, ... |
+    | applied torques | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | calculated from loads, connectors, ... |
+    | constraint reaction forces | $\LU{0}{\fv}_\lambda = [f_{\lambda 0},\;f_{\lambda 1},\;f_{\lambda 2}]\tp$ | calculated from joints or constraint) |
+    | constraint reaction torques | $\LU{0}{\ttau}_\lambda = [\tau_{\lambda 0},\;\tau_{\lambda 1},\;\tau_{\lambda 2}]\tp$ | calculated from joints or constraints |
+
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     #### Rotation parametrization
@@ -1097,19 +1103,21 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{reference position}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{reference point, only equal to the position of ABRV:COM if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference)}
-      \rowTable{reference point displacement}{$\LU{0}{\uv}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of reference point which is provided by node $n_0$ in any configuration; NOTE that for configurations other than reference, it is follows that $\pRefG\cRef - \pRefG\cConfig$}
-      \rowTable{reference point velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of reference point which is provided by node $n_0$ in any configuration}
-      \rowTable{body rotation}{$\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$}{rotation of body as provided by node $n_0$ in any configuration}
-      \rowTable{body rotation matrix}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$}{rotation matrix which transforms local to global coordinates as given by node}
-      \rowTable{local position}{$\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,0]\tp$}{local position as used by markers or sensors}
-      \rowTable{body angular velocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,0,\,0]}\cConfig\tp$}{rotation of body as provided by node $n_0$ in any configuration}
-      \rowTable{(generalized) coordinates}{$\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$}{generalized coordinates of body (= coordinates of node)}
-      \rowTable{generalized forces}{$\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$}{generalized forces applied to body}
-      \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;0]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
-      \rowTable{applied torques}{$\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$}{applied torques (loads, connectors, joint reaction forces, ...)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | reference position | $\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$ | reference point, only equal to the position of ABRV:COM if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference) |
+    | reference point displacement | $\LU{0}{\uv}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of reference point which is provided by node $n_0$ in any configuration; NOTE that for configurations other than reference, it is follows that $\pRefG\cRef - \pRefG\cConfig$ |
+    | reference point velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of reference point which is provided by node $n_0$ in any configuration |
+    | body rotation | $\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$ | rotation of body as provided by node $n_0$ in any configuration |
+    | body rotation matrix | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$ | rotation matrix which transforms local to global coordinates as given by node |
+    | local position | $\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,0]\tp$ | local position as used by markers or sensors |
+    | body angular velocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,0,\,0]}\cConfig\tp$ | rotation of body as provided by node $n_0$ in any configuration |
+    | (generalized) coordinates | $\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$ | generalized coordinates of body (= coordinates of node) |
+    | generalized forces | $\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$ | generalized forces applied to body |
+    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;0]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
+    | applied torques | $\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$ | applied torques (loads, connectors, joint reaction forces, ...) |
+
     %
 
     #### Equations of motion
@@ -1914,26 +1922,23 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The following output variables are available with \texttt{SensorKinematicTree} for a specific link.
     Within the link $n_i$, a local position $\LU{n_i}{\pv_{n_i}}$ is required. All output variables are available for different
     configurations. Furthermore, $\LU{0,n_i}{\Tm}$ is the homogeneous transformation from link $n_i$ coordinates to global coordinates.
-    \startTable{Kinematic tree output variables}{symbol}{description}
-      \rowTable{Position}{$\LU{0}{\pv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}}$}{global position of local position at link $n_i$}
-      \rowTable{Displacement}{$\LU{0}{\uv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}} - \LU{0}{\pv_{n_i,\cRef}}$}{global displacement of local position at link $n_i$}
-      %
-      \rowTable{Rotation}{$\tphi_{n_i}$}{Tait-Bryan angles of link $n_i$}
-      \rowTable{RotationMatrix}{$\LU{0,n_i}{\Rot_{n_i}}$}{rotation matrix of link $n_i$}
-      \rowTable{VelocityLocal}{$\LU{n_i}{\vv_{n_i}}$}{local velocity of local position at link $n_i$}
-      %
-      \rowTable{Velocity}{$\LU{0}{\vv_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}$}{global velocity of local position at link $n_i$}
-      \rowTable{VelocityLocal}{$\LU{n_i}{\vv_{n_i}}$}{local velocity of local position at link $n_i$}
-      %
-      \rowTable{Acceleration}{$\LU{0}{\av_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}$}{global acceleration of local position at link $n_i$}
-      \rowTable{AccelerationLocal}{$\LU{n_i}{\av_{n_i}}$}{local acceleration of local position at link $n_i$}
-      %
-      \rowTable{AngularVelocity}{$\LU{0}{\tomega_{n_i}}$}{global angular velocity of local position at link $n_i$}
-      \rowTable{AngularVelocityLocal}{$\LU{n_i}{\tomega_{n_i}}$}{local angular velocity of local position at link $n_i$}
-      %
-      \rowTable{AngularAcceleration}{$\LU{0}{\talpha_{n_i}}$}{global angular acceleration of local position at link $n_i$}
-      \rowTable{AngularAccelerationLocal}{$\LU{n_i}{\talpha_{n_i}}$}{local angular acceleration of local position at link $n_i$}
-    \finishTable
+
+    | Kinematic tree output variables | symbol | description |
+    |---|---|---|
+    | Position | $\LU{0}{\pv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}}$ | global position of local position at link $n_i$ |
+    | Displacement | $\LU{0}{\uv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}} - \LU{0}{\pv_{n_i,\cRef}}$ | global displacement of local position at link $n_i$ |
+    | Rotation | $\tphi_{n_i}$ | Tait-Bryan angles of link $n_i$ |
+    | RotationMatrix | $\LU{0,n_i}{\Rot_{n_i}}$ | rotation matrix of link $n_i$ |
+    | VelocityLocal | $\LU{n_i}{\vv_{n_i}}$ | local velocity of local position at link $n_i$ |
+    | Velocity | $\LU{0}{\vv_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}$ | global velocity of local position at link $n_i$ |
+    | VelocityLocal | $\LU{n_i}{\vv_{n_i}}$ | local velocity of local position at link $n_i$ |
+    | Acceleration | $\LU{0}{\av_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}$ | global acceleration of local position at link $n_i$ |
+    | AccelerationLocal | $\LU{n_i}{\av_{n_i}}$ | local acceleration of local position at link $n_i$ |
+    | AngularVelocity | $\LU{0}{\tomega_{n_i}}$ | global angular velocity of local position at link $n_i$ |
+    | AngularVelocityLocal | $\LU{n_i}{\tomega_{n_i}}$ | local angular velocity of local position at link $n_i$ |
+    | AngularAcceleration | $\LU{0}{\talpha_{n_i}}$ | global angular acceleration of local position at link $n_i$ |
+    | AngularAccelerationLocal | $\LU{n_i}{\talpha_{n_i}}$ | local angular acceleration of local position at link $n_i$ |
+
     %
 
     #### General notes
@@ -2500,39 +2505,38 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #### Super element output variables
 
     %
-    \startTable{super element output variables}{symbol}{description}
-      \rowTable{Position}{$\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\pRef\cConfig} + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$}{global position of mesh node $n_i$ including rigid body motion and flexible deformation}
-      \rowTable{Displacement}{$\LU{0}{\cv}\cConfig(n_i) = \LU{0}{\pv\cConfig(n_i)} - \LU{0}{\pv\cRef(n_i)}$}{global displacement of mesh node $n_i$ including rigid body motion and flexible deformation}
-      %
-      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \pRef\cConfig} + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \qv\indf}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\pv}\cConfig(n_i))$}{global velocity of mesh node $n_i$ including rigid body motion and flexible deformation}
-      %
-      \rowTable{Acceleration}{$\begin{array}{l} \LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\
-                              + \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) \\
-                              + 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) \\
-                              + \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i) \\
-                              + \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) \end{array}$}{global acceleration of mesh
-                              node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$}
-      %
-      \rowTable{DisplacementLocal}{$\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\pv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$}{local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ !}
-      \rowTable{VelocityLocal}{$\LU{b}{\dot \qv\indf}\cConfig(n_i)$}{local velocity of mesh node $n_i$, representing the rate of flexible deformation within the body frame}
-    \finishTable
+
+    | super element output variables | symbol | description |
+    |---|---|---|
+    | Position | $\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\pRef\cConfig} + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$ | global position of mesh node $n_i$ including rigid body motion and flexible deformation |
+    | Displacement | $\LU{0}{\cv}\cConfig(n_i) = \LU{0}{\pv\cConfig(n_i)} - \LU{0}{\pv\cRef(n_i)}$ | global displacement of mesh node $n_i$ including rigid body motion and flexible deformation |
+    | Velocity | $\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \pRef\cConfig} + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \qv\indf}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\pv}\cConfig(n_i))$ | global velocity of mesh node $n_i$ including rigid body motion and flexible deformation |
+    | Acceleration | $\begin{array}{l} \LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\
+                                  + \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) \\
+                                  + 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) \\
+                                  + \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i) \\
+                                  + \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) \end{array}$ | global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$ |
+    | DisplacementLocal | $\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\pv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$ | local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ ! |
+    | VelocityLocal | $\LU{b}{\dot \qv\indf}\cConfig(n_i)$ | local velocity of mesh node $n_i$, representing the rate of flexible deformation within the body frame |
+
     %
     %
 
     #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{object coordinates}{$\qv = [\qv\indt\tp,\;\qv\indr\tp,\;\qv\indf\tp]\tp$}{object coordinates}
-      \rowTable{rigid body coordinates}{$\qv\indrigid = [\qv\indt\tp,\;\qv\indr\tp]\tp =  [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp$}{rigid body coordinates in case of Euler parameters}
-      \rowTable{reference frame (rigid body) position}{$\LU{0}{\pRef\cConfig} = \LU{0}{\qv_\mathrm{t,config}}+\LU{0}{\qv_\mathrm{t,ref}}$}{global position of underlying rigid body node $n_0$ which defines the reference frame origin}
-      \rowTable{reference frame (rigid body) orientation}{$\LU{0b}{\Rot(\ttheta)}\cConfig$}{transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$}
-      %
-      \rowTable{local nodal position}{$\LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}}\cRef + \LU{b}{\qv\indf^{(i)}} $}{vector of body-fixed (local) position of node $(i)$, including flexible part}
-      \rowTable{local nodal positions}{$\LU{b}{\pv} = \LU{b}{\xv}\cRef + \LU{b}{\qv\indf}$}{vector of all body-fixed (local) nodal positions including flexible part}
-      \rowTable{rotation coordinates}{$\ttheta\cCur = [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\cCur\tp$}{rigid body coordinates in case of Euler parameters}
-      \rowTable{flexible coordinates}{$\LU{b}{\qv\indf}$}{flexible, body-fixed coordinates}
-      \rowTable{transformation of flexible coordinates}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | object coordinates | $\qv = [\qv\indt\tp,\;\qv\indr\tp,\;\qv\indf\tp]\tp$ | object coordinates |
+    | rigid body coordinates | $\qv\indrigid = [\qv\indt\tp,\;\qv\indr\tp]\tp =  [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp$ | rigid body coordinates in case of Euler parameters |
+    | reference frame (rigid body) position | $\LU{0}{\pRef\cConfig} = \LU{0}{\qv_\mathrm{t,config}}+\LU{0}{\qv_\mathrm{t,ref}}$ | global position of underlying rigid body node $n_0$ which defines the reference frame origin |
+    | reference frame (rigid body) orientation | $\LU{0b}{\Rot(\ttheta)}\cConfig$ | transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$ |
+    | local nodal position | $\LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}}\cRef + \LU{b}{\qv\indf^{(i)}} $ | vector of body-fixed (local) position of node $(i)$, including flexible part |
+    | local nodal positions | $\LU{b}{\pv} = \LU{b}{\xv}\cRef + \LU{b}{\qv\indf}$ | vector of all body-fixed (local) nodal positions including flexible part |
+    | rotation coordinates | $\ttheta\cCur = [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\cCur\tp$ | rigid body coordinates in case of Euler parameters |
+    | flexible coordinates | $\LU{b}{\qv\indf}$ | flexible, body-fixed coordinates |
+    | transformation of flexible coordinates | $\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$ | block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates |
+
     %++++++++++++++++++++++++++++++++++++++
     The derivations follow Zwölfer and Gerstmayr [CITE:ZwoelferGerstmayr2021] with only small modifications in the notation.
 
@@ -3023,46 +3027,44 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
     %#### Definition of quantities
     %The object additionally provides the following output variables for mesh nodes (use \texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
-    \startTable{super element output variables}{symbol}{description}
-        \rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$}{local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement}
-        \rowTable{VelocityLocal (mesh node $(i)$)}{$\LU{b}{\dot \uv_\mathrm{f}^{(i)}} = \left( \LU{b}{\tPsi} \dot \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}$}{local nodal mesh velocity in reference (body) frame, only for flexible part of displacement}
-        \rowTable{Displacement (mesh node $(i)$)}{$\LU{0}{\uv\cConfig^{(i)}} = \LU{0}{\qv_{\mathrm{t,config}}} + \LU{0b}{\Am_\mathrm{config}} \LU{b}{\pv_\mathrm{f,config}^{(i)}} - (\LU{0}{\qv_{\mathrm{t,ref}}} + \LU{0b}{\Am_{ref}} \LU{b}{\xv\cRef^{(i)}})$}{nodal mesh displacement in global coordinates}
-        \rowTable{Position (mesh node $(i)$)}{$\LU{0}{\pv^{(i)}} = \LU{0}{\pRef} + \LU{0b}{\Am} \LU{b}{\pv\indf^{(i)}}$}{nodal mesh position in global coordinates}
-        \rowTable{Velocity (mesh node $(i)$)}{$\LU{0}{\dot \uv^{(i)}} = \LU{0}{\dot \qv\indt} + \LU{0b}{\Am} (\LU{b}{\dot \uv\indf^{(i)}} + \LU{b}{\tilde \tomega} \LU{b}{\pv\indf^{(i)}})$}{nodal mesh velocity in global coordinates}
-        \rowTable{Acceleration (mesh node $(i)$)}{$\LU{0}{\av^{(i)}} = \LU{0}{\ddot \qv\indt} + 
-                                                        \LU{0b}{\Rot} \LU{b}{\ddot \uv\indf^{(i)}} + 
-                                                        2\LU{0}{\tomega} \times \LU{0b}{\Rot} \LU{b}{\dot \uv\indf^{(i)}} +
-                                                        \LU{0}{\talpha} \times \LU{0}{\pv\indf^{(i)}} + 
-                                                        \LU{0}{\tomega} \times (\LU{0}{\tomega} \times \LU{0}{\pv\indf^{(i)}})$}{global acceleration of mesh 
-                                                        node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}(n_i)$}
-        \rowTable{StressLocal (mesh node $(i)$)}{$\LU{b}{\tsigma^{(i)}} = (\LU{b}{\tPsi_{OV}} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized stress components of mesh node $(i)$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StressLocal}}
-        \rowTable{StrainLocal (mesh node $(i)$)}{$\LU{b}{\teps^{(i)}} = (\LU{b}{\tPsi}_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized strain components of mesh node $(i)$ in reference frame; $\teps=[\varepsilon_{xx},\,\varepsilon_{yy},\,\varepsilon_{zz},\,\varepsilon_{yz},\,\varepsilon_{xz},\,\varepsilon_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StrainLocal}}
-    \finishTable
+
+    | super element output variables | symbol | description |
+    |---|---|---|
+    | DisplacementLocal (mesh node $i$) | $\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$ | local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement |
+    | VelocityLocal (mesh node $(i)$) | $\LU{b}{\dot \uv_\mathrm{f}^{(i)}} = \left( \LU{b}{\tPsi} \dot \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}$ | local nodal mesh velocity in reference (body) frame, only for flexible part of displacement |
+    | Displacement (mesh node $(i)$) | $\LU{0}{\uv\cConfig^{(i)}} = \LU{0}{\qv_{\mathrm{t,config}}} + \LU{0b}{\Am_\mathrm{config}} \LU{b}{\pv_\mathrm{f,config}^{(i)}} - (\LU{0}{\qv_{\mathrm{t,ref}}} + \LU{0b}{\Am_{ref}} \LU{b}{\xv\cRef^{(i)}})$ | nodal mesh displacement in global coordinates |
+    | Position (mesh node $(i)$) | $\LU{0}{\pv^{(i)}} = \LU{0}{\pRef} + \LU{0b}{\Am} \LU{b}{\pv\indf^{(i)}}$ | nodal mesh position in global coordinates |
+    | Velocity (mesh node $(i)$) | $\LU{0}{\dot \uv^{(i)}} = \LU{0}{\dot \qv\indt} + \LU{0b}{\Am} (\LU{b}{\dot \uv\indf^{(i)}} + \LU{b}{\tilde \tomega} \LU{b}{\pv\indf^{(i)}})$ | nodal mesh velocity in global coordinates |
+    | Acceleration (mesh node $(i)$) | $\LU{0}{\av^{(i)}} = \LU{0}{\ddot \qv\indt} + 
+                                                            \LU{0b}{\Rot} \LU{b}{\ddot \uv\indf^{(i)}} + 
+                                                            2\LU{0}{\tomega} \times \LU{0b}{\Rot} \LU{b}{\dot \uv\indf^{(i)}} +
+                                                            \LU{0}{\talpha} \times \LU{0}{\pv\indf^{(i)}} + 
+                                                            \LU{0}{\tomega} \times (\LU{0}{\tomega} \times \LU{0}{\pv\indf^{(i)}})$ | global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}(n_i)$ |
+    | StressLocal (mesh node $(i)$) | $\LU{b}{\tsigma^{(i)}} = (\LU{b}{\tPsi_{OV}} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$ | linearized stress components of mesh node $(i)$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StressLocal} |
+    | StrainLocal (mesh node $(i)$) | $\LU{b}{\teps^{(i)}} = (\LU{b}{\tPsi}_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$ | linearized strain components of mesh node $(i)$ in reference frame; $\teps=[\varepsilon_{xx},\,\varepsilon_{yy},\,\varepsilon_{zz},\,\varepsilon_{yz},\,\varepsilon_{xz},\,\varepsilon_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StrainLocal} |
+
     %
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
-    \startTable{intermediate variables}{symbol}{description}
-        \rowTable{reference frame}{$b$}{the body-fixed / local frame is always denoted by $b$}
-        \rowTable{number of rigid body coordinates}{$n\indrigid$}{number of rigid body node coordinates: 6 in case of Euler angles (not fully available for ObjectFFRFreducedOrder) and 7 in case of Euler parameters}
-        \rowTable{number of flexible / mesh coordinates}{$n\indf = 3 \cdot n_n$}{with number of nodes $n_n$; relevant for visualization}
-        \rowTable{number of modal coordinates}{$n_m \ll n\indf$}{the number of reduced or modal coordinates, computed from number of columns given in \texttt{modeBasis}}
-        \rowTable{total number object coordinates}{$n_{ODE2} = n_m + n_{rigid}$}{}
-    %
-        \rowTable{reference frame origin}{$\LU{0}{\pRef} = \LU{0}{\qv_{\mathrm{t}}} + \LU{0}{\qv_{\mathrm{t,ref}}}$}{reference frame position (origin)}
-        \rowTable{reference frame rotation}{$\ttheta\cConfig = \ttheta\cConfig + \ttheta_{ref}$}{reference frame rotation parameters in any configuration except reference}
-        \rowTable{reference frame orientation}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}\cConfig(\ttheta\cConfig)$}{transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$}
-    %
-        \rowTable{local vector of flexible coordinates}{$\LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta$}{represents mesh displacements; vector of alternating x,y, an z coordinates of local (in body frame) mesh displacements reconstructed from modal coordinates $\tzeta$; only evaluated for selected node points (e.g., sensors) during computation; corresponds to same vector in \texttt{ObjectFFRF}}
-        \rowTable{local nodal positions}{$\LU{b}{\pv\indf} = \LU{b}{\qv\indf} + \LU{b}{\xv\cRef}$}{vector of all body-fixed nodal positions including flexible part; only evaluated for selected node points during computation}
-        \rowTable{local position of node (i)}{$\LU{b}{\pv\indf^{(i)}} = \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{body-fixed, deformed nodal mesh position (including flexible part)}
-    %
-        \rowTable{vector of modal coordinates}{$\tzeta = [\zeta_0,\,\ldots,\zeta_{n_m-1}]\tp$}{vector of modal or reduced coordinates; these coordinates can either represent amplitudes of eigenmodes, static modes or general modes, depending on your mode basis}
-        \rowTable{coordinate vector}{$\qv = [\LU{0}{\qv\indt},\,\tpsi,\,\tzeta]$}{vector of object coordinates; $\qv\indt$ and $\tpsi$ are the translation and rotation part of displacements of the reference frame, provided by the rigid body node (node number 0)}
-    %
-        \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am}])$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
-    %
-        %\rowTable{local mesh displacements}{$\LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv}_{\mathrm{f},i\cdot 3}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+1}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+2}}$}{nodal mesh displacement in local coordinates (body frame)}
-        %\rowTable{local mesh position}{$\LU{b}{\pv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
-    \finishTable
+    %\rowTable{local mesh displacements}{$\LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv}_{\mathrm{f},i\cdot 3}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+1}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+2}}$}{nodal mesh displacement in local coordinates (body frame)}
+    %\rowTable{local mesh position}{$\LU{b}{\pv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | reference frame | $b$ | the body-fixed / local frame is always denoted by $b$ |
+    | number of rigid body coordinates | $n\indrigid$ | number of rigid body node coordinates: 6 in case of Euler angles (not fully available for ObjectFFRFreducedOrder) and 7 in case of Euler parameters |
+    | number of flexible / mesh coordinates | $n\indf = 3 \cdot n_n$ | with number of nodes $n_n$; relevant for visualization |
+    | number of modal coordinates | $n_m \ll n\indf$ | the number of reduced or modal coordinates, computed from number of columns given in \texttt{modeBasis} |
+    | total number object coordinates | $n_{ODE2} = n_m + n_{rigid}$ |  |
+    | reference frame origin | $\LU{0}{\pRef} = \LU{0}{\qv_{\mathrm{t}}} + \LU{0}{\qv_{\mathrm{t,ref}}}$ | reference frame position (origin) |
+    | reference frame rotation | $\ttheta\cConfig = \ttheta\cConfig + \ttheta_{ref}$ | reference frame rotation parameters in any configuration except reference |
+    | reference frame orientation | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}\cConfig(\ttheta\cConfig)$ | transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$ |
+    | local vector of flexible coordinates | $\LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta$ | represents mesh displacements; vector of alternating x,y, an z coordinates of local (in body frame) mesh displacements reconstructed from modal coordinates $\tzeta$; only evaluated for selected node points (e.g., sensors) during computation; corresponds to same vector in \texttt{ObjectFFRF} |
+    | local nodal positions | $\LU{b}{\pv\indf} = \LU{b}{\qv\indf} + \LU{b}{\xv\cRef}$ | vector of all body-fixed nodal positions including flexible part; only evaluated for selected node points during computation |
+    | local position of node (i) | $\LU{b}{\pv\indf^{(i)}} = \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$ | body-fixed, deformed nodal mesh position (including flexible part) |
+    | vector of modal coordinates | $\tzeta = [\zeta_0,\,\ldots,\zeta_{n_m-1}]\tp$ | vector of modal or reduced coordinates; these coordinates can either represent amplitudes of eigenmodes, static modes or general modes, depending on your mode basis |
+    | coordinate vector | $\qv = [\LU{0}{\qv\indt},\,\tpsi,\,\tzeta]$ | vector of object coordinates; $\qv\indt$ and $\tpsi$ are the translation and rotation part of displacements of the reference frame, provided by the rigid body node (node number 0) |
+    | flexible coordinates transformation matrix | $\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am}])$ | block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates |
+
     %
 
     #### Modal reduction and reduced inertia matrices
@@ -3860,18 +3862,20 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-      \rowTable{beam height}{$h$}{beam height used in several definitions, but effectively undefined. The geometry of the cross section has no influence except for drawing or contact.}
-      \rowTable{local beam position}{$\pLocB=[x,\, y,\, 0]\tp$}{local position at axial coordinate $x \in [0,L]$ and cross section coordinate $y \in [-h/2, h/2]$. }
-      \rowTable{beam axis position}{$\LU{0}{\rv(x)} = \rv(x) $}{}
-      \rowTable{beam axis slope}{$\LU{0}{\rv'(x)} = \rv'(x) $}{}
-      \rowTable{beam axis tangent}{$\LU{0}{\tv(x)} = \frac{\rv'(x)}{\Vert \rv(x)'\Vert} $}{this (normalized) vector is normal to cross section}
-      \rowTable{beam axis normal}{$\LU{0}{\nv(x)} = [n_x,\, n_y]\tp = [-t_y,\, t_x]\tp  $}{this (normalized) vector lies within the cross section and defines positive $y$-direction.}
-      \rowTable{angular velocity}{$\omega_2 = (-r'_y \cdot \dot r'_x + r'_x \cdot \dot r'_y) / \Vert \rv(x)'\Vert^2 $}{}
-      \rowTable{rotation matrix}{$\LU{0b}{\Rot}$}{}
-      %\rowTable{}{$\LU{0}{\fv} $}{}
-      %\rowTable{}{$\LU{0}{\fv} $}{}
-    \finishTable
+    %\rowTable{}{$\LU{0}{\fv} $}{}
+    %\rowTable{}{$\LU{0}{\fv} $}{}
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | beam height | $h$ | beam height used in several definitions, but effectively undefined. The geometry of the cross section has no influence except for drawing or contact. |
+    | local beam position | $\pLocB=[x,\, y,\, 0]\tp$ | local position at axial coordinate $x \in [0,L]$ and cross section coordinate $y \in [-h/2, h/2]$. |
+    | beam axis position | $\LU{0}{\rv(x)} = \rv(x) $ |  |
+    | beam axis slope | $\LU{0}{\rv'(x)} = \rv'(x) $ |  |
+    | beam axis tangent | $\LU{0}{\tv(x)} = \frac{\rv'(x)}{\Vert \rv(x)'\Vert} $ | this (normalized) vector is normal to cross section |
+    | beam axis normal | $\LU{0}{\nv(x)} = [n_x,\, n_y]\tp = [-t_y,\, t_x]\tp  $ | this (normalized) vector lies within the cross section and defines positive $y$-direction. |
+    | angular velocity | $\omega_2 = (-r'_y \cdot \dot r'_x + r'_x \cdot \dot r'_y) / \Vert \rv(x)'\Vert^2 $ |  |
+    | rotation matrix | $\LU{0b}{\Rot}$ |  |
+
 
     The Bernoulli-Euler beam is capable of large axial and bendig deformation as it employs the material measure of curvature for the bending.
     %
@@ -5330,19 +5334,23 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
-    \rowTable{time derivative of distance}{$\dot L$}{$\Delta\! \LU{0}{\vv}\tp \vv_{f}$}
-    \finishTable
-    \startTable{output variables}{symbol}{formula}
-    \rowTable{Displacement}{$\Delta\! \LU{0}{\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
-    \rowTable{Velocity}{$\Delta\! \LU{0}{\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
-    \rowTable{Distance}{$L$}{$|\Delta\! \LU{0}{\pv}|$}
-    \rowTable{Force}{$\fv$}{see below}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ |  |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
+    | time derivative of distance | $\dot L$ | $\Delta\! \LU{0}{\vv}\tp \vv_{f}$ |
+
+
+    | output variables | symbol | formula |
+    |---|---|---|
+    | Displacement | $\Delta\! \LU{0}{\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
+    | Velocity | $\Delta\! \LU{0}{\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
+    | Distance | $L$ | $|\Delta\! \LU{0}{\pv}|$ |
+    | Force | $\fv$ | see below |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -5687,12 +5695,14 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ |  |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
+
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
 
     #### Connector forces
@@ -5958,36 +5968,38 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{input parameter}{symbol}{description}
-    \rowTable{stiffness}{$\kv \in \mathbb{R}^{6\times 6}$}{stiffness in $J0$ coordinates}
-    \rowTable{damping}{$\dv \in \mathbb{R}^{6\times 6}$}{damping in $J0$ coordinates}
-    \rowTable{offset}{$\LUR{J0}{\vv}{\mathrm{off}} \in \mathbb{R}^{6}$}{offset in $J0$ coordinates}
-    \rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
-    \rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
-    \rowTable{markerNumbers[0]}{$m0$}{global marker number m0}
-    \rowTable{markerNumbers[1]}{$m1$}{global marker number m1}
-    \finishTable
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    %
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    \rowTable{marker m0 velocity}{$\LU{m0}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{m1}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
-    \rowTable{Velocity}{$\LU{0}{\Delta\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
+
+    | input parameter | symbol | description |
+    |---|---|---|
+    | stiffness | $\kv \in \mathbb{R}^{6\times 6}$ | stiffness in $J0$ coordinates |
+    | damping | $\dv \in \mathbb{R}^{6\times 6}$ | damping in $J0$ coordinates |
+    | offset | $\LUR{J0}{\vv}{\mathrm{off}} \in \mathbb{R}^{6}$ | offset in $J0$ coordinates |
+    | rotationMarker0 | $\LU{m0,J0}{\Rot}$ | rotation matrix which transforms from joint 0 into marker 0 coordinates |
+    | rotationMarker1 | $\LU{m1,J1}{\Rot}$ | rotation matrix which transforms from joint 1 into marker 1 coordinates |
+    | markerNumbers[0] | $m0$ | global marker number m0 |
+    | markerNumbers[1] | $m1$ | global marker number m1 |
+
     %definition how output variables are computed:
-    \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
-    \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$}
-    %
-    \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\tomega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\tomega} - \LU{0,m0}{\Rot} \LU{m0}{\tomega} \right)$}
     %\rowTable{Rotation}{$\LU{J0}{\ttheta} = [\theta_0,\theta_1,\theta_2]$}{intrinsicFormulation=False: Tait-Bryan angles retrieved from relative rotation matrix; intrinsicFormulation=True: rotation vector of relative rotation matrix}
     %\rowTable{ForceLocal}{$\LU{J0}{\fv}$}{see below}
     %\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | marker m0 velocity | $\LU{m0}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
+    | marker m1 velocity | $\LU{m1}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
+    | Displacement | $\LU{0}{\Delta\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
+    | Velocity | $\LU{0}{\Delta\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
+    | DisplacementLocal | $\LU{J0}{\Delta\pv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$ |
+    | VelocityLocal | $\LU{J0}{\Delta\vv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ |
+    | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\tomega} - \LU{0,m0}{\Rot} \LU{m0}{\tomega} \right)$ |
+
 
     #### Connector forces
 
@@ -6240,23 +6252,26 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{input parameter}{symbol}{description}
     %\rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
     %\rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
-    \rowTable{markerNumbers[0]}{$m0$}{global marker number m0}
-    \rowTable{markerNumbers[1]}{$m1$}{global marker number m1}
-    \finishTable
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
+
+    | input parameter | symbol | description |
+    |---|---|---|
+    | markerNumbers[0] | $m0$ | global marker number m0 |
+    | markerNumbers[1] | $m1$ | global marker number m1 |
+
     %\rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{marker m0 position}{$\LU{0}{\pv_{m0}}$}{current position matrix provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv_{m1}}$}{current position matrix provided by marker m1}
-    %
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity vector provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity vector provided by marker m1}
-    \rowTable{relative displacement}{$\Delta x = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\pv_{m1}} - \LU{0}{\pv_{m0}})$}{scalar relative displacement}
-    \rowTable{relative velocity}{$\Delta v = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\vv_{m1}} - \LU{0}{\vv_{m0}})$}{scalar relative velocity; note that this only corresponds to the time derivative of $\Delta x$ if the markers only move along the axis (in a prismatic joint)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m0 position | $\LU{0}{\pv_{m0}}$ | current position matrix provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv_{m1}}$ | current position matrix provided by marker m1 |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity vector provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity vector provided by marker m1 |
+    | relative displacement | $\Delta x = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\pv_{m1}} - \LU{0}{\pv_{m0}})$ | scalar relative displacement |
+    | relative velocity | $\Delta v = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\vv_{m1}} - \LU{0}{\vv_{m0}})$ | scalar relative velocity; note that this only corresponds to the time derivative of $\Delta x$ if the markers only move along the axis (in a prismatic joint) |
+
 
     #### Connector forces
 
@@ -6458,22 +6473,25 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{input parameter}{symbol}{description}
-    \rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
-    \rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
-    \rowTable{markerNumbers[0]}{$m0$}{global marker number m0}
-    \rowTable{markerNumbers[1]}{$m1$}{global marker number m1}
-    \rowTable{nodeNumber}{$n0$}{optional node number of a generic node (otherwise exu.InvalidIndex())}
-    \finishTable
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    %
-    \rowTable{marker m0 ang.\ velocity}{$\LU{m0}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
-    \rowTable{marker m1 ang.\ velocity}{$\LU{m1}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
+
+    | input parameter | symbol | description |
+    |---|---|---|
+    | rotationMarker0 | $\LU{m0,J0}{\Rot}$ | rotation matrix which transforms from joint 0 into marker 0 coordinates |
+    | rotationMarker1 | $\LU{m1,J1}{\Rot}$ | rotation matrix which transforms from joint 1 into marker 1 coordinates |
+    | markerNumbers[0] | $m0$ | global marker number m0 |
+    | markerNumbers[1] | $m1$ | global marker number m1 |
+    | nodeNumber | $n0$ | optional node number of a generic node (otherwise exu.InvalidIndex()) |
+
     %definition how output variables are computed:
-    \rowTable{AngularVelocityLocal}{$\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$}{angular velocity around joint0 Z-axis}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | marker m0 ang.\ velocity | $\LU{m0}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
+    | marker m1 ang.\ velocity | $\LU{m1}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
+    | AngularVelocityLocal | $\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$ | angular velocity around joint0 Z-axis |
+
 
     #### Connector forces
 
@@ -6692,12 +6710,14 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
-    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
-    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
-    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 coordinate | $q_{m0}$ | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate! |
+    | marker m1 coordinate | $q_{m1}$ |  |
+    | marker m0 velocity coordinate | $v_{m0}$ | current velocity coordinate which is provided by marker m0 |
+    | marker m1 velocity coordinate | $v_{m1}$ |  |
+
 
     #### Connector forces
 
@@ -6902,12 +6922,14 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
-    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
-    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
-    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 coordinate | $q_{m0}$ | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate! |
+    | marker m1 coordinate | $q_{m1}$ |  |
+    | marker m0 velocity coordinate | $v_{m0}$ | current velocity coordinate which is provided by marker m0 |
+    | marker m1 velocity coordinate | $v_{m1}$ |  |
+
 
     #### Connector forces
 
@@ -7268,18 +7290,22 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
-    \finishTable
-    \startTable{output variables}{symbol}{formula}
-    \rowTable{Displacement}{$\Delta\! \LU{0}{\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
-    \rowTable{Velocity}{$\Delta\! \LU{0}{\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
-    \rowTable{Distance}{$L$}{$|\Delta\! \LU{0}{\pv}|$}
-    \rowTable{Force}{$\fv$}{see below}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ |  |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
+
+
+    | output variables | symbol | formula |
+    |---|---|---|
+    | Displacement | $\Delta\! \LU{0}{\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
+    | Velocity | $\Delta\! \LU{0}{\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
+    | Distance | $L$ | $|\Delta\! \LU{0}{\pv}|$ |
+    | Force | $\fv$ | see below |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -7480,17 +7506,19 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
-    \rowTable{Displacement}{$\Delta\! \LU{0}{\pv}$=$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{The relative vector between marker points, stored as Displacement in output variables}
-    \rowTable{current actuator length}{$L$=$|\Delta\! \LU{0}{\pv}|$}{stored as Distance in output variables}
-    \rowTable{time derivative of actuator length}{$\dot L$=$\Delta\! \LU{0}{\vv}\tp \vv_{f}$}{}
-    \rowTable{Velocity}{$\Delta\! \LU{0}{\vv}$=$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{The vectorial relative velocity}
-    \rowTable{Force}{$\fv$}{see below}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ |  |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
+    | Displacement | $\Delta\! \LU{0}{\pv}$=$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | The relative vector between marker points, stored as Displacement in output variables |
+    | current actuator length | $L$=$|\Delta\! \LU{0}{\pv}|$ | stored as Distance in output variables |
+    | time derivative of actuator length | $\dot L$=$\Delta\! \LU{0}{\vv}\tp \vv_{f}$ |  |
+    | Velocity | $\Delta\! \LU{0}{\vv}$=$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | The vectorial relative velocity |
+    | Force | $\fv$ | see below |
+
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -8117,17 +8145,17 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-        \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-        \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
-    %
-        \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-        \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-        \rowTable{relative displacement}{$\LU{0}{\Delta\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
-        \rowTable{relative velocity}{$\LU{0}{\Delta\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
-    %
-        \rowTable{algebraicVariable}{$\lambda_0$}{Lagrange multiplier = force in constraint}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | relative displacement | $\LU{0}{\Delta\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
+    | relative velocity | $\LU{0}{\Delta\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
+    | algebraicVariable | $\lambda_0$ | Lagrange multiplier = force in constraint |
+
 
     #### Connector forces constraint equations
 
@@ -8265,14 +8293,16 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
-    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
-    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
-    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
-    \rowTable{difference of coordinates}{$\Delta q = q_{m1} - q_{m0}$}{Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates)}
-    \rowTable{difference of velocity coordinates}{$\Delta v= v_{m1} - v_{m0}$}{}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 coordinate | $q_{m0}$ | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate! |
+    | marker m1 coordinate | $q_{m1}$ |  |
+    | marker m0 velocity coordinate | $v_{m0}$ | current velocity coordinate which is provided by marker m0 |
+    | marker m1 velocity coordinate | $v_{m1}$ |  |
+    | difference of coordinates | $\Delta q = q_{m1} - q_{m0}$ | Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates) |
+    | difference of velocity coordinates | $\Delta v= v_{m1} - v_{m0}$ |  |
+
 
     #### Connector constraint equations
 
@@ -8519,16 +8549,17 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 coordinate vector}{$\qv_{m0} \in \Rcal^{n_{q_{m0}}}$}{coordinate vector provided by marker $m0$; depending on the marker, the coordinates may or may not include reference coordinates}
-    \rowTable{marker m1 coordinate vector}{$\qv_{m1} \in \Rcal^{n_{q_{m1}}}$}{coordinate vector provided by marker $m1$; depending on the marker, the coordinates may or may not include reference coordinates}
-    \rowTable{marker m0 velocity coordinate vector}{$\dot \qv_{m0} \in \Rcal^{n_{q_{m0}}}$}{velocity coordinate vector provided by marker $m0$}
-    \rowTable{marker m1 velocity coordinate vector}{$\dot \qv_{m1} \in \Rcal^{n_{q_{m1}}}$}{velocity coordinate vector provided by marker $m1$}
-    \rowTable{number of algebraic equations}{$n_{ae}$}{number of algebraic equations must be same as number of rows in $\Xm_{m0}$ and $\Xm_{m1}$}
-    %
-    \rowTable{difference of coordinates}{$\Delta \qv = \qv_{m1} - \qv_{m0}$}{Displacement between marker m0 to marker m1 coordinates}
-    \rowTable{difference of velocity coordinates}{$\Delta \vv= \dot \qv_{m1} - \dot \qv_{m0}$}{}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 coordinate vector | $\qv_{m0} \in \Rcal^{n_{q_{m0}}}$ | coordinate vector provided by marker $m0$; depending on the marker, the coordinates may or may not include reference coordinates |
+    | marker m1 coordinate vector | $\qv_{m1} \in \Rcal^{n_{q_{m1}}}$ | coordinate vector provided by marker $m1$; depending on the marker, the coordinates may or may not include reference coordinates |
+    | marker m0 velocity coordinate vector | $\dot \qv_{m0} \in \Rcal^{n_{q_{m0}}}$ | velocity coordinate vector provided by marker $m0$ |
+    | marker m1 velocity coordinate vector | $\dot \qv_{m1} \in \Rcal^{n_{q_{m1}}}$ | velocity coordinate vector provided by marker $m1$ |
+    | number of algebraic equations | $n_{ae}$ | number of algebraic equations must be same as number of rows in $\Xm_{m0}$ and $\Xm_{m1}$ |
+    | difference of coordinates | $\Delta \qv = \qv_{m1} - \qv_{m0}$ | Displacement between marker m0 to marker m1 coordinates |
+    | difference of velocity coordinates | $\Delta \vv= \dot \qv_{m1} - \dot \qv_{m0}$ |  |
+
     %
 
     #### Remarks
@@ -8760,30 +8791,29 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference point; currently unused}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2]\tp$}{data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction)}
-    %
     %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
-    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-    %
-    \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}} = \LU{0,m0}{\Am} \LU{m0}{\vv_{PN}}$}{normalized normal vector to the ground body (rotates with marker $m0$ if not fixed to ground)}
-    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground (normal projection)}
-    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
-    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
-    \rowTable{wheel axis vector}{$\LU{0}{\wv_1} =\LU{0,m1}{\Rot} \LU{m1}{\wv_{1}} $}{normalized disc axis vector in global coordinates}
-    \rowTable{longitudinal vector}{$\LU{0}{\wv_2}$}{vector in longitudinal (motion) direction}
-    \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
-    \rowTable{lateral vector}{$\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$}{vector in lateral direction, parallel to ground plane}
-    \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
-    %
-    \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0, any ground reference point; currently unused |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0; currently unused |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | center of disc |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2]\tp$ | data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction) |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+    | ground normal vector | $\LU{0}{\vv_{PN}} = \LU{0,m0}{\Am} \LU{m0}{\vv_{PN}}$ | normalized normal vector to the ground body (rotates with marker $m0$ if not fixed to ground) |
+    | ground position B | $\LU{0}{\pv}_{B}$ | disc center point projected on ground (normal projection) |
+    | ground position C | $\LU{0}{\pv}_{C}$ | contact point of disc with ground |
+    | ground velocity C | $\LU{0}{\vv}_{C}$ | velocity of disc at ground contact point (must be zero at end of iteration) |
+    | wheel axis vector | $\LU{0}{\wv_1} =\LU{0,m1}{\Rot} \LU{m1}{\wv_{1}} $ | normalized disc axis vector in global coordinates |
+    | longitudinal vector | $\LU{0}{\wv_2}$ | vector in longitudinal (motion) direction |
+    | contact point vector | $\LU{0}{\wv_3}$ | normalized vector from disc center point in direction of contact point C |
+    | lateral vector | $\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$ | vector in lateral direction, parallel to ground plane |
+    | $D1$ transformation matrix | $\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$ | transformation of special disc coordinates $D1$ to global coordinates |
+    | connector forces | $\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$ | joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal) |
+
     
     #### Geometric relations
 
@@ -9124,22 +9154,8 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference point; currently unused}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of roll}
-    \rowTable{Contact position}{$\LU{0}{\pv}_{C}$}{Position of the Contact point C in the global frame 0}
-    \rowTable{Position marker m1 to contact}{$\LU{0}{\pv}_{\mathrm{m1, C}}$}{Position of the contact point C relative to the marker m1 in global frame}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2]\tp$}{data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction)}
-    %
     %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker m1}
     %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
-    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-    %
-    \rowTable{ground normal vector}{$\LU{0}{\nv}$}{normalized normal vector to the (moving, but not rotating) ground, by default [0,0,1]}
-    
     %    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{roll center point projected on ground (normal projection)}
     %    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
     %    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
@@ -9147,9 +9163,21 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     %    \rowTable{longitudinal vector}{$\LU{0}{\wv}_2$}{vector in longitudinal (motion) direction}
     %    \rowTable{lateral vector}{$\LU{0}{\wv}_l = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2 = [-\wv_{2,y}, \wv_{2,x}, 0]$}{vector in lateral direction, lies in ground plane}
     %    \rowTable{contact point vector}{$\LU{0}{\wv}_3$}{normalized vector from disc center point in direction of contact point C}
-    %
     %    \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0, any ground reference point; currently unused |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0; currently unused |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | center of roll |
+    | Contact position | $\LU{0}{\pv}_{C}$ | Position of the Contact point C in the global frame 0 |
+    | Position marker m1 to contact | $\LU{0}{\pv}_{\mathrm{m1, C}}$ | Position of the contact point C relative to the marker m1 in global frame |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2]\tp$ | data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction) |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
+    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+    | ground normal vector | $\LU{0}{\nv}$ | normalized normal vector to the (moving, but not rotating) ground, by default [0,0,1] |
+
     %
 
     #### Geometric relations
@@ -9635,16 +9663,17 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{represents current global position of the circle's centerpoint}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1}{}{represents the 2D ANCF cable}
-    \rowTable{data node}{$\xv=[x_{i},\; \ldots,\; x_{3 n_{cs} -1}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{data coordinates for segment $i$}{$[x_i,\, x_{n_{cs}+ i},\, x_{2\cdot n_{cs}+ i}]\tp = [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\tp$, with $i \in [0,n_{cs}-1]$}{
-              The data coordinates include the gap $x_{gap}$, the stick-slip state $x_{isSlipStick}$ and the previous sticking position $x_{lastStick}$ as computed in the PostNewtonStep, see description below. }
-    \rowTable{shortest distance to segment $s_i$}{$\dv_{g,i}$}{shortest distance of center of circle to contact segment, considering the endpoint of the segment}
     %\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | represents current global position of the circle's centerpoint |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 |  | represents the 2D ANCF cable |
+    | data node | $\xv=[x_{i},\; \ldots,\; x_{3 n_{cs} -1}]\tp$ | coordinates of node with node number $n_{GD}$ |
+    | data coordinates for segment $i$ | $[x_i,\, x_{n_{cs}+ i},\, x_{2\cdot n_{cs}+ i}]\tp = [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\tp$, with $i \in [0,n_{cs}-1]$ | The data coordinates include the gap $x_{gap}$, the stick-slip state $x_{isSlipStick}$ and the previous sticking position $x_{lastStick}$ as computed in the PostNewtonStep, see description below. |
+    | shortest distance to segment $s_i$ | $\dv_{g,i}$ | shortest distance of center of circle to contact segment, considering the endpoint of the segment |
+
     %++++++++++++++++++++++++
     
 
@@ -10251,17 +10280,19 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of sphere 0 center as provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{global position of sphere 1 center as provided by marker m1}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$}{hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and the plastic deformation (3) of the adhesion model}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker m1}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
-    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of sphere 0 center as provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and the plastic deformation (3) of the adhesion model |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
+    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+
 
     #### Connector forces
 
@@ -10610,17 +10641,19 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of torus 0 center as provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{global position of sphere 1 center as provided by marker m1}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$}{hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined }
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker m1}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
-    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of torus 0 center as provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
+    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+
 
     #### Connector forces
 
@@ -10782,17 +10815,19 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of torus 0 center as provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{global position of sphere 1 center as provided by marker m1}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$}{hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined }
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker m1}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
-    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of torus 0 center as provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
+    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+
 
     #### Connector forces
 
@@ -10949,13 +10984,15 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{global position of sphere 0 center as provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
-    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\, \ldots]\tp$}{data coordinates per number of circle markers}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of sphere 0 center as provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
+    | data coordinates | $\xv=[x_0,\,x_1,\, \ldots]\tp$ | data coordinates per number of circle markers |
+
     %
 
     #### Geometric relations
@@ -11129,28 +11166,28 @@ definitions.append(ItemDefinition(
     equations=r"""    (sec-objectjointgeneric-definitionofquantities)=
     #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{joint J0 orientation}{$\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$}{joint $J0$ rotation matrix}
-    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
-    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-    %
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{used, if all translational axes are constrained}
-    \rowTable{Velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{used, if all translational axes are constrained (velocity level)}
-    %
-    \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
-    \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
-    \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
-    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | joint J0 orientation | $\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$ | joint $J0$ rotation matrix |
+    | joint J0 orientation vectors | $\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | joint J1 orientation | $\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$ | joint $J1$ rotation matrix |
+    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | marker m0 velocity | $\LU{b}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
+    | marker m1 velocity | $\LU{b}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
+    | Displacement | $\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | used, if all translational axes are constrained |
+    | Velocity | $\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | used, if all translational axes are constrained (velocity level) |
+    | DisplacementLocal | $\LU{J0}{\Delta\pv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$ |
+    | VelocityLocal | $\LU{J0}{\Delta\vv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system |
+    | AngularVelocityLocal | $\LU{J0}{\Delta\omega}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$ |
+    | algebraic variables | $\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$ | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
     %
 
     #### Connector constraint equations
@@ -11433,28 +11470,28 @@ definitions.append(ItemDefinition(
     equations=r"""    (sec-objectjointrevolutez-definitionofquantities)=
     #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{joint J0 orientation}{$\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$}{joint $J0$ rotation matrix}
-    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
-    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,\LU{0}{\tv_{z1}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-    %
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{used, if all translational axes are constrained}
-    \rowTable{Velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{used, if all translational axes are constrained (velocity level)}
-    %
-    \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
-    \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
-    \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
-    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | joint J0 orientation | $\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$ | joint $J0$ rotation matrix |
+    | joint J0 orientation vectors | $\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | joint J1 orientation | $\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$ | joint $J1$ rotation matrix |
+    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,\LU{0}{\tv_{z1}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | marker m0 velocity | $\LU{b}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
+    | marker m1 velocity | $\LU{b}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
+    | Displacement | $\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | used, if all translational axes are constrained |
+    | Velocity | $\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | used, if all translational axes are constrained (velocity level) |
+    | DisplacementLocal | $\LU{J0}{\Delta\pv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$ |
+    | VelocityLocal | $\LU{J0}{\Delta\vv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system |
+    | AngularVelocityLocal | $\LU{J0}{\Delta\omega}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$ |
+    | algebraic variables | $\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$ | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
     %
 
     #### Connector constraint equations
@@ -11627,27 +11664,27 @@ definitions.append(ItemDefinition(
     equations=r"""    (sec-objectjointprismaticx-definitionofquantities)=
     #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
-    \rowTable{joint J0 orientation}{$\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$}{joint $J0$ rotation matrix}
-    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
-    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-    %
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{used, if all translational axes are constrained}
-    %
-    \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
-    \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
-    \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
-    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
+    | joint J0 orientation | $\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$ | joint $J0$ rotation matrix |
+    | joint J0 orientation vectors | $\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | accordingly |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | joint J1 orientation | $\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$ | joint $J1$ rotation matrix |
+    | joint J1 orientation vectors | $\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$ | orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | marker m0 velocity | $\LU{b}{\tomega}_{m0}$ | current local angular velocity vector provided by marker m0 |
+    | marker m1 velocity | $\LU{b}{\tomega}_{m1}$ | current local angular velocity vector provided by marker m1 |
+    | Displacement | $\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | used, if all translational axes are constrained |
+    | DisplacementLocal | $\LU{J0}{\Delta\pv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$ |
+    | VelocityLocal | $\LU{J0}{\Delta\vv}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system |
+    | AngularVelocityLocal | $\LU{J0}{\Delta\omega}$ | $\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$ |
+    | algebraic variables | $\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$ | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
     %
 
     #### Connector constraint equations
@@ -11804,16 +11841,16 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker $m0$}
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{current global position which is provided by marker $m1$}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker $m0$}
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker $m1$}
-    %
-    \rowTable{relative velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{constraint velocity error, or relative velocity if not all axes fixed}
-    %
-    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker $m0$ |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | current global position which is provided by marker $m1$ |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker $m0$ |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker $m1$ |
+    | relative velocity | $\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | constraint velocity error, or relative velocity if not all axes fixed |
+    | algebraic variables | $\zv=[\lambda_0,\,\ldots,\,\lambda_2]\tp$ | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
     %
 
     #### Connector constraint equations
@@ -11977,32 +12014,30 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     equations=r"""    #### Definition of quantities
 
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position of marker $m0$; needed only if body $m0$ is not a ground body}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0 (assumed to be rigid body)}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
-    %
-    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
-    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-    %
-    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-    %
-    \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}} = \LU{0,m0}{\Am} \LU{m0}{\vv_{PN}}$}{normalized normal vector to the ground plane, moving with marker $m0$}
-    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground in plane normal ($z$-direction, $z=0$)}
-    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground in global coordinates}
-    \rowTable{ground velocity C}{$\LU{0}{\vv}_{Cm1}$}{velocity of disc (marker 1) at ground contact point (must be zero if ground does not move)}
-    \rowTable{ground velocity C}{$\LU{0}{\vv}_{Cm2}$}{velocity of ground (marker 0) at ground contact point (is always zero if ground does not move)}
-    \rowTable{wheel axis vector}{$\LU{0}{\wv_1} =\LU{0,m1}{\Rot} \LU{m1}{\wv_{1}} $}{normalized disc axis vector}
-    \rowTable{longitudinal vector}{$\LU{0}{\wv_2}$}{vector in longitudinal (motion) direction}
-    \rowTable{lateral vector}{$\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$}{vector in lateral direction, parallel to ground plane}
-    \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
-    \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
-    \rowTable{$J1$ transformation matrix}{$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$}{transformation of special joint $J1$ coordinates to global coordinates}
-    %
-    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position of marker $m0$; needed only if body $m0$ is not a ground body |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 (assumed to be rigid body) |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 (assumed to be rigid body) |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 (assumed to be rigid body) |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | center of disc |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
+    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | accordingly |
+    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+    | ground normal vector | $\LU{0}{\vv_{PN}} = \LU{0,m0}{\Am} \LU{m0}{\vv_{PN}}$ | normalized normal vector to the ground plane, moving with marker $m0$ |
+    | ground position B | $\LU{0}{\pv}_{B}$ | disc center point projected on ground in plane normal ($z$-direction, $z=0$) |
+    | ground position C | $\LU{0}{\pv}_{C}$ | contact point of disc with ground in global coordinates |
+    | ground velocity C | $\LU{0}{\vv}_{Cm1}$ | velocity of disc (marker 1) at ground contact point (must be zero if ground does not move) |
+    | ground velocity C | $\LU{0}{\vv}_{Cm2}$ | velocity of ground (marker 0) at ground contact point (is always zero if ground does not move) |
+    | wheel axis vector | $\LU{0}{\wv_1} =\LU{0,m1}{\Rot} \LU{m1}{\wv_{1}} $ | normalized disc axis vector |
+    | longitudinal vector | $\LU{0}{\wv_2}$ | vector in longitudinal (motion) direction |
+    | lateral vector | $\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$ | vector in lateral direction, parallel to ground plane |
+    | contact point vector | $\LU{0}{\wv_3}$ | normalized vector from disc center point in direction of contact point C |
+    | $D1$ transformation matrix | $\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$ | transformation of special disc coordinates $D1$ to global coordinates |
+    | $J1$ transformation matrix | $\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$ | transformation of special joint $J1$ coordinates to global coordinates |
+    | algebraic variables | $\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$ | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
     %
 
     #### Geometric relations
@@ -12358,31 +12393,32 @@ definitions.append(ItemDefinition(
     equations=r"""    #### Definition of quantities
 
     %
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{data coordinate 0}{$x_{data0}$}{the current index in slidingMarkerNumbers}
-    \rowTable{data coordinate 1}{$x_{data1}$}{the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    %
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
-    %
     %\rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
-    \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1,\,r^\prime_2]\tp$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!)}
-    \rowTable{sliding velocity slope}{$\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$}{current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    %
-    \rowTable{algebraic coordinates}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5,\, s]\tp$}{algebraic coordinates composed of 3 Lagrange multipliers for forces $\lambda_{0..2}$, 3 multipliers for torques $\lambda_{3..5}$ and the current sliding coordinate $s$, which is local in the current cable element. }
-    \rowTable{local sliding coordinate}{$s$}{local incremental sliding coordinate $s$: the (algebraic) sliding coordinate {\bf relative to the start-of-step value}. Thus, $s$ only contains small local increments.}
-    \finishTable
-    \startTable{output variables}{symbol}{formula}
-    \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
-    \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
-    \rowTable{SlidingCoordinate}{$s_g = s + x_{data1}$}{current value of the global sliding coordinate}
-    \rowTable{Force}{$\fv$}{see below}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | data node | $\xv=[x_{data0},\,x_{data1}]\tp$ | coordinates of node with node number $n_{GD}$ |
+    | data coordinate 0 | $x_{data0}$ | the current index in slidingMarkerNumbers |
+    | data coordinate 1 | $x_{data1}$ | the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep |
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 (assumed to be rigid body) |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 (assumed to be rigid body) |
+    | sliding position | $\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$ | current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding position slope | $\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1,\,r^\prime_2]\tp$ | current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding velocity | $\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$ | current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!) |
+    | sliding velocity slope | $\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$ | current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | algebraic coordinates | $\zv=[\lambda_0,\,\ldots,\,\lambda_5,\, s]\tp$ | algebraic coordinates composed of 3 Lagrange multipliers for forces $\lambda_{0..2}$, 3 multipliers for torques $\lambda_{3..5}$ and the current sliding coordinate $s$, which is local in the current cable element. |
+    | local sliding coordinate | $s$ | local incremental sliding coordinate $s$: the (algebraic) sliding coordinate {\bf relative to the start-of-step value}. Thus, $s$ only contains small local increments. |
+
+
+    | output variables | symbol | formula |
+    |---|---|---|
+    | Position | $\LU{0}{\pv}_{m0}$ | current global position of position marker $m0$ |
+    | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
+    | SlidingCoordinate | $s_g = s + x_{data1}$ | current value of the global sliding coordinate |
+    | Force | $\fv$ | see below |
+
 
     #### Geometric relations
 
@@ -12639,34 +12675,34 @@ definitions.append(ItemDefinition(
     equations=r"""    #### Definition of quantities
 
     %
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{data coordinate 0}{$x_{data0}$}{the current index in slidingMarkerNumbers}
-    \rowTable{data coordinate 1}{$x_{data1}$}{the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    %
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
-    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
-    %
-    \rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
-    \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1]\tp$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!)}
-    \rowTable{sliding velocity slope}{$\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$}{current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    %
-    \rowTable{sliding normal vector}{$\LU{0}{\nv} = [-r^\prime_1,\,r^\prime_0]$}{2D normal vector computed from slope $\rv^\prime=\LURU{0}{\rv}{ANCF}{\prime}$}
-    \rowTable{sliding normal velocity vector}{$\LU{0}{\dot\nv} = [-\dot r^\prime_1,\,\dot r^\prime_0]$}{time derivative of 2D normal vector computed from slope velocity $\dot \rv^\prime=\LURU{0}{\dot \rv}{ANCF}{\prime}$}
-    %
-    \rowTable{algebraic coordinates}{$\zv=[\lambda_0,\,\lambda_1,\, s]\tp$}{algebraic coordinates composed of Lagrange multipliers $\lambda_0$ and $\lambda_1$ (in local cable coordinates: $\lambda_0$ is in axis direction) and the current sliding coordinate $s$, which is local in the current cable element. }
-    \rowTable{local sliding coordinate}{$s$}{local incremental sliding coordinate $s$: the (algebraic) sliding coordinate {\bf relative to the start-of-step value}. Thus, $s$ only contains small local increments.}
-    \finishTable
-    \startTable{output variables}{symbol}{formula}
-    \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
-    \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
-    \rowTable{SlidingCoordinate}{$s_g = s + x_{data1}$}{current value of the global sliding coordinate}
-    \rowTable{Force}{$\fv$}{see below}
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | data node | $\xv=[x_{data0},\,x_{data1}]\tp$ | coordinates of node with node number $n_{GD}$ |
+    | data coordinate 0 | $x_{data0}$ | the current index in slidingMarkerNumbers |
+    | data coordinate 1 | $x_{data1}$ | the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep |
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 (assumed to be rigid body) |
+    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 (assumed to be rigid body) |
+    | cable coordinates | $\qv_{ANCF,m1}$ | current coordiantes of the ANCF cable element with the current marker $m1$ is referring to |
+    | sliding position | $\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$ | current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding position slope | $\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1]\tp$ | current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding velocity | $\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$ | current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!) |
+    | sliding velocity slope | $\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$ | current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding normal vector | $\LU{0}{\nv} = [-r^\prime_1,\,r^\prime_0]$ | 2D normal vector computed from slope $\rv^\prime=\LURU{0}{\rv}{ANCF}{\prime}$ |
+    | sliding normal velocity vector | $\LU{0}{\dot\nv} = [-\dot r^\prime_1,\,\dot r^\prime_0]$ | time derivative of 2D normal vector computed from slope velocity $\dot \rv^\prime=\LURU{0}{\dot \rv}{ANCF}{\prime}$ |
+    | algebraic coordinates | $\zv=[\lambda_0,\,\lambda_1,\, s]\tp$ | algebraic coordinates composed of Lagrange multipliers $\lambda_0$ and $\lambda_1$ (in local cable coordinates: $\lambda_0$ is in axis direction) and the current sliding coordinate $s$, which is local in the current cable element. |
+    | local sliding coordinate | $s$ | local incremental sliding coordinate $s$: the (algebraic) sliding coordinate {\bf relative to the start-of-step value}. Thus, $s$ only contains small local increments. |
+
+
+    | output variables | symbol | formula |
+    |---|---|---|
+    | Position | $\LU{0}{\pv}_{m0}$ | current global position of position marker $m0$ |
+    | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
+    | SlidingCoordinate | $s_g = s + x_{data1}$ | current value of the global sliding coordinate |
+    | Force | $\fv$ | see below |
+
 
     #### Geometric relations
 
@@ -12941,24 +12977,23 @@ definitions.append(ItemDefinition(
     equations=r"""    #### Definition of quantities
 
     %
-    \startTable{intermediate variables}{symbol}{description}
-    \rowTable{generic data node}{$\xv=[x_{data0}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{generic ABRV:ODE2 node}{$\qv=[q_{0}]\tp$}{coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects}
-    \rowTable{data coordinate}{$x_{data0}$}{the current index in slidingMarkerNumbers}
-    \rowTable{ALE coordinate}{$q_{ALE} = q_{0}$}{current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation); note that reference coordinate of $q_{ALE}$ is ignored!}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-    %
-    \rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
-    \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1}$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1} + \dot q_{ALE} \LURU{0}{\rv}{ANCF}{\prime}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$, including convective term}
-    %
-    \rowTable{sliding normal vector}{$\LU{0}{\nv} = [-r^\prime_1,\,r^\prime_0]$}{2D normal vector computed from slope $\rv^\prime=\LURU{0}{\rv}{ANCF}{\prime}$}
     %\rowTable{sliding normal vector}{$\LU{0}{\dot\nv} = [-\dot r^\prime_1,\,\dot r^\prime_0]$}{time derivative of 2D normal vector computed from slope velocity $\dot \rv^\prime=\LURU{0}{\dot \rv}{ANCF}{\prime}$}
-    %
-    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1]\tp$}{algebraic variables (Lagrange multipliers) according to the algebraic equations }
-    \finishTable
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | generic data node | $\xv=[x_{data0}]\tp$ | coordinates of node with node number $n_{GD}$ |
+    | generic ABRV:ODE2 node | $\qv=[q_{0}]\tp$ | coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects |
+    | data coordinate | $x_{data0}$ | the current index in slidingMarkerNumbers |
+    | ALE coordinate | $q_{ALE} = q_{0}$ | current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation); note that reference coordinate of $q_{ALE}$ is ignored! |
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | current global position which is provided by marker m0 |
+    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
+    | cable coordinates | $\qv_{ANCF,m1}$ | current coordiantes of the ANCF cable element with the current marker $m1$ is referring to |
+    | sliding position | $\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$ | current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding position slope | $\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1}$ | current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$ |
+    | sliding velocity | $\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1} + \dot q_{ALE} \LURU{0}{\rv}{ANCF}{\prime}$ | current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$, including convective term |
+    | sliding normal vector | $\LU{0}{\nv} = [-r^\prime_1,\,r^\prime_0]$ | 2D normal vector computed from slope $\rv^\prime=\LURU{0}{\rv}{ANCF}{\prime}$ |
+    | algebraic variables | $\zv=[\lambda_0,\,\lambda_1]\tp$ | algebraic variables (Lagrange multipliers) according to the algebraic equations |
+
     %\startTable{output variables}{symbol}{formula}
     %\rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
     %\rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
