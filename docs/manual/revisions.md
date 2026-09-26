@@ -54,6 +54,12 @@ the usual way notices nothing.
 **Item dictionaries are more forgiving, not less**: a parameter that is left out keeps its default
 or its current value, where it used to raise `KeyError`.
 
+**`ObjectContactConvexRoll.rBoundingSphere` is read-only.** It is computed from
+`coefficientsHull`, and setting it never had an effect: the value was recomputed whenever the
+parameters changed. It is no longer an argument of the item and can no longer be set, so a script
+that passed it says so instead of being quietly ignored. Reading it — and `pContact`, the current
+potential contact point — works as before, with `mbs.GetObjectParameter(objectNumber, 'pContact')`.
+
 **OpenVR is removed.** The `--openvr` build flag, the settings under
 `visualizationSettings.interactive.openVR`, the `openVR` entry of the render state and the
 example `openVRengine.py` are gone. It could only be used with a head mounted display or an

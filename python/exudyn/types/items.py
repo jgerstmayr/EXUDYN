@@ -1063,7 +1063,6 @@ items = {
       'frictionProportionalZone': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.001', 'mustBeGiven': False, 'description': 'limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics'},
       'rollLength': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'roll length [m], symmetric w.r.t. centerpoint'},
       'coefficientsHull': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': ' []', 'mustBeGiven': False, 'description': 'a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; :math:`\\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \\ldots + k_{n_p-2} x  + k_{n_p-1}`'},
-      'rBoundingSphere': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0', 'mustBeGiven': False, 'description': 'The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull'},
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
     },
     'visualization': {

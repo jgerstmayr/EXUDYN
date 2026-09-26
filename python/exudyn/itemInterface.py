@@ -5232,8 +5232,6 @@ class ObjectContactConvexRoll:
 
         coefficientsHull: a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; :math:`\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x  + k_{n_p-1}`; type: array_like
 
-        rBoundingSphere: The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull; type: float
-
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
         visualization: visualization data, see VObjectContactConvexRoll
@@ -5246,7 +5244,7 @@ class ObjectContactConvexRoll:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., staticFrictionOffset = 0., viscousFriction = 0., exponentialDecayStatic = 0.001, frictionProportionalZone = 0.001, rollLength = 0., coefficientsHull =  [], rBoundingSphere = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., staticFrictionOffset = 0., viscousFriction = 0., exponentialDecayStatic = 0.001, frictionProportionalZone = 0.001, rollLength = 0., coefficientsHull =  [], activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -5259,7 +5257,6 @@ class ObjectContactConvexRoll:
         self.frictionProportionalZone = frictionProportionalZone
         self.rollLength = rollLength
         self.coefficientsHull = CheckForValidNumpyArray(coefficientsHull)
-        self.rBoundingSphere = rBoundingSphere
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -5277,7 +5274,6 @@ class ObjectContactConvexRoll:
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'rollLength', self.rollLength
         yield 'coefficientsHull', self.coefficientsHull
-        yield 'rBoundingSphere', self.rBoundingSphere
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
