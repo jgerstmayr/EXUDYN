@@ -41,6 +41,27 @@ inline const VSettingsView& GetSettingsView(Index viewID, const VisualizationSet
 	return visualizationSettings.view0;
 }
 
+//! THE SAME, WRITABLE, and deliberately named differently rather than overloaded: the renderer
+//! writing INTO the settings is unusual - it happens once, when a window closes and the user asked
+//! for where it was to be remembered (revision2026b step RG12.16.2, #2689) - and a call that does
+//! that should not look like the ordinary read
+inline VSettingsView& GetSettingsViewWritable(Index viewID, VisualizationSettings& visualizationSettings)
+{
+	CHECKandTHROW(MAX_VIEWS_GLFW == 4, "GetSettingsViewWritable: global number of views must be 4");
+
+	switch (viewID)
+	{
+	case 0: return visualizationSettings.view0;
+	case 1: return visualizationSettings.view1;
+	case 2: return visualizationSettings.view2;
+	case 3: return visualizationSettings.view3;
+	default: {
+		CHECKandTHROWstring("GetSettingsViewWritable: Invalid viewID");
+	}
+	}
+	return visualizationSettings.view0;
+}
+
 //! for a given viewID, get respective settings structure
 inline const VSettingsLight& GetSettingsLight(Index lightID, const VisualizationSettings& visualizationSettings)
 {

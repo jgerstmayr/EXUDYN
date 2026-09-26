@@ -1395,6 +1395,7 @@ public: // AUTO:
   bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections
   bool showRenderStateInfo;                       //!< AUTO: True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'
   bool showWindow;                                //!< AUTO: True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)
+  bool storeRenderWindowGeometry;                 //!< AUTO: True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition`, and `useRenderWindowPosition` is switched on - so that *store settings* in the visualization settings dialog, or `exudyn.misc.overrideSettings.Store(SC)`, keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run
   bool useRenderWindowPosition;                   //!< AUTO: True: the render window of this view is placed at `renderWindowPosition`; False (default): the window manager places it, as it did before these two settings existed
 
 private: // AUTO: 
@@ -1416,6 +1417,7 @@ public: // AUTO:
     showMouseCoordinates = false;
     showRenderStateInfo = false;
     showWindow = true;
+    storeRenderWindowGeometry = false;
     useRenderWindowPosition = false;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
@@ -1438,6 +1440,7 @@ public: // AUTO:
     os << "  showMouseCoordinates = " << showMouseCoordinates << "\n";
     os << "  showRenderStateInfo = " << showRenderStateInfo << "\n";
     os << "  showWindow = " << showWindow << "\n";
+    os << "  storeRenderWindowGeometry = " << storeRenderWindowGeometry << "\n";
     os << "  useRenderWindowPosition = " << useRenderWindowPosition << "\n";
     os << "\n";
   }

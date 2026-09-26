@@ -1291,7 +1291,7 @@ mbs.PlotSensor(...)
 (sec-mainsystemextensions-solutionviewer)=
 ### Function: SolutionViewer
 
-[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L798)
+[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L821)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics) - NOTE that this function is added to MainSystem via Python function SolutionViewer.
 - **input**:

@@ -723,6 +723,20 @@ def testAnUnreachablePositionIsStillRefused(storedGeometry):
     assert requested == '600x500'                       #the size, and no position
 
 
+def testADialogWhoseSizeComesFromItsLayoutIsLeftAlone(storedGeometry):
+    """RestoreWindowGeometry(window, name) without a size: the InteractiveDialog of the
+    SolutionViewer computes its size from its widgets, so nothing may be imposed on it unless
+    something IS stored (revision2026b step RG12.16.3, #2689)"""
+    storedGeometry([600, 500], [40, 50])
+
+    (requested, _) = RequestedGeometry('a dialog nobody stored', None, None)
+    assert requested == '', 'a window with nothing stored must be left to its layout'
+
+    #and with something stored, that is used - size and position, as for any other dialog
+    (requested, _) = RequestedGeometry('a dialog', None, None)
+    assert requested == '600x500+40+50'
+
+
 def testTheFlagIsAskedOfTheStructureBeingEdited():
     """python -m exudyn dialogs has no SystemContainer, so the flag was False however it was set
 

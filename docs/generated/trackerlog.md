@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.100.dev1
+- Exudyn version = 1.12.101.dev1
 - last change = 2026-09-26
 - Number of issues = 2693
-- Number of resolved issues = 2414 (100 in current version)
+- Number of resolved issues = 2415 (101 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,10 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the render window and the SolutionViewer do not remember their size and position (#2689)
-  - description: Asked for by the maintainer on 2026-09-26: both should be able to store position and size, as the settings dialogs do since revision2026b step RG12.5.3. The render window has visualizationSettings.view\*.window.renderWindowSize, which is an INITIAL size and is not written back, and it has no position at all: GlfwClient.cpp never calls glfwSetWindowPos or glfwGetWindowPos (measured). So this needs C++ - reading the position when the window closes and setting it when it opens - and a section of ~/.exudyn/config.json to keep it in, which is the mechanism exudyn.special.overrideSettings already is. Several views exist, so each needs its own entry. The SolutionViewer is the cheaper half: its dialog is a tkinter window like the settings dialogs, so it can use RestoreWindowGeometry and StoreWindowGeometry once revision2026b step RG12.13 makes those work without the renderer flag. The reachability rule of RG6.2.11 applies to both: the size comes back always, the position only when the window would still be reachable. revision2026b step RG12.16.
-  - **remarks:** The maintainer's design of 2026-09-26 makes this much cheaper than the raised text says: the position becomes an ordinary SETTING, view\*.window.renderWindowPosition, TIndexND(2), default Index2({-1,-1}) with negative meaning 'wherever the window manager puts it', beside the renderWindowSize that already exists. Then ~/.exudyn/config.json, Store(SC) and the store button carry it with no new section and no new mechanism, one entry per view, and a script can set it directly. What still needs C++ is only glfwSetWindowPos when the window opens and glfwGetWindowPos to write size and position back when it closes.; RG12.16.1 is DONE: view\*.window.renderWindowPosition and view\*.window.useRenderWindowPosition are ordinary settings, and GlfwClient.cpp calls glfwSetWindowPos when the flag is on. The maintainer's (-1,-1) sentinel could NOT be used, and the reason is worth keeping: the settings dialog refuses a negative value of an IndexArray, which is the type both the position and the size have, so no mapping could tell them apart - and that dialog rule is the only guard there is, because the C++ side accepts a negative sensor number and a negative window size (both measured). A flag says 'unset' in a way the dialog can edit and a reader can understand. Still open: .2 writing the size and the position back into the settings when the window closes (glfwGetWindowPos), which is what makes the store button of the dialog remember a render window; and .3 the SolutionViewer, whose dialog is tkinter and can use RestoreWindowGeometry now that \#2686 made that work without the flag.
-  - date raised: 2026-09-26
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the documentation does not say that a script can place a dialog (#2688)
   - description: The maintainer asks whether the dialog positions can be set inside a script. They can: exudyn.misc.overrideSettings.StoreDialogGeometry(name, size, position) is public and writes the dialogs section, and DialogKey(name) is the key it uses - but nothing in the documentation says so, and the section about the override settings only describes the file. An example belongs beside it, in the generated Exudyn module page: placing the visualization settings dialog from a script, and the note that the size comes back always while the position is used only when the window would still be reachable. Wait for revision2026b step RG12.13, because a placement that nothing reads back is not worth an example. revision2026b step RG12.15.
   - date raised: 2026-09-26

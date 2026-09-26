@@ -151,14 +151,14 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-restorewindowgeometry)=
 ## Function: RestoreWindowGeometry
 
-[`RestoreWindowGeometry(tkWindow, name, width, height)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1768)
+[`RestoreWindowGeometry(tkWindow, name, width = None, height = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1768)
 
 - **function description**: Give a dialog the size and position it was left at, as far as that is safe.
 - **input**:
   - `tkWindow`: the window
   - `name`: the title of the dialog, which is what it is stored under
-  - `width`: the width it would otherwise get, in pixels
-  - `height`: the height it would otherwise get
+  - `width`: the width it would otherwise get, in pixels; None leaves the size to the layout when nothing is stored, which is what a dialog whose size is computed from its widgets needs
+  - `height`: the height it would otherwise get, or None
 - **output**: None
 - **notes**: The **size** is restored always and the **position** only when the window would still be reachable on the current screen (revision2026b step RG6.2.11 wrote that rule down). A monitor that is gone, a resolution that changed, a laptop that was undocked: each of them would otherwise put the dialog where nobody can close it. A GEOMETRY THAT IS STORED IS USED, whatever `dialogs.storeDialogPositions` says (revision2026b step RG12.13, #2686). That flag decides whether a dialog stores ITSELF when it closes; this function only reads what is there, and it is there because the flag was on, or because the store button of the dialog wrote it, or because a script did. Asking the flag here is what made the store button of RG12.11 write something that nothing read back.
 
@@ -166,7 +166,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-rememberwindowgeometry)=
 ## Function: RememberWindowGeometry
 
-[`RememberWindowGeometry(tkWindow, name, settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1818)
+[`RememberWindowGeometry(tkWindow, name, settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1822)
 
 - **function description**: Record where a dialog is while it lives, so that it can be stored when it closes.
 - **input**:
@@ -180,7 +180,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storegeometrystring)=
 ## Function: StoreGeometryString
 
-[`StoreGeometryString(geometry, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1850)
+[`StoreGeometryString(geometry, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1854)
 
 - **function description**: Store one 'WIDTHxHEIGHT+X+Y' under the name of a dialog.
 - **input**:
@@ -193,7 +193,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storewindowgeometry)=
 ## Function: StoreWindowGeometry
 
-[`StoreWindowGeometry(recorded, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1880)
+[`StoreWindowGeometry(recorded, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1884)
 
 - **function description**: Store what `RememberWindowGeometry` recorded, after the dialog has closed.
 - **input**:
@@ -205,7 +205,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1893)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1897)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**:
@@ -218,7 +218,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1923)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1927)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -227,7 +227,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-modelscope)=
 ## Function: ModelScope
 
-[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1977)
+[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1981)
 
 - **function description**: the namespace a command of the command window runs in: the one the MODEL lives in `__main__` is the script the user started, or the console they are typing in, so this is where `mbs`, `SC` and everything else the model defined are. The command window used to be a Python string that the C++ executed in exactly this namespace; as a function of this module it would otherwise see the module's own globals, where there is no `mbs` (#2654).
 - **output**: the dictionary of `__main__`, which is written to as well as read: an assignment in the command window has to survive the command
@@ -236,7 +236,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1993)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1997)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -245,7 +245,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2081)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2085)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -254,7 +254,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2096)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2100)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -263,7 +263,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2110)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2114)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None

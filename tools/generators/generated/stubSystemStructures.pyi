@@ -836,6 +836,8 @@ class VSettingsWindow:
     """True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'."""
     showWindow: bool
     """True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)."""
+    storeRenderWindowGeometry: bool
+    """True: when the render window of this view closes, where it was is written into ``renderWindowSize`` and ``renderWindowPosition``, and ``useRenderWindowPosition`` is switched on - so that *store settings* in the visualization settings dialog, or ``exudyn.misc.overrideSettings.Store(SC)``, keeps the window where you left it, see Section sec-overridesettings. False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run."""
     useRenderWindowPosition: bool
     """True: the render window of this view is placed at ``renderWindowPosition``; False (default): the window manager places it, as it did before these two settings existed."""
     def GetDictionary(self) -> dict: ...

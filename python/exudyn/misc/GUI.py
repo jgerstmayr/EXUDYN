@@ -1765,14 +1765,15 @@ def StoreDialogPositions(settingsStructure=None):
     return False
 
 
-def RestoreWindowGeometry(tkWindow, name, width, height):
+def RestoreWindowGeometry(tkWindow, name, width=None, height=None):
     """Give a dialog the size and position it was left at, as far as that is safe.
 
     Args:
         tkWindow: the window
         name: the title of the dialog, which is what it is stored under
-        width: the width it would otherwise get, in pixels
-        height: the height it would otherwise get
+        width: the width it would otherwise get, in pixels; None leaves the size to the layout when
+            nothing is stored, which is what a dialog whose size is computed from its widgets needs
+        height: the height it would otherwise get, or None
 
     Returns:
         None
@@ -1792,6 +1793,9 @@ def RestoreWindowGeometry(tkWindow, name, width, height):
     from exudyn.misc import overrideSettings as userSettings
 
     (size, position) = userSettings.DialogGeometry(name)
+    if size is None and (width is None or height is None):
+        return                     #nothing stored and no size asked for: the layout decides
+
     try: #the virtual desktop where tkinter knows it, the screen otherwise
         screen = [tkWindow.winfo_vrootx(), tkWindow.winfo_vrooty(),
                   max(tkWindow.winfo_vrootwidth(), tkWindow.winfo_screenwidth()),

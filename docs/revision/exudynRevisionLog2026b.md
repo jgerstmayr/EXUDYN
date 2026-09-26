@@ -4938,3 +4938,56 @@ nothing else moved.
 not placed by any test - that needs a render window - so what is pinned is the contract: the flag is
 off on all four views, the position defaults to (0,0), and both are ordinary settings that
 `ChangedSettings` reports.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.16.2 and RG12.16.3 - the render window and the SolutionViewer remember themselves (2026-09-26, #2689)
+
+**RG12.16.2**: `view*.window.storeRenderWindowGeometry`, off by default, writes the size, the position
+and `useRenderWindowPosition` back into the settings when the window closes - so *store settings* in
+the visualization settings dialog keeps a render window where it was left, instead of the user reading
+coordinates off the screen and typing them in.
+
+**Three things about it were decided rather than assumed:**
+
+- **Off by default**, for the reason `dialogs.storeDialogPositions` exists: a settings structure that
+  changed by itself would make *diff to default* report a window size and position after **every**
+  run, and a user storing settings for an unrelated reason would pin their window without meaning to.
+- **It sets `useRenderWindowPosition` too.** Writing a position that nothing then uses would be a
+  setting that looks stored and does nothing - the mistake of RG12.11, where the store button wrote a
+  geometry the reader refused to read.
+- **`glfwGetWindowPos` and `glfwSetWindowPos` are both about the content area**, so what is written
+  back is exactly what `CreateViewWindow` reads - unlike a tkinter geometry string, which carries the
+  frame and is why the maintainer's stored dialog position reads `-10` on Windows.
+
+The write goes through `GetSettingsViewWritable(...)`, a **deliberately differently named** accessor
+rather than a `const` overload of `GetSettingsView`: the renderer writing *into* the settings happens
+once, when a window closes and only because the user asked, and a call that does that should not look
+like the ordinary read. An overload would also have quietly changed which function forty existing call
+sites resolve to.
+
+**RG12.16.3 was the cheap half and got cheaper.** The SolutionViewer's window is an
+`InteractiveDialog` - and so are `AnimateModes` and an interactive simulation - so putting
+`RestoreWindowGeometry` at the end of its constructor and `StoreWindowGeometry` in `OnQuit` makes
+**all three** remember themselves, each under its own title, through the same `dialogs` section of
+`~/.exudyn/config.json` as the settings dialogs, with the same reachability rule and the same flag
+deciding whether a dialog stores itself on closing.
+
+One thing had to give: `RestoreWindowGeometry(window, name, width, height)` always imposed a size, and
+an `InteractiveDialog` computes its size from its widgets. The width and the height are optional now,
+and with nothing stored and none given the function **returns without touching the window** - the
+layout decides, which is what it did before. A test pins that, because "the dialog is suddenly 900x700"
+would be a regression nobody would attribute to this step.
+
+**And a reminder that the tests read the INSTALLED package**: the new test failed with
+`bad geometry specifier "NonexNone"` until the wheel was rebuilt - the source had the guard, the
+installed copy did not. The gate order in the workflow says to build first, and it says it for this
+reason.
+
+**The reference of `parameterConversionTest` was rewritten twice** in this pair of steps, once per new
+setting, exactly as its header prescribes: 16 rows then 8, all of them new settings appearing in the
+four views' lists, nothing else.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 499 pytest, the strict HTML build. Neither window
+is opened by a test - both need a real window manager - so what is pinned is the contract around them:
+the flags are off, the position defaults to (0,0), a stored geometry is used, and a dialog with nothing
+stored is left alone.

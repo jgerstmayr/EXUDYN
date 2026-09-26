@@ -3609,6 +3609,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.storeRenderWindowGeometry;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition`, and `useRenderWindowPosition` is switched on - so that *store settings* in the visualization settings dialog, or `exudyn.misc.overrideSettings.Store(SC)`, keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run";
+    structureDict["storeRenderWindowGeometry"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.useRenderWindowPosition;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -3631,6 +3639,7 @@ inline py::dict GetDictionary(const VSettingsWindow& data) {
     structureDict["showMouseCoordinates"] = data.showMouseCoordinates;
     structureDict["showRenderStateInfo"] = data.showRenderStateInfo;
     structureDict["showWindow"] = data.showWindow;
+    structureDict["storeRenderWindowGeometry"] = data.storeRenderWindowGeometry;
     structureDict["useRenderWindowPosition"] = data.useRenderWindowPosition;
     return structureDict;
 }
@@ -3647,6 +3656,7 @@ inline void SetDictionary(VSettingsWindow& data, const py::dict& d) {
     EPyUtils::FromPython(d["showMouseCoordinates"], data.showMouseCoordinates, "VSettingsWindow.showMouseCoordinates");
     EPyUtils::FromPython(d["showRenderStateInfo"], data.showRenderStateInfo, "VSettingsWindow.showRenderStateInfo");
     EPyUtils::FromPython(d["showWindow"], data.showWindow, "VSettingsWindow.showWindow");
+    EPyUtils::FromPython(d["storeRenderWindowGeometry"], data.storeRenderWindowGeometry, "VSettingsWindow.storeRenderWindowGeometry");
     EPyUtils::FromPython(d["useRenderWindowPosition"], data.useRenderWindowPosition, "VSettingsWindow.useRenderWindowPosition");
 }
 

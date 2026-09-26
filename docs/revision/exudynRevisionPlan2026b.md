@@ -2206,31 +2206,30 @@ package).
     documented way and this is the footnote.
 
 <a id="rg12-16"></a>
-**RG12.16** *(group RG12; maintainer 2026-09-26)* **The render window and the SolutionViewer remember
-    their size and position** (#2689), as the settings dialogs do since RG12.5.3.
+**RG12.16** **DONE 2026-09-26** (#2689) — [log](exudynRevisionLog2026b.md#rg12-16) —
+    **The render window and the SolutionViewer remember their size and position**, as the settings
+    dialogs do since RG12.5.3.
 
-    - **RG12.16.1** **DONE 2026-09-26** — **the render window can be placed.**
-      `view*.window.renderWindowPosition` and `view*.window.useRenderWindowPosition` are ordinary
-      settings, so `~/.exudyn/config.json`, `Store(SC)` and the store button of the dialog carry them
-      with nothing added, one entry per view, and a script can set them. `GlfwClient.cpp` calls
-      `glfwSetWindowPos` when the flag is on - it never called it at all before.
+    - **RG12.16.1** **the render window can be placed.** `view*.window.renderWindowPosition` and
+      `view*.window.useRenderWindowPosition`, ordinary settings, so the settings file, `Store(SC)` and
+      the store button carry them with nothing added, one set per view. `GlfwClient.cpp` calls
+      `glfwSetWindowPos` when the flag is on - it never called it at all.
 
-      **The `(-1,-1)` sentinel could not be used, and the reason is worth keeping.** The settings
-      dialog **refuses a negative value of an `IndexArray`**, which is the type both the position and
-      the size have - so no mapping could tell them apart - and that rule is the only guard there is:
-      the C++ side accepts a negative sensor number *and* a negative window size, both measured. A
-      flag says "unset" in a way the dialog can edit and a reader can understand. If the maintainer
-      prefers the sentinel, it needs a distinct type for a signed pair, which is a bigger change than
-      the flag.
-    - **RG12.16.2** *(open)* **writing size and position back** into the settings when the window
-      closes (`glfwGetWindowPos`), which is what makes the store button of the dialog *remember* a
-      render window rather than only place it.
-    - **RG12.16.3** *(open)* **the SolutionViewer**, whose dialog is a tkinter window like the settings
-      dialogs, so it can use `RestoreWindowGeometry` and `StoreWindowGeometry` now that RG12.13 made
-      those work without the flag.
-
-    The reachability rule of RG6.2.11 applies to both, and a render window is where it matters most: a
-    renderer that opens off-screen cannot be closed by the mouse.
+      **The `(-1,-1)` sentinel could not be used**: the settings dialog refuses a negative
+      `IndexArray`, the type the position shares with the size, so nothing could tell them apart - and
+      that rule is the only guard there is, because the C++ accepts a negative sensor number *and* a
+      negative window size, both measured. A flag says "unset" in a way the dialog can edit.
+    - **RG12.16.2** **it remembers where it was.** `view*.window.storeRenderWindowGeometry`, off by
+      default, writes the size, the position and `useRenderWindowPosition` back into the settings when
+      the window closes, so that *store settings* keeps a render window where it was left. Off by
+      default for the reason `dialogs.storeDialogPositions` exists: a settings structure that changes
+      by itself would make *diff to default* report a window position after every run.
+    - **RG12.16.3** **the SolutionViewer, and two more for free.** Its window is an
+      `InteractiveDialog` - and so are the mode shapes and an interactive simulation - so all three
+      restore and store themselves under their own title, through the same
+      `RestoreWindowGeometry`/`StoreWindowGeometry` and the same `dialogs` section as the settings
+      dialogs. `RestoreWindowGeometry` leaves the size to the layout when nothing is stored, which a
+      dialog that sizes itself from its widgets needs.
 
 ## Next steps recommended
 
@@ -2272,7 +2271,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
 | RG12.15 | #2688 | the documentation does not say that a script can place a dialog |
-| RG12.16.2 | #2689 | writing the render window size and position back when it closes; .3 the SolutionViewer |
 
 ### Raised by the current work, and not yet a step
 

@@ -122,7 +122,8 @@ class InteractiveDialog:
         try:
             import tkinter
             import tkinter.font as tkFont
-            from exudyn.misc.GUI import GetTkRootAndNewWindow
+            from exudyn.misc.GUI import (GetTkRootAndNewWindow, RestoreWindowGeometry,
+                                        RememberWindowGeometry)
         except ImportError:
             raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
 
@@ -353,6 +354,20 @@ class InteractiveDialog:
             self.tkWindow.minsize(320,self.tkWindow.winfo_height())
         #self.tkWindow.minsize(280,50) #will create windows which are too small
 
+        #WHERE THIS DIALOG WAS LEFT (revision2026b step RG12.16.3, #2689). The SolutionViewer, the
+        #mode shapes and an interactive simulation are all this window, so all of them remember
+        #themselves, each under its own title. The size is only overridden if something IS stored -
+        #otherwise the layout above decides, which is why width and height are not given - and the
+        #position only if the window would still be reachable. Storing happens when the dialog
+        #closes and only if visualizationSettings.dialogs.storeDialogPositions is on
+        self.dialogName = title
+        try:
+            RestoreWindowGeometry(self.tkWindow, self.dialogName)
+            self.recordedGeometry = RememberWindowGeometry(self.tkWindow, self.dialogName)
+        except Exception as error:                                           # noqa: BLE001
+            self.recordedGeometry = {}
+            exudyn.Print('WARNING: InteractiveDialog could not restore its window: ' + str(error))
+
         self.InitializeSolver() #solver gets ready to be called repeatedly
         self.InitializePlots()  #set up all structures for plots
         self.UpdatePlots()      #update all subplots with new sensor values
@@ -369,6 +384,14 @@ class InteractiveDialog:
         self.simulationStopped = True
         self.RunButtonText.set('Stop')
         self.FinalizeSolver()
+        #where it was, before it is gone (revision2026b step RG12.16.3): the geometry cannot be read
+        #after the window is destroyed, which is what RememberWindowGeometry recorded it for
+        try:
+            from exudyn.misc.GUI import StoreWindowGeometry                  # noqa: PLC0415
+
+            StoreWindowGeometry(self.recordedGeometry, self.dialogName)
+        except Exception as error:                                           # noqa: BLE001
+            exudyn.Print('WARNING: InteractiveDialog could not store its window: ' + str(error))
         #del exudyn.sys['tkinterRoot'] #this is not thread safe, but interuption should not happen ...
         self.tkWindow.quit()
         self.tkWindow.destroy()

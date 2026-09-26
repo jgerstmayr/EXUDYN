@@ -1699,6 +1699,40 @@ void GlfwRenderer::StopRenderer()
 }
 
 //! Initializes and starts viewID=0, 1, 2, ...; HAS TO BE CALLED FROM GLFWClient THREAD
+namespace
+{
+	//! WHERE THE WINDOW WAS, written back into the settings of its view (revision2026b step
+	//! RG12.16.2, #2689), so that "store settings" in the visualization settings dialog - or
+	//! overrideSettings.Store(SC) - keeps a render window where the user left it.
+	//!
+	//! Nothing happens unless view*.window.storeRenderWindowGeometry is True, and it is False by
+	//! default: a settings structure that changed by itself would make the dialog's "diff to
+	//! default" report a window size and position after every run, and a user storing settings for
+	//! an unrelated reason would pin their window without meaning to. That is the same reason
+	//! visualizationSettings.dialogs.storeDialogPositions exists for the dialogs.
+	//!
+	//! glfwGetWindowPos and glfwSetWindowPos are both about the CONTENT area, so what is written
+	//! here is what CreateViewWindow reads back - unlike a tkinter geometry string, which carries
+	//! the frame.
+	void RecordWindowGeometry(Index viewID)
+	{
+		VisualizationSettings* settings = GlfwRenderer::GetVisualizationSettings();
+		RenderViewList* views = GlfwRenderer::GetRenderViews();
+		if (settings == nullptr || views == nullptr || !views->IsValidWindow(viewID)) { return; }
+		if (!GetSettingsView(viewID, *settings).window.storeRenderWindowGeometry) { return; }
+
+		int positionX = 0, positionY = 0, width = 0, height = 0;
+		glfwGetWindowPos(views->GetWindow(viewID), &positionX, &positionY);
+		glfwGetWindowSize(views->GetWindow(viewID), &width, &height);
+		if (width <= 0 || height <= 0) { return; }   //an iconified window reports nothing usable
+
+		VSettingsWindow& windowSettings = GetSettingsViewWritable(viewID, *settings).window;
+		windowSettings.renderWindowSize = Index2({ (Index)width, (Index)height });
+		windowSettings.renderWindowPosition = Index2({ (Index)positionX, (Index)positionY });
+		windowSettings.useRenderWindowPosition = true;   //otherwise the position would not be used
+	}
+}
+
 bool GlfwRenderer::CreateViewWindow(Index viewID)
 {
 	//NOTE: view 0 may only be called from InitCreateWindow!!!
@@ -2027,6 +2061,7 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 	{
 		if (renderViews.IsValidWindow(viewID) && glfwWindowShouldClose(renderViews.GetWindow(viewID)))
 		{
+			RecordWindowGeometry(viewID); //before it is gone, see above
 			glfwDestroyWindow(renderViews.GetWindow(viewID)); //should be called from main thread, but also works this way!
 			renderViews.SetWindow(viewID, nullptr);
 			renderViews.State(viewID)->windowOpen = false;
@@ -2111,10 +2146,12 @@ void GlfwRenderer::FinishRunLoop()
 		{
 			if (renderViews.IsValidWindow(viewID))
 			{
+				RecordWindowGeometry(viewID); //before it is gone, see above
 				glfwDestroyWindow(renderViews.GetWindow(viewID)); //should be called from main thread, but also works this way!
 				renderViews.SetWindow(viewID, nullptr);
 			}
 		}
+		RecordWindowGeometry(mainViewID);
 		glfwDestroyWindow(renderViews.GetWindow(mainViewID)); //HAS TO BE CALLED FROM GLFWClient THREAD
 		renderViews.SetWindow(mainViewID, nullptr);
 	}
