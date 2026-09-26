@@ -54,6 +54,9 @@ The class **exudyn** has the following **functions and structures**:
 - **`config.printFileName`**: file name for writing to file with exudyn.Print(...), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(...); flag is readonly
 - **`config.printToFileAppend`**: flag that shows if append mode is used for writing to file with exudyn.Print(...); flag is readonly
 - **`config.Version(addDetails = False)`**: Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)
+- **`config.GetDictionary()`**: all settings of `exudyn.config` as a dictionary, the way a settings structure gives them; `printToFile`, `printFileName` and `printToFileAppend` are in it but only report what the output is doing
+- **`config.SetDictionary(values)`**: set the settings named in the dictionary and leave the others; a name that `exudyn.config` does not have, and one of the three that only report, is ignored
+- **`config.GetDefaults()`**: the defaults of `exudyn.config`: what Exudyn started with, taken while the module was imported and before a script, an override setting or an environment variable could change one. This is what tells a setting somebody chose from one nobody touched, which is how `overrideSettings.Store(config=...)` knows what to store. They cannot be constructed - `exudyn.config` reads global state, so a second one reports the current values - so they are taken once
 - **`experimental`**: Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental
 - **`special`**: special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial
 - **`special.InfoStat(writeOutput = True)`**: Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag
@@ -137,6 +140,18 @@ that holds graphics data, a user function or a matrix container is refused with 
 changes nothing - such a value cannot be carried honestly by a JSON file. A key that names no
 setting, a section nobody reads, a file that is not valid JSON: each of them is reported and none of
 them stops `import exudyn`.
+
+#### Storing from the dialog
+
+The settings dialog has a **store settings** button. It writes the `visualizationSettings` that
+differ from the defaults, and the size and position of the dialog itself, and **nothing else** - not
+`exudyn.config`, not the simulation settings - and it shows exactly what it is about to write before
+it writes anything. It is the way to keep a look you have just made without switching
+`storeDialogPositions` on.
+
+**diff to default** stays a difference to the *default*, and a setting that the file already stores
+is listed with the others and then named again under a comment line that says so. Comparing against
+the defaults plus the file instead would hide exactly the settings the file is about.
 
 #### Remembering a dialog, its columns and its font
 

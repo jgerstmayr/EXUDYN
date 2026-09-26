@@ -34,6 +34,8 @@
 
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
+class ExudynConfig;                 //! declared for the two functions at the end; see Main/Config.h
+
 //! Exudyn python utilities namespace
 namespace EPyUtils { 
 
@@ -344,6 +346,18 @@ namespace EPyUtils {
 	//! because a global that releases a Python reference AFTER the interpreter has finalized
 	//! crashes the process - which is why exudyn.sys is a module attribute and not a C++ member.
 	py::dict& OverrideSettings();
+
+	//! the DEFAULTS of exudyn.config, snapshotted during module initialization before any user code
+	//! or override setting can change one (#2685). They cannot be constructed like the defaults of a
+	//! settings structure: ExudynConfig is a facade over global variables, so a second one reports
+	//! the CURRENT values - after config.outputPrecision = 12 a fresh Config says 12. What Exudyn
+	//! starts with IS the default, so it is taken once rather than written down a second time.
+	py::dict& ConfigDefaults();
+
+	//! every setting of exudyn.config, as a dictionary; the three that only report
+	//! (printToFile, printFileName, printToFileAppend) are in it but are not written back
+	py::dict ConfigDictionary(const ExudynConfig& config);
+	void SetConfigFromDictionary(ExudynConfig& config, const py::dict& values);
 
 
 } //namespace HPyUtils

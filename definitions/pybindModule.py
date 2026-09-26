@@ -270,6 +270,19 @@ pb.DefPyFunctionAccess(cClass='', pyName='config.Version', cName='unused',
                         description='Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)',
                         returnType='str',
                         )
+pb.DefPyFunctionAccess(cClass='', pyName='config.GetDictionary', cName='unused',
+                        description='all settings of `exudyn.config` as a dictionary, the way a settings structure gives them; `printToFile`, `printFileName` and `printToFileAppend` are in it but only report what the output is doing',
+                        returnType='dict',
+                        )
+pb.DefPyFunctionAccess(cClass='', pyName='config.SetDictionary', cName='unused',
+                        argList=['values'],
+                        description='set the settings named in the dictionary and leave the others; a name that `exudyn.config` does not have, and one of the three that only report, is ignored',
+                        returnType='None',
+                        )
+pb.DefPyFunctionAccess(cClass='', pyName='config.GetDefaults', cName='unused',
+                        description='the defaults of `exudyn.config`: what Exudyn started with, taken while the module was imported and before a script, an override setting or an environment variable could change one. This is what tells a setting somebody chose from one nobody touched, which is how `overrideSettings.Store(config=...)` knows what to store. They cannot be constructed - `exudyn.config` reads global state, so a second one reports the current values - so they are taken once',
+                        returnType='dict',
+                        )
 pb.EndCppWrittenByHand()
 
 #++++++++++
@@ -399,6 +412,18 @@ that holds graphics data, a user function or a matrix container is refused with 
 changes nothing - such a value cannot be carried honestly by a JSON file. A key that names no
 setting, a section nobody reads, a file that is not valid JSON: each of them is reported and none of
 them stops `import exudyn`.
+
+#### Storing from the dialog
+
+The settings dialog has a **store settings** button. It writes the `visualizationSettings` that
+differ from the defaults, and the size and position of the dialog itself, and **nothing else** - not
+`exudyn.config`, not the simulation settings - and it shows exactly what it is about to write before
+it writes anything. It is the way to keep a look you have just made without switching
+`storeDialogPositions` on.
+
+**diff to default** stays a difference to the *default*, and a setting that the file already stores
+is listed with the others and then named again under a comment line that says so. Comparing against
+the defaults plus the file instead would hide exactly the settings the file is about.
 
 #### Remembering a dialog, its columns and its font
 

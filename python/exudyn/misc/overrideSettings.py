@@ -420,8 +420,9 @@ def Store(SC=None, config=None, replace=False):
     Args:
         SC: a SystemContainer; every one of its `visualizationSettings` that differs from the
             defaults is stored, which is what `ChangedSettings` reports
-        config: `exudyn.config`; every one of its plain settings that differs from the default is
-            stored
+        config: `exudyn.config`; every one of its plain settings that differs from
+            `config.GetDefaults()` is stored - the defaults Exudyn started with, so a setting a
+            user never touched is not stored
         replace: True replaces the sections that are written; False (the default) merges them into
             what is already in the file
 
@@ -454,11 +455,13 @@ def Store(SC=None, config=None, replace=False):
 
     if config is not None:
         stored = {} if replace else dict(settings.get('config') or {})
-        for name in dir(config):
-            if name.startswith('_') or name[0].isupper():
-                continue
-            value = getattr(config, name)
-            if _IsPlain(value) and value not in ['', 0, False]:
+        #WHAT DIFFERS FROM THE DEFAULTS, and nothing else (revision2026b step RG12.11, #2685). This
+        #used to store every value that was not '', 0 or False, because exudyn.config had no
+        #defaults to compare with - a guess that stored settings a user never touched.
+        #config.GetDefaults() is what Exudyn started with, taken while it still was
+        defaults = config.GetDefaults()
+        for (name, value) in config.GetDictionary().items():
+            if _IsPlain(value) and value != defaults.get(name, value):
                 stored[name] = list(value) if isinstance(value, (list, tuple)) else value
         settings['config'] = stored
 

@@ -280,6 +280,108 @@ def test_theResultsMonitorReadsAndWritesItsSectionOfTheOneFile(settingsFile):
     assert settings.Load()['resultsMonitor']['updatePeriod'] == 7.0
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#exudyn.config has a dictionary interface and its defaults (revision2026b step RG12.11, #2685)
+def test_theConfigDefaultsAreWhatExudynStartedWith():
+    """they cannot be constructed: every getter of ExudynConfig reads a GLOBAL
+
+    Measured before this step: after exu.config.outputPrecision = 12, a freshly constructed Config
+    reports 12, so the trick every settings structure uses cannot work here. The defaults are taken
+    once, during module import, before any user code or override setting can change one."""
+    defaults = exu.config.GetDefaults()
+    assert defaults['outputPrecision'] == 6
+    assert defaults['outputDirectory'] == ''
+
+    previous = exu.config.outputPrecision
+    try:
+        exu.config.outputPrecision = 12
+        assert exu.config.GetDefaults()['outputPrecision'] == 6     #untouched by a later setting
+        assert exu.config.GetDictionary()['outputPrecision'] == 12  #the dictionary follows
+    finally:
+        exu.config.outputPrecision = previous
+
+
+def test_setDictionaryWritesWhatCanBeWrittenAndIgnoresTheRest():
+    """printToFile, printFileName and printToFileAppend only report, and a wrong name is not a crash"""
+    previous = exu.config.outputPrecision
+    try:
+        exu.config.SetDictionary({'outputPrecision': 7, 'printToFile': True, 'nonsense': 1})
+        assert exu.config.outputPrecision == 7
+        assert exu.config.printToFile is False          #read-only: it says what the output does
+        assert not hasattr(exu.config, 'nonsense')
+    finally:
+        exu.config.outputPrecision = previous
+
+
+def test_storeWritesTheConfigSettingsThatDifferAndNoOthers(settingsFile):
+    """it used to store every value that was not '', 0 or False - a guess, without the defaults
+
+    printToConsole is True by default, so the old rule stored it from every run that never touched
+    it; outputPrecision 6 is the default and was stored because 6 is not 0."""
+    settingsFile({})
+    previous = exu.config.outputPrecision
+    try:
+        exu.config.outputPrecision = 11
+        written = settings.Store(config=exu.config)
+        assert written['config'] == {'outputPrecision': 11}
+    finally:
+        exu.config.outputPrecision = previous
+
+
+def test_aConfigSettingThatWasNeverTouchedIsNotStored(settingsFile):
+    settingsFile({})
+    assert settings.Store(config=exu.config)['config'] == {}
+
+
+def test_theConfigDictionaryHasEverySettingTheInterfaceHas():
+    """one list in the C++, so a new setting of exudyn.config cannot be forgotten here"""
+    fromInterface = set(name for name in dir(exu.config)
+                        if not name.startswith('_') and not name[0].isupper())
+    assert set(exu.config.GetDictionary()) == fromInterface
+    assert set(exu.config.GetDefaults()) == fromInterface
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#what "diff to default" means once an override file exists (revision2026b step RG12.11, #2685).
+#The grouping is a function of its own, so it is tested without opening a dialog
+def test_theStoredSettingsAreNamedSeparatelyInTheDiff():
+    """the difference is to the REAL default, and what the file covers is said so
+
+    Comparing against default-plus-override would hide exactly the settings the file is about."""
+    from exudyn.misc.GUI import SplitStoredFromChanged
+
+    changes = [('openGL.multiSampling', 'SC.visualizationSettings.openGL.multiSampling = 4'),
+               ('nodes.defaultSize', 'SC.visualizationSettings.nodes.defaultSize = 0.2'),
+               ('general.drawWorldBasis', 'SC.visualizationSettings.general.drawWorldBasis = True')]
+    (lines, stored) = SplitStoredFromChanged(changes, {'openGL.multiSampling', 'general.drawWorldBasis'},
+                                             '~/.exudyn/config.json')
+    assert stored == 2
+    assert [path for (path, _) in lines] == ['nodes.defaultSize', '',
+                                             'openGL.multiSampling', 'general.drawWorldBasis']
+    assert lines[1][1].startswith('#the following are already stored in ~/.exudyn/config.json')
+    assert len(lines) == len(changes) + 1        #nothing is dropped, one comment is added
+
+
+def test_nothingIsGroupedWhenNothingIsStored():
+    """the normal case: no file, no comment line, the list exactly as it was"""
+    from exudyn.misc.GUI import SplitStoredFromChanged
+
+    changes = [('openGL.multiSampling', 'SC.visualizationSettings.openGL.multiSampling = 4')]
+    assert SplitStoredFromChanged(changes, set(), 'x') == (changes, 0)
+
+
+def test_aGeometryStringIsStoredWithoutTheFlag(settingsFile):
+    """the store button stores on request; storeDialogPositions is about remembering on closing"""
+    from exudyn.misc.GUI import StoreGeometryString
+
+    settingsFile({})
+    assert StoreGeometryString('1024x768+100+80', 'Visualization Settings')
+    assert settings.DialogGeometry('Visualization Settings') == ([1024, 768], [100, 80])
+
+    #and a geometry no window manager should report is refused rather than stored wrongly
+    assert not StoreGeometryString('not a geometry', 'Visualization Settings')
+
+
 def test_theRunnersIgnoreTheFile():
     """conftest.py sets it for pytest, and the three runners set it for themselves
 

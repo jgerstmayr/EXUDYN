@@ -1938,25 +1938,31 @@ package).
     dialogs, the monitor and `Store` all go through.
 
 <a id="rg12-11"></a>
-**RG12.11** *(group RG12; maintainer 2026-09-26)* **Storing the override settings**, in two ways:
+**RG12.11** **DONE 2026-09-26** (#2685) — [log](exudynRevisionLog2026b.md#rg12-11) —
+    **Storing the override settings**, all three parts of it.
 
-    - **the manual function**, which exists as `Store(SC=..., config=...)` and has a defect worth
-      naming: for `exudyn.config` it stores every value that is not empty, `0` or `False`, because
-      **it does not know the defaults**. That is a guess, and it stores settings a user never
-      changed. **Decision of 2026-09-26**: *"you have to improve the config mechanism (could add a
-      Get/Set dict access or so, and also the defaults)"* - so `exudyn.config` gets what every
-      settings structure already has, a dictionary interface and its defaults, and the storing
-      function compares against them instead of guessing. That is also the smallest real piece of
-      "accessible from C++" in RG12.9.
-    - **what "diff to default" means** once an override exists, which the maintainer decided on
-      2026-09-26: the dialog shows the difference to the **real default**, and names the settings
-      that the override file already covers **separately, with a comment between them**, so that a
-      user can see what they would be copying and decide. The alternative - comparing against
-      default plus override - hides exactly the settings this file is about.
-    - **a "Store settings" button in the visualization settings dialog**, which applies **only** to
-      `visualizationSettings` and `dialogs`, *"clearly written in the pop-up hints"*. It is the way
-      to keep a look without switching `storeDialogPositions` on, and the button is where a user
-      already is when they decide they like what they see.
+    **`exudyn.config` has a dictionary interface and its defaults** - `GetDictionary()`,
+    `SetDictionary(d)`, `GetDefaults()` - which is what the maintainer asked for. The defaults are
+    **snapshotted during module import**, because they cannot be constructed: `ExudynConfig` is a
+    facade over globals, so a second one reports the current values (measured: 12 after
+    `outputPrecision = 12`). What Exudyn starts with **is** the default, taken while it still is, so
+    nothing is written down twice and nothing can drift. The settings are listed once, with the three
+    read-only ones marked, and `Main/Config.h` stays free of pybind11 - eight translation units
+    include it.
+
+    **`Store(config=...)` stores what differs from those defaults.** It used to store every value that
+    was not `''`, `0` or `False`, so it stored `printToConsole` from every run and `outputPrecision`
+    because 6 is not 0 - settings a user never touched.
+
+    **The dialog has a "store settings" button**: the `visualizationSettings` that differ from the
+    defaults and the dialog's own size and position, nothing else, and it **shows exactly what it will
+    write** with a store/cancel pair first, because one click reaches the home directory. It stores
+    the geometry whether or not `storeDialogPositions` is on - that flag is about remembering on
+    closing, this is a user asking.
+
+    **"diff to default" stays a difference to the real default**, and what the file already stores is
+    named again under a comment line saying so, as decided. The grouping is
+    `GUI.SplitStoredFromChanged`, a function, so it is tested without opening a window.
 
 <a id="rg12-12"></a>
 **RG12.12** *(group RG12; maintainer 2026-09-26, separate step by their own request)* **PlotSensor
@@ -2146,8 +2152,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
-| RG12.10 | - | the workflow: read at import, config at once, the rest applied when a structure is created |
-| RG12.11 | - | storing: the manual function with the real defaults, and a button in the dialog |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
 
 ### Raised by the current work, and not yet a step

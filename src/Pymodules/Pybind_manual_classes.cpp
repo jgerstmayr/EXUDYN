@@ -418,6 +418,57 @@ py::dict& EPyUtils::OverrideSettings()
 #include "Main/Config.h"
 ExudynConfig pyConfig;				//! unified config for exudyn, avoid bloating main scope
 
+//! the dictionary interface of exudyn.config and its defaults (#2685); see PybindUtilities.h.
+//! The settings are listed ONCE, here, and the three read-only ones are marked, so that a new
+//! setting of exudyn.config is added in one place and reaches the dictionary, the defaults and
+//! everything that compares against them
+namespace
+{
+	//{name, writable}
+	const std::vector<std::pair<const char*, bool>> configSettings = {
+		{"outputPrecision", true},
+		{"suppressWarnings", true},
+		{"outputDirectory", true},
+		{"linalgOutputFormatPython", true},
+		{"printDelayMilliSeconds", true},
+		{"printFlushAlways", true},
+		{"printToConsole", true},
+		{"printToFile", false},
+		{"printFileName", false},
+		{"printToFileAppend", false},
+		};
+}
+
+py::dict& EPyUtils::ConfigDefaults()
+{
+	static py::dict* configDefaults = new py::dict();	//never freed, as OverrideSettings above
+	return *configDefaults;
+}
+
+py::dict EPyUtils::ConfigDictionary(const ExudynConfig& config)
+{
+	py::dict values;
+	py::object item = py::cast(&config);
+	for (const auto& setting : configSettings)
+	{
+		values[setting.first] = item.attr(setting.first);
+	}
+	return values;
+}
+
+void EPyUtils::SetConfigFromDictionary(ExudynConfig& config, const py::dict& values)
+{
+	py::object item = py::cast(&config);
+	for (const auto& setting : configSettings)
+	{
+		if (!setting.second) { continue; }				//printToFile and friends only report
+		if (values.contains(setting.first))
+		{
+			item.attr(setting.first) = values[setting.first];
+		}
+	}
+}
+
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -445,6 +496,13 @@ void Init_Pybind_manual_classes(py::module& m) {
 
 		.def("Version", &ExudynConfig::Version, "Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.)", py::arg("addDetails") = false)
 
+		.def("GetDictionary", [](const ExudynConfig& config) { return EPyUtils::ConfigDictionary(config); },
+			"all settings of exudyn.config as a dictionary, as a settings structure gives them; printToFile, printFileName and printToFileAppend are in it but only report, so they are ignored by SetDictionary")
+		.def("SetDictionary", [](ExudynConfig& config, const py::dict& values) { EPyUtils::SetConfigFromDictionary(config, values); },
+			"set the settings named in the dictionary and leave the others; a name exudyn.config does not have is ignored", py::arg("values"))
+		.def("GetDefaults", [](const ExudynConfig&) { return EPyUtils::ConfigDefaults(); },
+			"the defaults of exudyn.config, taken when the module was imported and before any setting or override could change one: what Exudyn starts with. This is what tells a stored setting from one a user never touched")
+
 		//representation:
 		.def("__repr__", [](const ExudynConfig& item) {
 		return STDstring(EXUstd::ToString(item));
@@ -452,6 +510,14 @@ void Init_Pybind_manual_classes(py::module& m) {
 		;
 
 
+
+	//THE DEFAULTS OF exudyn.config, TAKEN NOW (#2685): the class is registered, and no user code
+	//has run yet - __init__.py applies the override settings and reads the environment variables
+	//after the module is imported. They cannot be constructed on demand the way a settings
+	//structure's defaults are, because every getter of ExudynConfig reads a GLOBAL: a second Config
+	//reports the current values, so what Exudyn starts with has to be taken while it still is.
+	EPyUtils::ConfigDefaults().clear();
+	EPyUtils::ConfigDefaults().attr("update")(EPyUtils::ConfigDictionary(pyConfig));
 
 	//use _Experimental, because __Experimental (__) has special meaning in Python and may lead to different behavior
 	py::class_<PyExperimental>(m, "Experimental", "Experimental features, not intended for regular users") //use _Experimental to distinguish from Experimental() function

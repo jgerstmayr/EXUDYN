@@ -28,6 +28,7 @@ from exudyn.misc.keyBindings import RendererHelpText
 #is documented once, on the page of the module that defines it.
 from exudyn.misc.settingsUtilities import (CheckType, ConvertString2Value,  # noqa: F401
                                            IsArrayInt, IsFloat, IsVector,
+                                           CompiledSettingsClass,
                                            ConvertValue2String, DefaultSettingsDictionary,
                                            EnumDisplayName, EnumFullName,
                                            FindMatches, GetComboBoxListsDict,
@@ -44,12 +45,12 @@ __all__ = [
     'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'MakeProcessDpiAware',
     'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
     'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
-    'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo',
-    'TkinterEditDictionary', 'EditDictionary', 'StoreDialogPositions', 'RestoreWindowGeometry',
-    'RememberWindowGeometry', 'StoreWindowGeometry', 'ApplyDialogWindowSettings',
-    'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples', 'ModelScope',
-    'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
-    'AskQuitDialog',
+    'DialogScaling', 'SplitStoredFromChanged', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
+    'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary', 'StoreDialogPositions',
+    'RestoreWindowGeometry', 'RememberWindowGeometry', 'StoreGeometryString', 'StoreWindowGeometry',
+    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
+    'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
+    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -303,6 +304,34 @@ def DialogScaling(root):
 
     return [systemScaling, fontFactor]
 
+def SplitStoredFromChanged(changes, overriddenPaths, fileName):
+    """The changed settings, with the ones the override file stores named separately.
+
+    Args:
+        changes: [(path, line)] as SettingsCodeLines returns them - every setting that differs from
+            the DEFAULT, which is what the difference is to
+        overriddenPaths: the paths that `~/.exudyn/config.json` stores
+        fileName: the name of that file, for the comment line
+
+    Returns:
+        (lines, storedCount): the same pairs, the stored ones last and behind a comment line, and
+        how many of them there are
+
+    Note:
+        The maintainer decided this on 2026-09-26 (revision2026b step RG12.11): the difference is to
+        the REAL default, and what the file already covers is named separately with a comment
+        between them, so that a user can see what they would be copying and decide. Comparing
+        against default-plus-override instead would hide exactly the settings that file is about.
+    """
+    stored = [(path, line) for (path, line) in changes if path in overriddenPaths]
+    if not stored:
+        return (list(changes), 0)
+    lines = [(path, line) for (path, line) in changes if path not in overriddenPaths]
+    lines += [('', '#the following are already stored in ' + str(fileName)
+               + ' and are applied to every new structure:')] + stored
+    return (lines, len(stored))
+
+
 class Tooltip:
     """The small yellow window that shows the description of the row under the mouse.
 
@@ -545,7 +574,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #Every button says what it does in a tooltip; none of them fits in two words.
         self.buttonFrame = tk.Frame(self)
         self.buttonFrame.grid(row=3, column=0, columnspan=3, sticky=tk.E+tk.W)
-        self.buttonFrame.grid_columnconfigure(2, weight=1)      #the gap between the two groups
+        self.buttonFrame.grid_columnconfigure(3, weight=1)      #the gap between the two groups
         self.buttonTooltip = Tooltip(self, wrapLength=420)
 
         self.diffButton = tk.Button(self.buttonFrame, text='diff to default',
@@ -554,22 +583,30 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.sessionButton = tk.Button(self.buttonFrame, text='changes since start',
                                        command=self.OnShowSessionChanges)
         self.sessionButton.grid(row=0, column=1, padx=2, pady=(0, 4))
+        self.storeButton = tk.Button(self.buttonFrame, text='store settings',
+                                     command=self.OnStoreSettings)
+        self.storeButton.grid(row=0, column=2, padx=2, pady=(0, 4))
 
         self.resetButton = tk.Button(self.buttonFrame, text='reset', command=self.OnReset)
-        self.resetButton.grid(row=0, column=3, padx=2, pady=(0, 4))
+        self.resetButton.grid(row=0, column=4, padx=2, pady=(0, 4))
         self.revertButton = tk.Button(self.buttonFrame, text='revert', command=self.OnRevert)
-        self.revertButton.grid(row=0, column=4, padx=2, pady=(0, 4))
+        self.revertButton.grid(row=0, column=5, padx=2, pady=(0, 4))
         self.undoButton = tk.Button(self.buttonFrame, text='undo', command=self.OnUndo,
                                     state=tk.DISABLED)
-        self.undoButton.grid(row=0, column=5, padx=2, pady=(0, 4))
+        self.undoButton.grid(row=0, column=6, padx=2, pady=(0, 4))
         self.closeButton = tk.Button(self.buttonFrame, text='close',
                                      command=lambda: self.parentFrame.destroy())
-        self.closeButton.grid(row=0, column=6, padx=(2, 4), pady=(0, 4))
+        self.closeButton.grid(row=0, column=7, padx=(2, 4), pady=(0, 4))
 
         for (button, description) in [
                 (self.copyButton, 'copy the line above, which sets the selected setting'),
                 (self.diffButton, 'show diffs to default'),
                 (self.sessionButton, 'show changes since dialog opened'),
+                (self.storeButton, 'store these visualizationSettings and the size and position of'
+                                   ' this dialog in the settings file, so that every run starts'
+                                   ' with them; nothing else is stored - not exudyn.config, not the'
+                                   ' simulation settings - and you are shown what will be written'
+                                   ' before anything is'),
                 (self.resetButton, 'reset to default'),
                 (self.revertButton, 'revert to state when dialog opened'),
                 (self.undoButton, 'undo the last change, a reset or a revert'),
@@ -960,12 +997,78 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         return SettingsCodeLines(self.TreeLeaves(), referenceValueStrings,
                                  SettingsPrefix(self.settingsStructure), self.dictionaryTypesT)
 
+    def OverriddenPaths(self):
+        """the paths of THIS structure that ~/.exudyn/config.json already stores
+
+        Only visualizationSettings are stored, so a simulationSettings dialog gets an empty set.
+        """
+        if CompiledSettingsClass(self.settingsStructure).__name__ != 'VisualizationSettings':
+            return set()
+        try:
+            from exudyn.misc import overrideSettings
+            return set(overrideSettings.Settings().get('visualizationSettings') or {})
+        except Exception:                                                    # noqa: BLE001
+            return set()      #a dialog that cannot open is worse than one that groups nothing
+
     def OnShowDiffToDefault(self):
+        #THE DIFFERENCE IS TO THE REAL DEFAULT (maintainer, 2026-09-26, revision2026b step
+        #RG12.11): a setting the override file stores IS a difference to the default and is listed
+        #as one - comparing against default-plus-override would hide exactly the settings that file
+        #is about. What the file already covers is named separately, so that a user can see what
+        #they would be copying and decide.
         description = 'every setting that differs from the Exudyn defaults'
         if self.defaultValueStrings == {}:
             description = 'the defaults are not available in this session'
-        self.ShowCodeLines('settings differing from the defaults',
-                           self.ChangedCodeLines(self.defaultValueStrings), description)
+        (lines, stored) = SplitStoredFromChanged(self.ChangedCodeLines(self.defaultValueStrings),
+                                                 self.OverriddenPaths(), self.SettingsFileName())
+        if stored != 0:
+            description += '; ' + str(stored) + ' of them come from the settings file'
+        self.ShowCodeLines('settings differing from the defaults', lines, description)
+
+    def SettingsFileName(self):
+        """the override settings file, or a readable stand-in if it cannot be asked for"""
+        try:
+            from exudyn.misc import overrideSettings
+            return overrideSettings.FileName()
+        except Exception:                                                    # noqa: BLE001
+            return '~/.exudyn/config.json'
+
+    def OnStoreSettings(self):
+        """write the visualizationSettings that differ from the defaults, and this dialog's
+        geometry, to the override settings file - after showing exactly what that is
+
+        It applies to NOTHING else: exudyn.config and the results monitor keep their sections, and
+        a setting that is already stored and has not changed is simply written again."""
+        fileName = self.SettingsFileName()
+        changes = self.ChangedCodeLines(self.defaultValueStrings)
+        lines = ([('', '#' + str(len(changes)) + ' setting(s) of '
+                   + SettingsPrefix(self.settingsStructure) + ' will be stored in ' + fileName)]
+                 + changes
+                 + [('', '#and the size and the position of this dialog, under "dialogs"')])
+
+        def Store():
+            try:
+                from exudyn.misc import overrideSettings
+                values = {}
+                for (path, _) in changes:
+                    structure = self.settingsStructure
+                    parts = path.split('.')
+                    for part in parts[:-1]:
+                        structure = getattr(structure, part)
+                    value = getattr(structure, parts[-1])
+                    values[path] = list(value) if isinstance(value, (list, tuple)) else value
+                overrideSettings.StoreSection('visualizationSettings', values)
+                #the dialog's own size and position, whatever storeDialogPositions says: that flag
+                #is about remembering on closing, and this is a user asking
+                StoreGeometryString(self.parentFrame.geometry(), self.parentFrame.title())
+                exudyn.Print('stored ' + str(len(values)) + ' setting(s) in ' + fileName)
+            except Exception as exception:                                   # noqa: BLE001
+                exudyn.Print('WARNING: could not store the settings: ' + str(exception))
+
+        self.ShowCodeLines('store settings in ' + fileName, lines,
+                           'these are written to the settings file and applied to every run;'
+                           ' exudyn.config and the other sections are not touched',
+                           confirm=('store', Store))
 
     def OnShowSessionChanges(self):
         self.ShowCodeLines('settings changed in this dialog',
@@ -1044,9 +1147,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.undoButton.configure(state=tk.NORMAL if self.undoStack != [] else tk.DISABLED)
         self.ApplyValues(previousState, pushUndo=False)
 
-    def ShowCodeLines(self, title, lines, description):
+    def ShowCodeLines(self, title, lines, description, confirm=None):
         """the changes as the code that makes them, in a window that shows AND copies: a dialog
-        session that can be pasted into a script (maintainer, 2026-09-23)"""
+        session that can be pasted into a script (maintainer, 2026-09-23)
+
+        confirm: (buttonText, function) adds a button that closes the window and calls the
+        function, which is how the store button shows what it will write before it writes it"""
         window = tk.Toplevel(self)
         window.title(title)
         #THE WINDOW HAS TO BE SEEN (#2621). The settings dialog is topmost - it has to be, it
@@ -1110,7 +1216,16 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.update()       #without this the clipboard is empty once the window closes
 
         tk.Button(window, text='copy all', command=CopyAll).grid(row=2, column=0, pady=6)
-        tk.Button(window, text='close', command=window.destroy).grid(row=2, column=1, pady=6)
+        tk.Button(window, text='cancel' if confirm is not None else 'close',
+                  command=window.destroy).grid(row=2, column=1, pady=6)
+        if confirm is not None:
+            #the window is what asks: everything that writes outside this session shows what it
+            #will write first (revision2026b step RG12.11, #2685)
+            def Confirm():
+                window.destroy()
+                confirm[1]()
+
+            tk.Button(window, text=confirm[0], command=Confirm).grid(row=2, column=2, pady=6)
         window.bind('<Escape>', lambda event: window.destroy())
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1669,6 +1784,36 @@ def RememberWindowGeometry(tkWindow, name):
     return recorded
 
 
+def StoreGeometryString(geometry, name):
+    """Store one 'WIDTHxHEIGHT+X+Y' under the name of a dialog.
+
+    Args:
+        geometry: what tkWindow.geometry() reported
+        name: the title of the dialog
+
+    Returns:
+        True if it was stored
+
+    Note:
+        This does NOT ask whether storeDialogPositions is on: the flag decides whether a dialog
+        remembers itself on closing, and the store button of the settings dialog stores on request
+        (revision2026b step RG12.11, #2685). RememberWindowGeometry is where the flag is read.
+    """
+    from exudyn.misc import overrideSettings as userSettings
+
+    #'WIDTHxHEIGHT+X+Y', where a coordinate left of or above the primary screen is reported as
+    #'+-1500' by some window managers and as '-1500' by others
+    match = re.match(r'^(\d+)x(\d+)\+?(-?\d+)\+?(-?\d+)$', str(geometry).strip())
+    if match is None:
+        if str(geometry).strip() != '':
+            exudyn.Print('WARNING: could not store the position of the dialog "' + str(name)
+                         + '": the window reported the geometry "' + str(geometry) + '"')
+        return False
+    userSettings.StoreDialogGeometry(name, [int(match.group(1)), int(match.group(2))],
+                                     [int(match.group(3)), int(match.group(4))])
+    return True
+
+
 def StoreWindowGeometry(recorded, name):
     """Store what `RememberWindowGeometry` recorded, after the dialog has closed.
 
@@ -1679,18 +1824,7 @@ def StoreWindowGeometry(recorded, name):
     Returns:
         None
     """
-    from exudyn.misc import overrideSettings as userSettings
-
-    #'WIDTHxHEIGHT+X+Y', where a coordinate left of or above the primary screen is reported as
-    #'+-1500' by some window managers and as '-1500' by others
-    match = re.match(r'^(\d+)x(\d+)\+?(-?\d+)\+?(-?\d+)$', recorded.get('geometry', '').strip())
-    if match is None:
-        if recorded.get('geometry', '') != '':
-            exudyn.Print('WARNING: could not store the position of the dialog "' + str(name)
-                         + '": the window reported the geometry "' + recorded['geometry'] + '"')
-        return
-    userSettings.StoreDialogGeometry(name, [int(match.group(1)), int(match.group(2))],
-                                     [int(match.group(3)), int(match.group(4))])
+    StoreGeometryString(recorded.get('geometry', ''), name)
 
 
 def ApplyDialogWindowSettings(tkWindow, alwaysTopmost=None, alphaTransparency=None):

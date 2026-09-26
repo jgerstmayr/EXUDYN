@@ -4621,3 +4621,63 @@ does not know the list macros. Plain Markdown survives it - six `<li>` in the bu
 what the rest of `pybindModule.py` writes.
 
 **Gates**: 11/11 checks, the wheel, the full suite, 470 pytest, the strict HTML build and the PDF.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.11 - storing the override settings (2026-09-26, #2685)
+
+Three defects, and all three were the same one: nothing knew the defaults.
+
+**`exudyn.config` had none, and they cannot be constructed.** Every settings structure finds its
+defaults by `type(structure)()`; `ExudynConfig` is a **facade over global variables**, so a second one
+reports the **current** values - measured while planning: after `exu.config.outputPrecision = 12` a
+freshly constructed `Config` says 12. That is why `Store(config=...)` guessed: *"every value that is
+not `''`, `0` or `False`"*, which stored `printToConsole` from every run that never touched it and
+`outputPrecision` because 6 is not 0.
+
+The maintainer chose the snapshot: `EPyUtils::ConfigDefaults()` is filled in
+`Init_Pybind_manual_classes` from `pyConfig`'s own getters, **after** the class is registered - the
+first attempt put it before, where `py::cast(&config)` has nothing to cast to - and before any user
+code, any override setting or any environment variable can change one. **What Exudyn starts with is
+the default**, taken while it still is: nothing is declared twice and nothing can drift out of step.
+`GetDictionary()`, `SetDictionary(d)` and `GetDefaults()` are the interface the maintainer asked for,
+and the ten settings are listed **once**, in `configSettings`, with the three that only report
+(`printToFile`, `printFileName`, `printToFileAppend`) marked, so a new setting of `exudyn.config`
+reaches the dictionary, the defaults and everything comparing against them by being added in one
+place. A test requires the dictionary to hold exactly what the Python interface holds.
+
+`Main/Config.h` stays free of pybind11, as `Main/Experimental.h` did in RG12.9: eight translation
+units include it, two of them in `Linalg` and `Utilities`. The functions are declared in
+`PybindUtilities.h`, which already has pybind, with a forward declaration of the class.
+
+**The store button.** It writes the `visualizationSettings` that differ from the defaults and the
+dialog's own size and position, and **nothing else**. One click would otherwise reach the home
+directory, so it opens the window `ShowCodeLines` already builds - with the exact lines - and a
+**store / cancel** pair; `ShowCodeLines` gained one optional argument for that and every other caller
+is unchanged. It stores the geometry whether or not `storeDialogPositions` is on: that flag decides
+whether a dialog remembers itself when it closes, and this is a user asking. The geometry parser moved
+out of `StoreWindowGeometry` into `StoreGeometryString(geometry, name)`, so there is one parser and
+the button does not need a recorded dictionary.
+
+**And "diff to default" stays a difference to the default**, as decided: a stored setting **is** a
+difference and is listed as one, and the settings the file already covers are named again under
+`#the following are already stored in ...`. Comparing against default-plus-override would hide
+exactly the settings that file is about. The grouping is `GUI.SplitStoredFromChanged`, a module-level
+function rather than four lines inside the handler, because a handler that opens a window cannot be
+tested and this can: two tests, one of them asserting that nothing is dropped and exactly one comment
+is added.
+
+**One bug of my own, found by reading what RG12.10 had just changed.** The first version asked
+`isinstance(self.settingsStructure, exudyn.VisualizationSettings)` to decide whether the override
+section applies. Since RG12.10 that name is the override-applying **subclass** whenever a settings
+file exists, and `SC.visualizationSettings` - an instance of the compiled base - is **not** an
+instance of it, so the dialog a user is most likely to have open would have grouped nothing. It asks
+`CompiledSettingsClass(...)` instead, which is the helper RG12.10 added for the same reason. A
+mechanism that changes what a class is has to be remembered by everything that asks what a class is.
+
+**What was not verified by a test, and is stated rather than implied**: the button was never clicked.
+Its two halves are tested separately - `SplitStoredFromChanged` and `StoreGeometryString` with a
+temporary settings file - and the writing goes through `StoreSection`, which has its own tests, but
+no test opens the dialog and presses it. It wants one click from the maintainer.
+
+**Gates**: 11/11 checks - `checkAll` asked for `__all__` in definition order and rewrote it itself -
+the wheel, the full suite, 481 pytest and the strict HTML build.
