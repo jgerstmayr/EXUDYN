@@ -115,28 +115,18 @@ def GetRendererSystemContainer():
         nothing being printed is how "the V key opens no dialog" became a reproduction rather than a
         message (#2691, maintainer 2026-09-26).
     """
-    #THE CLASS THE COMPILED MODULE DEFINES, not exudyn.SystemContainer (#2691). The C++ side stores
-    #the container as a POINTER (MainSystemContainer.cpp, AttachToRenderEngineInternal), so what is
-    #in exudyn.sys is of the compiled class - and while revision2026b step RG12.10 installed a Python
-    #subclass under the module's own name, this isinstance() was False for it and every dialog that
-    #asks here found nothing. The subclass is gone (RG12.17), so exudyn.SystemContainer is that class
-    #again; the compiled module is asked because that is the one thing the C++ side cannot disagree
-    #with. revision2026b step RG12.18 (#2692) replaces this untyped dictionary entry with a member on
-    #the C++ side, and then there is no class to check at all.
+    #ASKED OF THE C++ SIDE, which holds the pointer (revision2026b step RG12.18, #2692). It used to
+    #be the dictionary entry exu.sys['currentRendererSystemContainer'], and a dictionary entry can
+    #hold anything: #2691 was exactly that - a Python subclass under the module's own name made the
+    #isinstance() that guarded it False, and every dialog that asks here found nothing, in silence.
+    #A typed member cannot be wrong about its own type, so there is nothing left to check.
     try:
-        containerClass = exudyn._compiledModule.SystemContainer
-        guiSC = exudyn.sys.get('currentRendererSystemContainer', 0)
-        if guiSC == 0:                          #no renderer: the normal answer, and not a complaint
+        guiSC = exudyn.special.currentRendererSystemContainer
+        if guiSC is None:                       #no renderer: the normal answer, and not a complaint
             return None
-        if not isinstance(guiSC, containerClass):
-            _ComplainOnce('exudyn.sys["currentRendererSystemContainer"] holds a '
-                          + type(guiSC).__name__ + ' and not the SystemContainer of '
-                          + exudyn._compiledModule.__name__)
-            return None
-        #the entry can name a container whose C++ object is gone, and the lookup does not
-        #notice: it is the first USE that raises, in whichever caller happens to be next
-        #(#2623 guarded this function, #2676 the value it returns). One cheap read here
-        #is what turns that into a None the callers already handle.
+        #the pointer is cleared when a container detaches or is destroyed, which the dictionary entry
+        #was NOT (#2623, #2676 guarded the reader against that): this read is what is left of the
+        #guard, and it costs nothing
         probe = guiSC.visualizationSettings.dialogs.alwaysTopmost
         if isinstance(probe, bool):
             return guiSC
@@ -283,11 +273,12 @@ def GetExudynDisplayScaling(root=None):
         the scaling, 1 if nothing knows better
     """
     try:
-        if 'currentRendererSystemContainer' in exudyn.sys: 
-            guiSC = exudyn.sys['currentRendererSystemContainer']
-            if guiSC != 0: #this would mean that renderer is detached
-                rs = guiSC.renderer.GetState()
-                return rs['displayScaling']
+        #GetRendererSystemContainer is the ONE place that knows how the link is found and that a
+        #container whose C++ object is gone must not be used (revision2026b step RG12.18)
+        guiSC = GetRendererSystemContainer()
+        if guiSC is not None: #None would mean that the renderer is detached
+            rs = guiSC.renderer.GetState()
+            return rs['displayScaling']
         
         if root is not None:        #96 dpi is the unscaled display, 144 is 150%
             return max(1., root.winfo_fpixels('1i') / 96.)
@@ -917,12 +908,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #++++++++++++++++++++++++++++++++++++++++++++++++
         #update changes
         self.settingsStructure.SetDictionary(self.modifiedDictionary)  #this may also change dialogs.multiThreadedDialogs itself
-        if 'currentRendererSystemContainer' in exudyn.sys:
-            guiSC = exudyn.sys['currentRendererSystemContainer']
-            if guiSC != 0:
-                if guiSC.visualizationSettings.dialogs.multiThreadedDialogs:
-                    guiSC.renderer.SendRedrawSignal()
-                    guiSC.renderer.DoIdleTasks(0) #do not wait
+        guiSC = GetRendererSystemContainer()
+        if guiSC is not None:
+            if guiSC.visualizationSettings.dialogs.multiThreadedDialogs:
+                guiSC.renderer.SendRedrawSignal()
+                guiSC.renderer.DoIdleTasks(0) #do not wait
         #++++++++++++++++++++++++++++++++++++++++++++++++
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        

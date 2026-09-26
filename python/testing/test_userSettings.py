@@ -45,8 +45,8 @@ def settingsFile(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, '_ignored', [])
 
     def Write(content, addVersion=True):
-        #a real file carries its format version (revision2026b step RG12.13.2), and a file without
-        #one is ignored - so the fixture writes it unless a test is ABOUT its absence
+        #a real file carries its format version (revision2026b step RG12.13.2), so the fixture
+        #writes it unless a test is ABOUT its absence
         content = dict(content)
         if addVersion and 'version' not in content:
             content['version'] = settings.fileFormatVersion
@@ -399,9 +399,7 @@ def test_aFileOfAnotherFormatVersionIsIgnored(settingsFile, capsys):
 
 
 def test_aFileWithoutAVersionIsIgnoredToo(settingsFile, capsys):
-    """every file written from now on has one, so a file without one was written before versions
-
-    That includes the files of 1.12.95 and 1.12.96, which is why the note says what to do."""
+    """the version is part of the format: a file without one is not a file this Exudyn reads"""
     settingsFile({'visualizationSettings': {'openGL.multiSampling': 4}}, addVersion=False)
     assert settings.Load() == {}
     assert 'version None' in capsys.readouterr().out
@@ -430,17 +428,14 @@ def test_theModuleClassesAreTheCompiledOnes():
     assert exu.SystemContainer is exu._compiledModule.SystemContainer
     assert exu.VisualizationSettings is exu._compiledModule.VisualizationSettings
 
-    #and that is what the probe needs: what the C++ hands over is an instance of the module's class
+    #and what the C++ hands over is an instance of the module's class: since revision2026b step
+    #RG12.18 the link is exudyn.special.currentRendererSystemContainer, set by creating a container
     from exudyn.misc.GUI import GetRendererSystemContainer
 
-    container = exu._compiledModule.SystemContainer()
-    previous = exu.sys.get('currentRendererSystemContainer', 0)
-    exu.sys['currentRendererSystemContainer'] = container
-    try:
-        assert isinstance(container, exu.SystemContainer)
-        assert GetRendererSystemContainer() is container
-    finally:
-        exu.sys['currentRendererSystemContainer'] = previous
+    container = exu.SystemContainer()
+    assert isinstance(container, exu.SystemContainer)
+    assert exu.special.currentRendererSystemContainer is container
+    assert GetRendererSystemContainer() is container
 
 
 def test_theSnapshottedDefaultsSurviveAWrappedConstructor():

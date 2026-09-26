@@ -586,6 +586,13 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("solver", &PySpecial::solver)
 		.def_readwrite("exceptions", &PySpecial::exceptions)
 		.def_readwrite("userInterface", &PySpecial::userInterface)
+		.def_property_readonly("currentRendererSystemContainer", [](const PySpecial&) -> py::object {
+			//py::cast of the POINTER returns the Python object that already wraps it, so a script
+			//gets the very SystemContainer it created; None when no renderer is attached
+			if (MainSystemContainer::currentRendererContainer == nullptr) { return py::none(); }
+			return py::cast(MainSystemContainer::currentRendererContainer);
+			},
+			"the SystemContainer the renderer is attached to, or None; GLFW can hold one at a time, so this is module-wide. It is set when a SystemContainer attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of exudyn.misc.GUI ask for; not intended for regular users")
 		.def_property_readonly("overrideSettings", [](const PySpecial&) { return EPyUtils::OverrideSettings(); },
 			"the settings read from ~/.exudyn/config.json by 'import exudyn', as a dictionary with one key per section ('config', 'visualizationSettings', 'dialogs', 'resultsMonitor'); it is empty unless a user has stored something, and EXUDYN_NO_USER_SETTINGS=1 keeps it empty; the same dictionary is read by the C++ side; use exudyn.misc.overrideSettings for reading and writing the file")
 		.def_static("InfoStat", &PythonInfoStat, "Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag", py::arg("writeOutput") = true)

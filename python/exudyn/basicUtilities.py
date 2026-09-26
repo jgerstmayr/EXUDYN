@@ -85,8 +85,10 @@ def ClearWorkspace():
 
         sysCopy = exudyn.sys.copy()
         for (key,value) in sysCopy.items():
-            if (#key != 'currentRendererSystemContainer' and
-                key != 'renderState'):
+            #the renderer link is not in exudyn.sys any more, it is
+            #exudyn.special.currentRendererSystemContainer (revision2026b step RG12.18), so clearing
+            #the workspace no longer takes the renderer away from the container it is attached to
+            if key != 'renderState':
                 del exudyn.sys[key]
         variablesCopy = exudyn.variables.copy()
         for (key,value) in variablesCopy.items():

@@ -41,9 +41,10 @@ __all__ = ['fileFormatVersion', 'sectionNames', 'plainTypes', 'structureDefaults
 #THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
 #(revision2026b step RG12.13.2, #2690). It is a plain integer and it is bumped BY HAND, and only
 #when both things are true: Exudyn has been released since the last bump, and the meaning of
-#something in this file has changed. So it does not move while a release is being prepared - the
-#micro version does that, on every resolved issue, and a file that died that often would be useless
-#- and it does tell a file written years ago from one written by this Exudyn.
+#something in this file has changed - so it will not move for a long time, at the earliest in the
+#release after the next one. It does not follow the Exudyn version, which moves on every resolved
+#issue and would kill a stored file every few days. What it is for is the long term: knowing that a
+#file somebody has kept for years is not one this Exudyn can read.
 #
 #A file whose version does not match is IGNORED, with one note naming both versions. Nothing is
 #guessed at and nothing is repaired: the settings in it are conveniences, and a wrong guess about an

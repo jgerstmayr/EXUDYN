@@ -349,19 +349,39 @@ def testASystemContainerInitialisesNothingBeyondTheDefaults(comboLists):
         'nothing should need this list any more')
 
 
-def testReadingTheDefaultsLeavesTheRendererItsContainer():
-    """creating a SystemContainer REPLACES exudyn.sys['currentRendererSystemContainer'], and the
-    defaults are read from a throw-away one - so without this the settings dialog handed the
-    renderer a different container: the redraw signal went to it, the dialog read its window
-    settings from it, and once it was collected, touching it was an access violation (#2623)"""
+def testTheRendererLinkIsAMemberOfTheCppSide():
+    """exudyn.special.currentRendererSystemContainer, not an entry of exudyn.sys (revision2026b step
+    RG12.18, #2692)
+
+    A dictionary entry can hold anything, and #2691 was exactly that: a Python subclass under the
+    module's own name made the isinstance() that guarded the entry False, and every dialog that needs
+    the container stopped working without a word. A typed member cannot be wrong about its own type.
+    """
+    assert 'currentRendererSystemContainer' not in exudyn.sys
+
     container = exudyn.SystemContainer()
-    exudyn.sys['currentRendererSystemContainer'] = container
+    assert exudyn.special.currentRendererSystemContainer is container
+    assert gui.GetRendererSystemContainer() is container
+
+    #it is the C++ side's, and Python does not get to set it
+    with pytest.raises(AttributeError):
+        exudyn.special.currentRendererSystemContainer = None
+
+
+def testReadingTheDefaultsLeavesTheRendererItsContainer():
+    """creating a SystemContainer REPLACES the renderer's link, and the defaults used to be read
+    from a throw-away one - so the settings dialog handed the renderer a different container: the
+    redraw signal went to it, the dialog read its window settings from it, and once it was
+    collected, touching it was an access violation (#2623). The link is
+    exudyn.special.currentRendererSystemContainer since revision2026b step RG12.18."""
+    container = exudyn.SystemContainer()
+    assert exudyn.special.currentRendererSystemContainer is container
 
     gui.DefaultSettingsDictionary(container.visualizationSettings)
 
-    assert exudyn.sys['currentRendererSystemContainer'] is container
+    assert exudyn.special.currentRendererSystemContainer is container
     #and it must still be usable, which is what the access violation took away
-    assert exudyn.sys['currentRendererSystemContainer'].visualizationSettings.dialogs.        alphaTransparency >= 0.
+    assert container.visualizationSettings.dialogs.alphaTransparency >= 0.
 
 
 def testASettingsStructureThatIsNotOnTheContainerStillHasDefaults():
@@ -529,10 +549,12 @@ def testTheProcessCanBeMadeDpiAware():
     assert gui.MakeProcessDpiAware() in [True, False]   #False only on an old Windows
 
 
-def testTheDisplayScalingIsAskedOfTkinterWhenNoRendererCanBeAsked():
+def testTheDisplayScalingIsAskedOfTkinterWhenNoRendererCanBeAsked(monkeypatch):
     root = TkRootOrSkip()
-    #another test in this file registers a container, and the renderer branch would win
-    registered = exudyn.sys.pop('currentRendererSystemContainer', None)
+    #another test in this file creates a container, and the renderer branch would win. The link
+    #belongs to the C++ side since revision2026b step RG12.18 and cannot be taken away from Python,
+    #so what is replaced is the one function that reads it
+    monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: None)
     try:
         withoutRoot = gui.GetExudynDisplayScaling()
         withRoot = gui.GetExudynDisplayScaling(root)
@@ -542,8 +564,6 @@ def testTheDisplayScalingIsAskedOfTkinterWhenNoRendererCanBeAsked():
         assert abs(withRoot - max(1., root.winfo_fpixels('1i') / 96.)) < 1e-9
     finally:
         pass                 #the root is shared and outlives the test
-        if registered is not None:
-            exudyn.sys['currentRendererSystemContainer'] = registered
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

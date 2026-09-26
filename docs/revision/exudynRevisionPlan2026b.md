@@ -2159,10 +2159,14 @@ package).
       so that we know whether a user stores a very old file that is not readable any more."*
 
       `overrideSettings.fileFormatVersion = 1` is written into every file by `Save`, always the
-      current one whatever the file said, and `Load` **ignores** a file whose version does not match -
-      including one with no version at all, which is every file written before today - with one note
-      naming both versions and saying to store the settings again. It is never a section and never
-      reaches `exudyn.special.overrideSettings`.
+      current one whatever the file said, and `Load` **ignores** a file that does not carry exactly
+      that number, with one note naming both versions and saying to store the settings again. It is
+      never a section and never reaches `exudyn.special.overrideSettings`.
+
+      **And nothing remembers the format that was not versioned** (maintainer, 2026-09-26): *"the
+      config file was just alive a few hours, we don't track something like that in the memory of the
+      code."* The rule is the rule - a file carries the number or it is not read - and the code says
+      that and no more.
 
 <a id="rg12-14"></a>
 **RG12.14** *(group RG12; maintainer 2026-09-26)* **The override settings are read only at import, so
@@ -2276,30 +2280,28 @@ package).
       the one message a user sees.
 
 <a id="rg12-18"></a>
-**RG12.18** *(group RG12; maintainer 2026-09-26)* **The renderer link becomes a member on the C++
-    side** (#2692). *"exudyn.sys['currentRendererSystemContainer'] stores the currently active
-    SystemContainer (as an old, dirty hack), as glfw can only hold one at a time. => however, we can
-    just store it on the C++ side of the code - module-wide, like in
-    `special.currentRendererSystemContainer`. => this would immediately return the correct link."*
+**RG12.18** **DONE 2026-09-26** (#2692) — [log](exudynRevisionLog2026b.md#rg12-18) —
+    **The renderer link is a member on the C++ side**, `exudyn.special.currentRendererSystemContainer`,
+    and `exu.sys['currentRendererSystemContainer']` is gone. The maintainer asked for it after RG12.17
+    and was right about why: a dictionary entry can hold anything, so the one reader that cares had to
+    check what class it got - and that check is what broke.
 
-    **And RG12.17 is the argument for it**: a dictionary entry can hold anything, so the one reader
-    that cares has to check what class it got - and that check is what broke. A typed member cannot be
-    wrong about its own type, and `GetRendererSystemContainer()` becomes a read.
+    It is a **raw pointer**, cast to Python on access, so a script gets the very `SystemContainer` it
+    created and nothing holds a Python reference that would have to be released after the interpreter
+    has finalized.
 
-    Written by `MainSystemContainer.cpp` (`AttachToRenderEngineInternal` sets the pointer, `Reset`
-    sets 0) and read by three places in `exudyn.misc.GUI`.
+    **And it fixes what the entry never did**: the pointer is cleared in `Reset()`, which the
+    destructor calls, so a destroyed container leaves `None` instead of a link into freed memory. The
+    entry was cleared only by an explicit detach - which is why the reader needed guarding against a
+    dead object twice, in #2623 and #2676.
 
-    **Nothing has to be deprecated**, which I had wrong and the maintainer corrected: *"exu.sys
-    ['currentRendererSystemContainer'] is an internal ("sys") variable, and never intended to be used
-    by any user!"* `exudyn.sys` is reserved by the system - its own documentation says so - so the
-    entry simply moves: no alias, no deprecation, nothing in the revisions chapter.
+    **Three readers became one**: `GetExudynDisplayScaling` and the dialog's redraw call
+    `GetRendererSystemContainer()` instead of reading the link themselves, so one place knows how it is
+    found and the guard applies everywhere.
 
-    **One thing is left to decide**: the lifetime rule of RG12.9 applies - a global that holds a Python
-    object must not release it after the interpreter has finalized, which is why
-    `EPyUtils::OverrideSettings()` is allocated once and never freed. A `MainSystemContainer*` is not a
-    Python object, so holding the pointer is free; handing it to Python as
-    `special.currentRendererSystemContainer` is where the question is.
-
+    Nothing in the examples or the models used the entry - checked, as the maintainer asked - and
+    `basicUtilities.ClearWorkspace` no longer takes the renderer away from its container as a side
+    effect of emptying `exudyn.sys`.
 
 ## Next steps recommended
 
@@ -2340,7 +2342,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
-| RG12.18 | #2692 | the renderer link becomes a member on the C++ side instead of an entry of exudyn.sys |
 | RG12.14 | #2687 | the override settings are read only at import, so a changed file needs a new session |
 | RG12.15 | #2688 | the documentation does not say that a script can place a dialog |
 | RG12.16 | #2689 | the render window and the SolutionViewer remember their size and position |

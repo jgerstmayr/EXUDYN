@@ -207,7 +207,7 @@ public:
 	MainSystemContainer()
 	{
 		renderer.Initialize(this);
-		AttachToRenderEngineInternal(); //also sets exu.sys['currentRendererSystemContainer']
+		AttachToRenderEngineInternal(); //also sets currentRendererContainer
 	}
 
 	//! delete all systems (otherwise they could do illegal operations)
@@ -215,6 +215,17 @@ public:
 	{
 		Reset(); //delete operator needs to delete all systems (otherwise they could do illegal operations)
 	}
+
+	//! THE CONTAINER THE RENDERER IS ATTACHED TO, or nullptr: GLFW can hold one at a time, so this
+	//! is module-wide (revision2026b step RG12.18, #2692). It used to be the dictionary entry
+	//! exu.sys['currentRendererSystemContainer'], which nothing could keep honest about its type -
+	//! and #2691 was exactly that: a Python subclass under the module's own name made an
+	//! isinstance() of the reader False and every dialog that needs the container stopped working.
+	//! A RAW POINTER, never a Python object: nothing is kept alive by it and nothing has to be
+	//! released after the interpreter has finalized. It is cleared by Reset(), so a container that
+	//! is destroyed leaves a nullptr here instead of a pointer to freed memory - which the
+	//! dictionary entry did NOT do (#2623, #2676 guarded the reader against exactly that).
+	static MainSystemContainer* currentRendererContainer;
 
 	//! function for getting all data and state; for pickling
 	py::dict GetDictionary() const;

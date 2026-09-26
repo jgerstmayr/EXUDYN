@@ -4825,3 +4825,54 @@ the three tests that broke on it were the right kind of failure.
 **Gates**: 11/11 checks, the wheel, the full suite, 494 pytest, the strict HTML build. The V key
 itself was not pressed by me - it needs a render window - so the reproduction is the probe the C++
 side feeds, and it fails before the fix and passes after it.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.18 - the renderer link is a member on the C++ side (2026-09-26, #2692)
+
+The maintainer, having read the fix of RG12.17: *"exudyn.sys['currentRendererSystemContainer'] stores
+the currently active SystemContainer (as an old, dirty hack), as glfw can only hold one at a time. =>
+however, we can just store it on the C++ side of the code - module-wide, like in
+special.currentRendererSystemContainer. => this would immediately return the correct link."* And:
+*"file this as next step or do it immediately, before doing strange workarounds."*
+
+**The strange workaround was mine**, one commit earlier: `isinstance(guiSC, <the compiled class>)`
+existed only because a dictionary entry can hold anything. A member cannot be wrong about its own
+type, so the check is gone rather than made cleverer.
+
+**A raw pointer, not a Python object.** `MainSystemContainer::currentRendererContainer` is a
+`MainSystemContainer*`, set when a container attaches and cleared when it detaches, and
+`exu.special.currentRendererSystemContainer` casts it on access - which returns the Python object that
+already wraps that pointer, so a script gets the very container it created. Nothing holds a Python
+reference, so the lifetime rule of RG12.9 - a global must not release a Python object after the
+interpreter has finalized - does not even come up.
+
+**It fixes something the entry never did, and that is the part worth reading.** The destructor calls
+`Reset()`, and `Reset()` called `visualizationSystems.DetachFromRenderEngine(...)` **directly** - not
+`DetachFromRenderEngineInternal`, which was the only place that cleared the entry. So a destroyed
+container left `exu.sys` naming an object whose C++ side was gone, and it was the first **use** of it
+that raised, in whichever caller happened to be next. That is #2623 and #2676: two issues spent
+guarding the *reader* against a link that the *writer* should never have left behind. The pointer is
+cleared in `Reset()`, so the reader gets `None`, and the probe that remains is a cheap second belt
+rather than the only one.
+
+**Three readers became one.** `GetExudynDisplayScaling` and the dialog's redraw read the link
+themselves, so the dangling guard applied to one of the three. Both call
+`GetRendererSystemContainer()` now. A test can also replace that one function, which it has to: the
+link belongs to the C++ side and Python cannot take it away - one test used to `pop` the dictionary
+entry to reach the tkinter branch, and it now patches the reader.
+
+**What used it, which the maintainer asked to check**: `exudyn.misc.GUI` (three readers), the
+`basicUtilities` workspace clear, two test files, and the C++. **No example, no test model, no
+documentation page.** The workspace clear is the one behaviour change worth naming: it emptied
+`exudyn.sys` and so took the renderer's link away as a side effect, and it does not any more, which is
+what a reader of that function would expect.
+
+**And one thing was reverted on the maintainer's word**, from RG12.13.2 in the previous commit: the
+code no longer says anything about settings files written before the version existed. *"the config
+file was just alive a few hours, we don't track something like that in the memory of the code."* The
+rule stands - a file carries `version` 1 or it is not read - and the code says the rule and nothing
+about this morning.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 495 pytest, the strict HTML build. The V key needs
+a render window, so what is tested is the link: `None` without a container, the container itself after
+one is created, absent from `exudyn.sys`, and not settable from Python.

@@ -328,6 +328,9 @@ pb.DefLatexDataAccess('special.userInterface.suppressPlots','if True, PlotSensor
 pb.DefLatexDataAccess('special.userInterface.suppressDialogs','if True, InteractiveDialog and the other tkinter dialogs return their defaults instead of opening a window; default=False',
                         dataType='bool', isTopLevel = True)
 
+pb.DefLatexDataAccess('special.currentRendererSystemContainer',r'the `SystemContainer` the renderer is attached to, or `None`; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of `exudyn.misc.GUI` ask for; not intended for regular users',
+                        dataType='SystemContainer', isTopLevel = True)
+
 pb.DefLatexDataAccess('special.overrideSettings',r'the settings that persist between runs, read once by `import exudyn` from `~/.exudyn/config.json`: a dictionary with one key per section, `config`, `visualizationSettings`, `dialogs` and `resultsMonitor`; it is empty unless something was stored, and both Python and the C++ side read it. See Section [](#sec-overridesettings)',
                         dataType='dict', isTopLevel = True)
 

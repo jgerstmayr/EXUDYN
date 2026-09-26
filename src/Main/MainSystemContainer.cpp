@@ -208,15 +208,16 @@ bool MainSystemContainer::AttachToRenderEngine()
 	return renderer.Attach();
 }
 
+//! the container the renderer is attached to; see the declaration (revision2026b step RG12.18)
+MainSystemContainer* MainSystemContainer::currentRendererContainer = nullptr;
+
 //! this function links the VisualizationSystem to renderer; returns true if renderer exists/running
 bool MainSystemContainer::AttachToRenderEngineInternal(bool warnNoRenderer)
 {
 	bool rv = visualizationSystems.AttachToRenderEngine(warnNoRenderer); //raise warning
 	if (rv)
 	{
-		py::module exudynModule = py::module::import("exudyn");
-		exudynModule.attr("sys")["currentRendererSystemContainer"] = this; //use pointer, otherwise SC is copied ...?
-		//PyWriteToSysDictionary("currentRendererSystemContainer", *this);
+		currentRendererContainer = this;
 		return true;
 	}
 	return false;
@@ -231,8 +232,7 @@ bool MainSystemContainer::DetachFromRenderEngine()
 //! this function releases the VisualizationSystem from the render engine;
 bool MainSystemContainer::DetachFromRenderEngineInternal(bool warnNoRenderer)
 {
-	py::module exudynModule = py::module::import("exudyn");
-	exudynModule.attr("sys")["currentRendererSystemContainer"] = 0;
+	if (currentRendererContainer == this) { currentRendererContainer = nullptr; }
 	return visualizationSystems.DetachFromRenderEngine(&visualizationSystems, warnNoRenderer);
 }
 
@@ -274,6 +274,11 @@ Index MainSystemContainer::AppendMainSystem(MainSystem& mainSystem)
 void MainSystemContainer::Reset()
 {
 	//pout << "MainSystemContainer::Reset()" << "\n";
+	//A DESTROYED CONTAINER MUST NOT BE FOUND BY A DIALOG (revision2026b step RG12.18): the
+	//destructor calls Reset(), and the dictionary entry this replaces was never cleared here - so
+	//exu.sys still named a container whose C++ object was gone, and it was the first USE of it that
+	//raised, in whichever caller happened to be next (#2623, #2676)
+	if (currentRendererContainer == this) { currentRendererContainer = nullptr; }
 	visualizationSystems.DetachFromRenderEngine(&visualizationSystems);
 	//pout << "MainSystemContainer::Reset():1" << "\n";
 	visualizationSystems.Reset(); //this takes care that no invalid pointers to some VisualizationSystem are left
