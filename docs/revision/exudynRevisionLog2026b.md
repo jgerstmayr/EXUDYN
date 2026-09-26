@@ -4083,3 +4083,57 @@ in the revisions chapter, because it changes what a script does when the file is
 
 **Gates**: 11/11 checks, the wheel, the full suite, pytest 461 passed / 2 skipped, the strict HTML
 build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.5.3 (= RG6.2.26) - the dialogs remember where they were (2026-09-26, #2675)
+
+Undecided since 2026-09-23, proposed and approved on 2026-09-26, and built into the file RG12.5.1
+made three hours earlier - which is the argument the proposal made: a second file for window states
+would have been the beginning of one file per feature.
+
+```json
+{"dialogs": {"visualizationsettings": {"size": [1024, 768], "position": [100, 80]}}}
+```
+
+**The rule RG6.2.11 wrote down is now code**, in `settings.PositionIsReachable`: the **size** comes
+back always, the **position** only when the window would still be reachable on the screen it would
+appear on. A monitor unplugged, a laptop undocked, a resolution changed - each of them would put a
+dialog where nobody can reach its title bar, and a settings dialog that cannot be closed is a stuck
+session. When the position is refused the dialog opens where it would have opened anyway, at its
+remembered size.
+
+**It is switched on, not default**: `visualizationSettings.dialogs.storeDialogPositions`, new and
+False, which is why the note of RG12.5.1 covers it - a remembered window is exactly the kind of
+state that makes a bug report irreproducible.
+
+**Three things that only show up when you build it, not when you propose it:**
+
+- the geometry cannot be read after the window is destroyed, and a dialog is left in three ways -
+  the close button, Escape, the window manager. So it is recorded on every `<Configure>` and the
+  last value is the one stored.
+- a window manager reports a screen left of the primary one as `900x700+-1500+40` or as
+  `900x700-1500+40`, depending on which one it is. Both are parsed, `nonsense` and `''` are
+  refused, and all four are a test.
+- `GetRendererSystemContainer()` is None for a dialog of `python -m exudyn dialogs`, which has no
+  SystemContainer to ask - so nothing is stored there rather than crashing.
+
+**Tested without opening a window**, which rule 11 requires and which is possible because the two
+halves are separable: `PositionIsReachable` is a pure function of a position and a screen rectangle
+(five cases, including a virtual desktop that starts at a negative x), and the file layer is tested
+through `EXUDYN_CONFIG_FILE`. What is not tested is the window itself; that is for a human with a
+screen.
+
+**One reference value moved**: `parameterConversionTest.py` probes every parameter of every item and
+`storeDialogPositions` is a new one, so its two paths are in the reference now. 4627 parameter paths,
+two of them new.
+
+**#2608 was already closed**, and resolving it again was the second time in two days that an old
+issue was re-resolved: RG6.2.11 closed it on 2026-09-23 with the window question left undecided, so
+the leftover needed an issue of its own (#2675) rather than a second stamp on a closed one. The
+symptom is the same both times - `checkIssues` reports that a published version number moved,
+because the check sorts the closed issues by `dateResolved` and a re-stamped date moves an issue
+from its old place into today's block. The repair is the same too: put the file back and raise the
+issue the work actually needs.
+
+**Gates**: 11/11 checks, the wheel, the full suite, pytest 476 passed / 2 skipped, the strict HTML
+build.

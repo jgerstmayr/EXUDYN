@@ -17,6 +17,7 @@ import tkinter.ttk as ttk
 import tkinter.font as tkFont
 import numpy as np #for array checks
 import sys
+import re
 import exudyn
 from exudyn.misc.keyBindings import RendererHelpText
 
@@ -44,7 +45,9 @@ __all__ = [
     'DialogFontSize', 'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling',
     'GetGUIContentScaling', 'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
     'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary',
-    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
+    'StoreDialogPositions', 'RestoreWindowGeometry', 'RememberWindowGeometry',
+    'StoreWindowGeometry', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
+    'pythonCommandExamples',
     'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
     'AskQuitDialog',
     ]
@@ -1177,7 +1180,10 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
                          ' size; please report this with your Python version and platform as a'
                          ' github issue')
 
-    tkWindow.geometry(str(treeEditDefaultWidth)+'x'+str(windowHeight))
+    #the size and the position of the last time, if the user asked for them to be remembered
+    #(revision2026b step RG12.5.3, #2608)
+    RestoreWindowGeometry(tkWindow, dictionaryName, treeEditDefaultWidth, windowHeight)
+    recordedGeometry = RememberWindowGeometry(tkWindow, dictionaryName)
 
     guiSC = GetRendererSystemContainer()
     updateOnChange = False
@@ -1225,6 +1231,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     else:
         root.wait_window(tkWindow)
     
+    StoreWindowGeometry(recordedGeometry, dictionaryName)
     settingsStructure.SetDictionary(ex.modifiedDictionary)
 
 
@@ -1483,6 +1490,116 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
 #raw string literals holding tkinter code, where no syntax check, no ruff and no import test ever
 #saw them. Each one is a function here now, and the C++ calls it. The window setup that the C++
 #assembled by string concatenation from visualizationSettings.dialogs is ApplyDialogWindowSettings.
+
+def StoreDialogPositions():
+    """True if a dialog should remember where it was left
+
+    Returns:
+        the value of `visualizationSettings.dialogs.storeDialogPositions`, or False when there is
+        no SystemContainer to ask - a dialog of `python -m exudyn dialogs` has none
+    """
+    guiSC = GetRendererSystemContainer()
+    if guiSC is None:
+        return False
+    try:
+        return bool(guiSC.visualizationSettings.dialogs.storeDialogPositions)
+    except AttributeError: #an older core: the setting is simply not there
+        return False
+
+
+def RestoreWindowGeometry(tkWindow, name, width, height):
+    """Give a dialog the size and position it was left at, as far as that is safe.
+
+    Args:
+        tkWindow: the window
+        name: the title of the dialog, which is what it is stored under
+        width: the width it would otherwise get, in pixels
+        height: the height it would otherwise get
+
+    Returns:
+        None
+
+    Note:
+        The **size** is restored always and the **position** only when the window would still be
+        reachable on the current screen (revision2026b step RG6.2.11 wrote that rule down). A
+        monitor that is gone, a resolution that changed, a laptop that was undocked: each of them
+        would otherwise put the dialog where nobody can close it.
+    """
+    from exudyn import settings as userSettings
+
+    if not StoreDialogPositions():
+        tkWindow.geometry(str(width) + 'x' + str(height))
+        return
+
+    (size, position) = userSettings.DialogGeometry(name)
+    (width, height) = (size[0], size[1]) if size is not None else (width, height)
+    geometry = str(width) + 'x' + str(height)
+
+    if position is not None:
+        try: #the virtual desktop where tkinter knows it, the screen otherwise
+            screen = [tkWindow.winfo_vrootx(), tkWindow.winfo_vrooty(),
+                      max(tkWindow.winfo_vrootwidth(), tkWindow.winfo_screenwidth()),
+                      max(tkWindow.winfo_vrootheight(), tkWindow.winfo_screenheight())]
+        except tk.TclError:
+            screen = None
+        if screen is not None and userSettings.PositionIsReachable(position, screen):
+            geometry += '+' + str(position[0]) + '+' + str(position[1])
+    tkWindow.geometry(geometry)
+
+
+def RememberWindowGeometry(tkWindow, name):
+    """Record where a dialog is while it lives, so that it can be stored when it closes.
+
+    Args:
+        tkWindow: the window
+        name: the title of the dialog, which is what it is stored under
+
+    Returns:
+        a dictionary that `StoreWindowGeometry` reads; empty when nothing is to be stored
+
+    Note:
+        The geometry cannot be read after the window is destroyed, and a dialog is left in three
+        ways - the close button, Escape, and the window manager - so it is recorded on every
+        `<Configure>` and the last value is the one that is stored.
+    """
+    recorded = {}
+    if not StoreDialogPositions():
+        return recorded
+
+    def Record(event=None):
+        try:
+            recorded['geometry'] = tkWindow.geometry()
+        except Exception: #a window that is going away has no geometry any more
+            pass
+
+    tkWindow.bind('<Configure>', Record, add='+')
+    Record()
+    return recorded
+
+
+def StoreWindowGeometry(recorded, name):
+    """Store what `RememberWindowGeometry` recorded, after the dialog has closed.
+
+    Args:
+        recorded: what `RememberWindowGeometry` returned
+        name: the title of the dialog
+
+    Returns:
+        None
+    """
+    from exudyn import settings as userSettings
+
+    #'WIDTHxHEIGHT+X+Y', where a coordinate left of or above the primary screen is reported as
+    #'+-1500' by some window managers and as '-1500' by others
+    match = re.match(r'^(\d+)x(\d+)\+?(-?\d+)\+?(-?\d+)$', recorded.get('geometry', '').strip())
+    if match is None:
+        if recorded.get('geometry', '') != '':
+            exudyn.Print('WARNING: could not store the position of the dialog "' + str(name)
+                         + '": the window reported the geometry "' + recorded['geometry'] + '"')
+        return
+    userSettings.StoreDialogGeometry(name, [int(match.group(1)), int(match.group(2))],
+                                     [int(match.group(3)), int(match.group(4))])
+
 
 def ApplyDialogWindowSettings(tkWindow, alwaysTopmost=None, alphaTransparency=None):
     """Apply what visualizationSettings.dialogs says about a dialog window.

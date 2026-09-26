@@ -146,3 +146,62 @@ def test_theRunnersIgnoreTheFile():
     A stored setting that moved a test result would be found weeks later, on another machine."""
     assert os.environ.get('EXUDYN_NO_USER_SETTINGS', '') == '1'
     assert exu.settings.Ignoring() if hasattr(exu, 'settings') else True
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the dialogs section (revision2026b step RG12.5.3, from RG6.2.11 / #2608). The window itself is not
+#opened here - a test must never wait for a human - so what is tested is the file layer and the
+#rule that decides whether a stored position may be used at all
+def test_theDialogKeyIsTheTitleWithoutSpacesAndCase():
+    assert settings.DialogKey('Visualization Settings') == 'visualizationsettings'
+    assert settings.DialogKey('simulationSettings') == 'simulationsettings'
+
+
+def test_aDialogGeometryIsStoredAndReadBack(settingsFile):
+    settingsFile({})
+    settings.StoreDialogGeometry('Visualization Settings', [1024, 768], [100, 80])
+    (size, position) = settings.DialogGeometry('Visualization Settings')
+    assert size == [1024, 768] and position == [100, 80]
+
+
+def test_aDialogGeometryThatWasNeverStoredIsNone(settingsFile):
+    settingsFile({'dialogs': {}})
+    assert settings.DialogGeometry('Visualization Settings') == (None, None)
+
+
+def test_ageometryThatIsNotTwoNumbersIsIgnored(settingsFile):
+    """a hand-edited file must not put a dialog somewhere impossible"""
+    settingsFile({'dialogs': {'visualizationsettings': {'size': 'big', 'position': [1, 2, 3]}}})
+    assert settings.DialogGeometry('Visualization Settings') == (None, None)
+
+
+@pytest.mark.parametrize('position, reachable', [
+    ([100, 80], True),                  #the ordinary case
+    ([-8, 0], True),                    #where Windows puts a maximised window
+    ([2200, 80], False),                #the second screen is gone
+    ([1900, 1000], False),              #the corner: the title bar would be unreachable
+    ([0, -50], False),                  #above the screen: the title bar is not there
+    ])
+def test_aStoredPositionIsUsedOnlyWhenItIsReachable(position, reachable):
+    """the rule of RG6.2.11: the size always, the position only when the window can be reached"""
+    assert settings.PositionIsReachable(position, [0, 0, 1920, 1080]) == reachable
+
+
+def test_aSecondScreenToTheLeftIsReachable():
+    """a virtual desktop starts at a negative x when a monitor sits left of the primary one"""
+    assert settings.PositionIsReachable([-1500, 100], [-1920, 0, 3840, 1080])
+
+
+@pytest.mark.parametrize('geometry, expected', [
+    ('1024x768+100+80', ([1024, 768], [100, 80])),
+    ('900x700+-1500+40', ([900, 700], [-1500, 40])),    #a screen left of the primary one
+    ('900x700-1500+40', ([900, 700], [-1500, 40])),     #the same, as other window managers say it
+    ('nonsense', (None, None)),
+    ('', (None, None)),
+    ])
+def test_everyGeometryStringAWindowManagerReports(settingsFile, geometry, expected):
+    """what tkinter hands back differs between window managers, and none of it may raise"""
+    from exudyn.misc.GUI import StoreWindowGeometry
+    settingsFile({})
+    StoreWindowGeometry({'geometry': geometry}, 'dialog')
+    assert settings.DialogGeometry('dialog') == expected

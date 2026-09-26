@@ -28,7 +28,8 @@ import json
 import os
 
 __all__ = ['sectionNames', 'plainTypes', 'FileName', 'Ignoring', 'Load', 'Save', 'Clear',
-           'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings', 'Store']
+           'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings',
+           'DialogKey', 'DialogGeometry', 'StoreDialogGeometry', 'PositionIsReachable', 'Store']
 
 #the sections of the file. 'dialogs' is read by the dialogs themselves (revision2026b step
 #RG6.2.26) and is listed here so that this module does not warn about it
@@ -272,6 +273,97 @@ def ApplyVisualizationSettings(visualizationSettings, settings=None):
         _Record(full, value)
         applied += 1
     return applied
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the dialogs section: one entry per dialog, holding the size and the position it was left at
+#(revision2026b step RG12.5.3, from RG6.2.11 / #2608)
+def DialogKey(name):
+    """the key a dialog is stored under: its title, without spaces and case
+
+    Args:
+        name: the title of the dialog, e.g. 'Visualization Settings'
+
+    Returns:
+        the key, e.g. 'visualizationsettings'
+    """
+    return ''.join(character for character in str(name).lower() if character.isalnum())
+
+
+def DialogGeometry(name):
+    """The stored size and position of one dialog.
+
+    Args:
+        name: the title of the dialog, see `DialogKey`
+
+    Returns:
+        `(size, position)`, each `[x, y]` or None when nothing is stored for it
+    """
+    def IsPair(pair):
+        """two integers, and nothing else: a hand-edited file must not place a window"""
+        return (isinstance(pair, list) and len(pair) == 2
+                and all(isinstance(entry, int) for entry in pair))
+
+    stored = (Load().get('dialogs') or {}).get(DialogKey(name)) or {}
+    size = stored.get('size')
+    position = stored.get('position')
+    return (size if IsPair(size) else None, position if IsPair(position) else None)
+
+
+def StoreDialogGeometry(name, size, position):
+    """Store the size and the position of one dialog.
+
+    Args:
+        name: the title of the dialog, see `DialogKey`
+        size: `[width, height]` in pixels
+        position: `[x, y]` of the top left corner, in pixels
+
+    Returns:
+        None
+
+    Note:
+        This is called by the dialogs themselves when
+        `visualizationSettings.dialogs.storeDialogPositions` is True. Nothing else writes the
+        file: see `Store`.
+    """
+    settings = Load()
+    dialogs = dict(settings.get('dialogs') or {})
+    dialogs[DialogKey(name)] = {'size': [int(size[0]), int(size[1])],
+                                'position': [int(position[0]), int(position[1])]}
+    settings['dialogs'] = dialogs
+    Save(settings)
+
+
+def PositionIsReachable(position, screen, margin=80):
+    """Would a window at this position still be reachable on this screen?
+
+    Args:
+        position: `[x, y]` of the top left corner of the window
+        screen: `[x, y, width, height]` of the screen, or of the virtual desktop when there is
+            more than one
+        margin: how much of the window has to remain on the screen, in pixels; the default is
+            about the width of a title bar button group
+
+    Returns:
+        True if a window placed there can be reached with the mouse
+
+    Note:
+        This is the rule RG6.2.11 wrote down and did not build: **the size is restored always, the
+        position only when it is still reachable**. A monitor that is unplugged, a laptop
+        undocked, a resolution changed - each of them would otherwise put a dialog where nobody
+        can close it, and a modal settings dialog that cannot be closed is a stuck session.
+
+    Example:
+        PositionIsReachable([100, 80], [0, 0, 1920, 1080])       #True
+        PositionIsReachable([2200, 80], [0, 0, 1920, 1080])      #False: the second screen is gone
+    """
+    (x, y) = (position[0], position[1])
+    (screenX, screenY, width, height) = (screen[0], screen[1], screen[2], screen[3])
+    #the top left corner must lie on the screen, and far enough from the right and lower edge
+    #that the title bar can still be grabbed. A little negative is normal on Windows, where a
+    #maximised window sits at -8
+    return (screenX - 16 <= x <= screenX + width - margin
+            and screenY - 4 <= y <= screenY + height - margin)
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

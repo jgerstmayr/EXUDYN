@@ -868,6 +868,8 @@ class VSettingsDialogs:
     """True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed."""
     openTreeView: bool
     """True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened."""
+    storeDialogPositions: bool
+    """True: the size and the position of a dialog are stored in the user settings file, ``~/.exudyn/config.json``, and the next dialog of the same kind starts with them; the size is always restored, the position only if the window would still be reachable on the current screen. See Section sec:usersettings."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 

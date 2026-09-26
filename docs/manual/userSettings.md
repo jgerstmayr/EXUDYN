@@ -57,6 +57,21 @@ value cannot be carried honestly by a JSON file.
 A key that names no setting, a section nobody reads, a file that is not valid JSON: each of them is
 reported and none of them stops `import exudyn`.
 
+## Remembering a dialog
+
+`visualizationSettings.dialogs.storeDialogPositions = True` makes a settings dialog remember where
+it was left. It is stored under `"dialogs"`, one entry per dialog:
+
+```json
+{"dialogs": {"visualizationsettings": {"size": [1024, 768], "position": [100, 80]}}}
+```
+
+**The size comes back always; the position only when the window would still be reachable.** A
+monitor that is unplugged, a laptop undocked, a screen resolution that changed: each of them would
+otherwise put the dialog where nobody can reach its title bar, and a dialog that cannot be closed
+is a stuck session. When the stored position is not usable, the dialog opens where it would have
+opened anyway, at its remembered size.
+
 ## Switching it off
 
 `EXUDYN_NO_USER_SETTINGS=1` ignores the file completely, and it is what makes a problem

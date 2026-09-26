@@ -430,6 +430,7 @@ VSettingsDialogs has the following items:
 | `fontScaling`<br>`SC.visualizationSettings.dialogs.fontScaling` | UFloat |  | 0. | scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop |
 | `multiThreadedDialogs`<br>`SC.visualizationSettings.dialogs.multiThreadedDialogs` | bool |  | True | True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed |
 | `openTreeView`<br>`SC.visualizationSettings.dialogs.openTreeView` | bool |  | False | True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened |
+| `storeDialogPositions`<br>`SC.visualizationSettings.dialogs.storeDialogPositions` | bool |  | False | True: the size and the position of a dialog are stored in the user settings file, `~/.exudyn/config.json`, and the next dialog of the same kind starts with them; the size is always restored, the position only if the window would still be reachable on the current screen. See Section [](#sec:usersettings) |
 
 
 

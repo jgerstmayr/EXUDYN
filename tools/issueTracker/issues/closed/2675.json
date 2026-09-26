@@ -1,0 +1,17 @@
+{
+  "number": 2675,
+  "title": "A settings dialog remembers its size and its position",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The leftover of #2608: RG6.2.11 went through the catalogue of optional dialog features on 2026-09-23 and decided all of them except this one, which stayed undecided, with the rule that would make it safe recorded in the log - restore the size always, the position only when the window still lies inside the virtual desktop. The maintainer asked for a proposal on 2026-09-26 and approved it: it belongs in the user settings file of #2666, under a dialogs section, and is switched on by a new visualizationSettings.dialogs.storeDialogPositions.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 10:11",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "A settings dialog remembers its size and position when visualizationSettings.dialogs.storeDialogPositions is True: both are stored in the dialogs section of ~/.exudyn/config.json, the size is restored always and the position only when the window would still be reachable on the current screen (revision2026b step RG12.5.3, the leftover of #2608).",
+  "resolvedInVersion": "1.12.84"
+}

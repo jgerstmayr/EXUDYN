@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 82 | 1.12.83 |
+| 1.12 | Metheney | 83 | 1.12.84 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.84** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A settings dialog remembers its size and its position (#2675)
+  - description: The leftover of \#2608: RG6.2.11 went through the catalogue of optional dialog features on 2026-09-23 and decided all of them except this one, which stayed undecided, with the rule that would make it safe recorded in the log - restore the size always, the position only when the window still lies inside the virtual desktop. The maintainer asked for a proposal on 2026-09-26 and approved it: it belongs in the user settings file of \#2666, under a dialogs section, and is switched on by a new visualizationSettings.dialogs.storeDialogPositions.
+  - **notes:** A settings dialog remembers its size and position when visualizationSettings.dialogs.storeDialogPositions is True: both are stored in the dialogs section of ~/.exudyn/config.json, the size is restored always and the position only when the window would still be reachable on the current screen (revision2026b step RG12.5.3, the leftover of \#2608).
+  - date resolved: **2026-09-26 10:11**, date raised: 2026-09-26
 - **1.12.83** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConvexRoll.pContact is computed state stored in parameters (#2413)
   - description: pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).
   - **notes:** ObjectContactConvexRoll.pContact is a computed value that Python reads - it already was, and its description now says so instead of carrying a typo. rBoundingSphere beside it was computed from coefficientsHull AND settable, which did nothing because SetObjectParameter ends in ParametersHaveChanged(); it is read-only now. python/testing/test\_computedParameters.py checks both: readable, in the dictionary, rBoundingSphere equal to the hull polynomial at 0, and writing either raises (revision2026b step RG4.2).

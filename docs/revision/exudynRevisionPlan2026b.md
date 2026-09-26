@@ -1257,9 +1257,11 @@ This group is that revision and what has to happen before it can start.
     runs in `vars(__main__)` again - one dictionary, so an assignment also survives the command.
 
 <a id="rg6-2-26"></a>
-**RG6.2.26** *(group RG6; from RG6.2.11, suggested 2026-09-26)* **Remember the window** (#2608).
-    RG6.2.11 left it undecided and kept the rule that makes it safe. The maintainer asked for a
-    proposal; this is it, and it is **not started**.
+**RG6.2.26** **DONE 2026-09-26** (#2675) — [log](exudynRevisionLog2026b.md#rg12-5-3) —
+    **Remember the window.** RG6.2.11 left it undecided on 2026-09-23 and kept the rule that makes
+    it safe; the maintainer asked for a proposal on 2026-09-26 and approved it the same day. Built
+    as **RG12.5.3**, in the file of RG12.5 rather than in one of its own, exactly as proposed
+    below.
 
     **It is not a mechanism of its own: it is three keys in the file of RG12.5** (#2666),
     `~/.exudyn/config.json`, under a `dialogs` section - one entry per dialog, holding its size and
@@ -1870,11 +1872,10 @@ package).
       `ItemType` - is stored honestly as its name, and `settingsUtilities` already converts between
       the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
       enums, which is why they were left out of .1 rather than guessed at.
-    - **RG12.5.3** *(open)* — **the dialogs section**, which is RG6.2.26 (#2608): the size and the
-      position of a dialog, under `"dialogs"`, written only when
-      `visualizationSettings.dialogs.storeDialogPositions` is true, and restored by the rule in the
-      RG6.2.11 log - the size always, the position only when the window still lies inside the
-      virtual desktop.
+    - **RG12.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-3) - the dialogs
+      section, which is **RG6.2.26** (#2675) built: `visualizationSettings.dialogs.
+      storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
+      of RG6.2.11 - the size always, the position only when the window would still be reachable.
     - **RG12.5.4** *(open)* — **folding in `~/.exudyn/resultsMonitor.json`.** The monitor had its
       own file first, and "one file" is the point of RG12.5. It needs a migration that reads the old
       file once and writes it into the `resultsMonitor` section, because a user who has one must not
@@ -1938,7 +1939,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG6.2.26 | #2608 | remember the window - the size always, the position only when it is reachable |
 | RG6.3 | #2583 | give the renderer a headless call that returns counts and an image at a given resolution |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1 | - | a checker for user scripts after the 1.12 API changes |
