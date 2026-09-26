@@ -131,7 +131,7 @@ class MainSystem:
     ...
 
     @overload
-    def PlotSensor(self, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=None, labels=[], colorCodeOffset=0, newFigure=True, closeAll=False, componentsX=[], title='', figureName='', fontSize=16, colors=[], lineStyles=[], lineWidths=[], markerStyles=[], markerSizes=[], markerDensity=0.08, rangeX=[], rangeY=[], majorTicksX=10, majorTicksY=10, offsets=[], factors=[], subPlot=[], sizeInches=[6.4,4.8], fileName='', useXYZcomponents=True, legendArgs=None, **kwargs) -> [Any, Any, Any, Any]: 
+    def PlotSensor(self, sensorNumbers=[], components=0, xLabel=None, yLabel=None, labels=[], colorCodeOffset=0, newFigure=True, closeAll=False, componentsX=[], title='', figureName='', fontSize=None, colors=None, lineStyles=None, lineWidths=None, markerStyles=None, markerSizes=None, markerDensity=None, rangeX=[], rangeY=[], majorTicksX=None, majorTicksY=None, offsets=[], factors=[], subPlot=[], sizeInches=None, fileName='', useXYZcomponents=True, legendArgs=None, **kwargs) -> [Any, Any, Any, Any]: 
         """Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage."""
     ...
 

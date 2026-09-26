@@ -1729,7 +1729,6 @@ namespace
 		VSettingsWindow& windowSettings = GetSettingsViewWritable(viewID, *settings).window;
 		windowSettings.renderWindowSize = Index2({ (Index)width, (Index)height });
 		windowSettings.renderWindowPosition = Index2({ (Index)positionX, (Index)positionY });
-		windowSettings.useRenderWindowPosition = true;   //otherwise the position would not be used
 	}
 }
 
@@ -1783,15 +1782,14 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 		renderViews.State(viewID)->windowOpen = true;
 		renderViews.State(viewID)->viewEnabled = true;
 
-		//WHERE THE WINDOW GOES, if it was asked for (revision2026b step RG12.16, #2689). The flag
-		//is off by default, so the window manager places the window as it did before these settings
-		//existed - a window is placed only on purpose, by a script or by ~/.exudyn/config.json, and
-		//every view has its own. The flag rather than a negative coordinate as a sentinel, because
-		//the settings dialog refuses a negative IndexArray and the size beside it is the same C++
-		//type, so nothing could tell the two apart
-		const auto& windowSettings = GetSettingsView(viewID, *visSettings).window;
-		const Index2& windowPosition = windowSettings.renderWindowPosition;
-		if (windowSettings.useRenderWindowPosition)
+		//WHERE THE WINDOW GOES, if it was asked for (revision2026b step RG12.16, #2689). The
+		//default is (-1,-1) and a negative coordinate means "wherever the window manager puts it",
+		//which is what happened before this setting existed - so a window is placed only on purpose,
+		//by a script or by ~/.exudyn/config.json, and every view has its own. The maintainer measured
+		//that a GLFW window position is always positive, which is what makes a negative one free as
+		//the sentinel
+		const Index2& windowPosition = GetSettingsView(viewID, *visSettings).window.renderWindowPosition;
+		if (windowPosition[0] >= 0 && windowPosition[1] >= 0)
 		{
 			glfwSetWindowPos(window, (int)windowPosition[0], (int)windowPosition[1]);
 			if (verboseRenderer)

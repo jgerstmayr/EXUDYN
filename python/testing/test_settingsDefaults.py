@@ -79,8 +79,8 @@ def testTheLightDefaultsAreInTheStructure():
 
 
 def testTheRenderWindowPositionIsUnsetByDefaultOnEveryView():
-    """the flag is off, so the window manager places the window as it did before (revision2026b step
-    RG12.16, #2689)
+    """(-1,-1) means "wherever the window manager puts it", which is what happened before the setting
+    existed (revision2026b step RG12.16, #2689)
 
     A window is placed only on purpose, by a script or by ~/.exudyn/config.json, and each of the four
     views has its own. The effect cannot be tested here - it needs a render window - so what is
@@ -89,18 +89,16 @@ def testTheRenderWindowPositionIsUnsetByDefaultOnEveryView():
     settings = exudyn.VisualizationSettings()
     for viewName in ['view0', 'view1', 'view2', 'view3']:
         window = getattr(settings, viewName).window
-        assert window.useRenderWindowPosition is False
-        assert list(window.renderWindowPosition) == [0, 0]
+        assert list(window.renderWindowPosition) == [-1, -1]
+        assert window.storeRenderWindowGeometry is False
         assert list(window.renderWindowSize) == [1024, 768]
 
     settings.view0.window.renderWindowPosition = [100, 80]
-    settings.view0.window.useRenderWindowPosition = True
     assert list(settings.view0.window.renderWindowPosition) == [100, 80]
 
     from exudyn.misc.settingsUtilities import ChangedSettings
 
-    assert [path for (path, _) in ChangedSettings(settings)] == [
-        'view0.window.renderWindowPosition', 'view0.window.useRenderWindowPosition']
+    assert [path for (path, _) in ChangedSettings(settings)] == ['view0.window.renderWindowPosition']
 
 
 def testAContainerStartsFromTheSameMaterials():

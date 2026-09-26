@@ -1,0 +1,13 @@
+{
+  "number": 2693,
+  "title": "the settings dialog should store settings and positions with two separate buttons",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer on 2026-09-26, after using the store button of revision2026b step RG12.11: 'I am still thinking, how the workflow for storing the window positions and sizes could be. The store settings means store positions at the same time. I would like to opt for two buttons, one for the settings and one for the positions.' Today one button writes both the visualizationSettings that differ from the defaults and the geometry of the dialog itself, and the confirmation window says so - but they are two decisions: 'I like this look' and 'I like this window here'. Two buttons say that, and each one's confirmation shows only what it writes. What has to be decided with it, because it stops being obvious once the buttons are separate: which of them stores the RENDER window geometry, which since #2689 is part of the visualizationSettings (view*.window.renderWindowSize and renderWindowPosition) and so would go with the settings button although it is a position; and whether the positions button also stores the geometry of the other dialogs it knows about, or only its own. revision2026b step RG12.19.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "python/exudyn/misc/GUI.py"
+}

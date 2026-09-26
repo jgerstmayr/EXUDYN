@@ -1389,14 +1389,13 @@ public: // AUTO:
   float globalFontSize;                           //!< AUTO: must be > 0; general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
   bool lockModelView;                             //!< AUTO: True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value
   bool maximize;                                  //!< AUTO: True: render window of respective view will be maximized at startup
-  Index2 renderWindowPosition;                    //!< AUTO: position of the top left corner of the render window of this view, in pixels, used only if `useRenderWindowPosition` is True. Set both to place a window where you want it, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-overridesettings); NOTE: the position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it
+  Index2 renderWindowPosition;                    //!< AUTO: position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-overridesettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it
   Index2 renderWindowSize;                        //!< AUTO: initial size of the render window of this view, in pixels
   bool showComputationInfo;                       //!< AUTO: true = show (hide) all computation information including Exudyn and version
   bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections
   bool showRenderStateInfo;                       //!< AUTO: True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'
   bool showWindow;                                //!< AUTO: True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)
-  bool storeRenderWindowGeometry;                 //!< AUTO: True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition`, and `useRenderWindowPosition` is switched on - so that *store settings* in the visualization settings dialog, or `exudyn.misc.overrideSettings.Store(SC)`, keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run
-  bool useRenderWindowPosition;                   //!< AUTO: True: the render window of this view is placed at `renderWindowPosition`; False (default): the window manager places it, as it did before these two settings existed
+  bool storeRenderWindowGeometry;                 //!< AUTO: True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -1411,14 +1410,13 @@ public: // AUTO:
     globalFontSize = 12.f;
     lockModelView = false;
     maximize = false;
-    renderWindowPosition = Index2({0,0});
+    renderWindowPosition = Index2({-1,-1});
     renderWindowSize = Index2({1024,768});
     showComputationInfo = true;
     showMouseCoordinates = false;
     showRenderStateInfo = false;
     showWindow = true;
     storeRenderWindowGeometry = false;
-    useRenderWindowPosition = false;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
   {
@@ -1441,7 +1439,6 @@ public: // AUTO:
     os << "  showRenderStateInfo = " << showRenderStateInfo << "\n";
     os << "  showWindow = " << showWindow << "\n";
     os << "  storeRenderWindowGeometry = " << storeRenderWindowGeometry << "\n";
-    os << "  useRenderWindowPosition = " << useRenderWindowPosition << "\n";
     os << "\n";
   }
 

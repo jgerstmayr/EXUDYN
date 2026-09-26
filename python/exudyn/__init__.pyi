@@ -1557,7 +1557,7 @@ class VSettingsWindow:
     maximize: bool
     """True: render window of respective view will be maximized at startup."""
     renderWindowPosition: Tuple[int,int]
-    """position of the top left corner of the render window of this view, in pixels, used only if ``useRenderWindowPosition`` is True. Set both to place a window where you want it, or store them in ``~/.exudyn/config.json`` to have every run start there, see Section sec-overridesettings; NOTE: the position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it."""
+    """position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in ``~/.exudyn/config.json`` to have every run start there, see Section sec-overridesettings. NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it."""
     renderWindowSize: Tuple[int,int]
     """initial size of the render window of this view, in pixels."""
     showComputationInfo: bool
@@ -1569,9 +1569,7 @@ class VSettingsWindow:
     showWindow: bool
     """True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)."""
     storeRenderWindowGeometry: bool
-    """True: when the render window of this view closes, where it was is written into ``renderWindowSize`` and ``renderWindowPosition``, and ``useRenderWindowPosition`` is switched on - so that *store settings* in the visualization settings dialog, or ``exudyn.misc.overrideSettings.Store(SC)``, keeps the window where you left it, see Section sec-overridesettings. False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run."""
-    useRenderWindowPosition: bool
-    """True: the render window of this view is placed at ``renderWindowPosition``; False (default): the window manager places it, as it did before these two settings existed."""
+    """True: when the render window of this view closes, where it was is written into ``renderWindowSize`` and ``renderWindowPosition`` - so that storing the settings keeps the window where you left it, see Section sec-overridesettings. False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -3715,7 +3713,7 @@ class MainSystem:
     ...
 
     @overload
-    def PlotSensor(self, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=None, labels=[], colorCodeOffset=0, newFigure=True, closeAll=False, componentsX=[], title='', figureName='', fontSize=16, colors=[], lineStyles=[], lineWidths=[], markerStyles=[], markerSizes=[], markerDensity=0.08, rangeX=[], rangeY=[], majorTicksX=10, majorTicksY=10, offsets=[], factors=[], subPlot=[], sizeInches=[6.4,4.8], fileName='', useXYZcomponents=True, legendArgs=None, **kwargs) -> [Any, Any, Any, Any]: 
+    def PlotSensor(self, sensorNumbers=[], components=0, xLabel=None, yLabel=None, labels=[], colorCodeOffset=0, newFigure=True, closeAll=False, componentsX=[], title='', figureName='', fontSize=None, colors=None, lineStyles=None, lineWidths=None, markerStyles=None, markerSizes=None, markerDensity=None, rangeX=[], rangeY=[], majorTicksX=None, majorTicksY=None, offsets=[], factors=[], subPlot=[], sizeInches=None, fileName='', useXYZcomponents=True, legendArgs=None, **kwargs) -> [Any, Any, Any, Any]: 
         """Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage."""
     ...
 

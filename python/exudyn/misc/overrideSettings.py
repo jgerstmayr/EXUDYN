@@ -53,7 +53,8 @@ fileFormatVersion = 1
 
 #the sections of the file. 'dialogs' is read by the dialogs themselves (revision2026b step
 #RG6.2.26) and is listed here so that this module does not warn about it
-sectionNames = ['config', 'visualizationSettings', 'dialogs', 'resultsMonitor']
+sectionNames = ['config', 'visualizationSettings', 'dialogs', 'resultsMonitor',
+                'plotSensor']
 
 #what may be stored: a plain value, or a list of plain values. Everything else - graphics data, a
 #user function, a matrix container - is a thing that a JSON file cannot carry honestly

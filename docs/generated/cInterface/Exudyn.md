@@ -174,6 +174,45 @@ it writes anything. It is the way to keep a look you have just made without swit
 is listed with the others and then named again under a comment line that says so. Comparing against
 the defaults plus the file instead would hide exactly the settings the file is about.
 
+#### Placing a dialog, and a window, from a script
+
+A script can say where a dialog opens, which is the same mechanism the dialogs use for themselves:
+
+```python
+from exudyn.misc import overrideSettings
+
+#the visualization settings dialog, 1024x768 at (100, 80):
+overrideSettings.StoreDialogGeometry('Visualization Settings', [1024, 768], [100, 80])
+```
+
+The name is the **title** of the dialog, and `overrideSettings.DialogKey(name)` is the key it is
+stored under, so the same call places the solution viewer (`'Solution Viewer'`) or any other dialog.
+The **size comes back always and the position only if the window would still be reachable** on the
+screen you have now - a monitor that is gone must not put a dialog where its title bar cannot be
+grabbed. This writes `~/.exudyn/config.json`, so it holds for every run afterwards.
+
+The **render window** is not a dialog and is placed by its own settings, per view:
+
+```python
+SC.visualizationSettings.view0.window.renderWindowSize = [1024, 768]
+SC.visualizationSettings.view0.window.renderWindowPosition = [100, 80]
+```
+
+A negative coordinate - the default - means the window manager places it. The position is that of the
+OpenGL area rather than the title bar, so a small value hides part of the title bar and 0 hides it
+completely, which is a way to have a view without one.
+
+**For this run only**, a script can write into `exudyn.special.overrideSettings` instead of the file:
+
+```python
+exudyn.special.overrideSettings['dialogs'] = {
+    'visualizationsettings': {'size': [1024, 768], 'position': [100, 80]}}
+```
+
+That is read by the next dialog that opens and the file is not touched. It is **not the recommended
+way**: nothing checks what is put there, and a value of the wrong shape is simply not used - the
+functions above are what say what they mean, and what a later Exudyn will keep working.
+
 #### Remembering a dialog, its columns and its font
 
 `visualizationSettings.dialogs.storeDialogPositions = True` makes a settings dialog remember

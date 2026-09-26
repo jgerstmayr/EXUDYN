@@ -65,7 +65,15 @@ def testThereIsSomethingToTest(leaves):
 #entries when this test was written (#2597) - every enum value, because CheckType had no branch
 #for one, and every absolute path, because ':' was not a valid file name character - and
 #revision2026b step RG6.2.3 emptied it.
-knownRoundTripGaps = []
+#THE FOUR SETTINGS THE DIALOG CANNOT UNSET (revision2026b step RG12.16, #2689). A render window
+#position of (-1,-1) means "wherever the window manager puts it", and the dialog's rule for an
+#IndexArray - the type it shares with renderWindowSize, so nothing can tell them apart - is that its
+#values are not negative. That rule is the only one there is, because the C++ side accepts a negative
+#sensor number and a negative window size, so it stays: a user SETS a position in the dialog, which is
+#positive and passes, and unsets it in the settings file or from a script. This list is what keeps the
+#round trip honest about the gap rather than silent about it.
+knownRoundTripGaps = ['view0.window.renderWindowPosition', 'view1.window.renderWindowPosition',
+                      'view2.window.renderWindowPosition', 'view3.window.renderWindowPosition']
 
 
 def testEveryCurrentValueSurvivesTheRoundTrip(leaves, comboLists):

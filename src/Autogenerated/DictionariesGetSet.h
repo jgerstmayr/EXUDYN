@@ -3564,7 +3564,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
     d["value"] = EPyUtils::ToPythonMember(data.renderWindowPosition);
     d["type"] = "IndexArray";
     d["size"] = std::vector<int>{2};
-    d["description"] = "position of the top left corner of the render window of this view, in pixels, used only if `useRenderWindowPosition` is True. Set both to place a window where you want it, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-overridesettings); NOTE: the position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it";
+    d["description"] = "position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-overridesettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it";
     structureDict["renderWindowPosition"] = d;
 
     d = py::dict(); //reset local dict
@@ -3612,16 +3612,8 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
     d["value"] = data.storeRenderWindowGeometry;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition`, and `useRenderWindowPosition` is switched on - so that *store settings* in the visualization settings dialog, or `exudyn.misc.overrideSettings.Store(SC)`, keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run";
+    d["description"] = "True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run";
     structureDict["storeRenderWindowGeometry"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.useRenderWindowPosition;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "True: the render window of this view is placed at `renderWindowPosition`; False (default): the window manager places it, as it did before these two settings existed";
-    structureDict["useRenderWindowPosition"] = d;
 
     return structureDict;
 }
@@ -3640,7 +3632,6 @@ inline py::dict GetDictionary(const VSettingsWindow& data) {
     structureDict["showRenderStateInfo"] = data.showRenderStateInfo;
     structureDict["showWindow"] = data.showWindow;
     structureDict["storeRenderWindowGeometry"] = data.storeRenderWindowGeometry;
-    structureDict["useRenderWindowPosition"] = data.useRenderWindowPosition;
     return structureDict;
 }
 
@@ -3657,7 +3648,6 @@ inline void SetDictionary(VSettingsWindow& data, const py::dict& d) {
     EPyUtils::FromPython(d["showRenderStateInfo"], data.showRenderStateInfo, "VSettingsWindow.showRenderStateInfo");
     EPyUtils::FromPython(d["showWindow"], data.showWindow, "VSettingsWindow.showWindow");
     EPyUtils::FromPython(d["storeRenderWindowGeometry"], data.storeRenderWindowGeometry, "VSettingsWindow.storeRenderWindowGeometry");
-    EPyUtils::FromPython(d["useRenderWindowPosition"], data.useRenderWindowPosition, "VSettingsWindow.useRenderWindowPosition");
 }
 
 //! AUTO: read access to structure; converting into dictionary

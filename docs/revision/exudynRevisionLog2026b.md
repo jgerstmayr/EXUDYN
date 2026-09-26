@@ -4991,3 +4991,76 @@ four views' lists, nothing else.
 is opened by a test - both need a real window manager - so what is pinned is the contract around them:
 the flags are off, the position defaults to (0,0), a stored geometry is used, and a dialog with nothing
 stored is left alone.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.12, RG12.15, and the flag the maintainer measured away (2026-09-27, #2688)
+
+**First a correction to yesterday's step.** RG12.16.1 shipped with a `useRenderWindowPosition` flag
+because the settings dialog refuses a negative `IndexArray` and I could not tell the position from the
+size. The maintainer went and **measured the window itself**: a GLFW window position is always
+positive, *"so this means that we CAN take the negative values (any of both)"*. The flag is gone and
+`(-1,-1)` is the sentinel again, which is what they proposed in the first place.
+
+What remains of my objection is one line in `knownRoundTripGaps` - until now an empty list - naming the
+four paths the dialog cannot type a negative value into, with the reason: a user **sets** a position
+there, which is positive and passes, and unsets it in the file or from a script. A gap that is named is
+not the same thing as a gap that is hidden, and the test would report it if it ever closed.
+
+They also measured what the number means, which is worth more than the flag was: it is the position of
+the **OpenGL area**, not of the title bar, so a value below about 50 hides part of the title bar and 0
+hides it completely - *"this works, as there is still the escape button"* - and that can be wanted. The
+description says so now.
+
+---
+
+**RG12.12, the defaults**: eleven arguments of `PlotSensor` defaulted to the same literal as
+`PlotSensorDefaults()`, and the code decided "the user did not pass this" by comparing against that
+literal - `if fontSize == 16`. So passing 16 on purpose was indistinguishable from not passing it, and
+the function's own documentation said so out loud:
+
+```
+#==>BUT PlotSensor(..., fontSize=16) will use fontSize=12, BECAUSE 16 is the original default value!!!
+```
+
+A docstring that explains a defect is a defect with a witness. The arguments default to `None` now,
+`None` is what asks for the default, that sentence is gone because the behaviour is gone, and the
+mutable default arguments (`colors=[]`, `sizeInches=[6.4,4.8]`) went with it - a Python wart that was
+only invisible because nothing mutated them.
+
+**The file**: a `plotSensor` section sets any of those defaults for every run, read when
+`exudyn.plot` is imported, with the same discipline as the rest of the file - a name that is not a
+default is reported, not invented.
+
+**The window positions**, by the decision in the plan: **by their sequence**, the counter reset by
+`closeAll=True`, because plot windows have no unique title. Two things fell out of writing it that the
+plan had not said:
+
+- **only the position.** A plot's size is `sizeInches`, which is already a default this file can set -
+  storing a *pixel* size beside it would be two sources for one thing, and the pixel one would win by
+  accident.
+- **it is all borrowed.** The `dialogs` section, `DialogGeometry`, the reachability rule and
+  `StoreGeometryString` all work unchanged for a matplotlib window, because TkAgg's `window.geometry()`
+  returns the same `'WIDTHxHEIGHT+X+Y'` a dialog gives. Qt gets its own two lines; any other backend is
+  left alone.
+
+**No test opens a plot window**, so that half is a contract and not a measurement, and it is off by
+default - `PlotSensorDefaults().storeWindowPositions` - so nothing changes for anyone who does not ask.
+
+---
+
+**RG12.15** is the documentation the maintainer asked for: placing a dialog from a script with
+`StoreDialogGeometry(name, size, position)`, placing the render window with its own two settings, and
+the footnote about writing into `exudyn.special.overrideSettings` directly - which works, holds for one
+run, does not touch the file, and is **not** recommended, because nothing checks what is put there. It
+waited for RG12.13, because an example of placing a window that nothing reads back would have been
+worse than no example.
+
+**Filed rather than built**, both from the maintainer while this was being written: **RG12.19** (#2693)
+two buttons, one for the settings and one for the positions - *"they are two decisions"* - and
+**RG12.20** (#2694), the one real hole this family has left: the render window's geometry lives in the
+view settings *and* in the file, they are applied at different moments, a script already wins by
+ordering, and nobody is told when the file said something else. That wants a step of its own, and it
+ends in the documentation.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 499 pytest, the strict HTML build. The reference of
+`parameterConversionTest` was rewritten once more, for the setting that went and the one that came.

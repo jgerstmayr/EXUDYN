@@ -1965,18 +1965,28 @@ package).
     `GUI.SplitStoredFromChanged`, a function, so it is tested without opening a window.
 
 <a id="rg12-12"></a>
-**RG12.12** *(group RG12; maintainer 2026-09-26, separate step by their own request)* **PlotSensor
-    takes its defaults from the override settings.** Two halves:
+**RG12.12** **DONE 2026-09-27** (#2588 family; no issue of its own) — [log](exudynRevisionLog2026b.md#rg12-12) —
+    **PlotSensor takes its defaults from the override settings.**
 
-    - **the defaults**: `plot.py` already has `__plotSensorDefaults` - `xLabel`, `fontSize`,
-      `colors`, `majorTicksX` and twenty more - and `PlotSensor` shadows them in its **signature**
-      (`xLabel='time (s)'`). Changing the signature default to `None` and falling back to
-      `__plotSensorDefaults.xLabel` when it is None leaves the behaviour as it is and makes the
-      default overridable. Each shadowing argument is one line, and the ones that already default to
-      `None` need nothing.
-    - **the window positions**, which are harder and are the maintainer's own caveat: there are
-      several plot windows and **no unique title**. Decision: store them by their
-      **sequence**, the counter reset by the `closeAll` argument of `PlotSensor`.
+    **The defaults**: the eleven arguments that shadowed `PlotSensorDefaults()` now default to `None`,
+    and `None` is what asks for the default. They used to be compared against *the original literal
+    default* - `if fontSize == 16` - so passing that value on purpose could not be told from not
+    passing it, which `PlotSensorDefaults()` documented as a wart of its own: *"BUT PlotSensor(...,
+    fontSize=16) will use fontSize=12, BECAUSE 16 is the original default value!!!"*. That sentence is
+    gone from the docstring because the behaviour is gone, and the mutable default arguments
+    (`colors=[]`, `sizeInches=[6.4,4.8]`) went with it.
+
+    **The file**: a `plotSensor` section of `~/.exudyn/config.json` sets any of those defaults, read
+    when `exudyn.plot` is imported; a name that is not a default is reported rather than invented.
+
+    **The window positions**, by the decision recorded here: **by their sequence**, the counter reset
+    by `closeAll=True`, because plot windows have no unique title. Only the **position** - the size of
+    a plot is `sizeInches`, which is already a default the file can set - and only when
+    `PlotSensorDefaults().storeWindowPositions` is True, which is off, as every "store where I left it"
+    in Exudyn is. It reuses what the dialogs use: the `dialogs` section, `DialogGeometry`, the
+    reachability rule and `StoreGeometryString`, and it is written for the tkinter and Qt backends and
+    silent on anything else. **No test opens a plot window**, so that half is contract, not
+    measurement.
 
 <a id="rg3-23"></a>
 **RG3.23** **DONE 2026-09-26** (#2680) — [log](exudynRevisionLog2026b.md#rg3-23) —
@@ -2185,25 +2195,12 @@ package).
     "it does not store" was RG12.13.
 
 <a id="rg12-15"></a>
-**RG12.15** *(group RG12; maintainer 2026-09-26)* **The documentation does not say that a script can
-    place a dialog** (#2688). The maintainer asks whether the dialog positions can be set inside a
-    script. **They can**, today: `overrideSettings.StoreDialogGeometry(name, size, position)` is
-    public and writes the `dialogs` section, and `DialogKey(name)` is the key. Nothing says so.
-
-    An example belongs beside the override settings in the generated Exudyn module page - placing the
-    visualization settings dialog from a script - with the note that the size comes back always and
-    the position only when the window would still be reachable. **After RG12.13**, because a
-    placement that nothing reads back is not worth an example.
-
-    **And the other way, which the maintainer asked about**: writing straight into
-    `exudyn.special.overrideSettings` works too, and it is worth documenting *with* its caveat.
-    Measured: `exu.special.overrideSettings['dialogs'] = {...}` is seen by `DialogGeometry` at once
-    and the **file is not touched**, so it places a dialog for *this run only* - which is exactly
-    what a script usually wants. The caveat is the maintainer's: *"it is certainly not recommended
-    because illegal values could lead to unexpected behaviour"*. A reader with a rule refuses a bad
-    value - a size of `['wide', 'high']` comes back as `None` from `DialogGeometry` - but that is one
-    reader's rule and not a promise of the dictionary, which is why the functions are the
-    documented way and this is the footnote.
+**RG12.15** **DONE 2026-09-27** (#2688) — [log](exudynRevisionLog2026b.md#rg12-15) —
+    **A script can place a dialog, and it is written down.** `StoreDialogGeometry(name, size,
+    position)` with the dialog's title, in the Exudyn module page beside the file it writes; the
+    render window with its own two settings, including what its position means; and the footnote the
+    maintainer asked for - writing into `exudyn.special.overrideSettings` works, holds for one run and
+    does not touch the file, and is not the recommended way because nothing checks what is put there.
 
 <a id="rg12-16"></a>
 **RG12.16** **DONE 2026-09-26** (#2689) — [log](exudynRevisionLog2026b.md#rg12-16) —
@@ -2215,21 +2212,62 @@ package).
       the store button carry them with nothing added, one set per view. `GlfwClient.cpp` calls
       `glfwSetWindowPos` when the flag is on - it never called it at all.
 
-      **The `(-1,-1)` sentinel could not be used**: the settings dialog refuses a negative
-      `IndexArray`, the type the position shares with the size, so nothing could tell them apart - and
-      that rule is the only guard there is, because the C++ accepts a negative sensor number *and* a
-      negative window size, both measured. A flag says "unset" in a way the dialog can edit.
+      **The `(-1,-1)` sentinel is what it uses**, after a detour: it was built with a
+      `useRenderWindowPosition` flag instead, because the settings dialog refuses a negative
+      `IndexArray` - the type the position shares with the size - and that rule is the only guard
+      there is, since the C++ accepts a negative sensor number *and* a negative window size. The
+      maintainer then **measured the render window itself** (2026-09-26): a GLFW window position is
+      always positive, *"so this means that we CAN take the negative values (any of both)"*, and
+      asked for the flag to go. It did. The dialog still cannot type a negative value there, which is
+      named in `knownRoundTripGaps` with the reason: a user **sets** a position in the dialog, which is
+      positive, and unsets it in the file or from a script.
+
+      They also measured what the position means: it is the position of the **OpenGL area**, not of the
+      title bar, so a value below about 50 hides part of the title bar and 0 hides it completely -
+      *"this works, as there is still the escape button"* - which is a way to have a view without one.
+      The description says so.
     - **RG12.16.2** **it remembers where it was.** `view*.window.storeRenderWindowGeometry`, off by
-      default, writes the size, the position and `useRenderWindowPosition` back into the settings when
-      the window closes, so that *store settings* keeps a render window where it was left. Off by
-      default for the reason `dialogs.storeDialogPositions` exists: a settings structure that changes
-      by itself would make *diff to default* report a window position after every run.
+      default, writes the size and the position back into the settings when the window closes, so that
+      storing the settings keeps a render window where it was left. Off by default for the reason
+      `dialogs.storeDialogPositions` exists: a settings structure that changes by itself would make
+      *diff to default* report a window position after every run.
     - **RG12.16.3** **the SolutionViewer, and two more for free.** Its window is an
       `InteractiveDialog` - and so are the mode shapes and an interactive simulation - so all three
       restore and store themselves under their own title, through the same
       `RestoreWindowGeometry`/`StoreWindowGeometry` and the same `dialogs` section as the settings
       dialogs. `RestoreWindowGeometry` leaves the size to the layout when nothing is stored, which a
       dialog that sizes itself from its widgets needs.
+
+<a id="rg12-19"></a>
+**RG12.19** *(group RG12; maintainer 2026-09-26)* **Two buttons: one for the settings, one for the
+    positions** (#2693). *"The store settings means store positions at the same time. I would like to
+    opt for two buttons, one for the settings and one for the positions."* They are two decisions - *I
+    like this look* and *I like this window here* - and one button makes them one.
+
+    **What stops being obvious once they are separate**, and belongs in the step: which button stores
+    the **render window** geometry, which since RG12.16 lives in the `visualizationSettings` and would
+    go with the settings button although it is a position; and whether the positions button stores only
+    this dialog's geometry or every dialog it knows of.
+
+<a id="rg12-20"></a>
+**RG12.20** *(group RG12; maintainer 2026-09-26)* **A render window geometry in the settings and in the
+    file can conflict silently** (#2694). The maintainer, seeing where RG12.16 leads:
+
+    - the render window has its size and position **in the view settings**;
+    - because those are ordinary settings, `~/.exudyn/config.json` can name them too;
+    - **the non-default `visualizationSettings` value should win**, with a warning **only** when the
+      two actually differ - not when they agree;
+    - the dialogs do not have this problem: one stored position, and an explicit call overrides it;
+    - and **storing the geometry should update the live `visualizationSettings`**, or reopening the
+      renderer in the same session uses what the structure still says rather than what was just stored.
+
+    **Why it is trickier than it sounds**: the render window is the only window whose geometry lives in
+    two places, and they are applied at different moments - the file when the structure is constructed,
+    a script afterwards - so a script already wins by ordering, silently. The step has to decide
+    **where** the comparison happens (the renderer starting is the only moment both are known), what
+    "different from default" means for a pair of integers, and how to warn once rather than once per
+    view per run. It ends in the documentation, as the maintainer asked.
+
 
 ## Next steps recommended
 
@@ -2270,7 +2308,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
-| RG12.15 | #2688 | the documentation does not say that a script can place a dialog |
+| RG12.19 | #2693 | two buttons in the settings dialog: one for the settings, one for the positions |
+| RG12.20 | #2694 | a render window geometry in the settings and in the file can conflict silently |
 
 ### Raised by the current work, and not yet a step
 

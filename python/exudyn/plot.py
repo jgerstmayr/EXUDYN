@@ -54,6 +54,89 @@ __plotSensorDefaults.majorTicksX = 10
 __plotSensorDefaults.majorTicksY = 10
 __plotSensorDefaults.sizeInches=[6.4,4.8]
 
+#WHERE THE PLOT WINDOWS GO (revision2026b step RG12.12). Plot windows have no unique title - a script
+#makes several - so they are remembered BY THEIR SEQUENCE, and the counter is reset by
+#PlotSensor(..., closeAll=True), which is the maintainer's decision and what a script says when it
+#starts over. Only the POSITION: the size of a plot is sizeInches above, which is already a default
+#this file can set. Off by default, as every "store where I left it" in Exudyn is
+__plotSensorDefaults.storeWindowPositions=False
+
+#the sequence number of the next plot window; PlotSensor(..., closeAll=True) starts over
+__plotWindowCount = [0]
+
+
+def __PlotWindowName(number):
+    """the name the position of the n-th plot window is stored under"""
+    return 'PlotSensor ' + str(number)
+
+
+def __PlacePlotWindow(fig):
+    """put a new plot window where the window of the same sequence number was left
+
+    Only the position, and only if it would still be reachable: the rule of revision2026b step
+    RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. Backend-dependent, so
+    anything it cannot do it leaves alone.
+    """
+    __plotWindowCount[0] += 1
+    try:
+        from exudyn.misc import overrideSettings
+        from exudyn.misc.GUI import StoreGeometryString
+
+        name = __PlotWindowName(__plotWindowCount[0])
+        window = getattr(fig.canvas.manager, 'window', None)
+        if window is None:
+            return                              #a backend without a window: nothing to place
+
+        (size, position) = overrideSettings.DialogGeometry(name)
+        if position is not None:
+            screen = None
+            if hasattr(window, 'winfo_screenwidth'):        #tkinter
+                screen = [0, 0, window.winfo_screenwidth(), window.winfo_screenheight()]
+            if screen is None or overrideSettings.PositionIsReachable(position, screen):
+                if hasattr(window, 'wm_geometry'):          #tkinter, and matplotlib TkAgg
+                    window.wm_geometry('+' + str(position[0]) + '+' + str(position[1]))
+                elif hasattr(window, 'move'):               #Qt
+                    window.move(int(position[0]), int(position[1]))
+
+        if not __plotSensorDefaults.storeWindowPositions:
+            return
+        #WHERE IT ENDS UP, when it closes: the geometry cannot be read afterwards
+        def Store(event=None):
+            try:
+                if hasattr(window, 'geometry'):             #'WIDTHxHEIGHT+X+Y', as a dialog gives it
+                    StoreGeometryString(window.geometry(), name)
+                elif hasattr(window, 'x'):                  #Qt
+                    overrideSettings.StoreDialogGeometry(name, [window.width(), window.height()],
+                                                         [window.x(), window.y()])
+            except Exception as error:                      # noqa: BLE001
+                exudyn.Print('WARNING: PlotSensor could not store the window position: ' + str(error))
+
+        fig.canvas.mpl_connect('close_event', Store)
+    except Exception as error:                              # noqa: BLE001
+        #a plot must never fail because of where its window is
+        exudyn.Print('WARNING: PlotSensor could not place the window: ' + str(error))
+
+
+#WHAT THE OVERRIDE SETTINGS SAY (revision2026b step RG12.12): the `plotSensor` section of
+#~/.exudyn/config.json sets any of the defaults above, so that a user who always wants fontSize 12 or
+#a larger figure says it once. A name that is not a default is reported rather than invented. It is
+#read when this module is imported, which is after `import exudyn` has read the file.
+def _ApplyOverrideSettings():
+    try:
+        from exudyn.misc import overrideSettings
+    except ImportError:                 #a package without the module: nothing to apply
+        return
+    for (name, value) in (overrideSettings.Settings().get('plotSensor') or {}).items():
+        if not hasattr(__plotSensorDefaults, name):
+            exudyn.Print('WARNING: ' + overrideSettings.FileName() + ', plotSensor: "' + str(name)
+                         + '" is not a PlotSensor default and is ignored')
+            continue
+        setattr(__plotSensorDefaults, name, value)
+
+
+_ApplyOverrideSettings()
+
+
 #practical list of marker styles to be used as list:
 listMarkerStyles = ['x ', '+ ', '* ', '. ', 'd ', 'D ', 's ', 'X ', 'P ', 'v ', '^ ', '< ', '> ', 'o ', 'p ', 'h ', 'H ']
 listMarkerStylesFilled = ['x','+','*','.','d','D','s','X','P','v','^','<','>','o','p','h','H']
@@ -159,8 +242,10 @@ def PlotSensorDefaults():
         #change one parameter:
         plot.PlotSensorDefaults().fontSize = 12
         #==>now PlotSensor(...) will use fontSize=12
-        #==>now PlotSensor(..., fontSize=10) will use fontSize=10
-        #==>BUT PlotSensor(..., fontSize=16) will use fontSize=12, BECAUSE 16 is the original default value!!!
+        #==>now PlotSensor(..., fontSize=10) will use fontSize=10, because an argument that is given
+        #   always wins: the arguments of PlotSensor default to None, and None is what asks for the
+        #   value set here
+        #the plotSensor section of ~/.exudyn/config.json sets the same values for every run
         #see which parameters are available:
         exudyn.Print(PlotSensorDefaults())
     """
@@ -169,12 +254,12 @@ def PlotSensorDefaults():
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=None, labels=[], 
+def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, labels=[], 
                colorCodeOffset=0, newFigure=True, closeAll=False, 
-               componentsX=[], title='', figureName='', fontSize=16, 
-               colors=[], lineStyles=[], lineWidths=[], markerStyles=[], markerSizes=[], markerDensity=0.08,
-               rangeX=[], rangeY=[], majorTicksX=10, majorTicksY=10,
-               offsets=[], factors=[], subPlot=[], sizeInches=[6.4,4.8],
+               componentsX=[], title='', figureName='', fontSize=None, 
+               colors=None, lineStyles=None, lineWidths=None, markerStyles=None, markerSizes=None, markerDensity=None,
+               rangeX=[], rangeY=[], majorTicksX=None, majorTicksY=None,
+               offsets=[], factors=[], subPlot=[], sizeInches=None,
                fileName='', useXYZcomponents=True, legendArgs=None, **kwargs):
     r"""Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage.
 
@@ -269,33 +354,37 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             and key!='logScaleX'  and key!='logScaleY'):
             raise ValueError('PlotSensor: invalid argument: '+key)
 
-    if xLabel == 'time (s)':
+    #NOT GIVEN MEANS None, and then the default is taken (revision2026b step RG12.12). It used to
+    #mean "equal to the original literal default", so passing that value ON PURPOSE could not be told
+    #from not passing it - PlotSensorDefaults() says so itself: "BUT PlotSensor(..., fontSize=16) will
+    #use fontSize=12, BECAUSE 16 is the original default value!!!". That is gone, and the mutable
+    #default arguments went with it
+    if xLabel is None:
         xLabel = __plotSensorDefaults.xLabel
     if yLabel is None:
         yLabel = __plotSensorDefaults.yLabel
 
-    if fontSize == 16:
+    if fontSize is None:
         fontSize = __plotSensorDefaults.fontSize
 
-    #the following code is not totally safe regarding mutable args, but works with this kind of default args
-    if IsEmptyList(colors):
+    if colors is None:
         colors = __plotSensorDefaults.colors
-    if IsEmptyList(lineStyles):
+    if lineStyles is None:
         lineStyles = __plotSensorDefaults.lineStyles
-    if IsEmptyList(lineWidths):
+    if lineWidths is None:
         lineWidths = __plotSensorDefaults.lineWidths
-    if IsEmptyList(markerStyles):
+    if markerStyles is None:
         markerStyles = __plotSensorDefaults.markerStyles
-    if IsEmptyList(markerSizes):
+    if markerSizes is None:
         markerSizes = __plotSensorDefaults.markerSizes
-    if markerDensity == 0.08:
+    if markerDensity is None:
         markerDensity = __plotSensorDefaults.markerDensity
 
-    if majorTicksX == 10:
+    if majorTicksX is None:
         majorTicksX = __plotSensorDefaults.majorTicksX
-    if majorTicksY == 10:
+    if majorTicksY is None:
         majorTicksY = __plotSensorDefaults.majorTicksY
-    if sizeInches == [6.4,4.8]:
+    if sizeInches is None:
         sizeInches = __plotSensorDefaults.sizeInches
 
 
@@ -333,6 +422,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     
     if closeAll:
         plt.close('all')
+        __plotWindowCount[0] = 0    #the windows are remembered by their sequence, which starts over
 
     logScaleX = False
     if 'logScaleX' in kwargs:
@@ -372,8 +462,10 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             if newFigure and plt.fignum_exists(figureName):
                 plt.close(figureName)
             fig = plt.figure(figureName)
+            __PlacePlotWindow(fig)
         elif newFigure:
             fig = plt.figure()
+            __PlacePlotWindow(fig)
         else:
             if IsEmptyList(plt.get_fignums()):
                 exudyn.Print('WARNING: PlotSensor(...,newFigure=False):  no existing figure was found, creating new figure')
