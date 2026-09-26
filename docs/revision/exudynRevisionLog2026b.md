@@ -3844,3 +3844,44 @@ What it asserts, over all 34 (item, user function) pairs:
 
 Checked that it bites rather than passes vacuously: renaming one argument in the registry at runtime
 fails `test_protocolAndRegistryAgreeOnTheArguments` with both spellings in the message.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### The tracker and the plan say what is true (2026-09-26)
+
+The maintainer: *"check whether the Still open list at the end of the plan is still up-to-date and
+also shortly check the list of open issues since 2583, if there is anything already closed"*. Of the
+nineteen issues open from #2583 on, **eight were already done** by work that is committed. Each was
+checked before it was closed, not assumed:
+
+| issue | what closed it | how it was checked |
+|---|---|---|
+| **#2664** a user function is described in five places and typed in none | RG12.4, all six sub-steps | `userFunctionModel.py` reads **34** user functions; `checkDefinitions` finds no parameter without a def |
+| **#2669** `springDamperTutorial.py` crashes at the end | the import, in RG11.3 | the tutorial runs to its last line and prints the displacement |
+| **#2658** `exudev docs --pdf` needs Perl | xelatex and makeindex directly | built with every `perl` directory off PATH; confirmed by the maintainer on their machine |
+| **#2657** the visualization documentation has no structure | RG3.15 | `index.md` is the table of contents the maintainer decided |
+| **#2661** the command line and the monitor are chapters of their own | RG3.15 | both are nested under *Advanced topics* (`introductionAdvanced.md:418`) |
+| **#2662** the manual mixes sentence case and Title Case | RG3.16 and `checkHeadings` | 353 headings pass the gate |
+| **#2652** the item docstrings show `addExampleImage{X}` | RG3.14's converter | `help(ObjectJointRevoluteZ)` ends with the marker types; the string is gone from the package |
+| **#2497** 59 bare `except:` in the shipped package | the module clean-ups, one at a time | **zero** in `python/exudyn/` and **zero** `E722` in `tools/ci/ruffBaseline.txt`, where all 59 were listed |
+
+**#2497 is the one worth a sentence.** It was raised in 2021 as #1988, re-raised as #2497, and
+baselined in revision2026 step R5.5.3 rather than fixed, *"because each needs a decision on which
+exception was actually meant"*. Nobody ever sat down to do it; it went out with the module
+clean-ups, one `except Exception as e` at a time, and the baseline emptied without anyone noticing.
+The check that made a new one fail is what kept the number from growing back.
+
+**Closing a batch has an order, which this taught.** The version an issue carries is derived from
+its position among the closed issues **sorted by issue number**, so eight `resolve` calls in the
+order they were thought of made `checkIssues` report that six published version numbers had moved.
+Nothing was wrong with the issues; the numbers simply have to be handed out in ascending order. The
+repair was to put the eight files back and resolve them again, 2497 first and 2669 last - and the
+rule for the next batch is: **resolve in ascending issue number**.
+
+**The plan was corrected in the same pass.** *Still open* lost the rows of what is done and gained
+what was missing, and is sorted by step number again - 18 of 29 rows had drifted out of order.
+*Raised by the current work, and not yet a step* is **empty but for one row**: the maintainer asked
+for its entries to become steps, so they are **RG3.21** (#2673, the pages that describe the state
+before a step that is done - whose first job is the list), **RG3.22** (#2659), **RG4.6** (#2674, a
+test hook for `forceQuitSimulation`: #2616 fixed the behaviour and nothing can reach it),
+**RG4.7** (#2423) and **RG10.2** (#2541). What stays in the table is #2608, because the maintainer
+asked for a *suggestion* and not a step: that is **RG6.2.26**, and it waits for RG12.5.

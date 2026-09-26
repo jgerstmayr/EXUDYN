@@ -2,12 +2,16 @@
   "number": 2661,
   "title": "The command line and the results monitor are chapters of their own, between the manual and the theory",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "index.md lists docs/manual/commandLine and docs/manual/resultsMonitor as top-level chapters, between the graphics chapter and the notation. Neither is something a reader needs before writing a first model: 'python -m exudyn' is five verbs for looking things up and reporting a bug, and the results monitor is a second process watching a running simulation. Both belong in Advanced topics, as sections or as sub-pages of it.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
-  "file": "index.md"
+  "dateResolved": "2026-09-26 08:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "index.md",
+  "releaseNotes": "The command line and the results monitor are sections of Advanced topics, nested through its own toctree, instead of chapters between the manual and the reference (revision2026b step RG3.15).",
+  "resolvedInVersion": "1.12.77"
 }

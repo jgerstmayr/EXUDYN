@@ -2,13 +2,16 @@
   "number": 2652,
   "title": "the item docstrings show addExampleImage{X} to a user of help()",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "priority": "LOW",
   "effort": "LOW",
   "description": "The classDescription of an item is the docstring of its class in python/exudyn/itemInterface.py, and the emitter drops the backslash of a LaTeX command instead of the command: help(ObjectJointRevoluteZ) ends with 'addExampleImage{RevoluteJointZ} addExampleImage{RevoluteJointZ2}'. It affects the six items that carry a picture (#2651 added three of them, so the count went from three to six) and it is the same for any other command that is not translated. The emitter should drop the whole command - there is no image in a terminal - the way latexToMarkdown turns it into an image directive for the page.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
+  "dateResolved": "2026-09-26 08:31",
+  "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/itemInterfaceEmitter.py",
-  "workingRemarks": "Found while doing revision2026b step RG3.14.1: the pybind stub path in autoGenerateHelper.PyLatexRST.DefPyFunctionAccess passes the description to SplitSummaryDescription WITHOUT CleanStringForPyiDescription, so the same leak reaches python/exudyn/__init__.pyi - 'mapped from module \\texttt{solver}' and 'see \\refSection{sec:solvers}' stand in the stub as LaTeX. Measured: running the cleaner there changes 14 lines and every change reads better, EXCEPT that CleanStringForPyiDescription rewrites \\refSection{...} to the literal 'theDoc.pdf', a document that has not existed since decision D8. So the fix is two things, not one: call the cleaner in that path, and give \\refSection a replacement that names something real."
+  "releaseNotes": "The class description of an item carries no LaTeX any more, so help(ObjectJointRevoluteZ) ends with the marker types and not with addExampleImage{RevoluteJointZ}: the figures of an item are MyST figure directives since revision2026b step RG3.14.",
+  "resolvedInVersion": "1.12.74"
 }

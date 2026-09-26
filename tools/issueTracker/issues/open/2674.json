@@ -1,0 +1,13 @@
+{
+  "number": 2674,
+  "title": "A test hook for forceQuitSimulation, which nothing can reach",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of #2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "src/Solver"
+}

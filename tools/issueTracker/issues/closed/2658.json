@@ -2,12 +2,16 @@
   "number": 2658,
   "title": "exudev docs --pdf needs Perl and does not say so",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "HIGH",
   "effort": "LOW",
   "description": "The third stage runs latexmk, which is a Perl script: MiKTeX answers \"MiKTeX could not find the script engine 'perl' which is required to execute 'latexmk'\" and the stage fails in 0.4 s. It succeeds in a Git Bash shell and fails in PowerShell on the same machine for one reason: Git for Windows ships perl in its usr/bin, which Git Bash puts on PATH and PowerShell deliberately does not. So the PDF build has never depended on the TeX installation alone - it depended on which shell it was started from, and nothing said so. Two fixes, and the second is the one worth having: prepend the directory of any perl that can be found to the PATH of the latexmk subprocess, which needs no installation; or run xelatex directly - three passes plus makeindex - which is what latexmk automates and needs no Perl at all. Either way the stage must say what is missing instead of failing with a MiKTeX message in the user's system language.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
-  "file": "tools/exudev/commands.py"
+  "dateResolved": "2026-09-26 08:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev docs --pdf runs xelatex and makeindex directly and repeats the run until the cross-reference files are stable, so the PDF builds where no Perl is installed; verified with every perl directory removed from PATH and confirmed by the maintainer.",
+  "resolvedInVersion": "1.12.76"
 }

@@ -2,12 +2,16 @@
   "number": 2657,
   "title": "The visualization documentation is spread over three chapters with no structure",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "Measured 2026-09-25. docs/manual/GUI.md, the chapter Graphics and visualization, holds mouse input, keyboard input, render state, the GraphicsData reference and UTF-8 encoding - five topics at one level. Exudyn Basics holds ten more visualization sections between the non-visualization ones: Renderer and 3D graphics, Visualization settings dialog, Execute Command and Help, Graphics pipeline, Raytracing, Storing the model view, Graphics user functions via Python, Color RGBA and alpha-transparency, Solution viewer, Storing images and generating animations. Advanced topics holds an eleventh, Camera following objects and interacting with model view. A reader looking for how to turn the renderer on has to know which of three chapters to open. Proposal: the visualization chapter becomes the one place, with four parts - the renderer window, the model view, images and animations, and writing your own graphics - and Exudyn Basics keeps one short section that points at it; the internals (Graphics pipeline, Raytracing) and the GraphicsData reference move to Advanced topics.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
-  "file": "docs/manual/GUI.md"
+  "dateResolved": "2026-09-26 08:31",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/GUI.md",
+  "releaseNotes": "The visualization documentation is one chapter, Renderer, graphics and visualization, in the four sections the maintainer decided, and the solver and performance material is its own chapter (revision2026b step RG3.15).",
+  "resolvedInVersion": "1.12.75"
 }

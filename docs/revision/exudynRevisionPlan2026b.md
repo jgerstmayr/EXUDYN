@@ -764,6 +764,25 @@ fix needs a plan of its own.
 Open in the tracker for this group: **#2423** (every C++ user error inspects the Python source to
 find its file and line, on every raise).
 
+<a id="rg3-21"></a>
+**RG3.21** *(group RG3; maintainer 2026-09-24)* **The pages that still describe the state before a
+    step that is done** (#2673). Six weeks changed behaviour that hand-written pages describe - the
+    renderer keys, the settings dialogs, the output directory, the star imports, the command line,
+    the results monitor - and a page is corrected only when someone walks past it.
+
+    **The first job is the list**, and the step cannot be planned before it exists: per chapter, what
+    the page claims against what the code does. Two sources make it cheap - the closed issues of
+    revision2026b carry their release notes, and `docs/manual/revisions.md` is the list of what
+    changed for a user - so the audit is a comparison and not a re-reading. What comes out of it
+    decides whether this is one commit or five.
+
+<a id="rg3-22"></a>
+**RG3.22** *(group RG3; maintainer 2026-09-25)* **The simulation settings section says how to look a
+    setting up** (#2659). It explains the substructures and how to assign values, and says nothing
+    about *finding* one. `python -m exudyn dialogs sim` opens the same tree the renderer's V key
+    opens, with no model and no renderer, and it is the fastest way to answer "what is this setting
+    called" - two sentences and a line of code in `docs/manual/` where the section is.
+
 <a id="rg4-1"></a>
 **RG3.19** *(group RG3; maintainer 2026-09-26)* **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-19) - **the arguments of
     a documented function are one per line, with the name in code** (#2665). The `Args:` block of a
@@ -845,6 +864,24 @@ find its file and line, on every raise).
       four are ANCF contact/sliding and one is a gravity connector, and none of them appears on
       Linux at all. Worth one look at whether they share a mechanism before being folded into the
       general question.
+
+<a id="rg4-6"></a>
+**RG4.6** *(group RG4; from RG4.5, 2026-09-26)* **A test hook for `forceQuitSimulation`** (#2674).
+    #2616 fixed the behaviour - quitting the renderer **before** a simulation starts raised where
+    quitting **during** it did not - and nothing can test it: the flag is set by the renderer thread
+    from a key press or a closed window, and there is no binding for it. The fix is therefore checked
+    by hand and stays checked by hand. The decision the step takes is **which of the two**: a
+    binding a user could also use (on `mbs.systemData` or the renderer) or a hook that exists only
+    for the test.
+
+<a id="rg4-7"></a>
+**RG4.7** *(group RG4; from #2423)* **Every C++ user error inspects the Python source for its file
+    and line.** `PyError` and `PyWarning` call `PyGetCurrentFileInformation`
+    (`src/Main/Stdoutput.cpp:259`), which calls `inspect.getframeinfo`: that resolves the module by
+    scanning `sys.modules` and then reads the source file. The cost grows with the number of
+    imported modules, and `parameterConversionTest.py` pays it about 38000 times - which is also the
+    measurement that found it. A raised error is not a hot path, but a *probe* is, and the test model
+    that probes every parameter of every item is the one place both meet.
 
 <a id="rg4-2"></a>
 **RG4.2** *(group RG4; revision2026 step R10.2)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
@@ -1194,6 +1231,32 @@ This group is that revision and what has to happen before it can start.
     `exudyn.misc.GUI` in RG6.2.1, and `globals()` inside a module function is the module. It
     runs in `vars(__main__)` again - one dictionary, so an assignment also survives the command.
 
+<a id="rg6-2-26"></a>
+**RG6.2.26** *(group RG6; from RG6.2.11, suggested 2026-09-26)* **Remember the window** (#2608).
+    RG6.2.11 left it undecided and kept the rule that makes it safe. The maintainer asked for a
+    proposal; this is it, and it is **not started**.
+
+    **It is not a mechanism of its own: it is three keys in the file of RG12.5** (#2666),
+    `~/.exudyn/config.json`, under a `dialogs` section - one entry per dialog, holding its size and
+    its position:
+
+    ```json
+    {"dialogs": {"visualizationSettings": {"size": [1024, 768], "position": [100, 80]}}}
+    ```
+
+    That is the whole of it, and it is the reason to decide RG12.5 first: a second file for window
+    states would be the beginning of one file per feature.
+
+    **The rule from the RG6.2.11 log stands and is what makes it safe**: restore the **size**
+    always, the **position** only when the window still lies inside the virtual desktop. A monitor
+    that is unplugged, a laptop undocked, a resolution changed - each of them would otherwise put a
+    dialog where no one can reach it, and a settings dialog that cannot be seen cannot be closed.
+
+    It is written only when `visualizationSettings.dialogs.storeDialogPositions` is true, so
+    remembering is something a user switches **on**; and RG12.5's note on the first import when the
+    stored settings are not empty covers it, because a remembered window is exactly the kind of state
+    that makes a bug report irreproducible.
+
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a
@@ -1492,6 +1555,15 @@ What belongs to no group yet. Three of a kind here are a reason to propose a gro
     raised without making it a step, and recommends an order with the reason for it. It copies
     nothing and is updated from time to time.
 
+<a id="rg10-2"></a>
+**RG10.2** *(group RG10; from #2541)* **`exudyn.config` and `exudyn.special` reach a stub file.**
+    `exudyn.config` is the run-time settings object - `outputDirectory`, `printToConsole`,
+    `suppressWarnings`, `precision` - and `exudyn.special` holds the rarely needed corners. Neither
+    the objects nor their C++ classes appear in `python/exudyn/__init__.pyi`, so no editor completes
+    `exudyn.config.outputDirectory` and no checker knows it exists. The stub is generated
+    (`tools/checkPython.py --stubs`), so this is a question of what the generator is told about the
+    two members rather than of writing a stub by hand.
+
 <a id="rg11-1"></a>
 **RG11.1** **DONE 2026-09-24** (#2610) — [log](exudynRevisionLog2026b.md#rg11-1) —
     **The results monitor runs beside the simulation, or it is redundant.** Evaluated, and the
@@ -1514,6 +1586,21 @@ What belongs to no group yet. Three of a kind here are a reason to propose a gro
     `subprocess.Popen` is the handle for a script that wants it gone; and `SolutionViewer` is **not**
     served by the same call - it needs the renderer and the system, not a file, so it has nothing to
     gain from a second process that can only read what was written.
+
+    - **RG11.3.1** *(from the maintainer, 2026-09-26)* **The monitor exits when the file does not
+      exist yet** (#2672). Reported at once: `StartResultsMonitor` does not do what its documentation
+      says. The cause is in `MonitorResults` - inside `while fileName != '':` it tests
+      `os.path.exists(fileName)` and returns **before** `WaitForData`, which only waits for a data
+      *row* in a file that already exists. A monitor started **before** the solver - the point of the
+      function, and what both examples do - prints `ERROR: file not found` and exits.
+
+      The fix is to move the existence test into the waiting loop, so that `--wait 0` waits for the
+      file to **appear** and not only for its first row. What `--wait N` should mean for a file that
+      never appears is the one decision: the same timeout, or a separate one, because waiting for a
+      file that a typo made impossible is a different mistake from waiting for a slow solver. Until
+      it is done, the docstring of `StartResultsMonitor` and `docs/manual/resultsMonitor.md` promise
+      something that is not true; that is recorded in the issue rather than by weakening the text,
+      because the text says what the function is **for**.
 
 <a id="rg11-2"></a>
 **RG11.2** **DONE 2026-09-23** (#2620) — [log](exudynRevisionLog2026b.md#rg11-2) —
@@ -1789,25 +1876,28 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG3.8 | #2594 | place or drop the figures that no page references |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: .7.2 to .7.6 close the gate; .12 and .13 open |
-| RG3.14.12 | #2656 | the theDoc.pdf references resolved against real sections, and the name explained once |
-| RG3.18 | #2660 | the C++ interface pages stop repeating their title, and the MainSystem extensions reach the table of contents |
+| RG3.14 | #2655 | the item descriptions become Markdown: only .13 is open, the LaTeX machinery that is left |
+| RG3.14.13 | #2655 | what is left of the LaTeX conversion in `autoGenerateHelper.py`, and what of it goes |
+| RG3.21 | #2673 | the pages that still describe the state before a step that is done |
+| RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
-| RG4.2 | #2413 | `ObjectContactConvexRoll.pContact` becomes a data variable |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
+| RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |
+| RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
 | RG5.2 | - | make the hot linear algebra vectorizable |
+| RG6.2.26 | #2608 | remember the window - the size always, the position only when it is reachable |
 | RG6.3 | #2583 | give the renderer a headless call that returns counts and an image at a given resolution |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1 | - | a checker for user scripts after the 1.12 API changes |
+| RG10.2 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
+| RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
+| RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
+| RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5 | #2666 | user settings that persist between runs: one ~/.exudyn file, and what may be in it |
 | RG12.6 | #2667 | the columns of a settings dialog are relative and configurable |
 | RG12.7 | #2668 | the mouse wheel changes the font size of a dialog |
-| RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
-| RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG12.4 | #2664 | a user function is one typed Python function, and the description, the args dict and a Protocol are generated from it |
 
 ### Raised by the current work, and not yet a step
 
@@ -1816,13 +1906,11 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| maintainer, 2026-09-24 | - | the documentation of the steps that are done, where a page still describes the state before one of them |
-| RG6.2.11 | #2608 | **remember the window** - undecided; the rule that makes it safe is in the log |
-| RG4.5 | #2616 | a binding or a test hook for `forceQuitSimulation`, which no test can reach today |
-| RG4 | #2423 | every C++ user error inspects the Python source to find its file and line |
-| RG10 | #2541 | `exudyn.config` and `exudyn.special` are in no stub file |
-| RG12 | #2497 | 59 bare `except:` remain in the shipped package |
-| maintainer, 2026-09-25 | #2659 | the simulation settings section does not mention `python -m exudyn dialogs sim` |
+| RG6.2.11 | #2608 | **remember the window** - the how is suggested in RG6.2.26; RG12.5 decides it with the rest of the settings file |
+
+*Emptied on 2026-09-26: the maintainer asked for the entries to become steps, and they are RG3.21,
+RG3.22, RG4.6, RG4.7 and RG10.2 above. #2497 and #2652 were closed the same day - both had been done
+by other work - and #2616 is resolved, with only its test hook left, which is RG4.6.*
 
 ### The chapters of the user manual, as decided for #2657 and #2662
 
