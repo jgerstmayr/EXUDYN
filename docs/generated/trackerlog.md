@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.92.dev1
 - last change = 2026-09-26
-- Number of issues = 2683
+- Number of issues = 2684
 - Number of resolved issues = 2406 (92 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual (#2683)
+  - description: Three descriptions of definitions/pybindSymbolic.py contain a TAB followed by 'exttt{...}' where 'texttt' was meant: someone wrote a backslash-t in a string that was not raw, and the tab is now in the source. The Symbolic page of the reference manual prints it as it is, on lines 11, 179 and 271 of docs/generated/cInterface/Symbolic.md: 'turing on recording by using \<tab\>exttt{exudyn.symbolic.SetRecording(True)}'. Inline code in a description is a backtick span (definitions/README.md, 'Writing a description'), so the fix is \`exudyn.symbolic.SetRecording(True)\`. Two typos are in the same sentences and in the paragraph above them: 'turing' for 'turning', three times, and 'veryfy' for 'verify'. Why no check caught it: checkDefinitions rejects a LaTeX command outside mathematics by looking for a backslash, and there is no backslash left - the tab ate it. A check for a raw tab inside a description would find this class of defect; that is the part worth deciding rather than just fixing the three lines.
+  - date raised: 2026-09-26
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the default values make a round trip through a C++ literal string and back (#2682)
   - description: A default value in definitions/ travels Python -\> C++ literal -\> Python: itemModel.DefaultValueString() calls definitionTypes.CppLiteral() to make a C++ source string, and autoGenerateHelper.DefaultValue2Python() converts that string back with about twenty str.replace() calls and three substring find() heuristics on 'Index', 'Float' and 'Vector'. Measured on 2026-09-26 over the 872 item members that have a default: 1001 of 2837 inputs are changed by it, 322 of them steered by the substring heuristics. It ends with an unconditional s.replace('f', '') to strip the float suffix of '0.05f', which eats the letter f out of anything else: 'Transformation66List()' becomes 'Transormation66List()' for three members of ObjectKinematicTree, and 'NoDefaultValue' becomes 'NoDeaultValue' for a settings parameter. Nothing visible is wrong today - the three members are CFNoInterface and the settings default is filtered before the call - so the defect is contained by accident rather than by design; one new parameter whose type name contains an f would ship a silently wrong Python default. The one symptom that does reach the tree is cosmetic: a stray leading space in the defaultValue of ObjectContactConvexRoll.coefficientsHull reaches the generated signature as 'coefficientsHull =  \[\]', because a default that is a string is not validated. The fix is a converter that dispatches on the TYPE, which the member carries, instead of on substrings of a C++ string: 402 of the 872 defaults exist only as C++ source text (142 CppValue and 260 plain str, in 29 distinct expression shapes), so they need a Python value in definitions/ first; the other 470 are already plain Python values and need no conversion at all. Options are in revision2026b step RG3.24.3, with the call-site map in RG3.24.1/.2.
   - date raised: 2026-09-26

@@ -2104,6 +2104,22 @@ package).
       removals with a measurement behind them and no decision to make.
 
 
+<a id="rg3-25"></a>
+**RG3.25** *(group RG3; noticed while doing RG3.23, 2026-09-26)* **A tab instead of a backslash puts
+    `exttt{...}` on three pages of the Symbolic manual** (#2683). Three descriptions of
+    `definitions/pybindSymbolic.py` hold a **tab** followed by `exttt{...}` - a `\t` written in a
+    string that was not raw - and the page prints it: *"turing on recording by using
+    &lt;tab&gt;exttt{exudyn.symbolic.SetRecording(True)}"*, on lines 11, 179 and 271 of
+    `docs/generated/cInterface/Symbolic.md`. The fix is a backtick span; "turing" (three times) and
+    "veryfy" are in the same sentences.
+
+    **The part worth deciding rather than fixing**: no check caught it, because `checkDefinitions`
+    finds a LaTeX command by its **backslash** and the tab ate the backslash. A check for a raw tab
+    inside a description would find this whole class of defect - a `\t`, `\n` or `\f` that a
+    non-raw string swallowed - and the raw-string rule it belongs to is already enforced on the
+    literal's own spelling.
+
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2127,6 +2143,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.21 | #2673 | the pages that still describe the state before a step that is done |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
+| RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
 | RG3.24.3 | #2682 | the default values make a round trip through a C++ literal string and back |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
