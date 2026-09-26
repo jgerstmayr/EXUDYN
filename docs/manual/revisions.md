@@ -54,6 +54,12 @@ the usual way notices nothing.
 **Item dictionaries are more forgiving, not less**: a parameter that is left out keeps its default
 or its current value, where it used to raise `KeyError`.
 
+**A settings file changes what a script does, if you make one.** `~/.exudyn/config.json` is read at
+import and can override `exudyn.config` and any plain `visualizationSettings`
+([](#sec-usersettings)). Nothing writes it by itself, `import exudyn` prints one note naming what
+came from it, and `EXUDYN_NO_USER_SETTINGS=1` ignores it — which is what a bug report needs. The
+test suites set that variable for themselves.
+
 **`ObjectContactConvexRoll.rBoundingSphere` is read-only.** It is computed from
 `coefficientsHull`, and setting it never had an effect: the value was recomputed whenever the
 parameters changed. It is no longer an argument of the item and can no longer be set, so a script

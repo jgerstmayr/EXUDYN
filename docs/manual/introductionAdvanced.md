@@ -408,13 +408,14 @@ support for Exudyn.
 (sec-overview-advanced-tools)=
 ## Tools that are not part of a model
 
-Two things that are used beside a model rather than inside one: the command line of
-the installed package, and the results monitor, which watches a running simulation
-from a second process.
+Three things that are used beside a model rather than inside one: the command line of
+the installed package, the results monitor, which watches a running simulation
+from a second process, and the settings that persist between runs.
 
 ```{toctree}
 :maxdepth: 2
 
 commandLine
 resultsMonitor
+userSettings
 ```

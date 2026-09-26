@@ -28,6 +28,14 @@ if platform.processor().find('arm') != -1:
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the user settings of ~/.exudyn/config.json are IGNORED here, and this has to happen before exudyn
+#is imported. A maintainer who stores a setting - an output directory, a tolerance-sensitive
+#visualization flag - must not thereby change what a test computes; a child process inherits the
+#variable, so the workers of --parallel and of pytest are covered too (revision2026b step RG12.5)
+import os
+os.environ['EXUDYN_NO_USER_SETTINGS'] = '1'
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #--fast-module: run the whole suite against exudynCPPfast instead of the default module, which
 #otherwise ships untested. This has to happen HERE, before exudyn is
 #imported below - once the C++ module is loaded the choice is made. The environment variable is

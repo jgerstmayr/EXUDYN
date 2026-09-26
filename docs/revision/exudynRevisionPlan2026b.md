@@ -1855,6 +1855,31 @@ package).
     Related: **RG6.2.11** (#2608) is a second file storing overall window states, and this step
     should decide whether that is the same file.
 
+    - **RG12.5.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-1) - the file, the
+      two sections that are read, the note, and the switch. `~/.exudyn/config.json` with `config`
+      and `visualizationSettings`; `python/exudyn/settings.py`; applied at import and at every
+      `SystemContainer`; `exudyn.settings.Print()` says what came from it; nothing writes it by
+      itself; `EXUDYN_NO_USER_SETTINGS=1` ignores it and **the four test runners set that
+      variable**, so a stored setting can never move a test result.
+
+      Three of the four open questions are answered by it: **what may be overridden** (plain values
+      and lists of them; anything else is refused with a message), **who reads it** (Python, in
+      `__init__.py`, so the C++ core is untouched and the values are in place before a script can
+      look at them) and **when a script can ask** (`Applied()`, `Ignored()`, `Print()`).
+    - **RG12.5.2** *(open)* — **the types that are not plain.** An enum - `OutputVariableType`,
+      `ItemType` - is stored honestly as its name, and `settingsUtilities` already converts between
+      the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
+      enums, which is why they were left out of .1 rather than guessed at.
+    - **RG12.5.3** *(open)* — **the dialogs section**, which is RG6.2.26 (#2608): the size and the
+      position of a dialog, under `"dialogs"`, written only when
+      `visualizationSettings.dialogs.storeDialogPositions` is true, and restored by the rule in the
+      RG6.2.11 log - the size always, the position only when the window still lies inside the
+      virtual desktop.
+    - **RG12.5.4** *(open)* — **folding in `~/.exudyn/resultsMonitor.json`.** The monitor had its
+      own file first, and "one file" is the point of RG12.5. It needs a migration that reads the old
+      file once and writes it into the `resultsMonitor` section, because a user who has one must not
+      lose their settings for a tidier directory.
+
 <a id="rg12-6"></a>
 **RG12.6** *(group RG12; maintainer 2026-09-26)* **The columns of a settings dialog are relative and
     configurable** (#2667). `misc/GUI.py` gives the tree four fixed widths - 325, 188, 113 and 420

@@ -4024,3 +4024,62 @@ evidence that the read-only flag touched what it was meant to and nothing else.
 
 **Gates**: 11/11 checks, the wheel, the full suite, pytest 450 passed / 2 skipped, the strict HTML
 build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.5.1 - one file for the settings that persist (2026-09-26, #2666)
+
+`~/.exudyn/config.json`, one file, two sections read today:
+
+```json
+{"config": {"outputDirectory": "solution/"},
+ "visualizationSettings": {"openGL.multiSampling": 4, "nodes.basisSize": 0.5}}
+```
+
+**Three of the four open questions are answered, and the fourth is split off.**
+
+- **What may be overridden**: a plain value - a number, a flag, a string - or a list of them.
+  Anything else is **refused with a message**: a setting holding graphics data, a user function or a
+  matrix container cannot be carried honestly by a JSON file, and guessing is how a settings file
+  starts corrupting models. A key that names no setting is reported the same way, and neither stops
+  the import.
+- **Who reads it**: `python/exudyn/__init__.py`, beside the environment variables it already reads,
+  through `python/exudyn/settings.py`. The C++ core is untouched - no `py::module_::import("json")`
+  in the core and none of its failure modes - and the values are in place before a script can look
+  at them.
+- **What a script can ask**: `exudyn.settings.Applied()`, `Ignored()` and `Print()`. That is the
+  answer to *why does this behave differently here*, and it is printed as **one note** at import
+  naming how many settings came from the file.
+
+**The `visualizationSettings` half needed a decision that the step had not seen**: they do not exist
+until a `SystemContainer` does. They are applied **when one is created**, through a Python subclass
+of `SystemContainer` that `__init__.py` installs - and installs **only when the file holds
+visualizationSettings**. With no file, or a file without that section, `exudyn.SystemContainer` is
+exactly the class the compiled module defines, so the normal case carries none of this at all.
+Checked that the subclass is a full SystemContainer: `AddSystem`, `Assemble` and a node all work
+through it, and `mbs.GetSystemContainer()` returns the same C++ object whose settings were already
+applied.
+
+**A stored setting must never move a test result**, and that is the part with teeth.
+`EXUDYN_NO_USER_SETTINGS=1` ignores the file, and `runTestSuite.py`, `runTestExamples.py`,
+`runPerformanceTests.py` and a new `python/testing/conftest.py` set it **before exudyn is
+imported** - a child process inherits it, so the workers of `--parallel` and of pytest are covered.
+Without this, a maintainer who stored an output directory would have moved results on their machine
+and nowhere else.
+
+**11 tests** in `python/testing/test_userSettings.py`, none of which touches the real file:
+`EXUDYN_CONFIG_FILE` names one in the pytest temporary directory. They check that a stored setting
+arrives, that a typo is reported and changes nothing, that a non-plain value is refused, that a
+visualization path is applied by its dialog path, that an unknown section and a broken file are
+reported and survive, that `Store` writes what differs from the defaults and nothing else, and that
+the runners ignore the file.
+
+**Nothing writes the file by itself.** `exudyn.settings.Store(SC)` writes the settings that differ
+from the defaults - the same list the dialog marks as changed - and `Clear()` deletes it. A script
+that behaves differently on another machine because something was stored there is the failure this
+file has to be worth, so storing is always asked for.
+
+Documented in `docs/manual/userSettings.md`, under *Tools that are not part of a model*, and named
+in the revisions chapter, because it changes what a script does when the file is present.
+
+**Gates**: 11/11 checks, the wheel, the full suite, pytest 461 passed / 2 skipped, the strict HTML
+build.

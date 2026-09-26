@@ -223,6 +223,60 @@ except Exception as e: #an environment that cannot be read must never stop 'impo
     print('WARNING: exudyn could not apply its environment settings: ' + str(e))
 
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the user settings of ~/.exudyn/config.json, read ONCE at import (revision2026b step RG12.5,
+##2666). A stored setting makes a run behave differently than it reads, so every one of them is
+#named in one note here, EXUDYN_NO_USER_SETTINGS=1 ignores the file, and exudyn.settings.Applied()
+#answers "what is not in my script" afterwards. Nothing writes the file by itself.
+def _ApplyUserSettings():
+    from . import settings as _settings
+    globals()['settings'] = _settings          #exudyn.settings, for Print(), Store() and Clear()
+
+    stored = _settings.Load()
+    if stored == {}:
+        return
+
+    _settings.ApplyConfig(config, stored)
+
+    #the visualizationSettings of a SystemContainer do not exist until one is created, so they are
+    #applied there - and exudyn.SystemContainer is left EXACTLY as the compiled module defines it
+    #when the file holds none of them, which is the normal case
+    if (stored.get('visualizationSettings') or {}) != {}:
+        _compiled = _compiledModule.SystemContainer
+
+        class SystemContainer(_compiled):
+            """a SystemContainer whose visualizationSettings start from ~/.exudyn/config.json"""
+
+            def __init__(self, *arguments, **keywordArguments):
+                super().__init__(*arguments, **keywordArguments)
+                try:
+                    _settings.ApplyVisualizationSettings(self.visualizationSettings, stored)
+                except Exception as error: #a stored setting must never stop a model from starting
+                    print('WARNING: exudyn could not apply the stored visualizationSettings: '
+                          + str(error))
+
+        globals()['SystemContainer'] = SystemContainer
+
+    #the visualizationSettings are applied when a SystemContainer is created, so they are counted
+    #here as what WILL happen rather than as what has happened
+    applied = _settings.Applied()
+    later = len(stored.get('visualizationSettings') or {})
+    ignored = _settings.Ignored()
+    if len(applied) != 0 or later != 0 or len(ignored) != 0:
+        print('NOTE: ' + str(len(applied)) + ' setting(s) from ' + _settings.FileName()
+              + ('' if later == 0 else ', and ' + str(later)
+                 + ' visualizationSettings for every SystemContainer')
+              + ' (exudyn.settings.Print() for the list; EXUDYN_NO_USER_SETTINGS=1 to ignore them)')
+        for (path, reason) in ignored:
+            print('  WARNING: ' + path + ' was not applied - ' + reason)
+
+
+try:
+    _ApplyUserSettings()
+except Exception as e: #a settings file that cannot be read must never stop 'import exudyn'
+    print('WARNING: exudyn could not apply its user settings: ' + str(e))
+
+
 __version__ = config.Version() #add __version__ to exudyn module ...
 
 

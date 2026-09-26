@@ -13,6 +13,15 @@
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys, platform
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the user settings of ~/.exudyn/config.json are IGNORED here, and this has to happen
+#before exudyn is imported. A maintainer who stores a setting must not thereby change
+#what a test computes; a child process inherits the variable, so the workers of
+#--parallel and of pytest are covered too (revision2026b step RG12.5)
+import os
+os.environ['EXUDYN_NO_USER_SETTINGS'] = '1'
+
 import multiprocessing #for determining if on laptop or workstation
 
 if sys.version_info.major != 3 or sys.version_info.minor < 6:# or sys.version_info.minor > 9:
