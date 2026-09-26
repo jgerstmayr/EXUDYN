@@ -356,6 +356,7 @@ Exudyn reads one file for that, `~/.exudyn/config.json`:""",
 
 pb.AddDocuCodeBlock(pythonStyle=False, code="""
 {
+  "version": 1,
   "config": {"outputDirectory": "solution/"},
   "visualizationSettings": {"openGL.multiSampling": 4, "nodes.basisSize": 0.5}
 }
@@ -375,6 +376,11 @@ overrideSettings.Store(SC)         #every run from now on starts with it
 pb.AddDocu(r"""`Store(SC)` writes the settings that differ from the defaults - the same list
 the settings dialog shows as *changed* - and `Store(config=exudyn.config)` does the same for
 `exudyn.config`. `overrideSettings.Clear()` deletes the file.
+
+**The `version` is the format of the file**, and it has to match: a file of another version is
+ignored, with one note naming both. It is a plain integer that moves only when Exudyn has been
+released *and* the meaning of something in this file has changed - not with the Exudyn version, which
+moves on every resolved issue. Store your settings again to write a current file.
 
 #### What happens when the file is there
 

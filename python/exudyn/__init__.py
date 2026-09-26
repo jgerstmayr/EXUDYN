@@ -243,9 +243,16 @@ def _ApplyUserSettings():
     #A STORED visualizationSetting IS APPLIED WHENEVER SUCH A STRUCTURE IS CREATED (revision2026b
     #step RG12.10, #2684), which is the two ways a user gets one: the structure a SystemContainer
     #builds in its constructor, and exu.VisualizationSettings() - which got nothing before, so a
-    #script that edited one before creating a container saw the defaults. Both classes are left
-    #EXACTLY as the compiled module defines them when the file holds no visualizationSettings,
-    #which is the normal case.
+    #script that edited one before creating a container saw the defaults.
+    #
+    #THE CONSTRUCTOR IS WRAPPED IN PLACE, NOT SUBCLASSED (revision2026b step RG12.17, #2691). A
+    #Python subclass installed as exudyn.SystemContainer changes what that NAME is, and three things
+    #broke on it in two days: DefaultSettingsDictionary constructed the subclass and reported the
+    #overrides as the defaults, an isinstance() of mine in the settings dialog stopped recognising
+    #SC.visualizationSettings, and - the one a user meets - GetRendererSystemContainer() does
+    #"isinstance(guiSC, exudyn.SystemContainer)" on the object the C++ side stores as a POINTER,
+    #which is of the COMPILED class, so it found nothing and the V key opened no dialog at all.
+    #Wrapping __init__ on the class itself leaves every name and every isinstance as they were.
     if (stored.get('visualizationSettings') or {}) != {}:
 
         def _Apply(visualizationSettings):
@@ -255,26 +262,32 @@ def _ApplyUserSettings():
                 print('WARNING: exudyn could not apply the stored visualizationSettings: '
                       + str(error))
 
-        class SystemContainer(_compiledModule.SystemContainer):
-            """a SystemContainer whose visualizationSettings start from ~/.exudyn/config.json"""
+        def _ApplyingConstructor(theClass, GetSettings):
+            """wrap theClass.__init__ so that it applies the stored settings afterwards"""
+            originalInit = theClass.__init__
 
-            def __init__(self, *arguments, **keywordArguments):
-                super().__init__(*arguments, **keywordArguments)
-                _Apply(self.visualizationSettings)
+            def Initialize(self, *arguments, **keywordArguments):
+                originalInit(self, *arguments, **keywordArguments)
+                _Apply(GetSettings(self))
 
-        class VisualizationSettings(_compiledModule.VisualizationSettings):
-            """a VisualizationSettings that starts from ~/.exudyn/config.json
+            theClass.__init__ = Initialize
 
-            NOTE the subclass is why settingsUtilities.DefaultSettingsDictionary constructs the
-            COMPILED class and not type(structure): the defaults of an overridden structure are
-            still the defaults, and everything that shows a difference depends on it."""
+        try:
+            #WHILE CONSTRUCTING ONE STILL GIVES THE DEFAULTS: afterwards it gives the overrides,
+            #and everything that shows a difference to the default needs them (the dialog's
+            #marking, its "diff to default", ChangedSettings, Store(SC))
+            _settings.structureDefaults['VisualizationSettings'] = \
+                _compiledModule.VisualizationSettings().GetDictionaryWithTypeInfo()
 
-            def __init__(self, *arguments, **keywordArguments):
-                super().__init__(*arguments, **keywordArguments)
-                _Apply(self)
-
-        globals()['SystemContainer'] = SystemContainer
-        globals()['VisualizationSettings'] = VisualizationSettings
+            _ApplyingConstructor(_compiledModule.SystemContainer,
+                                 lambda container: container.visualizationSettings)
+            _ApplyingConstructor(_compiledModule.VisualizationSettings, lambda structure: structure)
+        except (TypeError, AttributeError) as error:
+            #a build whose classes refuse it: say so rather than fall back to a subclass, which is
+            #what broke the dialogs
+            print('WARNING: exudyn cannot apply the stored visualizationSettings on this build ('
+                  + str(error) + '); they are in exudyn.special.overrideSettings and can be applied'
+                  + ' with exudyn.misc.overrideSettings.ApplyVisualizationSettings(...)')
 
     #the visualizationSettings are applied when such a structure is created, so they are counted
     #here as what WILL happen rather than as what has happened

@@ -44,11 +44,17 @@ def settingsFile(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, '_applied', [])
     monkeypatch.setattr(settings, '_ignored', [])
 
-    def Write(content):
+    def Write(content, addVersion=True):
+        #a real file carries its format version (revision2026b step RG12.13.2), and a file without
+        #one is ignored - so the fixture writes it unless a test is ABOUT its absence
+        content = dict(content)
+        if addVersion and 'version' not in content:
+            content['version'] = settings.fileFormatVersion
         with open(fileName, 'w', encoding='utf-8') as file:
             json.dump(content, file)
         settings.Settings().clear()
-        settings.Settings().update(content)
+        settings.Settings().update({name: value for (name, value) in content.items()
+                                    if name != 'version'})
         return fileName
     yield Write
     settings.Settings().clear()
@@ -380,6 +386,83 @@ def test_aGeometryStringIsStoredWithoutTheFlag(settingsFile):
 
     #and a geometry no window manager should report is refused rather than stored wrongly
     assert not StoreGeometryString('not a geometry', 'Visualization Settings')
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the format version of the file (revision2026b step RG12.13.2, #2690)
+def test_aFileOfAnotherFormatVersionIsIgnored(settingsFile, capsys):
+    """a plain integer, and it has to match: nothing is guessed at and nothing is repaired"""
+    settingsFile({'version': settings.fileFormatVersion + 1,
+                  'visualizationSettings': {'openGL.multiSampling': 4}})
+    assert settings.Load() == {}
+    assert 'IGNORED' in capsys.readouterr().out
+
+
+def test_aFileWithoutAVersionIsIgnoredToo(settingsFile, capsys):
+    """every file written from now on has one, so a file without one was written before versions
+
+    That includes the files of 1.12.95 and 1.12.96, which is why the note says what to do."""
+    settingsFile({'visualizationSettings': {'openGL.multiSampling': 4}}, addVersion=False)
+    assert settings.Load() == {}
+    assert 'version None' in capsys.readouterr().out
+
+
+def test_theVersionIsWrittenAndIsNotASection(settingsFile):
+    """it is always the current one, whatever the file said, and it never reaches the store"""
+    fileName = settingsFile({'version': settings.fileFormatVersion,
+                             'config': {'outputPrecision': 9}})
+    assert 'config' in settings.Load() and 'version' not in settings.Load()
+
+    settings.Save({'config': {'outputPrecision': 9}})
+    with open(fileName, 'r', encoding='utf-8') as file:
+        assert json.load(file)['version'] == settings.fileFormatVersion
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the override settings must not change what a class IS (revision2026b step RG12.17, #2691)
+def test_theModuleClassesAreTheCompiledOnes():
+    """a Python SUBCLASS installed as exudyn.SystemContainer broke three things in two days
+
+    The one a user meets: GetRendererSystemContainer() does isinstance(guiSC,
+    exudyn.SystemContainer) on the object the C++ side stores as a POINTER - which is of the compiled
+    class - so it found nothing and the V key opened no dialog. The constructor is wrapped in place
+    now, so these names are what the compiled module defines whether or not a settings file exists."""
+    assert exu.SystemContainer is exu._compiledModule.SystemContainer
+    assert exu.VisualizationSettings is exu._compiledModule.VisualizationSettings
+
+    #and that is what the probe needs: what the C++ hands over is an instance of the module's class
+    from exudyn.misc.GUI import GetRendererSystemContainer
+
+    container = exu._compiledModule.SystemContainer()
+    previous = exu.sys.get('currentRendererSystemContainer', 0)
+    exu.sys['currentRendererSystemContainer'] = container
+    try:
+        assert isinstance(container, exu.SystemContainer)
+        assert GetRendererSystemContainer() is container
+    finally:
+        exu.sys['currentRendererSystemContainer'] = previous
+
+
+def test_theSnapshottedDefaultsSurviveAWrappedConstructor():
+    """with the constructor applying the overrides, the defaults cannot be CONSTRUCTED any more
+
+    They are taken at import, before the wrapper is installed - the same decision as for the
+    defaults of exudyn.config - and DefaultSettingsDictionary uses them when they are there."""
+    from exudyn.misc.settingsUtilities import DefaultSettingsDictionary
+
+    #under the runners nothing is stored, so there is no snapshot and constructing is still right
+    assert settings.structureDefaults == {}
+    assert DefaultSettingsDictionary(exu.VisualizationSettings())['openGL']['multiSampling']['value'] == 1
+
+    #with a snapshot, that is what is used - and it is handed out as a copy
+    settings.structureDefaults['VisualizationSettings'] = \
+        exu.VisualizationSettings().GetDictionaryWithTypeInfo()
+    try:
+        taken = DefaultSettingsDictionary(exu.VisualizationSettings())
+        taken['openGL']['multiSampling']['value'] = 99
+        assert DefaultSettingsDictionary(exu.VisualizationSettings())['openGL']['multiSampling']['value'] == 1
+    finally:
+        settings.structureDefaults.clear()
 
 
 def test_theRunnersIgnoreTheFile():

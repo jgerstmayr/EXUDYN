@@ -32,10 +32,23 @@
 import json
 import os
 
-__all__ = ['sectionNames', 'plainTypes', 'FileName', 'Ignoring', 'Settings', 'Load', 'Save',
+__all__ = ['fileFormatVersion', 'sectionNames', 'plainTypes', 'structureDefaults',
+           'FileName', 'Ignoring', 'Settings', 'Load', 'Save',
            'Clear', 'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig',
            'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry', 'StoreDialogGeometry',
            'PositionIsReachable', 'Store']
+
+#THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
+#(revision2026b step RG12.13.2, #2690). It is a plain integer and it is bumped BY HAND, and only
+#when both things are true: Exudyn has been released since the last bump, and the meaning of
+#something in this file has changed. So it does not move while a release is being prepared - the
+#micro version does that, on every resolved issue, and a file that died that often would be useless
+#- and it does tell a file written years ago from one written by this Exudyn.
+#
+#A file whose version does not match is IGNORED, with one note naming both versions. Nothing is
+#guessed at and nothing is repaired: the settings in it are conveniences, and a wrong guess about an
+#old one is a run that behaves differently for a reason nobody can see.
+fileFormatVersion = 1
 
 #the sections of the file. 'dialogs' is read by the dialogs themselves (revision2026b step
 #RG6.2.26) and is listed here so that this module does not warn about it
@@ -47,6 +60,13 @@ plainTypes = (bool, int, float, str)
 
 _applied = []                   #[(path, value)] of what was applied in this process
 _ignored = []                   #[(path, reason)] of what was not
+
+#THE DEFAULTS OF A SETTINGS STRUCTURE, taken before its constructor was wrapped (revision2026b step
+#RG12.17, #2691). Since a stored visualizationSetting is applied by the CONSTRUCTOR of the class
+#itself, constructing one no longer gives the defaults - so they are taken once, at import, while it
+#still does, exactly as the defaults of exudyn.config are (#2685). {className: dictionaryWithTypeInfo}
+#and empty when nothing is stored, which is the normal case.
+structureDefaults = {}
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -92,9 +112,10 @@ def Load():
     """Read the override settings file.
 
     Returns:
-        the stored dictionary; `{}` when the file does not exist, cannot be read, or is switched
-        off. A file that cannot be read prints the reason once and is not an error: a broken
-        settings file must never stop `import exudyn`.
+        the stored dictionary, without its `version` entry; `{}` when the file does not exist,
+        cannot be read, is switched off, or is **of another format version** - see
+        `fileFormatVersion`. A file that cannot be read prints the reason once and is not an error:
+        a broken settings file must never stop `import exudyn`.
     """
     if Ignoring():
         return {}
@@ -110,6 +131,14 @@ def Load():
     if not isinstance(settings, dict):
         print('WARNING: ' + fileName + ' does not hold a dictionary; it is ignored')
         return {}
+
+    version = settings.pop('version', None)      #never a section, and never in the store
+    if version != fileFormatVersion:
+        print('NOTE: ' + fileName + ' is of format version ' + str(version) + ' and this Exudyn'
+              + ' reads version ' + str(fileFormatVersion) + '; it is IGNORED. Store your settings'
+              + ' again to write a current file, or delete it.')
+        return {}
+
     for name in settings:
         if name not in sectionNames:
             print('WARNING: ' + fileName + ': unknown section "' + name + '"; known sections are '
@@ -125,13 +154,19 @@ def Save(settings):
 
     Returns:
         the file name that was written
+
+    Note:
+        `version` is written with it and is always `fileFormatVersion`, whatever the file said
+        before: what is written is what this Exudyn means.
     """
     fileName = FileName()
     directory = os.path.dirname(fileName)
     if directory != '' and not os.path.exists(directory):
         os.makedirs(directory, exist_ok=True)
+    stored = dict(settings)
+    stored['version'] = fileFormatVersion        #always the current one, never what was read
     with open(fileName, 'w', encoding='utf-8') as file:
-        json.dump(settings, file, indent=2, sort_keys=True)
+        json.dump(stored, file, indent=2, sort_keys=True)
         file.write('\n')
     return fileName
 

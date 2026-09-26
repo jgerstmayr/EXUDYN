@@ -9,10 +9,28 @@ Helper functions and classes for graphical interaction with Exudyn
 - **Date**: 2020-01-25
 - **Notes**: This is an internal library, which is only used inside Exudyn for modifying settings.
 
+(sec-gui--complainonce)=
+## Function: _ComplainOnce
+
+[`_ComplainOnce(reason)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L97)
+
+- **function description**: say once per process that the renderer's SystemContainer could not be used, and why
+
+
+(sec-gui-getrenderersystemcontainer)=
+## Function: GetRendererSystemContainer
+
+[`GetRendererSystemContainer()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L105)
+
+- **function description**: The SystemContainer that is attached to the render engine, or None.
+- **output**: the container, or None when no renderer is running, when the entry names a container whose C++ object is gone, or when it names something else entirely
+- **notes**: None is the normal answer without a renderer and is not reported. Anything ELSE that goes wrong here says so once per process: a dialog that finds no container does nothing, and nothing being printed is how "the V key opens no dialog" became a reproduction rather than a message (#2691, maintainer 2026-09-26).
+
+
 (sec-gui-makeprocessdpiaware)=
 ## Function: MakeProcessDpiAware
 
-[`MakeProcessDpiAware()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L111)
+[`MakeProcessDpiAware()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L150)
 
 - **function description**: tell Windows that this process draws at the real resolution of the display Without it, Windows renders the window at 96 dpi and stretches the bitmap, which is why a dialog opened from a shell looked soft while the same dialog opened from the render window was sharp: GLFW makes the process DPI aware when it creates the render window, and a dialog that comes after it inherits that. From "python -m exudyn dialogs" there is no GLFW (#2634). It must be called BEFORE the first window is created; afterwards Windows refuses, which is not an error here - something else has already set it, which is what we wanted.
 - **output**: True if this process is DPI aware afterwards
@@ -21,7 +39,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-gettkrootandnewwindow)=
 ## Function: GetTkRootAndNewWindow
 
-[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L139)
+[`GetTkRootAndNewWindow()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L178)
 
 - **function description**: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
 
@@ -29,7 +47,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tkrootexists)=
 ## Function: TkRootExists
 
-[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L153)
+[`TkRootExists()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L192)
 
 - **function description**: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
 
@@ -37,7 +55,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-columnwidthfractions)=
 ## Function: ColumnWidthFractions
 
-[`ColumnWidthFractions(widths)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L160)
+[`ColumnWidthFractions(widths)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L199)
 
 - **function description**: the three column fractions, usable whatever was configured
 - **input**:
@@ -49,7 +67,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogfontsize)=
 ## Function: DialogFontSize
 
-[`DialogFontSize(fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L183)
+[`DialogFontSize(fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L222)
 
 - **function description**: the point size the tree, its headings and its tags use
 - **input**:
@@ -60,7 +78,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogrowmetrics)=
 ## Function: DialogRowMetrics
 
-[`DialogRowMetrics(root, fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L195)
+[`DialogRowMetrics(root, fontFactor)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L234)
 
 - **function description**: how tall a row must be and how much wider the columns must be, MEASURED Both used to be computed from systemScaling, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display, so at dialogs.fontScaling=1 the rows were 13 pixels tall for a font with a linespace of 16 to 18 and the text was clipped, while the column factor max(1,int(round(systemScaling))) stayed at 1 for every value below 1.5 (#2631). The font is asked instead, which is right at any scaling and on any platform.
 - **input**:
@@ -72,7 +90,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-getexudyndisplayscaling)=
 ## Function: GetExudynDisplayScaling
 
-[`GetExudynDisplayScaling(root = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L232)
+[`GetExudynDisplayScaling(root = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L271)
 
 - **function description**: the display scaling the dialogs size themselves by The renderer knows it and reports it in its state. Without a renderer this used to return 1, so a dialog opened from the command line came out at a different size than the same dialog opened with V in the render window (#2634); tkinter is asked instead, which knows it once MakeProcessDpiAware has been called.
 - **input**:
@@ -83,7 +101,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-dialogscaling)=
 ## Function: DialogScaling
 
-[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L273)
+[`DialogScaling(root)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L312)
 
 - **function description**: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value > 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602).
 - **input**:
@@ -94,7 +112,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-splitstoredfromchanged)=
 ## Function: SplitStoredFromChanged
 
-[`SplitStoredFromChanged(changes, overriddenPaths, fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L307)
+[`SplitStoredFromChanged(changes, overriddenPaths, fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L346)
 
 - **function description**: The changed settings, with the ones the override file stores named separately.
 - **input**:
@@ -108,7 +126,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1361)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1400)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**:
@@ -121,7 +139,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storedialogpositions)=
 ## Function: StoreDialogPositions
 
-[`StoreDialogPositions(settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1706)
+[`StoreDialogPositions(settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1745)
 
 - **function description**: True if a dialog should store where it was left, when it closes.
 - **input**:
@@ -133,7 +151,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-restorewindowgeometry)=
 ## Function: RestoreWindowGeometry
 
-[`RestoreWindowGeometry(tkWindow, name, width, height)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1739)
+[`RestoreWindowGeometry(tkWindow, name, width, height)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1778)
 
 - **function description**: Give a dialog the size and position it was left at, as far as that is safe.
 - **input**:
@@ -148,7 +166,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-rememberwindowgeometry)=
 ## Function: RememberWindowGeometry
 
-[`RememberWindowGeometry(tkWindow, name, settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1789)
+[`RememberWindowGeometry(tkWindow, name, settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1828)
 
 - **function description**: Record where a dialog is while it lives, so that it can be stored when it closes.
 - **input**:
@@ -162,7 +180,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storegeometrystring)=
 ## Function: StoreGeometryString
 
-[`StoreGeometryString(geometry, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1821)
+[`StoreGeometryString(geometry, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1860)
 
 - **function description**: Store one 'WIDTHxHEIGHT+X+Y' under the name of a dialog.
 - **input**:
@@ -175,7 +193,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storewindowgeometry)=
 ## Function: StoreWindowGeometry
 
-[`StoreWindowGeometry(recorded, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1851)
+[`StoreWindowGeometry(recorded, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1890)
 
 - **function description**: Store what `RememberWindowGeometry` recorded, after the dialog has closed.
 - **input**:
@@ -187,7 +205,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1864)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1903)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**:
@@ -200,7 +218,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1894)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1933)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -209,7 +227,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-modelscope)=
 ## Function: ModelScope
 
-[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1948)
+[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1987)
 
 - **function description**: the namespace a command of the command window runs in: the one the MODEL lives in `__main__` is the script the user started, or the console they are typing in, so this is where `mbs`, `SC` and everything else the model defined are. The command window used to be a Python string that the C++ executed in exactly this namespace; as a function of this module it would otherwise see the module's own globals, where there is no `mbs` (#2654).
 - **output**: the dictionary of `__main__`, which is written to as well as read: an assignment in the command window has to survive the command
@@ -218,7 +236,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1964)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2003)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -227,7 +245,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2052)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2091)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -236,7 +254,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2067)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2106)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -245,7 +263,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2081)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2120)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
@@ -260,7 +278,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-show)=
 ### Class function: Show
 
-[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L359)
+[`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L398)
 
 - **class function description**: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer's (#2614): a description that appears the moment the pointer crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a setting any more.
 
@@ -268,7 +286,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-cancel)=
 ### Class function: Cancel
 
-[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L372)
+[`Cancel(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L411)
 
 - **class function description**: forget a tooltip that was scheduled and has not appeared yet
 
@@ -276,7 +294,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-bind)=
 ### Class function: Bind
 
-[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L381)
+[`Bind(self, widget, text)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L420)
 
 - **class function description**: let a widget - a button, say - show this tooltip while the pointer rests on it
 
@@ -284,6 +302,6 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-tooltip-place)=
 ### Class function: Place
 
-[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L386)
+[`Place(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L425)
 
 - **class function description**: place the tooltip at the screen position (x, y), a little below the pointer

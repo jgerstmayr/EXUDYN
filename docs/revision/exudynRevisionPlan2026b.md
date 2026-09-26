@@ -2141,7 +2141,7 @@ package).
       should. They have since **deleted the file** - *"as it might have been in an invalid state"* -
       so there is nothing left to chase. It stays here so that a recurrence is recognised rather than
       investigated from the beginning; what is needed then is the text of the error.
-    - **RG12.13.2** *(open; #2690)* **a version in the settings file.** *"there should be a version in
+    - **RG12.13.2** **DONE 2026-09-26** (#2690) **a version in the settings file.** *"there should be a version in
       the config file, as we may change the structure or anything in the future, and only a version
       can help to decide whether or how an older file can be used."* The structure changed twice in
       one day - the `resultsMonitor` section was folded in, the `dialogs` section was added - so the
@@ -2152,18 +2152,17 @@ package).
       (`1.12.95.dev1`) throws a user's settings away **on every issue that is resolved**, and on every
       patch release.
 
-      - **Option A**: the full version, exact match. The strictest, and what was asked for; unusable
-        while developing, because the file dies every few commits.
-      - **Option B (recommended)**: the release version, `major.minor`, exact match. This is what
-        *"the version will not change before a different release is pushed on github"* describes: it
-        is stable across a whole development cycle and changes at 1.13.
-      - **Option C**: a **format** version of the file itself, a small integer bumped by hand when the
-        structure changes, with the Exudyn version written beside it for information. The only one
-        that catches a change *within* a cycle - which is what happened today - and the only one that
-        needs remembering to bump.
+      **The maintainer chose option C, and said how small it should be**: *"just add a version
+      number 1 for now. As soon as exudyn was released (so no earlier than that makes sense for users
+      out there) AND that we changed behavior of the config.json, we can increment the version just
+      using 2. Very simple, no deep tech; similar as in FEM. But we need a version in the long term,
+      so that we know whether a user stores a very old file that is not readable any more."*
 
-      Whichever is chosen: a file that does not match is **ignored**, with one note naming the file
-      and both versions, never in silence and never repaired by guessing.
+      `overrideSettings.fileFormatVersion = 1` is written into every file by `Save`, always the
+      current one whatever the file said, and `Load` **ignores** a file whose version does not match -
+      including one with no version at all, which is every file written before today - with one note
+      naming both versions and saying to store the settings again. It is never a section and never
+      reaches `exudyn.special.overrideSettings`.
 
 <a id="rg12-14"></a>
 **RG12.14** *(group RG12; maintainer 2026-09-26)* **The override settings are read only at import, so
@@ -2251,6 +2250,57 @@ package).
     a renderer that opens off-screen cannot be closed by the mouse.
 
 
+<a id="rg12-17"></a>
+**RG12.17** **DONE 2026-09-26** (#2691) — [log](exudynRevisionLog2026b.md#rg12-17) —
+    **A settings file with `visualizationSettings` killed the V key.** With such a file, pressing V in
+    the render window opened no dialog and the console said *"problems with the SystemContainer,
+    probably not attached to the renderer yet"*; without the file everything worked.
+
+    **Reproduced and measured**: RG12.10 installed a Python **subclass** as `exudyn.SystemContainer`,
+    and `GetRendererSystemContainer()` does `isinstance(guiSC, exudyn.SystemContainer)` on what the
+    C++ side stores - a **pointer**, which pybind casts to an object of the **compiled** class. False
+    against a subclass, so the probe found nothing and every dialog that needs the container did
+    nothing.
+
+    **The third thing that subclass broke in two days**, after the defaults of RG12.10 and an
+    `isinstance` of mine in RG12.11. So the mechanism stopped changing what a class is: the
+    constructor of the **compiled class is wrapped in place** (measured: pybind11 heap types allow
+    it), and no name and no `isinstance` moves. The defaults then cannot be constructed - every
+    construction applies the overrides - so they are **snapshotted at import**, before the wrapper,
+    exactly as the defaults of `exudyn.config` are.
+
+    - **RG12.17.1** the two things the maintainer asked for while reading it: the probe **says once
+      per process** what went wrong instead of returning None in silence, which is why this needed a
+      reproduction rather than a message; and `ShowVisualizationSettingsDialog` printed
+      *"ERROR: ShowRightMouseSelectionDialog: ..."*, a copy-paste error naming the wrong function in
+      the one message a user sees.
+
+<a id="rg12-18"></a>
+**RG12.18** *(group RG12; maintainer 2026-09-26)* **The renderer link becomes a member on the C++
+    side** (#2692). *"exudyn.sys['currentRendererSystemContainer'] stores the currently active
+    SystemContainer (as an old, dirty hack), as glfw can only hold one at a time. => however, we can
+    just store it on the C++ side of the code - module-wide, like in
+    `special.currentRendererSystemContainer`. => this would immediately return the correct link."*
+
+    **And RG12.17 is the argument for it**: a dictionary entry can hold anything, so the one reader
+    that cares has to check what class it got - and that check is what broke. A typed member cannot be
+    wrong about its own type, and `GetRendererSystemContainer()` becomes a read.
+
+    Written by `MainSystemContainer.cpp` (`AttachToRenderEngineInternal` sets the pointer, `Reset`
+    sets 0) and read by three places in `exudyn.misc.GUI`.
+
+    **Nothing has to be deprecated**, which I had wrong and the maintainer corrected: *"exu.sys
+    ['currentRendererSystemContainer'] is an internal ("sys") variable, and never intended to be used
+    by any user!"* `exudyn.sys` is reserved by the system - its own documentation says so - so the
+    entry simply moves: no alias, no deprecation, nothing in the revisions chapter.
+
+    **One thing is left to decide**: the lifetime rule of RG12.9 applies - a global that holds a Python
+    object must not release it after the interpreter has finalized, which is why
+    `EPyUtils::OverrideSettings()` is allocated once and never freed. A `MainSystemContainer*` is not a
+    Python object, so holding the pointer is free; handing it to Python as
+    `special.currentRendererSystemContainer` is where the question is.
+
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2290,7 +2340,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
-| RG12.13.2 | #2690 | a version in the settings file, so that a file from another Exudyn is recognised |
+| RG12.18 | #2692 | the renderer link becomes a member on the C++ side instead of an entry of exudyn.sys |
 | RG12.14 | #2687 | the override settings are read only at import, so a changed file needs a new session |
 | RG12.15 | #2688 | the documentation does not say that a script can place a dialog |
 | RG12.16 | #2689 | the render window and the SolutionViewer remember their size and position |

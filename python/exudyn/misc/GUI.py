@@ -90,22 +90,61 @@ def IsApple():
     else:
         return False
 
+#said once per process, because this function is called by every dialog and by the scaling
+_rendererContainerComplaints = []
+
+
+def _ComplainOnce(reason):
+    """say once per process that the renderer's SystemContainer could not be used, and why"""
+    if reason not in _rendererContainerComplaints:
+        _rendererContainerComplaints.append(reason)
+        exudyn.Print('WARNING: the SystemContainer attached to the renderer could not be used, so'
+                     ' the dialogs that need it do nothing - ' + reason)
+
+
 def GetRendererSystemContainer():
+    """The SystemContainer that is attached to the render engine, or None.
+
+    Returns:
+        the container, or None when no renderer is running, when the entry names a container whose
+        C++ object is gone, or when it names something else entirely
+
+    Note:
+        None is the normal answer without a renderer and is not reported. Anything ELSE that goes
+        wrong here says so once per process: a dialog that finds no container does nothing, and
+        nothing being printed is how "the V key opens no dialog" became a reproduction rather than a
+        message (#2691, maintainer 2026-09-26).
+    """
+    #THE CLASS THE COMPILED MODULE DEFINES, not exudyn.SystemContainer (#2691). The C++ side stores
+    #the container as a POINTER (MainSystemContainer.cpp, AttachToRenderEngineInternal), so what is
+    #in exudyn.sys is of the compiled class - and while revision2026b step RG12.10 installed a Python
+    #subclass under the module's own name, this isinstance() was False for it and every dialog that
+    #asks here found nothing. The subclass is gone (RG12.17), so exudyn.SystemContainer is that class
+    #again; the compiled module is asked because that is the one thing the C++ side cannot disagree
+    #with. revision2026b step RG12.18 (#2692) replaces this untyped dictionary entry with a member on
+    #the C++ side, and then there is no class to check at all.
     try:
-        if 'currentRendererSystemContainer' in exudyn.sys:
-            guiSC = exudyn.sys['currentRendererSystemContainer']
-            if guiSC != 0 and isinstance(guiSC, exudyn.SystemContainer):
-                #the entry can name a container whose C++ object is gone, and the lookup does not
-                #notice: it is the first USE that raises, in whichever caller happens to be next
-                #(#2623 guarded this function, #2676 the value it returns). One cheap read here
-                #is what turns that into a None the callers already handle.
-                probe = guiSC.visualizationSettings.dialogs.alwaysTopmost
-                if isinstance(probe, bool):
-                    return guiSC
+        containerClass = exudyn._compiledModule.SystemContainer
+        guiSC = exudyn.sys.get('currentRendererSystemContainer', 0)
+        if guiSC == 0:                          #no renderer: the normal answer, and not a complaint
+            return None
+        if not isinstance(guiSC, containerClass):
+            _ComplainOnce('exudyn.sys["currentRendererSystemContainer"] holds a '
+                          + type(guiSC).__name__ + ' and not the SystemContainer of '
+                          + exudyn._compiledModule.__name__)
+            return None
+        #the entry can name a container whose C++ object is gone, and the lookup does not
+        #notice: it is the first USE that raises, in whichever caller happens to be next
+        #(#2623 guarded this function, #2676 the value it returns). One cheap read here
+        #is what turns that into a None the callers already handle.
+        probe = guiSC.visualizationSettings.dialogs.alwaysTopmost
+        if isinstance(probe, bool):
+            return guiSC
+        _ComplainOnce('the container answered ' + repr(probe) + ' for dialogs.alwaysTopmost')
     #RuntimeError is the access violation of a container that was destroyed while the entry
     #still names it (#2623); a dialog must not die of that
-    except (KeyError, AttributeError, RuntimeError):
-        pass
+    except (KeyError, AttributeError, RuntimeError) as error:
+        _ComplainOnce(type(error).__name__ + ': ' + str(error))
     return None
 
 def MakeProcessDpiAware():
@@ -2057,7 +2096,7 @@ def ShowVisualizationSettingsDialog():
     """
     guiSC = GetRendererSystemContainer()
     if guiSC is None:
-        exudyn.Print('ERROR: ShowRightMouseSelectionDialog: problems with the'
+        exudyn.Print('ERROR: ShowVisualizationSettingsDialog: problems with the'
                      ' SystemContainer, probably not attached to the renderer yet')
         return
 

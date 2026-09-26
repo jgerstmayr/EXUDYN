@@ -22,6 +22,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import ast  #for ast.literal_eval
+import copy  #the snapshotted defaults are handed out as a copy
 import numpy as np  #for array checks
 from numpy import float32
 import exudyn
@@ -402,9 +403,10 @@ def DefaultSettingsDictionary(settingsStructure):
     initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where
     this function can see them.
 
-    NOT type(settingsStructure) either, for the reason CompiledSettingsClass gives: the structure
-    may be an instance of the subclass that applies the override settings, and then its own
-    constructor produces the overrides rather than the defaults.
+    AND NOT BY CONSTRUCTING ANYTHING when the override settings are in use: since revision2026b
+    step RG12.17 the constructor of the compiled class itself applies a stored setting, so
+    `exudyn.misc.overrideSettings.structureDefaults` holds what it produced BEFORE it was wrapped,
+    and that is used when it is there.
 
     Args:
         settingsStructure: the structure being edited
@@ -412,7 +414,14 @@ def DefaultSettingsDictionary(settingsStructure):
     Returns:
         the dictionary with type info of a fresh structure of the same kind
     """
-    return CompiledSettingsClass(settingsStructure)().GetDictionaryWithTypeInfo()
+    compiledClass = CompiledSettingsClass(settingsStructure)
+    try:
+        from exudyn.misc.overrideSettings import structureDefaults              # noqa: PLC0415
+        if compiledClass.__name__ in structureDefaults:
+            return copy.deepcopy(structureDefaults[compiledClass.__name__])
+    except ImportError:            #a package without the module: constructing is still right
+        pass
+    return compiledClass().GetDictionaryWithTypeInfo()
 
 
 def SettingsValueStrings(dictionaryWithTypeInfo):

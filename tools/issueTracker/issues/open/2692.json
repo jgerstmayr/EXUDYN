@@ -1,0 +1,13 @@
+{
+  "number": 2692,
+  "title": "the renderer link is an untyped entry of exudyn.sys and should be a member on the C++ side",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "Asked for by the maintainer on 2026-09-26: 'exudyn.sys[\"currentRendererSystemContainer\"] stores the currently active SystemContainer (as an old, dirty hack), as glfw can only hold one at a time. => however, we can just store it on the C++ side of the code - module-wide, like in special.currentRendererSystemContainer. => this would immediately return the correct link, similar to the current GUI function.' The entry is written by MainSystemContainer.cpp (AttachToRenderEngineInternal sets it to the pointer, Reset sets it to 0) and read by three places in exudyn.misc.GUI, one of which has to check what class it holds - because a dictionary entry can hold anything, which is exactly how #2691 happened: a Python subclass under the module's own name made the isinstance False and every dialog that needs the container stopped working, in silence. A typed member cannot be wrong about its own type. To decide in the step: exudyn.sys['currentRendererSystemContainer'] is public and documented, and basicUtilities filters it out of the variables it prints, so whether it stays as a deprecated alias or goes needs a word; and the lifetime question of #2679 applies - a global holding a Python object must not release it after the interpreter has finalized, which is why EPyUtils::OverrideSettings() is allocated once and never freed. revision2026b step RG12.18. [2026-09-26, Claude-JG]: Correction from the maintainer: 'exu.sys[\"currentRendererSystemContainer\"] is an internal (\"sys\") variable, and never intended to be used by any user!' So the question this issue raised about a deprecated alias does not exist: exudyn.sys is reserved by the system - its own documentation says so - and the entry can simply move to the C++ side with no alias, no deprecation and no note in the revisions chapter. What is left to decide is only the lifetime question: a global that holds a Python object must not release it after the interpreter has finalized.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "src/Main/MainSystemContainer.cpp"
+}

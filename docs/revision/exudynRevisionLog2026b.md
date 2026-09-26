@@ -4750,3 +4750,78 @@ withdrawn window reports `1x1+0+0` whatever it was given. They use `TkRootOrSkip
 fixture, so they run under xdist as well.
 
 **Gates**: 11/11 checks, the wheel, the full suite, 486 pytest, the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.17 - a settings file killed the V key, and RG12.13.2 - a version in the file (2026-09-26, #2691, #2690)
+
+The maintainer tested 1.12.96 properly: deleted the file, ran a model, placed the dialog, stored,
+reopened it in the same session - *"so this seems to work already"* - then restarted the session and
+pressed V. Nothing opened, and the console said *"problems with the SystemContainer, probably not
+attached to the renderer yet"*.
+
+**The cause, reproduced in twenty lines.** `GetRendererSystemContainer()` does
+
+```python
+isinstance(guiSC, exudyn.SystemContainer)
+```
+
+on what the C++ side stores - and the C++ side stores a **pointer**:
+`exudynModule.attr("sys")["currentRendererSystemContainer"] = this`, which pybind casts to an object
+of the **compiled** class. RG12.10 had installed a Python **subclass** under the name
+`exudyn.SystemContainer`, and a compiled-class object is not an instance of it. So the probe returned
+None and every dialog that needs the container - the settings dialog on V, the right-mouse dialog -
+did nothing. Only with a settings file, which is why it worked before the maintainer stored anything.
+
+**This was the third thing that subclass broke in two days**, and that is the finding, not the fix:
+
+| when | what it broke |
+|---|---|
+| RG12.10 (#2684) | `DefaultSettingsDictionary` constructed the subclass and reported the overrides as the defaults |
+| RG12.11 (#2685) | an `isinstance` of mine stopped recognising `SC.visualizationSettings` in the dialog |
+| here (#2691) | `GetRendererSystemContainer()`, in code nobody had touched since 2023 |
+
+The first two I found myself, and each time I fixed the *caller*. The third one a user met. **A
+mechanism that changes what a class is cannot be made safe by fixing the places that ask what a class
+is**, because that set is unbounded - it includes every line of Exudyn, every example and every user
+script.
+
+**So the class is no longer changed.** `pybind11` heap types allow their `__init__` to be wrapped in
+place - measured before relying on it - so the constructor of the **compiled** class applies the
+stored settings and `exudyn.SystemContainer` stays what it always was. No subclass, no name moved, no
+`isinstance` to fix. If a build ever refuses the patch, it says so and applies nothing, rather than
+falling back to the subclass that broke the dialogs.
+
+**And that cost one thing, which the same session had already solved elsewhere**: with the compiled
+constructor applying the overrides, the defaults cannot be **constructed** any more - `CompiledSettingsClass`
+was no help, because the compiled class is the one applying them. They are **snapshotted at import**,
+before the wrapper is installed, and `DefaultSettingsDictionary` hands out a copy. That is the same
+decision as for the defaults of `exudyn.config` in RG12.11, for the same reason: what Exudyn starts
+with is the default, taken while it still is.
+
+**Two things the maintainer asked for while reading the fix, and both were right:**
+
+- *"I very much believe that GetRendererSystemContainer() dies without a message - pass could instead
+  write at least a message to know that it happened and where."* It now says, **once per process**,
+  what went wrong: a wrong class, a container whose C++ object is gone, an exception. The normal
+  answer - no renderer - stays quiet, because every dialog asks. Had that message existed, this bug
+  would have been a line of output instead of a reproduction.
+- `ShowVisualizationSettingsDialog` printed **"ERROR: ShowRightMouseSelectionDialog: ..."**, a
+  copy-paste error naming the wrong function in the one message a user sees - which is also why the
+  report named a dialog nobody had pressed.
+
+**What was NOT wrong, and is worth writing down because it looked wrong**: the *"strange position
+coordinates"*, `[-10, 0]` for a window at the left edge. That is Windows reporting the invisible
+resize border, and `PositionIsReachable` already allows `screenX - 16` for exactly that - the rule's
+own comment says *"a maximised window sits at -8"*. The position is restored.
+
+**RG12.13.2, the version, in the same commit and to the maintainer's specification**: *"just add a
+version number 1 for now ... Very simple, no deep tech; similar as in FEM."*
+`overrideSettings.fileFormatVersion = 1` is written by `Save`, always the current one whatever the
+file said; `Load` **ignores** a file whose version does not match - including one with no version,
+which is every file written before today - with one note naming both and saying to store the settings
+again. It is never a section and never reaches the store. The test fixture writes it too, which is how
+the three tests that broke on it were the right kind of failure.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 494 pytest, the strict HTML build. The V key
+itself was not pressed by me - it needs a render window - so the reproduction is the probe the C++
+side feeds, and it fails before the fix and passes after it.
