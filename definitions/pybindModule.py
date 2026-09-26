@@ -374,11 +374,25 @@ NOTE: 1 setting(s) from %USERPROFILE%/.exudyn/config.json, and 2 visualizationSe
       EXUDYN_NO_USER_SETTINGS=1 to ignore them)
 """)
 
-pb.AddDocu(r"""The `config` settings are applied at that moment. The
-`visualizationSettings` are applied to every `SystemContainer` when it is created,
-because that is when they begin to exist. `overrideSettings.Print()` lists them, which is the
-answer to *why does this script behave differently here*, and `overrideSettings.Applied()`
-gives the same as a list, for a script that wants to print it into its own output.
+pb.AddDocu(r"""`overrideSettings.Print()` lists what came from the file, which is the answer to *why does this
+script behave differently here*, and `overrideSettings.Applied()` gives the same as a list, for a
+script that wants to print it into its own output.
+
+**What happens, in order:**
+
+1. the whole file is read into `exudyn.special.overrideSettings`, once, by `import exudyn`;
+2. what can be applied at once is applied at once, which is the `config` section;
+3. the rest stays in the dictionary, because the things it sets do not exist yet;
+4. every `VisualizationSettings` structure applies the stored settings **when it is created** - the
+   one a `SystemContainer` builds, and one built by `exu.VisualizationSettings()`. A setting that
+   names nothing is reported and changes nothing;
+5. a dialog reads its size and position from the `dialogs` section when it opens, and the results
+   monitor its own settings from `resultsMonitor`;
+6. nothing writes the file unless it is asked to.
+
+A stored `visualizationSetting` is **not** a new default: `exu.VisualizationSettings()` carries it,
+and the defaults the settings dialog compares against are still the defaults of Exudyn, so *diff to
+default* shows a stored setting as a difference. That is the point - it is what the file changed.
 
 **What may be stored are plain values**: a number, a flag, a string, or a list of numbers. A setting
 that holds graphics data, a user function or a matrix container is refused with a message and

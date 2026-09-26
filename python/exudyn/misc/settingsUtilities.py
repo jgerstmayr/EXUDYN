@@ -32,7 +32,8 @@ __all__ = [
     'IsFloat', 'IsArrayInt', 'IsVector', 'GetComboBoxListsDict', 'ConvertString2Value',
     'ConvertValue2String', 'CheckType', 'SettingsLeafList', 'EnumDisplayName',
     'EnumFullName', 'ValueLiteral', 'SettingsCodeLines',
-    'containerInitialisedSettings', 'DefaultSettingsDictionary', 'SettingsValueStrings',
+    'containerInitialisedSettings', 'CompiledSettingsClass', 'DefaultSettingsDictionary',
+    'SettingsValueStrings',
     'FindMatches', 'SettingsPrefix', 'ChangedSettings', 'ChangedSettingsCode',
     'PrintChangedSettings',
     ]
@@ -366,6 +367,30 @@ def SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTy
 containerInitialisedSettings = []
 
 
+def CompiledSettingsClass(settingsStructure):
+    """the class the COMPILED module defines for this structure, which is not always its own
+
+    A settings structure can be an instance of a Python subclass: `import exudyn` installs one for
+    VisualizationSettings when ~/.exudyn/config.json holds any, so that a stored setting reaches
+    every structure that is created (revision2026b step RG12.10, #2684). Constructing that subclass
+    to find the DEFAULTS would apply the overrides to it and report them as the defaults - measured
+    on the first attempt: openGL.multiSampling came back with 4 as its own default - so everything
+    that shows a difference has to construct the compiled class instead.
+
+    Args:
+        settingsStructure: the structure being edited
+
+    Returns:
+        the first class of its mro that the compiled module defines; the structure's own class when
+        it is not a subclass, which is the normal case
+    """
+    compiledModuleName = exudyn._compiledModule.__name__   #'exudyn.exudynCPP', or the fast one
+    for candidate in type(settingsStructure).__mro__:
+        if candidate.__module__ == compiledModuleName:
+            return candidate
+    return type(settingsStructure)
+
+
 def DefaultSettingsDictionary(settingsStructure):
     """the defaults of a settings structure, as its own constructor produces them
 
@@ -377,13 +402,17 @@ def DefaultSettingsDictionary(settingsStructure):
     initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where
     this function can see them.
 
+    NOT type(settingsStructure) either, for the reason CompiledSettingsClass gives: the structure
+    may be an instance of the subclass that applies the override settings, and then its own
+    constructor produces the overrides rather than the defaults.
+
     Args:
         settingsStructure: the structure being edited
 
     Returns:
         the dictionary with type info of a fresh structure of the same kind
     """
-    return type(settingsStructure)().GetDictionaryWithTypeInfo()
+    return CompiledSettingsClass(settingsStructure)().GetDictionaryWithTypeInfo()
 
 
 def SettingsValueStrings(dictionaryWithTypeInfo):

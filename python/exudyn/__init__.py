@@ -240,26 +240,43 @@ def _ApplyUserSettings():
 
     _settings.ApplyConfig(config, stored)
 
-    #the visualizationSettings of a SystemContainer do not exist until one is created, so they are
-    #applied there - and exudyn.SystemContainer is left EXACTLY as the compiled module defines it
-    #when the file holds none of them, which is the normal case
+    #A STORED visualizationSetting IS APPLIED WHENEVER SUCH A STRUCTURE IS CREATED (revision2026b
+    #step RG12.10, #2684), which is the two ways a user gets one: the structure a SystemContainer
+    #builds in its constructor, and exu.VisualizationSettings() - which got nothing before, so a
+    #script that edited one before creating a container saw the defaults. Both classes are left
+    #EXACTLY as the compiled module defines them when the file holds no visualizationSettings,
+    #which is the normal case.
     if (stored.get('visualizationSettings') or {}) != {}:
-        _compiled = _compiledModule.SystemContainer
 
-        class SystemContainer(_compiled):
+        def _Apply(visualizationSettings):
+            try:
+                _settings.ApplyVisualizationSettings(visualizationSettings, stored)
+            except Exception as error: #a stored setting must never stop a model from starting
+                print('WARNING: exudyn could not apply the stored visualizationSettings: '
+                      + str(error))
+
+        class SystemContainer(_compiledModule.SystemContainer):
             """a SystemContainer whose visualizationSettings start from ~/.exudyn/config.json"""
 
             def __init__(self, *arguments, **keywordArguments):
                 super().__init__(*arguments, **keywordArguments)
-                try:
-                    _settings.ApplyVisualizationSettings(self.visualizationSettings, stored)
-                except Exception as error: #a stored setting must never stop a model from starting
-                    print('WARNING: exudyn could not apply the stored visualizationSettings: '
-                          + str(error))
+                _Apply(self.visualizationSettings)
+
+        class VisualizationSettings(_compiledModule.VisualizationSettings):
+            """a VisualizationSettings that starts from ~/.exudyn/config.json
+
+            NOTE the subclass is why settingsUtilities.DefaultSettingsDictionary constructs the
+            COMPILED class and not type(structure): the defaults of an overridden structure are
+            still the defaults, and everything that shows a difference depends on it."""
+
+            def __init__(self, *arguments, **keywordArguments):
+                super().__init__(*arguments, **keywordArguments)
+                _Apply(self)
 
         globals()['SystemContainer'] = SystemContainer
+        globals()['VisualizationSettings'] = VisualizationSettings
 
-    #the visualizationSettings are applied when a SystemContainer is created, so they are counted
+    #the visualizationSettings are applied when such a structure is created, so they are counted
     #here as what WILL happen rather than as what has happened
     applied = _settings.Applied()
     later = len(stored.get('visualizationSettings') or {})
@@ -267,7 +284,7 @@ def _ApplyUserSettings():
     if len(applied) != 0 or later != 0 or len(ignored) != 0:
         print('NOTE: ' + str(len(applied)) + ' setting(s) from ' + _settings.FileName()
               + ('' if later == 0 else ', and ' + str(later)
-                 + ' visualizationSettings for every SystemContainer')
+                 + ' visualizationSettings for every such structure that is created')
               + ' (exudyn.misc.overrideSettings.Print() for the list;'
               + ' EXUDYN_NO_USER_SETTINGS=1 to ignore them)')
         for (path, reason) in ignored:

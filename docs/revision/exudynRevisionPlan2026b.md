@@ -1857,10 +1857,10 @@ package).
       section, which is **RG6.2.29** (#2675) built: `visualizationSettings.dialogs.
       storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
       of RG6.2.11 - the size always, the position only when the window would still be reachable.
-    - **RG12.5.4** *(open)* — **folding in `~/.exudyn/resultsMonitor.json`.** The monitor had its
-      own file first, and "one file" is the point of RG12.5. It needs a migration that reads the old
-      file once and writes it into the `resultsMonitor` section, because a user who has one must not
-      lose their settings for a tidier directory.
+    - **RG12.5.4** **DONE 2026-09-26** (by RG12.10, #2684) - **folding in
+      `~/.exudyn/resultsMonitor.json`.** Done without the migration the step planned: the maintainer
+      deleted the file on 2026-09-26 and decided it shall not be used again, so the monitor reads its
+      section of the one file and the old name disappears everywhere.
 
 <a id="rg12-6"></a>
 **RG12.6** **DONE 2026-09-26** (#2667) — [log](exudynRevisionLog2026b.md#rg12-6) —
@@ -1915,21 +1915,27 @@ package).
     write the file **and** the store, for the same reason. Three new tests, 29 in the file.
 
 <a id="rg12-10"></a>
-**RG12.10** *(group RG12; maintainer 2026-09-26)* **The workflow of the override settings**, written
-    out by the maintainer and to be built in this order (needs RG12.9):
+**RG12.10** **DONE 2026-09-26** (#2684) — [log](exudynRevisionLog2026b.md#rg12-10) —
+    **The workflow of the override settings**, as the maintainer wrote it out, in six steps that are
+    now also the documentation.
 
-    1. at `import exudyn`, the whole file is read into the override settings;
-    2. what can be applied at once - `exudyn.config` - is applied at once;
-    3. the rest **stays** in `exudyn.special.overrideSettings`;
-    4. **whenever a `VisualizationSettings` structure is created**, it applies what is there. This is
-       the change from RG12.5.1, where only a `SystemContainer` applied them, through a Python
-       subclass; a structure created by `exu.VisualizationSettings()` got nothing. It is also why
-       RG6.2.28 was already done.
-    5. the **results monitor** reads its settings from there rather than from
-       `~/.exudyn/resultsMonitor.json`, which **is** RG12.5.4 and replaces it: one file, one reader,
-       and a migration that keeps what a user has stored.
-    6. the finished workflow goes into the documentation - a sub-step of its own, as the maintainer
-       asked, because a mechanism that is not written down is a mechanism nobody uses on purpose.
+    **A stored `visualizationSetting` reaches every structure that is created** - the one a
+    `SystemContainer` builds and one built by `exu.VisualizationSettings()`, which got nothing before
+    - through two subclasses that `import exudyn` installs *only* when the file holds such a section.
+
+    **The trap the subclass sets is closed in the same step**, and it is the part worth remembering:
+    `DefaultSettingsDictionary` called `type(structure)()`, so on an instance of the subclass it
+    returned the **override** as its own default - measured at `multiSampling: 4` where the default is
+    1 - which would have broken every "diff to default", the dialog's marking and `Store(SC)` without
+    a word. `settingsUtilities.CompiledSettingsClass(structure)` walks to the class the compiled
+    module defines, and the defaults are the defaults again.
+
+    **The results monitor has no file of its own.** The maintainer deleted
+    `~/.exudyn/resultsMonitor.json` on 2026-09-26 - it had existed for a few hours - and decided
+    there is no migration: the monitor reads and writes the `resultsMonitor` section of the one file,
+    `SettingsFileName` is gone, and the old name is gone from the documentation.
+    **`overrideSettings.StoreSection(name, values)` is the one writer of a section**, which the
+    dialogs, the monitor and `Store` all go through.
 
 <a id="rg12-11"></a>
 **RG12.11** *(group RG12; maintainer 2026-09-26)* **Storing the override settings**, in two ways:
@@ -2139,7 +2145,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG12.5.2 | #2666 | the enum types of the override settings; .1 and .3 are done, .4 is superseded by RG12.10 |
+| RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.10 | - | the workflow: read at import, config at once, the rest applied when a structure is created |
 | RG12.11 | - | storing: the manual function with the real defaults, and a button in the dialog |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |

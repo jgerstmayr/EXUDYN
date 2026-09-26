@@ -33,8 +33,9 @@ import json
 import os
 
 __all__ = ['sectionNames', 'plainTypes', 'FileName', 'Ignoring', 'Settings', 'Load', 'Save',
-           'Clear', 'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings',
-           'DialogKey', 'DialogGeometry', 'StoreDialogGeometry', 'PositionIsReachable', 'Store']
+           'Clear', 'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig',
+           'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry', 'StoreDialogGeometry',
+           'PositionIsReachable', 'Store']
 
 #the sections of the file. 'dialogs' is read by the dialogs themselves (revision2026b step
 #RG6.2.26) and is listed here so that this module does not warn about it
@@ -148,6 +149,32 @@ def Clear():
     return False
 
 
+def StoreSection(name, values):
+    """Write one section of the file, keeping the others, and keep the store in step.
+
+    Args:
+        name: a section of `sectionNames` - 'config', 'visualizationSettings', 'dialogs' or
+            'resultsMonitor'
+        values: the dictionary to store under it; it REPLACES what was there
+
+    Returns:
+        the file name that was written
+
+    Note:
+        This is the only place that writes a section, so the file and
+        `exudyn.special.overrideSettings` cannot disagree within a process: everything that stores
+        something - the dialogs, the results monitor, `Store` - goes through here.
+    """
+    if name not in sectionNames:
+        raise ValueError('unknown section "' + str(name) + '"; known sections are '
+                         + ', '.join(sectionNames))
+    settings = Load()
+    settings[name] = values
+    fileName = Save(settings)
+    Settings()[name] = values
+    return fileName
+
+
 def Applied():
     """What the override settings changed in this process.
 
@@ -198,9 +225,13 @@ def _IsPlain(value):
 
 
 def _Record(path, value, reason=None):
+    #ONCE PER SETTING, not once per structure: the visualizationSettings are applied again for every
+    #structure that is created (revision2026b step RG12.10), and Print() listing the same setting
+    #five times because five structures exist says nothing about what was stored
     if reason is None:
-        _applied.append((path, value))
-    else:
+        if (path, value) not in _applied:
+            _applied.append((path, value))
+    elif (path, reason) not in _ignored:
         _ignored.append((path, reason))
 
 
@@ -344,13 +375,10 @@ def StoreDialogGeometry(name, size, position):
         `visualizationSettings.dialogs.storeDialogPositions` is True. Nothing else writes the
         file: see `Store`.
     """
-    settings = Load()
-    dialogs = dict(settings.get('dialogs') or {})
+    dialogs = dict(Load().get('dialogs') or {})
     dialogs[DialogKey(name)] = {'size': [int(size[0]), int(size[1])],
                                 'position': [int(position[0]), int(position[1])]}
-    settings['dialogs'] = dialogs
-    Save(settings)
-    Settings()['dialogs'] = dialogs  #the file and the store must not disagree within a process
+    StoreSection('dialogs', dialogs)
 
 
 def PositionIsReachable(position, screen, margin=80):

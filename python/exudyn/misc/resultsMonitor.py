@@ -29,7 +29,6 @@
 
 import argparse
 import glob
-import json
 import os
 import subprocess
 import sys
@@ -40,6 +39,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 import exudyn
+from exudyn.misc import overrideSettings
 from exudyn.basicUtilities import UIWindowSuppressed
 from exudyn.plot import ParseOutputFileHeader
 from exudyn.advancedUtilities import PlotLineCode
@@ -47,7 +47,7 @@ from exudyn.processing import SingleIndex2SubIndices
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'knownResultsFileTypes', 'SettingsFileName', 'LoadSettings', 'SaveSettings',
+    'knownResultsFileTypes', 'LoadSettings', 'SaveSettings',
     'ReadResultsFileHeader', 'ResultsFileColumns', 'FindResultsFiles', 'SelectResultsFile',
     'ResultsMonitor', 'MonitorResults', 'StartResultsMonitor', 'Main',
     ]
@@ -78,41 +78,29 @@ _defaultSettings = {
 #settings file
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def SettingsFileName():
-    """Path of the settings file of the results monitor, `~/.exudyn/resultsMonitor.json`.
-
-    Returns:
-        the absolute file name; the directory does not need to exist yet
-    """
-    return os.path.join(os.path.expanduser('~'), '.exudyn', 'resultsMonitor.json')
-
-
 def LoadSettings():
     """Read the stored monitor settings, filled up with the defaults.
 
+    The settings are the `resultsMonitor` section of the override settings, `~/.exudyn/config.json`,
+    which `import exudyn` has already read - one file for everything Exudyn remembers between runs
+    (revision2026b step RG12.10, #2684).
+
     Note:
-        A missing or unreadable settings file is not an error: the defaults are returned and the
-        reason is printed once.
+        Nothing here is an error: a section that is not there, or a key that is not known, leaves
+        the default in place.
 
     Returns:
         a dictionary with the keys of `exudyn.misc.resultsMonitor._defaultSettings`
     """
     settings = dict(_defaultSettings)
-    fileName = SettingsFileName()
-    if os.path.exists(fileName):
-        try:
-            with open(fileName, 'r') as file:
-                stored = json.load(file)
-            for key in settings:
-                if key in stored:
-                    settings[key] = stored[key]
-        except Exception as e:
-            print('WARNING: could not read ' + fileName + ': ' + str(e))
+    for (key, value) in (overrideSettings.Settings().get('resultsMonitor') or {}).items():
+        if key in settings:
+            settings[key] = value
     return settings
 
 
 def SaveSettings(settings):
-    """Store monitor settings in `SettingsFileName()`, so that the next run starts with them.
+    """Store monitor settings in the `resultsMonitor` section of the override settings.
 
     Args:
         settings: a dictionary; only the known keys are written
@@ -120,15 +108,12 @@ def SaveSettings(settings):
     Returns:
         True if the file was written
     """
-    fileName = SettingsFileName()
     try:
-        os.makedirs(os.path.dirname(fileName), exist_ok=True)
-        stored = {key: settings[key] for key in _defaultSettings if key in settings}
-        with open(fileName, 'w') as file:
-            json.dump(stored, file, indent=2)
+        overrideSettings.StoreSection(
+            'resultsMonitor', {key: settings[key] for key in _defaultSettings if key in settings})
         return True
     except Exception as e:
-        print('WARNING: could not write ' + fileName + ': ' + str(e))
+        print('WARNING: could not write ' + overrideSettings.FileName() + ': ' + str(e))
         return False
 
 
@@ -934,7 +919,8 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
         saveFigure: if not empty, write the figure to this file (png, pdf or svg)
         waitTimeout: seconds to wait for the first data row; 0 waits without limit
         searchDirectories: where to look for results files if `fileName` is None
-        useSettingsFile: read and write `~/.exudyn/resultsMonitor.json`; False keeps the
+        useSettingsFile: read and write the `resultsMonitor` section of
+            `~/.exudyn/config.json`; False keeps the
                          defaults and changes nothing on disk
 
     Returns:
@@ -1179,7 +1165,8 @@ def _Parser():
     behaviour.add_argument('--wait', type=float, default=0., metavar='SECONDS',
                            help='how long to wait for the first data row; 0 waits without limit')
     behaviour.add_argument('--no-settings', action='store_true',
-                           help='ignore and do not write ~/.exudyn/resultsMonitor.json')
+                           help='ignore and do not write the resultsMonitor section'
+                                ' of ~/.exudyn/config.json')
     return parser
 
 

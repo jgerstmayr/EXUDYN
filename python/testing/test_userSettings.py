@@ -190,6 +190,96 @@ def test_theApplyFunctionsTakeTheStoreWhenNothingIsGiven(monkeypatch):
         exu.config.outputPrecision = previous
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the workflow (revision2026b step RG12.10, #2684): what applies the stored settings, and when.
+#The import-time path cannot be tested here - the import is long over - so what is tested is the
+#classes it installs and the functions they call
+def test_aVisualizationSettingsStructureAppliesTheStoredSettingsWhenItIsCreated():
+    """not only a SystemContainer: exu.VisualizationSettings() used to get nothing
+
+    A script that edits a structure before creating a container saw the defaults, which is the
+    opposite of what a settings file is for."""
+    stored = {'visualizationSettings': {'openGL.multiSampling': 4, 'nodes.basisSize': 0.5}}
+
+    class VisualizationSettings(exu.VisualizationSettings):
+        def __init__(self):
+            super().__init__()
+            settings.ApplyVisualizationSettings(self, stored)
+
+    structure = VisualizationSettings()
+    assert structure.openGL.multiSampling == 4
+    assert structure.nodes.basisSize == 0.5
+
+
+def test_theDefaultsOfAnOverriddenStructureAreStillTheDefaults():
+    """the trap the subclass sets, and the reason CompiledSettingsClass exists
+
+    DefaultSettingsDictionary used to call type(structure)(), which on an instance of the subclass
+    constructs the subclass - so the override came back as its own default, measured at 4. Every
+    "diff to default", the dialog's marking and Store(SC) depend on this."""
+    from exudyn.misc.settingsUtilities import CompiledSettingsClass, DefaultSettingsDictionary
+
+    class VisualizationSettings(exu.VisualizationSettings):
+        def __init__(self):
+            super().__init__()
+            self.openGL.multiSampling = 4
+
+    structure = VisualizationSettings()
+    assert structure.openGL.multiSampling == 4                   #the structure carries it
+    assert CompiledSettingsClass(structure) is exu.VisualizationSettings
+    assert DefaultSettingsDictionary(structure)['openGL']['multiSampling']['value'] == 1
+
+    #and a structure that is not a subclass is its own compiled class, which is the normal case
+    plain = exu.VisualizationSettings()
+    assert CompiledSettingsClass(plain) is exu.VisualizationSettings
+
+
+def test_aSettingIsRecordedOnceHoweverManyStructuresApplyIt(settingsFile):
+    """Print() listing the same setting five times because five structures exist says nothing"""
+    settingsFile({'visualizationSettings': {'openGL.multiSampling': 4}})
+    for _ in range(3):
+        settings.ApplyVisualizationSettings(exu.VisualizationSettings())
+    assert settings.Applied() == [('visualizationSettings.openGL.multiSampling', 4)]
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#one writer per section
+def test_storeSectionWritesOneSectionAndKeepsTheOthers(settingsFile):
+    """the file and exudyn.special.overrideSettings cannot disagree within a process"""
+    settingsFile({'config': {'outputPrecision': 9}, 'resultsMonitor': {'updatePeriod': 3.0}})
+
+    settings.StoreSection('resultsMonitor', {'updatePeriod': 5.0})
+
+    written = settings.Load()
+    assert written['config'] == {'outputPrecision': 9}           #the other section is kept
+    assert written['resultsMonitor'] == {'updatePeriod': 5.0}
+    assert settings.Settings()['resultsMonitor'] == {'updatePeriod': 5.0}   #and so is the store
+
+
+def test_anUnknownSectionIsRefusedRatherThanWritten():
+    with pytest.raises(ValueError) as error:
+        settings.StoreSection('whatever', {})
+    assert 'whatever' in str(error.value)
+
+
+def test_theResultsMonitorReadsAndWritesItsSectionOfTheOneFile(settingsFile):
+    """it had ~/.exudyn/resultsMonitor.json; the maintainer deleted it on 2026-09-26"""
+    from exudyn.misc import resultsMonitor
+
+    assert not hasattr(resultsMonitor, 'SettingsFileName')       #the old file is gone entirely
+    settingsFile({'resultsMonitor': {'updatePeriod': 3.0}})
+    assert resultsMonitor.LoadSettings()['updatePeriod'] == 3.0
+
+    #a key the monitor does not know is left alone rather than reaching its settings
+    settingsFile({'resultsMonitor': {'updatePeriod': 3.0, 'nonsense': 1}})
+    assert 'nonsense' not in resultsMonitor.LoadSettings()
+
+    stored = dict(resultsMonitor.LoadSettings())
+    stored['updatePeriod'] = 7.0
+    assert resultsMonitor.SaveSettings(stored)
+    assert settings.Load()['resultsMonitor']['updatePeriod'] == 7.0
+
+
 def test_theRunnersIgnoreTheFile():
     """conftest.py sets it for pytest, and the three runners set it for themselves
 

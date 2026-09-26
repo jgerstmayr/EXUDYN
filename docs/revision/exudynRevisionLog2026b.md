@@ -4561,3 +4561,63 @@ re-word the manual. Whether a default column should read `exudyn.InvalidIndex()`
 `invalid (-1)` is now a one-line decision instead of an archaeology.
 
 **Gates**: 11/11 checks, the wheel, the full suite, 464 pytest, the strict HTML build and the PDF.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.10 - the workflow of the override settings (2026-09-26, #2684, and RG12.5.4 with it)
+
+RG12.9 put the values in `exudyn.special.overrideSettings`. This makes them arrive where a user meets
+them, in the six steps the maintainer wrote out - which are now also what the documentation says,
+because a workflow that is not written down is one nobody uses on purpose.
+
+**A stored `visualizationSetting` reaches every structure that is created.** Only a
+`SystemContainer` applied them, through a Python subclass; `exu.VisualizationSettings()` got nothing,
+so a script that edited a structure before creating a container saw the defaults - the opposite of
+what the file is for. There are now two subclasses, installed **only** when the file holds a
+`visualizationSettings` section, so a user without a file gets the compiled classes untouched.
+
+**The trap, which is the reason this step is worth reading.** A Python subclass changes what
+`type(structure)` is, and `settingsUtilities.DefaultSettingsDictionary` is
+`type(settingsStructure)().GetDictionaryWithTypeInfo()`. On an instance of the override-applying
+subclass that constructs **the subclass**, applies the overrides to it and reports them as the
+DEFAULTS. Measured on the first attempt: `openGL.multiSampling` came back with **4** as its own
+default, where the default is 1. Everything that shows a difference runs through that function - the
+dialog's *changed* marking, its *diff to default*, `ChangedSettings`, `Store(SC)` - so the whole
+mechanism of "what did I change" would have quietly started comparing the overrides with themselves,
+and `Store(SC)` would have stopped storing the settings a user had just set.
+
+`CompiledSettingsClass(structure)` walks `type(structure).__mro__` to the first class the compiled
+module defines, found by `exudyn._compiledModule.__name__` - **not** by
+`type(exu.SystemContainer).__module__`, which is the metaclass and says `pybind11_builtins`; that was
+the first attempt and the measurement caught it too. A structure that is not a subclass is its own
+compiled class, which is the normal case and costs one loop.
+
+**The results monitor has no file of its own.** The plan had a migration; the maintainer answered:
+*"I just deleted the resultsMonitor.json file. It shall not be used any more. Everything inside the
+new file. It also disappears from docs - it was just here for a few hours."* So `SettingsFileName` is
+gone, `LoadSettings` and `SaveSettings` read and write the `resultsMonitor` section, and
+`docs/manual/resultsMonitor.md` names `~/.exudyn/config.json`. **RG12.5.4 closes with it**, without
+the migration it planned - the cheapest way to finish a step is for the thing it was careful about to
+stop existing.
+
+**One writer per section.** `overrideSettings.StoreSection(name, values)` merges one section into the
+file and updates the store, and refuses a section that is not in `sectionNames`. `StoreDialogGeometry`
+did it by hand and now goes through it, and so does the monitor: three writers became one.
+
+**And one record per setting, not one per structure.** `_Record` appended on every application, and
+the settings are now applied again for every structure that is created, so `Print()` would have
+listed the same setting once per structure - which says how many structures exist, not what was
+stored. It de-duplicates.
+
+**Checked by hand, because the import-time path is over before a test runs**: a file holding
+`outputPrecision`, two `visualizationSettings` and a monitor setting, with `EXUDYN_CONFIG_FILE` in
+the scratchpad - `exu.config.outputPrecision` 9, `exu.VisualizationSettings()` 4 and 0.5,
+`SC.visualizationSettings` 4, the default still 1, the monitor 3.0, `StoreSection` keeping the other
+sections, and `Applied()` holding 3 records for 3 settings across two structures.
+
+**One conversion detail for the next person writing into `pb.AddDocu`**: `\\ben ... \\item ... \\een`
+reaches the page **as itself**. `AddDocu` goes through `autoGenerateHelper.LatexText2Markdown`, not
+through `latexToMarkdown.ConvertText` which the item and structure descriptions use, and that one
+does not know the list macros. Plain Markdown survives it - six `<li>` in the built HTML - and it is
+what the rest of `pybindModule.py` writes.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 470 pytest, the strict HTML build and the PDF.

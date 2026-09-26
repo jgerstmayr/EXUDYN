@@ -14,7 +14,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-getcomboboxlistsdict)=
 ## Function: GetComboBoxListsDict
 
-[`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L65)
+[`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L66)
 
 - **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
 - **input**:
@@ -25,7 +25,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-settingsleaflist)=
 ## Function: SettingsLeafList
 
-[`SettingsLeafList(dictionaryWithTypeInfo, path = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L253)
+[`SettingsLeafList(dictionaryWithTypeInfo, path = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L254)
 
 - **function description**: every editable value of a settings structure, in tree order
 - **input**:
@@ -37,7 +37,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-enumdisplayname)=
 ## Function: EnumDisplayName
 
-[`EnumDisplayName(valueStr, vType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L278)
+[`EnumDisplayName(valueStr, vType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L279)
 
 - **function description**: the enum value without the type in front of it: Displacement, not OutputVariableType.Displacement An enum is edited in a combo box as wide as the value column, and every entry of a list begins with the same type name - which is already in the type column beside it - so the part that tells the entries apart was pushed out of sight (#2635). Since #2640 this is **the** value string of an enum - what `ConvertValue2String` produces, what the cell shows, and what `ChangedSettings` compares - because shortening only the list left the cell unreadable the moment the box collapsed. The full name lives in exactly one place: `ValueLiteral`, which writes the Python.
 - **input**:
@@ -49,7 +49,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-enumfullname)=
 ## Function: EnumFullName
 
-[`EnumFullName(displayName, vType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L301)
+[`EnumFullName(displayName, vType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L302)
 
 - **function description**: the inverse of EnumDisplayName: the name Python needs, which `ValueLiteral` writes
 - **input**:
@@ -61,7 +61,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-valueliteral)=
 ## Function: ValueLiteral
 
-[`ValueLiteral(valueStr, vType, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L317)
+[`ValueLiteral(valueStr, vType, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L318)
 
 - **function description**: the value as PYTHON writes it: a string is quoted, an enum carries its module
 - **input**:
@@ -74,7 +74,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-settingscodelines)=
 ## Function: SettingsCodeLines
 
-[`SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L336)
+[`SettingsCodeLines(currentLeaves, referenceValueStrings, prefix, dictionaryTypesT = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L337)
 
 - **function description**: the settings that differ from a reference, as the lines that set them The comparison is on the string the dialog SHOWS, not on the value: that is what makes a float and an enum comparable at all, and it marks exactly what a user sees in the cell.
 - **input**:
@@ -85,12 +85,23 @@ every function here runs without a window and can be tested without one.
 - **output**: list of (path, line), in tree order
 
 
+(sec-settingsutilities-compiledsettingsclass)=
+## Function: CompiledSettingsClass
+
+[`CompiledSettingsClass(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L370)
+
+- **function description**: the class the COMPILED module defines for this structure, which is not always its own A settings structure can be an instance of a Python subclass: `import exudyn` installs one for VisualizationSettings when ~/.exudyn/config.json holds any, so that a stored setting reaches every structure that is created (revision2026b step RG12.10, #2684). Constructing that subclass to find the DEFAULTS would apply the overrides to it and report them as the defaults - measured on the first attempt: openGL.multiSampling came back with 4 as its own default - so everything that shows a difference has to construct the compiled class instead.
+- **input**:
+  - `settingsStructure`: the structure being edited
+- **output**: the first class of its mro that the compiled module defines; the structure's own class when it is not a subclass, which is the normal case
+
+
 (sec-settingsutilities-defaultsettingsdictionary)=
 ## Function: DefaultSettingsDictionary
 
-[`DefaultSettingsDictionary(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L369)
+[`DefaultSettingsDictionary(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L394)
 
-- **function description**: the defaults of a settings structure, as its own constructor produces them NOT from a SystemContainer, although that is the state a user really starts from: creating one ATTACHES IT TO THE RUNNING RENDER ENGINE (MainSystemContainer() calls AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() -> DetachFromRenderEngine), so a temporary container opened for a moment takes the render window away from the container that owns it - the window closes (#2625). The settings a container initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where this function can see them.
+- **function description**: the defaults of a settings structure, as its own constructor produces them NOT from a SystemContainer, although that is the state a user really starts from: creating one ATTACHES IT TO THE RUNNING RENDER ENGINE (MainSystemContainer() calls AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() -> DetachFromRenderEngine), so a temporary container opened for a moment takes the render window away from the container that owns it - the window closes (#2625). The settings a container initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where this function can see them. NOT type(settingsStructure) either, for the reason CompiledSettingsClass gives: the structure may be an instance of the subclass that applies the override settings, and then its own constructor produces the overrides rather than the defaults.
 - **input**:
   - `settingsStructure`: the structure being edited
 - **output**: the dictionary with type info of a fresh structure of the same kind
@@ -99,7 +110,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-settingsvaluestrings)=
 ## Function: SettingsValueStrings
 
-[`SettingsValueStrings(dictionaryWithTypeInfo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L389)
+[`SettingsValueStrings(dictionaryWithTypeInfo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L418)
 
 - **function description**: {path: valueString} of a settings structure - what SettingsCodeLines compares against
 
@@ -107,7 +118,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-findmatches)=
 ## Function: FindMatches
 
-[`FindMatches(leaves, searchText)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L395)
+[`FindMatches(leaves, searchText)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L424)
 
 - **function description**: the settings a search text finds: the NAMES first, the descriptions second Several hundred values in a tree of folders, and the only way to a setting was knowing which folder it sits in.
 - **input**:
@@ -119,7 +130,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-settingsprefix)=
 ## Function: SettingsPrefix
 
-[`SettingsPrefix(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L426)
+[`SettingsPrefix(settingsStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L455)
 
 - **function description**: the name a script uses for this settings structure, e.g. SC.visualizationSettings
 
@@ -127,7 +138,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-changedsettings)=
 ## Function: ChangedSettings
 
-[`ChangedSettings(settingsStructure, reference = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L440)
+[`ChangedSettings(settingsStructure, reference = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L469)
 
 - **function description**: every setting that differs from the defaults, as (path, the line that sets it)
 - **input**:
@@ -148,7 +159,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-changedsettingscode)=
 ## Function: ChangedSettingsCode
 
-[`ChangedSettingsCode(settingsStructure, reference = None, comment = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L464)
+[`ChangedSettingsCode(settingsStructure, reference = None, comment = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L493)
 
 - **function description**: what ChangedSettings found, as one pastable block of Python
 - **input**:
@@ -162,7 +173,7 @@ every function here runs without a window and can be tested without one.
 (sec-settingsutilities-printchangedsettings)=
 ## Function: PrintChangedSettings
 
-[`PrintChangedSettings(settingsStructure, reference = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L491)
+[`PrintChangedSettings(settingsStructure, reference = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L520)
 
 - **function description**: print what a model changed, as the code that changes it
 - **input**:
