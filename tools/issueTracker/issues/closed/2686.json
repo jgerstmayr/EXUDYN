@@ -2,12 +2,16 @@
   "number": 2686,
   "title": "a stored dialog geometry is written but never read back",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "HIGH",
   "effort": "LOW",
   "description": "Reported by the maintainer against 1.12.95: the store button of the settings dialog saves the settings and the position, but reopening the dialog does not restore the position. Measured: RestoreWindowGeometry returns early unless StoreDialogPositions() is true, so the geometry the store button writes is never read - and the button exists precisely so that a user does not have to switch visualizationSettings.dialogs.storeDialogPositions on (revision2026b step RG12.11). With the flag off the window is asked for the default '900x700' although '1122x1751+7+14' is stored. A second, wider half: StoreDialogPositions() asks GetRendererSystemContainer(), which is None whenever no container is attached to a running renderer, so the whole dialogs mechanism - storing AND restoring - is off for a dialog opened without a renderer, for instance by 'python -m exudyn dialogs' or by a script before renderer.Start(). Measured: GetRendererSystemContainer() is None and StoreDialogPositions() is False even when the container's own flag is True. The rule should be: the flag decides whether a dialog STORES itself when it closes; a geometry that IS stored is used whatever the flag says, and the reachability rule of RG6.2.11 still decides whether the position may be used. NOT YET REPRODUCED, and it needs the message: the maintainer also reports that opening the visualization settings with a config.json holding a dialogs entry 'reports an error', and that removing the entry makes it load. Building the same dialog in a withdrawn window with exactly that file raises nothing, so the text of the error is needed. revision2026b step RG12.13.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "python/exudyn/misc/GUI.py"
+  "dateResolved": "2026-09-26 19:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "A geometry that IS stored is used whenever a dialog opens, whatever visualizationSettings.dialogs.storeDialogPositions says. RestoreWindowGeometry asked that flag first and returned early, so what the store button of RG12.11 wrote was never read back - measured: the window was asked for the default 900x700 while 1122x1751+7+14 was stored. The flag now decides only what its name says, whether a dialog stores ITSELF when it closes, which is where RememberWindowGeometry still asks it. StoreDialogPositions(settingsStructure=None) asks the structure being edited before the renderer's SystemContainer, because GetRendererSystemContainer() is None whenever no container is attached to a running renderer - so for 'python -m exudyn dialogs', and for any script before renderer.Start(), the flag was False however it was set and such a dialog could never store itself. And a stored SIZE is now cut down to the current screen, for the reason the position is checked at all: a dialog is taller than it is wide and its buttons are in the bottom row, so a size stored on a larger or rotated monitor put the close button off the screen. The reachability rule for the position is unchanged. Five new tests, which measure what the function asks the window manager for, because a withdrawn window reports 1x1+0+0 whatever it was given.",
+  "resolvedInVersion": "1.12.96"
 }

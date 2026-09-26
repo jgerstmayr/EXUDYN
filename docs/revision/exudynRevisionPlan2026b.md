@@ -2115,32 +2115,55 @@ package).
       decision, and it is a small one now that there is one place to make it.
 
 <a id="rg12-13"></a>
-**RG12.13** *(group RG12; maintainer's test of 1.12.95, 2026-09-26)* **A stored dialog geometry is
-    written but never read back** (#2686). The store button of RG12.11 saves the settings and the
-    position, and reopening the dialog does not restore the position.
+**RG12.13** **DONE 2026-09-26** (#2686) — [log](exudynRevisionLog2026b.md#rg12-13) —
+    **A stored dialog geometry is used.** `RestoreWindowGeometry` asked
+    `visualizationSettings.dialogs.storeDialogPositions` first and returned early, so what the store
+    button of RG12.11 wrote was never read back - measured: the window was asked for the default
+    `900x700` while `1122x1751+7+14` was stored. **The flag now decides only what its name says**,
+    whether a dialog stores *itself* when it closes, which is where `RememberWindowGeometry` still
+    asks it.
 
-    **Measured, twice, and the second one is the wider half:**
+    `StoreDialogPositions(settingsStructure=None)` **asks the structure being edited first**, because
+    `GetRendererSystemContainer()` is None whenever no container is attached to a running renderer: for
+    `python -m exudyn dialogs`, and for any script before `renderer.Start()`, the flag was False
+    however it was set, and such a dialog could never store itself either.
 
-    - `RestoreWindowGeometry` **returns early unless `StoreDialogPositions()`**, so the geometry the
-      store button writes is never read - and the button exists so that a user does *not* have to
-      switch `visualizationSettings.dialogs.storeDialogPositions` on. With the flag off the window is
-      asked for the default `900x700` while `1122x1751+7+14` is stored.
-    - `StoreDialogPositions()` asks `GetRendererSystemContainer()`, which is **None whenever no
-      container is attached to a running renderer**. So the whole mechanism - storing *and*
-      restoring - is off for a dialog opened without a renderer: `python -m exudyn dialogs`, or any
-      script before `renderer.Start()`. The container's own flag being True makes no difference.
+    **And a stored size is cut down to the current screen**, for the reason the position is checked at
+    all: a settings dialog is taller than it is wide and its buttons are in the bottom row, so a size
+    stored on a larger or a rotated monitor put the close button off the screen. The maintainer's own
+    file - 1751 pixels high - is exactly that case on a 1234-pixel screen. The reachability rule for
+    the position is unchanged.
 
-    **The rule it should be**: the flag decides whether a dialog **stores itself when it closes**; a
-    geometry that **is** stored is used whatever the flag says, and the reachability rule of RG6.2.11
-    still decides whether the position may be used. That also makes the flag mean what its name says.
+    - **RG12.13.1** *(parked, 2026-09-26)* **the error that could not be reproduced.** The maintainer
+      reported that opening the visualization settings with a `config.json` holding a `dialogs` entry
+      *"reports an error"*. Their exact file, through the load path and through the same dialog built
+      in a withdrawn window, raises **nothing**, and every reader of the section returns what it
+      should. They have since **deleted the file** - *"as it might have been in an invalid state"* -
+      so there is nothing left to chase. It stays here so that a recurrence is recognised rather than
+      investigated from the beginning; what is needed then is the text of the error.
+    - **RG12.13.2** *(open; #2690)* **a version in the settings file.** *"there should be a version in
+      the config file, as we may change the structure or anything in the future, and only a version
+      can help to decide whether or how an older file can be used."* The structure changed twice in
+      one day - the `resultsMonitor` section was folded in, the `dialogs` section was added - so the
+      case is real and not hypothetical.
 
-    - **RG12.13.1** *(open, and it needs the message)* **the error.** The maintainer also reports
-      that opening the visualization settings with a `config.json` holding a `dialogs` entry
-      *"reports an error"*, and that removing the entry makes it load. Building the same dialog with
-      exactly that file - in a withdrawn window, as `test_guiValues.py` does - raises **nothing**,
-      and every reader of the section returns what it should, so the text of the error is what is
-      missing. It is a sub-step of its own because the first half above is proven and can be fixed
-      without it.
+      **Which version is the decision, and it matters more than it looks**: the micro version is
+      derived from the count of resolved issues, so an exact match on the full version
+      (`1.12.95.dev1`) throws a user's settings away **on every issue that is resolved**, and on every
+      patch release.
+
+      - **Option A**: the full version, exact match. The strictest, and what was asked for; unusable
+        while developing, because the file dies every few commits.
+      - **Option B (recommended)**: the release version, `major.minor`, exact match. This is what
+        *"the version will not change before a different release is pushed on github"* describes: it
+        is stable across a whole development cycle and changes at 1.13.
+      - **Option C**: a **format** version of the file itself, a small integer bumped by hand when the
+        structure changes, with the Exudyn version written beside it for information. The only one
+        that catches a change *within* a cycle - which is what happened today - and the only one that
+        needs remembering to bump.
+
+      Whichever is chosen: a file that does not match is **ignored**, with one note naming the file
+      and both versions, never in silence and never repaired by guessing.
 
 <a id="rg12-14"></a>
 **RG12.14** *(group RG12; maintainer 2026-09-26)* **The override settings are read only at import, so
@@ -2149,18 +2172,35 @@ package).
     and the file was written correctly all along. Spyder keeps the kernel, so `import exudyn` does
     nothing the second time.
 
-    Wanted: a **reload** that re-reads the file into `exudyn.special.overrideSettings` and applies
-    what can be applied at once, and a line in the documentation saying which settings need a restart
-    and why.
+**The step is much smaller than it looked, and the maintainer said why**: *"At least in
+    StoreSection, it seems that it already stores the values not only in the file, but also in the
+    local settings. This would already be exactly what we need, right?"* - yes. Measured on
+    2026-09-26:
 
-    **The fork to decide in the step**: the two subclasses that apply the `visualizationSettings` to
-    every new structure are installed at import and **only when the file holds such a section**, so a
-    reload cannot make them appear. Either they are installed whenever the file *could* hold one
-    (which costs a Python subclass in every session, for everybody), or the reload installs them
-    (they then appear in the middle of a session, and a structure created before it is untouched), or
-    the documentation says that this part needs a restart and the reload covers `config`, `dialogs`
-    and `resultsMonitor`. The third is the smallest and the most honest; the first is the most
-    useful.
+    - `StoreSection` writes the file **and** `exudyn.special.overrideSettings`, so the session is in
+      step with what it just stored;
+    - and because the subclasses of RG12.10 close over **that dictionary object**, a structure
+      created afterwards in the same session gets the new value - `general.circleTiling` stored as 7
+      and read back as 7 from a new `exu.VisualizationSettings()` and from a new `SystemContainer`,
+      with no restart.
+
+    **So what looked like "it does not store" was RG12.13**: the geometry was stored, in the file and
+    in the store, and the dialog never read it back.
+
+    **What is genuinely left:**
+
+    - a file edited **outside** the session - by hand, or by another process - is not re-read by
+      anything. That is the reload: `Reload()` re-reads the file into the store.
+    - a stored `config` section is **not** applied to the live `exudyn.config` by storing it
+      (measured: the store says 9, `exu.config.outputPrecision` stays 6). Storing usually comes
+      *from* the live config so they agree anyway, but a reload has to apply that section.
+    - the **documentation**: what needs a restart and what does not, because the answer is now
+      "almost nothing does" and that is worth saying where the file is described.
+
+    The fork about the subclasses stays, and is smaller for the same reason: they are installed at
+    import and only when the file holds a `visualizationSettings` section, so a reload of a file that
+    had none cannot make them appear. Either they are installed whenever the file could hold one, or
+    the reload installs them, or the documentation says that this one case needs a restart.
 
 <a id="rg12-15"></a>
 **RG12.15** *(group RG12; maintainer 2026-09-26)* **The documentation does not say that a script can
@@ -2173,16 +2213,35 @@ package).
     the position only when the window would still be reachable. **After RG12.13**, because a
     placement that nothing reads back is not worth an example.
 
+    **And the other way, which the maintainer asked about**: writing straight into
+    `exudyn.special.overrideSettings` works too, and it is worth documenting *with* its caveat.
+    Measured: `exu.special.overrideSettings['dialogs'] = {...}` is seen by `DialogGeometry` at once
+    and the **file is not touched**, so it places a dialog for *this run only* - which is exactly
+    what a script usually wants. The caveat is the maintainer's: *"it is certainly not recommended
+    because illegal values could lead to unexpected behaviour"*. A reader with a rule refuses a bad
+    value - a size of `['wide', 'high']` comes back as `None` from `DialogGeometry` - but that is one
+    reader's rule and not a promise of the dictionary, which is why the functions are the
+    documented way and this is the footnote.
+
 <a id="rg12-16"></a>
 **RG12.16** *(group RG12; maintainer 2026-09-26)* **The render window and the SolutionViewer remember
     their size and position** (#2689), as the settings dialogs do since RG12.5.3.
 
-    **The render window needs C++.** It has `visualizationSettings.view*.window.renderWindowSize`,
-    which is an *initial* size and is never written back, and **no position at all**:
-    `GlfwClient.cpp` never calls `glfwSetWindowPos` or `glfwGetWindowPos` (measured). So the window
-    position has to be read when it closes and set when it opens, and kept in a section of
-    `~/.exudyn/config.json` - which is what `exudyn.special.overrideSettings` already is, and which
-    the C++ side can read since RG12.9. Several views exist, so each needs its own entry.
+    **The maintainer's design, and it is cheaper than a new section** (2026-09-26): *"so we need an
+    additional field in SettingsView->window; default needs to be something illegal (-1/-1)?, like
+    that negative values are just ignored. It then allows to use predefined values for view0 .. view3.
+    This could then use the same mechanism as in the other visualizationSettings cases."*
+
+    So the position is an ordinary **setting** - `view*.window.renderWindowPosition`, `TIndexND(2)`,
+    default `Index2({-1,-1})`, negative meaning "wherever the window manager puts it" - beside the
+    `renderWindowSize` that is already there. Nothing new is needed to store it: it is a
+    `visualizationSetting` like any other, so `~/.exudyn/config.json`, `Store(SC)` and the store
+    button of RG12.11 carry it, one entry per view for free, and a script can set it directly.
+
+    **What still needs C++**, and it is the whole of it: `GlfwClient.cpp` never calls
+    `glfwSetWindowPos` or `glfwGetWindowPos` (measured). Two sub-steps suggest themselves - **setting**
+    the position when the window opens, and **reading** size and position back into the settings when
+    it closes, which is what makes "remember" work with the store button rather than by hand.
 
     **The SolutionViewer is the cheap half**: its dialog is a tkinter window like the settings
     dialogs, so it uses `RestoreWindowGeometry` and `StoreWindowGeometry` as soon as RG12.13 makes
@@ -2231,7 +2290,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
-| RG12.13 | #2686 | a stored dialog geometry is written but never read back; .1 needs the error message |
+| RG12.13.2 | #2690 | a version in the settings file, so that a file from another Exudyn is recognised |
 | RG12.14 | #2687 | the override settings are read only at import, so a changed file needs a new session |
 | RG12.15 | #2688 | the documentation does not say that a script can place a dialog |
 | RG12.16 | #2689 | the render window and the SolutionViewer remember their size and position |

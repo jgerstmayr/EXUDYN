@@ -1203,7 +1203,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool,
             pythonName='storeDialogPositions',
             defaultValue=False,
-            description=r'True: the size and the position of a dialog are stored in the user settings file, `~/.exudyn/config.json`, and the next dialog of the same kind starts with them; the size is always restored, the position only if the window would still be reachable on the current screen. See Section [](#sec-overridesettings)'),
+            description=r'True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-overridesettings)'),
         ],
     ))
 

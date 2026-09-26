@@ -4681,3 +4681,72 @@ no test opens the dialog and presses it. It wants one click from the maintainer.
 
 **Gates**: 11/11 checks - `checkAll` asked for `__all__` in definition order and rewrote it itself -
 the wheel, the full suite, 481 pytest and the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.13 - a stored dialog geometry is used (2026-09-26, #2686)
+
+The maintainer tested 1.12.95: *"it saves the settings and the positions. However, when loading and
+opening the vis settings, it reports an error. When I remove the second 'visualizationSettings', it
+loads, but position is not restored."* Two symptoms, and only one of them had a cause that could be
+found.
+
+**The position: my own defect from RG12.11, one commit old.** `RestoreWindowGeometry` began with
+
+```python
+if not StoreDialogPositions():
+    tkWindow.geometry(str(width) + 'x' + str(height))
+    return
+```
+
+so the geometry the **store button** writes is never read - and the button exists precisely so that a
+user does not have to switch `dialogs.storeDialogPositions` on. I built the button and left its reader
+gated by the flag it was designed to avoid. Measured with the maintainer's file: the window is asked
+for `900x700` while `1122x1751+7+14` is stored; after the change, for `1122x1751+7+14`. The same probe
+found it and confirmed the fix, which is the only reason the fix is believable.
+
+**The flag now decides what its name says**: whether a dialog stores *itself* when it closes.
+`RememberWindowGeometry` still asks it, which is where it belongs; `RestoreWindowGeometry` only reads
+what is there, whether it is there because the flag was on, because the button wrote it, or because a
+script did.
+
+**And a second, wider half, found while checking the first.** `StoreDialogPositions()` asked
+`GetRendererSystemContainer()`, which is **None whenever no container is attached to a running
+renderer**. So for `python -m exudyn dialogs` - which has no container at all, as its own docstring
+said - and for any script that opens a dialog before `renderer.Start()`, the flag was False however
+the user had set it, and such a dialog could **never** store itself. It now asks the structure being
+edited first, which is the one the user is looking at.
+
+**A stored size is cut down to the current screen.** This came out of the measurement rather than the
+report: the maintainer's stored height is **1751** pixels, and on a 1234-pixel screen the dialog's
+bottom - the button row, with *close* in it - is below the edge. The rule for the position exists for
+exactly this ("a dialog that cannot be closed is a stuck session", RG6.2.11) and the size had no rule
+at all. It has one now, `dialogScreenMargin` = 40 pixels on each side, and on the maintainer's own
+screen, where 1751 fits, nothing changes.
+
+**What could not be reproduced, and is not pretended otherwise.** The *error* was chased with their
+exact file: through the import, through `Print()`, through `DialogGeometry` for three spellings of the
+name, and through the same settings dialog built in a withdrawn window as `test_guiValues.py` builds
+it - 470 settings, no exception, every reader returning what it should. They have since deleted the
+file, *"as it might have been in an invalid state"*, so there is nothing left to chase. **RG12.13.1**
+stays open so that a recurrence is recognised instead of investigated from the beginning.
+
+**Two of the maintainer's other questions were answered by measuring rather than by planning**, and
+both made a step smaller:
+
+- *"For RG12.14 / Spyder: it seems that StoreSection already stores the values not only in the file,
+  but also in the local settings. This would already be exactly what we need, right?"* - Yes, and
+  more: because the subclasses of RG12.10 close over **that dictionary object**, a structure created
+  after a store gets the new value in the same session. `general.circleTiling` stored as 7 reads back
+  as 7 from a new `exu.VisualizationSettings()` and a new `SystemContainer`, with no restart. What
+  looked like "it does not store" was this step's defect.
+- *"For RG12.15: this could also be done by directly writing into exudyn.special.overrideSettings,
+  right?"* - Yes, and it does **not** touch the file, so it places a dialog for one run; a reader with
+  a rule refuses a bad value (a size of `['wide', 'high']` comes back as `None`), which is one
+  reader's rule and not a promise, which is why it is the footnote and the functions are the
+  documented way.
+
+**Tests**: five, and they measure what the function **asks the window manager for**, because a
+withdrawn window reports `1x1+0+0` whatever it was given. They use `TkRootOrSkip` rather than the tree
+fixture, so they run under xdist as well.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 486 pytest, the strict HTML build.

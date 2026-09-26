@@ -1,0 +1,13 @@
+{
+  "number": 2690,
+  "title": "the settings file has no version, so a file written by another Exudyn cannot be recognised",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Asked for by the maintainer on 2026-09-26: 'there should be a version in the config file, as we may change the structure or anything in the future, and only a version can help to decide whether or how an older file can be used. Currently, we could just decide to require exact version match (and the version will not change before a different release is pushed on github).' ~/.exudyn/config.json carries four sections and no version at all, so a file written by an older Exudyn - whose sections, keys or value shapes were different - is read as if it were current. The structure has already changed twice within one day (the resultsMonitor section was folded in, the dialogs section was added), which is the case being guarded against. WHICH version is the decision, and it matters more than it looks: the micro version is derived from the count of resolved issues, so an exact match on the full version (1.12.95.dev1) throws a user's settings away on every issue that is resolved - unusable during development, and it would also drop the file on every patch release. Options: the full version with an exact match (what was asked for, and the strictest), the release version major.minor with an exact match (stable across a development cycle, which is what 'will not change before a different release' means), or a format version of the file itself, bumped by hand when the structure changes, with the Exudyn version written beside it for information. Whatever is chosen, a file that does not match is IGNORED with one note naming the file and both versions, never silently, and never repaired by guessing. revision2026b step RG12.13.2.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "python/exudyn/misc/overrideSettings.py"
+}

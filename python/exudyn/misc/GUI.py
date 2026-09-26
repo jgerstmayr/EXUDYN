@@ -46,11 +46,11 @@ __all__ = [
     'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
     'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
     'DialogScaling', 'SplitStoredFromChanged', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
-    'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary', 'StoreDialogPositions',
-    'RestoreWindowGeometry', 'RememberWindowGeometry', 'StoreGeometryString', 'StoreWindowGeometry',
-    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
-    'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
-    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary', 'dialogScreenMargin',
+    'StoreDialogPositions', 'RestoreWindowGeometry', 'RememberWindowGeometry',
+    'StoreGeometryString', 'StoreWindowGeometry', 'ApplyDialogWindowSettings', 'rendererHelpText',
+    'ShowHelpDialog', 'pythonCommandExamples', 'ModelScope', 'ShowPythonCommandDialog',
+    'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -1386,7 +1386,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     #the size and the position of the last time, if the user asked for them to be remembered
     #(revision2026b step RG12.5.3, #2608)
     RestoreWindowGeometry(tkWindow, dictionaryName, treeEditDefaultWidth, windowHeight)
-    recordedGeometry = RememberWindowGeometry(tkWindow, dictionaryName)
+    recordedGeometry = RememberWindowGeometry(tkWindow, dictionaryName, settingsStructure)
 
     guiSC = GetRendererSystemContainer()
     updateOnChange = False
@@ -1698,20 +1698,42 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
 #saw them. Each one is a function here now, and the C++ calls it. The window setup that the C++
 #assembled by string concatenation from visualizationSettings.dialogs is ApplyDialogWindowSettings.
 
-def StoreDialogPositions():
-    """True if a dialog should remember where it was left
+#how much of the screen a restored dialog leaves free, in pixels: a window manager has a task
+#bar and a title bar, and a dialog that fills the screen exactly has its buttons under them
+dialogScreenMargin = 40
+
+
+def StoreDialogPositions(settingsStructure=None):
+    """True if a dialog should store where it was left, when it closes.
+
+    Args:
+        settingsStructure: the structure the dialog is editing, if it is a `visualizationSettings`;
+            it is asked FIRST, because it is the one the user is looking at
 
     Returns:
         the value of `visualizationSettings.dialogs.storeDialogPositions`, or False when there is
-        no SystemContainer to ask - a dialog of `python -m exudyn dialogs` has none
+        nothing to ask
+
+    Note:
+        This decides whether a dialog stores ITSELF on closing, and nothing else: a geometry that
+        is already stored - by this flag, by the store button or by a script - is used whenever a
+        dialog opens, see `RestoreWindowGeometry` (revision2026b step RG12.13, #2686).
+
+        The structure is asked before the renderer's SystemContainer because
+        `python -m exudyn dialogs` has no container at all, and a script that has not started the
+        renderer has none that can be found - so the flag used to be False there however it was
+        set, and such a dialog could never store itself.
     """
-    guiSC = GetRendererSystemContainer()
-    if guiSC is None:
-        return False
-    try:
-        return bool(guiSC.visualizationSettings.dialogs.storeDialogPositions)
-    except AttributeError: #an older core: the setting is simply not there
-        return False
+    for structure in [settingsStructure,
+                      None if GetRendererSystemContainer() is None
+                      else GetRendererSystemContainer().visualizationSettings]:
+        if structure is None:
+            continue
+        try:
+            return bool(structure.dialogs.storeDialogPositions)
+        except AttributeError: #not a visualizationSettings, or an older core without the setting
+            continue
+    return False
 
 
 def RestoreWindowGeometry(tkWindow, name, width, height):
@@ -1731,35 +1753,47 @@ def RestoreWindowGeometry(tkWindow, name, width, height):
         reachable on the current screen (revision2026b step RG6.2.11 wrote that rule down). A
         monitor that is gone, a resolution that changed, a laptop that was undocked: each of them
         would otherwise put the dialog where nobody can close it.
+
+        A GEOMETRY THAT IS STORED IS USED, whatever `dialogs.storeDialogPositions` says
+        (revision2026b step RG12.13, #2686). That flag decides whether a dialog stores ITSELF when
+        it closes; this function only reads what is there, and it is there because the flag was on,
+        or because the store button of the dialog wrote it, or because a script did. Asking the flag
+        here is what made the store button of RG12.11 write something that nothing read back.
     """
     from exudyn.misc import overrideSettings as userSettings
 
-    if not StoreDialogPositions():
-        tkWindow.geometry(str(width) + 'x' + str(height))
-        return
-
     (size, position) = userSettings.DialogGeometry(name)
-    (width, height) = (size[0], size[1]) if size is not None else (width, height)
+    try: #the virtual desktop where tkinter knows it, the screen otherwise
+        screen = [tkWindow.winfo_vrootx(), tkWindow.winfo_vrooty(),
+                  max(tkWindow.winfo_vrootwidth(), tkWindow.winfo_screenwidth()),
+                  max(tkWindow.winfo_vrootheight(), tkWindow.winfo_screenheight())]
+    except tk.TclError:
+        screen = None
+
+    if size is not None:
+        #A STORED SIZE IS CUT DOWN TO THIS SCREEN, for the reason the position is checked at all: a
+        #dialog is taller than it is wide, its buttons are in the bottom row, and a size stored on a
+        #larger or a rotated monitor would put that row - the close button with it - off the screen
+        (width, height) = (size[0], size[1])
+        if screen is not None:
+            width = min(width, max(320, screen[2] - 2 * dialogScreenMargin))
+            height = min(height, max(240, screen[3] - 2 * dialogScreenMargin))
     geometry = str(width) + 'x' + str(height)
 
-    if position is not None:
-        try: #the virtual desktop where tkinter knows it, the screen otherwise
-            screen = [tkWindow.winfo_vrootx(), tkWindow.winfo_vrooty(),
-                      max(tkWindow.winfo_vrootwidth(), tkWindow.winfo_screenwidth()),
-                      max(tkWindow.winfo_vrootheight(), tkWindow.winfo_screenheight())]
-        except tk.TclError:
-            screen = None
-        if screen is not None and userSettings.PositionIsReachable(position, screen):
-            geometry += '+' + str(position[0]) + '+' + str(position[1])
+    if position is not None and screen is not None \
+            and userSettings.PositionIsReachable(position, screen):
+        geometry += '+' + str(position[0]) + '+' + str(position[1])
     tkWindow.geometry(geometry)
 
 
-def RememberWindowGeometry(tkWindow, name):
+def RememberWindowGeometry(tkWindow, name, settingsStructure=None):
     """Record where a dialog is while it lives, so that it can be stored when it closes.
 
     Args:
         tkWindow: the window
         name: the title of the dialog, which is what it is stored under
+        settingsStructure: the structure being edited, which is asked for
+            `dialogs.storeDialogPositions` before the renderer's SystemContainer
 
     Returns:
         a dictionary that `StoreWindowGeometry` reads; empty when nothing is to be stored
@@ -1770,7 +1804,7 @@ def RememberWindowGeometry(tkWindow, name):
         `<Configure>` and the last value is the one that is stored.
     """
     recorded = {}
-    if not StoreDialogPositions():
+    if not StoreDialogPositions(settingsStructure):
         return recorded
 
     def Record(event=None):

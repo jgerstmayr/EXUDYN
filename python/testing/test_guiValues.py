@@ -619,6 +619,102 @@ def tkRoot():
     pass                 #the root is shared and outlives the test
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#A STORED GEOMETRY IS USED (revision2026b step RG12.13, #2686). RestoreWindowGeometry asked
+#dialogs.storeDialogPositions first, so what the store button of RG12.11 wrote was never read back.
+#A withdrawn window reports 1x1+0+0 whatever it was given, so what is tested is what the function
+#ASKS the window manager for
+def RequestedGeometry(name, width, height):
+    """what RestoreWindowGeometry asks for, in a withdrawn window of its own"""
+    import tkinter as tk                                                         # noqa: PLC0415
+
+    root = TkRootOrSkip()
+    requested = []
+    original = tk.Toplevel.geometry
+
+    def Recording(self, newGeometry=None):
+        if newGeometry is not None:
+            requested.append(newGeometry)
+        return original(self, newGeometry)
+
+    window = tk.Toplevel(root)
+    window.withdraw()
+    tk.Toplevel.geometry = Recording
+    try:
+        gui.RestoreWindowGeometry(window, name, width, height)
+    finally:
+        tk.Toplevel.geometry = original
+        screen = [window.winfo_vrootx(), window.winfo_vrooty(),
+                  max(window.winfo_vrootwidth(), window.winfo_screenwidth()),
+                  max(window.winfo_vrootheight(), window.winfo_screenheight())]
+        window.destroy()
+    return (requested[-1] if requested else '', screen)
+
+
+@pytest.fixture
+def storedGeometry(tmp_path, monkeypatch):
+    """a settings file of this test's own, holding one dialog geometry"""
+    from exudyn.misc import overrideSettings
+
+    fileName = str(tmp_path / 'config.json')
+    monkeypatch.setenv('EXUDYN_CONFIG_FILE', fileName)
+    monkeypatch.delenv('EXUDYN_NO_USER_SETTINGS', raising=False)
+
+    def Store(size, position):
+        overrideSettings.Settings().clear()
+        overrideSettings.StoreSection('dialogs', {overrideSettings.DialogKey('a dialog'):
+                                                  {'size': size, 'position': position}})
+        return 'a dialog'
+    yield Store
+    overrideSettings.Settings().clear()
+
+
+def testAStoredGeometryIsUsedWhateverTheFlagSays(storedGeometry):
+    """the store button writes it without the flag, so the flag must not decide whether it is read
+
+    Measured before the step: the window was asked for the default 900x700 while 1122x1751+7+14 was
+    stored."""
+    name = storedGeometry([600, 500], [40, 50])
+    (requested, _) = RequestedGeometry(name, 900, 700)
+    assert requested == '600x500+40+50'
+
+
+def testWithoutAStoredGeometryTheDialogGetsTheSizeItAsksedFor(storedGeometry):
+    storedGeometry([600, 500], [40, 50])
+    (requested, _) = RequestedGeometry('a dialog nobody stored', 900, 700)
+    assert requested == '900x700'
+
+
+def testAStoredSizeIsCutDownToThisScreen(storedGeometry):
+    """a dialog taller than the screen has its button row - and its close button - off the bottom"""
+    name = storedGeometry([30000, 30000], [0, 0])
+    (requested, screen) = RequestedGeometry(name, 900, 700)
+    (size, _) = requested.split('+', 1)
+    (width, height) = [int(part) for part in size.split('x')]
+    assert width <= screen[2] and height <= screen[3]
+    assert width == screen[2] - 2 * gui.dialogScreenMargin
+    assert height == screen[3] - 2 * gui.dialogScreenMargin
+
+
+def testAnUnreachablePositionIsStillRefused(storedGeometry):
+    """the rule of RG6.2.11 stands: the size comes back, the position only if it is reachable"""
+    name = storedGeometry([600, 500], [-30000, -30000])
+    (requested, _) = RequestedGeometry(name, 900, 700)
+    assert requested == '600x500'                       #the size, and no position
+
+
+def testTheFlagIsAskedOfTheStructureBeingEdited():
+    """python -m exudyn dialogs has no SystemContainer, so the flag was False however it was set
+
+    That is why such a dialog could never store itself when it closed."""
+    structure = exudyn.VisualizationSettings()
+    structure.dialogs.storeDialogPositions = True
+    assert gui.StoreDialogPositions(structure)
+    structure.dialogs.storeDialogPositions = False
+    assert not gui.StoreDialogPositions(structure)
+    assert not gui.StoreDialogPositions()               #nothing to ask: no renderer, no structure
+
+
 def TreeDialogOrSkip(root, columnWidths=None):
     """the settings tree of a visualizationSettings dialog, inside a withdrawn root"""
     settings = exudyn.VisualizationSettings()
