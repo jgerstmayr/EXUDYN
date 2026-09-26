@@ -906,9 +906,12 @@ find its file and line, on every raise).
     that probes every parameter of every item is the one place both meet.
 
 <a id="rg4-2"></a>
-**RG4.2** *(group RG4; revision2026 step R10.2)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
-    computed contact point is stored in the parameter structure and read by the visualization, so
-    it is neither system state nor configuration-dependent and keeps no history.
+**RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
+    **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
+    maintainer decided on 2026-09-26: *"make pContact same as the variables in FFRF that are computed
+    internally and can be read by the Python interface"* - and **not** a data variable, which is what
+    this step said from revision2026 step R10.2 until then. The step closes with the measurement that
+    `pContact` already was one, and with `rBoundingSphere` beside it, which was not.
 
 <a id="rg4-3"></a>
 **RG4.3** *(group RG4; revision2026 step R10.3)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver

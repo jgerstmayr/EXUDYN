@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  18:46:50 (last modified)
+* @date         2026-09-26  09:07:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -90,8 +90,8 @@ protected: // AUTO:
     CObjectContactConvexRollParameters parameters; //! AUTO: contains all parameters for CObjectContactConvexRoll
     mutable Vector coefficientsHullDerivative;    //!< AUTO: polynomial coefficients of the polynomial \f$\mathrm{hull}^\prime(x)\f$
     mutable Vector coefficientsHullDDerivative;   //!< AUTO: second derivative of the hull polynomial.
-    Real rBoundingSphere;                         //!< AUTO: must be >= 0; The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
-    Vector3D pContact;                            //!< AUTO: The  current potential contact point. Contact occures if pContact[2] < 0.
+    Real rBoundingSphere;                         //!< AUTO: must be >= 0; radius of the bounding sphere for the contact pre-check; **computed** from `coefficientsHull` whenever the parameters change, and therefore read-only
+    Vector3D pContact;                            //!< AUTO: the current potential contact point; **computed** in every contact evaluation and therefore read-only. Contact occurs if `pContact[2]` \f$< 0\f$
 
 public: // AUTO:
     //! AUTO: default constructor with parameter initialization
@@ -123,18 +123,18 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:second derivative of the hull polynomial.
     Vector& GetCoefficientsHullDDerivative() { return coefficientsHullDDerivative; }
 
-    //! AUTO:  Write (Reference) access to:The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
+    //! AUTO:  Write (Reference) access to:radius of the bounding sphere for the contact pre-check; **computed** from `coefficientsHull` whenever the parameters change, and therefore read-only
     void SetRBoundingSphere(const Real& value) { rBoundingSphere = value; }
-    //! AUTO:  Read (Reference) access to:The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
+    //! AUTO:  Read (Reference) access to:radius of the bounding sphere for the contact pre-check; **computed** from `coefficientsHull` whenever the parameters change, and therefore read-only
     const Real& GetRBoundingSphere() const { return rBoundingSphere; }
-    //! AUTO:  Read (Reference) access to:The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
+    //! AUTO:  Read (Reference) access to:radius of the bounding sphere for the contact pre-check; **computed** from `coefficientsHull` whenever the parameters change, and therefore read-only
     Real& GetRBoundingSphere() { return rBoundingSphere; }
 
-    //! AUTO:  Write (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0.
+    //! AUTO:  Write (Reference) access to:the current potential contact point; **computed** in every contact evaluation and therefore read-only. Contact occurs if `pContact[2]` \f$< 0\f$
     void SetPContact(const Vector3D& value) { pContact = value; }
-    //! AUTO:  Read (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0.
+    //! AUTO:  Read (Reference) access to:the current potential contact point; **computed** in every contact evaluation and therefore read-only. Contact occurs if `pContact[2]` \f$< 0\f$
     const Vector3D& GetPContact() const { return pContact; }
-    //! AUTO:  Read (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0.
+    //! AUTO:  Read (Reference) access to:the current potential contact point; **computed** in every contact evaluation and therefore read-only. Contact occurs if `pContact[2]` \f$< 0\f$
     Vector3D& GetPContact() { return pContact; }
 
     //! AUTO:  default (read) function to return Marker numbers

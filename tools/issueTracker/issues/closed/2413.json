@@ -2,11 +2,15 @@
   "number": 2413,
   "title": "ObjectContactConvexRoll.pContact is computed state stored in parameters",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
   "description": "pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).",
   "dateRaised": "2026-09-13",
   "deadline": "2027-03-12",
-  "file": "src/Objects/CObjectContactConvexRoll.cpp"
+  "dateResolved": "2026-09-26 09:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Objects/CObjectContactConvexRoll.cpp",
+  "releaseNotes": "ObjectContactConvexRoll.pContact is a computed value that Python reads - it already was, and its description now says so instead of carrying a typo. rBoundingSphere beside it was computed from coefficientsHull AND settable, which did nothing because SetObjectParameter ends in ParametersHaveChanged(); it is read-only now. python/testing/test_computedParameters.py checks both: readable, in the dictionary, rBoundingSphere equal to the hull polynomial at 0, and writing either raises (revision2026b step RG4.2).",
+  "resolvedInVersion": "1.12.83"
 }

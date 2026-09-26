@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-09-26  09:02:59 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,7 +126,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "rollLength")) { EPyUtils::FromPython(d["rollLength"], cObjectContactConvexRoll->GetParameters().rollLength, EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.rollLength"); }
         if (EPyUtils::DictItemExists(d, "coefficientsHull")) { EPyUtils::FromPython(d["coefficientsHull"], cObjectContactConvexRoll->GetParameters().coefficientsHull); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactConvexRoll->GetParameters().activeConnector, "ObjectContactConvexRoll.activeConnector"); }
-        if (EPyUtils::DictItemExists(d, "rBoundingSphere")) { EPyUtils::FromPython(d["rBoundingSphere"], cObjectContactConvexRoll->GetRBoundingSphere(), EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.rBoundingSphere"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactConvexRoll->GetShow(), "ObjectContactConvexRoll.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactConvexRoll->GetColor(), "ObjectContactConvexRoll.Vcolor"); }
@@ -202,7 +201,6 @@ public: // AUTO:
         else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactConvexRoll->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.frictionProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("rollLength") == 0) { EPyUtils::FromPython(value, cObjectContactConvexRoll->GetParameters().rollLength, EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.rollLength"); } //! AUTO: set parameter
         else if (parameterName.compare("coefficientsHull") == 0) { EPyUtils::FromPython(value, cObjectContactConvexRoll->GetParameters().coefficientsHull); } //! AUTO: set parameter
-        else if (parameterName.compare("rBoundingSphere") == 0) { EPyUtils::FromPython(value, cObjectContactConvexRoll->GetRBoundingSphere(), EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.rBoundingSphere"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactConvexRoll->GetParameters().activeConnector, "ObjectContactConvexRoll.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactConvexRoll->GetShow(), "ObjectContactConvexRoll.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactConvexRoll->GetColor(), "ObjectContactConvexRoll.Vcolor"); } //! AUTO: set parameter

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.82.dev1
+- Exudyn version = 1.12.83.dev1
 - last change = 2026-09-26
 - Number of issues = 2675
-- Number of resolved issues = 2396 (82 in current version)
+- Number of resolved issues = 2397 (83 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7623,9 +7623,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` every C++ user error inspects the Python source for its file and line (#2423)
   - description: PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (revision2026 step R4.4.3.1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f\_code.co\_filename; f\_lineno) gives the same information without the scan. revision2026 step R6.6.
   - date raised: 2026-09-14
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` ObjectContactConvexRoll.pContact is computed state stored in parameters (#2413)
-  - description: pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).
-  - date raised: 2026-09-13
 - `CHECK` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected (#2400)
   - description: the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 81 | 1.12.82 |
+| 1.12 | Metheney | 82 | 1.12.83 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.83** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactConvexRoll.pContact is computed state stored in parameters (#2413)
+  - description: pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).
+  - **notes:** ObjectContactConvexRoll.pContact is a computed value that Python reads - it already was, and its description now says so instead of carrying a typo. rBoundingSphere beside it was computed from coefficientsHull AND settable, which did nothing because SetObjectParameter ends in ParametersHaveChanged(); it is read-only now. python/testing/test\_computedParameters.py checks both: readable, in the dictionary, rBoundingSphere equal to the hull polynomial at 0, and writing either raises (revision2026b step RG4.2).
+  - date resolved: **2026-09-26 09:12**, date raised: 2026-09-13
 - **1.12.82** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Six pages of the Python-C++ command interface repeat their own title as the first section (#2660)
   - description: 12.3 SystemContainer / 12.3.1 SystemContainer, 12.4 Renderer / 12.4.1 Renderer, and the same for MainSystem, SystemData, Symbolic and GeneralContact - in the PDF and in the HTML sidebar alike. The page title comes from markdownPageTitles in pybindEmitter.WriteMarkdownPages and the section from the class's own DefPyStartClass, and for these six the two are the same word. The section heading carries the target a reference points to, so it cannot simply be deleted: the label has to move to the page title. The item pages of the reference manual have the same shape - '\# ObjectGround' then '\#\# ObjectGround' - and should be looked at in the same step.
   - **notes:** A page does not repeat its own title: latexToMarkdown.DropRepeatedTitle removes a first heading that only says the page name and returns its label, which the emitters write above the page title. The MainSystem extensions (create) and (general) are in the table of contents for the first time, because the repeated section no longer holds the level they needed. Six interface pages and 178 item pages; the item label sec:item:\<Item\> moved to the title and every reference still resolves, checked in the strict HTML build and in the PDF (revision2026b step RG3.18).

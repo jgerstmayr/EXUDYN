@@ -3989,3 +3989,38 @@ before anything was moved: nothing referenced them, so there was nothing to pres
 and every `### DESCRIPTION of X` is now `##`.
 
 **Gates**: 11/11 checks, the full suite, the strict HTML build and the PDF.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG4.2 - a computed value that Python reads (2026-09-26, #2413)
+
+The step had said since revision2026 step R10.2 that `pContact` should *become a data variable*. The
+maintainer decided otherwise: **make it what the FFRF members are** - computed inside the core, read
+from Python, not written.
+
+**It already was**, and measuring said so before anything was changed:
+`MainObjectContactConvexRoll.h` answers `GetObjectParameter(..., 'pContact')` and puts it in the
+dictionary, and there is **no** branch for it in `SetParameter`. So the work was to say it - the
+description said *"The  current potential contact point. Contact occures if pContact[2] < 0. "*, with
+a double space, a typo and no hint that a user may not set it.
+
+**What the measurement did find is `rBoundingSphere`, one parameter above it.** Also computed - from
+`coefficientsHull`, in `CObjectContactConvexRoll::InitializeObject` - and it **was settable**. Writing
+it did nothing at all: `SetObjectParameter` ends in `ParametersHaveChanged()`, which recomputes the
+value that was just written. A user could set it, read back something else, and never be told. It is
+`CFReadOnly` now, so the attempt raises, and the generated interface lost its setter and its
+dictionary write.
+
+**Both are tested rather than asserted.** `python/testing/test_computedParameters.py` builds a roll
+on a ground and checks the four things that matter: `pContact` is a finite 3D point,
+`rBoundingSphere` **is** the hull polynomial at 0, both appear in `mbs.GetObject(...)`, and writing
+either of them raises.
+
+**One reference value moved, and it is the right one.** `parameterConversionTest.py` probes every
+parameter of every item along four paths, and the four write paths of `rBoundingSphere` - `class`,
+`dict`, `set`, `omit` - are gone. Its reference file records outcomes per parameter, so it was
+rewritten with `recordReference = True`; the model's result is back to 0 and the diff is the two
+lines that name `rBoundingSphere`. Nothing else in 4625 parameter paths changed, which is the
+evidence that the read-only flag touched what it was meant to and nothing else.
+
+**Gates**: 11/11 checks, the wheel, the full suite, pytest 450 passed / 2 skipped, the strict HTML
+build.

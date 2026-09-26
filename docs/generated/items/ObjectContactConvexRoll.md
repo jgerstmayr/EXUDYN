@@ -29,8 +29,8 @@ The item **ObjectContactConvexRoll** with type = 'ContactConvexRoll' has the fol
 | **coefficientsHull** $\kv \in \Rcal^{n_p}$ | NumpyVector |  | [] | a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; $\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x + k_{n_p-1}$ |
 | **coefficientsHullDerivative** $\kv^\prime \in \Rcal^{n_p}$ | NumpyVector |  | [] | polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$ |
 | **coefficientsHullDDerivative** | NumpyVector |  | [] | second derivative of the hull polynomial. |
-| **rBoundingSphere** | UReal |  | 0 | The radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull |
-| **pContact** | Vector3D | 3 | [0,0,0] | The current potential contact point. Contact occures if pContact[2] < 0. |
+| **rBoundingSphere** | UReal |  | 0 | radius of the bounding sphere for the contact pre-check; **computed** from `coefficientsHull` whenever the parameters change, and therefore read-only |
+| **pContact** | Vector3D | 3 | [0,0,0] | the current potential contact point; **computed** in every contact evaluation and therefore read-only. Contact occurs if `pContact[2]` $< 0$ |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactConvexRoll |  |  | parameters for visualization of item |
 
