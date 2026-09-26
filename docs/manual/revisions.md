@@ -56,7 +56,7 @@ or its current value, where it used to raise `KeyError`.
 
 **A settings file changes what a script does, if you make one.** `~/.exudyn/config.json` is read at
 import and can override `exudyn.config` and any plain `visualizationSettings`
-([](#sec-usersettings)). Nothing writes it by itself, `import exudyn` prints one note naming what
+([](#sec-overridesettings)). Nothing writes it by itself, `import exudyn` prints one note naming what
 came from it, and `EXUDYN_NO_USER_SETTINGS=1` ignores it — which is what a bug report needs. The
 test suites set that variable for themselves.
 

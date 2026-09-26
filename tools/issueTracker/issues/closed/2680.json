@@ -1,0 +1,17 @@
+{
+  "number": 2680,
+  "title": "The override settings are documented in a hand-written page rather than with the module they belong to",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "docs/manual/userSettings.md was written by hand in revision2026b step RG12.5.1. The maintainer, 2026-09-26: it should be integrated into the Python-C++ command interface, under the Exudyn module, either written there or imported there, and consistent in both cases. The same step adds one hint to the troubleshooting section of performanceErrors.md: a user who sees strange behaviour should delete the ~/.exudyn folder or its config file - which is the first thing to try and is nowhere said today.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 15:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/userSettings.md",
+  "releaseNotes": "The override settings are documented under the Exudyn module of the Python-C++ interface, section 'Settings that persist between runs': the file and its sections, what may be stored, how a dialog remembers its size and its columns, and a new list of the SIX environment variables the package reads - EXUDYN_NO_USER_SETTINGS, EXUDYN_CONFIG_FILE, EXUDYN_OUTPUTDIRECTORY, EXUDYN_SUPPRESS_UI_WINDOW_OPEN, EXUDYN_MODULE and EXUDYN_IMPORT_VERBOSE - of which three were documented nowhere before. exu.special.overrideSettings is a documented data member beside exu.sys and exu.variables. docs/manual/userSettings.md keeps its place in the table of contents as a pointer to it, and the troubleshooting chapter now says that deleting ~/.exudyn returns everything to the defaults, and that EXUDYN_NO_USER_SETTINGS=1 answers the question without deleting anything.",
+  "resolvedInVersion": "1.12.92"
+}

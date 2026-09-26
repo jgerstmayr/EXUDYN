@@ -1607,7 +1607,7 @@ class VSettingsDialogs:
     openTreeView: bool
     """True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened."""
     storeDialogPositions: bool
-    """True: the size and the position of a dialog are stored in the user settings file, ``~/.exudyn/config.json``, and the next dialog of the same kind starts with them; the size is always restored, the position only if the window would still be reachable on the current screen. See Section sec-usersettings."""
+    """True: the size and the position of a dialog are stored in the user settings file, ``~/.exudyn/config.json``, and the next dialog of the same kind starts with them; the size is always restored, the position only if the window would still be reachable on the current screen. See Section sec-overridesettings."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 

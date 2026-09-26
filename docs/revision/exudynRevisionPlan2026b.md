@@ -1967,40 +1967,31 @@ package).
       **sequence**, the counter reset by the `closeAll` argument of `PlotSensor`.
 
 <a id="rg3-23"></a>
-**RG3.23** *(group RG3; maintainer 2026-09-26)* **The override settings are documented where the
-    module is** (#2680). `docs/manual/userSettings.md` was written by hand in RG12.5.1; the
-    maintainer wants it *"integrated into the Python-C++ command interface ... under the Exudyn
-    module"*.
+**RG3.23** **DONE 2026-09-26** (#2680) — [log](exudynRevisionLog2026b.md#rg3-23) —
+    **The override settings are documented where the module is.** The text of
+    `docs/manual/userSettings.md` is now a section of the Exudyn module page,
+    *Settings that persist between runs* (`sec-overridesettings`), written as `pb.AddDocu(...)` in
+    `definitions/pybindModule.py`; `exu.special.overrideSettings` is a documented data member beside
+    `exu.sys` and `exu.variables`; and the manual page keeps its place in the table of contents as a
+    pointer to it.
 
-    **Decision of 2026-09-26**: the text moves into `definitions/pybindModule.py` as
-    `pb.AddDocu(...)` beside `exu.config` and `exu.special`, so the generated page of the Exudyn
-    module carries it and there is **one** source; `docs/manual/` keeps a pointer, as it does for
-    the other generated chapters.
+    **The environment variables have a list**, `sec-environmentvariables`, and it was needed: of the
+    **six** the package reads, three - `EXUDYN_NO_USER_SETTINGS`, `EXUDYN_CONFIG_FILE` and
+    `EXUDYN_IMPORT_VERBOSE` - were documented nowhere at all.
 
-    **Two more things belong in the same step**, both from the maintainer:
+    **The troubleshooting hint** is in `performanceErrors.md`, *Behaviour that is not in your
+    script*: deleting `~/.exudyn` returns everything to the defaults, and
+    `EXUDYN_NO_USER_SETTINGS=1` answers the question without deleting anything.
 
-    - **a list of the environment variables** that change what Exudyn does. There is **none** today
-      (measured 2026-09-26): `EXUDYN_OUTPUTDIRECTORY` and `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` are named
-      in `revisions.md`, `EXUDYN_MODULE` in passing in `commandLine.md`, and
-      `EXUDYN_NO_USER_SETTINGS`, `EXUDYN_CONFIG_FILE` and `EXUDYN_IMPORT_VERBOSE` nowhere. One line
-      each and a link to where it is explained, beside the override settings, *"where they
-      essentially affect behavior"*.
-    - **the troubleshooting hint**: *"users experiencing weird behavior shall delete the
-      `~/.exudyn` folder"* - `performanceErrors.md`, section *Errors: what Exudyn raises, and what
-      to do about it*, which is where such a reader already is.
+    Two rules were learnt against the gate rather than from the README: inline code in a description
+    is a **backtick span** and `\texttt{}` is rejected outside mathematics - the README said the
+    opposite and now says what is checked - and a sub-heading of an `AddDocu` section is level
+    **4**.
 
-    **And one question the maintainer raised and did not decide**: `exu.config`, `exu.special` and
-    the settings structures are documented by **two** mechanisms - `pb.DefLatexDataAccess(...)` by
-    hand for the first two, and the structure emitter for the third. *"Ideally, the access to
-    structures would be handled and documented both via the same mechanism ... but I don't know if
-    this needs an improvement right now."* It is written here so that it is not forgotten; it is
-    not part of this step.
-
-    **And one hint elsewhere** (the same step): *"under the troubleshooting / errors: users
-    experiencing weird behavior shall delete the `~/.exudyn` folder"* - `performanceErrors.md`,
-    section *Errors: what Exudyn raises, and what to do about it*, which is where a reader with
-    strange behaviour already is.
-
+    **Still open, and not part of this step**: `exu.config` and `exu.special` are documented by
+    `pb.DefLatexDataAccess(...)` written by hand while the settings structures have a generator.
+    The maintainer: *"Ideally, the access to structures would be handled and documented both via the
+    same mechanism ... but I don't know if this needs an improvement right now."*
 
 <a id="rg3-24"></a>
 **RG3.24** *(group RG3; maintainer 2026-09-26)* **The generator API still says "Latex"** (#2681).
@@ -2135,7 +2126,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.21 | #2673 | the pages that still describe the state before a step that is done |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
-| RG3.23 | #2680 | the override settings are documented under the Exudyn module, and the troubleshooting hint |
 | RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
 | RG3.24.3 | #2682 | the default values make a round trip through a C++ literal string and back |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |

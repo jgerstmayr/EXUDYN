@@ -101,6 +101,17 @@ your script with
 
  which turns each of them into an error at the line that caused it.
 
+### Behaviour that is not in your script
+
+A script that behaves differently than it reads — a different output directory, a renderer that
+looks unfamiliar, a dialog in a place you did not put it — may be reading something that was stored
+on this machine. Exudyn keeps such settings in one folder, `~/.exudyn`, and
+**deleting that folder returns everything to the defaults**; nothing in it is needed to run a model.
+To find out whether it is the cause without deleting anything, run the script with
+`EXUDYN_NO_USER_SETTINGS=1`: the difference is either gone (a stored setting caused it) or still
+there (it did not). What was read is listed by `exudyn.misc.overrideSettings.Print()`, and the whole
+mechanism is [](#sec-overridesettings).
+
 (sec-overview-basics-errors-switches)=
 ### Switches
 

@@ -4437,3 +4437,46 @@ empties it again afterwards, because a dictionary on the C++ side outlives a tes
 
 **Gates**: 11/11 checks, the wheel, the full suite, 29 tests in `test_userSettings.py` and 447
 in `python/testing`, the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.23 - the override settings are documented where the module is (2026-09-26, #2680)
+
+The maintainer chose option A: *"integrated into the Python-C++ command interface ... under the
+Exudyn module"*, so that there is **one** source. `docs/manual/userSettings.md` was written by hand
+in RG12.5.1; its text is now a section of the generated Exudyn module page,
+*Settings that persist between runs*, written as `pb.AddDocu(...)` in `definitions/pybindModule.py`
+after the table of functions, with `AddDocuCodeBlock` for the JSON and the Python. The manual page
+keeps its place in the table of contents - *Tools that are not part of a model* - as a pointer to it,
+which is what the decision asked for; the label `sec-usersettings` stays on the pointer so that
+nothing outside breaks, and the new `sec-overridesettings` is what the two references now point at.
+
+`exu.special.overrideSettings` is documented as a data member beside `exu.sys` and `exu.variables`,
+which is where a reader of the module page will look for it.
+
+**The environment variables needed the list more than the settings needed the move.** The maintainer
+asked for one *"where they essentially affect behavior"*, and asked whether there already was one:
+there was not. The package reads **six**, and three of them - `EXUDYN_NO_USER_SETTINGS`,
+`EXUDYN_CONFIG_FILE` and `EXUDYN_IMPORT_VERBOSE` - were documented **nowhere**;
+`EXUDYN_OUTPUTDIRECTORY` and `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` were named only in passing in
+`revisions.md` and `EXUDYN_MODULE` only in `commandLine.md`. They are now a table under
+`sec-environmentvariables`, each with what it does and why anyone would set it. A seventh,
+`EXUDYN_MACHINE_ID`, is read only by the repository's performance runner and names a log file, so it
+is not in a user's list.
+
+**The troubleshooting hint**, in the maintainer's words *"users experiencing weird behavior shall
+delete the `~/.exudyn` folder"*, is a subsection of *Errors: what Exudyn raises, and what to do about
+it*, called *Behaviour that is not in your script*. It says the stronger thing first: deleting the
+folder returns everything to the defaults and nothing in it is needed to run a model, and
+`EXUDYN_NO_USER_SETTINGS=1` answers the question **without** deleting anything.
+
+**Two rules were learnt from the gate, not from the README, and one of them was the README's fault.**
+Inline code in a description is a **backtick span**: `checkDefinitions` rejects `\texttt{...}`
+outside mathematics, while `definitions/README.md` said *"Inline code ... is `\texttt{...}`"*. RG3.14
+migrated the descriptions and the rule was not migrated with them, so the document that CLAUDE.md
+rule 6b points at was telling a writer to do what the gate forbids. It now says what is checked; 42
+`\texttt{}` were written and converted. The second: a sub-heading of an `AddDocu` section is level
+**4**, because the section itself lands at 3 on the module page - the checker says which level it
+wants, and it was right both times.
+
+**Gates**: 11/11 checks, the wheel, the full suite, pytest, the strict HTML build **and the PDF**,
+because a new section with two labels and a table is what the LaTeX writer fails on.

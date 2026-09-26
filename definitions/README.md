@@ -110,7 +110,7 @@ not in the list below reaches the page as itself and is a defect.
   Use the recurring title where it fits - the list is `RECURRING_HEADINGS` in
   `tools/checkDefinitions.py`, which rejects both a wrong level and a recurring title spelled
   differently.
-- **Inline code** - a parameter name, a Python call, a type - is `\texttt{mbs.Assemble()}`.
+- **Inline code** - a parameter name, a Python call, a type - is a backtick span, `mbs.Assemble()`. `tools/checkDefinitions.py` rejects a `\texttt{...}` outside mathematics.
 - **A list** is `\bi ... \item ... \ei` (bulleted) or `\ben ... \item ... \een` (numbered).
 - **An abbreviation** is `ABRV:ODE2` - no backslash, no braces - which links to the list of
   abbreviations. The key ends where the word ends. The keys are the `abbreviations` dict in

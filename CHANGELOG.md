@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 89 | 1.12.91 |
+| 1.12 | Metheney | 90 | 1.12.92 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.92** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The override settings are documented in a hand-written page rather than with the module they belong to (#2680)
+  - description: docs/manual/userSettings.md was written by hand in revision2026b step RG12.5.1. The maintainer, 2026-09-26: it should be integrated into the Python-C++ command interface, under the Exudyn module, either written there or imported there, and consistent in both cases. The same step adds one hint to the troubleshooting section of performanceErrors.md: a user who sees strange behaviour should delete the ~/.exudyn folder or its config file - which is the first thing to try and is nowhere said today.
+  - **notes:** The override settings are documented under the Exudyn module of the Python-C++ interface, section 'Settings that persist between runs': the file and its sections, what may be stored, how a dialog remembers its size and its columns, and a new list of the SIX environment variables the package reads - EXUDYN\_NO\_USER\_SETTINGS, EXUDYN\_CONFIG\_FILE, EXUDYN\_OUTPUTDIRECTORY, EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, EXUDYN\_MODULE and EXUDYN\_IMPORT\_VERBOSE - of which three were documented nowhere before. exu.special.overrideSettings is a documented data member beside exu.sys and exu.variables. docs/manual/userSettings.md keeps its place in the table of contents as a pointer to it, and the troubleshooting chapter now says that deleting ~/.exudyn returns everything to the defaults, and that EXUDYN\_NO\_USER\_SETTINGS=1 answers the question without deleting anything.
+  - date resolved: **2026-09-26 15:59**, date raised: 2026-09-26
 - **1.12.91** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The override settings belong in exudyn.special.overrideSettings, not in a Python module of their own (#2679)
   - description: The maintainer, 2026-09-26, having seen revision2026b step RG12.5.1 built: the settings of ~/.exudyn are for convenience and are to be used rarely and with caution, so they belong under exudyn.special - exudyn.special.overrideSettings - and the dict should live on the C++ side, which also makes it accessible from C++. python/exudyn/settings.py becomes python/exudyn/misc/overrideSettings.py, because it is not intended to be used directly. What stays from RG12.5.1: the file and its format, the reader, the plain-values rule, the note at import, EXUDYN\_NO\_USER\_SETTINGS and the runners that set it, and the tests. What moves is where the values live and when they are applied - a VisualizationSettings structure applies them when it is CREATED, not only a SystemContainer. Three options for the C++ carrier are written in the plan step RG12.9.
   - **notes:** The override settings of ~/.exudyn/config.json now live in exudyn.special.overrideSettings, a dictionary that 'import exudyn' fills once and that both Python and the C++ core read; the module that reads and writes the file is exudyn.misc.overrideSettings (formerly exudyn.settings, which no longer exists - it is internal and a user reaches the values through exudyn.special.overrideSettings). Every function that took settings=None now means that dictionary instead of a second read of the file, so the dialogs and the settings can no longer disagree within a run. Three new tests; the settings dialog and the results monitor are unchanged for a user.

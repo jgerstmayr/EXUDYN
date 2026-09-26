@@ -67,5 +67,94 @@ The class **exudyn** has the following **functions and structures**:
 - **`special.userInterface.suppressSolutionViewer`**: if True, mbs.SolutionViewer(...) and AnimateModes(...) return immediately instead of opening the viewer; default=False
 - **`special.userInterface.suppressPlots`**: if True, PlotSensor and the other plotting helpers do not show a plot window; figures are still drawn and a figure given a file name is still saved; setting the environment variable EXUDYN_SUPPRESS_UI_WINDOW_OPEN additionally switches matplotlib to the non-interactive Agg backend, which also silences a plt.show() written in a script; default=False
 - **`special.userInterface.suppressDialogs`**: if True, InteractiveDialog and the other tkinter dialogs return their defaults instead of opening a window; default=False
+- **`special.overrideSettings`**: the settings that persist between runs, read once by `import exudyn` from `~/.exudyn/config.json`: a dictionary with one key per section, `config`, `visualizationSettings`, `dialogs` and `resultsMonitor`; it is empty unless something was stored, and both Python and the C++ side read it. See Section [](#sec-overridesettings)
 - **`variables`**: this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.
 - **`sys`**: this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations
+
+
+(sec-overridesettings)=
+### Settings that persist between runs
+
+A setting that is changed on every start - the output directory, the multi-sampling of
+the renderer, the size of the basis vectors - is stored once and taken by every run afterwards.
+Exudyn reads one file for that, `~/.exudyn/config.json`:
+
+```
+{
+  "config": {"outputDirectory": "solution/"},
+  "visualizationSettings": {"openGL.multiSampling": 4, "nodes.basisSize": 0.5}
+}
+```
+
+Nothing writes this file by itself. A script that behaves differently on another
+machine, because something was stored there, is the one thing a settings file must not cause, so
+storing is always asked for:
+
+```python
+from exudyn.misc import overrideSettings
+
+SC.visualizationSettings.openGL.multiSampling = 4
+overrideSettings.Store(SC)         #every run from now on starts with it
+```
+
+`Store(SC)` writes the settings that differ from the defaults - the same list
+the settings dialog shows as *changed* - and `Store(config=exudyn.config)` does the same for
+`exudyn.config`. `overrideSettings.Clear()` deletes the file.
+
+#### What happens when the file is there
+
+`import exudyn` reads it once into `exudyn.special.overrideSettings` and prints
+**one note** naming how many settings it took:
+
+```
+NOTE: 1 setting(s) from %USERPROFILE%/.exudyn/config.json, and 2 visualizationSettings for every
+      SystemContainer (exudyn.misc.overrideSettings.Print() for the list;
+      EXUDYN_NO_USER_SETTINGS=1 to ignore them)
+```
+
+The `config` settings are applied at that moment. The
+`visualizationSettings` are applied to every `SystemContainer` when it is created,
+because that is when they begin to exist. `overrideSettings.Print()` lists them, which is the
+answer to *why does this script behave differently here*, and `overrideSettings.Applied()`
+gives the same as a list, for a script that wants to print it into its own output.
+
+**What may be stored are plain values**: a number, a flag, a string, or a list of numbers. A setting
+that holds graphics data, a user function or a matrix container is refused with a message and
+changes nothing - such a value cannot be carried honestly by a JSON file. A key that names no
+setting, a section nobody reads, a file that is not valid JSON: each of them is reported and none of
+them stops `import exudyn`.
+
+#### Remembering a dialog, its columns and its font
+
+`visualizationSettings.dialogs.storeDialogPositions = True` makes a settings dialog remember
+where it was left, under `"dialogs"`, one entry per dialog. **The size comes back always; the
+position only when the window would still be reachable.** A monitor that is unplugged, a laptop
+undocked, a screen resolution that changed: each of them would otherwise put the dialog where nobody
+can reach its title bar, and a dialog that cannot be closed is a stuck session. When the stored
+position is not usable, the dialog opens where it would have opened anyway, at its remembered size.
+
+The three fixed columns of a settings dialog take a share of its width, each a fraction in
+`visualizationSettings.dialogs` - `columnWidthName`, `columnWidthValue`,
+`columnWidthType` - and the description column takes what they leave; if the three together
+would leave the description less than a tenth of the dialog, all three are scaled down to leave it
+that much. **Ctrl and the mouse wheel change the font size** of an open dialog, about 10% per notch;
+the wheel alone still scrolls.
+
+(sec-environmentvariables)=
+#### The environment variables
+
+These change what Exudyn does before a script says anything, which is what makes them worth knowing
+when a run behaves differently than it reads:
+
+| variable | what it does |
+|---|---|
+| `EXUDYN_NO_USER_SETTINGS` | anything but empty or `0` ignores `~/.exudyn/config.json` completely, so that a run starts from the defaults. `runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py` and `pytest` set it for themselves, so a stored setting can never move a test result |
+| `EXUDYN_CONFIG_FILE` | names a different settings file, for a second configuration or for a test |
+| `EXUDYN_OUTPUTDIRECTORY` | the initial value of `exudyn.config.outputDirectory`: every solution and sensor file a model writes goes there, which is how a model is run without writing into the working directory |
+| `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` | switches on all of `exudyn.special.userInterface`: no renderer, no solution viewer, no plot window and no dialog, and matplotlib is switched to its non-interactive backend. Meant for automated runs, where a window that waits for a human stops everything |
+| `EXUDYN_MODULE` | `fast` loads `exudynCPPfast` - no range checks, AVX2 - instead of the regular module; it belongs to release testing, because without range checks a wrong index is undefined behaviour instead of an exception |
+| `EXUDYN_IMPORT_VERBOSE` | 1 prints which compiled module was tried and what came of it, which is the whole answer to *it imports the wrong one* |
+
+`EXUDYN_NO_USER_SETTINGS=1` is also what makes a problem reproducible on a machine that has
+stored something: run the script with the variable set and the difference is either gone (the
+stored setting caused it) or still there (it did not).
