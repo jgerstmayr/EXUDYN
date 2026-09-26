@@ -439,6 +439,37 @@ def NormalizeHeadings(text):
     return '\n'.join(result)
 
 
+def DropRepeatedTitle(text, title):
+    """(label, text) with a first heading that only repeats the page title removed
+
+    Six pages of the Python-C++ interface and every item page opened with their own name twice -
+    "12.3 SystemContainer" then "12.3.1 SystemContainer" - and the repetition cost more than a line:
+    it holds a heading level, so every section of the page is one deeper than it should be and a
+    toctree with :maxdepth: 3 drops the last of them. That is why the MainSystem extensions had no
+    entry in the table of contents (#2660).
+
+    The label of the removed heading is RETURNED rather than dropped, to be written above the page
+    title: `sec:item:<Item>` is what every item reference in the documentation points at, and a
+    target on a heading resolves from another page."""
+    lines = text.split('\n')
+    label = ''
+    index = 0
+    while index < len(lines) and lines[index].strip() == '':
+        index += 1
+    if index < len(lines) and re.match(r'^\([^)]+\)=$', lines[index].strip()):
+        label = lines[index].strip()
+        index += 1
+        while index < len(lines) and lines[index].strip() == '':
+            index += 1
+    if index >= len(lines):
+        return ('', text)
+    heading = re.match(r'^#+ +(.*?) *$', lines[index])
+    if heading is None or heading.group(1) != title:
+        return ('', text)                   #the page says something else first: nothing to remove
+    del lines[:index + 1]
+    return (label, '\n'.join(lines).lstrip('\n'))
+
+
 def Tidy(text):
     text = re.sub(r'[ \t]+\n', '\n', text)
     text = re.sub(r'\$\$\n+', '$$\n', text)

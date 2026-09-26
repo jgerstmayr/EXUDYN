@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.81.dev1
+- Exudyn version = 1.12.82.dev1
 - last change = 2026-09-26
 - Number of issues = 2675
-- Number of resolved issues = 2395 (81 in current version)
+- Number of resolved issues = 2396 (82 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7583,10 +7583,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IDEA` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` User settings that persist between runs: one ~/.exudyn file, and what may be in it (#2666)
   - description: The results monitor introduced ~/.exudyn/resultsMonitor.json without a decision about what such a directory is for (maintainer, 2026-09-26). The maintainer sees it as generally useful - window positions, dialog sizes, font scaling, overrides for visualizationSettings except special types, and for exudyn.config such as outputDirectory - and asks for ONE file rather than one per tool, for whether C++ could read it (py::module\_::import('json')) or whether \_\_init\_\_.py should read it and write the values into the module through the dict interface, and for a note printed on the first import when the stored settings are not empty, because stored settings make a run less reproducible. It needs documentation and belongs in the revisions chapter, because it changes behaviour when a file is present. Related: \#2608 (window states) and the dialog settings storeDialogPositions and storeDialogSettings.
   - date raised: 2026-09-26
-- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Six pages of the Python-C++ command interface repeat their own title as the first section (#2660)
-  - description: 12.3 SystemContainer / 12.3.1 SystemContainer, 12.4 Renderer / 12.4.1 Renderer, and the same for MainSystem, SystemData, Symbolic and GeneralContact - in the PDF and in the HTML sidebar alike. The page title comes from markdownPageTitles in pybindEmitter.WriteMarkdownPages and the section from the class's own DefPyStartClass, and for these six the two are the same word. The section heading carries the target a reference points to, so it cannot simply be deleted: the label has to move to the page title. The item pages of the reference manual have the same shape - '\# ObjectGround' then '\#\# ObjectGround' - and should be looked at in the same step.
-  - **remarks:** The maintainer, 2026-09-25: the MainSystem Create functions have no separate subsection in the table of contents - there is no entry for 'MainSystem extensions (create)' nor for 'MainSystem extensions (general)'. Measured the same day: that is the SAME defect. Both are level-3 headings of docs/generated/cInterface/MainSystem.md, and the page is one level deeper than the chapter because of the duplicated '\#\# MainSystem' this issue is about: the page title is level 1, the redundant section is level 2, and the two extension sections are level 3 - which, nested through the cInterface index into the main toctree with maxdepth 3, falls past the limit. Removing the redundant section moves them to level 2 and they appear. So the fix for the duplication is also the fix for the missing entries, which is a good reason to do them in one step.
-  - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
   - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
   - date raised: 2026-09-25

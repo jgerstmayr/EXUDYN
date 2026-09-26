@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 80 | 1.12.81 |
+| 1.12 | Metheney | 81 | 1.12.82 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.82** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Six pages of the Python-C++ command interface repeat their own title as the first section (#2660)
+  - description: 12.3 SystemContainer / 12.3.1 SystemContainer, 12.4 Renderer / 12.4.1 Renderer, and the same for MainSystem, SystemData, Symbolic and GeneralContact - in the PDF and in the HTML sidebar alike. The page title comes from markdownPageTitles in pybindEmitter.WriteMarkdownPages and the section from the class's own DefPyStartClass, and for these six the two are the same word. The section heading carries the target a reference points to, so it cannot simply be deleted: the label has to move to the page title. The item pages of the reference manual have the same shape - '\# ObjectGround' then '\#\# ObjectGround' - and should be looked at in the same step.
+  - **notes:** A page does not repeat its own title: latexToMarkdown.DropRepeatedTitle removes a first heading that only says the page name and returns its label, which the emitters write above the page title. The MainSystem extensions (create) and (general) are in the table of contents for the first time, because the repeated section no longer holds the level they needed. Six interface pages and 178 item pages; the item label sec:item:\<Item\> moved to the title and every reference still resolves, checked in the strict HTML build and in the PDF (revision2026b step RG3.18).
+  - date resolved: **2026-09-26 08:58**, date raised: 2026-09-25
 - **1.12.81** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Five hand-written docstrings still send the reader to theDoc.pdf (#2656)
   - description: theDoc.pdf has not existed since decision D8. The generators no longer produce the name - revision2026b step RG3.14.10 made a section reference name its section - but five docstrings in the shipped package say it in their own text: python/exudyn/solver.py (3, two of which also carry a Markdown link written \[Section\](\#sec:solverSubstructures), whose target spelling is the LaTeX one and not the MyST one), python/exudyn/misc/mainSystemExtensions.py (1) and the module header of python/exudyn/\_\_init\_\_.py, which links to the file on GitHub. They are hand-written, so no regeneration reaches them.
   - **notes:** The five theDoc.pdf references are gone: the two solver docstrings name MainSolverStatic and MainSolverImplicitSecondOrder beside their section links, the module header points at readthedocs, and the comparison in mainSystemExtensions names the reference manual. Both section targets already resolved, so only the words in front of them were wrong. The same two docstrings said staticSolver where SolveDynamic stores dynamicSolver. The name theDoc.pdf is explained once, in the revisions chapter (revision2026b step RG3.14.12).

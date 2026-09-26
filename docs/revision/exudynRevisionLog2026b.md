@@ -3953,3 +3953,39 @@ the PDF the vector original. But the two were exported at different times over t
 pair has drifted the HTML shows one picture and the PDF another **with no warning at all**. One
 comparison per pair first; the `.png` in both builds is at least the same thing twice. `intro2.jpg`
 stays where it is: unreferenced, and deleting a tracked file is the maintainer's word.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.18 - a page does not repeat its own title (2026-09-26, #2660)
+
+Six pages of the Python-C++ interface and **178 item pages** opened with their own name twice.
+
+**The two halves of the issue were one line of code.** `latexToMarkdown.DropRepeatedTitle(text,
+title)` removes a first heading that only repeats the page title and **returns its label**; the two
+emitters write that label above the `# ` title instead. Nothing lifts the headings that follow:
+`NormalizeHeadings` already rebuilds every level from the nesting it walks, so a heading that is
+gone takes its level with it. That is what the table of contents needed -
+*MainSystem extensions (create)* and *(general)* were at level 3 **because** the repeated section
+held level 2, and both toctrees say `:maxdepth: 3`.
+
+Measured in the built HTML, which is the only proof that counts here:
+
+```html
+<li class="toctree-l3"><a href="...MainSystem.html#mainsystem-extensions-create">MainSystem extensions (create)</a></li>
+<li class="toctree-l3"><a href="...MainSystem.html#mainsystem-extensions-general">MainSystem extensions (general)</a></li>
+```
+
+Both entries are in the table of contents for the first time.
+
+**The item pages were the delicate half** and needed no special handling in the end: the second
+heading carried `(sec-item-objectground)=`, which every item reference in the documentation points
+at, and the label simply moved above the page title. A target on a heading resolves from another
+page - the property RG3.14.7 established - and the strict build is what proves it, together with a
+**PDF build**, because a moved label is what the LaTeX writer fails on when the HTML does not.
+
+The six interface pages carried **no label at all** on their repeated section, which was measured
+before anything was moved: nothing referenced them, so there was nothing to preserve.
+
+105 generated pages changed, 419 lines added and 629 removed - one heading and one blank line each,
+and every `### DESCRIPTION of X` is now `##`.
+
+**Gates**: 11/11 checks, the full suite, the strict HTML build and the PDF.

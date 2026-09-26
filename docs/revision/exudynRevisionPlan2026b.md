@@ -741,8 +741,9 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 
 
 <a id="rg3-18"></a>
-**RG3.18** *(group RG3; maintainer 2026-09-25)* **The pages of the Python-C++ interface repeat their
-    own title, and it costs the MainSystem extensions their place in the table of contents** (#2660).
+**RG3.18** **DONE 2026-09-26** (#2660) — [log](exudynRevisionLog2026b.md#rg3-18) —
+    **The pages of the Python-C++ interface repeat their own title, and it costs the MainSystem
+    extensions their place in the table of contents** (#2660).
 
     Six pages open with their own name twice - *12.3 SystemContainer* / *12.3.1 SystemContainer*, and
     the same for `Renderer`, `MainSystem`, `SystemData`, `Symbolic` and `GeneralContact`. The title
@@ -764,9 +765,15 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     what proves it.
 
     The item pages of the reference manual have the same shape - `# ObjectGround` then
-    `## ObjectGround` - and are looked at in this step. There the second heading carries
+    `## ObjectGround` - and are done in the same step. There the second heading carries
     `sec:item:<Item>`, which **every** item reference in the documentation uses, so it is the more
     delicate half of the two.
+
+    **Done with one helper for both**, `latexToMarkdown.DropRepeatedTitle`: it removes a first
+    heading that only repeats the page title and **returns its label**, which the emitters write
+    above the `# ` title. Nothing lifts the headings that follow by hand - `NormalizeHeadings`
+    rebuilds every level from the nesting it walks, so a heading that is gone takes its level with
+    it, which is exactly what the table of contents needed.
 
 
 ## RG4 — Implementation problems and bugs

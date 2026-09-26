@@ -2,13 +2,16 @@
   "number": 2660,
   "title": "Six pages of the Python-C++ command interface repeat their own title as the first section",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "12.3 SystemContainer / 12.3.1 SystemContainer, 12.4 Renderer / 12.4.1 Renderer, and the same for MainSystem, SystemData, Symbolic and GeneralContact - in the PDF and in the HTML sidebar alike. The page title comes from markdownPageTitles in pybindEmitter.WriteMarkdownPages and the section from the class's own DefPyStartClass, and for these six the two are the same word. The section heading carries the target a reference points to, so it cannot simply be deleted: the label has to move to the page title. The item pages of the reference manual have the same shape - '# ObjectGround' then '## ObjectGround' - and should be looked at in the same step.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
+  "dateResolved": "2026-09-26 08:58",
+  "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/pybindEmitter.py",
-  "workingRemarks": "The maintainer, 2026-09-25: the MainSystem Create functions have no separate subsection in the table of contents - there is no entry for 'MainSystem extensions (create)' nor for 'MainSystem extensions (general)'. Measured the same day: that is the SAME defect. Both are level-3 headings of docs/generated/cInterface/MainSystem.md, and the page is one level deeper than the chapter because of the duplicated '## MainSystem' this issue is about: the page title is level 1, the redundant section is level 2, and the two extension sections are level 3 - which, nested through the cInterface index into the main toctree with maxdepth 3, falls past the limit. Removing the redundant section moves them to level 2 and they appear. So the fix for the duplication is also the fix for the missing entries, which is a good reason to do them in one step."
+  "releaseNotes": "A page does not repeat its own title: latexToMarkdown.DropRepeatedTitle removes a first heading that only says the page name and returns its label, which the emitters write above the page title. The MainSystem extensions (create) and (general) are in the table of contents for the first time, because the repeated section no longer holds the level they needed. Six interface pages and 178 item pages; the item label sec:item:<Item> moved to the title and every reference still resolves, checked in the strict HTML build and in the PDF (revision2026b step RG3.18).",
+  "resolvedInVersion": "1.12.82"
 }
