@@ -2,12 +2,16 @@
   "number": 2694,
   "title": "a render window geometry in the settings and in the config file can conflict silently",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer on 2026-09-26, seeing where RG12.16 leads: 'The mechanism for the positions and sizes probably needs a further refinement, in particular for the render window: it has a position and size in the view settings; if size or position are different from default values, and the .exudyn/config.json file also names such quantities, the non-default visualizationSettings parameters should win - but there should be a separate warning ONLY if there are conflicting settings (not if they are equal). This problem should not happen for other dialogs, as they have only one position for storage and the manual position commands would override the global ones. When storing render window positions and size, the values should also be updated in the current visualizationSettings, otherwise a re-open would not have the just stored positions.' The render window is the only window whose geometry lives in TWO places - the settings structure and, because those settings are ordinary ones, the visualizationSettings section of the file - and they are applied at different moments: the file at construction, a script afterwards. So a script silently wins today, which is the wanted outcome, but a user whose file says something else is told nothing. What the step has to work out: WHERE the comparison happens (when the renderer starts is the only moment both are known), what counts as 'different from default' for a pair of integers, how to warn once rather than per view and per run, and the second half - that storing the geometry updates the live visualizationSettings, so that reopening the renderer in the same session uses what was just stored rather than what the structure still says. revision2026b step RG12.20.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "definitions/structureDefsVisualizationSettings.py"
+  "dateResolved": "2026-09-27 00:48",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsVisualizationSettings.py",
+  "releaseNotes": "The render state carries currentWindowPosition beside currentWindowSize, read from GLFW wherever the size is - every Render - rather than through a window-move callback, so that one place knows where the window is. It is in SC.renderer.GetState(), and SetState writes it AND view*.window.renderWindowPosition, exactly as it has always done for the size: the maintainer's 'when storing render window positions and size, the values should also be updated in the current visualizationSettings, otherwise a re-open would not have the just stored positions'. The write-back of #2689 reads the state instead of asking GLFW itself. And the conflict is said out loud: the render window is the only window whose geometry lives in two places - the view settings and, because those are ordinary settings, the visualizationSettings section of the file - applied at different moments, so a script already wins and nobody was told. SC.renderer.Start() now warns ONCE per process, naming both values, and only when they really differ; it is silent when they agree, which is the normal case for someone who stored the geometry and has not touched it since. It runs before the suppressRenderer guard, because the conflict is between the file and the session whether or not a window opens, and with no settings file it returns at once. Documented in the Exudyn module page and in the render state list of docs/manual/GUI.md.",
+  "resolvedInVersion": "1.12.104"
 }

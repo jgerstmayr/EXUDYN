@@ -1721,14 +1721,17 @@ namespace
 		if (settings == nullptr || views == nullptr || !views->IsValidWindow(viewID)) { return; }
 		if (!GetSettingsView(viewID, *settings).window.storeRenderWindowGeometry) { return; }
 
-		int positionX = 0, positionY = 0, width = 0, height = 0;
-		glfwGetWindowPos(views->GetWindow(viewID), &positionX, &positionY);
-		glfwGetWindowSize(views->GetWindow(viewID), &width, &height);
-		if (width <= 0 || height <= 0) { return; }   //an iconified window reports nothing usable
+		//WHAT THE RENDER STATE SAYS, which is refreshed on every Render (revision2026b step
+		//RG12.20): one place knows where the window is, and this reads it
+		const RenderState* state = views->State(viewID);
+		if (state == nullptr || state->currentWindowSize[0] <= 0 || state->currentWindowSize[1] <= 0)
+		{
+			return;                                  //an iconified window reports nothing usable
+		}
 
 		VSettingsWindow& windowSettings = GetSettingsViewWritable(viewID, *settings).window;
-		windowSettings.renderWindowSize = Index2({ (Index)width, (Index)height });
-		windowSettings.renderWindowPosition = Index2({ (Index)positionX, (Index)positionY });
+		windowSettings.renderWindowSize = state->currentWindowSize;
+		windowSettings.renderWindowPosition = state->currentWindowPosition;
 	}
 }
 
@@ -2360,6 +2363,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	GetWindowSize(window, width, height);
 	SetRenderStateScreenSize(viewID, width, height);
+	SetRenderStateWindowPosition(viewID, window);
 	height = height ? height : 1;
 	float ratio = width / (float)height;
 	float zoom = state->zoom;
@@ -2543,6 +2547,20 @@ void GlfwRenderer::SetRenderStateScreenSize(Index viewID, int screenWidth, int s
 	RenderState* state = renderViews.State(viewID);
 	state->currentWindowSize[0] = screenWidth;
 	state->currentWindowSize[1] = screenHeight;
+}
+
+//! WHERE THE WINDOW IS, in the render state beside its size (revision2026b step RG12.20, #2694).
+//! It is asked of GLFW wherever the size is - every Render - rather than through a window-move
+//! callback: the size is refreshed that way already, one glfwGetWindowPos costs nothing next to a
+//! redraw, and there is then one place where the state learns about the window instead of two.
+void GlfwRenderer::SetRenderStateWindowPosition(Index viewID, GLFWwindow* window)
+{
+	if (window == nullptr) { return; }
+	int positionX = 0, positionY = 0;
+	glfwGetWindowPos(window, &positionX, &positionY);
+	RenderState* state = renderViews.State(viewID);
+	state->currentWindowPosition[0] = positionX;
+	state->currentWindowPosition[1] = positionY;
 }
 
 void GlfwRenderer::Render3Dobjects(Index viewID, int screenWidth, int screenHeight, float screenRatio, float zoom)

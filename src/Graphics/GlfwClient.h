@@ -445,6 +445,8 @@ public:
 
 	//! unified function to get screen ratio and zoom
 	static void SetRenderStateScreenSize(Index viewID, int screenWidth, int screenHeight);
+	//! the position of the window of a view into its render state; asked of GLFW where the size is
+	static void SetRenderStateWindowPosition(Index viewID, GLFWwindow* window);
 
 	//! Render 3D scence function called from Render(), containing 3D model without additional text, etc.; projection is supplied
 	static void Render3Dobjects(Index viewID, int screenWidth, int screenHeight, float screenRatio, float zoom);

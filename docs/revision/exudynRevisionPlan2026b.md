@@ -2239,35 +2239,34 @@ package).
       dialog that sizes itself from its widgets needs.
 
 <a id="rg12-19"></a>
-**RG12.19** *(group RG12; maintainer 2026-09-26)* **Two buttons: one for the settings, one for the
-    positions** (#2693). *"The store settings means store positions at the same time. I would like to
-    opt for two buttons, one for the settings and one for the positions."* They are two decisions - *I
-    like this look* and *I like this window here* - and one button makes them one.
-
-    **What stops being obvious once they are separate**, and belongs in the step: which button stores
-    the **render window** geometry, which since RG12.16 lives in the `visualizationSettings` and would
-    go with the settings button although it is a position; and whether the positions button stores only
-    this dialog's geometry or every dialog it knows of.
+**RG12.19** **DONE 2026-09-27** (#2693) — [log](exudynRevisionLog2026b.md#rg12-19) —
+    **Two buttons: one for the settings, one for the positions**, each showing what it will write
+    before it writes it. The **render window** geometry rides along in the settings button, by the
+    maintainer's decision: *"I opt to store it in the config file in the visualizationSettings, because
+    it is the straightforward way and becomes now natural, because it is only stored if it differs from
+    default."*
 
 <a id="rg12-20"></a>
-**RG12.20** *(group RG12; maintainer 2026-09-26)* **A render window geometry in the settings and in the
-    file can conflict silently** (#2694). The maintainer, seeing where RG12.16 leads:
+**RG12.20** **DONE 2026-09-27** (#2694) — [log](exudynRevisionLog2026b.md#rg12-20) —
+    **Where the render window is, and what happens when the file and the session disagree.**
 
-    - the render window has its size and position **in the view settings**;
-    - because those are ordinary settings, `~/.exudyn/config.json` can name them too;
-    - **the non-default `visualizationSettings` value should win**, with a warning **only** when the
-      two actually differ - not when they agree;
-    - the dialogs do not have this problem: one stored position, and an explicit call overrides it;
-    - and **storing the geometry should update the live `visualizationSettings`**, or reopening the
-      renderer in the same session uses what the structure still says rather than what was just stored.
+    The maintainer pointed at the code: *"there is already SetRenderStateScreenSize in GlfwClient.cpp
+    and it only needs to be copied or extended to size AND position ... follow the trace of the
+    state->currentWindowSize, to add a currentWindowPosition to the RenderState, also making it
+    read/write in the MainRenderer::Get/SetState."* That is what was done, and the trace was exactly
+    as described.
 
-    **Why it is trickier than it sounds**: the render window is the only window whose geometry lives in
-    two places, and they are applied at different moments - the file when the structure is constructed,
-    a script afterwards - so a script already wins by ordering, silently. The step has to decide
-    **where** the comparison happens (the renderer starting is the only moment both are known), what
-    "different from default" means for a pair of integers, and how to warn once rather than once per
-    view per run. It ends in the documentation, as the maintainer asked.
+    **No window-move callback was needed**: the size is refreshed on every `Render`, so the position is
+    asked for in the same place - one `glfwGetWindowPos` next to a redraw - and there is one place where
+    the state learns about the window instead of two. `SetState` writes the position **and**
+    `view*.window.renderWindowPosition`, as it has always done for the size, which is the maintainer's
+    *"otherwise a re-open would not have the just stored positions"*.
 
+    **The conflict is said once.** `SC.renderer.Start()` compares the `visualizationSettings` section of
+    the file with what the session has, names both values when they differ, and is silent when they
+    agree. It runs **before** the `suppressRenderer` guard, because the disagreement is between the file
+    and the session whether or not a window opens - and with no settings file it returns at once, which
+    is every test run.
 
 ## Next steps recommended
 
@@ -2308,8 +2307,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
-| RG12.19 | #2693 | two buttons in the settings dialog: one for the settings, one for the positions |
-| RG12.20 | #2694 | a render window geometry in the settings and in the file can conflict silently |
 
 ### Raised by the current work, and not yet a step
 

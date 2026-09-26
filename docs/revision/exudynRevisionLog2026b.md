@@ -5064,3 +5064,62 @@ ends in the documentation.
 
 **Gates**: 11/11 checks, the wheel, the full suite, 499 pytest, the strict HTML build. The reference of
 `parameterConversionTest` was rewritten once more, for the setting that went and the one that came.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.19 and RG12.20 - two buttons, and where the render window is (2026-09-27, #2693, #2694)
+
+**RG12.19** splits the store button in two, because they are two decisions - *I like this look* and *I
+like this window here*. The question the step had left open was which button takes the **render
+window** geometry, and the maintainer answered it in a way that needed no code: *"I opt to store it in
+the config file in the visualizationSettings, because it is the straightforward way and becomes now
+natural, because it is only stored if it differs from default."* It is a `visualizationSetting`, so it
+rides along in the settings button and nothing special had to be written for it.
+
+---
+
+**RG12.20 was easier than the step I had filed, because the maintainer had read the code first**:
+*"there is already SetRenderStateScreenSize in GlfwClient.cpp and it only needs to be copied or
+extended to size AND position ... follow the trace of the state->currentWindowSize, to add a
+currentWindowPosition to the RenderState, also making it read/write in the MainRenderer::Get/SetState."*
+The trace was exactly that, in five places: the field, its initialisation from the setting, the refresh
+from GLFW, the dict, and the dict's way back.
+
+**No window-move callback was needed**, which the maintainer had flagged as a maybe. `Render` already
+refreshes `currentWindowSize` on every frame, so the position is asked for in the same place: one
+`glfwGetWindowPos` beside a redraw, and one place where the state learns about the window instead of
+two that can disagree.
+
+**`SetState` writes the setting as well as the state** - the maintainer's *"otherwise a re-open would
+not have the just stored positions"* - and that was not new so much as **symmetric**: the size has
+written `window.renderWindowSize` that way for years, and the position simply did not exist. The
+write-back of RG12.16.2 now reads the state instead of asking GLFW itself, so the recorded geometry and
+the state cannot differ.
+
+**And the conflict is said out loud.** The render window is the only window whose geometry lives in two
+places - the view settings, and the `visualizationSettings` section of the file, because those are
+ordinary settings - and they are applied at different moments: the file when the structure is
+constructed, a script afterwards. So the script already won; what was missing is that nobody was told.
+`SC.renderer.Start()` now says it **once** per process, naming both values, and only when they really
+differ:
+
+```
+Python WARNING: the render window geometry stored in the settings file differs from what this session
+set, and what the session set is used:
+  view0.window.renderWindowPosition: the file says [100,80] and this session uses [500,400]
+store the settings again to change the file, or remove them from it
+```
+
+**One placement decision, and it was made by a failed test.** The check first sat *after* the
+`suppressRenderer` guard, which is where a reader would put it - no window, no warning about a window.
+Then the probe that was meant to prove it printed nothing, because the guard returns first. It is
+before the guard now, and the reasoning changed with it: the disagreement is between the **file** and
+the **session**, which is true whether or not a window opens, and `Start()` is simply the moment both
+are known. With no settings file the function returns at once, which is every test run - so the noise
+where it would matter is zero.
+
+**What is tested and what is not**, said plainly: the render state carrying the position, and `SetState`
+writing the setting, are two tests. The warning was verified **by hand**, with the output above: equal
+values silent, differing values one warning, a second `Start()` quiet. No test opens a render window,
+and none opens the dialog whose buttons these are.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 501 pytest, the strict HTML build.

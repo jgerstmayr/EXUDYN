@@ -476,6 +476,23 @@ A negative coordinate - the default - means the window manager places it. The po
 OpenGL area rather than the title bar, so a small value hides part of the title bar and 0 hides it
 completely, which is a way to have a view without one.
 
+**The render window is the one window whose geometry lives in two places**: these settings, and -
+because they are ordinary settings - the `visualizationSettings` section of the file. The file is
+applied when the settings structure is created and a script speaks afterwards, so **what the script
+sets wins**, and `SC.renderer.Start()` says so once when the two differ:
+
+```
+Python WARNING: the render window geometry stored in the settings file differs from what this session
+set, and what the session set is used:
+  view0.window.renderWindowPosition: the file says [100,80] and this session uses [500,400]
+store the settings again to change the file, or remove them from it
+```
+
+It says nothing when they agree, which is the normal case for someone who stored the geometry and has
+not touched it since. `view*.window.storeRenderWindowGeometry` writes where the window was back into
+these settings when it closes, and `SC.renderer.GetState()['currentWindowPosition']` is where it is
+while it is open.
+
 **For this run only**, a script can write into `exudyn.special.overrideSettings` instead of the file:
 
 ```python

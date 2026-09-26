@@ -97,3 +97,33 @@ def testTheOldIdiomIsGoneEverywhere():
             if "'renderState' in exu" in text:
                 left.append(os.path.relpath(path, repositoryRoot))
     assert left == [], 'the old idiom is still in: ' + ', '.join(left)
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#WHERE THE WINDOW IS (revision2026b step RG12.20, #2694). The render state carried the size of the
+#window and not its position, so nothing could say where a window had been - which is what storing
+#the geometry needs. The window itself cannot be opened by a test, so what is pinned is the state.
+def testTheRenderStateCarriesTheWindowPosition():
+    SC = exudyn.SystemContainer()
+    state = SC.renderer.GetState()
+
+    assert 'currentWindowPosition' in state
+    assert list(state['currentWindowPosition']) == [-1, -1], (
+        'it starts from view0.window.renderWindowPosition, whose default says "the window manager'
+        ' decides"')
+    assert list(state['currentWindowSize']) == [1024, 768]
+
+
+def testSettingTheWindowPositionAlsoSetsTheSetting():
+    """otherwise re-opening the renderer in the same session would use what the structure still says
+
+    The maintainer asked for exactly this (2026-09-26): "when storing render window positions and
+    size, the values should also be updated in the current visualizationSettings". The size has
+    behaved that way for years; the position does now."""
+    SC = exudyn.SystemContainer()
+
+    SC.renderer.SetState({'currentWindowPosition': [321, 654], 'currentWindowSize': [800, 600]})
+
+    assert list(SC.renderer.GetState()['currentWindowPosition']) == [321, 654]
+    assert list(SC.visualizationSettings.view0.window.renderWindowPosition) == [321, 654]
+    assert list(SC.visualizationSettings.view0.window.renderWindowSize) == [800, 600]

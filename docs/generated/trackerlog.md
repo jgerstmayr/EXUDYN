@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.102.dev1
+- Exudyn version = 1.12.104.dev1
 - last change = 2026-09-27
 - Number of issues = 2695
-- Number of resolved issues = 2416 (102 in current version)
+- Number of resolved issues = 2418 (104 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,12 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHANGE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` a render window geometry in the settings and in the config file can conflict silently (#2694)
-  - description: The maintainer on 2026-09-26, seeing where RG12.16 leads: 'The mechanism for the positions and sizes probably needs a further refinement, in particular for the render window: it has a position and size in the view settings; if size or position are different from default values, and the .exudyn/config.json file also names such quantities, the non-default visualizationSettings parameters should win - but there should be a separate warning ONLY if there are conflicting settings (not if they are equal). This problem should not happen for other dialogs, as they have only one position for storage and the manual position commands would override the global ones. When storing render window positions and size, the values should also be updated in the current visualizationSettings, otherwise a re-open would not have the just stored positions.' The render window is the only window whose geometry lives in TWO places - the settings structure and, because those settings are ordinary ones, the visualizationSettings section of the file - and they are applied at different moments: the file at construction, a script afterwards. So a script silently wins today, which is the wanted outcome, but a user whose file says something else is told nothing. What the step has to work out: WHERE the comparison happens (when the renderer starts is the only moment both are known), what counts as 'different from default' for a pair of integers, how to warn once rather than per view and per run, and the second half - that storing the geometry updates the live visualizationSettings, so that reopening the renderer in the same session uses what was just stored rather than what the structure still says. revision2026b step RG12.20.
-  - date raised: 2026-09-27
-- `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the settings dialog should store settings and positions with two separate buttons (#2693)
-  - description: The maintainer on 2026-09-26, after using the store button of revision2026b step RG12.11: 'I am still thinking, how the workflow for storing the window positions and sizes could be. The store settings means store positions at the same time. I would like to opt for two buttons, one for the settings and one for the positions.' Today one button writes both the visualizationSettings that differ from the defaults and the geometry of the dialog itself, and the confirmation window says so - but they are two decisions: 'I like this look' and 'I like this window here'. Two buttons say that, and each one's confirmation shows only what it writes. What has to be decided with it, because it stops being obvious once the buttons are separate: which of them stores the RENDER window geometry, which since \#2689 is part of the visualizationSettings (view\*.window.renderWindowSize and renderWindowPosition) and so would go with the settings button although it is a position; and whether the positions button also stores the geometry of the other dialogs it knows about, or only its own. revision2026b step RG12.19.
-  - date raised: 2026-09-27
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual (#2683)
   - description: Three descriptions of definitions/pybindSymbolic.py contain a TAB followed by 'exttt{...}' where 'texttt' was meant: someone wrote a backslash-t in a string that was not raw, and the tab is now in the source. The Symbolic page of the reference manual prints it as it is, on lines 11, 179 and 271 of docs/generated/cInterface/Symbolic.md: 'turing on recording by using \<tab\>exttt{exudyn.symbolic.SetRecording(True)}'. Inline code in a description is a backtick span (definitions/README.md, 'Writing a description'), so the fix is \`exudyn.symbolic.SetRecording(True)\`. Two typos are in the same sentences and in the paragraph above them: 'turing' for 'turning', three times, and 'veryfy' for 'verify'. Why no check caught it: checkDefinitions rejects a LaTeX command outside mathematics by looking for a backslash, and there is no backslash left - the tab ate it. A check for a raw tab inside a description would find this class of defect; that is the part worth deciding rather than just fixing the three lines.
   - date raised: 2026-09-26

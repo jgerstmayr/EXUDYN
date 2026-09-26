@@ -341,6 +341,7 @@ void VisualizationSystemContainer::InitializeRenderState(bool validInitializatio
 		renderState.displayScaling = 1;
 
 		renderState.currentWindowSize = GetSettingsView(viewID, settings).window.renderWindowSize;
+		renderState.currentWindowPosition = GetSettingsView(viewID, settings).window.renderWindowPosition;
 		if (renderState.currentWindowSize[0] < 1) { renderState.currentWindowSize[0] = 1; } //avoid division by zero
 		if (renderState.currentWindowSize[1] < 1) { renderState.currentWindowSize[1] = 1; } //avoid division by zero
 

@@ -232,6 +232,7 @@ When starting with an empty `mbs` and calling `SC.renderer.Start()`, the `SC.ren
   'zoom': 0.4,
   'boundingBox': [[-1.0,-1.0,-1.0],[1.0,1.0,1.0]],
   'currentWindowSize': [1024, 768],
+  'currentWindowPosition': [-1, -1],
   'displayScaling': 1.0,
   'modelRotation': [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
   'mouseCoordinates': [0.0, 0.0],
@@ -259,6 +260,7 @@ containing a modified dictionary:
 Note that other items in renderState are ignored when calling `SC.renderer.SetState(renderState)`. The read only variables in `SC.renderer.GetState()` are:
 
 - `currentWindowSize`: contains current window size, which is different from default values in visualizationSettings, if window is scaled by user
+- `currentWindowPosition`: the top left corner of the render window, as the window manager reports it — the OpenGL area, not the title bar. It follows the window while it is open, and setting it through `SC.renderer.SetState(...)` also sets `view*.window.renderWindowPosition`, as `currentWindowSize` does for the size
 - `displayScaling`$^*$: contains display scaling (monitor scaling; content scaling) as returned by GLFW and Windows (always 1 on Linux); used internally in renderer to scale fonts
 - `mouseCoordinates`$^*$: returns 2D vector of current mouse coordinates on screen
 - `openGLcoordinates`$^*$: returns 3D vector of current mouse coordinates

@@ -145,6 +145,7 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	d["boundingBox"] = boundingBox;
 
 	d["currentWindowSize"] = EPyUtils::SlimArrayIndex2NumPy(state.currentWindowSize);
+	d["currentWindowPosition"] = EPyUtils::SlimArrayIndex2NumPy(state.currentWindowPosition);
 	d["displayScaling"] = state.displayScaling;
 	//++++++++++++++++++++++++++++++++++++++++++++
 	//current orientation:
@@ -338,8 +339,74 @@ void PrintRendererSuppressedNotice()
 }
 
 //! start render engine
+namespace
+{
+	//! WHEN THE FILE AND THE SCRIPT DISAGREE ABOUT THE RENDER WINDOW (revision2026b step RG12.20,
+	//! #2694). The render window is the only window whose geometry lives in two places: the view
+	//! settings, and - because those are ordinary settings - the visualizationSettings section of
+	//! ~/.exudyn/config.json. They are applied at different moments, the file when the structure is
+	//! constructed and a script afterwards, so THE SCRIPT ALREADY WINS, which is what the maintainer
+	//! asked for. What was missing is that nobody was told: a user with a stored position sees the
+	//! window somewhere else and has no way to know why.
+	//!
+	//! Said ONCE per process, and only when the values really differ - not when they agree, which is
+	//! the normal case for a user who stored the geometry and did not touch it since.
+	void WarnAboutRenderWindowConflicts(const VisualizationSettings& settings)
+	{
+		static bool alreadySaid = false;
+		if (alreadySaid) { return; }
+
+		py::dict overrideSettings = EPyUtils::OverrideSettings();
+		if (!overrideSettings.contains("visualizationSettings")) { return; }
+
+		py::dict section;
+		try { section = py::cast<py::dict>(overrideSettings["visualizationSettings"]); }
+		catch (...) { return; }               //a section of the wrong shape is not this function's job
+
+		STDstring conflicts;
+		for (Index viewID = 0; viewID < MAX_VIEWS_GLFW; viewID++)
+		{
+			const VSettingsWindow& window = GetSettingsView(viewID, settings).window;
+			const char* names[2] = { "renderWindowSize", "renderWindowPosition" };
+			const Index2* current[2] = { &window.renderWindowSize, &window.renderWindowPosition };
+			for (Index which = 0; which < 2; which++)
+			{
+				STDstring key = STDstring("view") + EXUstd::ToString(viewID) + ".window." + names[which];
+				if (!section.contains(key.c_str())) { continue; }
+				Index2 stored;
+				try
+				{
+					py::list values = py::cast<py::list>(section[key.c_str()]);
+					if (values.size() != 2) { continue; }
+					stored[0] = py::cast<Index>(values[0]);
+					stored[1] = py::cast<Index>(values[1]);
+				}
+				catch (...) { continue; }     //not a pair of numbers: the applying code reported it
+				if (stored[0] != (*current[which])[0] || stored[1] != (*current[which])[1])
+				{
+					conflicts += STDstring("\n  ") + key + ": the file says ["
+						+ EXUstd::ToString(stored[0]) + "," + EXUstd::ToString(stored[1])
+						+ "] and this session uses [" + EXUstd::ToString((*current[which])[0]) + ","
+						+ EXUstd::ToString((*current[which])[1]) + "]";
+				}
+			}
+		}
+		if (conflicts.size() != 0)
+		{
+			alreadySaid = true;
+			PyWarning("the render window geometry stored in the settings file differs from what this"
+				" session set, and what the session set is used:" + conflicts
+				+ "\nstore the settings again to change the file, or remove them from it");
+		}
+	}
+}
+
 bool MainRenderer::Start(Index verbose)
 {
+	//before the suppression guard: the conflict is between the settings FILE and this session, which
+	//is true whether or not a window opens, and this is the moment both are known. With no settings
+	//file - which is every test run, EXUDYN_NO_USER_SETTINGS - the check returns at once
+	WarnAboutRenderWindowConflicts(mainSystemContainer->PyGetVisualizationSettings());
 	if (pySpecial.userInterface.suppressRenderer) { PrintRendererSuppressedNotice(); return false; }
 	return PyStartOpenGLRenderer(verbose, false); //false=no deprecation warning
 }
@@ -651,6 +718,18 @@ void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartu
 			state.currentWindowSize[0] = (Index)windowSize[0];
 			state.currentWindowSize[1] = (Index)windowSize[1];
 			GetSettingsView(viewID, VSC.GetVisualizationSettings()).window.renderWindowSize = state.currentWindowSize;
+		}
+		//the position, the same way and for the same reason (revision2026b step RG12.20, #2694): a
+		//stored render state puts the window back where it was, and the setting follows it, so that
+		//re-opening the renderer in this session uses what was just set rather than what the
+		//structure still said
+		if (renderState.contains("currentWindowPosition"))
+		{
+			Vector2D windowPosition;
+			EPyUtils::FromPython(renderState["currentWindowPosition"], windowPosition);
+			state.currentWindowPosition[0] = (Index)windowPosition[0];
+			state.currentWindowPosition[1] = (Index)windowPosition[1];
+			GetSettingsView(viewID, VSC.GetVisualizationSettings()).window.renderWindowPosition = state.currentWindowPosition;
 		}
 		if (renderState.contains("modelRotation"))
 		{
