@@ -138,6 +138,20 @@ names nothing is reported and changes nothing;
 monitor its own settings from `resultsMonitor`;
 6. nothing writes the file unless it is asked to.
 
+**The file is read once**, so a file you edit while a session is running - or one that another
+session stored - has no effect until you read it again. That is what makes a stored setting look as
+if it had not been stored in a console that keeps its kernel, such as Spyder:
+
+```python
+from exudyn.misc import overrideSettings
+overrideSettings.Reload()          #read it again and apply what can be applied
+overrideSettings.Print()           #what came from it now
+```
+
+A reload does not **undo**: a setting that already reached `exudyn.config`, and a structure that
+already exists, keep what they were given. A setting you removed from the file is seen by the
+structures created after the reload; for everything else, start a new session.
+
 A stored `visualizationSetting` is **not** a new default: `exu.VisualizationSettings()` carries it,
 and the defaults the settings dialog compares against are still the defaults of Exudyn, so *diff to
 default* shows a stored setting as a difference. That is the point - it is what the file changed.

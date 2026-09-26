@@ -78,6 +78,31 @@ def testTheLightDefaultsAreInTheStructure():
     assert settings.openGL.light0.enable
 
 
+def testTheRenderWindowPositionIsUnsetByDefaultOnEveryView():
+    """the flag is off, so the window manager places the window as it did before (revision2026b step
+    RG12.16, #2689)
+
+    A window is placed only on purpose, by a script or by ~/.exudyn/config.json, and each of the four
+    views has its own. The effect cannot be tested here - it needs a render window - so what is
+    pinned is the contract: off by default, and ordinary settings, which is what makes the settings
+    file and the store button of the dialog carry them with nothing added."""
+    settings = exudyn.VisualizationSettings()
+    for viewName in ['view0', 'view1', 'view2', 'view3']:
+        window = getattr(settings, viewName).window
+        assert window.useRenderWindowPosition is False
+        assert list(window.renderWindowPosition) == [0, 0]
+        assert list(window.renderWindowSize) == [1024, 768]
+
+    settings.view0.window.renderWindowPosition = [100, 80]
+    settings.view0.window.useRenderWindowPosition = True
+    assert list(settings.view0.window.renderWindowPosition) == [100, 80]
+
+    from exudyn.misc.settingsUtilities import ChangedSettings
+
+    assert [path for (path, _) in ChangedSettings(settings)] == [
+        'view0.window.renderWindowPosition', 'view0.window.useRenderWindowPosition']
+
+
 def testAContainerStartsFromTheSameMaterials():
     """SC.visualizationSettings and the material list of the renderer must agree, which is what
     MainGraphicsMaterialList::Reset() now guarantees by copying from a fresh VSettingsRaytracer"""

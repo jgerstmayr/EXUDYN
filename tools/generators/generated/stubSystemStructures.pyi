@@ -824,8 +824,10 @@ class VSettingsWindow:
     """True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value."""
     maximize: bool
     """True: render window of respective view will be maximized at startup."""
+    renderWindowPosition: Tuple[int,int]
+    """position of the top left corner of the render window of this view, in pixels, used only if ``useRenderWindowPosition`` is True. Set both to place a window where you want it, or store them in ``~/.exudyn/config.json`` to have every run start there, see Section sec-overridesettings; NOTE: the position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it."""
     renderWindowSize: Tuple[int,int]
-    """initial size of render window of respective view for specific view in pixels for."""
+    """initial size of the render window of this view, in pixels."""
     showComputationInfo: bool
     """true = show (hide) all computation information including Exudyn and version."""
     showMouseCoordinates: bool
@@ -834,6 +836,8 @@ class VSettingsWindow:
     """True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'."""
     showWindow: bool
     """True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)."""
+    useRenderWindowPosition: bool
+    """True: the render window of this view is placed at ``renderWindowPosition``; False (default): the window manager places it, as it did before these two settings existed."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 

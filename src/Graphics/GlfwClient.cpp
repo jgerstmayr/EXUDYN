@@ -1748,6 +1748,24 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 		renderViews.SetWindow(viewID, window);
 		renderViews.State(viewID)->windowOpen = true;
 		renderViews.State(viewID)->viewEnabled = true;
+
+		//WHERE THE WINDOW GOES, if it was asked for (revision2026b step RG12.16, #2689). The flag
+		//is off by default, so the window manager places the window as it did before these settings
+		//existed - a window is placed only on purpose, by a script or by ~/.exudyn/config.json, and
+		//every view has its own. The flag rather than a negative coordinate as a sentinel, because
+		//the settings dialog refuses a negative IndexArray and the size beside it is the same C++
+		//type, so nothing could tell the two apart
+		const auto& windowSettings = GetSettingsView(viewID, *visSettings).window;
+		const Index2& windowPosition = windowSettings.renderWindowPosition;
+		if (windowSettings.useRenderWindowPosition)
+		{
+			glfwSetWindowPos(window, (int)windowPosition[0], (int)windowPosition[1]);
+			if (verboseRenderer)
+			{
+				PrintDelayed(STDstring("window of view ") + EXUstd::ToString(viewID) + " placed at ("
+					+ EXUstd::ToString(windowPosition[0]) + "," + EXUstd::ToString(windowPosition[1]) + ")");
+			}
+		}
 	}
 
 

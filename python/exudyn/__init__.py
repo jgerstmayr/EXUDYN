@@ -230,12 +230,28 @@ except Exception as e: #an environment that cannot be read must never stop 'impo
 #differently than it reads, so every one of them is named in one note here,
 #EXUDYN_NO_USER_SETTINGS=1 ignores the file, and exudyn.misc.overrideSettings.Applied() answers
 #"what is not in my script" afterwards. Nothing writes the file by itself.
-def _ApplyUserSettings():
+#the constructors are wrapped ONCE per process, and a reload may be what wraps them: a file that
+#had no visualizationSettings at import can have them after it was edited (revision2026b step
+#RG12.14, #2687)
+_visualizationSettingsWrapped = False
+
+
+def _ApplyUserSettings(reload=False):
+    """read ~/.exudyn/config.json into exudyn.special.overrideSettings and apply what can be applied
+
+    reload=True is exudyn.misc.overrideSettings.Reload(): the store is emptied first, so a section
+    that was removed from the file is gone from it as well. What was already APPLIED is not undone -
+    a setting that reached exudyn.config stays where it is, and a structure that exists keeps what it
+    was given.
+    """
     from .misc import overrideSettings as _settings
+    global _visualizationSettingsWrapped                                     # noqa: PLW0603
 
     stored = special.overrideSettings   #the one store; filled here and by nothing else
+    if reload:
+        stored.clear()
     stored.update(_settings.Load())
-    if len(stored) == 0:
+    if len(stored) == 0 and not reload:
         return
 
     _settings.ApplyConfig(config, stored)
@@ -253,7 +269,7 @@ def _ApplyUserSettings():
     #"isinstance(guiSC, exudyn.SystemContainer)" on the object the C++ side stores as a POINTER,
     #which is of the COMPILED class, so it found nothing and the V key opened no dialog at all.
     #Wrapping __init__ on the class itself leaves every name and every isinstance as they were.
-    if (stored.get('visualizationSettings') or {}) != {}:
+    if (stored.get('visualizationSettings') or {}) != {} and not _visualizationSettingsWrapped:
 
         def _Apply(visualizationSettings):
             try:
@@ -282,6 +298,7 @@ def _ApplyUserSettings():
             _ApplyingConstructor(_compiledModule.SystemContainer,
                                  lambda container: container.visualizationSettings)
             _ApplyingConstructor(_compiledModule.VisualizationSettings, lambda structure: structure)
+            _visualizationSettingsWrapped = True
         except (TypeError, AttributeError) as error:
             #a build whose classes refuse it: say so rather than fall back to a subclass, which is
             #what broke the dialogs

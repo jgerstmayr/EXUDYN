@@ -4876,3 +4876,65 @@ about this morning.
 **Gates**: 11/11 checks, the wheel, the full suite, 495 pytest, the strict HTML build. The V key needs
 a render window, so what is tested is the link: `None` without a container, the container itself after
 one is created, absent from `exudyn.sys`, and not settable from Python.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.14 - the override settings can be read again, and RG12.16.1 - the render window can be placed (2026-09-26, #2687, #2689)
+
+**RG12.14 was two thirds finished before it was built, and not by me.** The maintainer, reading the
+step: *"For RG12.14 / Spyder: it seems that StoreSection already stores the values not only in the
+file, but also in the local settings. This would already be exactly what we need, right?"* Yes - and
+measured, one better: because the wrapped constructors of RG12.17 close over **that dictionary
+object**, a structure created after a store gets the new value in the same session. So what looked
+like *"it does not store"* was RG12.13's defect, and this step is only what is genuinely left: a file
+edited **outside** the session.
+
+`overrideSettings.Reload()` empties the store, fills it from the file, applies `config`, and - the
+case that needed thought - **installs the wrapped constructors if the file had no
+`visualizationSettings` at import**. That was the fork in the step: install them always (a cost for
+everybody), install them on a reload, or document that this one case needs a restart. The reload
+installs them, which costs nothing in a session that never reloads and makes the reload complete.
+
+**A reload does not undo, and that is written where a user reads it.** A setting that already reached
+`exudyn.config` stays; a structure that exists keeps what it was given. What a reload *does* do, which
+I expected not to, is that a section **removed** from the file stops reaching new structures - the
+store is emptied and the wrapper then applies nothing. Measured: `general.circleTiling` 4, remove the
+section, reload, a new structure reads 16 again. The probe I wrote said "(4 expected)" and the code was
+right.
+
+**And the snapshot survived the same test**: the defaults still read 16 after the reload installed the
+wrappers, because the snapshot is taken before they are installed. I had annotated that probe line
+wrongly too.
+
+---
+
+**RG12.16.1: the render window can be placed**, and the maintainer's design made it small - an
+ordinary setting, so `~/.exudyn/config.json`, `Store(SC)` and the store button carry it with nothing
+added, one entry per view, and a script can set it. `GlfwClient.cpp` calls `glfwSetWindowPos` when it
+is asked to; it never called it at all before.
+
+**The `(-1,-1)` sentinel could not be used, and the reason is the interesting part.** The maintainer
+proposed it with a question mark - *"default needs to be something illegal (-1/-1)?"* - and the
+question has an answer: the settings dialog **refuses a negative value of an `IndexArray`**, so the
+value could be stored in a file and set from a script but never typed in the dialog. It is the same
+C++ type as `renderWindowSize` beside it, so no mapping can tell the two apart.
+
+I tried the obvious way out - let a **fixed-size** `IndexArray` be signed while a variable-length one
+stays non-negative, on the grounds that a list of indices is item numbers and a pair is geometry - and
+an existing test said no: `('[-1, 2, 3]', 'IndexArray', [3], 'positive integer')` is a case somebody
+wrote down on purpose. Relaxing the rule for all of them was the other way out, and measuring killed
+it: `v.sensors.traces.listOfPositionSensors = [-1]` and `renderWindowSize = [-5,-5]` are **both
+accepted by the C++**, so the dialog's rule is the only one there is.
+
+So "unset" is a **flag**, `useRenderWindowPosition`, default False. Two settings instead of one, which
+is more than was asked for, and the only option that plays by the rules that exist rather than by one
+I invent. If the sentinel is preferred, it needs a distinct type for a signed pair - a bigger change
+than the flag, and RG12.16.2 is where it would go.
+
+**The reference of `parameterConversionTest` was rewritten**, as its own header says to do after an
+intended change: 16 rows, all of them the two new settings appearing in the four views' lists, and
+nothing else moved.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 498 pytest, the strict HTML build. The window is
+not placed by any test - that needs a render window - so what is pinned is the contract: the flag is
+off on all four views, the position defaults to (0,0), and both are ordinary settings that
+`ChangedSettings` reports.

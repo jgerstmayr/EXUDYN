@@ -2169,41 +2169,20 @@ package).
       that and no more.
 
 <a id="rg12-14"></a>
-**RG12.14** *(group RG12; maintainer 2026-09-26)* **The override settings are read only at import, so
-    a changed file needs a new session** (#2687). *"the config is only loaded in spyder after
-    restarting. So that means that it does not store the settings."* - which is what it looks like,
-    and the file was written correctly all along. Spyder keeps the kernel, so `import exudyn` does
-    nothing the second time.
+**RG12.14** **DONE 2026-09-26** (#2687) — [log](exudynRevisionLog2026b.md#rg12-14) —
+    **The override settings can be read again**: `overrideSettings.Reload()`. A file edited while a
+    session runs, or stored by another session, takes effect without restarting the interpreter -
+    which is the Spyder case, where the kernel stays and a second `import exudyn` does nothing.
 
-**The step is much smaller than it looked, and the maintainer said why**: *"At least in
-    StoreSection, it seems that it already stores the values not only in the file, but also in the
-    local settings. This would already be exactly what we need, right?"* - yes. Measured on
-    2026-09-26:
+    The store is emptied first, so a section removed from the file is gone from it; `config` is
+    applied; and the `visualizationSettings` reach every structure created afterwards, **including the
+    case where the file had none at import** - then the reload is what installs the wrapped
+    constructors. **A reload does not undo**: what already reached `exudyn.config`, and a structure
+    that already exists, keep what they were given, and that is documented where the reload is.
 
-    - `StoreSection` writes the file **and** `exudyn.special.overrideSettings`, so the session is in
-      step with what it just stored;
-    - and because the subclasses of RG12.10 close over **that dictionary object**, a structure
-      created afterwards in the same session gets the new value - `general.circleTiling` stored as 7
-      and read back as 7 from a new `exu.VisualizationSettings()` and from a new `SystemContainer`,
-      with no restart.
-
-    **So what looked like "it does not store" was RG12.13**: the geometry was stored, in the file and
-    in the store, and the dialog never read it back.
-
-    **What is genuinely left:**
-
-    - a file edited **outside** the session - by hand, or by another process - is not re-read by
-      anything. That is the reload: `Reload()` re-reads the file into the store.
-    - a stored `config` section is **not** applied to the live `exudyn.config` by storing it
-      (measured: the store says 9, `exu.config.outputPrecision` stays 6). Storing usually comes
-      *from* the live config so they agree anyway, but a reload has to apply that section.
-    - the **documentation**: what needs a restart and what does not, because the answer is now
-      "almost nothing does" and that is worth saying where the file is described.
-
-    The fork about the subclasses stays, and is smaller for the same reason: they are installed at
-    import and only when the file holds a `visualizationSettings` section, so a reload of a file that
-    had none cannot make them appear. Either they are installed whenever the file could hold one, or
-    the reload installs them, or the documentation says that this one case needs a restart.
+    The step shrank twice before it was built, both times because the maintainer looked: `StoreSection`
+    already updates the store, and the wrappers close over that same dictionary - so what looked like
+    "it does not store" was RG12.13.
 
 <a id="rg12-15"></a>
 **RG12.15** *(group RG12; maintainer 2026-09-26)* **The documentation does not say that a script can
@@ -2230,78 +2209,28 @@ package).
 **RG12.16** *(group RG12; maintainer 2026-09-26)* **The render window and the SolutionViewer remember
     their size and position** (#2689), as the settings dialogs do since RG12.5.3.
 
-    **The maintainer's design, and it is cheaper than a new section** (2026-09-26): *"so we need an
-    additional field in SettingsView->window; default needs to be something illegal (-1/-1)?, like
-    that negative values are just ignored. It then allows to use predefined values for view0 .. view3.
-    This could then use the same mechanism as in the other visualizationSettings cases."*
+    - **RG12.16.1** **DONE 2026-09-26** — **the render window can be placed.**
+      `view*.window.renderWindowPosition` and `view*.window.useRenderWindowPosition` are ordinary
+      settings, so `~/.exudyn/config.json`, `Store(SC)` and the store button of the dialog carry them
+      with nothing added, one entry per view, and a script can set them. `GlfwClient.cpp` calls
+      `glfwSetWindowPos` when the flag is on - it never called it at all before.
 
-    So the position is an ordinary **setting** - `view*.window.renderWindowPosition`, `TIndexND(2)`,
-    default `Index2({-1,-1})`, negative meaning "wherever the window manager puts it" - beside the
-    `renderWindowSize` that is already there. Nothing new is needed to store it: it is a
-    `visualizationSetting` like any other, so `~/.exudyn/config.json`, `Store(SC)` and the store
-    button of RG12.11 carry it, one entry per view for free, and a script can set it directly.
+      **The `(-1,-1)` sentinel could not be used, and the reason is worth keeping.** The settings
+      dialog **refuses a negative value of an `IndexArray`**, which is the type both the position and
+      the size have - so no mapping could tell them apart - and that rule is the only guard there is:
+      the C++ side accepts a negative sensor number *and* a negative window size, both measured. A
+      flag says "unset" in a way the dialog can edit and a reader can understand. If the maintainer
+      prefers the sentinel, it needs a distinct type for a signed pair, which is a bigger change than
+      the flag.
+    - **RG12.16.2** *(open)* **writing size and position back** into the settings when the window
+      closes (`glfwGetWindowPos`), which is what makes the store button of the dialog *remember* a
+      render window rather than only place it.
+    - **RG12.16.3** *(open)* **the SolutionViewer**, whose dialog is a tkinter window like the settings
+      dialogs, so it can use `RestoreWindowGeometry` and `StoreWindowGeometry` now that RG12.13 made
+      those work without the flag.
 
-    **What still needs C++**, and it is the whole of it: `GlfwClient.cpp` never calls
-    `glfwSetWindowPos` or `glfwGetWindowPos` (measured). Two sub-steps suggest themselves - **setting**
-    the position when the window opens, and **reading** size and position back into the settings when
-    it closes, which is what makes "remember" work with the store button rather than by hand.
-
-    **The SolutionViewer is the cheap half**: its dialog is a tkinter window like the settings
-    dialogs, so it uses `RestoreWindowGeometry` and `StoreWindowGeometry` as soon as RG12.13 makes
-    those work without the renderer flag.
-
-    The reachability rule of RG6.2.11 applies to both, and a render window is where it matters most:
-    a renderer that opens off-screen cannot be closed by the mouse.
-
-
-<a id="rg12-17"></a>
-**RG12.17** **DONE 2026-09-26** (#2691) — [log](exudynRevisionLog2026b.md#rg12-17) —
-    **A settings file with `visualizationSettings` killed the V key.** With such a file, pressing V in
-    the render window opened no dialog and the console said *"problems with the SystemContainer,
-    probably not attached to the renderer yet"*; without the file everything worked.
-
-    **Reproduced and measured**: RG12.10 installed a Python **subclass** as `exudyn.SystemContainer`,
-    and `GetRendererSystemContainer()` does `isinstance(guiSC, exudyn.SystemContainer)` on what the
-    C++ side stores - a **pointer**, which pybind casts to an object of the **compiled** class. False
-    against a subclass, so the probe found nothing and every dialog that needs the container did
-    nothing.
-
-    **The third thing that subclass broke in two days**, after the defaults of RG12.10 and an
-    `isinstance` of mine in RG12.11. So the mechanism stopped changing what a class is: the
-    constructor of the **compiled class is wrapped in place** (measured: pybind11 heap types allow
-    it), and no name and no `isinstance` moves. The defaults then cannot be constructed - every
-    construction applies the overrides - so they are **snapshotted at import**, before the wrapper,
-    exactly as the defaults of `exudyn.config` are.
-
-    - **RG12.17.1** the two things the maintainer asked for while reading it: the probe **says once
-      per process** what went wrong instead of returning None in silence, which is why this needed a
-      reproduction rather than a message; and `ShowVisualizationSettingsDialog` printed
-      *"ERROR: ShowRightMouseSelectionDialog: ..."*, a copy-paste error naming the wrong function in
-      the one message a user sees.
-
-<a id="rg12-18"></a>
-**RG12.18** **DONE 2026-09-26** (#2692) — [log](exudynRevisionLog2026b.md#rg12-18) —
-    **The renderer link is a member on the C++ side**, `exudyn.special.currentRendererSystemContainer`,
-    and `exu.sys['currentRendererSystemContainer']` is gone. The maintainer asked for it after RG12.17
-    and was right about why: a dictionary entry can hold anything, so the one reader that cares had to
-    check what class it got - and that check is what broke.
-
-    It is a **raw pointer**, cast to Python on access, so a script gets the very `SystemContainer` it
-    created and nothing holds a Python reference that would have to be released after the interpreter
-    has finalized.
-
-    **And it fixes what the entry never did**: the pointer is cleared in `Reset()`, which the
-    destructor calls, so a destroyed container leaves `None` instead of a link into freed memory. The
-    entry was cleared only by an explicit detach - which is why the reader needed guarding against a
-    dead object twice, in #2623 and #2676.
-
-    **Three readers became one**: `GetExudynDisplayScaling` and the dialog's redraw call
-    `GetRendererSystemContainer()` instead of reading the link themselves, so one place knows how it is
-    found and the guard applies everywhere.
-
-    Nothing in the examples or the models used the entry - checked, as the maintainer asked - and
-    `basicUtilities.ClearWorkspace` no longer takes the renderer away from its container as a side
-    effect of emptying `exudyn.sys`.
+    The reachability rule of RG6.2.11 applies to both, and a render window is where it matters most: a
+    renderer that opens off-screen cannot be closed by the mouse.
 
 ## Next steps recommended
 
@@ -2342,9 +2271,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
-| RG12.14 | #2687 | the override settings are read only at import, so a changed file needs a new session |
 | RG12.15 | #2688 | the documentation does not say that a script can place a dialog |
-| RG12.16 | #2689 | the render window and the SolutionViewer remember their size and position |
+| RG12.16.2 | #2689 | writing the render window size and position back when it closes; .3 the SolutionViewer |
 
 ### Raised by the current work, and not yet a step
 

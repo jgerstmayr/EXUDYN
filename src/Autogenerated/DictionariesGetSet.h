@@ -3561,10 +3561,18 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.renderWindowPosition);
+    d["type"] = "IndexArray";
+    d["size"] = std::vector<int>{2};
+    d["description"] = "position of the top left corner of the render window of this view, in pixels, used only if `useRenderWindowPosition` is True. Set both to place a window where you want it, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-overridesettings); NOTE: the position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it";
+    structureDict["renderWindowPosition"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.renderWindowSize);
     d["type"] = "IndexArray";
     d["size"] = std::vector<int>{2};
-    d["description"] = "initial size of render window of respective view for specific view in pixels for";
+    d["description"] = "initial size of the render window of this view, in pixels";
     structureDict["renderWindowSize"] = d;
 
     d = py::dict(); //reset local dict
@@ -3599,6 +3607,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
     d["description"] = "True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)";
     structureDict["showWindow"] = d;
 
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.useRenderWindowPosition;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "True: the render window of this view is placed at `renderWindowPosition`; False (default): the window manager places it, as it did before these two settings existed";
+    structureDict["useRenderWindowPosition"] = d;
+
     return structureDict;
 }
 
@@ -3609,11 +3625,13 @@ inline py::dict GetDictionary(const VSettingsWindow& data) {
     structureDict["globalFontSize"] = data.globalFontSize;
     structureDict["lockModelView"] = data.lockModelView;
     structureDict["maximize"] = data.maximize;
+    structureDict["renderWindowPosition"] = EPyUtils::ToPythonMember(data.renderWindowPosition);
     structureDict["renderWindowSize"] = EPyUtils::ToPythonMember(data.renderWindowSize);
     structureDict["showComputationInfo"] = data.showComputationInfo;
     structureDict["showMouseCoordinates"] = data.showMouseCoordinates;
     structureDict["showRenderStateInfo"] = data.showRenderStateInfo;
     structureDict["showWindow"] = data.showWindow;
+    structureDict["useRenderWindowPosition"] = data.useRenderWindowPosition;
     return structureDict;
 }
 
@@ -3623,11 +3641,13 @@ inline void SetDictionary(VSettingsWindow& data, const py::dict& d) {
     EPyUtils::FromPython(d["globalFontSize"], data.globalFontSize, EPyUtils::RangeCheck::positive, "VSettingsWindow.globalFontSize");
     EPyUtils::FromPython(d["lockModelView"], data.lockModelView, "VSettingsWindow.lockModelView");
     EPyUtils::FromPython(d["maximize"], data.maximize, "VSettingsWindow.maximize");
+    EPyUtils::FromPython(d["renderWindowPosition"], data.renderWindowPosition, "VSettingsWindow.renderWindowPosition");
     EPyUtils::FromPython(d["renderWindowSize"], data.renderWindowSize, "VSettingsWindow.renderWindowSize");
     EPyUtils::FromPython(d["showComputationInfo"], data.showComputationInfo, "VSettingsWindow.showComputationInfo");
     EPyUtils::FromPython(d["showMouseCoordinates"], data.showMouseCoordinates, "VSettingsWindow.showMouseCoordinates");
     EPyUtils::FromPython(d["showRenderStateInfo"], data.showRenderStateInfo, "VSettingsWindow.showRenderStateInfo");
     EPyUtils::FromPython(d["showWindow"], data.showWindow, "VSettingsWindow.showWindow");
+    EPyUtils::FromPython(d["useRenderWindowPosition"], data.useRenderWindowPosition, "VSettingsWindow.useRenderWindowPosition");
 }
 
 //! AUTO: read access to structure; converting into dictionary

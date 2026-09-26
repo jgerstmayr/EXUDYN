@@ -460,6 +460,54 @@ def test_theSnapshottedDefaultsSurviveAWrappedConstructor():
         settings.structureDefaults.clear()
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#reading the file again (revision2026b step RG12.14, #2687)
+def test_reloadReadsTheFileAgainAndAppliesTheConfigSection(settingsFile):
+    """import exudyn reads it once, and importing it again does nothing - which in a console that
+    keeps its kernel makes a stored setting look as if it had not been stored"""
+    settingsFile({})
+    settings.Reload()
+    previous = exu.config.outputPrecision
+    try:
+        assert exu.special.overrideSettings == {}
+
+        settingsFile({'config': {'outputPrecision': 9}})     #edited while the session runs
+        assert exu.config.outputPrecision == previous        #nothing happens by itself
+
+        settings.Reload()
+        assert exu.config.outputPrecision == 9
+        assert sorted(exu.special.overrideSettings) == ['config']
+    finally:
+        exu.config.outputPrecision = previous
+        exu.special.overrideSettings.clear()
+
+
+def test_reloadEmptiesTheStoreFirst(settingsFile):
+    """a section removed from the file is gone from the store, and a hand-written entry with it"""
+    settingsFile({'dialogs': {'a': {'size': [1, 2], 'position': [3, 4]}}})
+    settings.Reload()
+    assert sorted(exu.special.overrideSettings) == ['dialogs']
+
+    exu.special.overrideSettings['resultsMonitor'] = {'updatePeriod': 9.0}   #by hand, this run only
+    settingsFile({})
+    settings.Reload()
+    assert exu.special.overrideSettings == {}
+
+
+def test_reloadRestartsTheRecords(settingsFile):
+    """Print() has to describe the file as it is now, not as it was"""
+    settingsFile({'config': {'outputPrecision': 9}})
+    previous = exu.config.outputPrecision
+    try:
+        settings.Reload()
+        assert len(settings.Applied()) == 1
+        settings.Reload()
+        assert len(settings.Applied()) == 1, 'the records grew instead of being replaced'
+    finally:
+        exu.config.outputPrecision = previous
+        exu.special.overrideSettings.clear()
+
+
 def test_theRunnersIgnoreTheFile():
     """conftest.py sets it for pytest, and the three runners set it for themselves
 

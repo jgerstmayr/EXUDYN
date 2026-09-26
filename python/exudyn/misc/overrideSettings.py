@@ -34,7 +34,7 @@ import os
 
 __all__ = ['fileFormatVersion', 'sectionNames', 'plainTypes', 'structureDefaults',
            'FileName', 'Ignoring', 'Settings', 'Load', 'Save',
-           'Clear', 'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig',
+           'Clear', 'Reload', 'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig',
            'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry', 'StoreDialogGeometry',
            'PositionIsReachable', 'Store']
 
@@ -183,6 +183,44 @@ def Clear():
         os.remove(fileName)
         return True
     return False
+
+
+def Reload():
+    """Read the file again, into `exudyn.special.overrideSettings`, and apply what can be applied.
+
+    Returns:
+        the store, `exudyn.special.overrideSettings`, as it is afterwards
+
+    Note:
+        `import exudyn` reads the file once, and importing an already imported module does nothing -
+        so a file edited by hand, or written by another process, has no effect until this is called
+        or the interpreter is restarted. In a console that keeps its kernel, such as Spyder, that is
+        what makes a stored setting look as if it had not been stored.
+
+        WHAT IT DOES: the store is emptied and filled from the file, the `config` section is applied,
+        and `visualizationSettings` reach every structure created from now on - including the case
+        where the file had none at import, which is when this installs what applies them.
+
+        WHAT IT DOES NOT DO: undo. A setting that already reached `exudyn.config` stays at the value
+        it was given, and a structure that exists keeps what it was given, so a setting REMOVED from
+        the file is seen by the structures created after the reload and not by `exudyn.config` or by
+        anything that exists. For that, start a new session.
+
+        Anything a script put into `exudyn.special.overrideSettings` by hand is dropped, because this
+        is a re-read of the file.
+
+    Example:
+        #after editing ~/.exudyn/config.json by hand:
+        from exudyn.misc import overrideSettings
+        overrideSettings.Reload()
+        overrideSettings.Print()        #what came from it now
+    """
+    import exudyn
+
+    del _applied[:]                #Print() describes the file as it is now, not as it was
+    del _ignored[:]
+    exudyn._ApplyUserSettings(reload=True)
+    return Settings()
 
 
 def StoreSection(name, values):
