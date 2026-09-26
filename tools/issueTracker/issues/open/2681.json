@@ -1,0 +1,13 @@
+{
+  "number": 2681,
+  "title": "The generator API still says Latex where it writes Markdown",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-09-26: DefLatexDataAccess and similar Latex commands need to be renamed consistently; search for latex, rename where it is clear (Markdown) and suggest options where it is not. Measured the same day over tools/generators/ and definitions/: 28 files carry the word. The declaration API every definition file uses - DefLatexDataAccess (64 uses), DefLatexStartTable (32), DefLatexFinishTable (27), DefLatexOperator (17), DefLatexStartClass (13) - writes Markdown and has done since RG3.14; PyLatexRST (18 uses) writes Python, a stub and Markdown and neither LaTeX nor RST. Names that describe real LaTeX stay: GetTypesStringLatex and Str2Latex feed mathematics and C++ comments, and latexToMarkdown.py is named after what it converts from. The open kind is latexSymbol and its family, the dollar-symbol of an item parameter, which IS LaTeX inside Markdown. A rename of 64 call sites changes no output, so the gate is that the regeneration stays a no-op.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "tools/generators/pybindEmitter.py"
+}

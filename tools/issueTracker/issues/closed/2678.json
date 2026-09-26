@@ -2,12 +2,16 @@
   "number": 2678,
   "title": "The lights and the raytracer materials are initialised by the SystemContainer, not by the settings structure",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "Measured in revision2026b step RG6.2.12: exu.VisualizationSettings() and SystemContainer().visualizationSettings differ in 59 settings - four lights and ten raytracer materials - because the container's constructor initialises them and the structure's defaults do not. DefaultSettingsDictionary() works around it by taking its reference from a container, and a test of RG6.2.20 guards the difference. It blocks the override settings of #2679: that design needs one unambiguous default, to store only what differs, and one moment of application, when a structure is created. Today a structure on a container is initialised AFTER its constructor, so an override of a light would be overwritten and a stored difference would depend on which reference was taken. The maintainer, 2026-09-26: this shall be resolved first.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "src/Main/Experimental.h"
+  "dateResolved": "2026-09-26 14:40",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/Experimental.h",
+  "releaseNotes": "obsolete: revision2026b step RG6.2.20 did this on 2026-09-23, three days before the issue was raised. The 89 assignments moved out of the C++ constructor into definitions/structureDefsVisualizationSettings.py, containerInitialisedSettings is empty, DefaultSettingsDictionary takes the plain constructor, and a test requires the difference to stay empty. Measured on 2026-09-26 before anything was changed: exu.VisualizationSettings() and SystemContainer().visualizationSettings differ in 0 of 470 settings. The issue was raised from the RG6.2.12 log entry, which describes the state before RG6.2.20.",
+  "resolvedInVersion": "1.12.90"
 }

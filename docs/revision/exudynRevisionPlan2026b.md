@@ -1247,69 +1247,23 @@ This group is that revision and what has to happen before it can start.
     the mechanism that hid the window of the changes in #2621. The tooltip window carries the
     flag now, so the dialog keeps the topmost it needs to block the render window.
 
-<a id="rg6-2-27"></a>
-**RG6.2.27** **DONE 2026-09-25** (#2654) — [log](exudynRevisionLog2026b.md#rg6-2-27) —
-    **The command window lost the scope of the model** *(maintainer, 2026-09-25)*. Pressing X in
-    the render window opens a window whose label promises the *"global scope of you Python
-    model"*, and `mbs` was a `NameError` there: the dialog became a function of
-    `exudyn.misc.GUI` in RG6.2.1, and `globals()` inside a module function is the module. It
-    runs in `vars(__main__)` again - one dictionary, so an assignment also survives the command.
+<a id="rg6-2-28"></a>
+**RG6.2.28** **DONE 2026-09-23** (by RG6.2.20, #2626) — [log](exudynRevisionLog2026b.md#rg6-2-28) —
+    **The lights and the raytracer materials are defaults of the structure.** Proposed on 2026-09-26
+    as the blocker of RG12.9 to RG12.11, on the strength of the RG6.2.12 log; the maintainer read
+    the C++ and said it looked done already, and it is. **RG6.2.20 did it three days earlier**: the
+    89 assignments moved out of the C++ constructor into
+    `definitions/structureDefsVisualizationSettings.py`, `containerInitialisedSettings` is empty,
+    `DefaultSettingsDictionary` takes the plain constructor, and
+    `testASystemContainerInitialisesNothingBeyondTheDefaults` requires the difference to stay empty.
 
-<a id="rg6-2-26"></a>
-**RG6.2.26** **DONE 2026-09-26** (#2675) — [log](exudynRevisionLog2026b.md#rg12-5-3) —
-    **Remember the window.** RG6.2.11 left it undecided on 2026-09-23 and kept the rule that makes
-    it safe; the maintainer asked for a proposal on 2026-09-26 and approved it the same day. Built
-    as **RG12.5.3**, in the file of RG12.5 rather than in one of its own, exactly as proposed
-    below.
+    **Measured on 2026-09-26 before anything was changed**: `exu.VisualizationSettings()` and
+    `SystemContainer().visualizationSettings` differ in **0 of 470** settings. #2678 is closed as
+    obsolete, and **nothing blocks RG12.9 to RG12.11**.
 
-    **It is not a mechanism of its own: it is three keys in the file of RG12.5** (#2666),
-    `~/.exudyn/config.json`, under a `dialogs` section - one entry per dialog, holding its size and
-    its position:
-
-    ```json
-    {"dialogs": {"visualizationSettings": {"size": [1024, 768], "position": [100, 80]}}}
-    ```
-
-    That is the whole of it, and it is the reason to decide RG12.5 first: a second file for window
-    states would be the beginning of one file per feature.
-
-    **The rule from the RG6.2.11 log stands and is what makes it safe**: restore the **size**
-    always, the **position** only when the window still lies inside the virtual desktop. A monitor
-    that is unplugged, a laptop undocked, a resolution changed - each of them would otherwise put a
-    dialog where no one can reach it, and a settings dialog that cannot be seen cannot be closed.
-
-    It is written only when `visualizationSettings.dialogs.storeDialogPositions` is true, so
-    remembering is something a user switches **on**; and RG12.5's note on the first import when the
-    stored settings are not empty covers it, because a remembered window is exactly the kind of state
-    that makes a bug report irreproducible.
-
-<a id="rg6-2-27"></a>
-**RG6.2.27** *(group RG6; from the maintainer's reconsideration of 2026-09-26)* **The lights and the
-    raytracer materials become defaults of the structure** (#2678). **This blocks RG12.9 to RG12.11**,
-    and the maintainer said so: *"for this special overrideSettings, some workflows are more
-    complicated, because the VisualizationSettings dialog contains a weird initialization of lights
-    and materials. Therefore, this shall be resolved first"*.
-
-    **What it is**, measured in RG6.2.12 and written down there: `exu.VisualizationSettings()` and
-    `SystemContainer().visualizationSettings` differ in **59 settings** - four lights and ten
-    raytracer materials - because the **container's constructor** initialises them and the
-    structure's own defaults do not. `DefaultSettingsDictionary()` papers over it by taking its
-    reference from a container, and a test of RG6.2.20 guards the difference.
-
-    **Why it blocks the override work**, which is the new part: the override design needs one
-    unambiguous *default* (to store only what differs) and one moment of *application* (when a
-    structure is created). Today a structure created on a container is initialised **after** its
-    constructor, so an override of a light would be overwritten by the container, and a stored
-    "difference from the default" would depend on which of the two references was taken.
-
-    - **Option A (recommended)**: move the initialisation into the **structure's defaults** in the
-      C++, so that a constructed structure already carries the lights and the materials. The log of
-      RG6.2.20 anticipates exactly this - *"if that test ever fails, the initialisation moved into
-      the structure itself and this function can go"* - and `DefaultSettingsDictionary()` loses its
-      container reference, which is one less thing that can disagree.
-    - **Option B**: leave it and **exclude** lights and materials from the override mechanism, named
-      in the documentation. Cheap, and it leaves a hole exactly where a user would want an override
-      (a light is a taste, which is what this whole file is for).
+    The lesson is worth the two lines: the plan said "the container initialises 59 settings"
+    because a log entry from eight steps earlier said so, and a log entry is what was true **when
+    it was written**. A premise that decides the order of three steps is measured, not read.
 
 <a id="rg6-3"></a>
 **RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
@@ -1900,7 +1854,7 @@ package).
       the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
       enums, which is why they were left out of .1 rather than guessed at.
     - **RG12.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-3) - the dialogs
-      section, which is **RG6.2.26** (#2675) built: `visualizationSettings.dialogs.
+      section, which is **RG6.2.29** (#2675) built: `visualizationSettings.dialogs.
       storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
       of RG6.2.11 - the size always, the position only when the window would still be reachable.
     - **RG12.5.4** *(open)* — **folding in `~/.exudyn/resultsMonitor.json`.** The monitor had its
@@ -1938,7 +1892,7 @@ package).
 
 <a id="rg12-9"></a>
 **RG12.9** *(group RG12; maintainer 2026-09-26)* **The override settings live in
-    `exudyn.special.overrideSettings`** (#2679). The maintainer, having seen RG12.5.1 built:
+    `exudyn.special.overrideSettings`** (#2679). **Not blocked**: RG6.2.28 turned out to be done. The maintainer, having seen RG12.5.1 built:
     *"they anyway should be used rarely and with caution; they are for convenience ... location in
     exudyn should be therefore e.g. `exudyn.special.overrideSettings`"*, and *"this requires a dict
     on the C++ side (?) ... Advantage: also accessible from C++ then"*.
@@ -1948,27 +1902,18 @@ package).
     rule of the dialog geometry, and the 26 tests. What moves is **where the values live** and
     **when they are applied**.
 
-    - **Option A (recommended)**: a `py::dict` member of `PySpecial` (`src/Main/Experimental.h`),
+    - Decision: a `py::dict` member of `PySpecial` (`src/Main/Experimental.h`),
       exposed as `exu.special.overrideSettings`. `exu.sys` is the precedent - a Python dict the C++
       side holds and both sides read. The caveat to handle: a global that owns Python objects must
       not be destroyed after the interpreter, which is why `exu.sys` is a module attribute; the
       dict is therefore created empty in `Initialize()` and cleared, never destructed.
-    - **Option B**: a `std::map<STDstring, STDstring>` of JSON fragments in `PySpecial`. C++ reads it
-      without the GIL and without pybind lifetime questions; Python pays a parse on every access and
-      the values stop being plain Python values, which is what makes them readable today.
-    - **Option C**: keep the dict in Python (`exudyn.settings` or `exudyn.sys`), and give C++ an
-      accessor **when C++ actually needs one**. Nothing in the core reads a user setting today, so
-      this is the option that builds nothing until there is a reader.
 
     **The module is renamed and moved** whichever option wins: `python/exudyn/settings.py` becomes
-    `python/exudyn/misc/overrideSettings.py` - *"it is not intended to be used by the user"*. Merging
-    it into `misc/settingsUtilities.py` is the alternative the maintainer named; a module of its own
-    is recommended, because `settingsUtilities` is about **editing** a settings structure and this is
-    about **persisting** one, and the two have no code in common.
+    `python/exudyn/misc/overrideSettings.py` - *"it is not intended to be used by the user"*.
 
 <a id="rg12-10"></a>
 **RG12.10** *(group RG12; maintainer 2026-09-26)* **The workflow of the override settings**, written
-    out by the maintainer and to be built in this order (needs RG6.2.27 and RG12.9):
+    out by the maintainer and to be built in this order (needs RG12.9):
 
     1. at `import exudyn`, the whole file is read into the override settings;
     2. what can be applied at once - `exudyn.config` - is applied at once;
@@ -1976,7 +1921,7 @@ package).
     4. **whenever a `VisualizationSettings` structure is created**, it applies what is there. This is
        the change from RG12.5.1, where only a `SystemContainer` applied them, through a Python
        subclass; a structure created by `exu.VisualizationSettings()` got nothing. It is also why
-       RG6.2.27 comes first.
+       RG6.2.28 was already done.
     5. the **results monitor** reads its settings from there rather than from
        `~/.exudyn/resultsMonitor.json`, which **is** RG12.5.4 and replaces it: one file, one reader,
        and a migration that keeps what a user has stored.
@@ -1989,8 +1934,16 @@ package).
     - **the manual function**, which exists as `Store(SC=..., config=...)` and has a defect worth
       naming: for `exudyn.config` it stores every value that is not empty, `0` or `False`, because
       **it does not know the defaults**. That is a guess, and it stores settings a user never
-      changed. It needs the defaults of `exudyn.config` - which the C++ has and Python does not -
-      and that is the smallest piece of "accessible from C++" in RG12.9.
+      changed. **Decision of 2026-09-26**: *"you have to improve the config mechanism (could add a
+      Get/Set dict access or so, and also the defaults)"* - so `exudyn.config` gets what every
+      settings structure already has, a dictionary interface and its defaults, and the storing
+      function compares against them instead of guessing. That is also the smallest real piece of
+      "accessible from C++" in RG12.9.
+    - **what "diff to default" means** once an override exists, which the maintainer decided on
+      2026-09-26: the dialog shows the difference to the **real default**, and names the settings
+      that the override file already covers **separately, with a comment between them**, so that a
+      user can see what they would be copying and decide. The alternative - comparing against
+      default plus override - hides exactly the settings this file is about.
     - **a "Store settings" button in the visualization settings dialog**, which applies **only** to
       `visualizationSettings` and `dialogs`, *"clearly written in the pop-up hints"*. It is the way
       to keep a look without switching `storeDialogPositions` on, and the button is where a user
@@ -2007,10 +1960,8 @@ package).
       default overridable. Each shadowing argument is one line, and the ones that already default to
       `None` need nothing.
     - **the window positions**, which are harder and are the maintainer's own caveat: there are
-      several plot windows and **no unique title**. Options: **(a, proposed)** store them by their
-      **sequence**, the counter reset by the `closeAll` argument of `PlotSensor`; (b) by title where
-      a title is unique and by sequence where it is not - two rules to explain; (c) not at all,
-      which is what a user gets today.
+      several plot windows and **no unique title**. Decision: store them by their
+      **sequence**, the counter reset by the `closeAll` argument of `PlotSensor`.
 
 <a id="rg3-23"></a>
 **RG3.23** *(group RG3; maintainer 2026-09-26)* **The override settings are documented where the
@@ -2018,18 +1969,59 @@ package).
     maintainer wants it *"integrated into the Python-C++ command interface ... under the Exudyn
     module"*.
 
-    - **Option A (recommended)**: the text moves into `definitions/pybindModule.py` as
-      `pb.AddDocu(...)` beside `exu.config` and `exu.special`, so the generated page of the Exudyn
-      module carries it and there is **one** source. `docs/manual/` keeps a pointer, as it does for
-      the other generated chapters.
-    - **Option B**: the generated page `{include}`s the hand-written file. One text, two places that
-      must agree about where it lives; the generator has to emit the include, because a generated
-      file is never edited by hand (rule 1).
+    **Decision of 2026-09-26**: the text moves into `definitions/pybindModule.py` as
+    `pb.AddDocu(...)` beside `exu.config` and `exu.special`, so the generated page of the Exudyn
+    module carries it and there is **one** source; `docs/manual/` keeps a pointer, as it does for
+    the other generated chapters.
+
+    **Two more things belong in the same step**, both from the maintainer:
+
+    - **a list of the environment variables** that change what Exudyn does. There is **none** today
+      (measured 2026-09-26): `EXUDYN_OUTPUTDIRECTORY` and `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` are named
+      in `revisions.md`, `EXUDYN_MODULE` in passing in `commandLine.md`, and
+      `EXUDYN_NO_USER_SETTINGS`, `EXUDYN_CONFIG_FILE` and `EXUDYN_IMPORT_VERBOSE` nowhere. One line
+      each and a link to where it is explained, beside the override settings, *"where they
+      essentially affect behavior"*.
+    - **the troubleshooting hint**: *"users experiencing weird behavior shall delete the
+      `~/.exudyn` folder"* - `performanceErrors.md`, section *Errors: what Exudyn raises, and what
+      to do about it*, which is where such a reader already is.
+
+    **And one question the maintainer raised and did not decide**: `exu.config`, `exu.special` and
+    the settings structures are documented by **two** mechanisms - `pb.DefLatexDataAccess(...)` by
+    hand for the first two, and the structure emitter for the third. *"Ideally, the access to
+    structures would be handled and documented both via the same mechanism ... but I don't know if
+    this needs an improvement right now."* It is written here so that it is not forgotten; it is
+    not part of this step.
 
     **And one hint elsewhere** (the same step): *"under the troubleshooting / errors: users
     experiencing weird behavior shall delete the `~/.exudyn` folder"* - `performanceErrors.md`,
     section *Errors: what Exudyn raises, and what to do about it*, which is where a reader with
     strange behaviour already is.
+
+
+<a id="rg3-24"></a>
+**RG3.24** *(group RG3; maintainer 2026-09-26)* **The generator API still says "Latex"** (#2681).
+    *"DefLatexDataAccess and similar Latex commands need to be just renamed consistently. Search for
+    latex and see where it still makes sense, rename where clear (Markdown) or suggest options when
+    unclear."*
+
+    Measured the same day over `tools/generators/` and `definitions/`: **28 files** carry the word.
+    The big ones are the pybind declaration API, which every definition file uses -
+    **`DefLatexDataAccess` (64 uses)**, `DefLatexStartTable` (32), `DefLatexFinishTable` (27),
+    `DefLatexOperator` (17), `DefLatexStartClass` (13) - and they write **Markdown** and have done
+    since RG3.14. Then `PyLatexRST` (18), which writes Python, a stub and Markdown and neither LaTeX
+    nor RST, and the small ones: `latexSymbol`, `moduleNameLatex`, `sLatexObjectClass`, `latexStr`.
+
+    **Three kinds, and only the third needs a decision.** A name that describes **Markdown output**
+    is renamed by rule (`DefLatexDataAccess` to `DefDataAccess`, `PyLatexRST` to something that says
+    what it writes). A name that describes **real LaTeX** stays: `GetTypesStringLatex` and
+    `Str2Latex` feed mathematics and C++ comments, and `latexToMarkdown.py` is named after what it
+    converts **from**. The third kind is `latexSymbol` and its family - the `$...$` symbol of an item
+    parameter, which **is** LaTeX inside Markdown - where `mathSymbol` says what it is and touching
+    it moves 12 uses in three emitters. Options go to the maintainer with the list.
+
+    A rename of 64 call sites in the definition files is a large diff that changes no output, so it
+    wants the same gate as RG3.14.13: **the regeneration is a no-op**, or the rename was not one.
 
 
 ## Next steps recommended
@@ -2055,13 +2047,13 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.21 | #2673 | the pages that still describe the state before a step that is done |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG3.23 | #2680 | the override settings are documented under the Exudyn module, and the troubleshooting hint |
+| RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG6.2.27 | #2678 | the lights and materials become defaults of the structure - blocks RG12.9 to RG12.11 |
 | RG6.3 | #2583 | give the renderer a headless call that returns counts and an image at a given resolution |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1 | - | a checker for user scripts after the 1.12 API changes |

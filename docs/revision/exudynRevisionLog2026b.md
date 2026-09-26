@@ -4085,7 +4085,7 @@ in the revisions chapter, because it changes what a script does when the file is
 build.
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-### RG12.5.3 (= RG6.2.26) - the dialogs remember where they were (2026-09-26, #2675)
+### RG12.5.3 (= RG6.2.29) - the dialogs remember where they were (2026-09-26, #2675)
 
 Undecided since 2026-09-23, proposed and approved on 2026-09-26, and built into the file RG12.5.1
 made three hours earlier - which is the argument the proposal made: a second file for window states
@@ -4293,3 +4293,31 @@ which is what a change to mathematics has to pass.
 **RG3.14 is finished** and #2655 closes with it: the descriptions in `definitions/` are Markdown,
 the converter is what reads them, the rules are in `definitions/README.md`, the checks hold them,
 and what is published carries no LaTeX escapes any more.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG6.2.28 - a blocker that was not there (2026-09-26, #2678 closed as obsolete)
+
+The step was proposed on 2026-09-26 as **the** blocker of RG12.9 to RG12.11: the four lights and the
+ten raytracer materials are initialised by the `SystemContainer` and not by the settings structure,
+so the override settings would have no unambiguous default and no single moment of application. The
+maintainer read the C++ and replied that it looked done already.
+
+**It was, and the measurement is one line**: `exu.VisualizationSettings()` and
+`SystemContainer().visualizationSettings` differ in **0 of 470** settings. `RG6.2.20` (#2626) did it
+on **2026-09-23**, three days before the issue was raised: the 89 assignments moved out of the C++
+constructor into `definitions/structureDefsVisualizationSettings.py`,
+`containerInitialisedSettings` is empty, `DefaultSettingsDictionary` takes the plain constructor -
+which is also what keeps the dialog from creating a container it would have to detach again - and
+`testASystemContainerInitialisesNothingBeyondTheDefaults` requires the difference to stay empty.
+Nothing needed changing.
+
+**Where the wrong premise came from, because it is the part worth keeping.** The RG6.2.12 log entry
+says, in the present tense, that a `SystemContainer` initialises 59 settings its constructor does
+not. That was true on 2026-09-23 **when it was written**, and a closed log entry is never edited -
+which is exactly right for a log and exactly wrong as a source for planning. The plan step repeated
+it, and it would have put a C++ change in front of three steps that do not need one.
+
+**A premise that decides the order of three steps is measured, not read.** It cost one command.
+
+`#2678` is closed as obsolete rather than resolved: nothing in this session changed what it asks
+for, and a resolved issue that changed nothing is a version number that means nothing.
