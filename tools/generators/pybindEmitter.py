@@ -155,14 +155,14 @@ def main():
     replay = Replay()
 
     #the chapter introduction; it goes before everything else, but the enums are replayed first
-    plrmain = PyLatexRST('','', '')
+    plrmain = PyLatexRST()
     replay(Declarations('pybindGeneralInformation').pb.calls, plrmain)
 
     #the OutputVariableType registrator owns the enum and writes its C++ header; enumEmitter writes EnumTypes.h
     outputVariableEmitter.EmitHeader()
     enumEmitter.EmitHeader()
 
-    plr = PyLatexRST('','', '')
+    plr = PyLatexRST()
     replay(Declarations('pybindEnums').pb.calls, plr)
     sStubEnums = plr.sPyi
     plr.sPyi = ''
@@ -179,7 +179,7 @@ def main():
     #the symbolic submodule: its stubs go into a separate file, its documentation into plr
     symbolic = Declarations('pybindSymbolic')
     replay(symbolic.pb.calls, plr)
-    plrsym = PyLatexRST('','', '')
+    plrsym = PyLatexRST()
     replay(symbolic.symbolicModule.calls, plrsym)
     plrsym.sPyi = plrsym.sPyi.replace('symbolic.','')
     plr.sMarkdown += plrsym.sMarkdown

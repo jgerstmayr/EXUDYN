@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.87.dev1
 - last change = 2026-09-26
-- Number of issues = 2677
+- Number of issues = 2678
 - Number of resolved issues = 2401 (87 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` 745 LaTeX underscore escapes are left in the generated Markdown, 38 of them inside mathematics (#2677)
+  - description: Measured 2026-09-26 by the audit of revision2026b step RG3.14.13: 33 generated pages carry a backslash-underscore. 707 of them are OUTSIDE mathematics - Coordinates\\\_t in an item table, \\\_\\\_all\\\_\\\_ in the tracker log - where Markdown renders the escape as a plain underscore, so the page looks right and the source carries LaTeX that nothing needs. They come from three producers: Str2Latex, which escapes every underscore it is given; an explicit replace of the output variable names in itemDocsEmitter; and the issue tracker, which escapes the text of an issue. The remaining 38 are INSIDE mathematics and are a real rendering defect: in math mode a backslash-underscore is a literal underscore, so BeamSectionGeometry shows c\_Y as text where a subscript was meant, and ObjectJointGeneric has UF\\\_t\_{k} in a display equation. Those need one judgement each - subscript or literal - which is why this is a step of its own and not a mechanical replace.
+  - date raised: 2026-09-26
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - date raised: 2026-09-26

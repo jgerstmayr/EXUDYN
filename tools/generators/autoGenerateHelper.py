@@ -25,9 +25,6 @@ localListEnumNames = []
 #switch .pyi docstrings
 ADD_DOCSTRINGS = True
 
-#empty default argument
-ArgNotSet = 'ArgNotSet'
-
 #this is the list of items which will be compiled for EXUDYN_MINIMAL_COMPILATION
 minimalItemsList=[
     'NodePoint',
@@ -316,194 +313,10 @@ def CountLines(s):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#abbreviations inside $$ latex math
-convLatexMath={
-    #r'\ra':     r'\rightarrow',
-    # r'\LU':     r'\,^',
-    #r'\Rcal':   r'\mathbb{R}',
-    r'\eqDot':     r'.',
-    r'\eqComma':     r',',
-    r'\ImThree':     r'\mathbf{I}_{3 \times 3}',
-    r'\ImTwo':     r'\mathbf{I}_{2 \times 2}',
-    #r'\':     r'',
-    }
-
-abc = 'abcdefghijklmnopqrstuvwxyz'
-for c in abc:
-    convLatexMath['\\'+c+'v'] = r'{\mathbf{'+c+'}}'
-    convLatexMath['\\'+c.upper()+'m'] = r'{\mathbf{'+c.upper()+'}}'
-
-convLatexWords={'(\\the\\month-\\the\\year)':'',
-           '    \\item':'\\item',
-           '  \\item':'\\item',
-           '\\item[$\\ra$]':'  |  → ', #'+ ->', #probably not used any more
-           #does not work: '\\item[\\ :math:`\\ra`\\ ]':'  |  \\ :math:`\\ra`\\ ',
-           #does not work: '[\\ :math:`\\ra`\\ ]':'\\ :math:`\\ra`\\ ',
-           '\\item[]':'  ', 
-           '\\item[--]':' - ',  #one additional whitespace at beginning for alignment of sub-lists!
-           '\\item':'+ ',
-           '\\finishTable':'',
-           # '\\small':'', #replaced to \mysmall
-           '\\noindent ':'',
-           '\\noindent':'',
-           '\\nonumber':'', 
-           '\\phantom{XXXX}':'    ',
-           '$\\ra$':'→',
-           '\\textbar':'|',
-           '\\lbrack':'[',
-           '\\rbrack':']',
-           '\\newpage':'',
-           '\\tabnewline':'',
-           #'\\TAB':'  ', #done in example conversion
-           '\\horizontalRuler':'',
-           '$\\backslash$':'\\',
-           '\\plainlststyle':'',
-           '\\codeName\\':'Exudyn',
-           '\\codeName':'Exudyn',
-           '\\pythonstyle':'',
-           # '\\pythonstyle\\begin{lstlisting}':'\n.. code-block:: python\n',
-           # '\\begin{lstlisting}':'\n.. code-block::\n',
-           # '\\end{lstlisting}':'\n',
-           '\\begin{center}':'',
-           '\\end{center}':'',
-           #'\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
-           # '+++++++++++++++++++++++++++++++':'\\ +++++++++++++++++++++++++++++++\n', #special problems with .rst
-           # '=========================================':'\\ =========================================\n', #special problems with .rst
-           '\\begin{itemize}':'', 
-           '[leftmargin=1.4cm]':'',
-           '[leftmargin=1.2cm]': '',
-           '[leftmargin=0.5cm]':'', 
-           '\\rule{8cm}{0.75pt}':'', 
-           '\\textcolor{steelblue}':'', 
-           '[language=Python, xleftmargin=36pt]':'',
-
-           '\\bi':'', 
-           '\\ei':'',
-           '\\bn':'', 
-           '\\en':'',
-           #'\\it ':'', #replaced to \myitalics
-           #specials:
-           #'\\ge':'>=', #needed?
-           '\\_':'_',
-           '\\textdegree':'°',
-           '-{}-':'--',
-           #
-           '{\\"a}':'ä',
-           '{\\"o}':'ö',
-           '{\\"u}':'ü',
-           '\\"a':'ä', #if '{' is already removed earlier
-           '\\"o':'ö',
-           '\\"u':'ü',
-           #'$':'',
-           '\\rstStartNewLine':'\\ '
-           }
-    
-#should never appear, not compatible with RST: convLabel = {'\\label':('\n\n.. _','_USE',':\n\n')} #do not do this for equation labels
-convLabelEq = {'\\label':(':label: ','_USE','\n\n')} #do not do this for equation labels
-
-convLatexCommands={#(precommand,'_USE'/'',postcommand)
-    '\\ignoreRST':('','',''),
-    '\\texttt':('\\ ``','_USE','``\\ '),
-    #'\\label':('\n\n.. _','_USE',':\n\n'), #do this before sections ...
-    '\\mysectionlabel':('','_USE','','2nd'),
-    '\\mysubsectionlabel':('','_USE','','2nd'),
-    '\\mysubsubsectionlabel':('','_USE','','2nd'),
-    '\\mysubsubsubsectionlabel':('','_USE','','2nd'),
-    '\\mysection':('','_USE',''),
-    '\\mysubsection':('','_USE',''),
-    '\\mysubsubsection':('','_USE',''),
-    '\\mysubsubsubsection':('','_USE',''),
-    #'\\pytlisting':('','',''),
-    # '\\pythonSmallListing':('','',''),
-    # '\\smallListing':('','',''),
-    'pytlisting':('\n.. code-block:: python\n','_USE','\n'),
-    'lstlisting':('\n.. code-block:: \n','_USE','\n'),
-    '\\paragraph':('\n\\ **','_USE','** '),
-    # '\\myListing':('','',''),
-    '\\setlength':('','',''),
-    '\\vspace':('','',''),
-    '\\footnote':('\\ (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
-    '\\mybold':('\\ **','_USE','**\\ '),
-    '\\myitalics':('\\ *','_USE','*\\ '),
-    '\\mysmall':('','_USE',''), #no change of fonts for now
-    #'\\mathrm':('','_USE',''),
-    '\\cite':('','',''),
-    '\\onlyRST':('','_USE',''),
-    '\\userFunctionExample':('\n--------\n\n\\ **User function example**\\ :\n\n','',''),
-    '\\userFunction':('\n--------\n\n\\ **Userfunction**\\ : ``','_USE','`` \n\n'),
-    '\\LatexRSTfigure':('','_USE','','*2nd','*3rd','*4th','*5th'),
-
-    #for tables:
-    '\\startGenericTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','',''), 
-    '\\rowTableThree':('','_USE','','*2nd','*3rd'),       #filled manually
-    '\\rowTableFour':('','_USE','','*2nd','*3rd','*4th'), #filled manually
-    '\\rowTableFive':('','_USE','','*2nd','*3rd','*4th','*5th'), #filled manually
-    #
-    '\\startTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','','','*2nd','*3rd'), 
-    '\\rowTable':('','_USE','','*2nd','*3rd'),       #filled manually
-    #'\\finishTable':('','',''),  #this is a word!
-    
-    '\\refSectionA':(' :ref:`Section <','_USE','>`\\ '), #anonymous -> if no header given
-    '\\refSection':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
-    '\\refChapter':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
-    '\\exuUrl':('`','_USE','`_','2nd'),
-    '\\url':('\\ `','_USE','`_\\ '),
-    '\\ref':(' :ref:`','_USE','`\\ '),
-    '\\fig':('\\ :numref:`','_USE','`\\ '), 
-    #'\\fig':('Fig. :ref:`','_USE','`\\ '), 
-    'figure':('','',''),
-    '\\hac':('\\ :ref:`_USE <','_USE','>`\\ '),
-    '\\hacs':('\\ :ref:`_USE <','_USE','>`\\ '),
-    '\\acs':('\\ :ref:`_USE <','_USE','>`\\ '),
-    '\\acp':('\\ :ref:`_USE <','_USE','>`\\ '),
-    '\\acf':('\\ :ref:`_USE <','_USE','>`\\ '),
-    '\\ac':('\\ :ref:`_USE <','_USE','>`\\ '),
-    '\\eqref':('\\ :eq:`','_USE','`\\ '),
-    '\\eqs':('Eqs. :eq:`','_USE','`\\ '),
-    '\\eqq':('\\ :eq:`','_USE','`\\ '),
-    '\\eq':('Eq. :eq:`','_USE','`\\ '),
-    } #TITLE, SUBTITLE, SUBSUBTITLE, ...
-
-#replace all occurances of conversionDict in string and return modified string
-def ReplaceWords(s, conversionDict, replaceBraces=True, replaceDoubleBS=False): #replace strings provided in conversion dict
-
-    # if replaceBraces:
-        # s = s.replace('{', '')
-        # s = s.replace('}', '')
-
-    for (key,value) in conversionDict.items():
-        s = s.replace(key, value)
-
-    if replaceDoubleBS:
-        s = s.replace('\\\\', '\n')
-
-    return s
-
-#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def Latex2RSTlabel(s):
     return s.replace(':','-').replace('_','-').lower()
 
-#add specific markup with blind spaces
-def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
-    cnt = 0
-    bStart = -1
-    if s[start] != openBracket:#requires to start with bracket! otherwise, this is risky!
-        print('FindMatchingBracket: no bracket:',s[start-10:start+20])
-        return [-1,-1]
-    for i in range(start,len(s)):
-        if s[i] == openBracket:
-            cnt += 1
-            if bStart == -1:
-                bStart = i
-        elif s[i] == closingBracket:
-            cnt -= 1
-
-        if bStart != -1 and cnt == 0:
-            return [bStart,i]
-    return [-1,-1]
-        
 #convert a text that is mainly designed for latex, but to be output into RST
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the LaTeX of definitions/ and of the docstrings becomes Markdown with the same converter the
@@ -532,9 +345,11 @@ def MarkdownCell(text):
 #declaration run. It was PyLatexRST and wrote LaTeX and RST beside the Markdown until revision2026
 #step R7.1.7; the name and the Def... method names stay, because they are the declaration calls
 #that definitions/pybind*.py is written in (pybindTypes.declarationCalls).
+#NOTE the name is the last LaTeX in this file: the class writes Python, stub and Markdown and has
+#written neither LaTeX nor RST since revision2026b step RG3.14. Renaming it touches five emitters
+#and is worth doing with the next change to them, not on its own (#2655)
 class PyLatexRST:
-    def __init__(self, sPy='', sLatex='', sRST='', sPyi='', sMarkdown=''):
-        #sLatex and sRST are accepted and ignored: the declarations pass them positionally
+    def __init__(self, sPy='', sPyi='', sMarkdown=''):
         self.sPy = sPy
         self.sPyi = sPyi
         self.sMarkdown = sMarkdown

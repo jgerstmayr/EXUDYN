@@ -651,17 +651,20 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       Smaller than the step assumed: both section targets already resolved, so only the words in
       front of them were wrong. The same docstrings said `staticSolver` where `SolveDynamic`
       stores `dynamicSolver`.
-    - **RG3.14.13** *(from RG3.14; maintainer 2026-09-25)* **what is left of the LaTeX conversion,
-      and what of it goes.** `tools/generators/autoGenerateHelper.py` carries the old
-      LaTeX-to-RST machinery - a conversion dict of some 90 entries, `ReplaceWords`, `Str2Latex`,
-      `Latex2RSTlabel`, `GetTypesStringLatex`, the `sLatex`/`sRST` members of `PyLatexRST` and the
-      table helpers that exist to lay out a LaTeX table - in an unsystematic state, because each
-      revision step took what it needed and left the rest. Once RG3.14 has emptied `definitions/`
-      of structural LaTeX, most of it has no caller. The step is a **census with a verdict per
-      entry**: what is still reached, by whom, and what is deleted. The rule is the one that makes
-      it safe - the regeneration must stay byte-identical - and the outcome is expected to be that
-      the shapes worth keeping (the Markdown table helpers, `ImagePath`, the heading and label
-      helpers) stay and the LaTeX branch goes.
+    - **RG3.14.13** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-14-13) - the LaTeX
+      machinery of `autoGenerateHelper.py`, audited by reachability and not by reading: **eight
+      names reachable from nothing**, 185 lines, and the regeneration a no-op afterwards. What is
+      alive is alive for a reason and is named in the log. The audit found what the step could not
+      know: **745 LaTeX escapes in the generated Markdown**, which is RG3.14.14.
+    - **RG3.14.14** *(from RG3.14.13, 2026-09-26)* **The LaTeX escapes that are left in the
+      generated Markdown** (#2677). 33 pages carry a `\_`. **707 are outside mathematics** - a
+      `Coordinates\_t` in an item table, `\_\_all\_\_` in the tracker log - where Markdown
+      renders the escape as a plain underscore, so the page looks right and the source carries LaTeX
+      that nothing needs; they come from `Str2Latex`, from an explicit replace of the output variable
+      names in `itemDocsEmitter`, and from the issue tracker. **38 are inside mathematics and are a
+      defect**: in math mode `\_` is a literal underscore, so `BeamSectionGeometry` shows `c_Y` as
+      text where a subscript was meant. Those need one judgement each, which is why this is a step
+      and not a replace.
 
     **What would not work today**, and is either solved inside the step or stated as its boundary:
 
@@ -1929,8 +1932,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: only .13 is open, the LaTeX machinery that is left |
-| RG3.14.13 | #2655 | what is left of the LaTeX conversion in `autoGenerateHelper.py`, and what of it goes |
+| RG3.14 | #2655 | the item descriptions become Markdown: only .14 is open, the escapes in the generated pages |
+| RG3.14.14 | #2677 | the 745 LaTeX escapes left in the generated Markdown, 38 of them inside mathematics |
 | RG3.21 | #2673 | the pages that still describe the state before a step that is done |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |

@@ -4181,3 +4181,64 @@ look.
 **Gates**: 11/11 checks, the wheel, the full suite, pytest 482 passed / 2 skipped, the strict HTML
 build. `parameterConversionTest.py` gained the three new settings - six parameter paths - and its
 reference was rewritten.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.14.13 - the LaTeX machinery of autoGenerateHelper.py (2026-09-26, #2655)
+
+**Audited by reachability, not by reading.** Every top-level name of the module, every name any other
+file in `tools/` mentions, and a walk from the second set through the first: what the walk does not
+reach is dead, whatever it looks like. Eight names, **185 lines**:
+
+| what | why it was there |
+|---|---|
+| `convLatexWords` (65 lines), `convLatexCommands` (63), `convLatexMath` (14), `convLabelEq` | the conversion tables of the LaTeX-to-RST machinery |
+| `ReplaceWords`, `FindMatchingBracket` | the two functions that used them |
+| `abc`, and the loop that indexed it | filled `convLatexMath` with `\av`, `\Am` and their 50 siblings |
+| `ArgNotSet` | a sentinel nothing sets |
+
+**The proof is that the regeneration is a no-op**: `exudev generate` reports *"regeneration is a
+no-op; the committed generated set is current"*, so 185 lines left the generator stack and not one
+byte of its output moved.
+
+One thing the walk missed and the build caught at once: a module-level **`for` loop** that filled
+`convLatexMath` from `abc`. A reachability walk over definitions and assignments does not see a bare
+statement, and the generator failed with `NameError: name 'abc' is not defined` on the next run.
+Which is the argument for the gate rather than for a cleverer walk.
+
+**`PyLatexRST` took two arguments it ignored** - `sLatex` and `sRST` - *"because the declarations
+pass them positionally"*. Three declarations in `pybindEmitter.py` passed `('','', '')`; they pass
+nothing now and the two parameters are gone. The **name** is the last LaTeX in the file: the class
+writes Python, a stub and Markdown, and has written neither LaTeX nor RST since RG3.14. Renaming it
+touches five emitters, so a note stands where the class is defined and it waits for the next change
+to them.
+
+**What is alive, and why** - the audit is not only what was removed:
+
+| name | uses | what it really does |
+|---|---|---|
+| `Str2Latex` | 21 | two jobs: a C++ default value in Python spelling (`true` to `True`, `EXUstd::InvalidIndex` to `invalid (-1)`), and escaping `_`. The first is needed everywhere; the second is RG3.14.14 |
+| `Str2Doxygen` | 15 | the C++ side: a Doxygen comment, where the escaping is correct |
+| `GetTypesStringLatex` | 7 | the requested marker and node types of an item page |
+| `Latex2RSTlabel` | 1 | one label in `utilityDocsEmitter` |
+
+**One thing from RG12.7 landed here**, because it was found while these gates were being run: the
+three tests that build a settings tree were **flaky under `pytest -n 8`**, one run in three, as a
+hard worker crash - *"node down: Not properly terminated"*, no Python traceback. Two attempts and a
+measurement:
+
+- rewriting the clamp test from 180 font changes to two changed nothing, so it is not the number of
+  calls;
+- **one Tk root per process** is a real fix for a different problem: a second `tk.Tk()` after the
+  first was destroyed fails on this Windows build, which is why three tests reported *"no tkinter
+  display available"* although the display was there. With a cached root the serial run went from
+  three skips to **73 passed**;
+- the parallel crash remained, so the three run **serially only**, with the measurement in the skip
+  reason. A crash reported as a failing test costs an hour of somebody's day.
+
+**And the audit found what the step could not know.** 33 generated pages carry **745** backslash
+underscores. 707 of them are outside mathematics, where Markdown renders the escape as a plain
+underscore - the page looks right and the source carries LaTeX nothing needs. **38 are inside
+mathematics and are a defect**: there `\_` is a literal underscore, so `BeamSectionGeometry` shows
+`c_Y` as text where a subscript was meant, and a display equation of `ObjectJointGeneric` carries
+`UF\_t_{k}`. That is **RG3.14.14** (#2677), and it is why #2655 does not close today: each of the
+38 needs a judgement, and the last hour of a long session is not when to make 38 of them.
