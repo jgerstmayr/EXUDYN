@@ -560,3 +560,77 @@ def testACommandOfTheWindowSeesTheModelAndItsAssignmentSurvives():
 def testTheModuleNamespaceIsNotTheModelNamespace():
     """the fault itself: globals() inside exudyn.misc.GUI is not where a model lives"""
     assert gui.ModelScope() is not vars(gui)
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the columns are fractions of the dialog width (revision2026b step RG12.6, #2667) and Ctrl with the
+#wheel changes the font size (RG12.7, #2668). Both are tested in a WITHDRAWN root: the widgets are
+#real, no window is ever mapped
+def testTheColumnFractionsAreWhatWasConfigured():
+    assert gui.ColumnWidthFractions([0.31, 0.18, 0.11]) == (0.31, 0.18, 0.11)
+
+
+def testTheColumnFractionsLeaveRoomForTheDescription():
+    """three independent settings can ask for more than the whole dialog; the description column
+    must not disappear"""
+    fractions = gui.ColumnWidthFractions([0.6, 0.5, 0.4])
+    assert sum(fractions) == pytest.approx(0.9)
+    assert fractions[0] > fractions[1] > fractions[2], 'the proportions are kept'
+
+
+def testAColumnCannotBeGivenZeroWidth():
+    assert gui.ColumnWidthFractions([0., -1., 0.]) == (0.05, 0.05, 0.05)
+
+
+def TreeDialogOrSkip(root, columnWidths=None):
+    """the settings tree of a visualizationSettings dialog, inside a withdrawn root"""
+    settings = exudyn.VisualizationSettings()
+    [systemScaling, fontFactor] = gui.DialogScaling(root)
+    [textHeight, columnScale] = gui.DialogRowMetrics(root, fontFactor)
+    return gui.TkinterEditDictionaryWithTypeInfo(
+        parent=root, settingsStructure=settings, dictionaryTypesT=gui.GetComboBoxListsDict(exudyn),
+        updateOnChange=False, treeOpen=False, textHeight=textHeight,
+        systemScaling=systemScaling, fontFactor=fontFactor, columnScale=columnScale,
+        columnWidths=columnWidths)
+
+
+def testTheColumnsGetTheirShareOfTheDialog():
+    root = TkRootOrSkip()
+    try:
+        tree = TreeDialogOrSkip(root, [0.4, 0.2, 0.1]).tree
+        widths = [tree.column(name, 'width') for name in ['#0', 'value', 'type', 'description']]
+        total = float(sum(widths))
+        assert widths[0] / total == pytest.approx(0.4, abs=0.02)
+        assert widths[1] / total == pytest.approx(0.2, abs=0.02)
+        assert widths[2] / total == pytest.approx(0.1, abs=0.02)
+        assert widths[3] / total == pytest.approx(0.3, abs=0.02), 'the description takes the rest'
+    finally:
+        root.destroy()
+
+
+def testCtrlAndTheWheelChangeTheFontSize():
+    root = TkRootOrSkip()
+    try:
+        dialog = TreeDialogOrSkip(root)
+        (before, beforeRow) = (dialog.fontFactor, dialog.textHeight)
+        dialog.ChangeFontSize(1.1)
+        assert dialog.fontFactor > before
+        assert dialog.textHeight >= beforeRow, 'the row height follows the font'
+        dialog.ChangeFontSize(1 / 1.1)
+        assert dialog.fontFactor == pytest.approx(before, rel=1e-6)
+    finally:
+        root.destroy()
+
+
+def testTheFontSizeCannotBeScrolledAwayInEitherDirection():
+    """a dialog whose font is two pixels tall cannot be read back to a usable size"""
+    root = TkRootOrSkip()
+    try:
+        dialog = TreeDialogOrSkip(root)
+        for _ in range(60):
+            dialog.ChangeFontSize(1 / 1.1)
+        assert dialog.fontFactor >= 0.4
+        for _ in range(120):
+            dialog.ChangeFontSize(1.1)
+        assert dialog.fontFactor <= 4.
+    finally:
+        root.destroy()

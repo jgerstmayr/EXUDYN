@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.84.dev1
+- Exudyn version = 1.12.87.dev1
 - last change = 2026-09-26
-- Number of issues = 2676
-- Number of resolved issues = 2398 (84 in current version)
+- Number of issues = 2677
+- Number of resolved issues = 2401 (87 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7573,12 +7573,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-26
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` Pages that still describe the state before a step that is already done (#2673)
   - description: The maintainer, 2026-09-24: the documentation of the steps that are done, where a page still describes the state before one of them. Six weeks of revision2026 and revision2026b changed behaviour that hand-written pages describe - the renderer keys, the settings dialogs, the output directory, the star imports, the command line, the results monitor - and a page is only corrected when someone walks past it. The first job of the step is to LIST them: what a page claims against what the code does, per chapter, because nothing can be planned before that list exists.
-  - date raised: 2026-09-26
-- `EXTENSION` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` Ctrl and the mouse wheel change the font size of a dialog (#2668)
-  - description: The font size of the settings dialogs is a setting that has to be found and typed. The maintainer asks whether the mouse wheel could change it directly - about 10 percent per notch, up and down (maintainer, 2026-09-26). The dialog already computes every metric from the font size through DialogFontSize and DialogRowMetrics, so the question is mostly about rebuilding the tree at a new size and about which modifier, since the wheel alone scrolls.
-  - date raised: 2026-09-26
-- `EXTENSION` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` The column widths of a settings dialog are fixed pixels; make them relative and configurable (#2667)
-  - description: GUI.py gives the tree four fixed widths - 325, 188, 113 and 420 pixels, scaled by the dialog scaling - so a name that is long is cut off whatever the screen. The maintainer asks for relative widths in visualizationSettings, each in 0..1: columnWidthName, columnWidthValue, columnWidthType, with the description column taking what is left (maintainer, 2026-09-26).
   - date raised: 2026-09-26
 - `IDEA` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` User settings that persist between runs: one ~/.exudyn file, and what may be in it (#2666)
   - description: The results monitor introduced ~/.exudyn/resultsMonitor.json without a decision about what such a directory is for (maintainer, 2026-09-26). The maintainer sees it as generally useful - window positions, dialog sizes, font scaling, overrides for visualizationSettings except special types, and for exudyn.config such as outputDirectory - and asks for ONE file rather than one per tool, for whether C++ could read it (py::module\_::import('json')) or whether \_\_init\_\_.py should read it and write the values into the module through the dict interface, and for a note printed on the first import when the stored settings are not empty, because stored settings make a run less reproducible. It needs documentation and belongs in the revisions chapter, because it changes behaviour when a file is present. Related: \#2608 (window states) and the dialog settings storeDialogPositions and storeDialogSettings.

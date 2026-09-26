@@ -449,7 +449,7 @@ outcome: !ExudynValueError float=0.0 float=2.0 float=2.5 !ExudynTypeError float=
   SimulationSettings.timeIntegration.newton: absoluteTolerance(attribute,dict) maximumSolutionNorm(attribute,dict) relativeTolerance(attribute,dict)
   SimulationSettings.timeIntegration.newton.numericalDifferentiation: minimumCoordinateSize(attribute,dict) relativeEpsilon(attribute,dict)
   VisualizationSettings.bodies.beams: drawVerticalFactor(attribute,dict)
-  VisualizationSettings.dialogs: alphaTransparency(attribute,dict) fontScaling(attribute,dict)
+  VisualizationSettings.dialogs: alphaTransparency(attribute,dict) columnWidthName(attribute,dict) columnWidthType(attribute,dict) columnWidthValue(attribute,dict) fontScaling(attribute,dict)
   VisualizationSettings.general: boundingBoxZoomAllOffset(attribute,dict) graphicsUpdateInterval(attribute,dict) reallyQuitTimeLimit(attribute,dict) textOffsetFactor(attribute,dict)
   VisualizationSettings.openGL: faceTransparencyGlobal(attribute,dict) lineWidth(attribute,dict)
   VisualizationSettings.openGL.advanced: initialZoom(attribute,dict) textLineWidth(attribute,dict)

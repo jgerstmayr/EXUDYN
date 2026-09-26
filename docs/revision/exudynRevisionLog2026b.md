@@ -4137,3 +4137,47 @@ issue the work actually needs.
 
 **Gates**: 11/11 checks, the wheel, the full suite, pytest 476 passed / 2 skipped, the strict HTML
 build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.6 and RG12.7 - the columns and the font of a dialog (2026-09-26, #2667, #2668)
+
+Two small things the maintainer asked for on 2026-09-26, and one bug they found.
+
+**The columns are fractions of the dialog** (#2667). `columnWidthName`, `columnWidthValue` and
+`columnWidthType` in `visualizationSettings.dialogs`, each a share of the width, and the description
+column takes what they leave - which is what makes three numbers enough. The defaults - 0.31, 0.18
+and 0.11 - give 317, 184 and 112 pixels at the default width, where the hard-coded numbers gave 325,
+188 and 113: the old ones were a sum of 1046 in a dialog of 1024, so they were fractions all along,
+of something that did not exist.
+
+`ColumnWidthFractions` applies the rule that three independent settings need: each is at least 0.05,
+and if together they would leave the description less than a tenth of the dialog, all three are
+scaled down to leave it that much. A user sets three numbers in any order; refusing the third one
+because of the first two would be the wrong half to complain about.
+
+**Ctrl and the wheel change the font size** (#2668), about 10% per notch, between 0.4 and 4 times
+the scaled size - a dialog whose font is two pixels tall cannot be read back to a usable size. The
+row height, the column widths and the font of a changed row all follow it, because every one of them
+is computed from the font factor. `Ctrl` and not the bare wheel, which scrolls the tree; on X11 the
+same is `Control-Button-4/5`, which is bound as well.
+
+**Tested in a withdrawn root**, the pattern `test_guiValues.py` already used: the widgets are real -
+a whole settings tree - and no window is ever mapped, which rule 11 requires. Seven tests: the
+fractions, their normalisation, the floor, the four columns of a built tree, the font going up and
+back, and the two clamps.
+
+**What the tests found is worth more than the two features.** They failed at random in a parallel
+pytest run - `RuntimeError: Access violation - no RTTI data!` in `DialogScaling`, reading
+`guiSC.visualizationSettings.dialogs.fontScaling`. `GetRendererSystemContainer` had been made to
+survive a destroyed SystemContainer in #2623, **but only the lookup**: it checks that the entry
+exists and has the right type, and the first *use* of what it returns raises in whichever caller
+comes next. One cheap read inside the guard turns that into the `None` every caller already handles
+(#2676). A user meets it when a dialog is opened after the container that started the renderer has
+been deleted; the tests met it because a worker runs many models in one process.
+
+Six consecutive full parallel runs are clean afterwards. If it ever comes back, this is where to
+look.
+
+**Gates**: 11/11 checks, the wheel, the full suite, pytest 482 passed / 2 skipped, the strict HTML
+build. `parameterConversionTest.py` gained the three new settings - six parameter paths - and its
+reference was rewritten.

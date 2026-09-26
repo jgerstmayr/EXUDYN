@@ -862,6 +862,12 @@ class VSettingsDialogs:
     """alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)."""
     alwaysTopmost: bool
     """True: dialogs are always topmost (otherwise, they are sometimes hidden)."""
+    columnWidthName: float
+    """width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave."""
+    columnWidthType: float
+    """width of the type column of a settings dialog, as a fraction of the width of the dialog."""
+    columnWidthValue: float
+    """width of the value column of a settings dialog, as a fraction of the width of the dialog."""
     fontScaling: float
     """scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop."""
     multiThreadedDialogs: bool

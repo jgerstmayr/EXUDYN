@@ -72,6 +72,23 @@ otherwise put the dialog where nobody can reach its title bar, and a dialog that
 is a stuck session. When the stored position is not usable, the dialog opens where it would have
 opened anyway, at its remembered size.
 
+## The columns and the font of a dialog
+
+The three fixed columns of a settings dialog take a share of its width, each a fraction in
+`visualizationSettings.dialogs`, and the description column takes what they leave:
+
+```python
+SC.visualizationSettings.dialogs.columnWidthName = 0.4      #a long name needs more
+SC.visualizationSettings.dialogs.columnWidthValue = 0.18
+SC.visualizationSettings.dialogs.columnWidthType = 0.09
+```
+
+They are fractions, so they do not depend on the screen; if the three together would leave the
+description less than a tenth of the dialog, all three are scaled down to leave it that much.
+
+**Ctrl and the mouse wheel change the font size** of an open dialog, about 10% per notch. The row
+height, the columns and the font of a changed row follow it. The wheel alone still scrolls.
+
 ## Switching it off
 
 `EXUDYN_NO_USER_SETTINGS=1` ignores the file completely, and it is what makes a problem

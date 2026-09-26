@@ -1,0 +1,18 @@
+{
+  "number": 2676,
+  "title": "GetRendererSystemContainer returns a container whose C++ object is gone",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "#2623 made the lookup survive a destroyed SystemContainer, but only the lookup: the function checks that exudyn.sys['currentRendererSystemContainer'] exists and has the right type, and the first USE of the returned object then raises RuntimeError - Access violation - in whichever caller happens to be next. Found on 2026-09-26 by the new dialog tests of revision2026b step RG12.7, which failed at random in a parallel pytest run, in DialogScaling at guiSC.visualizationSettings.dialogs.fontScaling. A user meets it when a dialog is opened after the container that started the renderer has been deleted. The fix is one cheap read inside the guard, so that a dead container becomes the None every caller already handles.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 10:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "line": "92",
+  "releaseNotes": "GetRendererSystemContainer reads one cheap setting of the container it is about to return, so a container whose C++ object is gone becomes the None every caller already handles. #2623 had guarded the lookup only, and the first use raised RuntimeError in whichever caller came next - found by the new dialog tests of RG12.7, which failed at random in a parallel pytest run.",
+  "resolvedInVersion": "1.12.87"
+}

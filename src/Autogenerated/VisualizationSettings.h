@@ -1626,6 +1626,9 @@ class VSettingsDialogs // AUTO:
 public: // AUTO: 
   float alphaTransparency;                        //!< AUTO: must be >= 0; alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
   bool alwaysTopmost;                             //!< AUTO: True: dialogs are always topmost (otherwise, they are sometimes hidden)
+  float columnWidthName;                          //!< AUTO: must be >= 0; width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave
+  float columnWidthType;                          //!< AUTO: must be >= 0; width of the type column of a settings dialog, as a fraction of the width of the dialog
+  float columnWidthValue;                         //!< AUTO: must be >= 0; width of the value column of a settings dialog, as a fraction of the width of the dialog
   float fontScaling;                              //!< AUTO: must be >= 0; scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop
   bool multiThreadedDialogs;                      //!< AUTO: True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
   bool openTreeView;                              //!< AUTO: True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened
@@ -1642,6 +1645,9 @@ public: // AUTO:
     backlink=nullptr;
     alphaTransparency = 0.94f;
     alwaysTopmost = true;
+    columnWidthName = 0.31f;
+    columnWidthType = 0.11f;
+    columnWidthValue = 0.18f;
     fontScaling = 0.f;
     multiThreadedDialogs = true;
     openTreeView = false;
@@ -1664,6 +1670,9 @@ public: // AUTO:
     os << "VSettingsDialogs" << ":\n";
     os << "  alphaTransparency = " << alphaTransparency << "\n";
     os << "  alwaysTopmost = " << alwaysTopmost << "\n";
+    os << "  columnWidthName = " << columnWidthName << "\n";
+    os << "  columnWidthType = " << columnWidthType << "\n";
+    os << "  columnWidthValue = " << columnWidthValue << "\n";
     os << "  fontScaling = " << fontScaling << "\n";
     os << "  multiThreadedDialogs = " << multiThreadedDialogs << "\n";
     os << "  openTreeView = " << openTreeView << "\n";

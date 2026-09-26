@@ -1882,8 +1882,8 @@ package).
       lose their settings for a tidier directory.
 
 <a id="rg12-6"></a>
-**RG12.6** *(group RG12; maintainer 2026-09-26)* **The columns of a settings dialog are relative and
-    configurable** (#2667). `misc/GUI.py` gives the tree four fixed widths - 325, 188, 113 and 420
+**RG12.6** **DONE 2026-09-26** (#2667) — [log](exudynRevisionLog2026b.md#rg12-6) —
+    **The columns of a settings dialog are relative and configurable**. `misc/GUI.py` gives the tree four fixed widths - 325, 188, 113 and 420
     pixels, multiplied by the dialog scaling - so a long name is cut off on every screen.
     `visualizationSettings.dialogs` gets `columnWidthName`, `columnWidthValue` and `columnWidthType`,
     each a fraction in 0..1 of the dialog width, and the **description column takes what is left**,
@@ -1891,8 +1891,8 @@ package).
     width is not a configuration a user means.
 
 <a id="rg12-7"></a>
-**RG12.7** *(group RG12; maintainer 2026-09-26)* **The mouse wheel changes the font size of a dialog**
-    (#2668). About 10% per notch, up and down. Every metric of the dialog already follows the font -
+**RG12.7** **DONE 2026-09-26** (#2668) — [log](exudynRevisionLog2026b.md#rg12-6) —
+    **The mouse wheel changes the font size of a dialog**. About 10% per notch, up and down. Every metric of the dialog already follows the font -
     `DialogFontSize`, `DialogRowMetrics`, `textHeightFactor` - so the work is to rebuild the tree at
     the new size and to keep the scroll position. **Which modifier** is the open question: the wheel
     alone scrolls the tree, so it is `Ctrl` + wheel unless the maintainer prefers otherwise, and on
@@ -1943,12 +1943,11 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1 | - | a checker for user scripts after the 1.12 API changes |
 | RG10.2 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
+| RG6.4 | #2676 | a destroyed SystemContainer reaches the dialogs - done with RG12.7 |
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5 | #2666 | user settings that persist between runs: one ~/.exudyn file, and what may be in it |
-| RG12.6 | #2667 | the columns of a settings dialog are relative and configurable |
-| RG12.7 | #2668 | the mouse wheel changes the font size of a dialog |
 
 ### Raised by the current work, and not yet a step
 

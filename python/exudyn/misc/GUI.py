@@ -38,17 +38,17 @@ from exudyn.misc.settingsUtilities import (CheckType, ConvertString2Value,  # no
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'useRenderWindowDisplayScaling', 'treeviewDefaultFontSize', 'rowHeightFactor',
-    'boolDoubleClickDelay', 'textHeightFactor', 'treeEditDefaultWidth', 'treeEditDefaultHeight',
-    'treeEditMaxInitialHeight', 'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems',
-    'treeEditLastOpenItems', 'codeLineBackground', 'changedValueColor', 'IsApple',
-    'GetRendererSystemContainer', 'MakeProcessDpiAware', 'GetTkRootAndNewWindow', 'TkRootExists',
-    'DialogFontSize', 'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling',
-    'GetGUIContentScaling', 'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
-    'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary',
-    'StoreDialogPositions', 'RestoreWindowGeometry', 'RememberWindowGeometry',
-    'StoreWindowGeometry', 'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog',
-    'pythonCommandExamples',
-    'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
+    'boolDoubleClickDelay', 'textHeightFactor', 'defaultColumnWidths', 'treeEditDefaultWidth',
+    'treeEditDefaultHeight', 'treeEditMaxInitialHeight', 'dialogDefaultWidth',
+    'dialogDefaultHeight', 'treeEditOpenItems', 'treeEditLastOpenItems', 'codeLineBackground',
+    'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'MakeProcessDpiAware',
+    'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
+    'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
+    'DialogScaling', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo',
+    'TkinterEditDictionary', 'EditDictionary', 'StoreDialogPositions', 'RestoreWindowGeometry',
+    'RememberWindowGeometry', 'StoreWindowGeometry', 'ApplyDialogWindowSettings',
+    'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples', 'ModelScope',
+    'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog',
     'AskQuitDialog',
     ]
 
@@ -61,6 +61,11 @@ rowHeightFactor = 1.15  #the factor between the MEASURED linespace of the font a
 boolDoubleClickDelay = 220 #ms a bool row waits before it opens its editor, so that a double
                         #click can cancel it and toggle instead
 textHeightFactor = 1.45 #this is the factor between font size and text height; larger values leading to more space between lines
+
+#the share of the dialog width the three fixed columns take; the description gets the rest. Until
+#revision2026b step RG12.6 these were 325, 188 and 113 pixels, which is what they still are at the
+#default width of 1024 (#2667)
+defaultColumnWidths = [0.31, 0.18, 0.11]
 
 treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
 treeEditDefaultHeight = 800     #unscaled height of e.g. visualizationSettings
@@ -86,13 +91,19 @@ def IsApple():
 
 def GetRendererSystemContainer():
     try:
-        if 'currentRendererSystemContainer' in exudyn.sys: 
+        if 'currentRendererSystemContainer' in exudyn.sys:
             guiSC = exudyn.sys['currentRendererSystemContainer']
-            if guiSC != 0 and type(guiSC) == exudyn.SystemContainer:
-                return guiSC
+            if guiSC != 0 and isinstance(guiSC, exudyn.SystemContainer):
+                #the entry can name a container whose C++ object is gone, and the lookup does not
+                #notice: it is the first USE that raises, in whichever caller happens to be next
+                #(#2623 guarded this function, #2676 the value it returns). One cheap read here
+                #is what turns that into a None the callers already handle.
+                probe = guiSC.visualizationSettings.dialogs.alwaysTopmost
+                if isinstance(probe, bool):
+                    return guiSC
     #RuntimeError is the access violation of a container that was destroyed while the entry
     #still names it (#2623); a dialog must not die of that
-    except (KeyError, AttributeError, RuntimeError): 
+    except (KeyError, AttributeError, RuntimeError):
         pass
     return None
 
@@ -143,6 +154,29 @@ def TkRootExists():
     """
     return (tk._default_root is not None)
 
+
+
+def ColumnWidthFractions(widths):
+    """the three column fractions, usable whatever was configured
+
+    Args:
+        widths: `[name, value, type]`, each a fraction of the dialog width
+
+    Returns:
+        the same three, each at least 0.05, and scaled down together if they would leave the
+        description column less than 10% of the dialog
+
+    Note:
+        A settings dialog whose description column is a few pixels wide cannot be read, and the
+        settings that produce it are three independent numbers a user may set in any order. So the
+        rule is applied here rather than refused at the setting: what a user asks for, as far as it
+        still leaves a dialog.
+    """
+    fractions = [max(0.05, float(width)) for width in (list(widths) + defaultColumnWidths)[:3]]
+    total = sum(fractions)
+    if total > 0.9:
+        fractions = [fraction * 0.9 / total for fraction in fractions]
+    return tuple(fractions)
 
 
 def DialogFontSize(fontFactor):
@@ -350,13 +384,16 @@ class Tooltip:
 #updateOnChange: every change is directly applied to the settingsStructure and redraw is signaled in stored renderer
 class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False,
-                 textHeight = 15, systemScaling = 1, fontFactor = 1, columnScale = 1.):
+                 textHeight = 15, systemScaling = 1, fontFactor = 1, columnScale = 1., columnWidths=None):
         tk.Frame.__init__(self, parent)
         
         self.parentFrame = parent #parent frame stored for member functions
         self.settingsStructure = settingsStructure
         self.dictionaryTypesT = dictionaryTypesT #as type
         self.updateOnChange = updateOnChange
+        #the fractions of the dialog width the first three columns take; the description column
+        #takes what they leave (revision2026b step RG12.6, #2667)
+        self.columnWidths = list(columnWidths) if columnWidths is not None else defaultColumnWidths
         self.treeOpen = treeOpen
         self.textHeight = textHeight
         self.systemScaling = systemScaling
@@ -429,19 +466,25 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #was never called, so every one of them kept tkinter's 200 px default - the name was cut,
         #the description was unreadable, and dragging one moved the others. Only the description
         #stretches with the window; the rest keep what they are given.
-        scale = self.columnScale
-        #the first three are 25% wider than they were until 2026-09-23, which the
-        #maintainer asked for after using the measured scaling of RG6.2.23
-        self.tree.column("#0", width=int(325*scale), minwidth=120, stretch=False)
-        self.tree.column("value", width=int(188*scale), minwidth=60, stretch=False)
-        self.tree.column("type", width=int(113*scale), minwidth=50, stretch=False, anchor=tk.W)
-        self.tree.column("description", width=int(420*scale), minwidth=120, stretch=True)
+        self.tree.column("#0", minwidth=120, stretch=False)
+        self.tree.column("value", minwidth=60, stretch=False)
+        self.tree.column("type", minwidth=50, stretch=False, anchor=tk.W)
+        self.tree.column("description", minwidth=120, stretch=True)
+        self.ApplyColumnWidths()
 
 
         #a row that differs from the default is written in colour and bold (#2606); the size
         #has to be given here, because a tag font does not follow the style of the tree
         self.tree.tag_configure('changed', foreground=changedValueColor,
                                 font=(None, DialogFontSize(fontFactor), 'bold'))
+
+        #Ctrl and the wheel change the font size, on every platform's spelling of the event
+        #(revision2026b step RG12.7, #2668)
+        for widget in [self, self.tree]:
+            widget.bind('<Control-MouseWheel>',
+                        lambda event: self.ChangeFontSize(1.1 if event.delta > 0 else 1/1.1))
+            widget.bind('<Control-Button-4>', lambda event: self.ChangeFontSize(1.1))
+            widget.bind('<Control-Button-5>', lambda event: self.ChangeFontSize(1/1.1))
 
         self.AddNodeFromDictionaryWithTypeInfo(value=self.dictionaryData, parentNode="")
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
@@ -741,6 +784,51 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def OnQuit(self,event): #new selection --> nothing to edit for now
         self.parentFrame.destroy()
         
+    def ApplyColumnWidths(self):
+        """Give the three fixed columns their share of the dialog, and the description the rest.
+
+        Returns:
+            None
+
+        Note:
+            The widths are fractions of the width of the dialog
+            (`visualizationSettings.dialogs.columnWidthName` and its two neighbours), so a long
+            name is a setting and not a rebuild. They are scaled by the font, which is why this is
+            called again when the font size changes.
+        """
+        (name, value, valueType) = ColumnWidthFractions(self.columnWidths)
+        width = int(treeEditDefaultWidth * self.columnScale)
+        self.tree.column("#0", width=int(name * width))
+        self.tree.column("value", width=int(value * width))
+        self.tree.column("type", width=int(valueType * width))
+        self.tree.column("description", width=int((1. - name - value - valueType) * width))
+
+    def ChangeFontSize(self, factor):
+        """Make the font of the dialog larger or smaller, and everything that follows it.
+
+        Args:
+            factor: 1.1 makes it about 10% larger, 1/1.1 about 10% smaller
+
+        Returns:
+            'break', so that the tree does not also scroll on the same event
+
+        Note:
+            The row height, the column widths and the font of a changed row all follow the font
+            size, so all three are recomputed here. The range is limited: a dialog whose font is
+            two pixels tall cannot be read back to a usable size.
+        """
+        self.fontFactor = max(0.4, min(4., self.fontFactor * factor))
+        [self.textHeight, self.columnScale] = DialogRowMetrics(self, self.fontFactor)
+        fontSize = DialogFontSize(self.fontFactor)
+
+        style = ttk.Style(self)
+        style.configure('Treeview', rowheight=self.textHeight, font=(None, fontSize))
+        style.configure('Treeview.Heading', font=(None, fontSize))
+        self.tree.tag_configure('changed', foreground=changedValueColor,
+                                font=(None, fontSize, 'bold'))
+        self.ApplyColumnWidths()
+        return 'break'
+
     def TreeviewSelect(self,event):
         """a new row is selected: the bottom row follows it, whether it is edited or not"""
         self.CancelCellEdit()
@@ -1190,12 +1278,16 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     topmost = True
     alphaTransparency = 1 #<1 means transparency
     treeOpen = True
+    columnWidths = defaultColumnWidths   #a dialog of 'python -m exudyn dialogs' has no container
     if guiSC is not None:
         updateOnChange = guiSC.visualizationSettings.dialogs.multiThreadedDialogs
         topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
         if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:
             alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
         treeOpen = guiSC.visualizationSettings.dialogs.openTreeView
+        columnWidths = [guiSC.visualizationSettings.dialogs.columnWidthName,
+                        guiSC.visualizationSettings.dialogs.columnWidthValue,
+                        guiSC.visualizationSettings.dialogs.columnWidthType]
 
     [systemScaling, fontFactor] = DialogScaling(root)
 
@@ -1223,7 +1315,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
                                          updateOnChange=updateOnChange, treeOpen=treeOpen, textHeight = textHeight,
                                          systemScaling = systemScaling, fontFactor = fontFactor,
-                                         columnScale = columnScale)
+                                         columnScale = columnScale, columnWidths = columnWidths)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:

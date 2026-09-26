@@ -2,13 +2,17 @@
   "number": 2667,
   "title": "The column widths of a settings dialog are fixed pixels; make them relative and configurable",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "LOW",
   "effort": "LOW",
   "description": "GUI.py gives the tree four fixed widths - 325, 188, 113 and 420 pixels, scaled by the dialog scaling - so a name that is long is cut off whatever the screen. The maintainer asks for relative widths in visualizationSettings, each in 0..1: columnWidthName, columnWidthValue, columnWidthType, with the description column taking what is left (maintainer, 2026-09-26).",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
+  "dateResolved": "2026-09-26 10:53",
+  "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/misc/GUI.py",
-  "line": "432"
+  "line": "432",
+  "releaseNotes": "The three fixed columns of a settings dialog take a share of its width - visualizationSettings.dialogs.columnWidthName, columnWidthValue and columnWidthType, each a fraction - and the description column takes what they leave. Each is at least 0.05, and if together they would leave the description less than a tenth of the dialog, all three are scaled down (revision2026b step RG12.6).",
+  "resolvedInVersion": "1.12.85"
 }

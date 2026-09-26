@@ -3698,6 +3698,30 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsDialogs& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.columnWidthName;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave";
+    structureDict["columnWidthName"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.columnWidthType;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "width of the type column of a settings dialog, as a fraction of the width of the dialog";
+    structureDict["columnWidthType"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.columnWidthValue;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "width of the value column of a settings dialog, as a fraction of the width of the dialog";
+    structureDict["columnWidthValue"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.fontScaling;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
@@ -3736,6 +3760,9 @@ inline py::dict GetDictionary(const VSettingsDialogs& data) {
     auto structureDict = py::dict();
     structureDict["alphaTransparency"] = data.alphaTransparency;
     structureDict["alwaysTopmost"] = data.alwaysTopmost;
+    structureDict["columnWidthName"] = data.columnWidthName;
+    structureDict["columnWidthType"] = data.columnWidthType;
+    structureDict["columnWidthValue"] = data.columnWidthValue;
     structureDict["fontScaling"] = data.fontScaling;
     structureDict["multiThreadedDialogs"] = data.multiThreadedDialogs;
     structureDict["openTreeView"] = data.openTreeView;
@@ -3747,6 +3774,9 @@ inline py::dict GetDictionary(const VSettingsDialogs& data) {
 inline void SetDictionary(VSettingsDialogs& data, const py::dict& d) {
     EPyUtils::FromPython(d["alphaTransparency"], data.alphaTransparency, EPyUtils::RangeCheck::nonNegative, "VSettingsDialogs.alphaTransparency");
     EPyUtils::FromPython(d["alwaysTopmost"], data.alwaysTopmost, "VSettingsDialogs.alwaysTopmost");
+    EPyUtils::FromPython(d["columnWidthName"], data.columnWidthName, EPyUtils::RangeCheck::nonNegative, "VSettingsDialogs.columnWidthName");
+    EPyUtils::FromPython(d["columnWidthType"], data.columnWidthType, EPyUtils::RangeCheck::nonNegative, "VSettingsDialogs.columnWidthType");
+    EPyUtils::FromPython(d["columnWidthValue"], data.columnWidthValue, EPyUtils::RangeCheck::nonNegative, "VSettingsDialogs.columnWidthValue");
     EPyUtils::FromPython(d["fontScaling"], data.fontScaling, EPyUtils::RangeCheck::nonNegative, "VSettingsDialogs.fontScaling");
     EPyUtils::FromPython(d["multiThreadedDialogs"], data.multiThreadedDialogs, "VSettingsDialogs.multiThreadedDialogs");
     EPyUtils::FromPython(d["openTreeView"], data.openTreeView, "VSettingsDialogs.openTreeView");

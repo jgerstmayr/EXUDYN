@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 83 | 1.12.84 |
+| 1.12 | Metheney | 86 | 1.12.87 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.87** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GetRendererSystemContainer returns a container whose C++ object is gone (#2676)
+  - description: \#2623 made the lookup survive a destroyed SystemContainer, but only the lookup: the function checks that exudyn.sys\['currentRendererSystemContainer'\] exists and has the right type, and the first USE of the returned object then raises RuntimeError - Access violation - in whichever caller happens to be next. Found on 2026-09-26 by the new dialog tests of revision2026b step RG12.7, which failed at random in a parallel pytest run, in DialogScaling at guiSC.visualizationSettings.dialogs.fontScaling. A user meets it when a dialog is opened after the container that started the renderer has been deleted. The fix is one cheap read inside the guard, so that a dead container becomes the None every caller already handles.
+  - **notes:** GetRendererSystemContainer reads one cheap setting of the container it is about to return, so a container whose C++ object is gone becomes the None every caller already handles. \#2623 had guarded the lookup only, and the first use raised RuntimeError in whichever caller came next - found by the new dialog tests of RG12.7, which failed at random in a parallel pytest run.
+  - date resolved: **2026-09-26 10:53**, date raised: 2026-09-26
+- **1.12.86** `EXTENSION` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Ctrl and the mouse wheel change the font size of a dialog (#2668)
+  - description: The font size of the settings dialogs is a setting that has to be found and typed. The maintainer asks whether the mouse wheel could change it directly - about 10 percent per notch, up and down (maintainer, 2026-09-26). The dialog already computes every metric from the font size through DialogFontSize and DialogRowMetrics, so the question is mostly about rebuilding the tree at a new size and about which modifier, since the wheel alone scrolls.
+  - **notes:** Ctrl and the mouse wheel change the font size of an open settings dialog, about 10 percent per notch and between 0.4 and 4 times the scaled size; the row height, the column widths and the font of a changed row follow it. The bare wheel still scrolls (revision2026b step RG12.7).
+  - date resolved: **2026-09-26 10:53**, date raised: 2026-09-26
+- **1.12.85** `EXTENSION` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The column widths of a settings dialog are fixed pixels; make them relative and configurable (#2667)
+  - description: GUI.py gives the tree four fixed widths - 325, 188, 113 and 420 pixels, scaled by the dialog scaling - so a name that is long is cut off whatever the screen. The maintainer asks for relative widths in visualizationSettings, each in 0..1: columnWidthName, columnWidthValue, columnWidthType, with the description column taking what is left (maintainer, 2026-09-26).
+  - **notes:** The three fixed columns of a settings dialog take a share of its width - visualizationSettings.dialogs.columnWidthName, columnWidthValue and columnWidthType, each a fraction - and the description column takes what they leave. Each is at least 0.05, and if together they would leave the description less than a tenth of the dialog, all three are scaled down (revision2026b step RG12.6).
+  - date resolved: **2026-09-26 10:53**, date raised: 2026-09-26
 - **1.12.84** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A settings dialog remembers its size and its position (#2675)
   - description: The leftover of \#2608: RG6.2.11 went through the catalogue of optional dialog features on 2026-09-23 and decided all of them except this one, which stayed undecided, with the rule that would make it safe recorded in the log - restore the size always, the position only when the window still lies inside the virtual desktop. The maintainer asked for a proposal on 2026-09-26 and approved it: it belongs in the user settings file of \#2666, under a dialogs section, and is switched on by a new visualizationSettings.dialogs.storeDialogPositions.
   - **notes:** A settings dialog remembers its size and position when visualizationSettings.dialogs.storeDialogPositions is True: both are stored in the dialogs section of ~/.exudyn/config.json, the size is restored always and the position only when the window would still be reachable on the current screen (revision2026b step RG12.5.3, the leftover of \#2608).
