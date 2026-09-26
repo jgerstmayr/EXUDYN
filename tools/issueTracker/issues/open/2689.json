@@ -1,0 +1,13 @@
+{
+  "number": 2689,
+  "title": "the render window and the SolutionViewer do not remember their size and position",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "Asked for by the maintainer on 2026-09-26: both should be able to store position and size, as the settings dialogs do since revision2026b step RG12.5.3. The render window has visualizationSettings.view*.window.renderWindowSize, which is an INITIAL size and is not written back, and it has no position at all: GlfwClient.cpp never calls glfwSetWindowPos or glfwGetWindowPos (measured). So this needs C++ - reading the position when the window closes and setting it when it opens - and a section of ~/.exudyn/config.json to keep it in, which is the mechanism exudyn.special.overrideSettings already is. Several views exist, so each needs its own entry. The SolutionViewer is the cheaper half: its dialog is a tkinter window like the settings dialogs, so it can use RestoreWindowGeometry and StoreWindowGeometry once revision2026b step RG12.13 makes those work without the renderer flag. The reachability rule of RG6.2.11 applies to both: the size comes back always, the position only when the window would still be reachable. revision2026b step RG12.16.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "src/Graphics/GlfwClient.cpp"
+}

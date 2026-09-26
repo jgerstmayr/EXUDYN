@@ -1,0 +1,13 @@
+{
+  "number": 2687,
+  "title": "the override settings are read only at import, so a changed file needs a new session",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The maintainer, testing 1.12.95 in Spyder: the settings file is only picked up after restarting the console, which makes storing something look as if it had not worked. 'import exudyn' reads the file once, and a second import of an already imported module does nothing, so a file written by the store button - or edited by hand - has no effect until the interpreter is restarted. Spyder keeps the kernel, which is where this is met. Wanted: a function that re-reads the file into exudyn.special.overrideSettings and applies what can be applied at once, so that a session can pick up what it has just stored, and a line in the documentation saying which settings need a restart and why. One thing to decide in the step: the subclasses that apply the visualizationSettings to every new structure are installed at import and ONLY when the file holds such a section, so a reload cannot make them appear - either they are installed whenever the file could hold one, or the reload installs them, or the documentation says that this part needs a restart. revision2026b step RG12.14.",
+  "dateRaised": "2026-09-26",
+  "deadline": "2027-03-25",
+  "file": "python/exudyn/misc/overrideSettings.py"
+}
