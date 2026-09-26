@@ -50,7 +50,8 @@ structureModules = ['structureDefsOther', 'structureDefsSimulationSettings',
                     'structureDefsSolvers']
 
 from itemModel import Mangle as _Mangle, LineType as _LineType, Size as _Size, \
-    DefaultValueString as _DefaultValue, Flags as _Flags, OutputVariablesString as _OutputVariables, booleanHeaderKeys
+    DefaultValueString as _DefaultValue, DefaultValueDocument as _DefaultValueDocument, \
+    Flags as _Flags, OutputVariablesString as _OutputVariables, booleanHeaderKeys
 
 
 def _Member(member, lineDefinition, source, structureClassNames):
@@ -68,6 +69,10 @@ def _Member(member, lineDefinition, source, structureClassNames):
     #a user function is a real Python def in the definition file, and what is carried through is the
     #FUNCTION OBJECT, not a string: its arguments, their types and the docstring are read from its
     #source, and the documentation block is generated from them (revision2026b step RG12.4, #2664)
+    #what a documentation table shows as the default value; the C++ literal in 'defaultValue' is
+    #what the headers need, and the two used to be the same string put through a converter that
+    #guessed (revision2026b step RG3.24.3, #2682)
+    line['defaultValueDocument'] = _DefaultValueDocument(member)
     if member.get('userFunction') is not None:
         line['userFunction'] = member['userFunction']
         line['userFunctionExample'] = member.get('userFunctionExample') or ''

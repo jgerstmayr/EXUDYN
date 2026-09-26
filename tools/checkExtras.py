@@ -90,6 +90,11 @@ exemptImports = {
                      'it into [tests] would be a large dependency for dead code',
     'mkl':           'optional performance tweak in a try/except with a working fallback; which '
                      'MKL build is correct depends on the BLAS the environment already has',
+    'definitionTypes': 'a module of definitions/, the generators\' input, which is not a package '
+                     'and is never installed: python/testing/test_defaultValueRenderings.py puts '
+                     'that directory on sys.path and imports it by name (#2682)',
+    'definitionLoader': 'a module of tools/generators/, imported by name the same way and for the '
+                     'same test as definitionTypes above (#2682)',
     'pytest':        'a DEV tool, declared in [dependency-groups] lint/dev of pyproject.toml and '
                      'not in any extra: the test suite runs without it (runTestSuite.py), and '
                      'test_testModels.py is the optional pytest collector of revision2026 step '

@@ -15,7 +15,7 @@ The item **ObjectConnectorGravity** with type = 'ConnectorGravity' has the follo
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **gravitationalConstant** $G$ | Real |  | 6.6743e-11 | gravitational constant [SI:m$^3$kg$^{-1}$s$^{-2}$)]; while not recommended, a negative constant gan represent a repulsive force |
 | **mass0** $mass_0$ | UReal |  | 0. | mass [SI:kg] of object attached to marker $m0$ |
 | **mass1** $mass_1$ | UReal |  | 0. | mass [SI:kg] of object attached to marker $m1$ |

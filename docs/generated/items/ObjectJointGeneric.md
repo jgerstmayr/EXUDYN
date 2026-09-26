@@ -19,7 +19,7 @@ The item **ObjectJointGeneric** with type = 'JointGeneric' has the following par
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **constrainedAxes** $\jv=[j_0,\,\ldots,\,j_5]$ | ArrayIndex | 6 | [1,1,1,1,1,1] | flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
 | **rotationMarker0** $\LU{m0,J0}{\Rot}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
 | **rotationMarker1** $\LU{m1,J1}{\Rot}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |

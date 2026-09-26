@@ -25,7 +25,7 @@ The item **ObjectALEANCFCable2D** with type = 'ALEANCFCable2D' has the following
 | **physicsReferenceCurvature** $\kappa_0$ | Real |  | 0. | [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
 | **physicsUseCouplingTerms** | Bool |  | True | true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then) |
 | **physicsAddALEvariation** | Bool |  | True | true: correct case, where additional terms related to variation of strain and curvature are added |
-| **nodeNumbers** | NodeIndex3 | 3 | [invalid [-1], invalid [-1], invalid [-1]] | two node numbers ANCF cable element, third node=ALE GenericODE2 node |
+| **nodeNumbers** | NodeIndex3 | 3 | [invalid (-1), invalid (-1), invalid (-1)] | two node numbers ANCF cable element, third node=ALE GenericODE2 node |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments |
 | **strainIsRelativeToReference** $f\cRef$ | Real |  | 0. | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
 | **visualization** | VObjectALEANCFCable2D |  |  | parameters for visualization of item |

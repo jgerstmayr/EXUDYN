@@ -16,7 +16,7 @@ The item **ObjectContactSphereTorus** with type = 'ContactSphereTorus' has the f
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid [-1], invalid [-1] ] | list of markers representing centers of sphere (marker 0) and center of torus (marker 1) |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers representing centers of sphere (marker 0) and center of torus (marker 1) |
 | **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused. |
 | **radiusSphere** $r_S$ | PReal |  | 0. | radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
 | **torusMajorRadius** $r_{M}$ | PReal |  | 0. | major radius of torus [SI:m], representing center of rotated circle; **must be given**: the default is only a placeholder |

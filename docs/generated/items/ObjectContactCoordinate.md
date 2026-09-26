@@ -14,7 +14,7 @@ The item **ObjectContactCoordinate** with type = 'ContactCoordinate' has the fol
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | markers define contact gap |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration) |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m]; acts only upon penetration |
 | **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)]; acts only upon penetration |

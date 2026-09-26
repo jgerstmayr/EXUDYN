@@ -14,7 +14,7 @@ The item **ObjectGenericODE1** with type = 'GenericODE1' has the following param
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$ | ArrayNodeIndex |  | [] | node numbers which provide the coordinates for the object (consecutively as provided in this list) |
-| **systemMatrix** $\Am \in \Rcal^{n \times n}$ | NumpyMatrix |  | Matrix[] | system matrix (state space matrix) of first order ODE |
+| **systemMatrix** $\Am \in \Rcal^{n \times n}$ | NumpyMatrix |  | [] | system matrix (state space matrix) of first order ODE |
 | **rhsVector** $\fv \in \Rcal^{n}$ | NumpyVector |  | [] | a constant rhs vector (e.g., for constant input) |
 | **rhsUserFunction** $\fv_{user} \in \Rcal^{n}$ | PyFunctionVectorMbsScalarIndexVector |  | 0 | A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below |
 | **coordinateIndexPerNode** | ArrayIndex |  | [] | this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed |

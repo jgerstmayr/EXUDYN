@@ -4480,3 +4480,84 @@ wants, and it was right both times.
 
 **Gates**: 11/11 checks, the wheel, the full suite, pytest, the strict HTML build **and the PDF**,
 because a new section with two labels and a table is what the LaTeX writer fails on.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.24.3 - the default values stopped travelling through a C++ literal and back (2026-09-26, #2682)
+
+RG3.24.1 and RG3.24.2 measured the round trip; this built option A. Three findings changed the shape
+of the work, and the first two made it smaller.
+
+**`CppValue` already knew.** It has carried `ToPython()` and `ToDocument()` since it was written, and
+**nothing had ever called them**. The three constants - `DVInvalidIndex`, `DVDefaultColor`,
+`DVZeroVector3D`, used by 142 members - were already saying what their Python and their document form
+is, while the generators threw that away and reconstructed it from the C++ string. Half of what
+looked like new work was a function call.
+
+**The other half is real**, and the audit's number holds: 260 defaults are raw C++ source text with
+no Python form anywhere, in 95 distinct spellings. They are now translated by named tables -
+`emptyContainerValues` (17), `namedDefaultValues` (7), `innerDefaultValues` (1) - with one rule for
+`Name({...})` and one for `Type::Value`. **An expression no rule covers raises
+`UnknownDefaultValue`**, which stops the generator and names the table to extend. That is the whole
+difference from the old converter: it guessed, and a guess that is wrong looks plausible.
+
+**And the third finding: the corruption was published.** The audit said the `f`-removal was
+"contained by accident" because its three victims are `CFNoInterface`. Writing the tables out showed
+what the audit had not looked for - what the **document** converter does to the same values:
+
+| in `docs/generated/` | was | is |
+|---|---|---|
+| 85 cells | `[ invalid [-1], invalid [-1] ]` | `[ invalid (-1), invalid (-1) ]` |
+| 30 cells | `Matrix[]`, `PyMatrixContainer[]`, `MatrixI[]` | `[]` |
+| 1 cell | `[Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]]` | `[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]` |
+| `itemInterface.py` | `coefficientsHull =  []` | `coefficientsHull = []` |
+
+The nested brackets are the blind `"(" -> "["`; `Matrix[]` is the same replacement eating a paren in
+a type name. The rotation matrix is the best of them: its own description says *"in python use e.g.:
+initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"* directly beside a default value that had been put
+through two string converters.
+
+**`grep` had found none of the string-valued ones, and the reason is in the generator**:
+
+```python
+if parameter['type'] != 'String' and parameter['type'] != 'FileName': #don't do this for file names, because 'f' is erased!
+```
+
+Somebody met the f-removal years ago and **worked around it by excluding two types**, in a comment
+that says exactly what is wrong and was never acted on. `solverInformation.txt` and `images/frame`
+are safe on the pages because of that line, not because the converter was right. The line is gone.
+
+**Four functions and 201 lines went**: `DefaultValue2Python`, `Str2Latex`, `SplitString`,
+`CutLinesFromString`, and the 14 `Str2Latex` calls that RG3.24.2 measured at 0 changes out of 3720
+inputs. **The regeneration after the removal produced the same 47 files and the same 74 lines as
+before it** - the measurements were right, and running the gate twice is what proves it rather than
+says it.
+
+**No regular expressions in a definition file.** The first version used `re`, and
+`checkDefinitions` rejected it: it reads every string literal of `definitions/` and a backslash
+followed by a letter is a LaTeX command to it, so `\\s` and `\\t` were four findings. That check is
+right - a description is what those files are for - so the patterns became plain string logic, which
+also made the f-suffix rule something a reader can see:
+
+```python
+if (character in 'fF' and index > 0 and characters[index - 1] in _numberEnd
+        and not (following.isalnum() or following == '_')):
+    continue                                     #a float suffix: it goes
+```
+
+**17 tests**, in `python/testing/test_defaultValueRenderings.py`, each named after the defect it
+forbids - `testTheLetterFInsideANameSurvives`, `testAFileNameKeepsItsF`,
+`testAnUnknownExpressionRaisesInsteadOfBeingGuessedAt` - and one that renders all 1376 defaults, so
+a missing rule is a test failure and not a surprise during a release.
+
+**RG3.24.2 got one verdict wrong and it is corrected in the plan**: `GetTypesStringLatex` does *not*
+write a macro that its callers strip. It writes `\\texttt{...}` into text that goes through the
+LaTeX-to-Markdown converter, which turns it into a backtick span - which is why none reaches a page.
+The function is correct; only its name is wrong, and that belongs to RG3.24.
+
+**What was deliberately not done.** The three constants' document wording disagreed with what is
+published - `'invalid index'` against `invalid (-1)`, prose against `[-1.,-1.,-1.,-1.]` - and the
+published wording won; the constants were corrected to it. This step removes corruption, it does not
+re-word the manual. Whether a default column should read `exudyn.InvalidIndex()` rather than
+`invalid (-1)` is now a one-line decision instead of an archaeology.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 464 pytest, the strict HTML build and the PDF.

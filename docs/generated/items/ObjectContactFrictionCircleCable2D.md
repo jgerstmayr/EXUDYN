@@ -14,7 +14,7 @@ The item **ObjectContactFrictionCircleCable2D** with type = 'ContactFrictionCirc
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | a marker $m0$ with position and orientation and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | a marker $m0$ with position and orientation and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry |
 | **nodeNumber** $n_g$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 3 $\times n_{cs}$ dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick |
 | **numberOfContactSegments** $n_{cs}$ | PInt |  | 3 | number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker |
 | **contactStiffness** $k_c$ | UReal |  | 0. | contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_n$ act in contact normal direction only upon penetration |

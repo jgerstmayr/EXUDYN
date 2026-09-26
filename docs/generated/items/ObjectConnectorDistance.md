@@ -15,7 +15,7 @@ The item **ObjectConnectorDistance** with type = 'ConnectorDistance' has the fol
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **distance** $d_0$ | PReal |  | 0. | prescribed distance [SI:m] of the used markers; must by greater than zero; **must be given**: the default is only a placeholder |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorDistance |  |  | parameters for visualization of item |

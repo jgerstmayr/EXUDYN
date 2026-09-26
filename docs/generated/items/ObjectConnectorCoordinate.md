@@ -15,7 +15,7 @@ The item **ObjectConnectorCoordinate** with type = 'ConnectorCoordinate' has the
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **offset** $l_\mathrm{off}$ | Real |  | 0. | An offset between the two values |
 | **factorValue1** $k_{m1}$ | Real |  | 1. | An additional factor multiplied with value1 used in algebraic equation |
 | **velocityLevel** | Bool |  | False | If true: connector constrains velocities (only works for {ref}`ODE2 <ODE2>` coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored |

@@ -28,7 +28,7 @@ if toolsDirectory not in sys.path:
 import itemModel as im                                                              # noqa: E402
 import typeModel as tm                                                              # noqa: E402
 from itemModel import ExtractLatexSymbol                                            # noqa: E402
-from autoGenerateHelper import DefaultValue2Python, CleanStringForPyiDescription    # noqa: E402
+from autoGenerateHelper import CleanStringForPyiDescription                        # noqa: E402
 
 #the C++ enum whose values GetType returns, per item kind
 typeEnums = {'Node': 'Node', 'Marker': 'Marker', 'Object': 'CObjectType', 'Load': 'LoadType',
@@ -76,7 +76,7 @@ def Parameter(member):
     return {'type': typeName,
             'size': im.Size(member),
             'range': tm.ConstraintNote(typeName).replace('must be ', '').replace('; ', ''),
-            'default': DefaultValue2Python(im.DefaultValueString(member)),
+            'default': im.DefaultValuePython(member),
             'mustBeGiven': 'Q' in (member.get('cFlags', '') or ''),
             'description': CleanStringForPyiDescription(description).strip()}
 

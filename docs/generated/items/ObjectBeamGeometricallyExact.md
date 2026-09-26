@@ -15,7 +15,7 @@ The item **ObjectBeamGeometricallyExact** with type = 'BeamGeometricallyExact' h
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **nodeNumbers** | NodeIndex2 | 2 | [invalid [-1], invalid [-1]] | two node numbers for beam element |
+| **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers for beam element |
 | **physicsLength** $L$ | PReal |  | 0. | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
 | **sectionData** | BeamSection |  | BeamSection() | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section. |
 | **visualization** | VObjectBeamGeometricallyExact |  |  | parameters for visualization of item |

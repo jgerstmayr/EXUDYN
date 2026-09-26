@@ -15,7 +15,7 @@ The item **ObjectConnectorSpringDamper** with type = 'ConnectorSpringDamper' has
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **referenceLength** $L_0$ | UReal |  | 0. | reference length [SI:m] of spring |
 | **stiffness** $k$ | UReal |  | 0. | stiffness [SI:N/m] of spring; force acts against (length-initialLength) |
 | **damping** $d$ | UReal |  | 0. | damping [SI:N/(m s)] of damper; force acts against d/dt(length) |

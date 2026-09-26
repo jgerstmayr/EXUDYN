@@ -72,72 +72,6 @@ def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit in
 
 #************************************************
 #convert string to latex readable string --> used in auto-generated docu
-def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and other symbols to fit into latex code
-
-    if isDefaultValue:
-        s = s.replace('true','True') #correct python notation
-        s = s.replace('false','False') #correct python notation
-
-        s = s.replace('EXUstd::InvalidIndex','invalid (-1)') #correct python notation
-
-        if (s.find('EXUmath::unitMatrix3D') != -1): #manually done - could be automatized in future ...
-            s = s.replace('EXUmath::unitMatrix3D','[[1,0,0], [0,1,0], [0,0,1]]')  
-        if (s.find('EXUmath::zeroMatrix3D') != -1): #manually done - could be automatized in future ...
-            s = s.replace('EXUmath::zeroMatrix3D','[[0,0,0], [0,0,0], [0,0,0]]')  
-
-        if (s.find('Matrix6D(6,6,0.)') != -1): #manually done - could be automatized in future ...
-            s = 'np.zeros((6,6))'
-        
-        
-        if ( (s.find('Index') != -1) or (s.find('Float') != -1) or
-            (s.find('Vector') != -1) or (s.find('Matrix') != -1) or 
-            (s.find('Transformations66List') != -1) or (s.find('Matrix3DList') != -1) or (s.find('JointTypeList') != -1)
-            ):
-            s = s.replace('ArrayFloat','') #correct python notation
-            s = s.replace('ArrayIndex','') #correct python notation
-            s = s.replace('JointTypeList','') #KinematicTree
-            s = s.replace('Vector3DList','') #KinematicTree
-            s = s.replace('Vector6DList','') #KinematicTree
-            s = s.replace('Vector6DList','') #KinematicTree
-            s = s.replace('Matrix3DList','') #KinematicTree
-            s = s.replace('Transformations66List','') #KinematicTree
-            s = s.replace('Vector7D','') #correct python notation; rigid body coordinates
-            s = s.replace('Vector9D','') #correct python notation; inertia parameters
-            s = s.replace('Vector6D','') #correct python notation; inertia parameters
-            s = s.replace('Vector4D','') #correct python notation
-            s = s.replace('Vector3D','') #correct python notation
-            s = s.replace('Vector2D','') #correct python notation
-            s = s.replace('Vector','') #correct python notation
-            s = s.replace('false','False') #correct python notation
-            s = s.replace('Index2','')
-            s = s.replace('Index3','')
-            s = s.replace('Index4','')
-            s = s.replace('Float3','')
-            s = s.replace('Float4','')
-            s = s.replace('Float9','')
-            s = s.replace('Float16','')
-            s = s.replace('EXUmath::Matrix3DFToStdArray33','')
-            s = s.replace('(','[')
-            s = s.replace(')',']')
-            #s = s.replace('.f','')
-            s = s.replace('{','')
-            s = s.replace('}','')
-        
-        if s.find("'") == -1: #don't do that for strings!
-            s = s.replace('f','')
-
-    #the underscore escaping went with the LaTeX (revision2026b step RG3.14.14, #2677): a Markdown
-    #page shows a backslash-underscore as a plain underscore, so in text it was invisible noise -
-    #and INSIDE mathematics it is a defect, because there the escape is a literal underscore and the
-    #subscript the author wrote never appeared: $c\_Y$ showed "c_Y" as text
-    if replaceCurlyBracket: #don't do that for systemstructures definitions, allowing hyperlinks, etc.
-        s = s.replace('{','\\{')
-        s = s.replace('}','\\}')
-    #s = s.replace('/',' / ')
-    #s = s.replace('$','\$') #do not exclude $ in order to allow latex formulas
-
-    return s
-
 #parse string s and extract types available in itemType (Object/Node/...) and represent as latex-string
 #possibleTypesList is e.g. Object::Body -> body 
 def GetTypesStringLatex(s, itemType, possibleTypesList, separator = ','):
@@ -150,14 +84,6 @@ def GetTypesStringLatex(s, itemType, possibleTypesList, separator = ','):
             commaStr = separator+' '
 
     return returnStr
-
-#cut the first 'numberOfCutLines' lines in a string (in order to ignore the header date in comparison of files)
-def CutLinesFromString(theString, numberOfCutLines):
-    pos = 0
-    for i in range(numberOfCutLines):
-        pos = theString.find('\n', pos) + 1
-
-    return theString[pos:]
 
 #compare except for special date strings
 #return True if files are equal, False if different
@@ -201,93 +127,6 @@ def WriteTextIfDifferent(fileName, text, ignoreDateStrings):
         return True
     else:
         return False
-
-#replace '_', certain default values (e.g. Matix() --> []) and other symbols to fit into python itemInterface and for latex
-def DefaultValue2Python(s): 
-
-    s = s.replace('true','True') #correct python notation
-    s = s.replace('false','False') #correct python notation
-
-    #old, would need exu in utilities: s = s.replace('OutputVariableType::_None','OutputVariableType._None')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
-    s = s.replace('OutputVariableType::_None','0')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
-    s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
-    s = s.replace('EXUmath::zeroMatrix3D','IIDiagMatrix(rowsColumns=3,value=0)')  #replace with itemInterface diagonal matrix
-    s = s.replace('Matrix()','[]')  #replace empty matrix with emtpy list
-    s = s.replace('MatrixI()','[]') #replace empty matrix with emtpy list
-    s = s.replace('PyMatrixContainer()','None')  #initialization in iteminterface with empty array
-    s = s.replace('Vector2DList()','None')  #initialization in iteminterface with empty array
-    s = s.replace('Vector3DList()','None')  #initialization in iteminterface with empty array
-    s = s.replace('Vector6DList()','None')  #initialization in iteminterface with empty array
-    s = s.replace('Matrix3DList()','None')  #initialization in iteminterface with empty array
-    s = s.replace('BeamSectionGeometry()','exudyn.BeamSectionGeometry()')  #initialization in iteminterface with empty array
-    s = s.replace('BeamSection()','exudyn.BeamSection()')  #initialization in iteminterface with empty array
-
-    
-    if (s.find('Matrix6D(6,6,') != -1):
-        s = s.replace('Matrix6D(6,6,','')
-        s = s.replace(')','')
-        if s != '0' and s != '0.': print('error: Matrix6D(...) may only initialized with 0s')
-        s = 'IIDiagMatrix(rowsColumns=6,value=' + s + ')'
-        #
-    elif (s.find('Matrix3D(3,3,') != -1):
-        s = s.replace('Matrix3D(3,3,','')
-        s = s.replace(')','')
-        if s != '0' and s != '0.': print('error: Matrix3D(...) may only initialized with 0s')
-        s = 'IIDiagMatrix(rowsColumns=3,value=' + s + ')'
-        #
-    elif ( (s.find('Index') != -1) or (s.find('Float') != -1) or 
-          (s.find('Vector') != -1) or (s.find('Matrix3DList') != -1) or 
-          (s.find('JointTypeList') != -1)
-          ):
-        s = s.replace('ArrayIndex','') #correct python notation
-        s = s.replace('JointTypeList','') #KinematicTree
-        # s = s.replace('Vector2DList','') #BeamSectionGeometry
-        # s = s.replace('Vector3DList','') #KinematicTree
-        # s = s.replace('Vector6DList','') #KinematicTree
-        # s = s.replace('Matrix3DList','') #KinematicTree
-
-        #s = s.replace('PyVector2DList','') #BeamSectionGeometry
-        if s.find('PyVector2DList') != -1:
-            print(s)
-            raise ValueError('autoGenerateHelper(): unexpected PyVector2DList found')
-
-        s = s.replace('Vector9D','') #correct python notation
-        s = s.replace('Vector7D','') #correct python notation; rigid body coordinates
-        s = s.replace('Vector6D','') #correct python notation; inertia parameters
-        s = s.replace('Vector4D','') #correct python notation
-        s = s.replace('Vector3D','') #correct python notation
-        s = s.replace('Vector2D','') #correct python notation
-        s = s.replace('Vector','') #Vector(...)-->correct python notation [...]
-        s = s.replace('false','False') #correct python notation
-        s = s.replace('Index2','')
-        s = s.replace('Index3','')
-        s = s.replace('Index4','')
-        s = s.replace('Float3','')
-        s = s.replace('Float4','')
-        s = s.replace('Float9','')
-        s = s.replace('Float16','')
-        s = s.replace('EXUmath::Matrix3DFToStdArray33','')
-        s = s.replace('(','[')
-        s = s.replace(')',']')
-        s = s.replace('f','')
-        s = s.replace('{','')
-        s = s.replace('}','')
-
-    #s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
-    #do this after replacing Index ...
-    s = s.replace('EXUstd::InvalidIndex','exudyn.InvalidIndex()') #requires to import exudyn, but is possible now in itemInterface.py
-    
-    s = s.replace('f','')
-
-    #not necessary in python:
-    #s = s.replace('\\','\\\\')
-    #s = s.replace('_','\\_') 
-    #s = s.replace('{','\\{')
-    #s = s.replace('}','\\}')
-    #s = s.replace('$','\\$')
-
-    return s
-
 
 #************************************************
 # helper function for reading the structure
@@ -643,8 +482,8 @@ class PyLatexRST:
         if (options != ''):
             self.sPy += ', ' + options
        
-        sLadd = '  ' + Str2Latex(pyNameLatex)
-        sRadd = '* | ' + '**'+Str2Latex(pyNameLatex)+'**\\ '
+        sLadd = '  ' + pyNameLatex
+        sRadd = '* | ' + '**'+pyNameLatex+'**\\ '
         if addBraces: 
             sLadd += '('
             sRadd += '('
@@ -847,46 +686,6 @@ def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnc
 
 
 #************************************************
-#do main part of parameter line parsing
-#standard string.split() does not work, because of possible commas in description
-def SplitString(string, line): #split comma separated string; commas in "..." are not counted; remove '"' and spaces outside ""
-
-    continueOperation = True #check if parsing shall be terminated
-    c = '';
-    list=[]
-    stringMode = 0 #0=normal mode, 1=string mode ("")
-    s=''
-#    for i in range[0,len(string)]:
-    for c in string:
-#        print('c="',c,'"')
-        if continueOperation:
-            if (c==',') & (stringMode != 1):
-                if (stringMode != 2):
-                    s = RemoveSpacesTabs(s) #to not erase interior space (e.g. initialization of vectors!) replace(' ','')
-                list.append(s)
-                s = ''
-                stringMode = 0
-            elif (c=='"'):
-                if (stringMode == 0):
-                    if len(s.replace(' ','').replace('\t','')) != 0:
-                        print('ERROR in line',line,': invalid characters before ":',s)
-                        continueOperation = False
-                        list = []
-                    stringMode = 1
-                    s = '' #start with new string
-                elif (stringMode == 1):
-                    stringMode = 2 # expect comma or spaces (ignored)
-            elif (stringMode != 2):
-                s += c
-
-
-    if (stringMode != 2):
-        s = RemoveSpacesTabs(s) #to not erase interior space (e.g. initialization of vectors!) replace(' ','')
-    list.append(s) #append last string; 3 commas = 4 strings   
-    return list
-#************************************************
-
-
 pyFunctionAccessConvert = {
     '__repr__': '__repr__()',
     '__getitem__': '... = data[index]',

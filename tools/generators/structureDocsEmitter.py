@@ -83,7 +83,7 @@ def StructureDocs(parseInfo, parameterList):
         if not descriptionStr.endswith('.'): 
             descriptionStr += '. '
         
-        plr.AddDocu(Str2Latex(descriptionStr, replaceCurlyBracket=False)+
+        plr.AddDocu(descriptionStr+
                     '\n\n\\noindent '+
                     parseInfo['class'] + ' has the following items:\n', 
                     section=parseInfo['class'], sectionLevel=3, 
@@ -120,23 +120,25 @@ def StructureDocs(parseInfo, parameterList):
                     paramDescriptionStr += '; ' + instanceDefaults
                 if len(defaultValueStr) > 18:
                     paramDescriptionStr = '\\tabnewline ' + paramDescriptionStr
-                pythonName = Str2Latex(parameter['pythonName']) 
-                typeName = Str2Latex(parameter['type'])
+                pythonName = parameter['pythonName'] 
+                typeName = parameter['type']
                 
                 # if len(pythonName)>28:  #inside plr.SystemStructuresWriteDefRow
                 #     typeName = '\\tabnewline ' + typeName
                     
-                if parameter['type'] != 'String' and parameter['type'] != 'FileName': #don't do this for file names, because 'f' is erased!
-                    defaultValueStr = Str2Latex(defaultValueStr, True)
+                #the document rendering the definition carries; the String/FileName exception
+                #that stood here - "don't do this for file names, because 'f' is erased!" -
+                #was a workaround for the converter that is gone (RG3.24.3, #2682)
+                defaultValueStr = parameter['defaultValueDocument']
 
-                plr.SystemStructuresWriteDefRow(pythonName, typeName, Str2Latex(parameter['size']), 
+                plr.SystemStructuresWriteDefRow(pythonName, typeName, parameter['size'], 
                                             sString+defaultValueStr+sString, paramDescriptionStr, 
                                             typicalPaths=typicalPaths, isFunction=False)
                                 
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
                 #write latex doc:
-                functionName = Str2Latex(parameter['pythonName'])
+                functionName = parameter['pythonName']
                 argStr = parameter['args']
                 if (argStr != ''):
                     #functionName += '(...)' #now added in SystemStructuresWriteDefRow
@@ -145,23 +147,21 @@ def StructureDocs(parseInfo, parameterList):
                     argSep = '' #no comma for first time
                     for item in argSplit:
                         argName = item.split(' ')[-1] #last word in args is the name of the argument, e.g. in const MainSystem& mainSystem ==> mainSystem
-                        argName = Str2Latex(argName)
+                        argName = argName
                         argStr += argSep + argName.replace('=true','=True').replace('=false','=False')
                         argSep = ', '
 
-                functionType = Str2Latex(parameter['type'])
+                functionType = parameter['type']
                 # if (len(functionName)>28):  #done now in SystemStructuresWriteDefRow
                 #     functionType = '\\tabnewline ' + functionType
 
                 # plr.sLatex += '    ' + functionName + ' & '
                 # plr.sLatex += '    ' + functionType + ' & '
-                # plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
 
                 # plr.sLatex += '    ' + argStr + ' & '
-                # plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
 
-                plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
-                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False), isFunction=True)
+                plr.SystemStructuresWriteDefRow(functionName, functionType, parameter['size'], argStr, 
+                                            parameter['parameterDescription'], isFunction=True)
 
 
         if len(plr.sMarkdown) == headerEnd:       #no row was written: no table (#2592)

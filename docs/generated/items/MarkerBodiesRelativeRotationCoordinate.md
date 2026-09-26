@@ -12,7 +12,7 @@ The item **MarkerBodiesRelativeRotationCoordinate** with type = 'BodiesRelativeR
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
-| **bodyNumbers** $[b_0,b_1]\tp$ | ArrayObjectIndex |  | [ invalid [-1], invalid [-1] ] | list of body numbers for which relative coordinate is computed |
+| **bodyNumbers** $[b_0,b_1]\tp$ | ArrayObjectIndex |  | [ invalid (-1), invalid (-1) ] | list of body numbers for which relative coordinate is computed |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside $\pm \pi$ |
 | **localPosition0** $\LU{m_0}{\pv}_0$ | Vector3D | 3 | [0.,0.,0.] | local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to |
 | **localPosition1** $\LU{m_1}{\pv}_1$ | Vector3D | 3 | [0.,0.,0.] | local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to |

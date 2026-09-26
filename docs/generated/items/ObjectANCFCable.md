@@ -23,7 +23,7 @@ The item **ObjectANCFCable** with type = 'ANCFCable' has the following parameter
 | **physicsAxialDamping** $d_{\varepsilon}$ | UReal |  | 0. | [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
 | **physicsReferenceAxialStrain** $\varepsilon_0$ | Real |  | 0. | [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
 | **strainIsRelativeToReference** $f\cRef$ | Real |  | 0. | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
-| **nodeNumbers** | NodeIndex2 | 2 | [invalid [-1], invalid [-1]] | two node numbers ANCF cable element |
+| **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers ANCF cable element |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments |
 | **visualization** | VObjectANCFCable |  |  | parameters for visualization of item |
 

@@ -15,7 +15,7 @@ The item **ObjectConnectorCoordinateSpringDamper** with type = 'ConnectorCoordin
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **stiffness** $k$ | Real |  | 0. | stiffness [SI:N/m] of spring; acts against relative value of coordinates |
 | **damping** $d$ | Real |  | 0. | damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
 | **offset** $l_\mathrm{off}$ | Real |  | 0. | offset between two coordinates (reference length of springs), see equation |

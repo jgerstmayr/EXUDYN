@@ -16,7 +16,7 @@ The item **ObjectConnectorRollingDiscPenalty** with type = 'ConnectorRollingDisc
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid [-1], invalid [-1] ] | list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
 | **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
 | **discRadius** | PReal |  | 0. | defines the disc radius; **must be given**: the default is only a placeholder |
 | **discAxis** $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$ | Vector3D | 3 | [1,0,0] | axis of disc defined in marker $m1$ frame |

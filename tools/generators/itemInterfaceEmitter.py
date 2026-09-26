@@ -31,7 +31,7 @@ from userFunctionModel import ReadUserFunction, CheckAgainstCpp, PythonType     
 from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
                        IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
                        possibleTypes)
-from autoGenerateHelper import (DefaultValue2Python, GetTypesStringLatex,           # noqa: E402
+from autoGenerateHelper import (GetTypesStringLatex,                                # noqa: E402
                                 SplitSummaryDescription, GoogleDocstringRenderer,
                                 CleanStringForPyiDescription)
 
@@ -220,7 +220,7 @@ def ItemClasses(definition):
             if (typeName == 'String'):
                 sString="'"
 
-            defaultValueStr = sString+DefaultValue2Python(im.DefaultValueString(member))+sString
+            defaultValueStr = sString+im.DefaultValuePython(member)+sString
 
             #special treatment of BodyGraphicsData
             if typeName == 'BodyGraphicsData' or typeName == 'BodyGraphicsDataList':

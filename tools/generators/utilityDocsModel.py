@@ -27,7 +27,7 @@ if toolsDirectory not in sys.path:
 import copy #for deep copies
 
 import generatorPaths as paths                                                  # noqa: E402
-from autoGenerateHelper import Str2Latex, RemoveIndentation, Latex2RSTlabel, \
+from autoGenerateHelper import RemoveIndentation, Latex2RSTlabel, \
           DocStringGoogleFromPlainText                                          # noqa: E402
 
 ADD_DOCSTRINGS = True
@@ -243,7 +243,7 @@ def GetFunctionArguments(functionLine, infoText):
     argList = SplitStringWithCommas(s)
     for val in argList:
         val1 = val.split('=')
-        argumentsList+=[Str2Latex(val1[0].strip())]
+        argumentsList+=[val1[0].strip()]
         defaultArg = ''
         if len(val1) == 2:
             defaultArg = val1[1].strip()
@@ -387,7 +387,7 @@ def _DocstringItem(node, summaryTag, fileLines, fileName):
 
     definitionLine = fileLines[node.lineno - 1].strip()
     if isinstance(node, ast.ClassDef):
-        item['className'] = Str2Latex(definitionLine[6:-1])
+        item['className'] = definitionLine[6:-1]
     else:
         functionLine = definitionLine[4:]
         lineIndex = node.lineno - 1
@@ -395,7 +395,7 @@ def _DocstringItem(node, summaryTag, fileLines, fileName):
             lineIndex += 1
             functionLine += fileLines[lineIndex] + '\n'
         [functionName, argumentsList, defaultArgumentsList] = GetFunctionArguments(functionLine, fileName)
-        item['functionName'] = Str2Latex(functionName)
+        item['functionName'] = functionName
         item['lineNumber'] = node.lineno - 1
         item['argumentsList'] = argumentsList
         item['defaultArgumentsList'] = defaultArgumentsList

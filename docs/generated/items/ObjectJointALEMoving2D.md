@@ -16,11 +16,11 @@ The item **ObjectJointALEMoving2D** with type = 'JointALEMoving2D' has the follo
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,\,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep) |
+| **markerNumbers** $[m0,\,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep) |
 | **slidingMarkerNumbers** $[m_{s0}, \ldots, m_{sn}]\tp$ | ArrayMarkerIndex |  | [] | a list of sn (global) marker numbers which are are used to update marker1 |
 | **slidingMarkerOffsets** $[d_{s0}, \ldots, d_{sn}]$ | Vector |  | [] | this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ... |
 | **slidingOffset** $s_\mathrm{off}$ | Real |  | 0. | sliding offset [SI:m]: a scalar offset, which represents the (reference arc) length of all previous sliding cable elements |
-| **nodeNumbers** $[n_{GD}, n_{ALE}]$ | ArrayNodeIndex |  | [ invalid [-1], invalid [-1] ] | node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one {ref}`ODE2 <ODE2>` coordinate |
+| **nodeNumbers** $[n_{GD}, n_{ALE}]$ | ArrayNodeIndex |  | [ invalid (-1), invalid (-1) ] | node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one {ref}`ODE2 <ODE2>` coordinate |
 | **usePenaltyFormulation** | Bool |  | False | flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false) |
 | **penaltyStiffness** $k$ | Real |  | 0. | penalty stiffness [SI:N/m] used if usePenaltyFormulation=True |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |

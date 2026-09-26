@@ -15,7 +15,7 @@ The item **ObjectConnectorLinearSpringDamper** with type = 'ConnectorLinearSprin
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,\, m1]$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,\, m1]$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **stiffness** $k$ | Real |  | 0. | torsional stiffness [SI:Nm/rad] against relative rotation |
 | **damping** $d$ | Real |  | 0. | torsional damping [SI:Nm/(rad/s)] |
 | **axisMarker0** $\LU{m0}{\dv}$ | Vector3D | 3 | [1,0,0] | local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations |

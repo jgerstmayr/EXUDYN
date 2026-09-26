@@ -26,8 +26,8 @@ if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
 
 from autoGenerateHelper import ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
-    GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
-    PyLatexRST, FileNameLower, RemoveIndentation, CutLinesFromString
+    GenerateHeader, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
+    PyLatexRST, FileNameLower, RemoveIndentation
 
 
 from autoGenerateHelper import KeywordExamplesMarkdown, MarkdownLabel, MarkdownHeading
@@ -224,8 +224,10 @@ def WriteFile(parseInfo, parameterList):
                 
                 parameterTypeStr = parameter['type']
                 parameterSizeStr = parameter['size']
-                parameterDefaultValueStr = parameter['defaultValue']
-                if len(parameterTypeStr) > 35 or len(parameterDefaultValueStr) > 17:
+                #the C++ literal decides the layout, as it always has; what is SHOWN is the
+                #document rendering the definition carries (revision2026b step RG3.24.3, #2682)
+                parameterDefaultValueStr = parameter['defaultValueDocument']
+                if len(parameterTypeStr) > 35 or len(parameter['defaultValue']) > 17:
                     parameterDescription = '\\tabnewline ' + parameterDescription 
 
                 if len(parameterTypeStr) > 15:
@@ -239,9 +241,9 @@ def WriteFile(parseInfo, parameterList):
                     thisPLR = cPLR
 
                 thisPLR.ItemInterfaceWriteRow(pythonName = parameter['pythonName'], 
-                                              typeName = Str2Latex(parameterTypeStr), 
-                                              sSize = Str2Latex(parameterSizeStr),
-                                              sDefaultVal = sString+Str2Latex(parameterDefaultValueStr, True)+sString, 
+                                              typeName = parameterTypeStr, 
+                                              sSize = parameterSizeStr,
+                                              sDefaultVal = sString+parameterDefaultValueStr+sString, 
                                               sSymbol = latexSymbol.replace('\n','\\n'), #correct e.g. \nu
                                               description = parameterDescription)
 

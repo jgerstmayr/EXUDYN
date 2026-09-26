@@ -16,7 +16,7 @@ The item **ObjectContactSphereSphere** with type = 'ContactSphereSphere' has the
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid [-1], invalid [-1] ] | list of markers representing centers of spheres, used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers representing centers of spheres, used in connector |
 | **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated. |
 | **spheresRadii** $[r_0,r_1]\tp$ | Vector2D | 2 | [-1.,-1.] | list containing radius of sphere 0 and radius of sphere 1 [SI:m]. |
 | **isHollowSphere1** | Bool |  | False | flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere. |

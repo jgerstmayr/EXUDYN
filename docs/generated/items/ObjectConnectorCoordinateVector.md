@@ -15,11 +15,11 @@ The item **ObjectConnectorCoordinateVector** with type = 'ConnectorCoordinateVec
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
-| **scalingMarker0** $\Xm_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | Matrix[] | linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
-| **scalingMarker1** $\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$ | NumpyMatrix |  | Matrix[] | linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
-| **quadraticTermMarker0** $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | Matrix[] | quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
-| **quadraticTermMarker1** $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | Matrix[] | quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
+| **scalingMarker0** $\Xm_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | [] | linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
+| **scalingMarker1** $\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$ | NumpyMatrix |  | [] | linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
+| **quadraticTermMarker0** $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | [] | quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
+| **quadraticTermMarker1** $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | [] | quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
 | **offset** $\vv_\mathrm{off} \in \Rcal^{n_{ae}}$ | NumpyVector |  | [] | offset added to constraint equation; only active, if no userFunction is defined |
 | **velocityLevel** | Bool |  | False | If true: connector constrains velocities (only works for {ref}`ODE2 <ODE2>` coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored |
 | **constraintUserFunction** $\cv_{user} \in \Rcal^{n_{ae}}$ | PyFunctionVectorMbsScalarIndex2VectorBool |  | 0 | A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below |

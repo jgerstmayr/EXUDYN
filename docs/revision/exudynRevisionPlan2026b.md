@@ -2051,74 +2051,56 @@ package).
       | `Str2Latex(s)`, plain | **a no-op, provably**: 0 of 3720 type names, sizes, python names and descriptions are changed. All it does now is `{` to `\{`, into Markdown, where it would be wrong if it ever fired |
       | `Str2Latex(s, isDefaultValue=True)` | the **only** source of the printed default of 990 item and 263 settings parameters; not LaTeX at all, a C++-to-Python converter with a different rounding than `DefaultValue2Python` (`np.zeros((6,6))` against `IIDiagMatrix(...)`) |
       | `DefaultValue2Python` | the same conversion for the interface and the stubs, 1001 of 2837 inputs changed; see below |
-      | `GetTypesStringLatex` | writes `\texttt{...}`, a **LaTeX macro into a Markdown page**; 0 of them reach `docs/generated/`, because both callers strip it again |
+      | `GetTypesStringLatex` | **correct, and RG3.24.3 corrected this row**: it writes `\texttt{...}` into text that goes through the LaTeX-to-Markdown converter, which turns it into a backtick span. Only the **name** is wrong, which is RG3.24 |
       | `Str2Doxygen` | **correct and stays**: it escapes for a C++ comment, which is what it says |
       | `ExtractLatexSymbol` | **stays**, and is the `latexSymbol` question of RG3.24 - it splits a real `$...$` off a description |
       | `Latex2RSTlabel`, `RemoveSpacesTabs` | small, correct, badly named (`Latex2RSTlabel` makes a **MyST** label) |
       | `SplitString`, `CutLinesFromString` | **dead**, and the import in `itemDocsEmitter` is the only thing that keeps them |
 
-    - **RG3.24.3** *(open, options; #2682)* **The default values make a round trip through a C++
-      literal string and back.** This is the *"outdated function with brittle behavior"* the
-      maintainer suspected, and the audit found it is worse than a redundancy.
+    - **RG3.24.3** **DONE 2026-09-26** (#2682) — [log](exudynRevisionLog2026b.md#rg3-24-3) -
+      **the default values stopped making a round trip through a C++ literal string.** Option A was
+      built, and the audit's own premise turned out to be too pessimistic: `CppValue` has carried
+      `ToPython()` and `ToDocument()` since it was written and **nothing had ever called them**, so
+      for 142 of the 402 the renderings were already there to be asked for.
 
-      **The round trip**: `itemModel.DefaultValueString()` calls `definitionTypes.CppLiteral()` to
-      turn the definition's value into **C++ source text**, and `DefaultValue2Python()` turns that
-      text back into Python with about twenty `str.replace()` calls and three substring `find()`
-      heuristics on `'Index'`, `'Float'` and `'Vector'` (322 values steered by them). It ends with an
-      **unconditional `s.replace('f', '')`** to strip the suffix of `0.05f` - which eats the letter
-      out of anything else: `Transformation66List()` becomes **`Transormation66List()`** for three
-      members of `ObjectKinematicTree`, and `NoDefaultValue` becomes `NoDeaultValue` for a settings
-      parameter. **Nothing visible is wrong today**, because those three members are `CFNoInterface`
-      and that default is filtered before the call - the defect is contained by accident, and one new
-      parameter whose type name contains an `f` would ship a silently wrong Python default. The one
-      symptom that does reach the tree: `defaultValue=' Vector()'` of
-      `ObjectContactConvexRoll.coefficientsHull` has a **stray leading space**, and the generated
-      signature reads `coefficientsHull =  []`, because a default that is a string is never
-      validated.
+      `definitionTypes.py` gained **`PythonLiteral(value, typeName)`** and
+      **`DocumentLiteral(value, typeName)`** beside `CppLiteral`: a `CppValue` is asked, a plain
+      number, flag or string is its own Python value, and C++ source text is translated by named
+      tables - `emptyContainerValues` (17 entries), `namedDefaultValues` (7), `innerDefaultValues`
+      (1) - plus one rule for a braced initializer and one for an enum value. **An expression no
+      rule covers raises `UnknownDefaultValue`**, which stops the generator and names the table to
+      extend; that is the whole difference from guessing. No regular expressions, because
+      `checkDefinitions` reads every string literal of a definition file and a backslash followed by
+      a letter is a LaTeX command to it - which is right for a description, so the patterns are
+      plain string logic and the f-suffix rule is written out.
 
-      **What the definitions already have, and what they do not.** Of the 872 item members with a
-      default, **470 are plain Python values** (234 float, 181 bool, 55 int) and go through the round
-      trip for nothing. The other **402 exist only as C++ source text** - 142 `CppValue` and 260
-      plain `str`, in 29 distinct expression shapes (`ArrayIndex()` 57, `Vector(...)` 47,
-      `EXUmath::...` 19, `Matrix()` 16, ...) - and for those `DefaultValue2Python` is not a
-      redundancy but the **only definition of the Python default**. So this cannot be deleted; it has
-      to be moved.
+      **`DefaultValue2Python`, `Str2Latex`, `SplitString` and `CutLinesFromString` are gone** - 201
+      lines - and with them the 14 `Str2Latex` calls that RG3.24.2 measured at 0 changes out of
+      3720 inputs, and the emitter workaround *"don't do this for file names, because 'f' is
+      erased!"*. Removing them changed the generated output by **nothing**, which is what those
+      measurements predicted.
 
-      - **Option A (recommended)**: a `PythonLiteral(value, typeName)` beside `CppLiteral` in
-        `definitionTypes.py`, dispatching on the **type the member already carries** instead of on
-        substrings of a string. The 470 plain values return themselves; the 29 shapes become 29
-        cases, each named and each testable. `DefaultValue2Python` and the `isDefaultValue` half of
-        `Str2Latex` then both go, and the two conversions stop disagreeing. One gate decides it:
-        **the regeneration is a no-op** except for the stray space.
-      - **Option B**: give the 402 members a real Python default in `definitions/` -
-        `defaultValue=[0., 0., 0.]` where `'Vector3D({0.,0.,0.})'` stands - and let `CppLiteral`
-        make the C++ from it, which is the direction the generator stack runs. The cleanest end
-        state and the largest diff in the files the maintainer edits by hand; it wants their word
-        before anything is touched.
-      - **Option C**: keep the round trip and only remove the unconditional `f`-removal, replacing it
-        with a float-suffix rule. Ten minutes, and it removes the one thing that can silently corrupt
-        a name - but leaves two converters that disagree.
+      **What it repaired in the published documentation**, all of it found by writing the tables out:
 
-      Independently of the option: `Str2Latex`'s plain branch (0 of 3720 inputs changed),
-      `GetTypesStringLatex`'s `\texttt{}` and the dead `SplitString` / `CutLinesFromString` are
-      removals with a measurement behind them and no decision to make.
+      | in the pages | was | is |
+      |---|---|---|
+      | 85 cells | `[ invalid [-1], invalid [-1] ]` | `[ invalid (-1), invalid (-1) ]` |
+      | 30 cells | `Matrix[]`, `PyMatrixContainer[]`, `MatrixI[]` | `[]` |
+      | 1 cell | `[Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]]` | `[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]` |
+      | the signature of `ObjectContactConvexRoll` | `coefficientsHull =  []` | `coefficientsHull = []` |
 
+      **74 lines in 47 generated files, and every one of them is in that table** - the gate the step
+      asked for, run before and after the removals. **17 new tests**
+      (`python/testing/test_defaultValueRenderings.py`), each naming the defect it forbids, and one
+      that renders all 1376 defaults so that a missing rule is a test failure and not a surprise
+      during a release.
 
-<a id="rg3-25"></a>
-**RG3.25** *(group RG3; noticed while doing RG3.23, 2026-09-26)* **A tab instead of a backslash puts
-    `exttt{...}` on three pages of the Symbolic manual** (#2683). Three descriptions of
-    `definitions/pybindSymbolic.py` hold a **tab** followed by `exttt{...}` - a `\t` written in a
-    string that was not raw - and the page prints it: *"turing on recording by using
-    &lt;tab&gt;exttt{exudyn.symbolic.SetRecording(True)}"*, on lines 11, 179 and 271 of
-    `docs/generated/cInterface/Symbolic.md`. The fix is a backtick span; "turing" (three times) and
-    "veryfy" are in the same sentences.
-
-    **The part worth deciding rather than fixing**: no check caught it, because `checkDefinitions`
-    finds a LaTeX command by its **backslash** and the tab ate the backslash. A check for a raw tab
-    inside a description would find this whole class of defect - a `\t`, `\n` or `\f` that a
-    non-raw string swallowed - and the raw-string rule it belongs to is already enforced on the
-    literal's own spelling.
-
+      **One thing was deliberately not done**: the three `CppValue` constants carried a *document*
+      wording that disagrees with what is published - `'invalid index'` against `invalid (-1)`, and
+      prose for the default colour against `[-1.,-1.,-1.,-1.]`. The published wording won and the
+      constants were corrected to it: this step removes corruption, it does not re-word the manual.
+      Whether the default column should read `exudyn.InvalidIndex()` instead of `invalid (-1)` is a
+      decision, and it is a small one now that there is one place to make it.
 
 ## Next steps recommended
 
@@ -2144,7 +2126,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
 | RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
-| RG3.24.3 | #2682 | the default values make a round trip through a C++ literal string and back |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |

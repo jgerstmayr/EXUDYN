@@ -296,6 +296,30 @@ def DefaultValueString(member):
     return definitionTypes.CppLiteral(value, str(member.get('type', '')))
 
 
+def _DefaultValueRendering(member, Literal):
+    """the Python or the document rendering of a member's default value (#2682, RG3.24.3): the
+    same three cases as DefaultValueString, so that the three renderings cannot drift apart"""
+    if 'Function' in member['kind']:
+        return ''                    #a function's implementation is C++ and is never a default
+    if member.get('deprecated', None) is not None:
+        return ''                    #a deprecated member has no default value; the field carries
+                                     #the version it went out in, which the C++ emitter reads
+    value = member.get('defaultValue', '')
+    if value is definitionTypes.NoDefaultValue or value is None or value == '':
+        return ''
+    return Literal(value, str(member.get('type', '')))
+
+
+def DefaultValuePython(member):
+    """the default value as the Python that itemInterface.py and the stubs write"""
+    return _DefaultValueRendering(member, definitionTypes.PythonLiteral)
+
+
+def DefaultValueDocument(member):
+    """the default value as a documentation table shows it"""
+    return _DefaultValueRendering(member, definitionTypes.DocumentLiteral)
+
+
 def Flags(member, source, structureClassNames):
     flags = member.get('cFlags', '') or ''
     isFunction = 'Function' in member['kind']

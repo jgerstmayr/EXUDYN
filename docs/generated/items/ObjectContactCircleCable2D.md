@@ -14,7 +14,7 @@ The item **ObjectContactCircleCable2D** with type = 'ContactCircleCable2D' has t
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | markers define contact gap |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state) |
 | **numberOfContactSegments** | Index |  | 3 | number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration |

@@ -21,7 +21,7 @@ The item **ObjectANCFThinPlate** with type = 'ANCFThinPlate' has the following p
 | **strainIsRelativeToReference** $f\cRef$ | Real |  | 1. | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation |
 | **slopesScalingX** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **slopesScalingY** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
-| **nodeNumbers** | NodeIndex4 | 4 | [invalid [-1], invalid [-1], invalid [-1], invalid [-1]] | 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)] |
+| **nodeNumbers** | NodeIndex4 | 4 | [invalid (-1), invalid (-1), invalid (-1), invalid (-1)] | 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)] |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use highest Gauss integration for virtual work of strains |
 | **visualization** | VObjectANCFThinPlate |  |  | parameters for visualization of item |
 

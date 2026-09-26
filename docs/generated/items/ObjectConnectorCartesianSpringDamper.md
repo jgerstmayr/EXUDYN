@@ -15,7 +15,7 @@ The item **ObjectConnectorCartesianSpringDamper** with type = 'ConnectorCartesia
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **stiffness** $\kv$ | Vector3D | 3 | [0.,0.,0.] | stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction |
 | **damping** $\dv$ | Vector3D | 3 | [0.,0.,0.] | damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction |
 | **offset** $\vv_{\mathrm{off}}$ | Vector3D | 3 | [0.,0.,0.] | offset between two springs |

@@ -119,6 +119,199 @@ def CppLiteral(value, typeName=''):
     return str(value)
 
 
+#------------------------------------------------ the Python and the document rendering (#2682)
+#A default value has THREE renderings: the C++ literal above, the Python value that the generated
+#itemInterface and the stubs need, and what a documentation table shows. A CppValue carries all
+#three; a plain number, flag or string IS its own Python value; and a default written as C++
+#SOURCE TEXT is translated by the tables below, dispatching on the SPELLING and on the declared
+#TYPE.
+#
+#Nothing is guessed from a substring of the text. That was DefaultValue2Python and the
+#isDefaultValue half of Str2Latex - two converters that disagreed - whose unconditional strip of
+#the letter "f" turned Transformation66List() into Transormation66List() and whose blind
+#"(" -> "[" put `Matrix[]`, `PyMatrixContainer[]` and `[ invalid [-1], ... ]` on the reference
+#pages. A spelling that no rule covers raises UnknownDefaultValue instead of reaching a generated
+#file wrong, and the message says which table to extend.
+
+#the types whose default value is a literal string and not a C++ expression: the generator used to
+#skip them by name, "don't do this for file names, because 'f' is erased!"
+stringTypeNames = set(['String', 'FileName'])
+
+#Name() - an empty container - as (Python, document). "None" means that the generated interface
+#passes nothing and the C++ side builds the empty container itself
+emptyContainerValues = {
+    'Vector':               ('[]', '[]'),
+    'ArrayIndex':           ('[]', '[]'),
+    'ArrayFloat':           ('[]', '[]'),
+    'Matrix':               ('[]', '[]'),
+    'MatrixI':              ('[]', '[]'),
+    'ResizableVector':      ('[]', '[]'),
+    'ResizableMatrix':      ('[]', '[]'),
+    'JointTypeList':        ('[]', '[]'),
+    'PyMatrixContainer':    ('None', '[]'),
+    'Vector2DList':         ('None', '[]'),
+    'Vector3DList':         ('None', '[]'),
+    'Vector6DList':         ('None', '[]'),
+    'Matrix3DList':         ('None', '[]'),
+    'Transformation66List': ('None', '[]'),
+    'InertiaList':          ('None', '[]'),
+    'BeamSection':          ('exudyn.BeamSection()', 'BeamSection()'),
+    'BeamSectionGeometry':  ('exudyn.BeamSectionGeometry()', 'BeamSectionGeometry()'),
+}
+
+#an expression that is neither an empty container nor a braced initializer, as (Python, document)
+namedDefaultValues = {
+    'EXUmath::unitMatrix3D': ('IIDiagMatrix(rowsColumns=3,value=1)', '[[1,0,0], [0,1,0], [0,0,1]]'),
+    'EXUmath::zeroMatrix3D': ('IIDiagMatrix(rowsColumns=3,value=0)', '[[0,0,0], [0,0,0], [0,0,0]]'),
+    'Matrix6D(6,6,0.)': ('IIDiagMatrix(rowsColumns=6,value=0.)', 'np.zeros((6,6))'),
+    #the one rotation matrix, whose own description says "in python use e.g.: [[1,0,0],[0,1,0],[0,0,1]]"
+    'EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))':
+        ('[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]', '[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]'),
+    #0 rather than the enum, so that an unset type gives a readable error and not an unreadable one
+    'OutputVariableType::_None': ('0', 'OutputVariableType::_None'),
+    #a C++ pointer member; it is not in the Python interface, and the page says what the C++ says
+    'nullptr': ('nullptr', 'nullptr'),
+}
+
+#a name that appears INSIDE a braced initializer, as (Python, document)
+innerDefaultValues = {
+    'EXUstd::InvalidIndex': ('exudyn.InvalidIndex()', 'invalid (-1)'),
+}
+
+#the digits a float literal can end with, before its C++ "f"
+_numberEnd = '0123456789.'
+
+
+def _IsIdentifier(text):
+    return text.isidentifier()
+
+
+def _WithoutFloatSuffixes(text):
+    """0.05f -> 0.05, {1.f,0.f} -> {1.,0.}: the f of a float literal belongs to the C++ TYPE and
+    never to the value. A letter that belongs to a word is left alone, which is the whole
+    difference to the str.replace('f', '') this replaces - it turned Transformation66List() into
+    Transormation66List() and images/frame into images/rame."""
+    characters = list(text)
+    kept = []
+    for (index, character) in enumerate(characters):
+        following = characters[index + 1] if index + 1 < len(characters) else ''
+        if (character in 'fF'
+                and index > 0 and characters[index - 1] in _numberEnd
+                and not (following.isalnum() or following == '_')):
+            continue                                     #a float suffix: it goes
+        kept.append(character)
+    return ''.join(kept)
+
+
+def _EmptyContainerName(text):
+    """the name of Name(), or None"""
+    if not text.endswith('()'):
+        return None
+    name = text[:-2]
+    return name if _IsIdentifier(name) else None
+
+
+def _BracedInitializer(text):
+    """(name, inner) of Name({...}), or None"""
+    if not text.endswith('})') or '({' not in text:
+        return None
+    name = text[:text.index('({')]
+    return (name, text[len(name) + 2:-2]) if _IsIdentifier(name) else None
+
+
+def _IsEnumValue(text):
+    """Type::Value, which is legible as it is written"""
+    parts = text.split('::')
+    return len(parts) == 2 and all(_IsIdentifier(part) for part in parts)
+
+
+def _IsNumber(text):
+    """a number that a definition file wrote as a string, '1.' or '0.1f'"""
+    try:
+        float(text.rstrip('fF'))
+    except ValueError:
+        return False
+    return True
+
+
+class UnknownDefaultValue(Exception):
+    """A default value written as C++ source text that no rule in definitionTypes covers."""
+
+
+def _BracedRenderings(name, inner):
+    """(Python, document) of Name({...}): the braces become a list, the f suffixes go, and a name
+    inside is translated by innerDefaultValues. The inner spacing is the author's and is kept."""
+    renderings = []
+    for index in (0, 1):
+        text = inner
+        for (innerName, pair) in innerDefaultValues.items():
+            text = text.replace(innerName, pair[index])
+        renderings.append('[' + _WithoutFloatSuffixes(text) + ']')
+    return (renderings[0], renderings[1])
+
+
+def _SourceTextRenderings(text, typeName):
+    """(Python, document) of a default value written as C++ source text."""
+    if text in namedDefaultValues:
+        return namedDefaultValues[text]
+
+    name = _EmptyContainerName(text)
+    if name is not None:
+        if name not in emptyContainerValues:
+            raise UnknownDefaultValue(
+                'the empty container "' + name + '()" has no Python and no document rendering; add '
+                'it to emptyContainerValues in definitions/definitionTypes.py')
+        return emptyContainerValues[name]
+
+    braced = _BracedInitializer(text)
+    if braced is not None:
+        return _BracedRenderings(braced[0], braced[1])
+
+    if _IsEnumValue(text):
+        return (text, text)                      #an enum value is legible as it is written
+
+    raise UnknownDefaultValue(
+        'the default value "' + text + '" (type ' + str(typeName) + ') is C++ source text that no '
+        'rule covers; give the parameter a real Python value, or a CppValue that carries all three '
+        'renderings, or add the expression to namedDefaultValues in definitions/definitionTypes.py')
+
+
+def _Renderings(value, typeName):
+    """(Python, document) for any default value."""
+    if isinstance(value, CppValue):
+        return (value.ToPython(), value.ToDocument())
+    if isinstance(value, bool):
+        return ('True', 'True') if value else ('False', 'False')
+    if isinstance(value, float):
+        text = CppFloatLiteral(value)            #the f suffix is the C++ type's, never Python's
+        return (text, text)
+    if isinstance(value, int):
+        return (str(value), str(value))
+    if value is Required or value is NoDefaultValue or value is None:
+        return (str(value), str(value))
+
+    if str(typeName) in stringTypeNames:
+        return (str(value), str(value))          #a file name is a string, and the f stays in it
+
+    text = str(value).strip()                    #a default written with a stray space is the same
+    if text == '':                               #default; the space used to reach the signature
+        return (text, text)
+    if _IsNumber(text):                          #a number that a definition file wrote as a string
+        return (_WithoutFloatSuffixes(text), _WithoutFloatSuffixes(text))
+
+    return _SourceTextRenderings(text, typeName)
+
+
+def PythonLiteral(value, typeName=''):
+    """The Python value of any default value: what the generated interface and the stubs write."""
+    return _Renderings(value, typeName)[0]
+
+
+def DocumentLiteral(value, typeName=''):
+    """What a documentation table shows as the default value."""
+    return _Renderings(value, typeName)[1]
+
+
 class _Required:
     """The value of a field that has to be given. It is the DEFAULT of every required argument, so
     a forgotten field is an error naming the class and the member, instead of an empty string that
@@ -362,9 +555,9 @@ CFMustBeGiven        = 'Q'   #the default is only a placeholder outside the para
                              #is not replaced; the validator requires the flag exactly there
 
 #--------------------------------------------------------------------- default values (items)
-DVInvalidIndex = CppValue('EXUstd::InvalidIndex', 'exudyn.InvalidIndex()', 'invalid index')
-DVDefaultColor = CppValue('Float4({-1.f,-1.f,-1.f,-1.f})', '[-1.,-1.,-1.,-1.]',
-                          'default colour (RGBA -1 means: use the default)')
+DVInvalidIndex = CppValue('EXUstd::InvalidIndex', 'exudyn.InvalidIndex()',
+                         'invalid (-1)')
+DVDefaultColor = CppValue('Float4({-1.f,-1.f,-1.f,-1.f})', '[-1.,-1.,-1.,-1.]')
 DVZeroVector3D = CppValue('Vector3D({0.,0.,0.})', '[0.,0.,0.]')
 
 #--------------------------------------------------------------------- parent classes (items)

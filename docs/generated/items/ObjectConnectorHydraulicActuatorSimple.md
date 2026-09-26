@@ -16,7 +16,7 @@ The item **ObjectConnectorHydraulicActuatorSimple** with type = 'ConnectorHydrau
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **nodeNumbers** $\mathbf{n}_n = [n_{ODE1}]\tp$ | ArrayNodeIndex |  | [] | currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching |
 | **offsetLength** $L_o$ | UReal |  | 0. | offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0 |
 | **strokeLength** $L_s$ | PReal |  | 0. | stroke length [SI:m] of cylinder, representing maximum extension relative to $L_o$; the measured distance between the markers is $L_s+L_o$; **must be given**: the default is only a placeholder |

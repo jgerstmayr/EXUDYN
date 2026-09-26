@@ -14,9 +14,9 @@ The item **ObjectGenericODE2** with type = 'GenericODE2' has the following param
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$ | ArrayNodeIndex |  | [] | node numbers which provide the coordinates for the object (consecutively as provided in this list) |
-| **massMatrix** $\Mm \in \Rcal^{n \times n}$ | PyMatrixContainer |  | PyMatrixContainer[] | mass matrix of object as MatrixContainer (or numpy array / list of lists) |
-| **stiffnessMatrix** $\Km \in \Rcal^{n \times n}$ | PyMatrixContainer |  | PyMatrixContainer[] | stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction |
-| **dampingMatrix** $\Dm \in \Rcal^{n \times n}$ | PyMatrixContainer |  | PyMatrixContainer[] | damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction |
+| **massMatrix** $\Mm \in \Rcal^{n \times n}$ | PyMatrixContainer |  | [] | mass matrix of object as MatrixContainer (or numpy array / list of lists) |
+| **stiffnessMatrix** $\Km \in \Rcal^{n \times n}$ | PyMatrixContainer |  | [] | stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction |
+| **dampingMatrix** $\Dm \in \Rcal^{n \times n}$ | PyMatrixContainer |  | [] | damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction |
 | **forceVector** $\fv \in \Rcal^{n}$ | NumpyVector |  | [] | generalized force vector added to RHS |
 | **forceUserFunction** $\fv_{user} \in \Rcal^{n}$ | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; see description below |
 | **massMatrixUserFunction** $\Mm_{user} \in \Rcal^{n\times n}$ | PyFunctionMatrixContainerMbsScalarIndex2Vector |  | 0 | A Python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below |
@@ -33,7 +33,7 @@ The item VObjectGenericODE2 has the following parameters:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used |
-| **triangleMesh** | NumpyMatrixI |  | MatrixI[] | a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
+| **triangleMesh** | NumpyMatrixI |  | [] | a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 | **graphicsDataUserFunction** | PyFunctionGraphicsData |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization |
 

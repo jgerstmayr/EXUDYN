@@ -16,7 +16,7 @@ The item **ObjectConnectorTorsionalSpringDamper** with type = 'ConnectorTorsiona
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used |
 | **stiffness** $k$ | Real |  | 0. | torsional stiffness [SI:Nm/rad] against relative rotation |
 | **damping** $d$ | Real |  | 0. | torsional damping [SI:Nm/(rad/s)] |

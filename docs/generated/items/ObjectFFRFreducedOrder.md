@@ -18,26 +18,26 @@ The item **ObjectFFRFreducedOrder** with type = 'FFRFreducedOrder' has the follo
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** $\mathbf{n} = [n_0,\,n_1]\tp$ | ArrayNodeIndex |  | [] | node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis |
-| **massMatrixReduced** $\Mm\indred \in \Rcal^{n_m \times n_m}$ | PyMatrixContainer |  | PyMatrixContainer[] | body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix) |
-| **stiffnessMatrixReduced** $\Km\indred \in \Rcal^{n_m \times n_m}$ | PyMatrixContainer |  | PyMatrixContainer[] | body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix) |
-| **dampingMatrixReduced** $\Dm\indred \in \Rcal^{n_m \times n_m}$ | PyMatrixContainer |  | PyMatrixContainer[] | body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix) |
+| **massMatrixReduced** $\Mm\indred \in \Rcal^{n_m \times n_m}$ | PyMatrixContainer |  | [] | body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix) |
+| **stiffnessMatrixReduced** $\Km\indred \in \Rcal^{n_m \times n_m}$ | PyMatrixContainer |  | [] | body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix) |
+| **dampingMatrixReduced** $\Dm\indred \in \Rcal^{n_m \times n_m}$ | PyMatrixContainer |  | [] | body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix) |
 | **forceUserFunction** $\fv\induser \in \Rcal^{n_{ODE2}}$ | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; see description below |
 | **massMatrixUserFunction** $\Mm\induser \in \Rcal^{n_{ODE2}\times n_{ODE2}}$ | PyFunctionMatrixMbsScalarIndex2Vector |  | 0 | A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below |
 | **computeFFRFterms** | Bool |  | True | flag decides whether the standard {ref}`FFRF <FFRF>`/{ref}`CMS <CMS>` terms are computed; use this flag for user-defined definition of {ref}`FFRF <FFRF>` terms in mass matrix and quadratic velocity vector |
-| **modeBasis** $\LU{b}{\tPsi} \in \Rcal^{n\indf \times n_{m}}$ | NumpyMatrix |  | Matrix[] | mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$ |
-| **outputVariableModeBasis** $\LU{b}{\tPsi}_{OV} \in \Rcal^{n_n \times (n_{m}\cdot s_{OV})}$ | NumpyMatrix |  | Matrix[] | mode basis, which transforms reduced coordinates to output variables per mode and per node; $s_{OV}$ is the size of the output variable, e.g., 6 for stress modes ($S_{xx},...,S_{xy}$) |
+| **modeBasis** $\LU{b}{\tPsi} \in \Rcal^{n\indf \times n_{m}}$ | NumpyMatrix |  | [] | mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$ |
+| **outputVariableModeBasis** $\LU{b}{\tPsi}_{OV} \in \Rcal^{n_n \times (n_{m}\cdot s_{OV})}$ | NumpyMatrix |  | [] | mode basis, which transforms reduced coordinates to output variables per mode and per node; $s_{OV}$ is the size of the output variable, e.g., 6 for stress modes ($S_{xx},...,S_{xy}$) |
 | **outputVariableTypeModeBasis** | OutputVariableType |  | OutputVariableType::_None | this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress |
 | **referencePositions** $\LU{b}{\xv}\cRef \in \Rcal^{n\indf}$ | NumpyVector |  | [] | vector containing the reference positions of all flexible nodes, needed for graphics |
 | **objectIsInitialized** | Bool |  | False | ALWAYS set to False! flag used to correctly initialize all {ref}`FFRF <FFRF>` matrices; as soon as this flag is False, some internal (constant) {ref}`FFRF <FFRF>` matrices are recomputed during Assemble() |
 | **physicsMass** $m$ | UReal |  | 0. | total mass [SI:kg] of FFRFreducedOrder object |
 | **physicsInertia** $\Jm_r \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body |
 | **physicsCenterOfMass** $\LU{b}{\bv}_{COM}$ | Vector3D | 3 | [0.,0.,0.] | local position of center of mass ({ref}`COM <COM>`) |
-| **mPsiTildePsi** | NumpyMatrix |  | Matrix[] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
-| **mPsiTildePsiTilde** | NumpyMatrix |  | Matrix[] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
-| **mPhitTPsi** | NumpyMatrix |  | Matrix[] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
-| **mPhitTPsiTilde** | NumpyMatrix |  | Matrix[] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
-| **mXRefTildePsi** | NumpyMatrix |  | Matrix[] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
-| **mXRefTildePsiTilde** | NumpyMatrix |  | Matrix[] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
+| **mPsiTildePsi** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
+| **mPsiTildePsiTilde** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
+| **mPhitTPsi** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
+| **mPhitTPsiTilde** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
+| **mXRefTildePsi** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
+| **mXRefTildePsiTilde** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
 | **physicsCenterOfMassTilde** $\LU{b}{\tilde \bv}_{COM}$ | Matrix3D | 9 | [[0,0,0], [0,0,0], [0,0,0]] | tilde matrix from local position of {ref}`COM <COM>`; autocomputed during initialization |
 | **tempUserFunctionForce** $\fv_{temp} \in \Rcal^{n_{ODE2}}$ | NumpyVector |  | [] | temporary vector for UF force |
 | **visualization** | VObjectFFRFreducedOrder |  |  | parameters for visualization of item |
@@ -48,7 +48,7 @@ The item VObjectFFRFreducedOrder has the following parameters:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used |
-| **triangleMesh** | NumpyMatrixI |  | MatrixI[] | a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
+| **triangleMesh** | NumpyMatrixI |  | [] | a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 
 

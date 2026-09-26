@@ -28,7 +28,7 @@ import copy
 
 import generatorPaths as paths                                          # noqa: E402,F401
 import definitionLoader                                                 # noqa: E402
-from autoGenerateHelper import CountLines, Str2Latex, Str2Doxygen, GetDateStr, \
+from autoGenerateHelper import CountLines, Str2Doxygen, GetDateStr, \
                                PyLatexRST, WriteTextIfDifferent, DocStringGoogleFromPlainText  # noqa: E402,F401
 
 sortStructures = True

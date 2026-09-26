@@ -12,7 +12,7 @@ The item **MarkerBodiesRelativeTranslationCoordinate** with type = 'BodiesRelati
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
-| **bodyNumbers** $[b_0,b_1]\tp$ | ArrayObjectIndex |  | [ invalid [-1], invalid [-1] ] | list of body numbers for which relative coordinate is computed |
+| **bodyNumbers** $[b_0,b_1]\tp$ | ArrayObjectIndex |  | [ invalid (-1), invalid (-1) ] | list of body numbers for which relative coordinate is computed |
 | **localPosition0** $\LU{m_0}{\pv}_0$ | Vector3D | 3 | [0.,0.,0.] | local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to |
 | **localPosition1** $\LU{m_1}{\pv}_1$ | Vector3D | 3 | [0.,0.,0.] | local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to |
 | **axis0** $\LU{m_0}{\av}_0$ | Vector3D | 3 | [1.,0.,0.] | axis defined in body 0, along which the relative translation is measured |

@@ -15,7 +15,7 @@ The item **ObjectJointPrismatic2D** with type = 'JointPrismatic2D' has the follo
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **axisMarker0** | Vector3D | 3 | [1.,0.,0.] | direction of prismatic axis, given as a 3D vector in Marker0 frame |
 | **normalMarker1** | Vector3D | 3 | [0.,1.,0.] | direction of normal to prismatic axis, given as a 3D vector in Marker1 frame |
 | **constrainRotation** | Bool |  | True | flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero |

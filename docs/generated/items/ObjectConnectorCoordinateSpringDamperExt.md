@@ -16,7 +16,7 @@ The item **ObjectConnectorCoordinateSpringDamperExt** with type = 'ConnectorCoor
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** | ArrayMarkerIndex |  | [ invalid [-1], invalid [-1] ] | list of markers used in connector |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops |
 | **stiffness** $k$ | Real |  | 0. | stiffness [SI:N/m] of spring; acts against relative value of coordinates |
 | **damping** $d$ | Real |  | 0. | damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |

@@ -15,7 +15,7 @@ The item **ObjectANCFBeam** with type = 'ANCFBeam' has the following parameters:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **nodeNumbers** | NodeIndex2 | 2 | [invalid [-1], invalid [-1]] | two node numbers for beam element |
+| **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers for beam element |
 | **physicsLength** $L$ | PReal |  | 0. | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
 | **sectionData** | BeamSection |  | BeamSection() | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section. |
 | **crossSectionPenaltyFactor** $k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$ | Vector3D | 3 | [1.,1.,1.] | [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$ |

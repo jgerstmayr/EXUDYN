@@ -53,7 +53,7 @@ def StructureStub(parseInfo):
                                                         addSpaces=' '*4, multiline=False)
 
         if (IsFunction(parameter)) and (HasFlag(parameter, 'P')): #only if it is a function
-            functionName = Str2Latex(parameter['pythonName'])
+            functionName = parameter['pythonName']
             argStr = Args(parameter)
             if (argStr != ''):
                 #functionName += '(...)' #now added in SystemStructuresWriteDefRow
@@ -62,7 +62,7 @@ def StructureStub(parseInfo):
                 argSep = '' #no comma for first time
                 for item in argSplit:
                     argName = item.split(' ')[-1] #last word in args is the name of the argument, e.g. in const MainSystem& mainSystem ==> mainSystem
-                    argName = Str2Latex(argName)
+                    argName = argName
                     argStr += argSep + argName.replace('=true','=True').replace('=false','=False')
                     argSep = ', '
             stubStr += spaces4+'@overload\n'
