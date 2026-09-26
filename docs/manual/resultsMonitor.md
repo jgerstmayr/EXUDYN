@@ -40,7 +40,8 @@ mbs.SolveDynamic(simulationSettings)     #the plot follows the file while this r
 `StartResultsMonitor(...)` starts the monitor as a **second process** - `python -m exudyn monitor`
 with the options it was given - and returns at once. The two processes share nothing but the file,
 which is the protocol they already had, so there is no plotting inside the solver and no question of
-threads. The file does not have to exist yet: the monitor waits for the first row.
+threads. The file does not have to exist yet: the monitor waits for it to appear and for its
+first row, and says which file it is waiting for.
 
 The process is **not** stopped when the script ends, so the plot is still there when a short
 simulation is over; the returned `subprocess.Popen` is the handle for a script that wants it gone.

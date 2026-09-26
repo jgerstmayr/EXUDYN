@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.106.dev1
+- Exudyn version = 1.12.107.dev1
 - last change = 2026-09-27
 - Number of issues = 2699
-- Number of resolved issues = 2420 (106 in current version)
+- Number of resolved issues = 2421 (107 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8383,10 +8383,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `LOW EFF` `raised by: Claude-JG` The results monitor exits when the file does not exist yet, and the documentation says it waits (#2672)
-  - description: Reported by the maintainer, 2026-09-26: StartResultsMonitor (revision2026b step RG11.3, \#2670) does not work as promised. The cause is in MonitorResults: inside the 'while fileName != :' loop it tests 'if not os.path.exists(fileName): print(ERROR: file not found); return None' BEFORE WaitForData, and WaitForData only waits for a data ROW in a file that already exists. A monitor started before the solver - which is the point of StartResultsMonitor, and what springDamperTutorial.py and 3SpringsDistance.py both do - therefore prints an error and exits at once. The docstring of StartResultsMonitor and docs/manual/resultsMonitor.md both say the file does not have to exist yet, which is false. The fix is to move the existence test into the waiting loop so that --wait 0 waits for the file to appear, and to decide what --wait N means for a file that never appears.
-  - **remarks:** Still failing on 2026-09-27, retried by the maintainer: 'I am not sure, if MonitorResults should work async already in the files - I tried, but it does not work.' It should, and that is what this issue is: the existence test stands before the waiting loop, so a monitor started before the solver exits at once. Unchanged since it was raised; RG11.3.1 is the step.
-  - date raised: 2026-09-26
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

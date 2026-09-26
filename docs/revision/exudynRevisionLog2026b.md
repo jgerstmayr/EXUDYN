@@ -5173,3 +5173,47 @@ The plot-window placement of RG12.12 keeps its Qt branch, because `window.move(x
 **Gates**: 11/11 checks, the wheel, the full suite, 505 pytest, the strict HTML build. Neither the
 monitor window nor the info command is opened by a human in the suite: the focus is tested by reading
 the loop's own source for `plt.pause`, which is the thing that must not be there.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG11.3.1 - the monitor waits for the file (2026-09-27, #2672)
+
+Reported twice, three days apart: *"ResultsMonitor: unfortunately does not work as you promised"*
+(2026-09-26) and *"I am not sure, if MonitorResults should work async already in the files - I tried,
+but it does not work"* (2026-09-27). It should, and the second report is why it was done tonight.
+
+**The whole defect was four lines in the wrong place**:
+
+```python
+while fileName != '':
+    if not os.path.exists(fileName):
+        print('ERROR: file not found: ' + fileName)
+        return None
+    monitor = ResultsMonitor(fileName, settings)
+    if not monitor.WaitForData(...):
+```
+
+`WaitForData` waits patiently for a header and a row - and was never reached, because the line above
+it gave up first. `StartResultsMonitor` exists to start a monitor **before** the solver, both examples
+do exactly that, and both printed "file not found" and exited.
+
+**The waiting now covers the file itself**, and the caller's test survives only for `--once`, which
+plots what exists and returns - waiting there would be waiting for nothing.
+
+**The open question of the step - what `--wait N` means for a file that never appears - answered
+itself once the waiting was in one place**: `waitTimeout` already meant "seconds to wait for the first
+data row, 0 without limit", so it means the same for the file. 0 is what a monitor started before the
+solver needs, and N gives up with a message naming the file.
+
+**And one thing was added that the step had not asked for**, because waiting without limit has a
+failure mode of its own: what is being waited for is **announced, with the file name**. Waiting
+forever for a file that will never appear is exactly what a typo in the name looks like, and a line
+saying which file it is waiting for is the difference between a hang and a hint.
+
+**Four tests**, and the first one is the promise itself: another thread writes the file after 0.4
+seconds - the solver's part - and the monitor has to pick it up. It does, 0.16 s later, which is the
+polling interval. The others: a file that never appears is an error after the timeout and not before
+it, a file that is already there is not waited for at all, and a file whose first line is complete and
+is not an Exudyn header is refused rather than waited for - that last one was already true and is now
+guarded.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 509 pytest, the strict HTML build.

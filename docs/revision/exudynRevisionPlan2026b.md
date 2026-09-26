@@ -1614,12 +1614,13 @@ What belongs to no group yet. Three of a kind here are a reason to propose a gro
     served by the same call - it needs the renderer and the system, not a file, so it has nothing to
     gain from a second process that can only read what was written.
 
-    - **RG11.3.1** *(from the maintainer, 2026-09-26)* **The monitor exits when the file does not
-      exist yet** (#2672). Reported at once: `StartResultsMonitor` does not do what its documentation
-      says. The cause is in `MonitorResults` - inside `while fileName != '':` it tests
-      `os.path.exists(fileName)` and returns **before** `WaitForData`, which only waits for a data
-      *row* in a file that already exists. A monitor started **before** the solver - the point of the
-      function, and what both examples do - prints `ERROR: file not found` and exits.
+    - **RG11.3.1** **DONE 2026-09-27** (#2672) — [log](exudynRevisionLog2026b.md#rg11-3-1) - **the
+      monitor waits for the file.** `WaitForData` waits for the file, the header and the first row;
+      the caller's existence test, which said *"file not found"* before any waiting could begin, now
+      applies only to `--once`, which plots what exists and returns. `waitTimeout` keeps its meaning
+      and gains the file: 0 waits without limit, N gives up after N seconds - and what is waited for
+      is announced, naming the file, because waiting forever for a file that never appears is what a
+      typo looks like. Reported twice, three days apart.
 
       The fix is to move the existence test into the waiting loop, so that `--wait 0` waits for the
       file to **appear** and not only for its first row. What `--wait N` should mean for a file that

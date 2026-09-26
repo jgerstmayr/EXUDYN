@@ -378,17 +378,39 @@ class ResultsMonitor:
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def WaitForData(self, timeout=0.):
-        """Wait until the file has a header and at least one data row.
+        """Wait until the file EXISTS, has a header and at least one data row.
 
         Args:
             timeout: seconds to wait; 0 waits without limit (Ctrl+C stops it)
 
         Returns:
             True if the file is ready
+
+        Note:
+            The file does not have to exist yet, which is the point of starting a monitor before the
+            solver: `StartResultsMonitor` does exactly that, and so do the two examples. Until
+            revision2026b step RG11.3.1 (#2672) the caller tested for the file and gave up before
+            this function was reached, so a monitor started first said "file not found" and exited -
+            while its own documentation promised it would wait.
+
+            What is waited for is announced, naming the file, because waiting without limit for a
+            file that will never appear is what a typo in the name looks like.
         """
         startTime = time.time()
         announced = False
+        announcedMissing = False
         while True:
+            if not os.path.exists(self.fileName):
+                if timeout > 0 and time.time() - startTime > timeout:
+                    print('ERROR: ' + self.fileName + ' did not appear within '
+                          + str(timeout) + ' seconds')
+                    return False
+                if not announcedMissing:
+                    print('waiting for ' + self.fileName + ' to appear ... (Ctrl+C to stop)')
+                    announcedMissing = True
+                time.sleep(0.25)
+                continue
+
             header = ReadResultsFileHeader(self.fileName)
             if header.get('type', 'unknown') in knownResultsFileTypes:
                 reader = _IncrementalData(self.fileName)
@@ -947,7 +969,8 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
         once: draw the current contents once and return, instead of updating; this is what makes
               the monitor usable in a test or a script that only wants the figure
         saveFigure: if not empty, write the figure to this file (png, pdf or svg)
-        waitTimeout: seconds to wait for the first data row; 0 waits without limit
+        waitTimeout: seconds to wait for the file to appear and for its first data row; 0 (the
+            default) waits without limit, which is what a monitor started before the solver needs
         searchDirectories: where to look for results files if `fileName` is None
         alwaysOnTop: True keeps the plot window above other windows; it does NOT take the
             keyboard focus either way, see the note below
@@ -1001,7 +1024,11 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
 
     monitor = None
     while fileName != '':
-        if not os.path.exists(fileName):
+        #ONLY --once INSISTS THAT THE FILE IS THERE (revision2026b step RG11.3.1, #2672): it plots
+        #what exists now and returns, so waiting would be waiting for nothing. Every other mode waits
+        #in WaitForData, which is what a monitor started BEFORE the solver needs - and what the
+        #documentation has promised all along
+        if settings['once'] and not os.path.exists(fileName):
             print('ERROR: file not found: ' + fileName)
             return None
         monitor = ResultsMonitor(fileName, settings)
@@ -1030,7 +1057,7 @@ def StartResultsMonitor(fileName, xColumns=None, yColumns=None, updatePeriod=Non
     The monitor is `python -m exudyn monitor` in a process of its own: it reads the file that the
     simulation writes, which is the only thing the two share, so there is no question of threads,
     of the GIL, or of a plotting backend inside the solver. The file does not need to exist yet -
-    the monitor waits for the first row.
+    the monitor waits for it to appear and for its first row, saying which file it is waiting for.
 
     Note:
         The process is NOT stopped when the script ends: that is what makes it useful after a
