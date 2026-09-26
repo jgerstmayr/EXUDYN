@@ -3707,12 +3707,12 @@ class MainSystem:
 
     @overload
     def SolveStatic(self, simulationSettings=None, updateInitialValues=False, storeSolver=True, showHints=False, showCausingItems=True, autoAssemble=True) -> bool: 
-        """solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))."""
+        """solves the static mbs problem using simulationSettings; see MainSolverStatic, sec-mainsolverstatic, for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))."""
     ...
 
     @overload
     def SolveDynamic(self, simulationSettings=None, solverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True, showHints=False, showCausingItems=True, autoAssemble=True) -> bool: 
-        """solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))."""
+        """solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, sec-mainsolverimplicitsecondorder, for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))."""
     ...
 
     @overload

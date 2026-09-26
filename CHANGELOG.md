@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 79 | 1.12.80 |
+| 1.12 | Metheney | 80 | 1.12.81 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.81** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Five hand-written docstrings still send the reader to theDoc.pdf (#2656)
+  - description: theDoc.pdf has not existed since decision D8. The generators no longer produce the name - revision2026b step RG3.14.10 made a section reference name its section - but five docstrings in the shipped package say it in their own text: python/exudyn/solver.py (3, two of which also carry a Markdown link written \[Section\](\#sec:solverSubstructures), whose target spelling is the LaTeX one and not the MyST one), python/exudyn/misc/mainSystemExtensions.py (1) and the module header of python/exudyn/\_\_init\_\_.py, which links to the file on GitHub. They are hand-written, so no regeneration reaches them.
+  - **notes:** The five theDoc.pdf references are gone: the two solver docstrings name MainSolverStatic and MainSolverImplicitSecondOrder beside their section links, the module header points at readthedocs, and the comparison in mainSystemExtensions names the reference manual. Both section targets already resolved, so only the words in front of them were wrong. The same two docstrings said staticSolver where SolveDynamic stores dynamicSolver. The name theDoc.pdf is explained once, in the revisions chapter (revision2026b step RG3.14.12).
+  - date resolved: **2026-09-26 08:40**, date raised: 2026-09-25
 - **1.12.80** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` springDamperTutorial.py crashes at the end: OutputFilePath is not imported (#2669)
   - description: The tutorial solves and then reads its own output with OutputFilePath(...), which it never imports - from exudyn.utilities it imports a named list, and OutputFilePath is in exudyn.basicUtilities. A user who runs the tutorial to the end gets NameError: name OutputFilePath is not defined, after the simulation has finished. It is not in the example test suite, which is why nothing noticed. Found on 2026-09-26 while adding the results monitor to the example (revision2026b step RG11.3).
   - **notes:** springDamperTutorial.py imports OutputFilePath, which it used at its last line and never imported.

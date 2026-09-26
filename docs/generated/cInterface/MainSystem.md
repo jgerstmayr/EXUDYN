@@ -1249,7 +1249,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`distanceSen
   - `showLoads`: toggle appearance of loads in mbs
   - `showSensors`: toggle appearance of sensors in mbs
   - `useItemNames`: if True, object names are shown instead of basic object types (Node, Load, ...)
-  - `useItemTypes`: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+  - `useItemTypes`: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to the reference manual); item classes become clear from the legend
   - `addItemTypeNames`: if True, type nymes (Node, Load, etc.) are added
   - `multiLine`: if True, labels are multiline, improving readability; ignored if showGraph = False
   - `fontSizeFactor`: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
@@ -1409,7 +1409,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 
 [`SolveStatic(mbs, simulationSettings = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L137)
 
-- **function description**: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...)) - NOTE that this function is added to MainSystem via Python function SolveStatic.
+- **function description**: solves the static mbs problem using simulationSettings; see MainSolverStatic, {ref}`sec-mainsolverstatic`, for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...)) - NOTE that this function is added to MainSystem via Python function SolveStatic.
 - **input**:
   - `mbs`: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
   - `simulationSettings`: specific simulation settings out of exu.SimulationSettings(), as described in {ref}`sec-solutionsettings`; use options for newton, discontinuous settings, etc., from staticSolver sub-items
@@ -1418,7 +1418,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
   - `showHints`: show additional hints, if solver fails
   - `showCausingItems`: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
   - `autoAssemble`: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-- **output**: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf {ref}`sec-solversubstructures` and the items described in {ref}`sec-mainsolverstatic`)
+- **output**: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (see {ref}`sec-solversubstructures` and the items described in {ref}`sec-mainsolverstatic`)
 
 *example*:
 
@@ -1455,17 +1455,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
 
 [`SolveDynamic(mbs, simulationSettings = None, solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L216)
 
-- **function description**: solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...)) - NOTE that this function is added to MainSystem via Python function SolveDynamic.
+- **function description**: solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, {ref}`sec-mainsolverimplicitsecondorder`, for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...)) - NOTE that this function is added to MainSystem via Python function SolveDynamic.
 - **input**:
   - `mbs`: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
   - `simulationSettings`: specific simulation settings out of exu.SimulationSettings(), as described in {ref}`sec-solutionsettings`; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special {ref}`sec-overview-basics-speedup`)
   - `solverType`: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
   - `updateInitialValues`: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
-  - `storeSolver`: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
+  - `storeSolver`: if True, the dynamicSolver object is stored in the mbs.sys dictionary as mbs.sys['dynamicSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
   - `showHints`: show additional hints, if solver fails
   - `showCausingItems`: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
   - `autoAssemble`: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-- **output**: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf {ref}`sec-solversubstructures` and the items described in {ref}`sec-mainsolverstatic`)
+- **output**: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains dynamicSolver, which allows to investigate solver problems (see {ref}`sec-solversubstructures` and the items described in {ref}`sec-mainsolverimplicitsecondorder`)
 
 *example*:
 

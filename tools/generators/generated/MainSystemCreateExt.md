@@ -1107,7 +1107,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`distanceSen
   - `showLoads`: toggle appearance of loads in mbs
   - `showSensors`: toggle appearance of sensors in mbs
   - `useItemNames`: if True, object names are shown instead of basic object types (Node, Load, ...)
-  - `useItemTypes`: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+  - `useItemTypes`: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to the reference manual); item classes become clear from the legend
   - `addItemTypeNames`: if True, type nymes (Node, Load, etc.) are added
   - `multiLine`: if True, labels are multiline, improving readability; ignored if showGraph = False
   - `fontSizeFactor`: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1

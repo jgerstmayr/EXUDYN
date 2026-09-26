@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.80.dev1
+- Exudyn version = 1.12.81.dev1
 - last change = 2026-09-26
 - Number of issues = 2675
-- Number of resolved issues = 2394 (80 in current version)
+- Number of resolved issues = 2395 (81 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7589,9 +7589,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
   - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
-  - date raised: 2026-09-25
-- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Five hand-written docstrings still send the reader to theDoc.pdf (#2656)
-  - description: theDoc.pdf has not existed since decision D8. The generators no longer produce the name - revision2026b step RG3.14.10 made a section reference name its section - but five docstrings in the shipped package say it in their own text: python/exudyn/solver.py (3, two of which also carry a Markdown link written \[Section\](\#sec:solverSubstructures), whose target spelling is the LaTeX one and not the MyST one), python/exudyn/misc/mainSystemExtensions.py (1) and the module header of python/exudyn/\_\_init\_\_.py, which links to the file on GitHub. They are hand-written, so no regeneration reaches them.
   - date raised: 2026-09-25
 - `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` The item and settings descriptions are written in LaTeX, not in Markdown (#2655)
   - description: The descriptions in definitions/ are the source of the reference manual, and a developer writing one meets 2684 LaTeX macro occurrences in 87 distinct macros: 709 rowTable, 160 hac, 127 mysubsubsubsection, 86 startTable, 69 refSection, 35 userFunction. The build converts them (tools/generators/latexToMarkdown.py) and the published pages are correct, so this is not a defect in the output - it is that the input is a language nobody writing an item description should have to know, and that nothing checks it. Replace the structural macros by a small documented set plus data in the definition dict, keep the math as it is, and remove the onlyRST/ignoreRST switches.

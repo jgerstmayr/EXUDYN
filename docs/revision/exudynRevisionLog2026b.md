@@ -3885,3 +3885,38 @@ before a step that is done - whose first job is the list), **RG3.22** (#2659), *
 test hook for `forceQuitSimulation`: #2616 fixed the behaviour and nothing can reach it),
 **RG4.7** (#2423) and **RG10.2** (#2541). What stays in the table is #2608, because the maintainer
 asked for a *suggestion* and not a step: that is **RG6.2.26**, and it waits for RG12.5.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.14.12 - the theDoc.pdf references (2026-09-26, #2656)
+
+Five hand-written docstrings sent a reader to a document that has not existed since decision D8.
+**The step was smaller than it looked, and measuring said so before any work was done**: both targets
+the two `Returns:` lines carry - `sec:solverSubstructures` and `sec:MainSolverStatic` - **already
+resolve**, because `(sec-solversubstructures)=` is in `CSolverStructures.md` and
+`(sec-mainsolverstatic)=` in `MainSolver.md`. Only the words *check theDoc.pdf* in front of them were
+wrong. So five edits, not five judgements:
+
+| where | now |
+|---|---|
+| `__init__.py:11` | the header points at `https://exudyn.readthedocs.io/`, as `README.rst` does |
+| `solver.py`, `SolveStatic` | *"see MainSolverStatic, [Section](#sec:MainSolverStatic), for further details"* |
+| `solver.py`, `SolveDynamic` | the same with `MainSolverImplicitSecondOrder`, which the old text named without linking |
+| both `Returns:` lines | *"see ... and the items described in ..."* - the two links, no PDF |
+| `mainSystemExtensions.py:3369` | *"as compared to the reference manual"* |
+
+**The class name stays beside the link, and that is not decoration.** A `[Section](#x)` link is
+rendered by `docstringText` as the bare anchor - `see sec-mainsolverstatic for further details` -
+because a stub has no page to link to. Naming the class in the prose gives the HTML a link and the
+tooltip a word a reader can search for.
+
+**And the same two docstrings were wrong about their own solver.** `SolveDynamic` said, twice, that
+`storeSolver` stores *the staticSolver object ... as mbs.sys['staticSolver']* - it stores
+`mbs.sys['dynamicSolver']` (`solver.py:273`). A copy of the static docstring that nobody re-read.
+Fixed in the same lines, because they were being rewritten anyway and leaving it would have meant
+writing a correct sentence around a wrong one.
+
+The name itself is said **once**, in `docs/manual/revisions.md`, where what changed between releases
+belongs: until this release the documentation was one PDF called `theDoc.pdf`, a name that still
+appears in older issues and notes, and it is the HTML documentation now.
+
+**Gates**: 11/11 checks, the wheel, the full suite, the strict HTML build.

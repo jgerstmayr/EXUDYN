@@ -141,7 +141,7 @@ def SolveStatic(mbs, simulationSettings = None,
                 showCausingItems = True,
                 autoAssemble = True,
                 ):
-    """solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
+    """solves the static mbs problem using simulationSettings; see MainSolverStatic, [Section](#sec:MainSolverStatic), for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
 
     Args:
         mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
@@ -153,7 +153,7 @@ def SolveStatic(mbs, simulationSettings = None,
         autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 
     Returns:
-        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverStatic))
+        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (see [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverStatic))
 
     Example:
         import exudyn as exu
@@ -222,20 +222,20 @@ def SolveDynamic(mbs,
                 showCausingItems = True,
                 autoAssemble = True,
                 ):
-    """solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
+    """solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, [Section](#sec:MainSolverImplicitSecondOrder), for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
 
     Args:
         mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
         simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in [Section](#sec:SolutionSettings); use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special [Section](#sec:overview:basics:speedup))
         solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
         updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
-        storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
+        storeSolver: if True, the dynamicSolver object is stored in the mbs.sys dictionary as mbs.sys['dynamicSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
         showHints: show additional hints, if solver fails
         showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
         autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 
     Returns:
-        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverStatic))
+        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains dynamicSolver, which allows to investigate solver problems (see [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverImplicitSecondOrder))
 
     Example:
         import exudyn as exu

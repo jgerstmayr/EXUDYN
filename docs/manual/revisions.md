@@ -85,8 +85,11 @@ which item types exist.
 The documentation is **Markdown** and is built with Sphinx for every release; the hand-written
 chapters are `docs/manual/`, and everything under `docs/generated/` — the reference manual of all
 items, the Python utilities, the examples and the test models — is written by the generators from
-the definitions and the docstrings. There is no PDF any more: the same content is the HTML
-documentation.
+the definitions and the docstrings.
+
+Until this release the documentation was **one PDF, `theDoc.pdf`** — a name that still appears in
+older issues, in scripts and in printed notes. It is the HTML documentation now: the same content,
+searchable, and one place per subject instead of a chapter and a PDF section saying it twice.
 
 **Installing and building are told once each.** The installation instructions come before the
 first example, and building from source - which used to be described in three places that

@@ -8,7 +8,7 @@
 # Update:   2022-12-26
 #
 # Notes:    see https://github.com/jgerstmayr/EXUDYN for first steps
-#           see theDoc.pdf for instructions, tutorials, etc.: https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf
+#           see the documentation for instructions, tutorials, etc.: https://exudyn.readthedocs.io/
 # Example (without visualization):
 #    import exudyn as exu
 #    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries

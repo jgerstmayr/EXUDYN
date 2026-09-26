@@ -623,19 +623,11 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       the issue archive are plain section names (**#2656** is the five hand-written docstrings that
       still say `theDoc.pdf` in their own text).
 
-    - **RG3.14.12** *(from #2656; maintainer 2026-09-25)* **the `theDoc.pdf` references are resolved
-      against real sections.** Five hand-written docstrings in the shipped package still send the
-      reader to a document that has not existed since decision D8. The maintainer searched the built
-      documentation: *"all of them can be clearly related to a section, but this has to be done with
-      the context of each paragraph or section"* - so this is one judgement per reference, not a
-      pattern. `MainSolverStatic`, for instance, **is** a section of the structures chapter and only
-      needs a label to be referenceable. Two of the five also carry `[Section](#sec:solverSubstructures)`,
-      whose target is spelled the LaTeX way and resolves to nothing.
-
-      And the name itself gets one honest mention: the **revisions chapter** says that the
-      documentation was a single PDF, `theDoc.pdf`, until this revision - a reader who meets the
-      name in an old issue has to be able to find out what it was - and points at how the
-      documentation is built now. That is the only place it is said (rule 6a).
+    - **RG3.14.12** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-14-12) - the five
+      `theDoc.pdf` references are gone, and the name is explained once in the revisions chapter.
+      Smaller than the step assumed: both section targets already resolved, so only the words in
+      front of them were wrong. The same docstrings said `staticSolver` where `SolveDynamic`
+      stores `dynamicSolver`.
     - **RG3.14.13** *(from RG3.14; maintainer 2026-09-25)* **what is left of the LaTeX conversion,
       and what of it goes.** `tools/generators/autoGenerateHelper.py` carries the old
       LaTeX-to-RST machinery - a conversion dict of some 90 entries, `ReplaceWords`, `Str2Latex`,
