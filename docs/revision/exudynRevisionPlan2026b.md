@@ -2014,14 +2014,100 @@ package).
 
     **Three kinds, and only the third needs a decision.** A name that describes **Markdown output**
     is renamed by rule (`DefLatexDataAccess` to `DefDataAccess`, `PyLatexRST` to something that says
-    what it writes). A name that describes **real LaTeX** stays: `GetTypesStringLatex` and
-    `Str2Latex` feed mathematics and C++ comments, and `latexToMarkdown.py` is named after what it
-    converts **from**. The third kind is `latexSymbol` and its family - the `$...$` symbol of an item
-    parameter, which **is** LaTeX inside Markdown - where `mathSymbol` says what it is and touching
-    it moves 12 uses in three emitters. Options go to the maintainer with the list.
+    what it writes). A name that describes **real LaTeX** stays: `Str2Doxygen` writes C++ comments
+    and `latexToMarkdown.py` is named after what it converts **from**. The third kind is
+    `latexSymbol` and its family - the `$...$` symbol of an item parameter, which **is** LaTeX inside
+    Markdown - where `mathSymbol` says what it is and touching it moves 12 uses in three emitters.
+    Options go to the maintainer with the list.
+
+    **RG3.24.1/.2 corrected one sentence of this step**: `Str2Latex` and `GetTypesStringLatex` were
+    named here as functions that feed real LaTeX and therefore keep their names. They do not - see
+    the audit below - so they are a question of *removal*, not of renaming.
 
     A rename of 64 call sites in the definition files is a large diff that changes no output, so it
     wants the same gate as RG3.14.13: **the regeneration is a no-op**, or the rename was not one.
+
+    - **RG3.24.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-24-1) - **where the
+      legacy string helpers are still called.** Asked for by the maintainer: *"I still believe that
+      functions like Str2Latex and in particular DefaultValue2Python would now be replaced by the new
+      generators and definitions mechanisms."* Nine helpers, 60 call sites, all in
+      `tools/generators/`:
+
+      | helper | call sites | what it is given |
+      |---|---|---|
+      | `Str2Latex` | 21 | a type name, a size, a default value, a python name, an argument name, a description |
+      | `Str2Doxygen` | 17 | the text of a C++ `//!` comment |
+      | `ExtractLatexSymbol` | 9 | a description that begins with `$...$` |
+      | `GetTypesStringLatex` | 8 | the `Node::Position`-style requested types of an item |
+      | `DefaultValue2Python` | 5 | the C++ literal of a default value |
+      | `Latex2RSTlabel` | 4 | a section label |
+      | `RemoveSpacesTabs` | 3 | a type string |
+      | `SplitString`, `CutLinesFromString` | 0 | nothing - imported by `itemDocsEmitter` and never called |
+
+      `PyLatexRST` (18) and `NormalizeHeadings` (10) are counted with them in the earlier survey and
+      are **not** legacy: the first is the writer every emitter uses, the second is the Markdown rule
+      of RG3.14. They belong to the renaming, not here.
+
+    - **RG3.24.2** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-24-2) - **what each of
+      them still does**, measured by giving every call site its real inputs (the generator runs each
+      stage as a subprocess, so a wrapper would have seen nothing):
+
+      | helper | verdict |
+      |---|---|
+      | `Str2Latex(s)`, plain | **a no-op, provably**: 0 of 3720 type names, sizes, python names and descriptions are changed. All it does now is `{` to `\{`, into Markdown, where it would be wrong if it ever fired |
+      | `Str2Latex(s, isDefaultValue=True)` | the **only** source of the printed default of 990 item and 263 settings parameters; not LaTeX at all, a C++-to-Python converter with a different rounding than `DefaultValue2Python` (`np.zeros((6,6))` against `IIDiagMatrix(...)`) |
+      | `DefaultValue2Python` | the same conversion for the interface and the stubs, 1001 of 2837 inputs changed; see below |
+      | `GetTypesStringLatex` | writes `\texttt{...}`, a **LaTeX macro into a Markdown page**; 0 of them reach `docs/generated/`, because both callers strip it again |
+      | `Str2Doxygen` | **correct and stays**: it escapes for a C++ comment, which is what it says |
+      | `ExtractLatexSymbol` | **stays**, and is the `latexSymbol` question of RG3.24 - it splits a real `$...$` off a description |
+      | `Latex2RSTlabel`, `RemoveSpacesTabs` | small, correct, badly named (`Latex2RSTlabel` makes a **MyST** label) |
+      | `SplitString`, `CutLinesFromString` | **dead**, and the import in `itemDocsEmitter` is the only thing that keeps them |
+
+    - **RG3.24.3** *(open, options; #2682)* **The default values make a round trip through a C++
+      literal string and back.** This is the *"outdated function with brittle behavior"* the
+      maintainer suspected, and the audit found it is worse than a redundancy.
+
+      **The round trip**: `itemModel.DefaultValueString()` calls `definitionTypes.CppLiteral()` to
+      turn the definition's value into **C++ source text**, and `DefaultValue2Python()` turns that
+      text back into Python with about twenty `str.replace()` calls and three substring `find()`
+      heuristics on `'Index'`, `'Float'` and `'Vector'` (322 values steered by them). It ends with an
+      **unconditional `s.replace('f', '')`** to strip the suffix of `0.05f` - which eats the letter
+      out of anything else: `Transformation66List()` becomes **`Transormation66List()`** for three
+      members of `ObjectKinematicTree`, and `NoDefaultValue` becomes `NoDeaultValue` for a settings
+      parameter. **Nothing visible is wrong today**, because those three members are `CFNoInterface`
+      and that default is filtered before the call - the defect is contained by accident, and one new
+      parameter whose type name contains an `f` would ship a silently wrong Python default. The one
+      symptom that does reach the tree: `defaultValue=' Vector()'` of
+      `ObjectContactConvexRoll.coefficientsHull` has a **stray leading space**, and the generated
+      signature reads `coefficientsHull =  []`, because a default that is a string is never
+      validated.
+
+      **What the definitions already have, and what they do not.** Of the 872 item members with a
+      default, **470 are plain Python values** (234 float, 181 bool, 55 int) and go through the round
+      trip for nothing. The other **402 exist only as C++ source text** - 142 `CppValue` and 260
+      plain `str`, in 29 distinct expression shapes (`ArrayIndex()` 57, `Vector(...)` 47,
+      `EXUmath::...` 19, `Matrix()` 16, ...) - and for those `DefaultValue2Python` is not a
+      redundancy but the **only definition of the Python default**. So this cannot be deleted; it has
+      to be moved.
+
+      - **Option A (recommended)**: a `PythonLiteral(value, typeName)` beside `CppLiteral` in
+        `definitionTypes.py`, dispatching on the **type the member already carries** instead of on
+        substrings of a string. The 470 plain values return themselves; the 29 shapes become 29
+        cases, each named and each testable. `DefaultValue2Python` and the `isDefaultValue` half of
+        `Str2Latex` then both go, and the two conversions stop disagreeing. One gate decides it:
+        **the regeneration is a no-op** except for the stray space.
+      - **Option B**: give the 402 members a real Python default in `definitions/` -
+        `defaultValue=[0., 0., 0.]` where `'Vector3D({0.,0.,0.})'` stands - and let `CppLiteral`
+        make the C++ from it, which is the direction the generator stack runs. The cleanest end
+        state and the largest diff in the files the maintainer edits by hand; it wants their word
+        before anything is touched.
+      - **Option C**: keep the round trip and only remove the unconditional `f`-removal, replacing it
+        with a float-suffix rule. Ten minutes, and it removes the one thing that can silently corrupt
+        a name - but leaves two converters that disagree.
+
+      Independently of the option: `Str2Latex`'s plain branch (0 of 3720 inputs changed),
+      `GetTypesStringLatex`'s `\texttt{}` and the dead `SplitString` / `CutLinesFromString` are
+      removals with a measurement behind them and no decision to make.
 
 
 ## Next steps recommended
@@ -2048,6 +2134,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG3.23 | #2680 | the override settings are documented under the Exudyn module, and the troubleshooting hint |
 | RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
+| RG3.24.3 | #2682 | the default values make a round trip through a C++ literal string and back |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |

@@ -4321,3 +4321,65 @@ it, and it would have put a C++ change in front of three steps that do not need 
 
 `#2678` is closed as obsolete rather than resolved: nothing in this session changed what it asks
 for, and a resolved issue that changed nothing is a version number that means nothing.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.24.1, RG3.24.2 - what the legacy string helpers still do (2026-09-26, #2681, #2682 raised)
+
+The maintainer's suspicion, in their words: *"I still believe that functions like Str2Latex and in
+particular DefaultValue2Python would now be replaced by the new generators and definitions
+mechanisms."* Two sub-steps: where they are called (**RG3.24.1**) and what they still do
+(**RG3.24.2**). Nothing was changed - this is the measurement that RG3.24.3 will act on.
+
+**Nine helpers, 60 call sites, all inside `tools/generators/`.** The interesting number is not the
+total but where it is zero: `SplitString` and `CutLinesFromString` are **imported by
+`itemDocsEmitter` and never called**.
+
+**How they were measured.** `generate.py` runs each generator as a **subprocess**, so an in-process
+wrapper around a helper sees nothing at all. Every call site was instead given its real inputs,
+taken from the models the emitters read - 2837 item parameters, 883 settings parameters, 52 structure
+descriptions - which is reproducible and does not touch the tree.
+
+**`Str2Latex(s)` with its default arguments is a no-op, and now provably**: of **3720** type names,
+sizes, python names and descriptions, it changes **0**. After RG3.14.14 took the underscore escaping
+out, all that is left is `{` to `\{` - a LaTeX escape written into a **Markdown** page, and into a
+**stub file** at `structureStubEmitter.py:56`, where it would be a syntax error if a python name ever
+contained a brace. Five of the 21 call sites are of this kind and can go without a decision.
+
+**`Str2Latex(s, isDefaultValue=True)` is not a LaTeX function at all.** It is a C++-to-Python
+converter, and it is the **only** source of the printed default of **990** item and **263** settings
+parameters. There are therefore **two** such converters in the same file, and they disagree:
+`Matrix6D(6,6,0.)` becomes `np.zeros((6,6))` on a documentation page and
+`IIDiagMatrix(rowsColumns=6,value=0.)` in `itemInterface.py`. Both are right for their reader, which
+is why neither was ever noticed.
+
+**`GetTypesStringLatex` writes `\texttt{...}`** - a LaTeX macro into a Markdown page - and **0** of
+them reach `docs/generated/`, because both callers strip it again. A function whose output is
+undone by every caller.
+
+**And then the one worth the step, `DefaultValue2Python`.** A default value travels
+**Python value → C++ literal string → Python value**: `itemModel.DefaultValueString()` calls
+`definitionTypes.CppLiteral()`, and `DefaultValue2Python()` converts the result back with about
+twenty `str.replace()` calls and three substring `find()` heuristics on `'Index'`, `'Float'` and
+`'Vector'` - **322** values steered by a substring rather than by their type. 1001 of 2837 inputs are
+changed by it.
+
+**It ends with an unconditional `s.replace('f', '')`.** The intent is the float suffix of `0.05f`;
+the effect is that the letter `f` is deleted from whatever else is there.
+`Transformation66List()` becomes **`Transormation66List()`** for three members of
+`ObjectKinematicTree`, and `NoDefaultValue` becomes `NoDeaultValue` for a settings parameter.
+
+**Nothing visible is wrong today**, and that is the finding, not a reassurance: the three members are
+`CFNoInterface`, so the mangled value never reaches `itemInterface.py`, and the settings default is
+filtered before the call. The defect is contained **by accident**. One new parameter whose type name
+contains an `f` and not the flag would ship a silently wrong Python default, and no gate would say
+so. What does reach the tree is cosmetic and comes from the same cause: `coefficientsHull` of
+`ObjectContactConvexRoll` has `defaultValue=' Vector()'` with a **stray leading space**, and the
+generated signature reads `coefficientsHull =  []` - a default that is a *string* is never validated.
+
+**Why it cannot simply be deleted, which is the part the suspicion did not cover.** Of the 872 item
+members with a default, **470 are plain Python values** (234 float, 181 bool, 55 int) and make the
+round trip for nothing. The other **402 exist only as C++ source text** - 142 `CppValue` and 260
+plain `str`, in 29 distinct expression shapes - and for those `DefaultValue2Python` is not a
+redundancy but the **only place where the Python default is defined**. The new mechanism has replaced
+half of this function and not the other half; the options in RG3.24.3 are about which way the
+remaining 402 go, and #2682 records it.
