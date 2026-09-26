@@ -60,7 +60,7 @@ The item VObjectFFRFreducedOrder has the following parameters:
 | output variable | symbol | description |
 |---|---|---|
 | Coordinates |  | all {ref}`ODE2 <ODE2>` coordinates |
-| Coordinates\_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
+| Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
 
 (sec-objectffrfreducedorder-superelementoutput)=

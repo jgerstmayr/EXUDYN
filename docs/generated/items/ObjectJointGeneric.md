@@ -113,7 +113,7 @@ and the translational index 2 constraints read for every component $k \in [0,1,2
 
 $$
 \begin{aligned}
-\LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, i_N, \pv_{par})  &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+\LU{J0}{\Delta v_k} - UF_{t;k}(mbs, t, i_N, \pv_{par})  &= 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
 \lambda_k &= 0 \quad \mathrm{if} \quad j_k = 0 \\
 \end{aligned}
 $$

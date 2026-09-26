@@ -2,12 +2,16 @@
   "number": 2677,
   "title": "745 LaTeX underscore escapes are left in the generated Markdown, 38 of them inside mathematics",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "Measured 2026-09-26 by the audit of revision2026b step RG3.14.13: 33 generated pages carry a backslash-underscore. 707 of them are OUTSIDE mathematics - Coordinates\\_t in an item table, \\_\\_all\\_\\_ in the tracker log - where Markdown renders the escape as a plain underscore, so the page looks right and the source carries LaTeX that nothing needs. They come from three producers: Str2Latex, which escapes every underscore it is given; an explicit replace of the output variable names in itemDocsEmitter; and the issue tracker, which escapes the text of an issue. The remaining 38 are INSIDE mathematics and are a real rendering defect: in math mode a backslash-underscore is a literal underscore, so BeamSectionGeometry shows c_Y as text where a subscript was meant, and ObjectJointGeneric has UF\\_t_{k} in a display equation. Those need one judgement each - subscript or literal - which is why this is a step of its own and not a mechanical replace.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "tools/generators/autoGenerateHelper.py"
+  "dateResolved": "2026-09-26 13:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/autoGenerateHelper.py",
+  "releaseNotes": "115 LaTeX escapes removed from the generated Markdown - the other 638 counted are the tracker log, where escaping issue text is the rule of #2545 and is correct. Five producers: Str2Latex, structureDocsEmitter, itemDocsEmitter, itemModel and five example comments. 38 were inside mathematics, where the escape is a literal underscore, so subscripts such as c_Y, h_{max} and t_{end} render for the first time; one display equation needed a judgement and took the notation of the equation above it. Two utility functions got their Relevant Examples list back (revision2026b step RG3.14.14).",
+  "resolvedInVersion": "1.12.89"
 }

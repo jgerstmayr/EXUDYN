@@ -23,7 +23,7 @@ CSolverTimer has the following items:
 | `jacobianAE` | Real |  | 0. | jacobian of algebraic equations (not counted in sum) |
 | `jacobianODE1` | Real |  | 0. | jacobian w.r.t. coordinates of {ref}`ODE1 <ODE1>` equations (not counted in sum) |
 | `jacobianODE2` | Real |  | 0. | jacobian w.r.t. coordinates of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
-| `jacobianODE2\_t` | Real |  | 0. | jacobian w.r.t. coordinates_t of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
+| `jacobianODE2_t` | Real |  | 0. | jacobian w.r.t. coordinates_t of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
 | `massMatrix` | Real |  | 0. | mass matrix computation |
 | `newtonIncrement` | Real |  | 0. | Jac$^{-1}$ * RHS; backsubstitution |
 | `ODE1RHS` | Real |  | 0. | time for residual evaluation of {ref}`ODE1 <ODE1>` right-hand-side |
@@ -72,7 +72,7 @@ SolverIterationData has the following items:
 | `newtonSteps` | Index |  | 0 | number of current newton steps |
 | `newtonStepsCount` | Index |  | 0 | count total Newton steps |
 | `numberOfSteps` | Index |  | 0 | number of time steps (if fixed size); $n$ |
-| `recommendedStepSize` | Real |  | -1. | recommended step size $h\_{recom}$ after PostNewton(...): $h\_{recom} < 0$: no recommendation, $h\_{recom}==0$: use minimum step size, $h\_{recom}>0$: use specific step size, if no smaller size requested by other reason |
+| `recommendedStepSize` | Real |  | -1. | recommended step size $h_{recom}$ after PostNewton(...): $h_{recom} < 0$: no recommendation, $h_{recom}==0$: use minimum step size, $h_{recom}>0$: use specific step size, if no smaller size requested by other reason |
 | `rejectedAutomaticStepSizeSteps` | Index |  | 0 | count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size) |
 | `rejectedModifiedNewtonSteps` | Index |  | 0 | count the number of rejected modified Newton steps (switch to full Newton) |
 | `startTime` | Real |  | 0. | time at beginning of time integration |

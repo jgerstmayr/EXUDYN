@@ -46,7 +46,7 @@ The item VObjectJointALEMoving2D has the following parameters:
 | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
 | SlidingCoordinate | $s_g = q_{ALE} + s_\mathrm{off}$ | current value of the global sliding ALE coordinate, including offset; note that reference coordinate of $q_{ALE}$ is ignored! |
 | Coordinates | $[x_{data0},\,q_{ALE}]\tp$ | provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate |
-| Coordinates\_t | $[\dot q_{ALE}]\tp$ | provides ALE sliding velocity |
+| Coordinates_t | $[\dot q_{ALE}]\tp$ | provides ALE sliding velocity |
 | Force | $\fv$ | joint force vector (3D) |
 
 ### Definition of quantities

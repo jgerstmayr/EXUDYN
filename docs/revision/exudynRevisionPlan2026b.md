@@ -428,7 +428,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     is work for a session with nothing better to do.
 
 <a id="rg3-14"></a>
-**RG3.14** *(group RG3; maintainer 2026-09-25)* **The item and settings descriptions are written
+**RG3.14** **DONE 2026-09-26** (#2655) **The item and settings descriptions are written
     in LaTeX** (#2655). `definitions/` is the source of the reference manual, and a developer who
     writes an item description there writes LaTeX: the published pages are Markdown and are
     correct, so this is not a defect in the output - it is that the input is a language nobody
@@ -656,15 +656,11 @@ gaps it names are the first candidates. The maintainer's own findings go here as
       names reachable from nothing**, 185 lines, and the regeneration a no-op afterwards. What is
       alive is alive for a reason and is named in the log. The audit found what the step could not
       know: **745 LaTeX escapes in the generated Markdown**, which is RG3.14.14.
-    - **RG3.14.14** *(from RG3.14.13, 2026-09-26)* **The LaTeX escapes that are left in the
-      generated Markdown** (#2677). 33 pages carry a `\_`. **707 are outside mathematics** - a
-      `Coordinates\_t` in an item table, `\_\_all\_\_` in the tracker log - where Markdown
-      renders the escape as a plain underscore, so the page looks right and the source carries LaTeX
-      that nothing needs; they come from `Str2Latex`, from an explicit replace of the output variable
-      names in `itemDocsEmitter`, and from the issue tracker. **38 are inside mathematics and are a
-      defect**: in math mode `\_` is a literal underscore, so `BeamSectionGeometry` shows `c_Y` as
-      text where a subscript was meant. Those need one judgement each, which is why this is a step
-      and not a replace.
+    - **RG3.14.14** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-14-14) - the LaTeX
+      escapes that were left in the generated Markdown. **115 of them, not 745**: the other 638 are
+      the tracker log, where escaping issue text is the rule of #2545 and is correct. Five producers
+      removed, 38 subscripts that had never rendered, and two utility functions that had no
+      *Relevant Examples* list because the search looked for a name with a backslash in it.
 
     **What would not work today**, and is either solved inside the step or stated as its boundary:
 
@@ -1932,8 +1928,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.14 | #2655 | the item descriptions become Markdown: only .14 is open, the escapes in the generated pages |
-| RG3.14.14 | #2677 | the 745 LaTeX escapes left in the generated Markdown, 38 of them inside mathematics |
 | RG3.21 | #2673 | the pages that still describe the state before a step that is done |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |

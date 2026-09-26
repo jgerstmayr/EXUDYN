@@ -47,8 +47,8 @@ The item VObjectGenericODE2 has the following parameters:
 |---|---|---|
 | CoordinatesTotal |  | all {ref}`ODE2 <ODE2>` displacement plus reference coordinates of object |
 | Coordinates |  | all {ref}`ODE2 <ODE2>` (displacement) coordinates |
-| Coordinates\_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
-| Coordinates\_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
+| Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
+| Coordinates_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
 
 ### Additional output variables for superelement node access

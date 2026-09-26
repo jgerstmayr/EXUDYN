@@ -39,5 +39,5 @@ The item VNodePointSlope1 has the following parameters:
 | Acceleration | $\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$ | global 3D acceleration vector of node |
 | CoordinatesTotal |  | displacement plus reference coordinates of node |
 | Coordinates |  | coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates) |
-| Coordinates\_t |  | velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates) |
-| Coordinates\_tt |  | acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates) |
+| Coordinates_t |  | velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates) |
+| Coordinates_tt |  | acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates) |

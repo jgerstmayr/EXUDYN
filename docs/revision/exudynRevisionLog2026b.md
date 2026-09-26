@@ -4242,3 +4242,54 @@ mathematics and are a defect**: there `\_` is a literal underscore, so `BeamSect
 `c_Y` as text where a subscript was meant, and a display equation of `ObjectJointGeneric` carries
 `UF\_t_{k}`. That is **RG3.14.14** (#2677), and it is why #2655 does not close today: each of the
 38 needs a judgement, and the last hour of a long session is not when to make 38 of them.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.14.14 - the LaTeX escapes in the generated Markdown (2026-09-26, #2677)
+
+**The first thing the step did was correct its own number.** 745 backslash-underscores were counted
+by RG3.14.13; **638 of them are the tracker log**, where `ToMarkdown` escapes the text of an issue on
+purpose since #2545 - an author writes text, not markup, and a `|` would otherwise split a table
+cell. Those are right and stay. The real count was **115**.
+
+**Five producers, all of them escaping for a format that is gone:**
+
+| where | what it escaped |
+|---|---|
+| `autoGenerateHelper.Str2Latex` | every `_` of every string it was given |
+| `structureDocsEmitter` | the whole description of a settings parameter, mathematics included |
+| `itemDocsEmitter` | the name of an output variable: `Coordinates\_t` |
+| `itemModel.ExtractLatexSymbol` | the text beside a symbol |
+| five example files | a hand-written `#**output:` comment |
+
+**38 of them were a real defect, and it is the reason this was a step.** Inside `$...$` a
+backslash-underscore is a *literal underscore*, so the subscript the author wrote never appeared:
+`BeamSectionGeometry` showed `c_Y` as text where `$c_Y$` was meant, and `SimulationSettings` had
+**23** of them - `$h\_{max}$`, `$t\_{end}$`, `$a\_{tol}$`, `$q^{Ref}\_i$`. The sources were
+correct all along; the emitters broke them on the way out. They render as mathematics now.
+
+**One needed a judgement rather than a rule**: a display equation of `ObjectJointGeneric` carried
+`UF\_t_{k}`, which is not even valid LaTeX (a double subscript). Two equations above it, the same
+user function is written `UF_{t;0,1,2}`, so the velocity-level one is `UF_{t;k}` - the author's own
+notation, not an invention of this step.
+
+**The five example comments became code spans**, not bare names: `initialValues_t` is a name, and
+`[_t]` in running text opens emphasis in Markdown, which is what the escape had been avoiding. A
+name belongs in backticks; the escape was the wrong answer to a real question.
+
+**Two functions got their examples back.** `AngularVelocity2EulerParameters_t` and
+`AngularVelocity2RotXYZ_t` had **no** *Relevant Examples* list, because the keyword search looked
+for `AngularVelocity2RotXYZ\_t` and no example contains a backslash. Nobody would have found that by
+reading; it fell out of removing the escape.
+
+**And the full PDF build found a reference I had broken three steps earlier**: the description of
+`storeDialogPositions` (RG12.5.3) says `[](#sec:usersettings)` where the label is
+`sec-usersettings`. The incremental HTML build never re-read that page, so it passed; the fresh
+build for the PDF reported it at once. The colon spelling is the LaTeX one - which is the same
+mistake this step is about, made by hand.
+
+**Gates**: 11/11 checks, the wheel, the full suite, pytest, the strict HTML build **and the PDF**,
+which is what a change to mathematics has to pass.
+
+**RG3.14 is finished** and #2655 closes with it: the descriptions in `definitions/` are Markdown,
+the converter is what reads them, the rules are in `definitions/README.md`, the checks hold them,
+and what is published carries no LaTeX escapes any more.

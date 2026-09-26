@@ -203,7 +203,6 @@ def WriteFile(parseInfo, parameterList):
         # cLatex += sTemp
         # vLatex += sTemp
     
-        symbolList = ''
         requestedMarkerString = ''
         itemTypeString = '' #string containing type of item (out of possibleTypes dict)
         requestedNodeString = ''
@@ -219,10 +218,6 @@ def WriteFile(parseInfo, parameterList):
                 [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
                 if parameter['cFlags'].find('Q') != -1: #CFMustBeGiven: the default is only a placeholder
                     parameterDescription += '; \mybold{must be given}: the default is only a placeholder'
-                if len(latexSymbol) != 0:
-                    #if there is a \n, it was wrongly converted => convert back!
-                    symbolList+= "\\rowTable{" + parameter['pythonName'].replace('_','\\_') +"}{" + latexSymbol.replace('\n','\\n') + "}{}\n"  #this is the latex symbol string 
-                
                 if latexSymbol.count('\\n'):
                     print('WARNING: found \\n in latexSymbol: '
                           +parseInfo['class']+':'+parameter['pythonName'])
@@ -318,7 +313,10 @@ def WriteFile(parseInfo, parameterList):
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
-                oVariable = outputVariables[0].replace('_','\\_')
+                #the name of an output variable is a NAME: Coordinates_t, not Coordinates\_t; the
+                #escape was LaTeX and a Markdown page shows it as the underscore it stands for,
+                #which is why it went unnoticed (revision2026b step RG3.14.14, #2677)
+                oVariable = outputVariables[0]
                 description = outputVariables[1]
                 [description, latexSymbol] = ExtractLatexSymbol(description)
                 if len(latexSymbol) != 0: 

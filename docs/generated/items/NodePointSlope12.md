@@ -39,8 +39,8 @@ The item VNodePointSlope12 has the following parameters:
 | Acceleration | $\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$ | global 3D acceleration vector of node |
 | CoordinatesTotal |  | displacement plus reference coordinates of node |
 | Coordinates |  | coordinate vector of node (relative to reference configuration) |
-| Coordinates\_t |  | velocity coordinates vector of node |
-| Coordinates\_tt |  | acceleration coordinates vector of node |
+| Coordinates_t |  | velocity coordinates vector of node |
+| Coordinates_tt |  | acceleration coordinates vector of node |
 | RotationMatrix | $[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ | vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates |
 | Rotation | $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ | vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | global 3D angular velocity vector of node |

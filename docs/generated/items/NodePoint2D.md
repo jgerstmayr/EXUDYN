@@ -41,8 +41,8 @@ The item VNodePoint2D has the following parameters:
 | Acceleration | $\av\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$ | global 3D acceleration vector of node |
 | CoordinatesTotal | $\cv\cConfig = \uv\cConfig + \pv\cRef$ | displacement plus reference coordinates of node |
 | Coordinates | $\cv\cConfig = [q_0,\,q_1]\tp\cConfig$ | coordinate vector of node |
-| Coordinates\_t | $\dot\cv\cConfig = [\dot q_0,\,\dot q_1]\tp\cConfig$ | velocity coordinates vector of node |
-| Coordinates\_tt | $\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1]\tp\cConfig$ | acceleration coordinates vector of node |
+| Coordinates_t | $\dot\cv\cConfig = [\dot q_0,\,\dot q_1]\tp\cConfig$ | velocity coordinates vector of node |
+| Coordinates_tt | $\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1]\tp\cConfig$ | acceleration coordinates vector of node |
 | RotationMatrix |  | identity matrix (only for completeness) |
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |

@@ -54,8 +54,8 @@ The item VObjectKinematicTree has the following parameters:
 | output variable | symbol | description |
 |---|---|---|
 | Coordinates |  | all {ref}`ODE2 <ODE2>` joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object |
-| Coordinates\_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
-| Coordinates\_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
+| Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
+| Coordinates_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
 
 (sec-kinematictree-additionaloutput)=

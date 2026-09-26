@@ -33,8 +33,8 @@ The item VNode1D has the following parameters:
 |---|---|---|
 | CoordinatesTotal |  | displacement plus reference coordinates of node |
 | Coordinates | $\qv\cConfig = [q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` coordinate of node (in vector form) |
-| Coordinates\_t | $\dot \qv\cConfig = [\dot q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` velocity coordinate of node (in vector form) |
-| Coordinates\_tt | $\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` acceleration coordinate of node (in vector form) |
+| Coordinates_t | $\dot \qv\cConfig = [\dot q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` velocity coordinate of node (in vector form) |
+| Coordinates_tt | $\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` acceleration coordinate of node (in vector form) |
 
 **Detailed information:**
 The current position/rotation coordinate of the 1D node is computed from

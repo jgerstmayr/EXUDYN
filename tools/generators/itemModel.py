@@ -213,7 +213,7 @@ def ExtractLatexSymbol(s):
                 if i%2 == 1:
                     sAdd = splitString[i]
                 else:
-                    sAdd = splitString[i].replace('_','\\_')                    
+                    sAdd = splitString[i]
                 stringWithoutSymbol+=addLatexSign+sAdd
                 addLatexSign = '$'
 

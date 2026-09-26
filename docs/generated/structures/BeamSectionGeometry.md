@@ -10,7 +10,7 @@ BeamSectionGeometry has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `crossSectionRadiusY` | UReal |  | 0. | $c\_Y\,$ [SI:m] $Y$ radius for circular cross section |
-| `crossSectionRadiusZ` | UReal |  | 0. | $c\_Z\,$ [SI:m] $Z$ radius for circular cross section |
+| `crossSectionRadiusY` | UReal |  | 0. | $c_Y\,$ [SI:m] $Y$ radius for circular cross section |
+| `crossSectionRadiusZ` | UReal |  | 0. | $c_Z\,$ [SI:m] $Z$ radius for circular cross section |
 | `crossSectionType` | CrossSectionType |  | CrossSectionType::Polygon | Type of cross section: Polygon, Circular, etc. |
-| `polygonalPoints` | Vector2DList |  |  | $\pv\_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction |
+| `polygonalPoints` | Vector2DList |  |  | $\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction |

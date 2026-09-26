@@ -135,6 +135,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePist
 - **output**: vector of time derivatives of 4 eulerParameters as np.array
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`flexibleRotor3Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexibleRotor3Dtest.py) (Ex), [`performanceMultiThreadingNG.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/performanceMultiThreadingNG.py) (Ex), [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...
+
+
 (sec-rigidbodyutilities-rotationvector2rotationmatrix)=
 ## Function: RotationVector2RotationMatrix
 
@@ -276,6 +279,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
   - `angularVelocity`: global angular velocity vector as list or np.array
   - `rotation`: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - **output**: time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), [`heavyTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py) (TM)
 
 
 (sec-rigidbodyutilities-rotxyz2eulerparameters)=

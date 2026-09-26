@@ -296,7 +296,7 @@ class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
 
     
     #**classFunction: OVERRIDE this function to maps the current state to mbs initial values
-    #**output: return [initialValues, initialValues\_t] where initialValues[\_t] are ODE2 vectors of coordinates[\_t] for the mbs
+    #**output: return `[initialValues, initialValues_t]`, where `initialValues` and `initialValues_t` are the ODE2 coordinate and velocity vectors of the mbs
     def State2InitialValues(self):
         #+++++++++++++++++++++++++++++++++++++++++++++
         initialValues = self.state[0:self.nTotalLinks]

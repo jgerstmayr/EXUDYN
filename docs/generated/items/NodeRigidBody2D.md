@@ -42,8 +42,8 @@ The item VNodeRigidBody2D has the following parameters:
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$ | global 3D angular velocity vector of node |
 | CoordinatesTotal |  | displacement/rotation coordinates of node including reference configuration |
 | Coordinates | $\cv\cConfig = [q_0,\,q_1,\,\psi_0]\tp\cConfig$ | coordinate vector of node, having 2 displacement coordinates and 1 angle |
-| Coordinates\_t | $\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig$ | velocity coordinates vector of node |
-| Coordinates\_tt | $\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot \psi_0]\tp\cConfig$ | acceleration coordinates vector of node |
+| Coordinates_t | $\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig$ | velocity coordinates vector of node |
+| Coordinates_tt | $\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot \psi_0]\tp\cConfig$ | acceleration coordinates vector of node |
 | RotationMatrix | $[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ | vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates |
 | Rotation | $[0,\,0,\,\theta_0]\tp\cConfig = [0,\,0,\,\psi_0]\tp\cRef + [0,\,0,\,\psi_0]\tp\cConfig$ | vector with 3rd angle around out of plane axis |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |

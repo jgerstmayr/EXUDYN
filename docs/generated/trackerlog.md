@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.87.dev1
+- Exudyn version = 1.12.89.dev1
 - last change = 2026-09-26
 - Number of issues = 2678
-- Number of resolved issues = 2401 (87 in current version)
+- Number of resolved issues = 2403 (89 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` 745 LaTeX underscore escapes are left in the generated Markdown, 38 of them inside mathematics (#2677)
-  - description: Measured 2026-09-26 by the audit of revision2026b step RG3.14.13: 33 generated pages carry a backslash-underscore. 707 of them are OUTSIDE mathematics - Coordinates\\\_t in an item table, \\\_\\\_all\\\_\\\_ in the tracker log - where Markdown renders the escape as a plain underscore, so the page looks right and the source carries LaTeX that nothing needs. They come from three producers: Str2Latex, which escapes every underscore it is given; an explicit replace of the output variable names in itemDocsEmitter; and the issue tracker, which escapes the text of an issue. The remaining 38 are INSIDE mathematics and are a real rendering defect: in math mode a backslash-underscore is a literal underscore, so BeamSectionGeometry shows c\_Y as text where a subscript was meant, and ObjectJointGeneric has UF\\\_t\_{k} in a display equation. Those need one judgement each - subscript or literal - which is why this is a step of its own and not a mechanical replace.
-  - date raised: 2026-09-26
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - date raised: 2026-09-26
@@ -7583,9 +7580,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-26
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
   - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
-  - date raised: 2026-09-25
-- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` The item and settings descriptions are written in LaTeX, not in Markdown (#2655)
-  - description: The descriptions in definitions/ are the source of the reference manual, and a developer writing one meets 2684 LaTeX macro occurrences in 87 distinct macros: 709 rowTable, 160 hac, 127 mysubsubsubsection, 86 startTable, 69 refSection, 35 userFunction. The build converts them (tools/generators/latexToMarkdown.py) and the published pages are correct, so this is not a defect in the output - it is that the input is a language nobody writing an item description should have to know, and that nothing checks it. Replace the structural macros by a small documented set plus data in the definition dict, keep the math as it is, and remove the onlyRST/ignoreRST switches.
   - date raised: 2026-09-25
 - `DOCU` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` 235 references to the revision plan are left in comments, each inside a sentence (#2649)
   - description: What RG3.13 could not do mechanically. Of the 887 mentions of revision2026 outside docs/revision, 652 were parentheticals or appended clauses and could be removed by rule, keeping the issue number where there was one. The remaining 235 in 149 files are inside a sentence - 'step R4.3 is moving outputs from the old generators to separate emitters', 'the name the function had between steps R8.7 and R8.3.4' - and each needs a sentence written for it, which a pattern cannot do: an attempt that allowed the phrase to wrap across two comment lines matched from a code line into a comment and merged prose into code (tools/generators/generatorPaths.py:35), so that pass was withdrawn and every file rebuilt from its committed content with the line-based rules only. None of the 235 is in a published page; they are comments in src/, tools/ and python/, where the rule is the older one of CODING\_STYLE 6.1 - a comment cites the issue - so this is tidiness rather than a defect.

@@ -38,7 +38,7 @@ The item VNodePointGround has the following parameters:
 | Velocity | $\vv\cConfig = [0,\,0,\,0]\cConfig\tp$ | zero 3D vector |
 | CoordinatesTotal | $\cv\cConfig =[]$ | vector of length zero |
 | Coordinates | $\cv\cConfig =[]$ | vector of length zero |
-| Coordinates\_t | $\dot\cv\cConfig =[]$ | vector of length zero |
+| Coordinates_t | $\dot\cv\cConfig =[]$ | vector of length zero |
 | RotationMatrix |  | identity matrix (only for completeness) |
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |

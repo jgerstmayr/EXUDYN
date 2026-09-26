@@ -126,8 +126,10 @@ def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and
         if s.find("'") == -1: #don't do that for strings!
             s = s.replace('f','')
 
-    #s = s.replace('\\','\\\\') #leads to double \\ in latex
-    s = s.replace('_','\\_')
+    #the underscore escaping went with the LaTeX (revision2026b step RG3.14.14, #2677): a Markdown
+    #page shows a backslash-underscore as a plain underscore, so in text it was invisible noise -
+    #and INSIDE mathematics it is a defect, because there the escape is a literal underscore and the
+    #subscript the author wrote never appeared: $c\_Y$ showed "c_Y" as text
     if replaceCurlyBracket: #don't do that for systemstructures definitions, allowing hyperlinks, etc.
         s = s.replace('{','\\{')
         s = s.replace('}','\\}')

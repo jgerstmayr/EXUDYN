@@ -111,13 +111,13 @@ def StructureDocs(parseInfo, parameterList):
                     sString="'"
                 #write latex doc:
                 defaultValueStr = parameter['defaultValue']
-                paramDescriptionStr = parameter['parameterDescription'].replace('_','\\_')
+                paramDescriptionStr = parameter['parameterDescription']
                 #a sub-structure instance with values of its own says so, because the table of
                 #its class shows the class defaults
                 instanceDefaults = InstanceDefaultsText(parseInfo['class'],
                                                         parameter['pythonName'])
                 if instanceDefaults != '':
-                    paramDescriptionStr += '; ' + instanceDefaults.replace('_', '\\_')
+                    paramDescriptionStr += '; ' + instanceDefaults
                 if len(defaultValueStr) > 18:
                     paramDescriptionStr = '\\tabnewline ' + paramDescriptionStr
                 pythonName = Str2Latex(parameter['pythonName']) 

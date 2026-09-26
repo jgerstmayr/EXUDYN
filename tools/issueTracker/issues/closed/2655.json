@@ -2,12 +2,16 @@
   "number": 2655,
   "title": "The item and settings descriptions are written in LaTeX, not in Markdown",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "HIGH",
   "description": "The descriptions in definitions/ are the source of the reference manual, and a developer writing one meets 2684 LaTeX macro occurrences in 87 distinct macros: 709 rowTable, 160 hac, 127 mysubsubsubsection, 86 startTable, 69 refSection, 35 userFunction. The build converts them (tools/generators/latexToMarkdown.py) and the published pages are correct, so this is not a defect in the output - it is that the input is a language nobody writing an item description should have to know, and that nothing checks it. Replace the structural macros by a small documented set plus data in the definition dict, keep the math as it is, and remove the onlyRST/ignoreRST switches.",
   "dateRaised": "2026-09-25",
   "deadline": "2027-03-24",
-  "file": "definitions/itemDefsObjects.py"
+  "dateResolved": "2026-09-26 13:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "The item and settings descriptions are Markdown: one converter, the rules in definitions/README.md, eleven checks that hold them, and no LaTeX escape left in what is published. Closed with revision2026b step RG3.14.14, which removed the last five escapers and the 38 subscripts inside mathematics that had never rendered.",
+  "resolvedInVersion": "1.12.88"
 }
