@@ -12964,6 +12964,12 @@ definitions.append(ItemDefinition(
                         \LU{0}{\Delta\vv} = \LUR{0}{\vv}{ANCF} - \LU{0}{\vv}_{m0}
                         $$
 
+    ```{figure} /docs/figures/ObjectJointALEmoving2D.*
+    :width: 400
+
+    Geometrical relations for ALE sliding joint.
+    ```
+
     <!--
     
     +++++++++++++++++++++++++++++++++++++++++++++

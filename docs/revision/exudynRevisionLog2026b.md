@@ -3920,3 +3920,36 @@ belongs: until this release the documentation was one PDF called `theDoc.pdf`, a
 appears in older issues and notes, and it is the HTML documentation now.
 
 **Gates**: 11/11 checks, the wheel, the full suite, the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG3.8.4 - the figures the conversion lost are back (2026-09-26, #2594)
+
+Three of the four. Each was found in the 1.11 sources the maintainer kept in `tmp/docs/`, with the
+caption it had there:
+
+| figure | where it is now | what it shows |
+|---|---|---|
+| `generalContactSpheres` | `theoryContact.md`, *Sphere-sphere contact*, after the contact point equation - where `theory.tex` had it | the geometry of two spheres and their markers |
+| `generalContactANCF2Dcircle` | the same file, *Contact relations for ANCF cable* | the two cases of a cable span intersecting a circle |
+| `ObjectJointALEmoving2D` | the description of `ObjectJointALEMoving2D`, after the velocity difference | the geometry of the ALE sliding joint |
+
+**One sentence was waiting for its figure.** The ANCF paragraph read *"... intersects with the
+circle, see the geometrical relations between the beam span and the circle"* - the conversion had
+replaced `\\fig{fig_generalContactANCF2Dcircle}` with a description of the figure it was dropping.
+It says `see {ref}`fig-contact-ancf2dcircle`` now, and there is something to see.
+
+**The ALE figure had been hidden on purpose**: in `itemDefinition.tex` it sat inside
+`\\ignoreRST{...}`, so the conversion that produced the web documentation honoured the instruction
+and dropped it. That was a decision for a format that no longer exists.
+
+All three are `.*` candidates - the pair mechanism of RG3.8.1 - so the browser shows the SVG the
+maintainer drew and the PDF the vector original. **Checked in both builds**, not only in the HTML:
+`_buildpdf/latex/exudynDocumentation.tex` includes `{generalContactSpheres}.pdf`,
+`{generalContactANCF2Dcircle}.pdf` and `{ObjectJointALEmoving2D}.pdf`, and the PDF built in 2 passes.
+
+**What is left of #2594 is RG3.8.5**, and it is left deliberately. Seventeen figures exist as a
+`.png` **and** as a `.pdf` or `.eps`, and every reference names the `.png`; writing `.*` would give
+the PDF the vector original. But the two were exported at different times over ten years, and if a
+pair has drifted the HTML shows one picture and the PDF another **with no warning at all**. One
+comparison per pair first; the `.png` in both builds is at least the same thing twice. `intro2.jpg`
+stays where it is: unreferenced, and deleting a tracked file is the maintainer's word.

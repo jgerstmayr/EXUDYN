@@ -139,6 +139,13 @@ $$
   \LU{0}{\pv_{c}} = \LU{0}{\pv_{m0}} + r_i^* \cdot \nv_0 \, ,
 $$
 
+(fig-contact-spheres)=
+```{figure} /docs/figures/generalContactSpheres.*
+:width: 400
+
+Geometrical relations for contact of two spheres $i$ and $j$ with according markers $m0$ and $m1$.
+```
+
 the velocities of the spheres at the contact point (In case of no friction, the angular velocities are not included in these relations),
 
 $$
@@ -603,9 +610,17 @@ Jacobians for the derivative of contact forces w.r.t. marker positions and rotat
 
 ## Contact relations for ANCF cable $g_i$ (marker $m0$) and sphere $g_j$ (marker $m1$)
 
- If contact is active, we have two relative axial reference coordinates $s_0$ and $s_1$, which define start and end location at the beam, for which the span in between intersects with the circle, see the geometrical relations between the beam span and the circle.
+ If contact is active, we have two relative axial reference coordinates $s_0$ and $s_1$, which define start and end location at the beam, for which the span in between intersects with the circle, see {ref}`fig-contact-ancf2dcircle`.
 The intersection points are either computed based on the exact 6th order polynomial equations or using a set of linear segments for interpolation.
 In this model, due to the active set strategy, the reference coordinates spanning $[s_0,\, s_1]$ are kept fixed, even though that they would change during Newton iterations.
+
+(fig-contact-ancf2dcircle)=
+```{figure} /docs/figures/generalContactANCF2Dcircle.*
+
+Geometrical relations for contact of ANCFCable2D $i$ and circle $j$ with according marker $m1$;
+case a) shows a cable with nodes $n_0$ and $n_1$, partially penetrating at the midspan of the cable;
+case b) shows the case of a cable where node $n_0$ is inside the cable.
+```
 
 Normal contact and tangential friction forces are then computed based on integrals over the coordinates $[s_0,\, s_1]$.
 The integration is performed over $n_{ip}$ integration points $x_k \in [x_{i0},\, x_{i1},\, \ldots]$. In case of a 3 point Lobatto integration, we chose the integration points

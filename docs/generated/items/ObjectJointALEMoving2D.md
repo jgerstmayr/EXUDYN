@@ -92,6 +92,12 @@ $$
 \LU{0}{\Delta\vv} = \LUR{0}{\vv}{ANCF} - \LU{0}{\vv}_{m0}
 $$
 
+```{figure} /docs/figures/ObjectJointALEmoving2D.*
+:width: 400
+
+Geometrical relations for ALE sliding joint.
+```
+
 #### Connector constraint equations
 
 The 2D sliding joint is implemented having 2 equations, using the Lagrange multipliers $\zv$.

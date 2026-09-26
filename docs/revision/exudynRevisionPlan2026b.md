@@ -285,6 +285,29 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     `ObjectJointGeneric`. `TutorialRigidBody1.png` belonged to a tutorial that no longer exists
     and is gone.
 
+<a id="rg3-8-4"></a>
+**RG3.8.4** **DONE 2026-09-26** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-4) —
+    **The four lost figures are three, and they are back.** `generalContactSpheres` and
+    `generalContactANCF2Dcircle` are in `docs/manual/theoryContact.md` with the captions they had in
+    `theory.tex`, and `ObjectJointALEmoving2D` is in the description of its item, where
+    `itemDefinition.tex` had it inside an `\ignoreRST{...}` that the conversion honoured. Each is a
+    `.*` candidate, so the browser gets the SVG the maintainer drew and the PDF the vector original -
+    checked in `_buildpdf/latex/exudynDocumentation.tex`, which includes all three as `.pdf`.
+
+<a id="rg3-8-5"></a>
+**RG3.8.5** *(from RG3.8; measured 2026-09-26)* **The seventeen vector originals whose png the
+    documentation uses.** `CommonTangents3D`, `ConvexRolling`, `ObjectFFRFsketch`,
+    `SphereSphereContact` and thirteen more exist as `.png` **and** as `.pdf` or `.eps`, and every
+    reference names the `.png`. Writing them as `.*` would give the PDF the vector original at no
+    cost, which is what RG3.8 wanted.
+
+    **Why it is not done in passing**: the risk is that a `.pdf` twin is *not* the same picture as
+    its `.png` - they were exported at different times over ten years - and the failure is silent,
+    because the HTML shows one and the PDF the other and nobody compares two builds. So the step is
+    **one comparison per pair first**, and only the pairs that match are switched. Until then the
+    `.png` is what both builds show, which is at least the same thing twice.
+
+
 <a id="rg3-9"></a>
 **RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) —
     **Three corrections to the landing pages and the developer chapters.** That Exudyn is
@@ -1868,6 +1891,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
+| RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.14 | #2655 | the item descriptions become Markdown: only .13 is open, the LaTeX machinery that is left |
 | RG3.14.13 | #2655 | what is left of the LaTeX conversion in `autoGenerateHelper.py`, and what of it goes |
