@@ -1617,7 +1617,7 @@ def RestoreWindowGeometry(tkWindow, name, width, height):
         monitor that is gone, a resolution that changed, a laptop that was undocked: each of them
         would otherwise put the dialog where nobody can close it.
     """
-    from exudyn import settings as userSettings
+    from exudyn.misc import overrideSettings as userSettings
 
     if not StoreDialogPositions():
         tkWindow.geometry(str(width) + 'x' + str(height))
@@ -1679,7 +1679,7 @@ def StoreWindowGeometry(recorded, name):
     Returns:
         None
     """
-    from exudyn import settings as userSettings
+    from exudyn.misc import overrideSettings as userSettings
 
     #'WIDTHxHEIGHT+X+Y', where a coordinate left of or above the primary screen is reported as
     #'+-1500' by some window managers and as '-1500' by others

@@ -224,16 +224,18 @@ except Exception as e: #an environment that cannot be read must never stop 'impo
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the user settings of ~/.exudyn/config.json, read ONCE at import (revision2026b step RG12.5,
-##2666). A stored setting makes a run behave differently than it reads, so every one of them is
-#named in one note here, EXUDYN_NO_USER_SETTINGS=1 ignores the file, and exudyn.settings.Applied()
-#answers "what is not in my script" afterwards. Nothing writes the file by itself.
+#the override settings of ~/.exudyn/config.json, read ONCE here and kept in
+#exudyn.special.overrideSettings, which is where both Python and the C++ core read them
+#(revision2026b steps RG12.5 and RG12.9, #2666 and #2679). A stored setting makes a run behave
+#differently than it reads, so every one of them is named in one note here,
+#EXUDYN_NO_USER_SETTINGS=1 ignores the file, and exudyn.misc.overrideSettings.Applied() answers
+#"what is not in my script" afterwards. Nothing writes the file by itself.
 def _ApplyUserSettings():
-    from . import settings as _settings
-    globals()['settings'] = _settings          #exudyn.settings, for Print(), Store() and Clear()
+    from .misc import overrideSettings as _settings
 
-    stored = _settings.Load()
-    if stored == {}:
+    stored = special.overrideSettings   #the one store; filled here and by nothing else
+    stored.update(_settings.Load())
+    if len(stored) == 0:
         return
 
     _settings.ApplyConfig(config, stored)
@@ -266,7 +268,8 @@ def _ApplyUserSettings():
         print('NOTE: ' + str(len(applied)) + ' setting(s) from ' + _settings.FileName()
               + ('' if later == 0 else ', and ' + str(later)
                  + ' visualizationSettings for every SystemContainer')
-              + ' (exudyn.settings.Print() for the list; EXUDYN_NO_USER_SETTINGS=1 to ignore them)')
+              + ' (exudyn.misc.overrideSettings.Print() for the list;'
+              + ' EXUDYN_NO_USER_SETTINGS=1 to ignore them)')
         for (path, reason) in ignored:
             print('  WARNING: ' + path + ' was not applied - ' + reason)
 
@@ -274,7 +277,7 @@ def _ApplyUserSettings():
 try:
     _ApplyUserSettings()
 except Exception as e: #a settings file that cannot be read must never stop 'import exudyn'
-    print('WARNING: exudyn could not apply its user settings: ' + str(e))
+    print('WARNING: exudyn could not apply its override settings: ' + str(e))
 
 
 __version__ = config.Version() #add __version__ to exudyn module ...

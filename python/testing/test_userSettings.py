@@ -1,7 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  The user settings file, ~/.exudyn/config.json (revision2026b step RG12.5, #2666).
+# Details:  The override settings: the file ~/.exudyn/config.json and the dictionary
+#           exudyn.special.overrideSettings it is read into (revision2026b steps RG12.5 and
+#           RG12.9, #2666 and #2679).
 #
 #           These tests never touch the real file: EXUDYN_CONFIG_FILE names one in the pytest
 #           temporary directory, and the application functions are called directly, so nothing
@@ -26,12 +28,16 @@ import os
 import pytest
 
 import exudyn as exu
-from exudyn import settings
+from exudyn.misc import overrideSettings as settings
 
 
 @pytest.fixture
 def settingsFile(tmp_path, monkeypatch):
-    """a settings file of this test's own, and no memory of an earlier one"""
+    """a settings file of this test's own, and no memory of an earlier one
+
+    Writing it also fills exudyn.special.overrideSettings, which is what `import exudyn` does with
+    the file and what the functions read when nothing is passed to them (revision2026b step
+    RG12.9). The store is process-wide, so it is emptied again afterwards."""
     fileName = str(tmp_path / 'config.json')
     monkeypatch.setenv('EXUDYN_CONFIG_FILE', fileName)
     monkeypatch.delenv('EXUDYN_NO_USER_SETTINGS', raising=False)
@@ -41,8 +47,11 @@ def settingsFile(tmp_path, monkeypatch):
     def Write(content):
         with open(fileName, 'w', encoding='utf-8') as file:
             json.dump(content, file)
+        settings.Settings().clear()
+        settings.Settings().update(content)
         return fileName
-    return Write
+    yield Write
+    settings.Settings().clear()
 
 
 def test_noFileMeansNoSettings(tmp_path, monkeypatch):
@@ -140,12 +149,53 @@ def test_theFileCanBeSwitchedOff(settingsFile, monkeypatch):
     assert settings.Ignoring() and settings.Load() == {}
 
 
+def test_theStoreIsOnTheCppSideAndIsTheOneTheModuleReads():
+    """exudyn.special.overrideSettings is where the values live (revision2026b step RG12.9, #2679)
+
+    A dict on the C++ side rather than a Python global, so that the core can read a user setting
+    without importing anything - and so that there is ONE of them."""
+    assert isinstance(exu.special.overrideSettings, dict)
+    assert settings.Settings() is exu.special.overrideSettings
+
+    #it is the dictionary itself, not a copy: a change is seen by the next reader
+    exu.special.overrideSettings['config'] = {'outputPrecision': 9}
+    try:
+        assert settings.Settings()['config'] == {'outputPrecision': 9}
+        assert 'overrideSettings: 1 section(s)' in repr(exu.special)
+    finally:
+        del exu.special.overrideSettings['config']
+
+
+def test_theStoreIsEmptyUnderTheRunners():
+    """nothing was read, because conftest.py switched the file off
+
+    The C++ dict exists whether or not a file does; what must not happen is that a test run picks
+    up a setting from the machine it runs on."""
+    assert exu.special.overrideSettings == {}
+
+
+def test_theApplyFunctionsTakeTheStoreWhenNothingIsGiven(monkeypatch):
+    """settings=None means exudyn.special.overrideSettings, not a second read of the file
+
+    Before RG12.9 each of them called Load() again, so a file that changed during a run was read
+    several times and the dialogs could disagree with the settings."""
+    monkeypatch.setitem(exu.special.overrideSettings, 'config', {'outputPrecision': 11})
+    monkeypatch.setattr(settings, '_applied', [])
+    monkeypatch.setattr(settings, '_ignored', [])
+    previous = exu.config.outputPrecision
+    try:
+        assert settings.ApplyConfig(exu.config) == 1
+        assert exu.config.outputPrecision == 11
+    finally:
+        exu.config.outputPrecision = previous
+
+
 def test_theRunnersIgnoreTheFile():
     """conftest.py sets it for pytest, and the three runners set it for themselves
 
     A stored setting that moved a test result would be found weeks later, on another machine."""
     assert os.environ.get('EXUDYN_NO_USER_SETTINGS', '') == '1'
-    assert exu.settings.Ignoring() if hasattr(exu, 'settings') else True
+    assert settings.Ignoring()
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

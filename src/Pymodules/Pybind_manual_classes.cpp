@@ -406,6 +406,15 @@ PyExperimental pyExperimental;	//! for experimental things, not to be used by co
 PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 bool EXUstd::ParameterRangeChecksActive() { return pySpecial.exceptions.parameterRangeChecks; }
 
+//! the one dictionary behind exudyn.special.overrideSettings (#2679); see PybindUtilities.h.
+//! Allocated on the first access, which happens during module initialization while the interpreter
+//! and the GIL are there, and never freed: releasing a Python reference after finalization crashes
+py::dict& EPyUtils::OverrideSettings()
+{
+	static py::dict* overrideSettings = new py::dict();
+	return *overrideSettings;
+}
+
 #include "Main/Config.h"
 ExudynConfig pyConfig;				//! unified config for exudyn, avoid bloating main scope
 
@@ -511,6 +520,8 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("solver", &PySpecial::solver)
 		.def_readwrite("exceptions", &PySpecial::exceptions)
 		.def_readwrite("userInterface", &PySpecial::userInterface)
+		.def_property_readonly("overrideSettings", [](const PySpecial&) { return EPyUtils::OverrideSettings(); },
+			"the settings read from ~/.exudyn/config.json by 'import exudyn', as a dictionary with one key per section ('config', 'visualizationSettings', 'dialogs', 'resultsMonitor'); it is empty unless a user has stored something, and EXUDYN_NO_USER_SETTINGS=1 keeps it empty; the same dictionary is read by the C++ side; use exudyn.misc.overrideSettings for reading and writing the file")
 		.def_static("InfoStat", &PythonInfoStat, "Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag", py::arg("writeOutput") = true)
 
 #ifdef PERFORM_UNIT_TESTS
@@ -520,7 +531,8 @@ void Init_Pybind_manual_classes(py::module& m) {
 
 		//representation:
 		.def("__repr__", [](const PySpecial& item) {
-		return STDstring(EXUstd::ToString(item));
+		return STDstring(EXUstd::ToString(item)) + "overrideSettings: "
+			+ EXUstd::ToString((Index)EPyUtils::OverrideSettings().size()) + " section(s)\n";
 			}, "return the string representation of Special class")
 		;
 

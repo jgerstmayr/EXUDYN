@@ -17,13 +17,15 @@ something was stored there, is the one thing a settings file must not cause, so 
 asked for:
 
 ```python
+from exudyn.misc import overrideSettings
+
 SC.visualizationSettings.openGL.multiSampling = 4
-exudyn.settings.Store(SC)          #every run from now on starts with it
+overrideSettings.Store(SC)         #every run from now on starts with it
 ```
 
 `Store(SC)` writes the settings that differ from the defaults — the same list the settings dialog
 shows as *changed* — and `Store(config=exudyn.config)` does the same for `exudyn.config`.
-`exudyn.settings.Clear()` deletes the file.
+`overrideSettings.Clear()` deletes the file.
 
 ## What happens when the file is there
 
@@ -31,21 +33,25 @@ shows as *changed* — and `Store(config=exudyn.config)` does the same for `exud
 
 ```
 NOTE: 1 setting(s) from %USERPROFILE%\.exudyn\config.json, and 2 visualizationSettings for every
-      SystemContainer (exudyn.settings.Print() for the list; EXUDYN_NO_USER_SETTINGS=1 to ignore them)
+      SystemContainer (exudyn.misc.overrideSettings.Print() for the list;
+      EXUDYN_NO_USER_SETTINGS=1 to ignore them)
 ```
+
+What it read is in **`exudyn.special.overrideSettings`**, a dictionary with one key per section,
+which both a script and the C++ core read — the file is opened once, by the import, and not again.
 
 The `config` settings are applied at that moment. The `visualizationSettings` are applied to every
 `SystemContainer` when it is created, because that is when they begin to exist.
-`exudyn.settings.Print()` lists them:
+`overrideSettings.Print()` lists them:
 
 ```
-user settings file: %USERPROFILE%\.exudyn\config.json
+override settings file: %USERPROFILE%\.exudyn\config.json
   applied: config.outputDirectory = 'solution/'
   applied: visualizationSettings.openGL.multiSampling = 4
 ```
 
 which is the answer to *why does this script behave differently here* — and
-`exudyn.settings.Applied()` gives the same as a list, for a script that wants to print it into its
+`overrideSettings.Applied()` gives the same as a list, for a script that wants to print it into its
 own output.
 
 ## What may be stored

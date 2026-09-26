@@ -4383,3 +4383,57 @@ plain `str`, in 29 distinct expression shapes - and for those `DefaultValue2Pyth
 redundancy but the **only place where the Python default is defined**. The new mechanism has replaced
 half of this function and not the other half; the options in RG3.24.3 are about which way the
 remaining 402 go, and #2682 records it.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.9 - the override settings live in exudyn.special.overrideSettings (2026-09-26, #2679)
+
+RG12.5.1 built the file and kept its values in a Python module. The maintainer, having seen it:
+*"they anyway should be used rarely and with caution; they are for convenience ... location in
+exudyn should be therefore e.g. `exudyn.special.overrideSettings`"*, and *"this requires a dict on
+the C++ side (?) ... Advantage: also accessible from C++ then"*. Both are done.
+
+**The decided carrier, and why it is not a member.** The step said "a `py::dict` member of
+`PySpecial`". A member means `pybind11` in `Main/Experimental.h`, and that header is included by
+**eight** translation units - `Linalg/LinearSolver.cpp` and `Utilities/Threading.cpp` among them,
+which have no business knowing about Python. The dictionary is instead
+`EPyUtils::OverrideSettings()`, declared in `PybindUtilities.h` and defined in
+`Pybind_manual_classes.cpp`:
+
+```cpp
+py::dict& EPyUtils::OverrideSettings()
+{
+    static py::dict* overrideSettings = new py::dict();
+    return *overrideSettings;
+}
+```
+
+**It is never freed, and that is the point.** The step itself named the caveat - *"a global that owns
+Python objects must not be destroyed after the interpreter"* - and it is why `exu.sys` is a module
+attribute and not a C++ member. A function-local static pointer is allocated on the first access,
+which happens during module import while the interpreter and the GIL are there, and has no
+destructor to run afterwards. From Python it is exactly what was asked for,
+`exu.special.overrideSettings`, exposed **read-only** so that it cannot be replaced by something
+that is not a dictionary - `update`, `clear` and item assignment all work, which is everything that
+is needed - and `repr(exu.special)` ends with `overrideSettings: n section(s)`.
+
+**The module moved and was renamed**: `python/exudyn/settings.py` to
+`python/exudyn/misc/overrideSettings.py`, *"it is not intended to be used by the user"*. A module of
+its own rather than a merge into `misc/settingsUtilities.py`: that one is about **editing** a
+settings structure, this one about **persisting** it, and they share no code.
+
+**What changed beyond the move, and it is the part that fixes something.** Every function that took
+`settings=None` read the file **again**: `ApplyConfig`, `ApplyVisualizationSettings` and -
+worst - `DialogGeometry`, which is called whenever a dialog opens. A file edited during a run was
+therefore read several times and the dialogs could disagree with the settings. `None` now means the
+store, the file is opened once by the import, and `Store` and `StoreDialogGeometry` write **both**
+the file and the store so that the two cannot drift apart inside a process. `Settings()` is the new
+accessor and returns the dictionary itself, not a copy.
+
+**The three new tests say what a reader needs**: that `Settings() is exu.special.overrideSettings`,
+that the store is **empty** under the runners (a test that picks up a setting from the machine it
+runs on is the failure this whole mechanism has to avoid), and that `settings=None` takes the store
+and not the file. The fixture of the eleven older tests now fills the store as the import does; it
+empties it again afterwards, because a dictionary on the C++ side outlives a test.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 29 tests in `test_userSettings.py` and 447
+in `python/testing`, the strict HTML build.

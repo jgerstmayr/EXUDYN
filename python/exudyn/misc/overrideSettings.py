@@ -1,13 +1,18 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  User settings that persist between runs: one file, `~/.exudyn/config.json`, holding
-#           overrides for `exudyn.config` and for `visualizationSettings` (revision2026b step
-#           RG12.5, #2666).
+# Details:  Reads and writes the override settings: one file, `~/.exudyn/config.json`, holding
+#           settings that persist between runs - for `exudyn.config`, for `visualizationSettings`,
+#           for the dialogs and for the results monitor (#2666, #2679).
 #
-#           WHY ONE FILE: the results monitor introduced `~/.exudyn/resultsMonitor.json` and the
-#           dialogs will want to remember their size. One file per feature is how a directory
-#           becomes unreadable, so everything that persists goes in here, in a section of its own.
+#           WHERE THE VALUES LIVE: in `exudyn.special.overrideSettings`, a dictionary that
+#           `import exudyn` fills once from the file and that both Python and the C++ core read.
+#           This module is the only thing that reads or writes the file; it is internal, and a
+#           user reaches the values through `exudyn.special.overrideSettings`.
+#
+#           WHY ONE FILE: the results monitor and the dialogs both want to remember something.
+#           One file per feature is how a directory becomes unreadable, so everything that
+#           persists goes in here, in a section of its own.
 #
 #           WHAT MAY BE OVERRIDDEN: plain values only - a number, a flag, a string, or a list of
 #           numbers. A setting that holds graphics data, a user function or a container is refused
@@ -27,8 +32,8 @@
 import json
 import os
 
-__all__ = ['sectionNames', 'plainTypes', 'FileName', 'Ignoring', 'Load', 'Save', 'Clear',
-           'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings',
+__all__ = ['sectionNames', 'plainTypes', 'FileName', 'Ignoring', 'Settings', 'Load', 'Save',
+           'Clear', 'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings',
            'DialogKey', 'DialogGeometry', 'StoreDialogGeometry', 'PositionIsReachable', 'Store']
 
 #the sections of the file. 'dialogs' is read by the dialogs themselves (revision2026b step
@@ -45,7 +50,7 @@ _ignored = []                   #[(path, reason)] of what was not
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def FileName():
-    """Path of the user settings file, `~/.exudyn/config.json`.
+    """Path of the override settings file, `~/.exudyn/config.json`.
 
     Returns:
         the absolute file name; neither the file nor the directory has to exist
@@ -61,7 +66,7 @@ def FileName():
 
 
 def Ignoring():
-    """True if the user settings file is switched off for this process (`EXUDYN_NO_USER_SETTINGS`)
+    """True if the override settings file is switched off for this process (`EXUDYN_NO_USER_SETTINGS`)
 
     Returns:
         bool
@@ -69,8 +74,21 @@ def Ignoring():
     return os.environ.get('EXUDYN_NO_USER_SETTINGS', '') not in ['', '0', 'False', 'false']
 
 
+def Settings():
+    """The override settings of this process: `exudyn.special.overrideSettings`.
+
+    Returns:
+        the dictionary `import exudyn` filled from the file - one key per section, see
+        `sectionNames`; `{}` when nothing is stored or when the file is switched off. It is the
+        dictionary itself and not a copy, so a change to it is seen by everything that reads it,
+        the C++ side included; it is NOT written to the file, which only `Save` and `Store` do.
+    """
+    import exudyn
+    return exudyn.special.overrideSettings
+
+
 def Load():
-    """Read the user settings file.
+    """Read the override settings file.
 
     Returns:
         the stored dictionary; `{}` when the file does not exist, cannot be read, or is switched
@@ -99,7 +117,7 @@ def Load():
 
 
 def Save(settings):
-    """Write the user settings file, creating `~/.exudyn` if it does not exist.
+    """Write the override settings file, creating `~/.exudyn` if it does not exist.
 
     Args:
         settings: the dictionary to store; its keys should be section names, see `sectionNames`
@@ -118,7 +136,7 @@ def Save(settings):
 
 
 def Clear():
-    """Delete the user settings file, so that the next run starts from the defaults.
+    """Delete the override settings file, so that the next run starts from the defaults.
 
     Returns:
         True if a file was deleted
@@ -131,18 +149,18 @@ def Clear():
 
 
 def Applied():
-    """What the user settings file changed in this process.
+    """What the override settings changed in this process.
 
     Returns:
         list of `(path, value)`, e.g. `[('config.outputDirectory', 'solution/')]`; empty when
         nothing was stored or when the file is switched off. This is what makes a run that behaves
-        oddly explainable: `exudyn.settings.Applied()` says what is not in the script.
+        oddly explainable: `exudyn.misc.overrideSettings.Applied()` says what is not in the script.
     """
     return list(_applied)
 
 
 def Ignored():
-    """What the user settings file asked for and did not get.
+    """What the override settings asked for and did not get.
 
     Returns:
         list of `(path, reason)` - a setting that does not exist, or one whose type cannot be
@@ -152,15 +170,15 @@ def Ignored():
 
 
 def Print():
-    """Print what came from the user settings file, and what did not.
+    """Print what came from the override settings file, and what did not.
 
     Returns:
         None
     """
     if Ignoring():
-        print('user settings: switched off by EXUDYN_NO_USER_SETTINGS')
+        print('override settings: switched off by EXUDYN_NO_USER_SETTINGS')
         return
-    print('user settings file: ' + FileName()
+    print('override settings file: ' + FileName()
           + ('' if os.path.exists(FileName()) else '  (does not exist)'))
     for (path, value) in _applied:
         print('  applied: ' + path + ' = ' + repr(value))
@@ -187,11 +205,11 @@ def _Record(path, value, reason=None):
 
 
 def ApplyConfig(config, settings=None):
-    """Apply the `config` section of the user settings to `exudyn.config`.
+    """Apply the `config` section of the override settings to `exudyn.config`.
 
     Args:
         config: the `exudyn.config` object
-        settings: the dictionary of `Load()`; it is read here when None is given
+        settings: the section dictionary; `exudyn.special.overrideSettings` when None is given
 
     Returns:
         the number of settings applied
@@ -200,7 +218,7 @@ def ApplyConfig(config, settings=None):
         This is called once by `import exudyn`. A name that `exudyn.config` does not have, or a
         value of a type it cannot hold, is reported by `Ignored()` and changes nothing.
     """
-    settings = Load() if settings is None else settings
+    settings = Settings() if settings is None else settings
     applied = 0
     for (name, value) in (settings.get('config') or {}).items():
         path = 'config.' + name
@@ -226,11 +244,11 @@ def ApplyConfig(config, settings=None):
 
 
 def ApplyVisualizationSettings(visualizationSettings, settings=None):
-    """Apply the `visualizationSettings` section of the user settings to a settings structure.
+    """Apply the `visualizationSettings` section of the override settings to a settings structure.
 
     Args:
         visualizationSettings: `SC.visualizationSettings` of a SystemContainer
-        settings: the dictionary of `Load()`; it is read here when None is given
+        settings: the section dictionary; `exudyn.special.overrideSettings` when None is given
 
     Returns:
         the number of settings applied
@@ -244,7 +262,7 @@ def ApplyVisualizationSettings(visualizationSettings, settings=None):
         #{"visualizationSettings": {"openGL.multiSampling": 4, "general.drawWorldBasis": true}}
         SC = exu.SystemContainer()      #the two settings are applied here
     """
-    settings = Load() if settings is None else settings
+    settings = Settings() if settings is None else settings
     applied = 0
     for (path, value) in (settings.get('visualizationSettings') or {}).items():
         full = 'visualizationSettings.' + path
@@ -304,7 +322,7 @@ def DialogGeometry(name):
         return (isinstance(pair, list) and len(pair) == 2
                 and all(isinstance(entry, int) for entry in pair))
 
-    stored = (Load().get('dialogs') or {}).get(DialogKey(name)) or {}
+    stored = (Settings().get('dialogs') or {}).get(DialogKey(name)) or {}
     size = stored.get('size')
     position = stored.get('position')
     return (size if IsPair(size) else None, position if IsPair(position) else None)
@@ -332,6 +350,7 @@ def StoreDialogGeometry(name, size, position):
                                 'position': [int(position[0]), int(position[1])]}
     settings['dialogs'] = dialogs
     Save(settings)
+    Settings()['dialogs'] = dialogs  #the file and the store must not disagree within a process
 
 
 def PositionIsReachable(position, screen, margin=80):
@@ -388,7 +407,7 @@ def Store(SC=None, config=None, replace=False):
 
     Example:
         SC.visualizationSettings.openGL.multiSampling = 4
-        exudyn.settings.Store(SC)       #every run from now on starts with it
+        overrideSettings.Store(SC)       #every run from now on starts with it
     """
     settings = {} if replace else Load()
 
@@ -416,4 +435,6 @@ def Store(SC=None, config=None, replace=False):
         settings['config'] = stored
 
     Save(settings)
+    Settings().clear()
+    Settings().update(settings)  #the store follows the file, so the two cannot disagree
     return settings

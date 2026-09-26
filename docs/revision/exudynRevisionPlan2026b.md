@@ -1891,25 +1891,28 @@ package).
     user function is what the test models are, and would be testing the solver.
 
 <a id="rg12-9"></a>
-**RG12.9** *(group RG12; maintainer 2026-09-26)* **The override settings live in
-    `exudyn.special.overrideSettings`** (#2679). **Not blocked**: RG6.2.28 turned out to be done. The maintainer, having seen RG12.5.1 built:
-    *"they anyway should be used rarely and with caution; they are for convenience ... location in
-    exudyn should be therefore e.g. `exudyn.special.overrideSettings`"*, and *"this requires a dict
-    on the C++ side (?) ... Advantage: also accessible from C++ then"*.
+**RG12.9** **DONE 2026-09-26** (#2679) — [log](exudynRevisionLog2026b.md#rg12-9) —
+    **The override settings live in `exudyn.special.overrideSettings`**, a dictionary that
+    `import exudyn` fills once from `~/.exudyn/config.json` and that both Python and the C++ core
+    read, and the module that reads and writes the file is **`exudyn.misc.overrideSettings`**
+    (`exudyn.settings` is gone - it is internal, and a user reaches the values through
+    `exudyn.special.overrideSettings`).
 
-    **What stays from RG12.5.1**: the file and its format, the reader, the "plain values only" rule,
-    the note at import, `EXUDYN_NO_USER_SETTINGS` and the four runners that set it, the reachability
-    rule of the dialog geometry, and the 26 tests. What moves is **where the values live** and
-    **when they are applied**.
+    **The decided `py::dict` carrier, with the lifetime caveat handled the other way round.** The
+    step said "a `py::dict` member of `PySpecial`"; the member would have put pybind11 into
+    `Main/Experimental.h`, which **eight** translation units include, two of them in `Linalg` and
+    `Utilities`. The dictionary is therefore `EPyUtils::OverrideSettings()` in
+    `Pybind_manual_classes.cpp` - allocated once on the first access, during module import while the
+    interpreter and the GIL are there, and **never freed on purpose**, which is the caveat the step
+    itself named: a global that releases a Python reference after finalization crashes the process.
+    From Python it is what was asked for, `exu.special.overrideSettings`, read-only so that it cannot
+    be replaced by something that is not a dictionary, and `__repr__` says how many sections are in
+    it.
 
-    - Decision: a `py::dict` member of `PySpecial` (`src/Main/Experimental.h`),
-      exposed as `exu.special.overrideSettings`. `exu.sys` is the precedent - a Python dict the C++
-      side holds and both sides read. The caveat to handle: a global that owns Python objects must
-      not be destroyed after the interpreter, which is why `exu.sys` is a module attribute; the
-      dict is therefore created empty in `Initialize()` and cleared, never destructed.
-
-    **The module is renamed and moved** whichever option wins: `python/exudyn/settings.py` becomes
-    `python/exudyn/misc/overrideSettings.py` - *"it is not intended to be used by the user"*.
+    **What changed beyond the move**: every function that took `settings=None` now means *the store*
+    and not a second read of the file, so the dialogs and the settings can no longer disagree within
+    a run - `DialogGeometry` re-opened the file on every call. `Store` and `StoreDialogGeometry`
+    write the file **and** the store, for the same reason. Three new tests, 29 in the file.
 
 <a id="rg12-10"></a>
 **RG12.10** *(group RG12; maintainer 2026-09-26)* **The workflow of the override settings**, written
@@ -2149,7 +2152,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1 and .3 are done, .4 is superseded by RG12.10 |
-| RG12.9 | #2679 | the override settings live in exudyn.special.overrideSettings; settings.py becomes misc/overrideSettings.py |
 | RG12.10 | - | the workflow: read at import, config at once, the rest applied when a structure is created |
 | RG12.11 | - | storing: the manual function with the real defaults, and a button in the dialog |
 | RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |

@@ -338,6 +338,13 @@ namespace EPyUtils {
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+	//! the override settings, filled once by 'import exudyn' from ~/.exudyn/config.json and exposed
+	//! as exudyn.special.overrideSettings, so that Python and C++ read the same dictionary (#2679).
+	//! Defined in Pybind_manual_classes.cpp; it is allocated once and never freed on purpose,
+	//! because a global that releases a Python reference AFTER the interpreter has finalized
+	//! crashes the process - which is why exudyn.sys is a module attribute and not a C++ member.
+	py::dict& OverrideSettings();
+
 
 } //namespace HPyUtils
 

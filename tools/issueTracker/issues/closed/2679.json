@@ -2,12 +2,16 @@
   "number": 2679,
   "title": "The override settings belong in exudyn.special.overrideSettings, not in a Python module of their own",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-09-26, having seen revision2026b step RG12.5.1 built: the settings of ~/.exudyn are for convenience and are to be used rarely and with caution, so they belong under exudyn.special - exudyn.special.overrideSettings - and the dict should live on the C++ side, which also makes it accessible from C++. python/exudyn/settings.py becomes python/exudyn/misc/overrideSettings.py, because it is not intended to be used directly. What stays from RG12.5.1: the file and its format, the reader, the plain-values rule, the note at import, EXUDYN_NO_USER_SETTINGS and the runners that set it, and the tests. What moves is where the values live and when they are applied - a VisualizationSettings structure applies them when it is CREATED, not only a SystemContainer. Three options for the C++ carrier are written in the plan step RG12.9.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "python/exudyn/settings.py"
+  "dateResolved": "2026-09-26 15:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/settings.py",
+  "releaseNotes": "The override settings of ~/.exudyn/config.json now live in exudyn.special.overrideSettings, a dictionary that 'import exudyn' fills once and that both Python and the C++ core read; the module that reads and writes the file is exudyn.misc.overrideSettings (formerly exudyn.settings, which no longer exists - it is internal and a user reaches the values through exudyn.special.overrideSettings). Every function that took settings=None now means that dictionary instead of a second read of the file, so the dialogs and the settings can no longer disagree within a run. Three new tests; the settings dialog and the results monitor are unchanged for a user.",
+  "resolvedInVersion": "1.12.91"
 }
