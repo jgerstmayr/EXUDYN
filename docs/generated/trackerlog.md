@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.89.dev1
 - last change = 2026-09-26
-- Number of issues = 2678
+- Number of issues = 2681
 - Number of resolved issues = 2403 (89 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The override settings are documented in a hand-written page rather than with the module they belong to (#2680)
+  - description: docs/manual/userSettings.md was written by hand in revision2026b step RG12.5.1. The maintainer, 2026-09-26: it should be integrated into the Python-C++ command interface, under the Exudyn module, either written there or imported there, and consistent in both cases. The same step adds one hint to the troubleshooting section of performanceErrors.md: a user who sees strange behaviour should delete the ~/.exudyn folder or its config file - which is the first thing to try and is nowhere said today.
+  - date raised: 2026-09-26
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The override settings belong in exudyn.special.overrideSettings, not in a Python module of their own (#2679)
+  - description: The maintainer, 2026-09-26, having seen revision2026b step RG12.5.1 built: the settings of ~/.exudyn are for convenience and are to be used rarely and with caution, so they belong under exudyn.special - exudyn.special.overrideSettings - and the dict should live on the C++ side, which also makes it accessible from C++. python/exudyn/settings.py becomes python/exudyn/misc/overrideSettings.py, because it is not intended to be used directly. What stays from RG12.5.1: the file and its format, the reader, the plain-values rule, the note at import, EXUDYN\_NO\_USER\_SETTINGS and the runners that set it, and the tests. What moves is where the values live and when they are applied - a VisualizationSettings structure applies them when it is CREATED, not only a SystemContainer. Three options for the C++ carrier are written in the plan step RG12.9.
+  - date raised: 2026-09-26
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` The lights and the raytracer materials are initialised by the SystemContainer, not by the settings structure (#2678)
+  - description: Measured in revision2026b step RG6.2.12: exu.VisualizationSettings() and SystemContainer().visualizationSettings differ in 59 settings - four lights and ten raytracer materials - because the container's constructor initialises them and the structure's defaults do not. DefaultSettingsDictionary() works around it by taking its reference from a container, and a test of RG6.2.20 guards the difference. It blocks the override settings of \#2679: that design needs one unambiguous default, to store only what differs, and one moment of application, when a structure is created. Today a structure on a container is initialised AFTER its constructor, so an override of a light would be overwritten and a stored difference would depend on which reference was taken. The maintainer, 2026-09-26: this shall be resolved first.
+  - date raised: 2026-09-26
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - date raised: 2026-09-26
