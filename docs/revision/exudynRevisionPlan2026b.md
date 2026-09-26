@@ -786,16 +786,35 @@ Open in the tracker for this group: **#2423** (every C++ user error inspects the
 find its file and line, on every raise).
 
 <a id="rg3-21"></a>
-**RG3.21** *(group RG3; maintainer 2026-09-24)* **The pages that still describe the state before a
-    step that is done** (#2673). Six weeks changed behaviour that hand-written pages describe - the
-    renderer keys, the settings dialogs, the output directory, the star imports, the command line,
-    the results monitor - and a page is corrected only when someone walks past it.
+**RG3.21** *(group RG3; maintainer 2026-09-24, clarified on their request 2026-09-27)* **The pages that
+    still describe the state before a step that is done** (#2673).
 
-    **The first job is the list**, and the step cannot be planned before it exists: per chapter, what
-    the page claims against what the code does. Two sources make it cheap - the closed issues of
-    revision2026b carry their release notes, and `docs/manual/revisions.md` is the list of what
-    changed for a user - so the audit is a comparison and not a re-reading. What comes out of it
-    decides whether this is one commit or five.
+    **The reason**: six weeks of revision2026 and revision2026b changed behaviour that `docs/manual/`
+    pages describe, and a page is corrected only when somebody walks past it - so some of them still
+    describe how Exudyn worked in August.
+
+    **What is in scope, because "which exact audit" is a fair question**: `docs/manual/` only.
+    `docs/generated/` is rewritten from `definitions/` and the docstrings and cannot be stale;
+    `docs/dev/` and `docs/howTo/` describe the workflow rather than the behaviour, and go with the step
+    that changes the workflow. The subjects are the ones the closed issues name:
+
+    | subject | what changed |
+    |---|---|
+    | the renderer keys and the dialogs | RG6.2.x: the settings dialog, the find, the fonts, the columns, what is stored |
+    | the output directory | `exudyn.config.outputDirectory`, and which files follow it |
+    | the star imports and `exudyn.config` | the deprecated module-level functions |
+    | the command line | `python -m exudyn ...` |
+    | the results monitor | it exists, and what it stores |
+    | the override settings | `~/.exudyn/config.json`, which changes what a script does |
+    | the deprecated names | what is on its way out, and by when |
+    | the PlotSensor defaults | `None` means the default, and the file can set them |
+
+    **The method, and why it is cheap**: `docs/manual/revisions.md` is the list of what changed for a
+    user, and every closed issue of the two revisions carries its release note. So this is a comparison
+    of two lists against the pages, not a re-reading of the manual.
+
+    **The first deliverable is the LIST** - per page, what it claims against what the code does - and
+    nothing else can be planned before it exists. It decides whether the rest is one commit or five.
 
 <a id="rg3-22"></a>
 **RG3.22** *(group RG3; maintainer 2026-09-25)* **The simulation settings section says how to look a
@@ -2268,6 +2287,58 @@ package).
     and the session whether or not a window opens - and with no settings file it returns at once, which
     is every test run.
 
+<a id="rg3-26"></a>
+**RG3.26** *(group RG3; maintainer 2026-09-27)* **`index.md` and `pdfIndex.md` are two hand-written
+    tables of contents that must agree** (#2697). *"Maybe this is necessary, but it is really brittle
+    and requires a clear indication to sync the toctrees ... The rest should be practically identical,
+    if possible."*
+
+    **Measured, and it is more than remembered**: 25 toctree entries against 23. Only in `index.md`:
+    `README`, **`docs/manual/performanceErrors`**, the examples index and the test-models index. Only in
+    `pdfIndex.md`: `docs/manual/commandLine` and `docs/manual/resultsMonitor`, which in the HTML are
+    nested under `introductionAdvanced` instead. **And the order of the shared entries differs.** So the
+    examples and the front page are the intended differences; a whole chapter missing from the PDF, the
+    different nesting and the different order are not, and nothing says so when they drift again.
+
+    - **Option A**: generate `pdfIndex.md` from `index.md` with a declared list of exclusions. One file
+      is then the truth and the other a build product - and it needs a rule for the front page, which is
+      the one part that really differs.
+    - **Option B (cheapest, and it catches drift tomorrow)**: keep both and add a check to `tools/` that
+      compares the two entry lists against a **declared** difference, the way `checkAll` compares
+      `__all__` against what a module defines. A new page in one and not the other then fails a gate
+      instead of being noticed months later.
+    - **Option C**: accept the difference and say so at the top of both files. The least work and the
+      least protection.
+
+<a id="rg12-21"></a>
+**RG12.21** **DONE 2026-09-27** (#2695) — [log](exudynRevisionLog2026b.md#rg12-21) — **`python -m exudyn info` prints the home directory** - and the command exists to be pasted into an issue, so it carries an account name with it.
+    The home directory is shown as `%USERPROFILE%` or `~`, which is what a reader would type anyway, and
+    `--showPaths` gives the real ones for a problem that is about a path.
+
+<a id="rg12-22"></a>
+**RG12.22** **DONE 2026-09-27** (#2696) — [log](exudynRevisionLog2026b.md#rg12-22) — **The results monitor took the focus and came to the front
+    on every update** - *"so one cannot use the control panel"*. The cause is
+    `plt.pause`, which calls `show(block=False)` every time, and TkAgg's `show()` does `deiconify()` and
+    `lift()`. `canvas.start_event_loop` waits and processes events and does nothing else. The *"except
+    optionally alwaysOnTop"* half is a monitor setting of that name, default False, stored in the
+    `resultsMonitor` section like the rest, with `--always-on-top` on the command line.
+
+<a id="rg12-23"></a>
+**RG12.23** *(group RG12; maintainer 2026-09-27)* **The plot windows cannot be stored while the renderer
+    is still open** (#2698). RG12.12 places a plot window where the one of the same sequence number was
+    left, and stores it when it closes - but the maintainer is pointing at the *moment*: a user arranges
+    several windows and wants to store them together, and the settings dialog, which is where storing
+    happens for everything else, is usually gone by then because the renderer has stopped.
+
+    Their design, and it is the right shape: a **function** a script or a dialog can call - *store where
+    the plot windows are now* - which needs a list of the live figures. *"possibly the matplotlib figures
+    need to be stored in an internal list - either in plot.py or in exudyn.sys, cleared when doing
+    closeAll; the figure references should get invalid on closing ... and thus a function could then try
+    to grab the current figure's positions and sizes and store them, allowing to reuse the size in the
+    next PlotSensor commands."* With it, the sizes become reusable too, which the per-window close
+    handler cannot do.
+
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2305,8 +2376,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
+| RG3.26 | #2697 | index.md and pdfIndex.md are two tables of contents that must agree |
+| RG12.23 | #2698 | the plot windows cannot be stored while the renderer is still open |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
-| RG12.12 | - | PlotSensor takes its defaults - and its window positions - from the override settings |
 
 ### Raised by the current work, and not yet a step
 

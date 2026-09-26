@@ -1,0 +1,17 @@
+{
+  "number": 2695,
+  "title": "python -m exudyn info prints the home directory of whoever ran it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'python -m exudyn info: you mention that this shall be used when submitting issues. But I believe that it should either not show the user path (replace user path with something like %USERPROFILE%; there could be an option --showPaths, which shows the real paths'. The output names the package directory and the Python executable, both of which are usually under the home directory and therefore carry an account name - and the command's whole purpose is to be pasted into an issue. The home directory is shown as %USERPROFILE% on Windows and as ~ elsewhere, which is also what a reader would type themselves, and --showPaths gives the real ones for a problem that is about a path. revision2026b step RG12.21.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 01:08",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/__main__.py",
+  "releaseNotes": "'python -m exudyn info' shows the home directory as %USERPROFILE% (Windows) or ~ instead of the real path, in the package location, the Python executable and the output directory - the command exists to be pasted into an issue, and those paths carried the account name of whoever ran it. --showPaths prints them as they are, for a problem that is about a path. Two tests: nothing of the home directory in the normal output, and all of it with the flag.",
+  "resolvedInVersion": "1.12.105"
+}

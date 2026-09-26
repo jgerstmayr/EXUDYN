@@ -101,22 +101,39 @@ def _CommandInfo(argumentList):
     parser = argparse.ArgumentParser(
         prog='python -m exudyn info',
         description='version, location and environment of this Exudyn installation.')
-    parser.parse_args(argumentList)
+    parser.add_argument('--showPaths', action='store_true',
+                        help='print the paths as they are; without it, the home directory is shown '
+                             'as %USERPROFILE% (Windows) or ~, because this output goes into bug '
+                             'reports')
+    arguments = parser.parse_args(argumentList)
 
     import os
     import platform
     import exudyn
 
+    #THIS OUTPUT IS MEANT TO BE PASTED INTO AN ISSUE (#2695), and a path under the home directory
+    #carries the account name of whoever ran it. The variable is what a reader needs anyway - it is
+    #what they would type themselves - and --showPaths gives the real ones for a problem that is
+    #about a path
+    home = os.path.expanduser('~')
+    variable = '%USERPROFILE%' if sys.platform == 'win32' else '~'
+
+    def Shown(text):
+        text = str(text)
+        if arguments.showPaths or home in ('', os.sep):
+            return text
+        return text.replace(home, variable)
+
     print('Exudyn')
     print('  version           ' + exudyn.__version__)
-    print('  details           ' + exudyn.config.Version(True).replace('\n', '; '))
-    print('  package           ' + os.path.dirname(os.path.abspath(exudyn.__file__)))
+    print('  details           ' + Shown(exudyn.config.Version(True).replace('\n', '; ')))
+    print('  package           ' + Shown(os.path.dirname(os.path.abspath(exudyn.__file__))))
     print('  module            ' + os.environ.get('EXUDYN_MODULE', 'default (exudynCPP)'))
-    print('  outputDirectory   ' + (exudyn.config.outputDirectory
+    print('  outputDirectory   ' + (Shown(exudyn.config.outputDirectory)
                                     if exudyn.config.outputDirectory != '' else '(current)'))
     print('Python')
     print('  version           ' + platform.python_version() + ' (' + platform.architecture()[0] + ')')
-    print('  executable        ' + sys.executable)
+    print('  executable        ' + Shown(sys.executable))
     print('  platform          ' + platform.platform())
     print('packages')
     for name in ['numpy', 'scipy', 'matplotlib', 'networkx', 'ngsolve', 'pytest']:

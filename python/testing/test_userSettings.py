@@ -508,6 +508,33 @@ def test_reloadRestartsTheRecords(settingsFile):
         exu.special.overrideSettings.clear()
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the results monitor's own settings (revision2026b step RG12.22, #2696)
+def test_theMonitorHasAnAlwaysOnTopSettingAndItIsOff():
+    """the monitor used to come to the front on every update; now that is a choice, and not the
+    default - the cause was plt.pause, which raises the window every time it is called"""
+    from exudyn.misc import resultsMonitor
+
+    assert resultsMonitor._defaultSettings['alwaysOnTop'] is False
+    assert 'alwaysOnTop' in resultsMonitor.LoadSettings()
+
+    #and it is an ordinary monitor setting, so the settings file carries it
+    assert set(resultsMonitor.LoadSettings()) == set(resultsMonitor._defaultSettings)
+
+
+def test_theMonitorWaitsWithoutRaisingItsWindow():
+    """the loop must not call plt.pause, which is what raised the window and took the focus"""
+    import inspect
+
+    from exudyn.misc import resultsMonitor
+
+    source = inspect.getsource(resultsMonitor.ResultsMonitor.Run)
+    assert 'plt.pause' not in source, 'plt.pause raises the window on every call'
+    assert '_Wait(' in source
+    waiting = inspect.getsource(resultsMonitor.ResultsMonitor._Wait)
+    assert 'start_event_loop' in waiting
+
+
 def test_theRunnersIgnoreTheFile():
     """conftest.py sets it for pytest, and the three runners set it for themselves
 

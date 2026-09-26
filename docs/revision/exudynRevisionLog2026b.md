@@ -5123,3 +5123,53 @@ values silent, differing values one warning, a second `Start()` quiet. No test o
 and none opens the dialog whose buttons these are.
 
 **Gates**: 11/11 checks, the wheel, the full suite, 501 pytest, the strict HTML build.
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### RG12.21 and RG12.22 - the info command and the monitor's focus (2026-09-27, #2695, #2696)
+
+Two from the maintainer's queue that were decided in the asking, and one cause worth writing down.
+
+**RG12.21**: *"python -m exudyn info: you mention that this shall be used when submitting issues. But
+I believe that it should either not show the user path."* It printed the package directory, the Python
+executable and the output directory, and on a normal installation all three are under the home
+directory - so the one command whose whole purpose is to be pasted into a public issue carried an
+account name. They are shown as `%USERPROFILE%` or `~` now, which is also what a reader would type
+themselves, and `--showPaths` gives the real ones for a problem that is about a path.
+
+**RG12.22 had a cause that explains both halves of the complaint at once**: *"always takes focus (so
+one cannot use the control panel); always in front of terminal"*. The update loop called
+`plt.pause(period)`, and `plt.pause` is:
+
+```python
+show(block=False)                 #<-- for TkAgg: deiconify() and lift()
+canvas.start_event_loop(interval)
+```
+
+So the window was raised **and** focused once per update period - one to twenty times a second - which
+is why the control panel beside the plot could not be typed into: the focus was taken back before a
+keystroke arrived. The loop calls `start_event_loop` directly now, which is the half of `pause` that
+does the waiting, and `plt.pause` remains as the fallback for a backend without an event loop.
+
+*"except optionally alwaysOnTop"* is a monitor setting of that name, default False, and - being a
+monitor setting - it is stored in the `resultsMonitor` section of `~/.exudyn/config.json` like the
+rest, with `--always-on-top` on the command line. It puts the window above the others and still does
+not take the keyboard.
+
+**One thing had to be given up, and the gate caught it**: the Qt branch of `alwaysOnTop` needed
+`QtCore.Qt.WindowStaysOnTopHint`, so it imported PyQt5 - and `checkExtras` refused the commit, because
+that is a new dependency for one line and CLAUDE.md rule 6 says no. It is tkinter only and says so.
+The plot-window placement of RG12.12 keeps its Qt branch, because `window.move(x, y)` needs no import.
+
+**Also from the queue, without code:**
+
+- **#2673 was clarified on request** - *"I don't understand any more what was the reason, and what is
+  the content"* - and RG3.21 now says the reason, the scope (`docs/manual/` only, with the eight
+  subjects named), the method (compare `revisions.md` and the release notes against the pages, rather
+  than re-read the manual) and that the first deliverable is the **list**.
+- **#2672 was remarked**: the maintainer retried the asynchronous monitor and it still fails, which is
+  exactly what that issue is - the existence test stands before the waiting loop. RG11.3.1 is the step.
+- **RG3.26** (#2697), **RG12.23** (#2698): filed with what was measured, see the plan.
+
+**Gates**: 11/11 checks, the wheel, the full suite, 505 pytest, the strict HTML build. Neither the
+monitor window nor the info command is opened by a human in the suite: the focus is tested by reading
+the loop's own source for `plt.pause`, which is the thing that must not be there.

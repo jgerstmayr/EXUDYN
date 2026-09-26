@@ -1,0 +1,17 @@
+{
+  "number": 2696,
+  "title": "the results monitor takes the focus and comes to the front on every update",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'resultsMonitor: always takes focus (so one cannot use the control panel); always in front of terminal => this should not be the case, except optionally alwaysOnTop.' The cause is plt.pause, which the update loop calls once per update period: it calls show(block=False) every time, and for the TkAgg backend show() does deiconify() and lift() - so the window was raised and given the focus one to twenty times a second, which is why the control panel beside it could not be typed into. canvas.start_event_loop(seconds) waits and processes events and does nothing else. The 'except optionally' half is a new monitor setting, alwaysOnTop (default False), which sets the window above the others without taking the keyboard - and, being a monitor setting, is stored in the resultsMonitor section of ~/.exudyn/config.json like the rest. There is a --always-on-top flag for the command line. revision2026b step RG12.22.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 01:08",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/resultsMonitor.py",
+  "releaseNotes": "The results monitor no longer takes the keyboard focus and no longer comes to the front while it updates. The cause was plt.pause in the update loop: it calls show(block=False) every time, and TkAgg's show() does deiconify() and lift(), so the window was raised and focused once per update period - which is why the control panel beside it could not be typed into. canvas.start_event_loop(seconds) waits and processes events and does nothing else, with plt.pause as the fallback for a backend that has no event loop. The 'except optionally' half is a new monitor setting alwaysOnTop, default False, stored in the resultsMonitor section of ~/.exudyn/config.json like the rest, with --always-on-top on the command line; it puts the window above the others and still does not take the keyboard. It works with the tkinter backend and says so otherwise, because a Qt window would need a Qt enum and Exudyn does not depend on a Qt binding. Two tests and a line in the manual.",
+  "resolvedInVersion": "1.12.106"
+}

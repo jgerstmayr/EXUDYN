@@ -64,6 +64,31 @@ def testTheAbbreviationsNameTheSameDialogs():
     assert names['help'] == 'help'
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#WHAT "info" MAY PRINT (revision2026b step RG12.21, #2695). The output exists to be pasted into an
+#issue, so it must not carry the account name of whoever ran it
+def testInfoDoesNotPrintTheHomeDirectory(capsys):
+    import os
+
+    home = os.path.expanduser('~')
+    assert commandLine._CommandInfo([]) == 0
+    printed = capsys.readouterr().out
+    assert printed != ''
+    if home not in ('', os.sep):
+        assert home not in printed, 'the home directory reached the output a bug report carries'
+        assert ('%USERPROFILE%' in printed) or ('~' in printed)
+
+
+def testInfoShowsTheRealPathsWhenAsked(capsys):
+    import os
+
+    home = os.path.expanduser('~')
+    assert commandLine._CommandInfo(['--showPaths']) == 0
+    printed = capsys.readouterr().out
+    if home not in ('', os.sep):
+        assert home in printed, '--showPaths is for a problem that is about a path'
+
+
 def testHelpExitsWithZero():
     """'python -m exudyn dialogs --help' is how a user finds the names"""
     with pytest.raises(SystemExit) as raised:

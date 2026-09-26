@@ -70,6 +70,7 @@ _defaultSettings = {
     'lineColor': 'b',
     'lineStyle': '-',
     'showPanel': True,          #the tkinter control panel next to the plot
+    'alwaysOnTop': False,       #keep the plot window above other windows; it does NOT take the focus
     'lastDirectory': '',        #where the file dialog opens next time
     }
 
@@ -514,6 +515,21 @@ class ResultsMonitor:
                                                         + os.path.basename(self.fileName))
         self.figure = plt.figure(figureName)
         self.figure.dpi = 100
+        #ON TOP ONLY IF ASKED, and never focused: the monitor used to come to the front on every
+        #update because plt.pause raises the window, see _Wait. A user who WANTS it above the console
+        #says so with alwaysOnTop, and even then it does not take the keyboard away
+        if self.settings.get('alwaysOnTop', False):
+            try:
+                window = getattr(self.figure.canvas.manager, 'window', None)
+                if hasattr(window, 'attributes'):               #tkinter, which TkAgg uses
+                    window.attributes('-topmost', True)
+                else:
+                    #a Qt window would need its own enum - QtCore.Qt.WindowStaysOnTopHint - and that
+                    #means importing a Qt binding, which Exudyn does not depend on and will not start
+                    #depending on for one line (CLAUDE.md rule 6)
+                    print('NOTE: alwaysOnTop is only available with the tkinter backend (TkAgg)')
+            except Exception as error:                          # noqa: BLE001
+                print('WARNING: results monitor could not stay on top: ' + str(error))
         #'constrained' re-computes the margins at every draw, so the axis labels stay inside the
         #window when the user makes it smaller; tight_layout() would only do it once, at creation
         self.figure.set_layout_engine('constrained')
@@ -700,12 +716,26 @@ class ResultsMonitor:
                         break
                 if self.panel is not None:
                     self.panel.ProcessEvents()
-                plt.pause(max(0.05, self.settings['updatePeriod']))
+                self._Wait(max(0.05, self.settings['updatePeriod']))
         except KeyboardInterrupt:
             print('\nresults monitor stopped')
         finally:
             self.Close()
         return self.nextFileName
+
+    def _Wait(self, seconds):
+        """let the backend work for a while, WITHOUT raising the window
+
+        plt.pause() calls show(block=False) every time, and for TkAgg show() does deiconify() and
+        lift() - so the window came to the front and took the focus once per update period, several
+        times a second, and the control panel beside it could not be used at all. start_event_loop
+        does the waiting and the event processing and nothing else.
+        """
+        try:
+            self.figure.canvas.draw_idle()
+            self.figure.canvas.start_event_loop(seconds)
+        except Exception:                #a backend without an event loop: the old way, focus and all
+            plt.pause(seconds)
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def Close(self):
@@ -887,7 +917,7 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
                    logX=None, logY=None, autoScale=None, addMarker=None,
                    colorVariations=False, variations=None,
                    sizeInches=None, lineColor=None, lineStyle=None, title='',
-                   showPanel=None, once=False, saveFigure='', waitTimeout=0.,
+                   showPanel=None, alwaysOnTop=None, once=False, saveFigure='', waitTimeout=0.,
                    searchDirectories=None, useSettingsFile=True):
     """Show the contents of an Exudyn results file while it is being written, and keep the plot
     up to date until the window is closed. This is the function behind
@@ -919,6 +949,8 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
         saveFigure: if not empty, write the figure to this file (png, pdf or svg)
         waitTimeout: seconds to wait for the first data row; 0 waits without limit
         searchDirectories: where to look for results files if `fileName` is None
+        alwaysOnTop: True keeps the plot window above other windows; it does NOT take the
+            keyboard focus either way, see the note below
         useSettingsFile: read and write the `resultsMonitor` section of
             `~/.exudyn/config.json`; False keeps the
                          defaults and changes nothing on disk
@@ -940,7 +972,8 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
     settings = LoadSettings() if useSettingsFile else dict(_defaultSettings)
     given = {'updatePeriod': updatePeriod, 'logX': logX, 'logY': logY, 'autoScale': autoScale,
              'addMarker': addMarker, 'sizeInches': sizeInches, 'lineColor': lineColor,
-             'lineStyle': lineStyle, 'showPanel': showPanel}
+             'lineStyle': lineStyle, 'showPanel': showPanel,
+             'alwaysOnTop': alwaysOnTop}
     for key, value in given.items():
         if value is not None:
             settings[key] = value
@@ -1154,6 +1187,9 @@ def _Parser():
     appearance.add_argument('--title', default='', help='name of the figure window')
     appearance.add_argument('--no-panel', action='store_true',
                             help='do not show the control panel next to the plot')
+    appearance.add_argument('--always-on-top', action='store_true',
+                            help='keep the plot window above other windows; it never takes the'
+                                 ' keyboard focus either way')
 
     behaviour = parser.add_argument_group('behaviour')
     behaviour.add_argument('-u', '--update', type=float, default=None, metavar='SECONDS',
@@ -1228,6 +1264,7 @@ def Main(argumentList=None):
         colorVariations=args.color_variations, variations=args.variations,
         sizeInches=sizeInches, lineColor=args.color, lineStyle=args.style, title=args.title,
         showPanel=False if args.no_panel else None,
+        alwaysOnTop=True if args.always_on_top else None,
         once=args.once, saveFigure=args.save, waitTimeout=args.wait,
         searchDirectories=args.dir, useSettingsFile=not args.no_settings)
     if monitor is None:

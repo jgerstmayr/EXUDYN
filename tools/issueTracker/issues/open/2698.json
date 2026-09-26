@@ -1,0 +1,13 @@
+{
+  "number": 2698,
+  "title": "the plot windows of PlotSensor cannot be stored while the renderer is still open",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-09-27, on revision2026b step RG12.12, which stores a plot window's position by its sequence: 'how could storing of positions work? the sensor windows are opened at a point when the renderer is usually already stopped (though this could also be done). Possibly there should be a script then from exudyn.misc.overrideSettings which would grab the according PlotSensor windows (which are matplotlib); possibly the matplotlib figures need to be stored in an internal list - either in plot.py or in exudyn.sys, cleared when doing closeAll; the figure references should get invalid on closing (that's what I think), and thus a function could then try to grab the current figure's positions and sizes and store them, allowing to reuse the size in the next PlotSensor commands. The positions could be stored either with the visualizationSettings dialog itself. In this case, the user must open the sensors before closing the render window.' What RG12.12 built: a plot window is PLACED where the window of the same sequence number was left, and its position is stored when it closes if PlotSensorDefaults().storeWindowPositions is on. What the maintainer is pointing at is the moment of storing: a close handler fires per window, whereas a user wants to arrange several windows and then store them all at once - and the settings dialog, which is the place where storing happens for everything else, is usually gone by then because the renderer has stopped. So the step is a FUNCTION a script or a dialog can call - 'store where the plot windows are now' - which needs the list of live figures that the maintainer describes: kept in plot.py, cleared by closeAll, and pruned of figures that have been closed. revision2026b step RG12.23.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "python/exudyn/plot.py"
+}

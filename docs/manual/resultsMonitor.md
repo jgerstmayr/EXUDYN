@@ -99,6 +99,12 @@ script or a test wants.
 
 An option given on the command line always wins over the stored setting.
 
+The monitor **does not take the keyboard focus** and does not come to the front while it updates. It
+did until 1.12.104, because the update used `matplotlib.pyplot.pause`, which raises and focuses the
+window every time it is called - once per update period - so the control panel beside the plot could
+not be typed into. If you *want* the window above the others, `--always-on-top` (or
+`alwaysOnTop=True`) does that, and it still leaves the keyboard where it was.
+
 ## In a script, in a test, on a server
 
 ```

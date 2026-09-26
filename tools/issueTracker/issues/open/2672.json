@@ -9,5 +9,6 @@
   "description": "Reported by the maintainer, 2026-09-26: StartResultsMonitor (revision2026b step RG11.3, #2670) does not work as promised. The cause is in MonitorResults: inside the 'while fileName != :' loop it tests 'if not os.path.exists(fileName): print(ERROR: file not found); return None' BEFORE WaitForData, and WaitForData only waits for a data ROW in a file that already exists. A monitor started before the solver - which is the point of StartResultsMonitor, and what springDamperTutorial.py and 3SpringsDistance.py both do - therefore prints an error and exits at once. The docstring of StartResultsMonitor and docs/manual/resultsMonitor.md both say the file does not have to exist yet, which is false. The fix is to move the existence test into the waiting loop so that --wait 0 waits for the file to appear, and to decide what --wait N means for a file that never appears.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "python/exudyn/misc/resultsMonitor.py"
+  "file": "python/exudyn/misc/resultsMonitor.py",
+  "workingRemarks": "Still failing on 2026-09-27, retried by the maintainer: 'I am not sure, if MonitorResults should work async already in the files - I tried, but it does not work.' It should, and that is what this issue is: the existence test stands before the waiting loop, so a monitor started before the solver exits at once. Unchanged since it was raised; RG11.3.1 is the step."
 }
