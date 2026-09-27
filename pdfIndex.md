@@ -56,6 +56,8 @@ that suit the needs they were written for, some are under development — which 
 says where it is the case — and some have bugs. Do not rely on any part of it blindly.
 ```
 
+<!-- the same pages in the same order as index.md, the table of contents of the HTML, except those
+     declared in tools/checkTocs.py; a page added there goes here too, or the check fails (#2697) -->
 ```{toctree}
 :maxdepth: 3
 :caption: Exudyn User Manual

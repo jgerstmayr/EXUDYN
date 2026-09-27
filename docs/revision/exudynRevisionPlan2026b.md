@@ -2401,7 +2401,9 @@ package).
     the LaTeX rule looks for the backslash, and the TAB had eaten it.
 
 <a id="rg3-26"></a>
-**RG3.26** *(group RG3; maintainer 2026-09-27)* **`index.md` and `pdfIndex.md` are two hand-written
+**RG3.26** *(group RG3; maintainer 2026-09-27)* **DONE 2026-09-27** —
+    [log](exudynRevisionLog2026b.md#rg3-26) — the maintainer chose **option B**, the check.
+    **`index.md` and `pdfIndex.md` are two hand-written
     tables of contents that must agree** (#2697). *"Maybe this is necessary, but it is really brittle
     and requires a clear indication to sync the toctrees ... The rest should be practically identical,
     if possible."*
@@ -2492,7 +2494,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG3.26 | #2697 | index.md and pdfIndex.md: how to keep them from drifting - options A, B, C (RG3.26.1 fixed the drift) |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 
 ### Raised by the current work, and not yet a step

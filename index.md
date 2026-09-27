@@ -18,6 +18,9 @@ Searching on Read the Docs: add `*` or `~1` / `~2` to a term to search more gene
 `FEMinter*` for `FEMinterface`, or `objectffrf~3` to find `ObjectFFRF`. The search preview finds
 fewer results than the search itself.
 
+<!-- pdfIndex.md is the table of contents of the PDF and lists the same pages in the same order,
+     except those declared in tools/checkTocs.py; a page added here goes there too, or the check
+     fails (#2697) -->
 ```{toctree}
 :maxdepth: 3
 :caption: Exudyn User Manual

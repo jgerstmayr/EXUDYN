@@ -5548,3 +5548,22 @@ the word `revision2026`, which is what RG3.13 had counted.
 **Gates**: the wheel, 11/11 checks (TIER 1 drift: a comment in `symbolic.pyi`), the full suite,
 pytest, the strict HTML build. Four generated pages of the Python utilities changed, because their
 docstrings carried the references and are published.
+
+<a id="rg3-26"></a>
+### RG3.26 — the two tables of contents are held together by a check (2026-09-27, #2697)
+
+The maintainer chose **option B**: both files stay hand-written, and `tools/checkTocs.py` compares
+the entries of their `{toctree}` blocks. What may differ is declared in the tool - `README`, the
+examples index and the test-models index are HTML only, nothing is PDF only - and **a declared entry
+that is no longer there is a finding too**, so the declaration cannot go stale while the files move on.
+
+**It finds what it was written for**: run against `pdfIndex.md` as it was before RG3.26.1, it reports
+the missing `performanceErrors`, the two pages listed as chapters only in the PDF, and *the order
+differs at entry 4* - the whole drift of #2702 in four lines. On the repository it reports nothing.
+
+It runs in `exudev generate --all-checks` beside `checkHeadings`, so the next page added to one file
+and not the other fails the gate of that commit. Both files say so in an HTML comment above their
+first toctree, which is where somebody adding a page is looking. Four tests
+(`test_checkTocs.py`), the first of them the drift that happened.
+
+**Gates**: 12/12 checks, the full suite, pytest, the strict HTML build.

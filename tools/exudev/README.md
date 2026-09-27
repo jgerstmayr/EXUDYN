@@ -22,7 +22,7 @@ three from any platform.
 
 | command | what it runs |
 |---|---|
-| `exudev generate [--check] [--no-run] [--all-checks]` | `tools/regenerate.py`; with `--all-checks` also `checkAll`, `checkExtras`, `checkPython`, `checkPython --stubs` and `gen_sources`, each with `--check` |
+| `exudev generate [--check] [--no-run] [--all-checks]` | `tools/regenerate.py`; with `--all-checks` also every `tools/check*.py` - `checkTocs` among them, which holds `index.md` and `pdfIndex.md` together - and `gen_sources`, each with `--check` |
 | `exudev build [--py P313] [--fast] [--complete]` | `pip wheel . -w dist --no-deps`, then installs exactly that wheel. **No clean, no regeneration, no docs, no tests** unless `--complete` |
 | `exudev test [--py] [--fast] [--parallel [N]]` | `runTestSuite.py`, always with `--exit-code` |
 | `exudev examples [--py] [--timeout S]` | `runTestExamples.py` (slow; default `venvP312`) |

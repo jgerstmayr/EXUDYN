@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.116.dev1
+- Exudyn version = 1.12.117.dev1
 - last change = 2026-09-27
 - Number of issues = 2704
-- Number of resolved issues = 2430 (116 in current version)
+- Number of resolved issues = 2431 (117 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7570,9 +7570,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `DOCU` `LOW EFF` `raised by: Claude-JG` 88 bare plan step numbers are left in comments and docstrings, without the word revision2026 (#2703)
   - description: Measured 2026-09-27 at the end of revision2026b step RG3.13.1 (\#2649), which removed every mention of 'revision2026' from the comments and docstrings of src/, tools/, python/ and definitions/: the same rule (CLAUDE.md rule 8, code cites the issue, not the plan step) is broken 88 more times in 39 files by step numbers written WITHOUT the plan's name - 'step R6.3.8', 'the rule RG6.2.11 wrote down', 'dies with the LaTeX branch in R7.1.7', 'measured before RG9.1'. They were out of RG3.13.1's measure, which counted 'revision2026'. The same three passes apply - a parenthetical keeps its issue, a two-line reference is rejoined, the rest gets a sentence - with the same proof that no code changed: the Python AST without docstrings and the C++ tokens without comments are identical. revision2026b step RG3.13.2.
-  - date raised: 2026-09-27
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` index.md and pdfIndex.md are two hand-written tables of contents that must agree (#2697)
-  - description: The maintainer, 2026-09-27: 'index.md and pdfIndex.md: I see that there are two files, which have different structure. Maybe this is necessary, but it is really brittle and requires a clear indication to sync the toctrees. The main difference - if I remember correctly - are the examples/models/etc. not to be included in PDF, and a different front page. The rest should be practically identical, if possible.' Measured on 2026-09-27, and it is more than that: index.md has 25 toctree entries and pdfIndex.md has 23. Only in index.md: README, docs/manual/performanceErrors, docs/generated/examples/examplesIndex, docs/generated/testModels/testModelsIndex. Only in pdfIndex.md: docs/manual/commandLine, docs/manual/resultsMonitor - which in the HTML are nested under introductionAdvanced instead. And the ORDER of the entries they share is not the same. So the examples and the front page are the intended differences; performanceErrors missing from the PDF and the different nesting and order are not, and nothing tells anybody when they drift again. Options for the step: generate pdfIndex.md from index.md with a declared list of exclusions (then one file is the truth and the other is a build product, which also needs a rule for the front page); or keep both and add a check to tools/ that compares the two entry lists against a declared difference, which is cheap and catches drift on the next commit; or accept the difference and document it at the top of both files. revision2026b step RG3.26.
   - date raised: 2026-09-27
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
