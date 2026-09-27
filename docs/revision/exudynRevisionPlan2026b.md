@@ -2641,6 +2641,12 @@ package).
     anything); the button and label columns of a dialog keep their width, and only the slider column
     gives when the window is narrower than the dialog asks for.
 
+<a id="rg12-28"></a>
+**RG12.28** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2723) —
+    [log](exudynRevisionLog2026b.md#rg12-28) — **PlotSensor opens at the stored size**: the default
+    `sizeInches` no longer resizes a window that was given its stored size; a `sizeInches` given in
+    the script still wins.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a

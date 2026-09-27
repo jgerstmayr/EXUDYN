@@ -176,6 +176,9 @@ def __PlacePlotWindow(fig):
     ~/.exudyn/config.json section the dialogs use (#2608). The size is the window's
     own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored.
     Backend-dependent, so anything it cannot do it leaves alone.
+
+    Returns True if it gave the window a stored size, which the caller must then not overwrite with
+    the default sizeInches (#2723)
     """
     __plotWindowCount[0] += 1
     number = __plotWindowCount[0]
@@ -186,7 +189,7 @@ def __PlacePlotWindow(fig):
         name = __PlotWindowName(number)
         window = __PlotWindowOf(fig)
         if window is None:
-            return                              #a backend without a window: nothing to place
+            return False                        #a backend without a window: nothing to place
 
         (size, position) = overrideSettings.DialogGeometry(name)
         if position is not None:
@@ -208,9 +211,10 @@ def __PlacePlotWindow(fig):
                     window.resize(int(size[0]), int(size[1]))
                 if position is not None and hasattr(window, 'move'):
                     window.move(int(position[0]), int(position[1]))
+        sizeApplied = size is not None
 
         if not __plotSensorDefaults.storeWindowPositions:
-            return
+            return sizeApplied
         #AND WHERE IT ENDS UP, when it closes: the geometry cannot be read afterwards. This is the
         #automatic half; StorePlotWindowGeometry() is the one a user asks for
         def Store(event=None):
@@ -220,9 +224,11 @@ def __PlacePlotWindow(fig):
                 exudyn.Print('WARNING: PlotSensor could not store the window position: ' + str(error))
 
         fig.canvas.mpl_connect('close_event', Store)
+        return sizeApplied
     except Exception as error:                              # noqa: BLE001
         #a plot must never fail because of where its window is
         exudyn.Print('WARNING: PlotSensor could not place the window: ' + str(error))
+        return False
 
 
 #WHAT THE OVERRIDE SETTINGS SAY: the `plotSensor` section of
@@ -492,6 +498,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
         majorTicksX = __plotSensorDefaults.majorTicksX
     if majorTicksY is None:
         majorTicksY = __plotSensorDefaults.majorTicksY
+    sizeInchesGiven = sizeInches is not None      #a size given in the script wins over a stored one
     if sizeInches is None:
         sizeInches = __plotSensorDefaults.sizeInches
 
@@ -568,15 +575,16 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
     fig=None
     ax=None
     line=None
+    storedSizeApplied = False
     if nSensors:
         if figureName!='':
             if newFigure and plt.fignum_exists(figureName):
                 plt.close(figureName)
             fig = plt.figure(figureName)
-            __PlacePlotWindow(fig)
+            storedSizeApplied = __PlacePlotWindow(fig)
         elif newFigure:
             fig = plt.figure()
-            __PlacePlotWindow(fig)
+            storedSizeApplied = __PlacePlotWindow(fig)
         else:
             if IsEmptyList(plt.get_fignums()):
                 exudyn.Print('WARNING: PlotSensor(...,newFigure=False):  no existing figure was found, creating new figure')
@@ -593,7 +601,9 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
             [subNx, subNy, subPos] = subPlot
             fig.add_subplot(subNy, subNx, subPos)
             fig.set_size_inches(subNx*sizeInches[0],subNy*sizeInches[1], forward=True)
-        else:
+        elif sizeInchesGiven or not storedSizeApplied:
+            #not over a stored window size: forward=True resizes the window, and the stored size
+            #was lost to the default this way (#2723)
             fig.set_size_inches(sizeInches[0],sizeInches[1], forward=True)
 
     sensorFileNames = [] #for loading of files

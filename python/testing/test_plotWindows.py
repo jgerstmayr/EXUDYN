@@ -170,3 +170,26 @@ def testAQtWindowIsListedAndStoredByItsSize(settingsFile):
     dialogs = overrideSettings.Load()['dialogs']
     assert dialogs[overrideSettings.DialogKey('PlotSensor 1')] == {'size': [640, 480],
                                                                   'position': [10, 20]}
+
+
+class StubQtWindowThatMoves(StubQtWindow):
+    def resize(self, width, height):
+        (self._width, self._height) = (width, height)
+
+    def move(self, x, y):
+        (self._x, self._y) = (x, y)
+
+
+def testAStoredSizeIsAppliedAndReportedSo(settingsFile):
+    """the placing says that it applied a stored size, which PlotSensor then does not overwrite with
+    the default sizeInches - what made a stored size come back as 6.4 x 4.8 inches (#2723)"""
+    overrideSettings.StoreDialogGeometry('PlotSensor 1', [900, 700], [100, 200])
+    plot.__plotWindowFigures.clear()
+    plot.__plotWindowCount[0] = 0
+    window = StubQtWindowThatMoves(640, 480, 0, 0)
+    assert plot.__PlacePlotWindow(StubFigure(window)) is True
+    assert (window.width(), window.height(), window.x(), window.y()) == (900, 700, 100, 200)
+
+    tkWindow = StubWindow('640x480+0+0')                      #PlotSensor 2: nothing stored
+    assert plot.__PlacePlotWindow(StubFigure(tkWindow)) is False
+    assert tkWindow.geometry() == '640x480+0+0'

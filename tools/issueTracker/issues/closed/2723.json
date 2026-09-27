@@ -1,0 +1,16 @@
+{
+  "number": 2723,
+  "title": "PlotSensor does not apply the stored window size: the default sizeInches overwrites it",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27, V1.12.132: the size of a PlotSensor window is stored correctly by store positions, but a new PlotSensor opens at the default size. __PlacePlotWindow resizes the window to the stored size, and PlotSensor then calls fig.set_size_inches(sizeInches, forward=True) with the default 6.4 x 4.8 inches, which resizes the window again. A size given in the script (sizeInches=...) still wins, as for the dialogs and the render window. revision2026b step RG12.28.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 23:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/plot.py",
+  "releaseNotes": "PlotSensor opens a window at the size stored for it by store positions; before, the default sizeInches overwrote it. A sizeInches given in the script still wins.",
+  "resolvedInVersion": "1.12.133"
+}

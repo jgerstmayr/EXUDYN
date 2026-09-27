@@ -6047,3 +6047,19 @@ positions**. Two findings:
   of them before.
 
 The window positions themselves are for the maintainer's hands again: the fix is tested on stubs.
+
+<a id="rg12-28"></a>
+### RG12.28 — PlotSensor opens at the stored size (2026-09-27, #2723)
+
+The maintainer, after RG12.27: store positions stores the PlotSensor windows, position and size -
+checked with different sizes in `config.json` - but a new PlotSensor opened at the stored position
+and the **default** size. `__PlacePlotWindow` resized the window to the stored size, and two lines
+later `PlotSensor` called `fig.set_size_inches(sizeInches, forward=True)` with the default 6.4 x 4.8
+inches, and `forward=True` resizes the window. It had never shown, because no size was stored before
+RG12.25.
+
+`__PlacePlotWindow` returns now whether it applied a stored size, and `PlotSensor` sets the figure
+size only if it did not, or if `sizeInches` was given in the script - the rule of the dialogs and
+the render window: the script wins over what is stored. A figure with sub plots, which does not
+place a window, is unchanged. A test places a stub Qt window with a stored size and a stub tkinter
+window without one; on the screen it is for the maintainer to see.

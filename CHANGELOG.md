@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 129 | 1.12.132 |
+| 1.12 | Metheney | 130 | 1.12.133 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.133** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotSensor does not apply the stored window size: the default sizeInches overwrites it (#2723)
+  - description: The maintainer, 2026-09-27, V1.12.132: the size of a PlotSensor window is stored correctly by store positions, but a new PlotSensor opens at the default size. \_\_PlacePlotWindow resizes the window to the stored size, and PlotSensor then calls fig.set\_size\_inches(sizeInches, forward=True) with the default 6.4 x 4.8 inches, which resizes the window again. A size given in the script (sizeInches=...) still wins, as for the dialogs and the render window. revision2026b step RG12.28.
+  - **notes:** PlotSensor opens a window at the size stored for it by store positions; before, the default sizeInches overwrote it. A sizeInches given in the script still wins.
+  - date resolved: **2026-09-27 23:36**, date raised: 2026-09-27
 - **1.12.132** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` store positions fails with Qt plot windows (QRect is not a geometry string), so no PlotSensor window is stored; the SolutionViewer loses its button column when narrower than its slider (#2722)
   - description: The maintainer, 2026-09-27, V1.12.131 in Spyder (QtAgg): pressing store positions in the settings dialog with two PlotSensor windows open raised 'TypeError: can only concatenate str (not QRect) to str' in OnStorePositions, and no window opened, so nothing was stored. A Qt window has geometry() too, returning a QRect, and PlotWindowGeometries and the storing of a plot window took any window with geometry() for tkinter. Second: the SolutionViewer, resized narrower than its 1200-pixel slider asks for, lost its third column (Static, Make mp4): Tk takes the missing width from the weighted columns, down to nothing, and every column right of the first was weighted. revision2026b step RG12.27.
   - **notes:** The store positions button of the settings dialog lists and stores PlotSensor windows of the Qt backend (Spyder); before, it failed with a TypeError and stored nothing. An interactive dialog that is narrower than its sliders ask for keeps its button and label columns; only the sliders give. The sliders of the SolutionViewer and of AnimateModes reach the last column.
