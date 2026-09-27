@@ -127,7 +127,7 @@ if computeDynamic:
     mbs.SolveDynamic(simulationSettings)
 
 else:
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = "staticSolution.txt"
+    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/staticSolution.txt"
     simulationSettings.solutionSettings.appendToFile = False
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
     #simulationSettings.staticSolver.newton.relativeTolerance = 1e-6

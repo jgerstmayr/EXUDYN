@@ -140,7 +140,7 @@ u = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position) #tip node
 errorSliderCrankIndex3 = u[0] - 1.3513750614331235 #x-position of slider
 print('error errorSliderCrankIndex3=',errorSliderCrankIndex3)
 
-dataIndex3 = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
+dataIndex3 = np.loadtxt(OutputFilePath('solution/coordinatesSolution.txt'), comments='#', delimiter=',')
 
 #++++++++++++++++++++++++++++++++++++++++++
 ##solve index 2 / trapezoidal rule:
@@ -153,7 +153,7 @@ dataIndex3 = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#',
 #errorSliderCrankIndex2 = u[0] - 1.3528786319585837 #x-position of slider
 #print('error errorSliderCrankIndex2=',errorSliderCrankIndex2)
 #
-#dataIndex2 = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
+#dataIndex2 = np.loadtxt(OutputFilePath('solution/coordinatesSolution.txt'), comments='#', delimiter=',')
 #plt.plot(dataIndex2[:,0], dataIndex2[:,1+globalIndex], 'r-') #plot x-coordinate of slider
 
 plt.plot(dataIndex3[:,0], dataIndex3[:,1+globalIndex], 'b-') #plot x-coordinate of slider
@@ -166,7 +166,7 @@ plt.tight_layout()
 plt.show() 
 
 ##animate solution
-#fileName = 'coordinatesSolution.txt'
-#solution = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
+#fileName = 'solution/coordinatesSolution.txt'
+#solution = LoadSolutionFile(OutputFilePath('solution/coordinatesSolution.txt'))
 #AnimateSolution(mbs, solution, 10, 0.05)
 

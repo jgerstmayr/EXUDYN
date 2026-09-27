@@ -574,6 +574,20 @@ when a run behaves differently than it reads:
 | `EXUDYN_MODULE` | `fast` loads `exudynCPPfast` - no range checks, AVX2 - instead of the regular module; it belongs to release testing, because without range checks a wrong index is undefined behaviour instead of an exception |
 | `EXUDYN_IMPORT_VERBOSE` | 1 prints which compiled module was tried and what came of it, which is the whole answer to *it imports the wrong one* |
 
+**Setting one for every run in Spyder**: Spyder starts its consoles itself, so a variable is set
+where a console starts. In *Tools > Preferences > IPython console > Startup*, under *Run code*, the
+lines
+
+```python
+import os; os.environ['EXUDYN_OUTPUTDIRECTORY'] = 'solution'
+```
+
+make every run of a restarted console write its output into `solution/` beside the script it runs -
+with the working directory set to the directory of the file being executed, which is Spyder's
+default. A script that writes to `solution/...` itself then writes to `solution/solution/...`.
+Outside Spyder, `setx EXUDYN_OUTPUTDIRECTORY solution` sets the variable for every program the user
+starts afterwards.
+
 `EXUDYN_NO_USER_SETTINGS=1` is also what makes a problem reproducible on a machine that has
 stored something: run the script with the variable set and the difference is either gone (the
 stored setting caused it) or still there (it did not).

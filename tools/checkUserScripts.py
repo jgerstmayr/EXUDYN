@@ -12,7 +12,10 @@
 #   - a function, method or setting that is DEPRECATED, with what to use instead - read from
 #     definitions/, so that the list is the one the documentation is generated from;
 #   - a setting or a function that is REMOVED;
-#   - a submodule used through 'exu.<submodule>' that 'import exudyn' does not load.
+#   - a submodule used through 'exu.<submodule>' that 'import exudyn' does not load;
+#   - a file the script writes without naming a directory - a solution file, a sensor file, the
+#     results of a parameter variation - which lands beside the script, and the default solution
+#     file read back by its old name: the files a run writes by default are in solution/ (#2718).
 # It checks every .py file under the folders it is given that imports exudyn; the others are counted
 # and skipped. A file that does not parse - Python 2, say - is reported as such.
 #
@@ -128,6 +131,20 @@ replacements = {
     ('MainSystem', 'WaitForUserToContinue'): 'SC.renderer.DoIdleTasks()',
     ('SystemContainer', 'WaitForRenderEngineStopFlag'): 'SC.renderer.DoIdleTasks()',
     }
+
+#THE FILES A RUN WRITES BY DEFAULT are in solution/ (#2718): these were their names before
+formerDefaultFiles = {
+    'coordinatesSolution.txt': 'solution/coordinatesSolution.txt',
+    'coordinatesSolution.sol': 'solution/coordinatesSolution.sol',
+    'coordinatesSolution':     'solution/coordinatesSolution',
+    'solverInformation.txt':   'solution/solverInformation.txt',
+    'restartFile.txt':         'solution/restartFile.txt',
+    }
+
+#WHERE A SCRIPT NAMES A FILE IT WRITES: a setting, or a keyword argument of a function
+outputSettings = ['coordinatesSolutionFileName', 'solverInformationFileName', 'restartFileName',
+                  'saveImageFileName']
+outputKeywords = {'fileName': 'Sensor', 'resultsFile': ''}   #keyword -> the call must contain this
 
 #ARGUMENTS THAT ARE GONE
 removedKeywords = {
@@ -294,6 +311,22 @@ def AttributeChain(node):
     return None
 
 
+def LeadingString(node):
+    """the first literal piece of a file name: 'a.txt', 'dir/' + name, f'dir/{x}.txt' - or None"""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        return LeadingString(node.left)
+    if isinstance(node, ast.JoinedStr) and node.values and isinstance(node.values[0], ast.Constant):
+        return str(node.values[0].value)
+    return None
+
+
+def IsLocal(name):
+    """True if a file name has no directory: the file lands where the script runs"""
+    return name != '' and '/' not in name and chr(92) not in name
+
+
 def CheckTree(tree, tables):
     """the findings of one parsed script: [(line, text)]"""
     findings = []
@@ -373,6 +406,34 @@ def CheckTree(tree, tables):
         elif isinstance(node, ast.keyword) and node.arg in removedKeywords:
             Report(node.value.lineno, ('keyword', node.arg), "argument '" + node.arg
                    + "' is removed: " + removedKeywords[node.arg])
+
+    #WHERE THE FILES GO (#2718): a file named without a directory is written where the script runs,
+    #and the default solution files are in solution/ now, so a script that reads one of them by its
+    #old name reads nothing - unless it writes that name itself
+    (written, insideTargets) = (set(), set())
+    for node in ast.walk(tree):
+        target = None
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and                 isinstance(node.targets[0], ast.Attribute) and node.targets[0].attr in outputSettings:
+            (target, what) = (node.value, node.targets[0].attr)
+        elif isinstance(node, ast.Call):
+            name = getattr(node.func, 'attr', getattr(node.func, 'id', ''))
+            for keyword in node.keywords:
+                if keyword.arg in outputKeywords and outputKeywords[keyword.arg] in name:
+                    (target, what) = (keyword.value, name + '(' + keyword.arg + '=...)')
+        if target is None:
+            continue
+        leading = LeadingString(target)
+        insideTargets.update(id(part) for part in ast.walk(target))
+        if isinstance(target, ast.Constant):
+            written.add(target.value)
+        if leading is not None and IsLocal(leading):
+            Report(target.lineno, ('local', target.lineno), what + " writes '" + leading
+                   + ("..." if not isinstance(target, ast.Constant) else '') + "' where the script "
+                   "runs; name a directory: 'solution/" + leading + ("...'" if not isinstance(target, ast.Constant) else "'"))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)                 and node.value in formerDefaultFiles and node.value not in written                 and id(node) not in insideTargets:
+            Report(node.lineno, ('default', node.value), "'" + node.value + "' is not where Exudyn "
+                   "writes it any more; the default is '" + formerDefaultFiles[node.value] + "'")
 
     return sorted(findings)
 

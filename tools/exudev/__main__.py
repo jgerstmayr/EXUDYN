@@ -354,7 +354,8 @@ def BuildParsers():
                     'per file and line, what an earlier Exudyn let it do and this one does not: names '
                     'that a star import no longer provides, removed names and settings, deprecated '
                     'functions and settings with their replacement, submodules used without their '
-                    'import. Nothing is run and nothing is changed (#2712).')
+                    'import, and files written beside the script instead of into a directory. '
+                    'Nothing is run and nothing is changed (#2712, #2718).')
     scripts.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
     scripts.add_argument('--check', action='store_true', help='fail if anything was found')
     scripts.set_defaults(function=commands.Scripts)

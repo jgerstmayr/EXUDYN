@@ -441,7 +441,7 @@ The `SolutionViewer` adds a `tkinter` interactive dialog, which lets you interac
 - Since Exudyn V1.9.83, the button 'Make mp4' allows to directly generate animation files, see next section.
 
 The solution should be loaded with
-`LoadSolutionFile('coordinatesSolution.txt')`, where 'coordinatesSolution.txt' represents the stored solution file,
+`LoadSolutionFile('solution/coordinatesSolution.txt')`, where 'solution/coordinatesSolution.txt' is the default solution file,
 see
 
 - `exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName`
@@ -450,7 +450,7 @@ You can call the `SolutionViewer` either in the model, or at the command line / 
 
 ```python
   from exudyn.utilities import LoadSolutionFile
-  sol = LoadSolutionFile('coordinatesSolution.txt')
+  sol = LoadSolutionFile('solution/coordinatesSolution.txt')
   mbs.SolutionViewer(solution=sol)
 ```
 

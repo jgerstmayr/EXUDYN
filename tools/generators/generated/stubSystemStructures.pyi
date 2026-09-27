@@ -39,7 +39,7 @@ class SolutionSettings:
     binarySolutionFile: bool
     """if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files."""
     coordinatesSolutionFileName: str
-    """filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)."""
+    """filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)."""
     exportAccelerations: bool
     """add ODE2 accelerations to solution file (coordinatesSolutionFile)."""
     exportAlgebraicCoordinates: bool
@@ -59,7 +59,7 @@ class SolutionSettings:
     recordImagesInterval: float
     """record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()."""
     restartFileName: str
-    """filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart."""
+    """filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart."""
     restartWritePeriod: float
     """time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance."""
     sensorsAppendToFile: bool

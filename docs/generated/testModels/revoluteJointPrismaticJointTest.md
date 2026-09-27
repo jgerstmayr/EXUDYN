@@ -162,7 +162,7 @@ else:
 mbs.SolveDynamic(simulationSettings, showHints=True)
 
 if False: #use this to reload the solution and use SolutionViewer
-    sol = LoadSolutionFile('coordinatesSolution.txt')
+    sol = LoadSolutionFile('solution/coordinatesSolution.txt')
     
     mbs.SolutionViewer(sol)
 

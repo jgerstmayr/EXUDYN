@@ -2597,6 +2597,16 @@ package).
     handler cannot do.
 
 
+<a id="rg12-24"></a>
+**RG12.24** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2718) —
+    [log](exudynRevisionLog2026b.md#rg12-24) — **The files a run writes by default go into
+    `solution/`**, and the scripts that write beside themselves are found. The solution file, the
+    solver information and the restart file default to `solution/...`; `exudev scripts` reports a file
+    a script names without a directory and the default solution file read back by its old name; the
+    repository's scripts follow, and neither the examples nor the test models write a file beside a
+    script any more. The other way the maintainer named - the output directory set in Spyder - is
+    documented beside the environment variables.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
@@ -2633,6 +2643,11 @@ What depends on it: the graphics regression test takes every item through its Mi
     `checkDefinitions` can report *"the implementation of ObjectJointRevoluteZ changed since its
     description was checked"*. The mark then means what a reader assumes it means, and a change to an
     item's C++ brings its description back into view in the commit that made it.
+
+    **Decided (maintainer, 2026-09-27)**: *"the fingerprint is cool! yes, should be added. With a
+    simple way to compute a new fingerprint after a change"* - the check reports the old and the new
+    fingerprint, and after the description has been looked at again, the new one replaces the old
+    one: one command, not a hand edit of a hash.
 
 ## Next steps recommended
 

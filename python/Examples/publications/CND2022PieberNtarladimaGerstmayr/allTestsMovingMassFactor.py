@@ -348,14 +348,14 @@ for x in range(nb):
         
         if eigenValues==False:
             if examplePipe:
-                mbs.AddSensor(SensorBody(bodyNumber=cableList[round(len(cableList)-1)], localPosition=[lElem,0.,0.], fileName='displacementPoint.txt', 
+                mbs.AddSensor(SensorBody(bodyNumber=cableList[round(len(cableList)-1)], localPosition=[lElem,0.,0.], fileName='solution/displacementPoint.txt', 
                                             outputVariableType=exu.OutputVariableType.Position))
                 
             if exampleBeam:
-                mbs.AddSensor(SensorBody(bodyNumber=cableList[int(0.25*L/(L/nElements))], localPosition=[0.25*L-L/nElements*int(0.25*L/(L/nElements)),0,0], fileName='displacementPoint.txt', 
+                mbs.AddSensor(SensorBody(bodyNumber=cableList[int(0.25*L/(L/nElements))], localPosition=[0.25*L-L/nElements*int(0.25*L/(L/nElements)),0,0], fileName='solution/displacementPoint.txt', 
                                             outputVariableType=exu.OutputVariableType.Position))
             
-            mbs.AddSensor(SensorObject(objectNumber=oCC, fileName='vALE.txt',
+            mbs.AddSensor(SensorObject(objectNumber=oCC, fileName='solution/vALE.txt',
                                        outputVariableType=exu.OutputVariableType.Velocity)) 
 
         mbs.Assemble()
@@ -478,11 +478,11 @@ for x in range(nb):
                 SC.renderer.DoIdleTasks()
                 SC.renderer.Stop() #safely close rendering window!        
         
-            data0 = np.loadtxt('displacementPoint.txt', comments='#', delimiter=',') 
+            data0 = np.loadtxt('solution/displacementPoint.txt', comments='#', delimiter=',') 
             
             plt.close()
             if plotVALE:
-                data1 = np.loadtxt('vALE.txt', comments='#', delimiter=',') 
+                data1 = np.loadtxt('solution/vALE.txt', comments='#', delimiter=',') 
                 plt.figure()
                 plt.plot(data1[:,0],data1[:,1])
                 plt.xlabel(r'time in s',fontsize=fontSize)

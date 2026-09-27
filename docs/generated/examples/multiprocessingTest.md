@@ -58,7 +58,7 @@ def TestExudyn(x):
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = "coordinatesSolution"+str(int(x))+".txt"
+    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolution"+str(int(x))+".txt"
     simulationSettings.solutionSettings.writeSolutionToFile = True #no concurrent writing to files ...!
     #SC.renderer.Start() #don't do this in parallelization: will crash
     mbs.SolveDynamic(simulationSettings)

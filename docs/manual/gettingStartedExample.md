@@ -24,7 +24,7 @@ If successful, the IPython Console of Spyder will print something like:
   solver finished after 0.0007824 seconds.
 ```
 
-If you check your current directory (where `myFirstExample.py` lies), you will find a new file `coordinatesSolution.txt`, which contains the results of your computation (with default values for time integration).
+If you check your current directory (where `myFirstExample.py` lies), you will find a new directory `solution` with the file `coordinatesSolution.txt`, which contains the results of your computation (with default values for time integration). Every file a run writes by default goes there, so that nothing is written beside your script.
 The beginning and end of the file should look like: \
 
 ```python

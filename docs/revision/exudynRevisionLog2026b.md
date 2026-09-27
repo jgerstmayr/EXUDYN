@@ -5774,3 +5774,48 @@ this step did not touch, failed once with netgen's *"Could not allocate localhea
 longer tracked, and `.gitignore` ignores `coordinatesSolution.txt` and `.sol` wherever they are
 written: the default solution file name of the simulation settings has no directory, so a model run
 from any folder writes it there.
+
+<a id="rg12-24"></a>
+### RG12.24 — the files a run writes by default go into solution/ (2026-09-27, #2718)
+
+The maintainer, on the stray `coordinatesSolution.txt` files: *"This is the problem that still examples
+write into the root instead of solution"* - and, once the cause was named, *"as we anyway made some
+small API changes, this would be the right time to resolve"*.
+
+**The cause** is one default: `solutionSettings.coordinatesSolutionFileName` was `coordinatesSolution`,
+without a directory, so every model that did not name its solution file wrote it beside itself. It is
+`solution/coordinatesSolution` now, and **`solverInformationFileName` and `restartFileName` go with
+it**, to `solution/solverInformation.txt` and `solution/restartFile.txt`. The directory is created when
+the file is written, as before.
+
+**Measured before the change**, in the output folders the two runners give each model: the examples
+suite wrote **91 files beside the script, every one of them the default solution file** (86 `.txt`, 5
+`.sol`) - no sensor file among them. **After it, both suites write nothing beside a script**: the
+top level of all 141 example output folders and of all test model output folders is empty, and
+everything is under `solution/`.
+
+**What a script has to change, and how it is found.** `exudev scripts` learned two findings:
+
+- a file the script **names without a directory** - `coordinatesSolutionFileName`,
+  `solverInformationFileName`, `restartFileName`, `saveImageFileName`, a sensor's `fileName=`, the
+  `resultsFile=` of the processing functions - including a computed name whose first piece has no
+  directory (`'info' + str(i) + '.txt'`);
+- the **default solution file read back by its old name** - `LoadSolutionFile('coordinatesSolution.txt')`,
+  `np.loadtxt(OutputFilePath('coordinatesSolution.txt'))`, a `PlotSensor` of it - unless the script
+  writes that name itself.
+
+Over the repository: **22 findings in 19 files**, all fixed. Twelve examples and two test models read
+the default solution file by its old name, which **the new default would have broken** - that is what
+the maintainer's *"needs to be consistently changed in a script then"* meant, and why the check came
+before the change. Seven scripts set a solution file name without a directory, and one publication
+example wrote two sensor files beside itself and read them back. The processing functions have no
+default file name, and every `resultsFile` in the repository already names a directory.
+
+**For a user**: `revisions.md` says what changed and what `exudev scripts` finds; the tutorials, the
+getting-started example, the GUI chapter and the `SolutionViewer` docstring read
+`solution/coordinatesSolution.txt`. **The other way** the maintainer named - setting the output
+directory once in Spyder - is in the documentation of the environment variables of the Exudyn
+module: the *Run code* startup line of the IPython console, and `setx` outside Spyder.
+
+Two more tests of the checker (13). **Gates**: the wheel, 12/12 checks, the full suite, the examples
+(169 of 170; the known `rendererNOGLFWexample.py`), pytest, the strict HTML build.

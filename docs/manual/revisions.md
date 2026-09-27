@@ -51,6 +51,13 @@ in `exudyn.graphics`.
 `advancedUtilities` and `mainSystemExtensions`. A script that imports from `exudyn.utilities` in
 the usual way notices nothing.
 
+**The files a run writes by default are in `solution/`**: the solution file is
+`solution/coordinatesSolution.txt`, and the solver information and the restart file are there as
+well, so that a run writes nothing beside the script. A script that reads the solution file back as
+`'coordinatesSolution.txt'` reads the new name `'solution/coordinatesSolution.txt'` instead; a script
+that sets its own file names keeps them. `exudev scripts <folder>` finds both, and every file a script
+names without a directory.
+
 **Item dictionaries are more forgiving, not less**: a parameter that is left out keeps its default
 or its current value, where it used to raise `KeyError`.
 

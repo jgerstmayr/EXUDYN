@@ -1309,11 +1309,11 @@ mbs.PlotSensor(...)
 *example*:
 
 ```python
-  #HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
+  #HERE, mbs must contain same model as solution stored in solution/coordinatesSolution.txt
   #adjust autoFitScence, otherwise it may lead to unwanted fit to scene
   SC.visualizationSettings.general.autoFitScene = False
   from exudyn.interactive import SolutionViewer #import function
-  sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
+  sol = LoadSolutionFile('solution/coordinatesSolution.txt') #the default solution file
   mbs.SolutionViewer(sol) #call via MainSystem
 ```
 

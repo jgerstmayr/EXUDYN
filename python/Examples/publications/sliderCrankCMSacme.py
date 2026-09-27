@@ -421,7 +421,7 @@ SC.visualizationSettings.loads.defaultRadius= 0.001
 #SC.visualizationSettings.openGL.multiSampling = 4
 
 simulationSettings.solutionSettings.solutionInformation = "Slidercrank ACME "+solutionLabel
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "coordinates"+solutionLabel+".txt"
+simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinates"+solutionLabel+".txt"
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.displayComputationTime = True
 

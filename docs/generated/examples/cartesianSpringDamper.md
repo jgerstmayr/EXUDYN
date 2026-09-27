@@ -100,7 +100,7 @@ print('refSol=',refSol[steps,1])
 print('error exact-numerical=',refSol[steps,1] - uCSD)
 
 ## compare Exudyn with analytical solution:
-mbs.PlotSensor(['coordinatesSolution.txt', refSol],
+mbs.PlotSensor(['solution/coordinatesSolution.txt', refSol],
                 components=[0,0], yLabel='displacement',
                 labels=['Exudyn','analytical'])
 ```

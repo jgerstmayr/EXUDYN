@@ -73,7 +73,7 @@ for i in range( len(stepSizeList) ):
     mbs = SC.AddSystem()
     
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'BASpringDamperSystem h=' + str(stepSizeList[i]) + '.txt'
+    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/BASpringDamperSystem h=' + str(stepSizeList[i]) + '.txt'
     
     print(int( tEnd/stepSizeList[i] ) )
     

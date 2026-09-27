@@ -69,7 +69,7 @@ simulationSettings.timeIntegration.adaptiveStep = False
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName= "coordinatesSolution.txt"
+simulationSettings.solutionSettings.coordinatesSolutionFileName= "solution/coordinatesSolution.txt"
 
 
 simulationSettings.displayComputationTime = False

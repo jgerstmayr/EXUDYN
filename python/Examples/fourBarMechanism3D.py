@@ -185,7 +185,7 @@ for case in cases:
 
 
 if False:
-    sol = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
+    sol = LoadSolutionFile(OutputFilePath('solution/coordinatesSolution.txt'))
     
     mbs.SolutionViewer(sol)
 

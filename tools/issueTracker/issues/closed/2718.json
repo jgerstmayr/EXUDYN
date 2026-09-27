@@ -1,0 +1,16 @@
+{
+  "number": 2718,
+  "title": "the files a run writes by default go into solution/, and scripts that write beside themselves are found",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-09-27: examples still write into the folder of the script instead of solution/, because the default solution file name 'coordinatesSolution' has no directory. As small API changes are made anyway, this is the time: coordinatesSolutionFileName, solverInformationFileName and restartFileName default to solution/...; a script that sets such a name itself, or reads the solution file back by its old name, has to be changed consistently, and exudev scripts finds both; sensors, the resultsFile of the processing functions and exported images write wherever the script names them, so the scripts of the repository are checked for names without a directory, and the example and test suites show what still lands beside a script. revision2026b step RG12.24.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 18:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsSimulationSettings.py",
+  "releaseNotes": "The files a run writes by default are in the directory solution/: the solution file is solution/coordinatesSolution.txt, and the solver information and the restart file are there too, so a run writes nothing beside the script. A script that reads the solution file back as 'coordinatesSolution.txt' has to read 'solution/coordinatesSolution.txt'; exudev scripts finds that, and every file a script names without a directory. The documentation of the environment variables says how Spyder sets an output directory for every run.",
+  "resolvedInVersion": "1.12.128"
+}

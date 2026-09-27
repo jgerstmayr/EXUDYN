@@ -187,7 +187,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 if useGraphics:
-    data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
+    data = np.loadtxt(OutputFilePath('solution/coordinatesSolution.txt'), comments='#', delimiter=',')
     n=steps
     plt.rcParams.update({'font.size': 24})
 

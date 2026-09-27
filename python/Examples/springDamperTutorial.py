@@ -128,7 +128,7 @@ for i in range(0,steps+1):
     refSol[i,0] = t
     refSol[i,1] = np.exp(-omega0*dRel*t)*(C1*np.cos(omega*t) + C2*np.sin(omega*t))+x0
 
-data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
+data = np.loadtxt(OutputFilePath('solution/coordinatesSolution.txt'), comments='#', delimiter=',')
 plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
 plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
 

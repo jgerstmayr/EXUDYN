@@ -241,8 +241,8 @@ for testCases in rangeTests:
         #+++++++++++++++++++++++++++++++++++++
         #animate solution
 #        mbs.WaitForUserToContinue
-#        fileName = 'coordinatesSolution.txt'
-#        solution = LoadSolutionFile('coordinatesSolution.txt')
+#        fileName = 'solution/coordinatesSolution.txt'
+#        solution = LoadSolutionFile('solution/coordinatesSolution.txt')
 #        AnimateSolution(mbs, solution, 10, 0.025, True)
         #+++++++++++++++++++++++++++++++++++++
 
@@ -261,7 +261,7 @@ exu.sys['testResult'] = solutionSliderCrankIndex2
 #plotResults = True#constrainGroundBody #comparison only works in case of fixed ground
 plotResults = (not testIsActive)#constrainGroundBody #comparison only works in case of fixed ground
 if plotResults:
-    dataIndex2 = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+    dataIndex2 = np.loadtxt('solution/coordinatesSolution.txt', comments='#', delimiter=',')
     #dataMatlab = np.loadtxt('slidercrankRefSolM0.1_tol1e-4.txt', comments='#', delimiter=',') #this is quite inaccurate
     dataMatlab2 = np.loadtxt('slidercrankRefSolM0.1_tol1e-6.txt', comments='#', delimiter=',')
                             

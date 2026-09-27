@@ -227,14 +227,14 @@ The following code generates a reference (exact) solution for our example:
   plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
 ```
 
-Now we can load our results from the default solution file `coordinatesSolution.txt`, which is in the same
-directory as your Python tutorial file.
+Now we can load our results from the default solution file `solution/coordinatesSolution.txt`, in the
+directory `solution` beside your Python tutorial file.
 **Note** that the visualization of results can be simplified considerably using the `PlotSensor(...)` utility function as shown in the **Rigid body and joints tutorial**!
 
 For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point (`data[:,0]` contains the simulation time, `data[:,1]` contains displacement of (global) coordinate 0, `data[:,2]` contains displacement of (global) coordinate 1, ...)):
 
 ```python
-  data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+  data = np.loadtxt('solution/coordinatesSolution.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution')
 ```
 

@@ -837,11 +837,11 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         :None: updates current visualization state, renders the scene continuously (after pressing button 'Run')
 
     Example:
-        #HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
+        #HERE, mbs must contain same model as solution stored in solution/coordinatesSolution.txt
         #adjust autoFitScence, otherwise it may lead to unwanted fit to scene
         SC.visualizationSettings.general.autoFitScene = False
         from exudyn.interactive import SolutionViewer #import function
-        sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
+        sol = LoadSolutionFile('solution/coordinatesSolution.txt') #the default solution file
         mbs.SolutionViewer(sol) #call via MainSystem
     """
     if UIWindowSuppressed('SolutionViewer', 'SolutionViewer'): return

@@ -81,7 +81,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
     d["value"] = data.coordinatesSolutionFileName;
     d["type"] = "FileName";
     d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)";
+    d["description"] = "filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)";
     structureDict["coordinatesSolutionFileName"] = d;
 
     d = py::dict(); //reset local dict
@@ -161,7 +161,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
     d["value"] = data.restartFileName;
     d["type"] = "FileName";
     d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart";
+    d["description"] = "filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart";
     structureDict["restartFileName"] = d;
 
     d = py::dict(); //reset local dict

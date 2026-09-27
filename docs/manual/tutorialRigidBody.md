@@ -414,7 +414,7 @@ If we do not stop the renderer (`SC.renderer.Stop()`), it will stay open for fur
   mbs.SolutionViewer()
   #alternatively, we could load solution from a file:
   #from exudyn.utilities import LoadSolutionFile
-  #sol = LoadSolutionFile('coordinatesSolution.txt')
+  #sol = LoadSolutionFile('solution/coordinatesSolution.txt')
   #mbs.SolutionViewer(sol)
 ```
 

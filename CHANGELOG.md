@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 124 | 1.12.127 |
+| 1.12 | Metheney | 125 | 1.12.128 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.128** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the files a run writes by default go into solution/, and scripts that write beside themselves are found (#2718)
+  - description: The maintainer, 2026-09-27: examples still write into the folder of the script instead of solution/, because the default solution file name 'coordinatesSolution' has no directory. As small API changes are made anyway, this is the time: coordinatesSolutionFileName, solverInformationFileName and restartFileName default to solution/...; a script that sets such a name itself, or reads the solution file back by its old name, has to be changed consistently, and exudev scripts finds both; sensors, the resultsFile of the processing functions and exported images write wherever the script names them, so the scripts of the repository are checked for names without a directory, and the example and test suites show what still lands beside a script. revision2026b step RG12.24.
+  - **notes:** The files a run writes by default are in the directory solution/: the solution file is solution/coordinatesSolution.txt, and the solver information and the restart file are there too, so a run writes nothing beside the script. A script that reads the solution file back as 'coordinatesSolution.txt' has to read 'solution/coordinatesSolution.txt'; exudev scripts finds that, and every file a script names without a directory. The documentation of the environment variables says how Spyder sets an output directory for every run.
+  - date resolved: **2026-09-27 18:18**, date raised: 2026-09-27
 - **1.12.127** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the repository's own examples and test models use what exudev scripts reports: 54 findings in 17 files (#2714)
   - description: Measured 2026-09-27 with exudev scripts (\#2712) over python/Examples, python/TestModels and python/MiniExamples, 342 scripts that import exudyn: 54 findings in 17 files. Four are real breaks of scripts that are in no suite - NGsolveGeometry.py, humanRobotInteraction.py and stlFileImport.py call AddEdgesAndSmoothenNormals without graphics., and nMassOscillatorEigenmodes.py uses graphics without importing it. The rest are deprecated forms that still work: exu.StartRenderer/StopRenderer (21), general.drawWorldBasis and other relocated settings (about 20), exu.SolveStatic/SolveDynamic (6), SC.GetRenderState/SetRenderState, renderer.Detach. The examples are what users copy, so they should show the current forms. revision2026b step RG10.1.2.
   - **notes:** The examples and test models of the repository use the current forms of everything exudev scripts reports: four scripts that failed with a NameError run again (NGsolveGeometry.py, humanRobotInteraction.py, stlFileImport.py, nMassOscillatorEigenmodes.py), and the renderer calls, solver calls and relocated visualization settings are the ones the documentation shows. exudev scripts also reports SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue().

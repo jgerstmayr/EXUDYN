@@ -71,7 +71,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.60 #0.62 
 simulationSettings.timeIntegration.adaptiveStep = False
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName= "coordinatesSolution.txt"
+simulationSettings.solutionSettings.coordinatesSolutionFileName= "solution/coordinatesSolution.txt"
 
 simulationSettings.displayStatistics = True
 #simulationSettings.solutionSettings.recordImagesInterval = 0.04
@@ -99,7 +99,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 #plot y-acceleration:
-data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
+data = np.loadtxt(OutputFilePath('solution/coordinatesSolution.txt'), comments='#', delimiter=',')
 plt.figure()
 plt.plot(data[:,0], data[:,1+2*nODE2+1], 'b-')
 
