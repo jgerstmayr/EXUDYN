@@ -284,14 +284,8 @@ if True:
         print("nModes=", nModes, ", tip displacement=", uTip)
 
         if False:
-            # SC.visualizationSettings.exportImages.saveImageFileName = "images/test"
-            SC.visualizationSettings.exportImages.saveImageFormat = "TXT"
-            SC.visualizationSettings.exportImages.saveImageAsTextTriangles=True
-            SC.renderer.RedrawAndSaveImage() #uses default filename
-            
-            from exudyn.plot import LoadImage, PlotImage
-            data = LoadImage('images/frame00000.txt', trianglesAsLines=True)
-            #PlotImage(data)
+            from exudyn.plot import PlotImage
+            data = SC.renderer.GetGraphicsData() #the drawing elements; no render window needed
             PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.*pi)@RotationMatrixX(0.*pi), [0,0,0]), lineWidths=0.5, lineStyles='-', 
                       triangleEdgeColors='b', triangleEdgeWidths=0.1, title='', closeAll=True, plot3D=True)
             # PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.5*pi)@RotationMatrixX(0.5*pi), [0,0,0]), lineWidths=0.5, title='', closeAll=True, fileName='images/test.pdf')

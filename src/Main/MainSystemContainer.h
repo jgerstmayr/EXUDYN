@@ -152,6 +152,9 @@ public:
 	//! redraw current view and get image
 	py::array_t<uint8_t> RedrawAndGetImage(bool useRaytracer = false, Index viewID = VisualizationSystemContainer::mainViewID);
 
+	//! the drawing elements of the scene as a dictionary of numpy arrays, built without a window (#2700)
+	py::dict GetGraphicsData();
+
 	//! get render state dictionary
 	py::dict GetState(Index viewID = VisualizationSystemContainer::mainViewID) const;
 

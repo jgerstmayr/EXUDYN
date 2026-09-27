@@ -792,21 +792,17 @@ if True:
 
 
         if False: #draw with matplotlib, export as pdf
-            SC.visualizationSettings.exportImages.saveImageFormat = "TXT"
-            SC.visualizationSettings.exportImages.saveImageAsTextTriangles=True
-            SC.renderer.RedrawAndSaveImage() #uses default filename
-            
-            from exudyn.plot import LoadImage, PlotImage
+            from exudyn.plot import PlotImage
+            data = SC.renderer.GetGraphicsData() #the drawing elements; no render window needed
 
             # plot 2D
-            # data = LoadImage('images/frame00000.txt', trianglesAsLines=True)
             # PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.5*pi)@RotationMatrixX(0.5*pi), [0,0,0]), 
             #           lineWidths=0.5, lineStyles='-', title='', closeAll=True, plot3D=False,
             #           fileName='images/test.pdf')
             
-            data = LoadImage('images/frame00000.txt', trianglesAsLines=False)
-            PlotImage(data, HT=HomogeneousTransformation(2.5*RotationMatrixZ(0.5*pi)@RotationMatrixY(-0.5*pi), [0,1,0.25]), 
+            PlotImage(data, HT=HomogeneousTransformation(2.5*RotationMatrixZ(0.5*pi)@RotationMatrixY(-0.5*pi), [0,1,0.25]),
                       lineWidths=0.5, lineStyles='-', triangleEdgeColors='black', triangleEdgeWidths=0.25, title='', closeAll=True, plot3D=True,
+                      trianglesAsLines=False,
                       fileName='images/test3D.pdf')
                     
         SC.renderer.DoIdleTasks()

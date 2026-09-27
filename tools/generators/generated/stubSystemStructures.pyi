@@ -1084,20 +1084,12 @@ class VSettingsExportImages:
     """Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."""
     heightAlignment: int
     """alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)."""
-    saveImageAsTextCircles: bool
-    """export circles in save image (only in TXT format)."""
-    saveImageAsTextLines: bool
-    """export lines in save image (only in TXT format)."""
-    saveImageAsTextTexts: bool
-    """export text in save image (only in TXT format)."""
-    saveImageAsTextTriangles: bool
-    """export triangles in save image (only in TXT format)."""
     saveImageFileCounter: int
     """current value of the counter which is used to consecutively save frames (images) with consecutive numbers."""
     saveImageFileName: str
     """filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist."""
     saveImageFormat: str
-    """format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms."""
+    """format of an exported image, ``PNG`` or ``TGA``; ``TGA`` has the highest compatibility with all platforms. The drawing elements of a scene as data - lines, triangles, texts, each with the item that drew it - are ``SC.renderer.GetGraphicsData()``."""
     saveImageSingleFile: bool
     """True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName."""
     saveImageTimeOut: int

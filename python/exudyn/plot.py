@@ -25,7 +25,7 @@ import copy
 __all__ = [
     'StorePlotWindowGeometry', 'listMarkerStyles', 'listMarkerStylesFilled', 'componentNorm',
     'ParseOutputFileHeader', 'PlotSensorDefaults', 'PlotSensor', 'PlotFFT', 'FileStripSpaces',
-    'DataArrayFromSensorList', 'LoadImage', 'PlotImage',
+    'DataArrayFromSensorList', 'PlotImage',
     ]
 
 #++++++++++++++++++++++++++++++++
@@ -1006,75 +1006,50 @@ def DataArrayFromSensorList(mbs, sensorNumbers, positionList=[], time=''):
     return data
 
 
-def LoadImage(fileName, trianglesAsLines = True, verbose=False):
-    """import image text file as exported from renderer.RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
-
-    Args:
-        fileName includes directory
-
-    Returns:
-        returns dictionary with according structures
-    """
-        
-    with open(fileName) as file:
-        lines = file.readlines()
-
-    if len(lines) == 0:
-        raise ValueError('LoadImage: empty file')
-
-    if lines[0][:-1] != '#Exudyn text image export file':
-        exudyn.Print('WARNING: LoadImage found inconsistent file header:',lines[0])
-    
-    if lines[-1][:-1] != '#END':
-        exudyn.Print('WARNING: LoadImage found inconsistent file ending; expected "END"')
-    
-    i = 1
+def __ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments):
+    """the polylines and triangles PlotImage draws, from the dictionary of
+    SC.renderer.GetGraphicsData(): a circle becomes a closed polyline, and with trianglesAsLines a
+    triangle becomes its closed outline"""
     listLines = []
-    listLineColors = [] #line colors as tuples
+    listLineColors = []
     listTriangles = []
-    nSegments = 0
-    nTriangles = 0
-    actColor = (0,0,0,1)
-    while i < len(lines)-1: #there will be always 1 extra line (or file end)!
-        lineType = lines[i][:-1]
-        data = lines[i+1]
-        if lineType == '#COLOR':
-            actColor = tuple(np.array(data.split(','), dtype=float))
-        elif lineType == '#LINE':
-            splitLine = np.array(data.split(','), dtype=float)
-            listLines += [list(splitLine)]
-            listLineColors += [actColor] #per line
-            nSegments +=int(len(splitLine)/3)-1
-        elif lineType == '#TRIANGLE':
-            nTriangles += 1
-            splitLine = np.array(data.split(','), dtype=float)
-            linePoints = list(np.array(data.split(','), dtype=float))
-            if trianglesAsLines:
-                linePoints += linePoints[0:3] #add first point as last point
-                listLines += [linePoints]
-                listLineColors += [actColor] #per line
-            else:
-               listTriangles += [(list(splitLine), actColor)]
-        else:
-            i -= 1 #this may be a comment line; just increment by 1
-        
-        i += 2 #always increment by 2
 
-    if verbose:
-        exudyn.Print('number of lines:', len(listLines))
-        exudyn.Print('number of line segments:', nSegments)
-        exudyn.Print('number of triangles:', nTriangles)
-        
+    lines = graphicsData['lines']
+    for (points, colors) in zip(lines['points'], lines['colors']):
+        listLines += [list(points.flatten())]
+        listLineColors += [tuple(colors[0])]
+
+    circles = graphicsData['circles']
+    for (center, color, radius, nSegments) in zip(circles['points'], circles['colors'],
+                                                  circles['radius'], circles['numberOfSegments']):
+        if nSegments <= 0:
+            nSegments = circleSegments
+        phi = np.linspace(0., 2.*np.pi, int(nSegments)+1)
+        points = np.column_stack([center[0] + radius*np.sin(phi), center[1] + radius*np.cos(phi),
+                                  np.full(len(phi), center[2])])
+        listLines += [list(points.flatten())]
+        listLineColors += [tuple(color)]
+
+    triangles = graphicsData['triangles']
+    for (points, colors) in zip(triangles['points'], triangles['colors']):
+        if trianglesAsLines:
+            listLines += [list(points.flatten()) + list(points[0])]
+            listLineColors += [tuple(colors[0])]
+        else:
+            listTriangles += [(list(points.flatten()), tuple(colors[0]))]
+
     return {'linePoints':listLines, 'lineColors':listLineColors, 'triangles':listTriangles}
 
-def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidths=1, lineStyles='-', 
+
+def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidths=1, lineStyles='-',
               triangleEdgeColors='black', triangleEdgeWidths=0.5, removeAxes = True, orthogonalProjection=True,
               title = '', figureName='', fileName = '', fontSize = 16, closeAll = False,
-              azim=0., elev=0.):
-    """plot 2D or 3D vector image data as provided by LoadImage(...) using matplotlib
+              azim=0., elev=0., trianglesAsLines=True, circleSegments=16):
+    """plot the scene of a SystemContainer as 2D or 3D vector graphics using matplotlib, e.g. for a
+    figure in a paper
 
     Args:
-        imageData: dictionary as provided by LoadImage(...)
+        imageData: the dictionary of SC.renderer.GetGraphicsData(), which needs no render window
         HT: homogeneous transformation, used to transform coordinates; lines are drawn in (x,y) plane
         axesEqual: for 2D mode, axis are set equal, otherwise model is distorted
         plot3D: in this mode, a 3D visualization is used; triangles are only be displayed in this mode!
@@ -1090,6 +1065,13 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
         fontSize: change general fontsize of axis, labels, etc. (matplotlib default is 12, default in PlotSensor: 16)
         closeAll: if True, close all figures before opening new one (do this only in first PlotSensor command!)
         azim, elev: for 3D plots: the initial angles for the 3D view in degrees
+        trianglesAsLines: if True, a triangle is drawn as its outline, which is what a 2D plot can show
+        circleSegments: the number of segments of a circle that does not say its own
+
+    Example:
+        #after the model is built, or after solving:
+        from exudyn.plot import PlotImage
+        PlotImage(SC.renderer.GetGraphicsData(), fileName='images/model.pdf')
     """
 
     from matplotlib import collections  as mc #plot does not accept colors
@@ -1098,6 +1080,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
 
     from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation
 
+    imageData = __ImageDataFromGraphicsData(imageData, trianglesAsLines, circleSegments)
     linePoints = imageData['linePoints']
     lineColors = imageData['lineColors']
     triangles = imageData['triangles']

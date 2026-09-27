@@ -229,27 +229,22 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex)
 
 
-(sec-plot-loadimage)=
-## Function: LoadImage
+(sec-plot---imagedatafromgraphicsdata)=
+## Function: __ImageDataFromGraphicsData
 
-[`LoadImage(fileName, trianglesAsLines = True, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1009)
+[`__ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1009)
 
-- **function description**: import image text file as exported from renderer.RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
-- **input**: fileName includes directory
-- **output**: returns dictionary with according structures
-
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex)
+- **function description**: the polylines and triangles PlotImage draws, from the dictionary of SC.renderer.GetGraphicsData(): a circle becomes a closed polyline, and with trianglesAsLines a triangle becomes its closed outline
 
 
 (sec-plot-plotimage)=
 ## Function: PlotImage
 
-[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1070)
+[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0., trianglesAsLines = True, circleSegments = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1044)
 
-- **function description**: plot 2D or 3D vector image data as provided by LoadImage(...) using matplotlib
+- **function description**: plot the scene of a SystemContainer as 2D or 3D vector graphics using matplotlib, e.g. for a figure in a paper
 - **input**:
-  - `imageData`: dictionary as provided by LoadImage(...)
+  - `imageData`: the dictionary of SC.renderer.GetGraphicsData(), which needs no render window
   - `HT`: homogeneous transformation, used to transform coordinates; lines are drawn in (x,y) plane
   - `axesEqual`: for 2D mode, axis are set equal, otherwise model is distorted
   - `plot3D`: in this mode, a 3D visualization is used; triangles are only be displayed in this mode!
@@ -264,6 +259,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCrai
   - `fileName`: if this string is non-empty, figure will be saved to given path and filename (use figName.pdf to safe as PDF or figName.png to save as PNG image); use matplotlib.use('Agg') in order not to open figures if you just want to save them
   - `fontSize`: change general fontsize of axis, labels, etc. (matplotlib default is 12, default in PlotSensor: 16)
   - `closeAll`: if True, close all figures before opening new one (do this only in first PlotSensor command!) azim, elev: for 3D plots: the initial angles for the 3D view in degrees
+  - `trianglesAsLines`: if True, a triangle is drawn as its outline, which is what a 2D plot can show
+  - `circleSegments`: the number of segments of a circle that does not say its own
+
+*example*:
+
+```python
+  #after the model is built, or after solving:
+  from exudyn.plot import PlotImage
+  PlotImage(SC.renderer.GetGraphicsData(), fileName='images/model.pdf')
+```
+
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex)

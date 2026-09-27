@@ -1816,20 +1816,12 @@ class VSettingsExportImages:
     """Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."""
     heightAlignment: int
     """alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)."""
-    saveImageAsTextCircles: bool
-    """export circles in save image (only in TXT format)."""
-    saveImageAsTextLines: bool
-    """export lines in save image (only in TXT format)."""
-    saveImageAsTextTexts: bool
-    """export text in save image (only in TXT format)."""
-    saveImageAsTextTriangles: bool
-    """export triangles in save image (only in TXT format)."""
     saveImageFileCounter: int
     """current value of the counter which is used to consecutively save frames (images) with consecutive numbers."""
     saveImageFileName: str
     """filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist."""
     saveImageFormat: str
-    """format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms."""
+    """format of an exported image, ``PNG`` or ``TGA``; ``TGA`` has the highest compatibility with all platforms. The drawing elements of a scene as data - lines, triangles, texts, each with the item that drew it - are ``SC.renderer.GetGraphicsData()``."""
     saveImageSingleFile: bool
     """True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName."""
     saveImageTimeOut: int
@@ -3812,6 +3804,17 @@ class Renderer:
             plt.imshow(image)
             plt.axis('off')
             plt.show()
+        """
+        ...
+    @overload
+    def GetGraphicsData(self) -> dict: 
+        """The drawing elements of the scene as a dictionary of numpy arrays: what the renderer would draw, as data.
+        
+        It is built without a window, the way `RedrawAndGetImage(True)` builds it, so it works with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` set and needs no OpenGL; zoom, model view and window size are not part of it. The keys `lines`, `spheres`, `circles`, `texts` and `triangles` each hold a dictionary whose `items` is an int array of shape (n,3) - the system number, the `exudyn.ItemType` value and the index of the item that drew the element, or `[-1, 0, code]` for a static element of the scene; then `points` and `colors` (RGBA, per vertex for lines and triangles), and per kind `radius` and `resolution` (spheres), `radius` and `numberOfSegments` (circles), `fontSize`, `offset` and the list `text` (texts), `normals` (triangles). `formatVersion` is 1. It is the oracle of the graphics tests: the number of elements per item is exact, coordinates are floats and are compared with a tolerance
+        
+        Examples:
+            data = SC.renderer.GetGraphicsData()
+            print(len(data['triangles']['items']), 'triangles')
         """
         ...
     @overload

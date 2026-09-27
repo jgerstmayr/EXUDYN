@@ -516,6 +516,160 @@ py::array_t<uint8_t> MainRenderer::RedrawAndGetImage(bool useRaytracer, Index vi
 	}
 }
 
+//! the item that drew a primitive as [system, itemType, itemIndex]; an ID that names no item - a
+//! static object of the scene - is [-1, 0, ID], so the kind of static object stays visible
+inline void GraphicsDataItem(Index itemID, int* item)
+{
+	if (itemID < 0)
+	{
+		item[0] = -1; item[1] = (int)ItemType::_None; item[2] = (int)itemID;
+		return;
+	}
+	Index index; ItemType type; Index mbsNumber;
+	ItemID2IndexType(itemID, index, type, mbsNumber);
+	item[0] = (int)mbsNumber; item[1] = (int)type; item[2] = (int)index;
+}
+
+//! the drawing elements of the scene as numpy arrays (#2700). The graphics data is built the way
+//! RedrawAndGetImage(useRaytracer=True) builds it, so no window and no OpenGL is needed; nothing that
+//! depends on a window - zoom, model view, screen size - is part of it
+py::dict MainRenderer::GetGraphicsData()
+{
+	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
+
+	for (MainSystem* mainSystem : mainSystemContainer->GetMainSystems())
+	{
+		mainSystem->GetCSystem().UpdatePostProcessData();
+	}
+	VSC.UpdateGraphicsDataNow();
+	VSC.UpdateGraphicsData();
+
+	const ResizableArray<GraphicsData*>& list = VSC.GetGraphicsDataList();
+	{
+		//a running renderer may hold a lock while it waits for the GIL in a graphics user function
+		py::gil_scoped_release release;
+		for (auto data : list) { data->LockData(); }
+	}
+
+	py::ssize_t nLines = 0, nSpheres = 0, nCircles = 0, nTexts = 0, nTriangles = 0;
+	for (auto data : list)
+	{
+		nLines += data->glLines.NumberOfItems();
+		nSpheres += data->glSpheres.NumberOfItems();
+		nCircles += data->glCirclesXY.NumberOfItems();
+		nTexts += data->glTexts.NumberOfItems();
+		nTriangles += data->glTriangles.NumberOfItems();
+	}
+
+	py::array_t<int> lineItems({ nLines, (py::ssize_t)3 });
+	py::array_t<float> linePoints({ nLines, (py::ssize_t)2, (py::ssize_t)3 });
+	py::array_t<float> lineColors({ nLines, (py::ssize_t)2, (py::ssize_t)4 });
+	py::array_t<int> sphereItems({ nSpheres, (py::ssize_t)3 });
+	py::array_t<float> spherePoints({ nSpheres, (py::ssize_t)3 });
+	py::array_t<float> sphereColors({ nSpheres, (py::ssize_t)4 });
+	py::array_t<float> sphereRadii(nSpheres);
+	py::array_t<int> sphereResolutions(nSpheres);
+	py::array_t<int> circleItems({ nCircles, (py::ssize_t)3 });
+	py::array_t<float> circlePoints({ nCircles, (py::ssize_t)3 });
+	py::array_t<float> circleColors({ nCircles, (py::ssize_t)4 });
+	py::array_t<float> circleRadii(nCircles);
+	py::array_t<int> circleSegments(nCircles);
+	py::array_t<int> textItems({ nTexts, (py::ssize_t)3 });
+	py::array_t<float> textPoints({ nTexts, (py::ssize_t)3 });
+	py::array_t<float> textColors({ nTexts, (py::ssize_t)4 });
+	py::array_t<float> textFontSizes(nTexts);
+	py::array_t<float> textOffsets({ nTexts, (py::ssize_t)2 });
+	py::list textStrings;
+	py::array_t<int> triangleItems({ nTriangles, (py::ssize_t)3 });
+	py::array_t<float> trianglePoints({ nTriangles, (py::ssize_t)3, (py::ssize_t)3 });
+	py::array_t<float> triangleNormals({ nTriangles, (py::ssize_t)3, (py::ssize_t)3 });
+	py::array_t<float> triangleColors({ nTriangles, (py::ssize_t)3, (py::ssize_t)4 });
+
+	auto li = lineItems.mutable_unchecked<2>(); auto lp = linePoints.mutable_unchecked<3>(); auto lc = lineColors.mutable_unchecked<3>();
+	auto si = sphereItems.mutable_unchecked<2>(); auto sp = spherePoints.mutable_unchecked<2>(); auto sc = sphereColors.mutable_unchecked<2>();
+	auto sr = sphereRadii.mutable_unchecked<1>(); auto sres = sphereResolutions.mutable_unchecked<1>();
+	auto ci = circleItems.mutable_unchecked<2>(); auto cp = circlePoints.mutable_unchecked<2>(); auto cc = circleColors.mutable_unchecked<2>();
+	auto cr = circleRadii.mutable_unchecked<1>(); auto cs = circleSegments.mutable_unchecked<1>();
+	auto ti = textItems.mutable_unchecked<2>(); auto tp = textPoints.mutable_unchecked<2>(); auto tc = textColors.mutable_unchecked<2>();
+	auto tf = textFontSizes.mutable_unchecked<1>(); auto to = textOffsets.mutable_unchecked<2>();
+	auto gi = triangleItems.mutable_unchecked<2>(); auto gp = trianglePoints.mutable_unchecked<3>();
+	auto gn = triangleNormals.mutable_unchecked<3>(); auto gc = triangleColors.mutable_unchecked<3>();
+
+	py::ssize_t iLine = 0, iSphere = 0, iCircle = 0, iText = 0, iTriangle = 0;
+	int item[3];
+	for (auto data : list)
+	{
+		for (const GLLine& line : data->glLines)
+		{
+			GraphicsDataItem(line.itemID, item);
+			for (Index k = 0; k < 3; k++) { li(iLine, k) = item[k]; lp(iLine, 0, k) = line.point1[k]; lp(iLine, 1, k) = line.point2[k]; }
+			for (Index k = 0; k < 4; k++) { lc(iLine, 0, k) = line.color1[k]; lc(iLine, 1, k) = line.color2[k]; }
+			iLine++;
+		}
+		for (const GLSphere& sphere : data->glSpheres)
+		{
+			GraphicsDataItem(sphere.itemID, item);
+			for (Index k = 0; k < 3; k++) { si(iSphere, k) = item[k]; sp(iSphere, k) = sphere.point[k]; }
+			for (Index k = 0; k < 4; k++) { sc(iSphere, k) = sphere.color[k]; }
+			sr(iSphere) = sphere.radius;
+			sres(iSphere) = (int)sphere.resolution;
+			iSphere++;
+		}
+		for (const GLCircleXY& circle : data->glCirclesXY)
+		{
+			GraphicsDataItem(circle.itemID, item);
+			for (Index k = 0; k < 3; k++) { ci(iCircle, k) = item[k]; cp(iCircle, k) = circle.point[k]; }
+			for (Index k = 0; k < 4; k++) { cc(iCircle, k) = circle.color[k]; }
+			cr(iCircle) = circle.radius;
+			cs(iCircle) = (int)circle.numberOfSegments;
+			iCircle++;
+		}
+		for (const GLText& text : data->glTexts)
+		{
+			GraphicsDataItem(text.itemID, item);
+			for (Index k = 0; k < 3; k++) { ti(iText, k) = item[k]; tp(iText, k) = text.point[k]; }
+			for (Index k = 0; k < 4; k++) { tc(iText, k) = text.color[k]; }
+			tf(iText) = text.fontSize;
+			to(iText, 0) = text.offsetX;
+			to(iText, 1) = text.offsetY;
+			textStrings.append(py::str(text.text != nullptr ? text.text : ""));
+			iText++;
+		}
+		for (const GLTriangle& trig : data->glTriangles)
+		{
+			GraphicsDataItem(trig.itemID, item);
+			for (Index k = 0; k < 3; k++) { gi(iTriangle, k) = item[k]; }
+			for (Index j = 0; j < 3; j++)
+			{
+				for (Index k = 0; k < 3; k++) { gp(iTriangle, j, k) = trig.points[j][k]; gn(iTriangle, j, k) = trig.normals[j][k]; }
+				for (Index k = 0; k < 4; k++) { gc(iTriangle, j, k) = trig.colors[j][k]; }
+			}
+			iTriangle++;
+		}
+	}
+	for (auto data : list) { data->ClearLock(); }
+
+	py::dict lines, spheres, circles, texts, triangles;
+	lines["items"] = lineItems; lines["points"] = linePoints; lines["colors"] = lineColors;
+	spheres["items"] = sphereItems; spheres["points"] = spherePoints; spheres["colors"] = sphereColors;
+	spheres["radius"] = sphereRadii; spheres["resolution"] = sphereResolutions;
+	circles["items"] = circleItems; circles["points"] = circlePoints; circles["colors"] = circleColors;
+	circles["radius"] = circleRadii; circles["numberOfSegments"] = circleSegments;
+	texts["items"] = textItems; texts["points"] = textPoints; texts["colors"] = textColors;
+	texts["fontSize"] = textFontSizes; texts["offset"] = textOffsets; texts["text"] = textStrings;
+	triangles["items"] = triangleItems; triangles["points"] = trianglePoints;
+	triangles["normals"] = triangleNormals; triangles["colors"] = triangleColors;
+
+	py::dict d;
+	d["formatVersion"] = 1;
+	d["lines"] = lines;
+	d["spheres"] = spheres;
+	d["circles"] = circles;
+	d["texts"] = texts;
+	d["triangles"] = triangles;
+	return d;
+}
+
 //! add subview which is either only activated (for raytracing), or activated and visible
 void MainRenderer::EnableView(Index viewID, bool createWindow)
 {

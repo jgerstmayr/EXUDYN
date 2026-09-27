@@ -809,7 +809,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   VisualizationSettings.contour: automaticRange(attribute,dict) nodesColored(attribute,dict) reduceRange(attribute,dict) rigidBodiesColored(attribute,dict)
   VisualizationSettings.contour.advanced: showColorBar(attribute,dict)
   VisualizationSettings.dialogs: alwaysTopmost(attribute,dict) multiThreadedDialogs(attribute,dict) openTreeView(attribute,dict) storeDialogPositions(attribute,dict)
-  VisualizationSettings.exportImages: saveImageAsTextCircles(attribute,dict) saveImageAsTextLines(attribute,dict) saveImageAsTextTexts(attribute,dict) saveImageAsTextTriangles(attribute,dict) saveImageSingleFile(attribute,dict)
+  VisualizationSettings.exportImages: saveImageSingleFile(attribute,dict)
   VisualizationSettings.general: autoFitScene(attribute,dict) limitWindowToScreenSize(attribute,dict) showSolutionInformation(attribute,dict) showSolverInformation(attribute,dict) showSolverTime(attribute,dict) textAlwaysInFront(attribute,dict) textHasBackground(attribute,dict) threadSafeGraphicsUpdate(attribute,dict) useBitmapText(attribute,dict) useGradientBackground(attribute,dict) useMultiThreadedRendering(attribute,dict) useWindowsDisplayScaleFactor(attribute,dict) zoomAllUseBoundingBox(attribute,dict)
   VisualizationSettings.interactive: autoRotateModelView(attribute,dict) ignoreKeys(attribute,dict) logMouseCoordinates(attribute,dict) useJoystickInput(attribute,dict)
   VisualizationSettings.interactive.advanced: pauseWithSpacebar(attribute,dict) selectionHighlights(attribute,dict) selectionLeftMouse(attribute,dict) selectionRightMouse(attribute,dict) selectionRightMouseGraphicsData(attribute,dict)

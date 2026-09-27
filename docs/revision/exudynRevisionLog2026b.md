@@ -5406,3 +5406,51 @@ the half of C that cost nothing came along.
 **Gate**: the regeneration wrote byte-identical files; the only generated file that moved was the
 tracker log, because the issue was raised in the same run. With this the generator API has no name
 left that says LaTeX where it does not mean it.
+
+<a id="rg2-3-1"></a>
+### RG2.3.1 — the scene as data, and the text export removed (2026-09-27, #2700)
+
+The maintainer's decision on the proposal of the same day: *"yes do that and totally remove the .txt
+graphics export"*.
+
+**`SC.renderer.GetGraphicsData()`** returns the five primitive lists of the graphics data - lines,
+spheres, circles, texts, triangles - as numpy arrays, each with an `items` array of shape (n,3):
+system number, `exudyn.ItemType` value, item index. The encoded `itemID` is decoded in C++ with
+`ItemID2IndexType`; the negative IDs of static scene elements, which that function does not decode,
+come out as `[-1, 0, code]` so the kind stays visible. It is built the way
+`RedrawAndGetImage(True)` builds its data - post-processing data of every system, then
+`UpdateGraphicsDataNow()` and `UpdateGraphicsData()` - so **it needs no window**, and the tests
+confirm `IsActive()` is False throughout.
+
+**One thing in it is there for a running renderer**: the GIL is released while the graphics data
+locks are taken, because a render thread can hold such a lock while it waits for the GIL in a
+graphics user function, and a Python thread spinning on the lock with the GIL held would wait
+forever.
+
+**The first measurement of the pendulum** (a ground with a checkerboard, a brick, a revolute joint)
+is what the suite will compare: 200 triangles for the ground, **12 for the brick** - six faces of two
+- and 192 for the joint, 12 lines, and with `nodes.showNumbers` one text, `N0`.
+
+**Removed**: the `TXT` branch of `GlfwRenderer::SaveSceneToFile` and of the file ending (106 lines),
+the four `exportImages.saveImageAsText...` settings, and `exudyn.plot.LoadImage`. An unknown
+`saveImageFormat` - `TXT` included now - says `exportImages.saveImageFormat='TXT' is not a format; use
+'PNG' or 'TGA'` instead of a generic *illegal format*. `parameterConversionTestReference.txt` lost the
+four names from its `exportImages` row, rewritten with `recordReference`.
+
+**`PlotImage` stays and draws `GetGraphicsData()`** - it is the one thing the export was for, a
+vector figure of a model for a paper - with `trianglesAsLines` and `circleSegments` taking over what
+`LoadImage` and `general.circleTiling` did. The two NGsolve examples that used the export do it that
+way now; both are in `if False` blocks.
+
+**Found on the way and raised, not fixed** (#2701, RG2.3.2): `PlotImage(plot3D=True)` raises
+`TypeError` with every matplotlib since 3.6 - `fig.gca(projection='3d')` - so both examples'
+3D figures had been broken for years behind their `if False`.
+
+**Seven tests** (`test_graphicsData.py`), none opening a window: the shapes of every array, the brick's
+12 triangles under its own item, the counts identical on a second call, a setting that hides the
+bodies removing their triangles and `showNumbers` adding `N0`, the brick's triangles **moving** after
+half a second of simulation while their number stays, the export and `LoadImage` gone, and
+`PlotImage` writing a PDF.
+
+**Gates**: the wheel, 11/11 checks (TIER 1 drift, which is the new function and the four removed
+settings), the full suite, pytest, the strict HTML build.

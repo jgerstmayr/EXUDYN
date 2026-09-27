@@ -74,6 +74,12 @@ example `openVRengine.py` are gone. It could only be used with a head mounted di
 emulator, it was never part of a released wheel - it had to be compiled in - and it stood in the
 way of the coming rendering work. A script that needs it stays on Exudyn 1.11.
 
+**The text export of an image is removed.** `exportImages.saveImageFormat = 'TXT'`, the four
+`exportImages.saveImageAsText...` settings and `exudyn.plot.LoadImage` are gone.
+`SC.renderer.GetGraphicsData()` gives the same drawing elements, and more of them, as numpy arrays,
+without a render window; `exudyn.plot.PlotImage` draws what it returns, so a vector figure of a model
+is `PlotImage(SC.renderer.GetGraphicsData(), fileName='model.pdf')`.
+
 ### What is new to use
 
 **A command line for the installed package**: `python -m exudyn info` prints the version, where
@@ -97,6 +103,10 @@ them.
 `exudyn.plot.StorePlotWindowGeometry()` keeps the plot windows of `PlotSensor` where they are
 arranged. Everything goes into `~/.exudyn/config.json`, after showing what will be written
 ([](#sec-overridesettings)).
+
+**The scene as data**: `SC.renderer.GetGraphicsData()` returns every line, sphere, circle, text and
+triangle the renderer would draw, each with the item that drew it, and needs no window - for a test
+that checks what a model looks like, or for a figure drawn with matplotlib.
 
 **`exudyn.types`** answers questions about items from Python: which markers an object accepts,
 which item types exist.

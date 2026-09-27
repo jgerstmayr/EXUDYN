@@ -62,6 +62,15 @@ The class **MainRenderer** has the following **functions and structures**:
   plt.show()
   ```
 
+- **`GetGraphicsData()`**: the drawing elements of the scene as a dictionary of numpy arrays: what the renderer would draw, as data. It is built without a window, the way `RedrawAndGetImage(True)` builds it, so it works with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` set and needs no OpenGL; zoom, model view and window size are not part of it. The keys `lines`, `spheres`, `circles`, `texts` and `triangles` each hold a dictionary whose `items` is an int array of shape (n,3) - the system number, the `exudyn.ItemType` value and the index of the item that drew the element, or `[-1, 0, code]` for a static element of the scene; then `points` and `colors` (RGBA, per vertex for lines and triangles), and per kind `radius` and `resolution` (spheres), `radius` and `numberOfSegments` (circles), `fontSize`, `offset` and the list `text` (texts), `normals` (triangles). `formatVersion` is 1. It is the oracle of the graphics tests: the number of elements per item is exact, coordinates are floats and are compared with a tolerance
+
+  *Example*:
+
+  ```python
+  data = SC.renderer.GetGraphicsData()
+  print(len(data['triangles']['items']), 'triangles')
+  ```
+
 - **`GetState(viewID = 0)`**: Get dictionary with current render state (openGL zoom, modelview, etc.)
 
   *Example*:

@@ -2654,17 +2654,14 @@ void GlfwRenderer::SaveImage(Index viewID)
 		{
 			filename += ".png"; //image format ending
 		}
-		else if (visSettings->exportImages.saveImageFormat == "TXT")
-		{
-			filename += ".txt"; //this is the (internal) text format; used then to postprocess in Python
-		}
 		else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable)
 		{
 			filename += ".tga"; //image format ending
 		}
 		else
 		{
-			PrintDelayed("SaveImage ERROR: illegal format; check documentation for exportImages; no file written");
+			PrintDelayed("SaveImage ERROR: exportImages.saveImageFormat='" + visSettings->exportImages.saveImageFormat
+				+ "' is not a format; use 'PNG' or 'TGA'; no file written");
 			//SaveSceneToFile will do nothing
 		}
 
@@ -2764,112 +2761,6 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 		stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip->GetDataPointer(), stride);
 		pixelBufferFlip->Flush(); //not stored to preserve earlier functionality
 #endif
-	}
-	else if (visSettings->exportImages.saveImageFormat == "TXT")
-	{
-		//export text
-		std::ofstream imageFile;
-
-		std::ios_base::openmode fileMode = std::ofstream::out; //int does not work in linux!
-
-		//if (solutionSettings.binarySolutionFile) { fileMode = std::ofstream::binary; } //no append right now!
-
-		//if (solutionSettings.appendToFile) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
-		//else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
-		bool checkPath = CheckPathAndCreateDirectories(filename);
-
-		if (checkPath)
-		{
-			imageFile.open(filename, fileMode);
-		}
-
-		if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
-		{
-			CHECKandTHROWstring((STDstring("failed to open image file '") + filename + "'; check path and file name").c_str(), ExudynValueError);
-		}
-		imageFile.precision(8); //more accuracy is not available from float values!
-		imageFile << "#Exudyn text image export file\n";
-		imageFile << "# export of lines, triangles, texts, etc.\n";
-		imageFile << "# \n";
-
-		if (visSettings->exportImages.saveImageAsTextLines)
-		{
-			imageFile << "# SECTION LINES (consisting of X0, Y0, Z0, X1, Y1, Z1, ...  coordinates for 3D line points)\n";
-			//circles are currently transformed into lines
-			for (auto data : *graphicsDataList)
-			{
-				for (const GLCircleXY& item : data->glCirclesXY)
-				{
-					bool isFirst = true;
-					imageFile << "#COLOR\n";
-					imageFile << item.color[0] << ", " << item.color[1] << ", " << item.color[2] << ", " << item.color[3] << "\n";
-
-					imageFile << "#LINE\n";
-					const Float3& pItem = item.point;
-					float r = item.radius;
-
-					float nSeg = (float)item.numberOfSegments;
-					if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
-
-					//for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
-					for (float i = 0; i <= 2.f*EXUstd::pi_f + 1e-5; i += 2.f*EXUstd::pi_f / nSeg)
-					{
-						Float3 p({ pItem[0] + r * sin(i), pItem[1] + r * cos(i), pItem[2] });
-						if (!isFirst) { imageFile << ", "; }
-						else { isFirst = false; }
-						imageFile << p[0] << ", " << p[1] << ", " << p[2];
-					}
-					if (!isFirst) { imageFile << "\n"; }
-				}
-
-				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				//DRAW LINES
-				for (const GLLine& item : data->glLines)
-				{
-					imageFile << "#COLOR\n";
-					imageFile << item.color1[0] << ", " << item.color1[1] << ", " << item.color1[2] << ", " << item.color1[3] << "\n";
-					//second color item.color2 ignored!
-
-					imageFile << "#LINE\n";
-					imageFile << item.point1[0] << ", " << item.point1[1] << ", " << item.point1[2] << ", ";
-					imageFile << item.point2[0] << ", " << item.point2[1] << ", " << item.point2[2] << "\n";
-				}
-			}
-		}
-
-		if (visSettings->exportImages.saveImageAsTextTriangles)
-		{
-			imageFile << "# SECTION TRIANGLES (consisting of X0, Y0, Z0, X1, Y1, Z1, X2, Y2, Z2  coordinates for 3D triangle points)\n";
-			for (auto data : *graphicsDataList)
-			{
-				for (const GLTriangle& trig : data->glTriangles)
-				{ //draw lines
-					imageFile << "#COLOR\n";
-					const Float4& color = trig.colors[0]; //other colors ignored!
-					imageFile << color[0] << ", " << color[1] << ", " << color[2] << ", " << color[3] << "\n";
-
-					imageFile << "#TRIANGLE\n";
-					for (Index i = 0; i < 3; i++)
-					{
-						Index j = i + 1;
-						if (j >= 3) { j = 0; }
-						const Float3& p0 = trig.points[i];
-						//const Float3& p1 = trig.points[j];
-						imageFile << p0[0] << ", " << p0[1] << ", " << p0[2];
-						if (i != 2) { imageFile << ", "; }
-						else { imageFile << "\n"; }
-					}
-				}
-			}
-		}
-		if (visSettings->exportImages.saveImageAsTextTexts)
-		{
-			PrintDelayed("SageImage: Text export not yet implemented!");
-		}
-		imageFile << "#END\n"; //for safety add file end
-
-		//FINALLY: close
-		imageFile.close();
 	}
 	else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable) //for all remaining scenarios
 	{
