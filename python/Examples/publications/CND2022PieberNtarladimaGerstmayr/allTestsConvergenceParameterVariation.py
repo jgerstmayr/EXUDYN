@@ -402,8 +402,8 @@ def ParameterFunction(parameterSet):
         
             
             if displayStaticSimulation: 
-                exu.StartRenderer()
-                mbs.WaitForUserToContinue()        
+                SC.renderer.Start()
+                SC.renderer.DoIdleTasks()        
                 
                 
             if doStaticSimulation:
@@ -424,15 +424,15 @@ def ParameterFunction(parameterSet):
                     mbs.SetLoadParameter(nLoad, 'loadVector', [0,-loadValue,0]) 
                     
                     
-                    exu.SolveStatic(mbs, simulationSettings)
+                    mbs.SolveStatic(simulationSettings)
                 
                     sol = mbs.systemData.GetSystemState()
                     mbs.systemData.SetSystemState(sol, configuration=exu.ConfigurationType.Initial) #set initial conditions for next step
                     
                 
                 if displayStaticSimulation:  
-                    mbs.WaitForUserToContinue()
-                    exu.StopRenderer() #safely close rendering window!
+                    SC.renderer.DoIdleTasks()
+                    SC.renderer.Stop() #safely close rendering window!
     
             
             uList=[]    
@@ -486,8 +486,8 @@ def ParameterFunction(parameterSet):
                 modeDynamic=True    
         
                 if displayDynamicSimulation:
-                    exu.StartRenderer()
-                    mbs.WaitForUserToContinue()
+                    SC.renderer.Start()
+                    SC.renderer.DoIdleTasks()
             
                 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
                 simulationSettings.timeIntegration.endTime = tEnd
@@ -511,14 +511,14 @@ def ParameterFunction(parameterSet):
                 simulationSettings.displayStatistics = False
     
 
-                success = exu.SolveDynamic(mbs, simulationSettings)
+                success = mbs.SolveDynamic(simulationSettings)
         
                 
                 uList += [mbs.GetNodeOutput(nLast, exu.OutputVariableType.Position)]
                 
                 if displayDynamicSimulation:
-                    SC.WaitForRenderEngineStopFlag()
-                    exu.StopRenderer() #safely close rendering window!        
+                    SC.renderer.DoIdleTasks()
+                    SC.renderer.Stop() #safely close rendering window!        
              
                 data0 = np.loadtxt(fileName, comments='#', delimiter=',') 
                 

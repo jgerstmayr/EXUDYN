@@ -168,7 +168,7 @@ SC.visualizationSettings.view0.window.renderWindowSize = [2000,1600]
 
 if not testIsActive:
     SC.renderer.Start()
-    mbs2.WaitForUserToContinue()
+    SC.renderer.DoIdleTasks()
 
 mbs2.SolveDynamic(simulationSettings)
 

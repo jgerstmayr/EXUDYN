@@ -20,6 +20,7 @@ You can view and download this file on Github: [nMassOscillatorEigenmodes.py](ht
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+import exudyn.graphics as graphics
 from exudyn.itemInterface import *
 from exudyn.graphicsDataUtilities import *
 import matplotlib.pyplot as plt

@@ -395,14 +395,14 @@ def BuildModel(parameterSet):
     
           
     if useGraphics:
-        exu.StartRenderer()
-        mbs.WaitForUserToContinue()
+        SC.renderer.Start()
+        SC.renderer.DoIdleTasks()
 
     simulationSettings.staticSolver.numberOfLoadSteps=10
 
-    success = exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+    success = mbs.SolveStatic(simulationSettings, updateInitialValues=True)
     # if useGraphics:
-    #     mbs.WaitForUserToContinue()
+    #     SC.renderer.DoIdleTasks()
 
     for sjl in mbs.variables['slidingJointList']:
         mbs.SetObjectParameter(sjl[0], 'activeConnector', False)
@@ -412,12 +412,12 @@ def BuildModel(parameterSet):
 
     #simulationSettings.timeIntegration.simulateInRealtime = True
     #simulationSettings.timeIntegration.realtimeFactor=1
-    success = exu.SolveDynamic(mbs, simulationSettings, exudyn.DynamicSolverType.TrapezoidalIndex2)
-    #success = exu.SolveDynamic(mbs, simulationSettings)
+    success = mbs.SolveDynamic(simulationSettings, exudyn.DynamicSolverType.TrapezoidalIndex2)
+    #success = mbs.SolveDynamic(simulationSettings)
 
     if useGraphics:
-        SC.WaitForRenderEngineStopFlag()
-        exu.StopRenderer() #safely close rendering window!        
+        SC.renderer.DoIdleTasks()
+        SC.renderer.Stop() #safely close rendering window!        
 
         from exudyn.plot import PlotSensor
         plt.figure("masses-x")

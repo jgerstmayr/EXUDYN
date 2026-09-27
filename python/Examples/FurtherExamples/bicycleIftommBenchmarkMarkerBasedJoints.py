@@ -128,11 +128,11 @@ if True:
         n = mbs.variables['nTrackNode']
         p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
                               configuration=exu.ConfigurationType.Visualization)
-        rs=SC.GetRenderState()
+        rs=SC.renderer.GetState()
         A = np.array(rs['modelRotation'])
         p = A.T @ p
         rs['centerPoint']=[p[0],p[1],p[2]]
-        SC.SetRenderState(rs)
+        SC.renderer.SetState(rs)
         return []
     
     #add object with graphics user function
@@ -383,16 +383,16 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 if False: #record animation frames:
     SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-    SC.visualizationSettings.window.renderWindowSize=[1600,1024]
+    SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
     SC.visualizationSettings.openGL.multiSampling = 4
     simulationSettings.solutionSettings.recordImagesInterval = 0.02
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True
 if useGraphics:
-    exu.StartRenderer()
+    SC.renderer.Start()
     SC.renderer.RestoreSavedState()
-    mbs.WaitForUserToContinue()
+    SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 #mbs.SolveDynamic(simulationSettings, showHints=True)
@@ -400,8 +400,8 @@ mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.Trapezoida
 
 #%%+++++++++++++++++++++++++++++
 if useGraphics:
-    SC.WaitForRenderEngineStopFlag()
-    exu.StopRenderer() #safely close rendering window!
+    SC.renderer.DoIdleTasks()
+    SC.renderer.Stop() #safely close rendering window!
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 if addSensors:

@@ -133,12 +133,12 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.simulateInRealtime = True
 
-sc.visualizationSettings.general.drawWorldBasis = True
+sc.visualizationSettings.view0.scene.drawWorldBasis = True
 
-exu.StartRenderer()
-mbs.WaitForUserToContinue()
+sc.renderer.Start()
+sc.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-sc.WaitForRenderEngineStopFlag()
-exu.StopRenderer()
+sc.renderer.DoIdleTasks()
+sc.renderer.Stop()

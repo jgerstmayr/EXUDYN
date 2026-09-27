@@ -65,11 +65,12 @@ test.txt
 # Test suite output (written into the tree by runTestSuite.py)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 python/TestModels/solution/
-python/TestModels/coordinatesSolution.txt
 python/PerformanceModels/solution/
-python/PerformanceModels/coordinatesSolution.txt
 python/Examples/solution/
-python/Examples/coordinatesSolution.txt
+# the default solution file of the simulation settings is 'coordinatesSolution', with no directory, so
+# a model run from any folder writes it there - in text or in binary form
+coordinatesSolution.txt
+coordinatesSolution.sol
 
 # artefacts of the netgen tests' load/save round trip (netgenTestMesh2*), NOT the committed mesh:
 # netgenTestMesh.npz is tracked and holds the reference solution of NGsolveCMStest (#2469). It used

@@ -5737,3 +5737,40 @@ anything was found, and the paths are printed relative to where `exudev` was sta
 
 **Also in this commit, on the maintainer's word**: RG6.3 (#2583) closed as superseded; RG10.10 moved
 to where its number belongs; RG12.5.2 given the measurement it lacked; RG13 created.
+
+<a id="rg10-1-2"></a>
+### RG10.1.2 — the repository's scripts take what exudev scripts says (2026-09-27, #2714)
+
+The maintainer asked for the four real breaks to be fixed and the step done. **92 lines in 18 files**,
+and `exudev scripts` over the 342 examples, test models and mini examples now reports **0**.
+
+**The checker learned two things first**, both found on these files:
+
+- `SC.WaitForRenderEngineStopFlag()` and `mbs.WaitForUserToContinue()` warn in C++, but their
+  descriptions in `definitions/` do not start with DEPRECATED, so the first version did not know them.
+  It now also reads the `renderer.DeprecationWarning("old", "new")` calls of
+  `MainSystemContainer.cpp`: 19 more findings, all in scripts that also used the renderer the old way.
+- `openGL.light0ambient` is deprecated **to a dummy** - it has done nothing since 1.10.80 - and the
+  checker said *"use openGL.dummy"*. It says *"it has no effect; remove it"*, and the line is removed.
+
+**The four breaks**: `NGsolveGeometry.py`, `humanRobotInteraction.py` and `stlFileImport.py` call
+`graphics.AddEdgesAndSmoothenNormals` now, and `nMassOscillatorEigenmodes.py` imports
+`exudyn.graphics`. **`NGsolveGeometry.py` was a known failure of the examples runner**, recorded as
+*"fails inside the NGsolve geometry construction under exec(...)"* - the failure was this `NameError`.
+It passes, and the runner reported its own exclusion as dead, so the exclusion is removed.
+
+**The rest** are the current forms: `SC.renderer.Start()`, `Stop()` and `DoIdleTasks()` (with `sc` and
+`env.SC` where the script calls its container that), `mbs.SolveStatic/SolveDynamic`, the relocated
+settings under `view0.scene`, `view0.window`, `view0.camera` and `openGL.light0`, and
+`SC.renderer.GetState/SetState`. In `simulatorCouplingTwoMbs.py` the `SC.renderer.Detach()` before a
+second container is created goes: creating a container attaches it to the renderer.
+
+**Checked**: the full test suite (both changed test models are in it) and the examples runner - 168 of
+170 pass. `rendererNOGLFWexample.py` is the one known failure; `NGsolveOCCboundaries2.py`, which
+this step did not touch, failed once with netgen's *"Could not allocate localheap, heapsize =
+3200000000"* while the runner ran examples in parallel, and runs through when run alone.
+
+**With it**: the stray `coordinatesSolution.txt` in the repository root - committed by mistake - is no
+longer tracked, and `.gitignore` ignores `coordinatesSolution.txt` and `.sol` wherever they are
+written: the default solution file name of the simulation settings has no directory, so a model run
+from any folder writes it there.

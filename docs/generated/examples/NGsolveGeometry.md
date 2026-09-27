@@ -119,7 +119,7 @@ if showCase == 'revolute':
     fem0.ImportMeshFromNGsolve(mesh0, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     graphics0 = graphics.FromPointsAndTrigs(fem0.GetNodePositionsAsArray(), fem0.GetSurfaceTriangles(), 
                                                color=graphics.color.dodgerblue, )
-    graphics0 = AddEdgesAndSmoothenNormals(graphics0)
+    graphics0 = graphics.AddEdgesAndSmoothenNormals(graphics0)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy*2-dy,0],
                         referenceRotationMatrix=RotationMatrixX(0),
@@ -133,7 +133,7 @@ if showCase == 'revolute':
     fem1.ImportMeshFromNGsolve(mesh1, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     graphics1 = graphics.FromPointsAndTrigs(fem1.GetNodePositionsAsArray(), fem1.GetSurfaceTriangles(), 
                                                color=graphics.color.lightred)
-    graphics1 = AddEdgesAndSmoothenNormals(graphics1)
+    graphics1 = graphics.AddEdgesAndSmoothenNormals(graphics1)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy,0],
                         referenceRotationMatrix=RotationMatrixY(1.2*pi),
@@ -177,7 +177,7 @@ if showCase == 'spheric':
     fem0.ImportMeshFromNGsolve(mesh0, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     graphics0 = graphics.FromPointsAndTrigs(fem0.GetNodePositionsAsArray(), fem0.GetSurfaceTriangles(), 
                                                color=graphics.color.dodgerblue, )
-    graphics0 = AddEdgesAndSmoothenNormals(graphics0)
+    graphics0 = graphics.AddEdgesAndSmoothenNormals(graphics0)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy,0],
                         referenceRotationMatrix=RotationMatrixX(0),
@@ -191,7 +191,7 @@ if showCase == 'spheric':
     fem1.ImportMeshFromNGsolve(mesh1, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     graphics1 = graphics.FromPointsAndTrigs(fem1.GetNodePositionsAsArray(), fem1.GetSurfaceTriangles(), 
                                                color=graphics.color.lightred)
-    graphics1 = AddEdgesAndSmoothenNormals(graphics1)
+    graphics1 = graphics.AddEdgesAndSmoothenNormals(graphics1)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy,0],
                         referenceRotationMatrix=RotationMatrixZ(-0.12*pi)@RotationMatrixY(1.15*pi),

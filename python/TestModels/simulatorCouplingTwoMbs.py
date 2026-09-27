@@ -669,8 +669,8 @@ if not testIsActive:
     SC.renderer.Stop() #safely close rendering window!
 
 if True:
-    #in order to see updates of displayed time, we need to make mbs1 to the master
-    SC.renderer.Detach() #detach from current renderer
+    #in order to see updates of displayed time, we need to make mbs1 to the master: a new
+    #SystemContainer attaches itself to the renderer
     SC2 = exu.SystemContainer()
     SC2.visualizationSettings = SC.visualizationSettings
     SC2.AppendSystem(mbs1)

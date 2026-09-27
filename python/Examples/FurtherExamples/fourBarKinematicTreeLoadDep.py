@@ -163,17 +163,17 @@ simulationSettings.displayStatistics = True
 
 SC.visualizationSettings.bodies.kinematicTree.frameSize = 0.25
 SC.visualizationSettings.bodies.kinematicTree.showJointFrames = True
-SC.visualizationSettings.general.drawWorldBasis = True
-SC.visualizationSettings.general.worldBasisSize = 2
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.worldBasisSize = 2
 SC.visualizationSettings.openGL.multiSampling = 4
 
-exu.StartRenderer()
-mbs.WaitForUserToContinue()
+SC.renderer.Start()
+SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer()
+SC.renderer.DoIdleTasks()
+SC.renderer.Stop()
 
 #draw angular velocity
 mbs.PlotSensor(sOmega, components=[2])

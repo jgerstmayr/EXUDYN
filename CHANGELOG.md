@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 123 | 1.12.126 |
+| 1.12 | Metheney | 124 | 1.12.127 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.127** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the repository's own examples and test models use what exudev scripts reports: 54 findings in 17 files (#2714)
+  - description: Measured 2026-09-27 with exudev scripts (\#2712) over python/Examples, python/TestModels and python/MiniExamples, 342 scripts that import exudyn: 54 findings in 17 files. Four are real breaks of scripts that are in no suite - NGsolveGeometry.py, humanRobotInteraction.py and stlFileImport.py call AddEdgesAndSmoothenNormals without graphics., and nMassOscillatorEigenmodes.py uses graphics without importing it. The rest are deprecated forms that still work: exu.StartRenderer/StopRenderer (21), general.drawWorldBasis and other relocated settings (about 20), exu.SolveStatic/SolveDynamic (6), SC.GetRenderState/SetRenderState, renderer.Detach. The examples are what users copy, so they should show the current forms. revision2026b step RG10.1.2.
+  - **notes:** The examples and test models of the repository use the current forms of everything exudev scripts reports: four scripts that failed with a NameError run again (NGsolveGeometry.py, humanRobotInteraction.py, stlFileImport.py, nMassOscillatorEigenmodes.py), and the renderer calls, solver calls and relocated visualization settings are the ones the documentation shows. exudev scripts also reports SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue().
+  - date resolved: **2026-09-27 17:29**, date raised: 2026-09-27
 - **1.12.126** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a static checker for user scripts after the API changes: exudev scripts \<folder\> (#2712)
   - description: The maintainer, 2026-09-27: RG10.1 is next, needed for teaching next week - 'a command-line exudev tool for now, only a static checker of folders, looking at all .py files where exudyn is imported'. It parses and never runs, and reports per file and line: names a star import from exudyn no longer provides (np, sin, graphics, ...) with the import line, removed names with their replacement (the vector helpers, the GraphicsData aliases, LoadImage), deprecated functions and settings read from definitions/ with what to use instead, removed settings and arguments, and submodules used as exu.\<submodule\> that import exudyn does not load. revision2026b step RG10.1.
   - **notes:** exudev scripts \<folder\> checks the Exudyn scripts in a folder for what changed in Exudyn, without running them: names that a star import from exudyn no longer provides (np, sin, graphics, ...) with the import line to add, removed names and settings with their replacement, deprecated functions and settings with what to use instead, and submodules used through exu.\<submodule\> without their import. A maintainer tool for now (tools/checkUserScripts.py).

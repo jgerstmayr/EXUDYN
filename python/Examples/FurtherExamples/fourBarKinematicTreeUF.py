@@ -160,7 +160,7 @@ mbs.ComputeSystemDegreeOfFreedom(verbose=True)
 
 
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
-SC.visualizationSettings.general.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
@@ -173,16 +173,16 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayStatistics = True
 
 #solve dynamic problem with default parameters
-exu.StartRenderer()
-mbs.WaitForUserToContinue()
+SC.renderer.Start()
+SC.renderer.DoIdleTasks()
 
 mbs.SolveDynamic(simulationSettings)
 
-SC.WaitForRenderEngineStopFlag()
+SC.renderer.DoIdleTasks()
 
 mbs.PlotSensor(sensorNumbers=sOmega,components=[2])
 
-exu.StopRenderer() #safely close rendering window!
+SC.renderer.Stop() #safely close rendering window!
 
 #visualize solution
 # mbs.SolutionViewer()

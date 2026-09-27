@@ -370,8 +370,8 @@ for x in range(nb):
 
 
         if displayStaticSimulation: 
-            exu.StartRenderer()
-            mbs.WaitForUserToContinue()        
+            SC.renderer.Start()
+            SC.renderer.DoIdleTasks()        
             
         if doStaticSimulation:
             nLoadSteps = 10
@@ -389,15 +389,15 @@ for x in range(nb):
                 mbs.SetObjectParameter(oCC, 'velocityLevel', False)
                 mbs.SetLoadParameter(nLoad, 'loadVector', [0,-loadValue,0]) 
                 
-                exu.SolveStatic(mbs, simulationSettings)
+                mbs.SolveStatic(simulationSettings)
             
                 sol = mbs.systemData.GetSystemState()
                 mbs.systemData.SetSystemState(sol, configuration=exu.ConfigurationType.Initial) #set initial conditions for next step
                 
             
             if displayStaticSimulation:  
-                mbs.WaitForUserToContinue()
-                exu.StopRenderer() #safely close rendering window!
+                SC.renderer.DoIdleTasks()
+                SC.renderer.Stop() #safely close rendering window!
 
         uList=[]    
         if doDynamicSimulation: #switch between static and dynamic simulation
@@ -450,8 +450,8 @@ for x in range(nb):
             modeDynamic=True    
     
             if displayDynamicSimulation:
-                exu.StartRenderer()
-                mbs.WaitForUserToContinue()
+                SC.renderer.Start()
+                SC.renderer.DoIdleTasks()
         
             simulationSettings.timeIntegration.numberOfSteps = nrSteps
             simulationSettings.timeIntegration.endTime = simTime
@@ -470,13 +470,13 @@ for x in range(nb):
             ##############################################################
             simulationSettings.displayStatistics = False
             
-            success = exu.SolveDynamic(mbs, simulationSettings)
+            success = mbs.SolveDynamic(simulationSettings)
 
             uList += [mbs.GetNodeOutput(nLast, exu.OutputVariableType.Position)]
             
             if displayDynamicSimulation:
-                SC.WaitForRenderEngineStopFlag()
-                exu.StopRenderer() #safely close rendering window!        
+                SC.renderer.DoIdleTasks()
+                SC.renderer.Stop() #safely close rendering window!        
         
             data0 = np.loadtxt('displacementPoint.txt', comments='#', delimiter=',') 
             

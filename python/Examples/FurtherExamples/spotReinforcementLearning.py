@@ -173,12 +173,12 @@ class SpotEnv(OpenAIGymInterfaceEnv):
         
         
         self.SC.visualizationSettings.contact.showSpheres = False
-        self.SC.visualizationSettings.general.drawWorldBasis = True
-        self.SC.visualizationSettings.general.drawCoordinateSystem = False
+        self.SC.visualizationSettings.view0.scene.drawWorldBasis = True
+        self.SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
         self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.2
         self.SC.visualizationSettings.openGL.multiSampling = 4        
         self.SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
-        self.SC.visualizationSettings.openGL.shadow = 0.25
+        self.SC.visualizationSettings.openGL.light0.shadow = 0.25
         
         self.state = None
         self.done = False
@@ -558,7 +558,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
             #torch.set_num_threads(1) #seems to be best for serial
     
             if showDuringLearning:
-                exu.StartRenderer() #do this to see what is done during learning
+                env.SC.renderer.Start() #do this to see what is done during learning
             model = getModel(env,modelType=modelType)
             print('start learning of agent with algorithm: '+modelType)
         
@@ -570,7 +570,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
                         )
         
             if showDuringLearning:
-                exu.StopRenderer() #do this to see what is done during learning
+                env.SC.renderer.Stop() #do this to see what is done during learning
         
         
         else: #parallel; faster #set verbose=0 in getModel()!

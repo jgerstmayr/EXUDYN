@@ -123,7 +123,10 @@ replacements = {
     ('SystemContainer', 'DetachFromRenderEngine'): 'nothing: SC.renderer.Stop() detaches it',
     ('SystemContainer', 'SendRedrawSignal'): 'SC.renderer.SendRedrawSignal()',
     ('SystemContainer', 'GetCurrentMouseCoordinates'): 'SC.renderer.GetMouseCoordinates()',
-    ('renderer', 'Detach'):                  'nothing: SC.renderer.Stop() detaches the container',
+    ('renderer', 'Detach'):                  'nothing: SC.renderer.Stop() detaches the container, and '
+                                             'a new SystemContainer attaches itself',
+    ('MainSystem', 'WaitForUserToContinue'): 'SC.renderer.DoIdleTasks()',
+    ('SystemContainer', 'WaitForRenderEngineStopFlag'): 'SC.renderer.DoIdleTasks()',
     }
 
 #ARGUMENTS THAT ARE GONE
@@ -135,7 +138,9 @@ removedKeywords = {
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #what definitions/ says is deprecated
 def DeprecatedFunctions():
-    """{('module'|'SystemContainer'|'renderer', name): description} from the pybind definitions"""
+    """{('module'|'SystemContainer'|'renderer'|'MainSystem', name): what to use instead} from the
+    pybind definitions, and from the SystemContainer functions that warn in C++ although their
+    description does not say DEPRECATED - WaitForRenderEngineStopFlag is one"""
     receivers = {'pybindModule.py': 'module', 'pybindSystemContainer.py': 'SystemContainer',
                  'pybindRenderer.py': 'renderer'}
     found = {}
@@ -154,6 +159,18 @@ def DeprecatedFunctions():
                 else:
                     text = str(description.value)[len('DEPRECATED'):].lstrip(';: ')
                     found[key] = text.split(';')[0]
+
+    #renderer.DeprecationWarning("OldName", "NewName") in the C++ of the SystemContainer
+    cpp = io.open(os.path.join(root, 'src', 'Main', 'MainSystemContainer.cpp'), encoding='utf-8').read()
+    marker = 'renderer.DeprecationWarning("'
+    position = cpp.find(marker)
+    while position != -1:
+        arguments = cpp[position + len(marker):cpp.index(')', position)]
+        (old, new) = [part.strip().strip('"') for part in arguments.split(',')]
+        key = ('SystemContainer', old)
+        found.setdefault(key, 'use ' + replacements.get(key, 'SC.renderer.' + new + '(...)'))
+        position = cpp.find(marker, position + 1)
+    found[('MainSystem', 'WaitForUserToContinue')] = 'use ' + replacements[('MainSystem', 'WaitForUserToContinue')]
     return found
 
 
@@ -330,8 +347,9 @@ def CheckTree(tree, tables):
                     if (parentMember is not None and above != parentMember) or                             (parentMember is None and (above in DeprecatedSettings.structureMembers
                                                        or above.startswith('view'))):
                         continue                          #the same pair in another structure
+                    advice = ('it has no effect; remove it' if use.endswith('.dummy') else 'use ' + use)
                     Report(node.lineno, ('setting',) + pair, "'" + '.'.join(pair) + "' is deprecated"
-                           + (' since ' + version if version else '') + '; use ' + use)
+                           + (' since ' + version if version else '') + '; ' + advice)
                 if pair in removedSettings:
                     Report(node.lineno, ('removedSetting',) + pair, "'" + '.'.join(pair)
                            + "' is removed; use " + removedSettings[pair])
@@ -345,10 +363,12 @@ def CheckTree(tree, tables):
                        + "' is used, but 'import exudyn' does not load it; add: import exudyn."
                        + chain[1])
             if len(chain) >= 2 and chain[0] not in exudynAliases:
-                receiver = 'renderer' if chain[-2] == 'renderer' else 'SystemContainer'
-                if (receiver, chain[-1]) in tables['functions']:
-                    Report(node.lineno, ('method', receiver, chain[-1]), "'" + '.'.join(chain[-2:])
-                           + "' is deprecated: " + tables['functions'][(receiver, chain[-1])])
+                receivers = ['renderer'] if chain[-2] == 'renderer' else ['SystemContainer', 'MainSystem']
+                for receiver in receivers:
+                    if (receiver, chain[-1]) in tables['functions']:
+                        Report(node.lineno, ('method', receiver, chain[-1]), "'" + '.'.join(chain[-2:])
+                               + "' is deprecated: " + tables['functions'][(receiver, chain[-1])])
+                        break
 
         elif isinstance(node, ast.keyword) and node.arg in removedKeywords:
             Report(node.value.lineno, ('keyword', node.arg), "argument '" + node.arg

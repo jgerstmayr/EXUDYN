@@ -136,7 +136,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.simulateInRealtime =False
 
 
-SC.visualizationSettings.general.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
 
 #solve dynamic problem with default parameters
 
@@ -146,5 +146,5 @@ mbs.SolutionViewer()
 
 mbs.PlotSensor(sOmega,components=[2])
 
-SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer() #safely close rendering window!
+SC.renderer.DoIdleTasks()
+SC.renderer.Stop() #safely close rendering window!

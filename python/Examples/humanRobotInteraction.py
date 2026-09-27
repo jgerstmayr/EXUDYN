@@ -121,7 +121,7 @@ if addHand:
     dataLAL[1]['inertia'] = rbiLAL.InertiaCOM()
     dataLAL[1]['COM'] = rbiLAL.COM()
 #++++++++++++++++++++++++++++++++++
-graphicsBody += [AddEdgesAndSmoothenNormals(graphics.FromSTLfile(fileName=myDir+'Torso.stl', 
+graphicsBody += [graphics.AddEdgesAndSmoothenNormals(graphics.FromSTLfile(fileName=myDir+'Torso.stl', 
                                         color=graphics.color.grey, verbose=verbose, density=density,
                                         scale = scaleBody)[0], addEdges=False)]
 
@@ -131,7 +131,7 @@ if addFullBody:
         data = graphics.FromSTLfile(fileName=myDir+''+part+'.stl', 
                                        color=graphics.color.grey, verbose=verbose, density=density*0,
                                        scale = scaleBody)
-        graphicsBody += [AddEdgesAndSmoothenNormals(data, addEdges=False)]
+        graphicsBody += [graphics.AddEdgesAndSmoothenNormals(data, addEdges=False)]
         #graphicsBody += [data[0]]
 
 
@@ -187,7 +187,7 @@ if useKT:
     showCOM     = False
 
     body = dataUAL
-    body[0] = graphics.Move(AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftShoulder, np.eye(3))
+    body[0] = graphics.Move(graphics.AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftShoulder, np.eye(3))
     link = body[1]
 
     articulatedBody.AddLink(RobotLink(jointType='Rx',
@@ -215,13 +215,13 @@ if useKT:
                             ))
 
     body = dataLAL
-    body[0] = graphics.Move(AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftElbow, np.eye(3))
+    body[0] = graphics.Move(graphics.AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftElbow, np.eye(3))
     link = body[1]
     gList = [body[0]]
     
     if addHand:
         if not addHandKinematic:
-            dataHandL[0] = graphics.Move(AddEdgesAndSmoothenNormals(dataHandL[0], addEdges=False), -leftElbow, np.eye(3))
+            dataHandL[0] = graphics.Move(graphics.AddEdgesAndSmoothenNormals(dataHandL[0], addEdges=False), -leftElbow, np.eye(3))
             dataFingersL[0] = graphics.Move(dataFingersL[0], -leftElbow, np.eye(3))
             gList = [body[0], dataHandL[0], dataFingersL[0]]
         

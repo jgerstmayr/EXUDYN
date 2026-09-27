@@ -110,3 +110,18 @@ def testTheCommandLine(tmp_path):
     assert "old.py:2: 'np' no longer comes with" in result.stdout
     assert 'py2.py:2: does not parse as Python 3' in result.stdout
     assert '1 other .py files skipped' in result.stdout
+
+
+def testDeprecationsTheCppWarnsAbout(tables):
+    """WaitForRenderEngineStopFlag warns in C++ although its description does not say DEPRECATED"""
+    found = Findings('import exudyn as exu\nSC = exu.SystemContainer()\nmbs = SC.AddSystem()\n'
+                     'mbs.WaitForUserToContinue()\nSC.WaitForRenderEngineStopFlag()\n', tables)
+    assert "'mbs.WaitForUserToContinue' is deprecated: use SC.renderer.DoIdleTasks()" in found
+    assert "'SC.WaitForRenderEngineStopFlag' is deprecated: use SC.renderer.DoIdleTasks()" in found
+
+
+def testASettingThatBecameADummyIsToBeRemoved(tables):
+    found = Findings('import exudyn as exu\nSC = exu.SystemContainer()\n'
+                     'SC.visualizationSettings.openGL.light0ambient = 0.5\n', tables)
+    assert len(found) == 1 and found[0].endswith('it has no effect; remove it')
+

@@ -58,7 +58,7 @@ graphicsBody0 = graphics.FromSTLfileASCII(fileName, graphics.color.dodgerblue) #
 # graphicsBody0 = graphics.FromSTLfile(fileName, graphics.color.dodgerblue, scale=1., Aoff=np.eye(3), pOff=[0,0,0])
 
 #+++++++++++++++++++++++
-graphicsBody0 = AddEdgesAndSmoothenNormals(graphicsBody0, edgeAngle = 0.25*pi, addEdges=True, smoothNormals=True)
+graphicsBody0 = graphics.AddEdgesAndSmoothenNormals(graphicsBody0, edgeAngle = 0.25*pi, addEdges=True, smoothNormals=True)
 
 
 graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w)

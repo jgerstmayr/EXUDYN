@@ -179,25 +179,25 @@ simulationSettings.linearSolverSettings.ignoreSingularJacobian = True # importan
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense # important for redundant constraints
 simulationSettings.timeIntegration.simulateInRealtime = True
 SC.visualizationSettings.general.autoFitScene=True
-# SC.visualizationSettings.window.renderWindowSize = [1600,1200]
-SC.visualizationSettings.general.drawCoordinateSystem=True
-SC.visualizationSettings.general.drawWorldBasis=True
+# SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.openGL.multiSampling=4
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.5
 if useGraphics:
 
-    exu.StartRenderer()
+    SC.renderer.Start()
     SC.renderer.RestoreSavedState() #load last model view
 
-    mbs.WaitForUserToContinue() #press space to continue
+    SC.renderer.DoIdleTasks() #press space to continue
 
 # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
 mbs.SolveDynamic(simulationSettings)
 
 if useGraphics:
-    SC.WaitForRenderEngineStopFlag()
-    exu.StopRenderer() #safely close rendering window!
+    SC.renderer.DoIdleTasks()
+    SC.renderer.Stop() #safely close rendering window!
 
 if useKinematicTree:
     mbs.PlotSensor(sKT, components=2,title="Winkelgeschwindigkeit am 1. Link, Kinematic Tree")

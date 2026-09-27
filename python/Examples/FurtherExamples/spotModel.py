@@ -377,7 +377,7 @@ if __name__=='__main__':
     tEnd = 6
     stepSize = 0.0002 #could be larger!
     
-    #mbs.WaitForUserToContinue()
+    #SC.renderer.DoIdleTasks()
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
@@ -395,14 +395,13 @@ if __name__=='__main__':
     # simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
         
     SC.visualizationSettings.contact.showSpheres = False
-    SC.visualizationSettings.general.drawWorldBasis = False
+    SC.visualizationSettings.view0.scene.drawWorldBasis = False
     SC.visualizationSettings.general.autoFitScene=False
-    SC.visualizationSettings.window.renderWindowSize=[1920,1200]
-    SC.visualizationSettings.openGL.perspective=1
-    SC.visualizationSettings.openGL.shadow=0.25
-    SC.visualizationSettings.openGL.light0ambient = 0.5
-    SC.visualizationSettings.openGL.light0diffuse = 0.5
-    SC.visualizationSettings.openGL.light0position = [2,-4,8,0]
+    SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
+    SC.visualizationSettings.view0.camera.perspective=1
+    SC.visualizationSettings.openGL.light0.shadow=0.25
+    SC.visualizationSettings.openGL.light0.diffuse = 0.5
+    SC.visualizationSettings.openGL.light0.position = [2,-4,8,0]
     
     
     SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
@@ -410,9 +409,9 @@ if __name__=='__main__':
     useGraphics = True
     
     if useGraphics:
-        exu.StartRenderer()
+        SC.renderer.Start()
         SC.renderer.RestoreSavedState()
-        mbs.WaitForUserToContinue()
+        SC.renderer.DoIdleTasks()
         
     mbs.SolveDynamic(simulationSettings, 
                        # solverType=exu.DynamicSolverType.TrapezoidalIndex2,
@@ -424,7 +423,7 @@ if __name__=='__main__':
     
     if useGraphics:
         SC.visualizationSettings.general.autoFitScene = False
-        exu.StopRenderer()
+        SC.renderer.Stop()
     
     if True and simulationSettings.solutionSettings.writeSolutionToFile: #set True to show animation after simulation
         mbs.SolutionViewer()

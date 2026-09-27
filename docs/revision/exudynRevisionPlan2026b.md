@@ -1640,7 +1640,8 @@ file, so an editor cannot complete them).
       first for paths that do not travel - absolute ones such as `C:\`, relative ones such as `../`
       or `..\` - because a copied script with such a path reads or writes elsewhere, or fails for a
       reason that is not the Exudyn version.
-    - **RG10.1.2** **the repository's own scripts** (#2714): the checker reports 54 findings in 17 of
+    - **RG10.1.2** **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg10-1-2) - **the
+      repository's own scripts** (#2714): the checker reports 54 findings in 17 of
       the 342 examples, test models and mini examples. **Four are real breaks** in scripts that no
       suite runs - `NGsolveGeometry.py`, `humanRobotInteraction.py` and `stlFileImport.py` call
       `AddEdgesAndSmoothenNormals` without `graphics.`, `nMassOscillatorEigenmodes.py` uses
@@ -1769,18 +1770,19 @@ file, so an editor cannot complete them).
     about its own removal. It says what it is and who uses it. `itemModel.LegacyItems()`, found
     while checking, really was dead and is gone.
 
-## RG11 — Misc
-
-What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
-
-<a id="rg10-2"></a>
-**RG10.2** *(group RG10; from #2541)* **`exudyn.config` and `exudyn.special` reach a stub file.**
+<a id="rg10-11"></a>
+**RG10.11** *(group RG10; from #2541; numbered RG10.2 by mistake until 2026-09-27, when that number
+    was already taken)* **`exudyn.config` and `exudyn.special` reach a stub file.**
     `exudyn.config` is the run-time settings object - `outputDirectory`, `printToConsole`,
     `suppressWarnings`, `precision` - and `exudyn.special` holds the rarely needed corners. Neither
     the objects nor their C++ classes appear in `python/exudyn/__init__.pyi`, so no editor completes
     `exudyn.config.outputDirectory` and no checker knows it exists. The stub is generated
     (`tools/checkPython.py --stubs`), so this is a question of what the generator is told about the
     two members rather than of writing a stub by hand.
+
+## RG11 — Misc
+
+What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
 
 <a id="rg11-1"></a>
 **RG11.1** **DONE 2026-09-24** (#2610) — [log](exudynRevisionLog2026b.md#rg11-1) —
@@ -2076,6 +2078,11 @@ package).
       `Store` leaves out. `interactive.highlightItemType` is the state of an interactive highlight
       rather than a preference, so it is proposed to stay out of the file altogether - the only enum
       a user would store is `contour.outputVariable`.
+
+      **Decided (maintainer, 2026-09-27)**: *"this is a good way to go"*. The conversions between an
+      enum and its name exist already, because the settings dialog needs them; the same will be
+      needed wherever a settings structure is written and read, for example the HDF5 load and save,
+      which is for later.
     - **RG12.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-3) - the dialogs
       section, which is **RG6.2.29** (#2675) built: `visualizationSettings.dialogs.
       storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
@@ -2614,6 +2621,19 @@ What depends on it: the graphics regression test takes every item through its Mi
     connector, constraint, and the other object types. From that and the table of RG13.1: **a
     detailed plan that makes it work** for every item, as further steps of this group.
 
+<a id="rg13-3"></a>
+**RG13.3** *(group RG13; maintainer 2026-09-27)* **Each description synchronized once with its
+    implementation, and the definition says so** (#2717). *"each item's description needs to be
+    one-time manually synched with the implementation; then gets a checked in the definitions file
+    (or any better way for that)."*
+
+    **The better way, proposed**: a flag that is set once stays true while the code moves on. The
+    mark records **what** was checked as well as who and when - a fingerprint of the implementation it
+    was checked against, the item's `src/Impl<Kind>s/C<Item>.cpp` and its generated header - so that
+    `checkDefinitions` can report *"the implementation of ObjectJointRevoluteZ changed since its
+    description was checked"*. The mark then means what a reader assumes it means, and a change to an
+    item's C++ brings its description back into view in the commit that made it.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2648,10 +2668,10 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG10.1.2 | #2714 | the repository's own scripts: 54 findings of exudev scripts, 4 of them real breaks |
 | RG13.1 | #2715 | the state of the documentation of every item, measured |
 | RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
-| RG10.2 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
+| RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
+| RG10.11 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
