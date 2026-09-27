@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 131 | 1.12.134 |
+| 1.12 | Metheney | 132 | 1.12.135 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.135** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics drawn by a graphicsDataUserFunction carry the object number where an item ID belongs, so they are attributed to a wrong system and item (#2726)
+  - description: Found by the graphics regression test of revision2026b step RG2.3.3.3, 2026-09-27: the triangles returned by the graphicsDataUserFunction of ObjectGround, ObjectRigidBody, ObjectRigidBody2D and ObjectGenericODE2 appear in SC.renderer.GetGraphicsData() as 'system 1, type None, index 0' for object 1. CallUserFunction passes itemNumber to EXUvis::AddBodyGraphicsData, which expects the item ID that UpdateGraphics computes with Index2ItemID(itemNumber, ItemType::Object, systemID); the object number is decoded as a system number. The same ID is what mouse selection shows, so selecting a user-function body reported a wrong item.
+  - **notes:** What a graphicsDataUserFunction draws (ObjectGround, ObjectRigidBody, ObjectRigidBody2D, ObjectGenericODE2) belongs to its object: mouse selection and SC.renderer.GetGraphicsData() name the object; before, the object number was decoded as a system number.
+  - date resolved: **2026-09-27 23:56**, date raised: 2026-09-27
 - **1.12.134** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item definitions: classDescription becomes overallDescription and equations becomes detailedDescription (#2724)
   - description: The maintainer, 2026-09-27: 'the classDescription and the equations fields in the items should be replaced into overallDescription (brief description, summary) and detailedDescription. The reason for the split is that the overall descr. is used for class, etc., while the full description goes into the docs. And there is some auto-generated part before the details.' Items only; the structures keep classDescription, which has no detailed counterpart there. A rename in the five item definition files, the generators that read them, the item report and definitions/README.md; the generated files do not change. revision2026b step RG13.5.0.1.
   - **notes:** The item definitions call their two description fields overallDescription (the brief text: the class, the docstring, the paragraph under the heading) and detailedDescription (the full text of the page after its generated part); they were classDescription and equations. The structures keep classDescription.

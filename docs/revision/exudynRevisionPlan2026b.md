@@ -264,12 +264,20 @@ NOT cover, and about the testing that no suite can do.
         settings - faces, face edges, lines, transparency - are not in the graphics data**: OpenGL
         applies them when it draws, so this test cannot see them, and the raytracer images of
         RG2.3.3.4 are where they can be seen.
-      - **RG2.3.3.3** **special cases as manual examples** - graphics user functions, and whatever else
-        needs a model of its own; sensor traces only if they become part of the graphics data.
-      - **RG2.3.3.4** **the raytracer** - `RedrawAndGetImage(True)` at a very low resolution, about
-        100 x 100, which is the part that sees transparency, materials and lighting. Slower, so
-        probably **a small test set that always runs and a larger one that does not**; decided after
-        measuring the first results, not before.
+      - **RG2.3.3.3** **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg2-3-3-3) - **special
+        cases as manual examples** - graphics user functions, and whatever else needs a model of its
+        own; sensor traces only if they become part of the graphics data. Done for the graphics user
+        functions of a ground and a rigid body and a load user function, at the start and after half
+        a second. **It found a bug on its first run** (#2726): what a graphics user function draws
+        carried the object number where the item ID belongs, and was attributed to a wrong system.
+      - **RG2.3.3.4** **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg2-3-3-4) - **the
+        raytracer** - `RedrawAndGetImage(True)` at a very low resolution, about 100 x 100, which is
+        the part that sees transparency, materials and lighting. Slower, so probably **a small test
+        set that always runs and a larger one that does not**; decided after measuring the first
+        results, not before. **Measured: 1 to 12 ms per image, identical from run to run** - so one
+        set, always run: the representative model with the default, transparent faces, face edges
+        and no faces, as PNG references of 0.2 to 1.1 KB. The tolerance across platforms is a guess
+        until the first linux run.
       - **RG2.3.3.5** **every item, through its MiniExample** - depends on the group the maintainer
         announced on 2026-09-27: **a MiniExample for every item**, together with the missing
         documentation and examples of all items (a revision group of its own, *"like RG13"* - not
@@ -2793,8 +2801,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG2.3.3.3 | #2704 | graphics regression test: special cases as manual examples |
-| RG2.3.3.4 | #2704 | graphics regression test: low-resolution raytracer images |
 | RG2.3.3.5 | #2704 | graphics regression test: every item through its MiniExample (needs the MiniExample group) |
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a CurvedTriangleList |
 | RG6.7.1 | #2710 | evaluate the curved triangle (or quad) geometry and the sphere's features |

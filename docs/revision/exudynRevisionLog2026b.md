@@ -6084,3 +6084,40 @@ step that writes them. For loads the maintainer asked that the generalized force
 reading `CSystem::ComputeODE2SingleLoad` for that also showed that the static solver's load factor
 multiplies every load **except** one with a user function (#603), which `loadDefinitionsDev.md` had
 put the other way round.
+
+<a id="rg2-3-3-3"></a>
+### RG2.3.3.3 — graphics user functions, and the bug they showed (2026-09-27, #2704, #2726)
+
+The case: a ground drawn by plain graphics data, a ground whose `graphicsDataUserFunction` moves a
+brick with the time, a rigid body drawn by a user function under gravity, and a force whose
+`loadVectorUserFunction` grows with the time, drawn with `loads.fixedLoadSize` off. The fingerprint
+is taken at the start and after a dynamic solve of 0.5 s, and stored as the start and what changed.
+The test asserts that the plain ground did not change and that the two user function objects and the
+load did. The Python user functions are called by `GetGraphicsData()` itself - no renderer.
+
+**On its first run the fingerprint had `system 1 None 0` and `system 2 None 0` in it** - groups for
+a second and third system that the model does not have. `CallUserFunction` of `ObjectGround`,
+`ObjectRigidBody`, `ObjectRigidBody2D` and `ObjectGenericODE2` passed the object number to
+`EXUvis::AddBodyGraphicsData`, which takes an item ID - `Index2ItemID(itemNumber, ItemType::Object,
+systemID)`, as every `UpdateGraphics` computes it - and decoded object 1 as system 1. The mouse
+selection reads the same ID, so selecting a body drawn by a user function named a wrong item. Fixed
+in `src/Graphics/VisualizationUserFunctions.cpp` (#2726); after it, the two objects are `Object 1`
+and `Object 2`.
+
+<a id="rg2-3-3-4"></a>
+### RG2.3.3.4 — low-resolution raytracer images (2026-09-27, #2704)
+
+Measured before deciding: the representative model of RG2.3.3.2 at 100 x 100 pixels takes **1 to 12
+ms** per image through `SC.renderer.RedrawAndGetImage(useRaytracer=True)`, without a window, and two
+runs give **identical** images. The settings the graphics data cannot see do change the image:
+transparent faces 37 % of the pixels, face edges 11 %, no faces 31 %; `nodes.show` changes almost
+nothing, because points are not raytraced. So there is **one set that always runs**, not two.
+
+Two things had to go out of the image: the **texts** - the version number is one of them and would
+change the reference with every commit (`raytracer.advanced.showText = False`) - and the **world
+basis**, which decided the zoom (`drawWorldBasis`, `drawCoordinateSystem`). The four references -
+default, `facesTransparent`, `showFaceEdges`, no faces - are PNG files of 0.2 to 1.1 KB, written and
+read with `zlib` alone (`WritePNG`, `ReadPNG` in `graphicsRegression.py`), so a human can open them
+and the test needs nothing beyond numpy. Two images agree if at most 1 % of the pixels differ by
+more than 24 of 255 levels; that tolerance is a guess until the first run on linux. As in the other
+cases, a variant that stops changing the image fails.

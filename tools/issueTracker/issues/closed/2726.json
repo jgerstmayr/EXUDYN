@@ -1,0 +1,16 @@
+{
+  "number": 2726,
+  "title": "graphics drawn by a graphicsDataUserFunction carry the object number where an item ID belongs, so they are attributed to a wrong system and item",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Found by the graphics regression test of revision2026b step RG2.3.3.3, 2026-09-27: the triangles returned by the graphicsDataUserFunction of ObjectGround, ObjectRigidBody, ObjectRigidBody2D and ObjectGenericODE2 appear in SC.renderer.GetGraphicsData() as 'system 1, type None, index 0' for object 1. CallUserFunction passes itemNumber to EXUvis::AddBodyGraphicsData, which expects the item ID that UpdateGraphics computes with Index2ItemID(itemNumber, ItemType::Object, systemID); the object number is decoded as a system number. The same ID is what mouse selection shows, so selecting a user-function body reported a wrong item.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 23:56",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationUserFunctions.cpp",
+  "releaseNotes": "What a graphicsDataUserFunction draws (ObjectGround, ObjectRigidBody, ObjectRigidBody2D, ObjectGenericODE2) belongs to its object: mouse selection and SC.renderer.GetGraphicsData() name the object; before, the object number was decoded as a system number.",
+  "resolvedInVersion": "1.12.135"
+}

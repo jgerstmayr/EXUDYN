@@ -212,3 +212,77 @@ def CheckVariantsAgainstReference(case, default, variants):
         expected = ApplyDelta(reference['default'], reference['variants'][name])
         lines += [name + ' - ' + line for line in Differences(expected, variants[name])]
     return lines
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#LOW-RESOLUTION RAYTRACER IMAGES (#2704): what the graphics data cannot say - faces, face edges,
+#transparency, lighting - is in the image of the software raytracer, which needs no window. The
+#references are PNG files a human can open; written and read here with zlib alone, so that the test
+#needs nothing beyond numpy. An image agrees if few pixels differ by more than a few levels:
+#floating point differs between compilers, and a pixel on an edge may flip
+pixelTolerance = 24              #levels of 255 a pixel may differ by without counting
+pixelFractionTolerance = 0.01    #the fraction of pixels that may differ by more
+
+
+def WritePNG(fileName, image):
+    """an 8-bit RGB PNG of an array (height, width, 3) of uint8"""
+    import struct                                                           # noqa: PLC0415
+    import zlib                                                             # noqa: PLC0415
+    image = np.ascontiguousarray(image, dtype=np.uint8)
+    (height, width) = image.shape[:2]
+    raw = b''.join(b'\x00' + image[row].tobytes() for row in range(height))   #filter type 0
+
+    def Chunk(kind, data):
+        return (struct.pack('>I', len(data)) + kind + data
+                + struct.pack('>I', zlib.crc32(kind + data) & 0xffffffff))
+    with open(fileName, 'wb') as file:
+        file.write(b'\x89PNG\r\n\x1a\n'
+                   + Chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 2, 0, 0, 0))
+                   + Chunk(b'IDAT', zlib.compress(raw, 9)) + Chunk(b'IEND', b''))
+
+
+def ReadPNG(fileName):
+    """the image WritePNG wrote, as an array (height, width, 3) of uint8"""
+    import struct                                                           # noqa: PLC0415
+    import zlib                                                             # noqa: PLC0415
+    with open(fileName, 'rb') as file:
+        data = file.read()
+    (position, header, compressed) = (8, None, b'')
+    while position < len(data):
+        (length,) = struct.unpack('>I', data[position:position + 4])
+        kind = data[position + 4:position + 8]
+        content = data[position + 8:position + 8 + length]
+        if kind == b'IHDR':
+            header = struct.unpack('>IIBBBBB', content)
+        elif kind == b'IDAT':
+            compressed += content
+        position += 12 + length
+    (width, height) = header[:2]
+    rows = np.frombuffer(zlib.decompress(compressed), dtype=np.uint8).reshape(height, 1 + 3*width)
+    assert (rows[:, 0] == 0).all(), fileName + ': only unfiltered rows, as WritePNG writes them'
+    return rows[:, 1:].reshape(height, width, 3).copy()
+
+
+def ImageDifferences(name, reference, image):
+    """what differs between two images, as readable lines; [] if they agree"""
+    if reference.shape != image.shape:
+        return [name + ': image size ' + str(reference.shape) + ' -> ' + str(image.shape)]
+    difference = np.abs(reference.astype(int) - image.astype(int)).max(axis=2)
+    fraction = float((difference > pixelTolerance).mean())
+    if fraction > pixelFractionTolerance:
+        return [name + ': ' + str(round(100*fraction, 2)) + '% of the pixels differ by more than '
+                + str(pixelTolerance) + ' levels (mean difference '
+                + str(round(float(difference.mean()), 2)) + ')']
+    return []
+
+
+def CheckImageAgainstReference(case, image):
+    """the differences of a raytracer image to its reference PNG; writes the reference if it is
+    missing or EXUDYN_RECORD_GRAPHICS_REFERENCES is set, and then reports that it did"""
+    path = os.path.join(referenceDirectory, case + '.png')
+    record = os.environ.get('EXUDYN_RECORD_GRAPHICS_REFERENCES', '') not in ['', '0']
+    if record or not os.path.exists(path):
+        os.makedirs(referenceDirectory, exist_ok=True)
+        WritePNG(path, image)
+        return ['reference written: ' + os.path.relpath(path) + ' - look at it, and run again']
+    return ImageDifferences(case, ReadPNG(path), image)

@@ -238,3 +238,104 @@ def testAVariantIsStoredAsWhatDiffers():
         assert graphicsRegression.Differences(graphicsRegression.ApplyDelta(default, delta), variant) == []
         if 'nodes.showNumbers' in settings:     #the numbers add texts, nothing else
             assert all(set(change) == {'texts'} for change in delta.values() if change and 'texts' in change)
+
+
+def UserFunctionModel():
+    """a ground whose graphics user function draws a brick that moves with time, a ground drawn
+    by plain graphics data, a rigid body drawn by a user function under gravity, and a force whose
+    load user function grows with time - drawn with loads.fixedLoadSize off"""
+    from exudyn.utilities import InertiaCuboid                                  # noqa: PLC0415
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    brick = graphics.Brick(size=[0.4, 0.2, 0.1], color=red)
+
+    def UFgroundGraphics(mbs, itemNumber):
+        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization)
+        return [graphics.Move(brick, [t, 0, 0], np.eye(3))]
+
+    def UFbodyGraphics(mbs, itemNumber):
+        n = mbs.GetObjectParameter(itemNumber, 'nodeNumber')
+        p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position, exu.ConfigurationType.Visualization)
+        A = mbs.GetNodeOutput(n, exu.OutputVariableType.RotationMatrix,
+                              exu.ConfigurationType.Visualization).reshape((3, 3))
+        return [graphics.Move(brick, p, A)]
+
+    def UFload(mbs, t, loadVector):
+        return [0, -10*(1 + t), 0]
+
+    mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, -0.5], size=2, nTiles=2)])
+    mbs.AddObject(ObjectGround(referencePosition=[0, 1, 0],
+                               visualization=VObjectGround(graphicsDataUserFunction=UFgroundGraphics)))
+    oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [0.4, 0.2, 0.1]), referencePosition=[1, 0, 0],
+                                gravity=[0, -9.81, 0])
+    mbs.SetObjectParameter(oBody, 'VgraphicsDataUserFunction', UFbodyGraphics)
+    mbs.CreateForce(bodyNumber=oBody, loadVector=[0, -10, 0], loadVectorUserFunction=UFload)
+    mbs.Assemble()
+    SC.visualizationSettings.loads.fixedLoadSize = False
+    return (SC, mbs)
+
+
+def testGraphicsUserFunctions():
+    """what a graphics user function and a load user function draw, at the start and after half a
+    second: the user function items must move, the plain ground must not. Drawn with the Python user
+    functions called from GetGraphicsData, without a renderer (#2704)"""
+    (SC, mbs) = UserFunctionModel()
+    initial = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData())
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.endTime = 0.5
+    simulationSettings.timeIntegration.numberOfSteps = 50
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.displayComputationTime = False
+    simulationSettings.displayStatistics = False
+    simulationSettings.timeIntegration.verboseMode = 0
+    mbs.SolveDynamic(simulationSettings)
+    later = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=initial['perItem'])
+
+    moved = graphicsRegression.VariantDelta(initial, later)
+    assert 'Object 0' not in moved                          #the plain ground stays where it is
+    assert 'Object 1' in moved and 'Object 2' in moved      #the user function ground and the body
+    assert any(key.startswith('Load') for key in moved)     #the load that grows with time
+
+    differences = graphicsRegression.CheckVariantsAgainstReference('userFunctions', initial,
+                                                                   {'after 0.5 s': later})
+    assert differences == [], '\n'.join(differences)
+
+
+#the settings the graphics data cannot see, because OpenGL and the raytracer apply them when they
+#draw; each is one image of the representative model
+raytracerVariants = {'default': {}, 'facesTransparent': {'view0.scene.facesTransparent': True},
+                     'showFaceEdges': {'view0.scene.showFaceEdges': True},
+                     'noFaces': {'view0.scene.showFaces': False}}
+
+
+def testRaytracerImages():
+    """the representative model through the software raytracer at 100 x 100 pixels - a few
+    milliseconds per image, no window - compared with reference PNGs (#2704)"""
+    images = {}
+    for (name, settings) in raytracerVariants.items():
+        SC = RepresentativeModel()
+        SC.visualizationSettings.view0.window.renderWindowSize = [100, 100]
+        #no texts - the version number is one - and no world basis, which would decide the zoom
+        SC.visualizationSettings.raytracer.advanced.showText = False
+        SC.visualizationSettings.view0.scene.drawWorldBasis = False
+        SC.visualizationSettings.view0.scene.drawCoordinateSystem = 0
+        SetSettings(SC.visualizationSettings, settings)
+        SC.renderer.ZoomAll()
+        images[name] = SC.renderer.RedrawAndGetImage(useRaytracer=True)
+
+    #each setting must still change the image, or it has silently stopped working
+    for name in raytracerVariants:
+        if name != 'default':
+            assert graphicsRegression.ImageDifferences(name, images['default'], images[name]) != [], \
+                name + ' no longer changes the image'
+    differences = []
+    for (name, image) in images.items():
+        differences += graphicsRegression.CheckImageAgainstReference('raytracer_' + name, image)
+    assert differences == [], '\n'.join(differences)
+
+
+def testThePNGsAreReadAsTheyWereWritten(tmp_path):
+    image = (np.arange(4*5*3) % 256).astype(np.uint8).reshape(4, 5, 3)
+    graphicsRegression.WritePNG(str(tmp_path / 'image.png'), image)
+    assert np.array_equal(graphicsRegression.ReadPNG(str(tmp_path / 'image.png')), image)

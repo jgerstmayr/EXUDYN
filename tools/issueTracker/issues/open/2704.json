@@ -9,5 +9,5 @@
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
   "file": "python/testing",
-  "workingRemarks": "RG2.3.3.2 done 2026-09-27: the 28 most used visualization settings as variants of one representative model, stored as what each changes (python/testing/graphicsReferences/settings.json); the fingerprint holds sphere resolutions, circle segments and font sizes as well. The view0.scene settings are applied by OpenGL and are not in the graphics data."
+  "workingRemarks": "RG2.3.3.2 done 2026-09-27: the 28 most used visualization settings as variants of one representative model, stored as what each changes (python/testing/graphicsReferences/settings.json); the fingerprint holds sphere resolutions, circle segments and font sizes as well. The view0.scene settings are applied by OpenGL and are not in the graphics data.; RG2.3.3.3 and RG2.3.3.4 done 2026-09-27: graphics user functions (which found #2726), and low-resolution raytracer images as PNG references. RG2.3.3.5 waits for the MiniExamples of RG13."
 }
