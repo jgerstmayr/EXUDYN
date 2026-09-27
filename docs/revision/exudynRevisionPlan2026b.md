@@ -221,6 +221,44 @@ NOT cover, and about the testing that no suite can do.
       segment at `z[j]` instead of `z[j+1]`; neither shows with the default `HT`. Small, with a test
       that draws in 3D.
 
+    - **RG2.3.3** *(sub-step of RG2.3; maintainer 2026-09-27)* **The graphics regression test**
+      (#2704). *"File graphicdata test as step. It could include also metrics for positions, colors -
+      mean/min/max - so the content is also checked."*
+
+      **What is compared**: each case - a model under one set of visualization settings - is reduced
+      to a **fingerprint** of `SC.renderer.GetGraphicsData()`, per kind of element and per item
+      (`[system, itemType, index]`):
+
+      | part | compared |
+      |---|---|
+      | the number of lines, spheres, circles, texts, triangles | exactly |
+      | points: min, max, mean per coordinate | with a tolerance |
+      | colors: min, max, mean per channel (RGBA) | with a tolerance |
+      | radii of spheres and circles, normals of triangles: min, max, mean | with a tolerance |
+      | texts | the strings, exactly |
+
+      The counts say **what** changed and which item; the metrics say that the **content** is still
+      right - a brick that moved, a colour that changed, a normal that flipped - without storing every
+      coordinate. The tolerance is needed because the data is `float32` and has to agree across
+      compilers and platforms; per-item means are also far less sensitive to the order of the elements
+      than the raw arrays.
+
+      **The cases**, a first proposal: a pendulum (rigid body, joint, ground), a chain with springs and
+      markers and loads shown, an ANCF cable, a model with many triangles (an STL or an FFRF body), and
+      sensors with traces; each under two to four settings - defaults, nodes/markers/loads/sensors
+      shown, `showNumbers`, a different `circleTiling` or colour. Small models, so the whole test stays
+      well under a second per case.
+
+      **The reference**: one JSON file per case, written by the test itself when asked
+      (`recordReference`, as `parameterConversionTest.py` does), so a change of the drawing is one
+      reviewed diff - *"object 3: triangles 12 -> 10"*, *"mean z of the triangles of object 0: 0.00 ->
+      0.20"* - and not a new checksum.
+
+      **To decide with the maintainer**: the tolerance (a relative 1e-5 is the proposal), whether the
+      metrics are per item or per item type for larger models, and where the references live
+      (`python/testing/graphicsReferences/` is the proposal). The low-resolution images of RG2.3 - the
+      human half - stay a separate step.
+
 ## RG3 — Docs
 
 The documentation is Markdown, built with Sphinx and published for every release since
@@ -2480,6 +2518,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
+| RG2.3.3 | #2704 | the graphics regression test: counts per item, and min/max/mean of positions and colors |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |

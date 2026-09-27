@@ -1,0 +1,12 @@
+{
+  "number": 2704,
+  "title": "a graphics regression test on SC.renderer.GetGraphicsData(): counts per item, and metrics of positions and colors",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-09-27: 'File graphicdata test as step. It could include also metrics for positions, colors - mean/min/max - so the content is also checked.' A set of models, each under several visualization settings, reduced to a fingerprint from SC.renderer.GetGraphicsData() (#2700) and compared with a stored reference: the NUMBER of lines, spheres, circles, texts and triangles per item exactly, and the CONTENT through metrics - min, max and mean of the points per coordinate, of the colors per channel, of radii and normals - with a tolerance, because the data is float32 and must compare across compilers. Texts are compared as their strings. The fingerprint is small enough to be a readable JSON reference, so a change shows in git diff as 'ObjectRigidBody 3: 12 triangles -> 10' or 'mean z of the triangles of object 0 moved by 0.2'. No window is opened. revision2026b step RG2.3.3.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "python/testing"
+}

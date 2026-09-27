@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.119.dev1
 - last change = 2026-09-27
-- Number of issues = 2704
+- Number of issues = 2705
 - Number of resolved issues = 2433 (119 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` a graphics regression test on SC.renderer.GetGraphicsData(): counts per item, and metrics of positions and colors (#2704)
+  - description: The maintainer, 2026-09-27: 'File graphicdata test as step. It could include also metrics for positions, colors - mean/min/max - so the content is also checked.' A set of models, each under several visualization settings, reduced to a fingerprint from SC.renderer.GetGraphicsData() (\#2700) and compared with a stored reference: the NUMBER of lines, spheres, circles, texts and triangles per item exactly, and the CONTENT through metrics - min, max and mean of the points per coordinate, of the colors per channel, of radii and normals - with a tolerance, because the data is float32 and must compare across compilers. Texts are compared as their strings. The fingerprint is small enough to be a readable JSON reference, so a change shows in git diff as 'ObjectRigidBody 3: 12 triangles -\> 10' or 'mean z of the triangles of object 0 moved by 0.2'. No window is opened. revision2026b step RG2.3.3.
+  - date raised: 2026-09-27
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - date raised: 2026-09-26
