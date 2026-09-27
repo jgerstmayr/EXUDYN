@@ -55,7 +55,7 @@ descriptionStr += r"""Available output variables and the interpreation of the ou
 pb.DefStartEnumClass(className = pyClass, 
                         description=descriptionStr, 
                         subSection=True, labelName='sec:'+pyClass)
-pb.DefLatexStartTable(pyClass)
+pb.DefStartTable(pyClass)
 
 #the enum, its bit positions, the two C++ helper functions and this Python/documentation
 #table all come from definitions/outputVariableTypes.py - nothing is left to keep
@@ -64,7 +64,7 @@ for outputVariable in outputVariableTypes:
     pb.AddEnumValue(pyClass, outputVariable.name, outputVariable.description)
 
 pb.CppCode('		'+enumExportValues+';\n\n')
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #the other enums: their values, the C++ enums and string functions all come from
 #definitions/enumTypes.py
@@ -78,10 +78,10 @@ for enum in enumTypes:
     else:
         pb.DefStartEnumClass(className=enum.pythonName, description=enum.description,
                              subSection=True, labelName='sec:'+enum.pythonName)
-    pb.DefLatexStartTable(enum.pythonName)
+    pb.DefStartTable(enum.pythonName)
     for value in enum.values:
         if value.python:
             pb.AddEnumValue(cClass, value.name, value.description)
     pb.CppCode('		'+enumExportValues+';\n\n')
-    pb.DefLatexFinishTable()
+    pb.DefFinishTable()
 

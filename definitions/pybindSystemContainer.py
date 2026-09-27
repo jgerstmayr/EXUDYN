@@ -42,7 +42,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 """)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #GENERAL FUNCTIONS
@@ -77,7 +77,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem
                         returnType='MainSystem',
                         )
 
-pb.DefLatexDataAccess('visualizationSettings',r"""this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: `SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False`""",
+pb.DefDataAccess('visualizationSettings',r"""this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: `SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False`""",
                        dataType = 'VisualizationSettings')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary', 
@@ -159,15 +159,15 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cNa
                         )
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-pb.DefLatexDataAccess('renderer','The substructure in SystemContainer responsible for rendering (except visualizationSettings)',
+pb.DefDataAccess('renderer','The substructure in SystemContainer responsible for rendering (except visualizationSettings)',
                         dataType='Renderer')
 
-pb.DefLatexDataAccess('visualizationSettings','Structure representing the settings for renderer; for details of visualizationSettings see Section Structures and Settings',
+pb.DefDataAccess('visualizationSettings','Structure representing the settings for renderer; for details of visualizationSettings see Section Structures and Settings',
                         dataType='VisualizationSettings')
 
 pb.EndCppWrittenByHand()  #system container manually added 
 
 
-pb.DefLatexFinishTable()#only finalize latex table
+pb.DefFinishTable()#only finalize latex table
 
 pb.EndStubSection()

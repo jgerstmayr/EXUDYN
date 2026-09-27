@@ -73,7 +73,7 @@ mbs.systemData.Info()
 mbs.systemData.InfoLTG()
 """)
 
-pb.DefLatexStartTable(classStr)
+pb.DefStartTable(classStr)
 
 pb.CppCode("\n//        General functions:\n")
 
@@ -202,17 +202,17 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='InfoLTG', cName='[](const MainSy
 
 
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pb.CppCode("\n//        Coordinate access:\n")
 #start new Latex/RST subsection:
-pb.DefLatexStartClass(pyClassStr+': Access coordinates', '', subSection=True, labelName='sec:mbs:systemData:coordinates')
+pb.DefStartClass(pyClassStr+': Access coordinates', '', subSection=True, labelName='sec:mbs:systemData:coordinates')
 
 pb.AddDocu('This section provides access functions to global coordinate vectors. Assigning invalid values or using '+
             'wrong vector size might lead to system crash and unexpected results.')
 
-pb.DefLatexStartTable(classStr+':coordinate access')
+pb.DefStartTable(classStr+':coordinate access')
 #+++++++++++++++++++++++++++++++++
 #coordinate access functions:
 
@@ -379,17 +379,17 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemStateDict', cName='PyGe
                                 )
 
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #+++++++++++++++++++++++++++++++++
 #LTG-functions:
 pb.CppCode("\n//        LTG readout functions:\n")
-pb.DefLatexStartClass(pyClassStr+': Get object LTG coordinate mappings', '', subSection=True, labelName='sec:systemData:ObjectLTG')
+pb.DefStartClass(pyClassStr+': Get object LTG coordinate mappings', '', subSection=True, labelName='sec:systemData:ObjectLTG')
 
 pb.AddDocu('This section provides access functions the ABRV:LTG-lists for every object (body, constraint, ...) '+
             'in the system. For details on the ABRV:LTG mapping, see [](#sec-overview-ltgmapping).')
 
-pb.DefLatexStartTable(classStr+':object LTG coordinate mappings')
+pb.DefStartTable(classStr+':object LTG coordinate mappings')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectLTGODE2', cName='PyGetObjectLocalToGlobalODE2', 
                                 description="get object local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()",
@@ -457,7 +457,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetNodeLTGData', cName='PyGetNod
                                 )
 
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #now finalize pybind class, but do nothing on latex side (sL1 ignored)
 pb.CppFinishClass('SystemData') #finalize the pybind class only; nothing on the documentation side

@@ -71,10 +71,12 @@ def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit in
     return s
 
 #************************************************
-#convert string to latex readable string --> used in auto-generated docu
+#the requested types of a marker or an item as documentation text, each one as a code span: it is
+#written as 	exttt{...} because the text goes through LatexText2Markdown, which turns that into a
+#backtick span (#2681)
 #parse string s and extract types available in itemType (Object/Node/...) and represent as latex-string
 #possibleTypesList is e.g. Object::Body -> body 
-def GetTypesStringLatex(s, itemType, possibleTypesList, separator = ','):
+def GetTypesStringDocu(s, itemType, possibleTypesList, separator = ','):
     returnStr = ''
     commaStr = ''
     for t in possibleTypesList:
@@ -155,10 +157,10 @@ def CountLines(s):
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def Latex2RSTlabel(s):
+def MarkdownLabelName(s):
+    """the name a section label is referenced by: lower case, and ':' and '_' as '-'"""
     return s.replace(':','-').replace('_','-').lower()
 
-#convert a text that is mainly designed for latex, but to be output into RST
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the LaTeX of definitions/ and of the docstrings becomes Markdown with the same converter the
 #chapters were converted with; it moved to tools/generators/latexToMarkdown.py in revision2026
@@ -166,10 +168,10 @@ def Latex2RSTlabel(s):
 from latexToMarkdown import ConvertText as LatexText2Markdown                    # noqa: E402
 
 
-def MarkdownLabel(latexLabel):
+def MarkdownLabel(label):
     """a LaTeX label as a MyST target: the same name the RST side uses, so that every reference
     that exists today keeps working"""
-    return '(' + Latex2RSTlabel(latexLabel) + ')='
+    return '(' + MarkdownLabelName(label) + ')='
 
 
 def MarkdownHeading(title, level):
@@ -183,13 +185,10 @@ def MarkdownCell(text):
 
 
 #a class that collects the pybind11 code, the stub text and the documentation of one
-#declaration run. It was PyLatexRST and wrote LaTeX and RST beside the Markdown until revision2026
-#step R7.1.7; the name and the Def... method names stay, because they are the declaration calls
-#that definitions/pybind*.py is written in (pybindTypes.declarationCalls).
-#NOTE the name is the last LaTeX in this file: the class writes Python, stub and Markdown and has
-#written neither LaTeX nor RST since revision2026b step RG3.14. Renaming it touches five emitters
-#and is worth doing with the next change to them, not on its own (#2655)
-class PyLatexRST:
+#declaration run: the three outputs it writes. Its Def... methods are the declaration calls that
+#definitions/pybind*.py is written in, and pybindTypes.declarationCalls lists them by name, so a
+#method renamed here is renamed there (#2681)
+class DeclarationWriter:
     def __init__(self, sPy='', sPyi='', sMarkdown=''):
         self.sPy = sPy
         self.sPyi = sPyi
@@ -205,7 +204,7 @@ class PyLatexRST:
         self.currentPageName = ''
 
     def __add__(self, other):
-        return PyLatexRST(self.sPy+other.sPy, sMarkdown=self.sMarkdown+other.sMarkdown)
+        return DeclarationWriter(self.sPy+other.sPy, sMarkdown=self.sMarkdown+other.sMarkdown)
 
     def __iadd__(self, other):
         self = self + other
@@ -273,7 +272,7 @@ class PyLatexRST:
         return text
 
     def AddInlineRef(self, ref):
-        self.sMarkdown += ' {ref}`' + Latex2RSTlabel(ref) + '` '
+        self.sMarkdown += ' {ref}`' + MarkdownLabelName(ref) + '` '
 
     def AddDocuCodeBlock(self, code, pythonStyle=True, addRSTLineNumbers=True):
         if code.strip(' ')[-1] != '\n':
@@ -291,7 +290,7 @@ class PyLatexRST:
     #for the pybind interface documentation:
 
     #the sentence that introduces the functions and structures of a class
-    def DefLatexStartTable(self, classStr='', style='', header=''):
+    def DefStartTable(self, classStr='', style='', header=''):
         addInfo = ''
         if ':' in classStr:
             ni = classStr.find(':')
@@ -301,7 +300,7 @@ class PyLatexRST:
                            + 'structures**' + addInfo + ':\n\n')
 
     #a three column table, e.g. for output variables
-    def DefLatexStartTable3(self, headers=[]):
+    def DefStartTable3(self, headers=[]):
         self.sMarkdown += ('\n| ' + ' | '.join([MarkdownCell(h) for h in headers[:3]])
                            + ' |\n|---|---|---|\n')
 
@@ -310,7 +309,7 @@ class PyLatexRST:
         self.sMarkdown += ('\n| Name | type | size | default value | description |\n'
                            + '|---|---|---|---|---|\n')
 
-    def DefLatexFinishTable(self):
+    def DefFinishTable(self):
         self.sMarkdown += '\n'
 
     def DefStartEnumClass(self, className, description, subSection=False, labelName='', cClass=None):
@@ -318,7 +317,7 @@ class PyLatexRST:
             cClass = className
 
         self.sPy +=	'  py::enum_<' + cClass + '>(m, "' + className + '")\n'
-        self.DefLatexStartClass(className, description, subSection=subSection, labelName=labelName)
+        self.DefStartClass(className, description, subSection=subSection, labelName=labelName)
 
         self.sPyi += '\nclass '+className+'(Enum):\n'
         self.sPyi += DocStringGoogleFromPlainText(description, addSpaces='    ', multiline=True,
@@ -334,13 +333,13 @@ class PyLatexRST:
         if className not in localListEnumNames:
             localListEnumNames.append(className)
 
-        self.DefLatexDataAccess(itemName, description)
+        self.DefDataAccess(itemName, description)
 
         self.sPyi += ' '*4 + itemName + ' = int\n' #is int correct?
         if ADD_DOCSTRINGS: self.sPyi += ' '*4 + '"""' + descriptionClean + '"""\n'
 
     #start a new section
-    def DefLatexStartClass(self, sectionName, description, subSection=False, labelName=''):
+    def DefStartClass(self, sectionName, description, subSection=False, labelName=''):
         self.sMarkdown += '\n'
         if labelName != '':
             self.sMarkdown += MarkdownLabel(labelName) + '\n'
@@ -365,7 +364,7 @@ class PyLatexRST:
             else:
                 self.sPy += '        .def(py::init(&'+cClass+'::ForbidConstructor))\n'
 
-        self.DefLatexStartClass(sectionName, description, subSection=subSection, labelName=labelName)
+        self.DefStartClass(sectionName, description, subSection=subSection, labelName=labelName)
 
         classInfo = 'exudyn module'
         if pyClass != '': #in case of basic module, stubs are not needed => information
@@ -382,11 +381,11 @@ class PyLatexRST:
         if (cClass != ''):
             self.sPy += '        ; // end of ' + cClass + ' pybind definitions\n\n'
 
-        self.DefLatexFinishTable()
+        self.DefFinishTable()
         self.sMarkdown += '\n'
 
     #one data member of a class
-    def DefLatexDataAccess(self, name, description, dataType = '', isTopLevel = False):
+    def DefDataAccess(self, name, description, dataType = '', isTopLevel = False):
         self.sMarkdown += self.MarkdownEntry(name, description)
 
         if dataType != '':
@@ -398,7 +397,7 @@ class PyLatexRST:
                 self.sPyi += pyiIndent + DocStringGoogleFromPlainText(description,addSpaces='',multiline=False)
 
     #one operator of a class
-    def DefLatexOperator(self, name, description, returnType = '',
+    def DefOperator(self, name, description, returnType = '',
                          argList=[], defaultArgs=[], argTypes=[],
                          isTopLevel = False):
         hasArgs = bool(len(argList))
@@ -439,7 +438,7 @@ class PyLatexRST:
             sNew = sNew.replace('True','true').replace('False','false') #docu shows True, C++ code needs true
             return sNew
         
-        def ReplaceDefaultArgsLatex(s):
+        def ReplaceDefaultArgsDocu(s):
             sNew = copy.copy(s)
             sNew = sNew.replace('EXUstd::InvalidIndex','invalid (-1)') #if changed: check other places for "invalid (-1)"
             sNew = sNew.replace('Contact::IndexEndOfEnumList','ContactTypeIndex.IndexEndOfEnumList') #if changed: check other places for "invalid (-1)"
@@ -465,9 +464,9 @@ class PyLatexRST:
     
         #convert some special functions, like __repr__()
         addBraces = True
-        pyNameLatex = pyName
-        if pyNameLatex in pyFunctionAccessConvert:
-            pyNameLatex = pyFunctionAccessConvert[pyName]
+        pyNameDocu = pyName
+        if pyNameDocu in pyFunctionAccessConvert:
+            pyNameDocu = pyFunctionAccessConvert[pyName]
             addBraces = False
             #print('now pyName=', pyName)
     
@@ -482,8 +481,8 @@ class PyLatexRST:
         if (options != ''):
             self.sPy += ', ' + options
        
-        sLadd = '  ' + pyNameLatex
-        sRadd = '* | ' + '**'+pyNameLatex+'**\\ '
+        sLadd = '  ' + pyNameDocu
+        sRadd = '* | ' + '**'+pyNameDocu+'**\\ '
         if addBraces: 
             sLadd += '('
             sRadd += '('
@@ -498,8 +497,8 @@ class PyLatexRST:
                 if (defaultArgs[i] != ''):
                     if argList[i] != '*args': #won't work in pybind interface (see comment in Pybind11 docs)
                         self.sPy += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
-                    sLadd += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
-                    sRadd += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
+                    sLadd += ' = ' + ReplaceDefaultArgsDocu(defaultArgs[i])
+                    sRadd += ' = ' + ReplaceDefaultArgsDocu(defaultArgs[i])
                 sSep = ', '
 
         self.sPy += ')'
@@ -541,7 +540,7 @@ class PyLatexRST:
                         if i < len(defaultArgs):
                             defaultArgClean = defaultArgs[i].replace('exu.','')
                             if defaultArgClean != '':
-                                argString += '='+ReplaceDefaultArgsLatex(defaultArgClean)
+                                argString += '='+ReplaceDefaultArgsDocu(defaultArgClean)
                         sepArg = ', '
                 # if pyName=='ODE1Size': #*** check if this works! check .pyi file!
                 #     print(pyName+':'+argString+'; ',defaultArgs[i])

@@ -68,8 +68,8 @@ def ReadableDefault(value):
 #the documentation of one structure
 def StructureDocs(parseInfo, parameterList):
     """returns [Markdown text, parameter changes list]"""
-    plr = PyLatexRST()
-    plr.AddDocu(parseInfo['sectionText']) #.replace('\\n','\n') #this is the string for latex documentation
+    writer = DeclarationWriter()
+    writer.AddDocu(parseInfo['sectionText']) #.replace('\\n','\n') #this is the string for latex documentation
     
     parameterListSorted = SortedParameters(parameterList)
     hasPybindInterface = HasPybindInterface(parseInfo, parameterList)
@@ -83,7 +83,7 @@ def StructureDocs(parseInfo, parameterList):
         if not descriptionStr.endswith('.'): 
             descriptionStr += '. '
         
-        plr.AddDocu(descriptionStr+
+        writer.AddDocu(descriptionStr+
                     '\n\n\\noindent '+
                     parseInfo['class'] + ' has the following items:\n', 
                     section=parseInfo['class'], sectionLevel=3, 
@@ -94,10 +94,10 @@ def StructureDocs(parseInfo, parameterList):
         #nothing under them: an empty box in the HTML, and a hard failure of the LaTeX builder,
         #which looks for a tbody that is not there (#2592). So the
         #position is remembered and the header is taken back again if no row followed.
-        tableStart = len(plr.sMarkdown)
-        plr.sMarkdown += ('\n| Name | type / function return type | size | default value / function '
+        tableStart = len(writer.sMarkdown)
+        writer.sMarkdown += ('\n| Name | type / function return type | size | default value / function '
                           'args | description |\n|---|---|---|---|---|\n')
-        headerEnd = len(plr.sMarkdown)
+        headerEnd = len(writer.sMarkdown)
 
         for parameter in parameterListSorted:
             if IsDeprecatedParameter(parameter):
@@ -123,7 +123,7 @@ def StructureDocs(parseInfo, parameterList):
                 pythonName = parameter['pythonName'] 
                 typeName = parameter['type']
                 
-                # if len(pythonName)>28:  #inside plr.SystemStructuresWriteDefRow
+                # if len(pythonName)>28:  #inside writer.SystemStructuresWriteDefRow
                 #     typeName = '\\tabnewline ' + typeName
                     
                 #the document rendering the definition carries; the String/FileName exception
@@ -131,7 +131,7 @@ def StructureDocs(parseInfo, parameterList):
                 #was a workaround for the converter that is gone (RG3.24.3, #2682)
                 defaultValueStr = parameter['defaultValueDocument']
 
-                plr.SystemStructuresWriteDefRow(pythonName, typeName, parameter['size'], 
+                writer.SystemStructuresWriteDefRow(pythonName, typeName, parameter['size'], 
                                             sString+defaultValueStr+sString, paramDescriptionStr, 
                                             typicalPaths=typicalPaths, isFunction=False)
                                 
@@ -155,27 +155,22 @@ def StructureDocs(parseInfo, parameterList):
                 # if (len(functionName)>28):  #done now in SystemStructuresWriteDefRow
                 #     functionType = '\\tabnewline ' + functionType
 
-                # plr.sLatex += '    ' + functionName + ' & '
-                # plr.sLatex += '    ' + functionType + ' & '
-
-                # plr.sLatex += '    ' + argStr + ' & '
-
-                plr.SystemStructuresWriteDefRow(functionName, functionType, parameter['size'], argStr, 
+                writer.SystemStructuresWriteDefRow(functionName, functionType, parameter['size'], argStr, 
                                             parameter['parameterDescription'], isFunction=True)
 
 
-        if len(plr.sMarkdown) == headerEnd:       #no row was written: no table (#2592)
-            plr.sMarkdown = (plr.sMarkdown[:tableStart]
+        if len(writer.sMarkdown) == headerEnd:       #no row was written: no table (#2592)
+            writer.sMarkdown = (writer.sMarkdown[:tableStart]
                              + '\n*(none: this structure has no items in the Python interface. A '
                              + 'deprecated item keeps working and is described where it moved to.)*'
                              + '\n')
 
-        plr.sMarkdown += '\n'
+        writer.sMarkdown += '\n'
 
 
 
     parameterChangesList = ParameterChangesList(parseInfo, parameterListSorted, typicalPaths)
-    return [plr.sMarkdown, parameterChangesList]
+    return [writer.sMarkdown, parameterChangesList]
 
 
 def main():

@@ -82,7 +82,7 @@ esym.SetRecording(True)
 
 symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:""")
 
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 
 # def __init__(self, arg1: int, arg2: float) -> None: ...
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
@@ -120,19 +120,19 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='',
                         argTypes=['symbolic.Real'],
                         )
 
-symbolicModule.DefLatexDataAccess('value','access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)',
+symbolicModule.DefDataAccess('value','access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)',
                        dataType = 'float')
 
-symbolicModule.DefLatexOperator('__float__','evaluation of expression and conversion of symbolic.Real to Python float',
+symbolicModule.DefOperator('__float__','evaluation of expression and conversion of symbolic.Real to Python float',
                        returnType = 'float')
 
-symbolicModule.DefLatexOperator('__str__','conversion of symbolic.Real to string',
+symbolicModule.DefOperator('__str__','conversion of symbolic.Real to string',
                        returnType = 'str')
 
-symbolicModule.DefLatexOperator('__repr__','representation of symbolic.Real in Python',
+symbolicModule.DefOperator('__repr__','representation of symbolic.Real in Python',
                        returnType = 'str')
 
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 
 
 symbolicModule.AddDocu(r"""The remaining operators and mathematical functions are recorded within expressions. Main mathematical operators for `SymReal` exist, similar to Python, such as:""")
@@ -172,7 +172,7 @@ symbolicModule.StubCode('\n#functions directly in symbolic module:\n')
 pyClassStr = 'symbolic'
 classStr = ''
 #these functions are in symbolic.Real:
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 fnList=['isfinite','abs',#'sign',
         'round','ceil','floor',
         'sqrt','exp','log',
@@ -192,13 +192,13 @@ for fnName in fnList:
                             returnType='symbolic.Real',
                             )
 
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 symbolicModule.AddDocu(r"""The following table lists special functions for `SymReal`: """)
 
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='sign', cName='', 
                         description="returns 0 for x=0, -1 for x<0 and 1 for x>1.",
@@ -265,7 +265,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName
                         returnType='bool',
                         )
 
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 symbolicModule.StubCode('\n')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -312,7 +312,7 @@ print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 
 symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
 
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
                         description="Construct symbolic.Vector from vector represented as numpy array or list (which may contain symbolic expressions).",
@@ -352,7 +352,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cNam
 #                         argTypes=['symbolic.Real'],
 #                         returnType='None',
 #                         )
-symbolicModule.DefLatexOperator(name='__setitem__', 
+symbolicModule.DefOperator(name='__setitem__', 
                      description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
                      argList=['index'],
                      argTypes=['symbolic.Real'],
@@ -374,7 +374,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cNa
                         returnType='symbolic.Real',
                         )
 
-symbolicModule.DefLatexOperator(name='__getitem__', 
+symbolicModule.DefOperator(name='__getitem__', 
                      description="bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.",
                      argList=['index'],
                      argTypes=['symbolic.Real'],
@@ -382,15 +382,15 @@ symbolicModule.DefLatexOperator(name='__getitem__',
                      )
 
 
-symbolicModule.DefLatexOperator('__str__','conversion of SymVector to string',
+symbolicModule.DefOperator('__str__','conversion of SymVector to string',
                        returnType = 'str')
 
-symbolicModule.DefLatexOperator('__repr__','representation of SymVector in Python',
+symbolicModule.DefOperator('__repr__','representation of SymVector in Python',
                        returnType = 'str')
 
 
 #+++++++++
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 symbolicModule.AddDocu(r"""Standard vector operators are available for `SymVector`, see the following examples:""")
@@ -453,7 +453,7 @@ print('m2: ',m2)
 
 symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:""")
 
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
                         description="Construct symbolic.Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions).",
@@ -491,7 +491,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfColumns', cN
                         returnType='int',
                         )
 
-symbolicModule.DefLatexOperator(name='__setitem__', 
+symbolicModule.DefOperator(name='__setitem__', 
                      description="bracket [] operator for (symbolic) component of Matrix (write-access). Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)",
                      argList=['row','column'],
                      argTypes=['symbolic.Real','symbolic.Real'],
@@ -513,7 +513,7 @@ symbolicModule.DefLatexOperator(name='__setitem__',
 #                         returnType='symbolic.Real',
 #                         )
 
-symbolicModule.DefLatexOperator(name='__getitem__', 
+symbolicModule.DefOperator(name='__getitem__', 
                      description="bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.",
                      argList=['row','column'],
                      argTypes=['symbolic.Real','symbolic.Real'],
@@ -521,15 +521,15 @@ symbolicModule.DefLatexOperator(name='__getitem__',
                      )
 
 
-symbolicModule.DefLatexOperator('__str__','conversion of SymMatrix to string',
+symbolicModule.DefOperator('__str__','conversion of SymMatrix to string',
                      returnType = 'str')
 
-symbolicModule.DefLatexOperator('__repr__','representation of SymMatrix in Python',
+symbolicModule.DefOperator('__repr__','representation of SymMatrix in Python',
                      returnType = 'str')
 
 
 #+++++++++
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 symbolicModule.AddDocu(r"""Standard Matrix operators are available for `SymMatrix`, see the following examples:""")
@@ -608,7 +608,7 @@ print('x:',x,"=",x.Evaluate()) #3.33
 mySet = esym.VariableSet()
 """)
 
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 
 # 		//+++++++++++++++++++++++++++++++++++++++++++
 
@@ -684,15 +684,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', cName=
                         )
 
 
-symbolicModule.DefLatexOperator('__str__','create string of set of variables',
+symbolicModule.DefOperator('__str__','create string of set of variables',
                        returnType = 'str')
 
-symbolicModule.DefLatexOperator('__repr__','representation of SymMatrix in Python',
+symbolicModule.DefOperator('__repr__','representation of SymMatrix in Python',
                        returnType = 'str')
 
 
 #+++++++++
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -741,7 +741,7 @@ print('load user function: ',symFuncLoad.Evaluate(mbs, 0.025, 10.))
 #now you could add further items or simulate ...
 """)
 
-symbolicModule.DefLatexStartTable(pyClassStr)
+symbolicModule.DefStartTable(pyClassStr)
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing",
@@ -763,15 +763,15 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromD
 #                         returnType='None',
 #                         )
 
-symbolicModule.DefLatexOperator('__repr__','Representation of Symbolic function',
+symbolicModule.DefOperator('__repr__','Representation of Symbolic function',
                        returnType = 'str')
 
-symbolicModule.DefLatexOperator('__str__','Convert stored symbolic function to string',
+symbolicModule.DefOperator('__str__','Convert stored symbolic function to string',
                        returnType = 'str')
 
 
 #+++++++++
-symbolicModule.DefLatexFinishTable()#only finalize latex table
+symbolicModule.DefFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

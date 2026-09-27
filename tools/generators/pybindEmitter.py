@@ -37,7 +37,7 @@ if definitionsDirectory not in sys.path:
 import generatorPaths as paths                                                          # noqa: E402
 import enumEmitter                                                                      # noqa: E402
 import outputVariableEmitter                                                            # noqa: E402
-from autoGenerateHelper import PyLatexRST, GetDateStr, WriteTextIfDifferent             # noqa: E402
+from autoGenerateHelper import DeclarationWriter, GetDateStr, WriteTextIfDifferent             # noqa: E402
 from autoGenerateHelper import MarkdownLabel                                            # noqa: E402
 from latexToMarkdown import NormalizeHeadings, DropRepeatedTitle                                 # noqa: E402
 from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames  # noqa: E402
@@ -45,44 +45,44 @@ from pybindTypes import declarationCalls                                        
 
 
 class Replay:
-    """replays recorded declaration calls into a PyLatexRST; keeps the stub sections"""
+    """replays recorded declaration calls into a DeclarationWriter; keeps the stub sections"""
     def __init__(self):
         self.stubSections = ''  #closed stub sections, latest first
         self.savedCpp = None
         self.savedStub = None
 
-    def __call__(self, calls, plr):
+    def __call__(self, calls, writer):
         for name, args, kwargs in calls:
             if name in declarationCalls:
-                getattr(plr, name)(*args, **kwargs)
+                getattr(writer, name)(*args, **kwargs)
             elif name == 'CppCode':
-                plr.sPy += args[0]
+                writer.sPy += args[0]
             elif name == 'StubCode':
-                plr.sPyi += args[0]
+                writer.sPyi += args[0]
             elif name == 'ResetMarkdown':
-                plr.sMarkdown = ''   #the chapter title lives in the index
+                writer.sMarkdown = ''   #the chapter title lives in the index
             elif name == 'BeginCppWrittenByHand':
                 assert self.savedCpp is None, 'BeginCppWrittenByHand is not closed'
-                self.savedCpp = plr.sPy
+                self.savedCpp = writer.sPy
             elif name == 'EndCppWrittenByHand':
-                plr.sPy = self.savedCpp
+                writer.sPy = self.savedCpp
                 self.savedCpp = None
             elif name == 'BeginNoStub':
                 assert self.savedStub is None, 'BeginNoStub is not closed'
-                self.savedStub = plr.sPyi
+                self.savedStub = writer.sPyi
             elif name == 'EndNoStub':
-                plr.sPyi = self.savedStub
+                writer.sPyi = self.savedStub
                 self.savedStub = None
             elif name == 'EndStubSection':
-                self.stubSections = plr.sPyi + self.stubSections
-                plr.sPyi = ''
+                self.stubSections = writer.sPyi + self.stubSections
+                writer.sPyi = ''
             elif name == 'CppFinishClass':
-                plrFinish = PyLatexRST()
-                plrFinish.DefPyFinishClass(args[0])
-                plr.sPy += plrFinish.PyStr()
+                writerFinish = DeclarationWriter()
+                writerFinish.DefPyFinishClass(args[0])
+                writer.sPy += writerFinish.PyStr()
             elif name == 'ExtensionMarkdown':
                 with open(paths.generatedDir+args[0]+'.md', 'r', encoding='utf8') as f:
-                    plr.sMarkdown += '\n' + f.read()
+                    writer.sMarkdown += '\n' + f.read()
             else:
                 raise ValueError('unknown declaration call ' + name)
         assert self.savedCpp is None and self.savedStub is None, 'unbalanced Begin/End declaration calls'
@@ -104,7 +104,7 @@ markdownPageTitles = {
     }
 
 
-def WriteMarkdownPages(plr):
+def WriteMarkdownPages(writer):
     """docs/generated/cInterface/: one page per file of the RST split, plus the chapter index
     which carries the chapter label"""
     markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'cInterface')
@@ -123,7 +123,7 @@ def WriteMarkdownPages(plr):
                  '```{toctree}\n:maxdepth: 3\n\n')
 
     written = 0
-    for (name, text) in plr.markdownPages:
+    for (name, text) in writer.markdownPages:
         if text.strip() == '':
             continue
         #a page that opens with its own name says it twice and spends a heading level on it
@@ -155,46 +155,46 @@ def main():
     replay = Replay()
 
     #the chapter introduction; it goes before everything else, but the enums are replayed first
-    plrmain = PyLatexRST()
-    replay(Declarations('pybindGeneralInformation').pb.calls, plrmain)
+    writerMain = DeclarationWriter()
+    replay(Declarations('pybindGeneralInformation').pb.calls, writerMain)
 
     #the OutputVariableType registrator owns the enum and writes its C++ header; enumEmitter writes EnumTypes.h
     outputVariableEmitter.EmitHeader()
     enumEmitter.EmitHeader()
 
-    plr = PyLatexRST()
-    replay(Declarations('pybindEnums').pb.calls, plr)
-    sStubEnums = plr.sPyi
-    plr.sPyi = ''
-    sMarkdownEnum = plr.sMarkdown #the enums are documented after the systemData section
+    writer = DeclarationWriter()
+    replay(Declarations('pybindEnums').pb.calls, writer)
+    sStubEnums = writer.sPyi
+    writer.sPyi = ''
+    sMarkdownEnum = writer.sMarkdown #the enums are documented after the systemData section
 
     #now start the main page:
-    plr.sMarkdown = ''
-    plr.CreateNewPage('GeneralInformation')
-    plr.sMarkdown = plrmain.sMarkdown
+    writer.sMarkdown = ''
+    writer.CreateNewPage('GeneralInformation')
+    writer.sMarkdown = writerMain.sMarkdown
 
     for name in ['pybindModule', 'pybindSystemContainer', 'pybindRenderer', 'pybindMainSystem', 'pybindSystemData']:
-        replay(Declarations(name).pb.calls, plr)
+        replay(Declarations(name).pb.calls, writer)
 
-    #the symbolic submodule: its stubs go into a separate file, its documentation into plr
+    #the symbolic submodule: its stubs go into a separate file, its documentation into writer
     symbolic = Declarations('pybindSymbolic')
-    replay(symbolic.pb.calls, plr)
-    plrsym = PyLatexRST()
-    replay(symbolic.symbolicModule.calls, plrsym)
-    plrsym.sPyi = plrsym.sPyi.replace('symbolic.','')
-    plr.sMarkdown += plrsym.sMarkdown
+    replay(symbolic.pb.calls, writer)
+    writerSym = DeclarationWriter()
+    replay(symbolic.symbolicModule.calls, writerSym)
+    writerSym.sPyi = writerSym.sPyi.replace('symbolic.','')
+    writer.sMarkdown += writerSym.sMarkdown
 
     for name in ['pybindGeneralContact', 'pybindDataStructures']:
-        replay(Declarations(name).pb.calls, plr)
-    sStubEnums += plr.sPyi #the type definitions are needed earlier and go into enums file
+        replay(Declarations(name).pb.calls, writer)
+    sStubEnums += writer.sPyi #the type definitions are needed earlier and go into enums file
     savedPyi = replay.stubSections
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #now finalize files:
-    plr.CreateNewPage('TypeDefinitions')
-    plr.sMarkdown += sMarkdownEnum
-    plr.CreateNewPage('') #this finalizes the list
+    writer.CreateNewPage('TypeDefinitions')
+    writer.sMarkdown += sMarkdownEnum
+    writer.CreateNewPage('') #this finalizes the list
 
     directoryString = paths.autogeneratedDir
     pybindFile = directoryString + 'pybind_manual_classes.h'
@@ -206,7 +206,7 @@ def main():
     sPybind += '// AUTO:  pybind11 manual module includes; generated by Johannes Gerstmayr\n'
     sPybind += '// AUTO:  last modified = '+ GetDateStr() + '\n'
     sPybind += '// AUTO:  ++++++++++++++++++++++\n'
-    sPybind += plr.PyStr()
+    sPybind += writer.PyStr()
     WriteTextIfDifferent(pybindFile, sPybind, True)
 
     #docs/theDoc/manual_interfaces.tex and docs/RST/cInterface/ are not written since
@@ -217,7 +217,7 @@ def main():
     #MARKDOWN: the same pages, in docs/generated/ where emitter output
     #belongs (decision D10). docs/theDoc/manual_interfaces.tex and docs/RST/cInterface/ go away
     #with this step; the LaTeX and RST branches above go in R7.1.7.
-    WriteMarkdownPages(plr)
+    WriteMarkdownPages(writer)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -225,13 +225,13 @@ def main():
     #stub file .pyi (will be merged with general file)
     file=io.open(paths.generatedDir+'stubAutoBindings.pyi','w',encoding='utf8')  #clear file by one write access
     file.write(savedPyi)
-    #file.write(plr.sPyi)
+    #file.write(writer.sPyi)
     file.close()
 
     #stub file symbolic.pyi (will be merged with general file)
     file=io.open(paths.generatedDir+'stubSymbolic.pyi','w',encoding='utf8')  #clear file by one write access
-    file.write(plrsym.sPyi)
-    #file.write(plr.sPyi)
+    file.write(writerSym.sPyi)
+    #file.write(writer.sPyi)
     file.close()
 
     file=io.open(paths.generatedDir+'stubEnums.pyi','w',encoding='utf8')  #clear file by one write access

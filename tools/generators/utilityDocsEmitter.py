@@ -37,7 +37,7 @@ def main():
         sMarkdown = ''
         [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
         moduleName = fileName[:-3]
-        moduleNameLatex = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
+        moduleNameDocu = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
     
         moduleNamePython = moduleName.split('/')[-1]
         baseModule = ''
@@ -45,8 +45,8 @@ def main():
             baseModule = moduleName.split('/')[0]
         
     
-        sMarkdown += MarkdownLabel('sec:module:'+moduleNameLatex)+'\n'
-        sMarkdown += MarkdownHeading('Module: '+moduleNameLatex, 1)+'\n\n'
+        sMarkdown += MarkdownLabel('sec:module:'+moduleNameDocu)+'\n'
+        sMarkdown += MarkdownHeading('Module: '+moduleNameDocu, 1)+'\n\n'
     
         if moduleNamePython != 'mainSystemExtensions': #no description for this!
             #*****************************************************
@@ -107,7 +107,7 @@ def main():
                                   + funcDict['functionName'].replace(chr(92) + '_', '_')
                                   + '(...). For description of the interface, see the MainSystem '
                                   'Python extensions, {ref}`'
-                                  + Latex2RSTlabel(mseLabel) + '`\n\n')
+                                  + MarkdownLabelName(mseLabel) + '`\n\n')
         
 
             isFirstFunction=False
@@ -122,10 +122,10 @@ def main():
             #print(classDict)
 
         
-            sMarkdown += ('\n' + MarkdownLabel('sec:module:' + moduleNameLatex + ':class:'
+            sMarkdown += ('\n' + MarkdownLabel('sec:module:' + moduleNameDocu + ':class:'
                                               + classDict['className']) + '\n'
                           + MarkdownHeading('CLASS ' + classDict['className'] + ' (in module '
-                                            + moduleNameLatex + ')', 2) + '\n\n'
+                                            + moduleNameDocu + ')', 2) + '\n\n'
                           + '**class description**: '
                           + LatexText2Markdown(classDict['class']).replace('\n', ' ') + '\n\n')
 
@@ -145,7 +145,7 @@ def main():
                 sMarkdown += KeywordExamplesMarkdown('UtilityFunction',
                                                      classDict['className'].split('(')[0])
 
-        listMarkdown += [(moduleNameLatex, sMarkdown)]
+        listMarkdown += [(moduleNameDocu, sMarkdown)]
 
 
 

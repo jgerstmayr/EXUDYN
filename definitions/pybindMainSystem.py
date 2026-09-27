@@ -20,7 +20,7 @@ from pybindTypes import *
 
 pb = PybindInterface()
 
-# pb.DefLatexFinishTable()
+# pb.DefFinishTable()
 
 # #now finalize pybind class, but do nothing on latex side (sL1 ignored)
 
@@ -49,7 +49,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 """)
 
-pb.DefLatexStartTable(classStr)
+pb.DefStartTable(classStr)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #GENERAL FUNCTIONS
@@ -286,41 +286,41 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName=r"""[](const Ma
                         example = 'print(mbs)')
 
 pb.CppCode('        .def_property("systemIsConsistent", &MainSystem::GetFlagSystemIsConsistent, &MainSystem::SetFlagSystemIsConsistent)\n') 
-pb.DefLatexDataAccess('systemIsConsistent','this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to False as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to False again; this flag can be modified (set to True), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False',
+pb.DefDataAccess('systemIsConsistent','this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to False as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to False again; this flag can be modified (set to True), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("interactiveMode", &MainSystem::GetInteractiveMode, &MainSystem::SetInteractiveMode)\n') 
-pb.DefLatexDataAccess('interactiveMode','set this flag to True in order to invoke a Assemble() command in every system modification, e.g., AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode.',
+pb.DefDataAccess('interactiveMode','set this flag to True in order to invoke a Assemble() command in every system modification, e.g., AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode.',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_readwrite("variables", &MainSystem::variables, py::return_value_policy::reference)\n') 
-pb.DefLatexDataAccess('variables','this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables["myvar"] = 42 ',
+pb.DefDataAccess('variables','this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables["myvar"] = 42 ',
                        dataType='dict',
                        )
 
 pb.CppCode('        .def_readwrite("sys", &MainSystem::systemVariables, py::return_value_policy::reference)\n') 
-pb.DefLatexDataAccess('sys','this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables ',
+pb.DefDataAccess('sys','this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables ',
                        dataType='dict',
                        )
 
 pb.CppCode('        .def_property("solverSignalJacobianUpdate", &MainSystem::GetFlagSolverSignalJacobianUpdate, &MainSystem::SetFlagSolverSignalJacobianUpdate)\n') 
-pb.DefLatexDataAccess('solverSignalJacobianUpdate','this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g., during time integration  ',
+pb.DefDataAccess('solverSignalJacobianUpdate','this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g., during time integration  ',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_readwrite("systemData", &MainSystem::mainSystemData, py::return_value_policy::reference)\n') 
-pb.DefLatexDataAccess('systemData','Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)',
+pb.DefDataAccess('systemData','Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)',
                        dataType='SystemData',
                        )
 
-pb.DefLatexFinishTable()#only finalize latex table
+pb.DefFinishTable()#only finalize latex table
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create extensions
-pb.DefLatexStartClass('MainSystem extensions (create)',r"""This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
+pb.DefStartClass('MainSystem extensions (create)',r"""This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu           
@@ -341,7 +341,7 @@ pb.ExtensionMarkdown('MainSystemCreateExt') #written by tools/generators/mainSys
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #function extensions
-pb.DefLatexStartClass('MainSystem extensions (general)',r"""This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensions')
+pb.DefStartClass('MainSystem extensions (general)',r"""This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensions')
 
 pb.AddDocuCodeBlock(code="""
 #this example sketches the usage 
@@ -367,7 +367,7 @@ pb.ExtensionMarkdown('MainSystemExt') #written by tools/generators/mainSystemExt
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #NODE
 pb.CppCode("\n//        NODES:\n")
-pb.DefLatexStartClass(classStr+': Node','', subSection=True,labelName='sec:mainsystem:node')
+pb.DefStartClass(classStr+': Node','', subSection=True,labelName='sec:mainsystem:node')
 
 pb.AddDocu('This section provides functions for adding, reading and modifying nodes. '+
             'Nodes are used to define coordinates (unknowns to the static system and degrees of freedom '+
@@ -384,7 +384,7 @@ mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
 """)
 
-pb.DefLatexStartTable(classStr+':nodes')
+pb.DefStartTable(classStr+':nodes')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='AddMainNodePyClass', 
                                 description="add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...)",
@@ -490,11 +490,11 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetNodeParameter', cName='PySetN
                                 returnType='None',
                                 )
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #OBJECT
 pb.CppCode("\n//        OBJECTS:\n")
-pb.DefLatexStartClass(classStr+': Object', '', subSection=True,labelName='sec:mainsystem:object')
+pb.DefStartClass(classStr+': Object', '', subSection=True,labelName='sec:mainsystem:object')
 
 pb.AddDocu('This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, '+
             'rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided '+
@@ -512,7 +512,7 @@ nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
 mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
 """)
 
-pb.DefLatexStartTable(classStr+':objects')
+pb.DefStartTable(classStr+':objects')
 #pb.DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainObjectPyClass(pyObject); }', 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='AddMainObjectPyClass', 
                                 description="add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object",
@@ -606,12 +606,12 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetObjectParameter', cName='PySe
                                 returnType='None',
                                 )
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #MARKER
 pb.CppCode("\n//        MARKER:\n")
-pb.DefLatexStartClass(classStr+': Marker', '', subSection=True, labelName='sec:mainsystem:marker')
+pb.DefStartClass(classStr+': Marker', '', subSection=True, labelName='sec:mainsystem:marker')
 
 pb.AddDocu('This section provides functions for adding, reading and modifying markers. Markers define how to measure '+
             'primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), '+
@@ -629,7 +629,7 @@ mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
 mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 """)
 
-pb.DefLatexStartTable(classStr+':markers')
+pb.DefStartTable(classStr+':markers')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='AddMainMarkerPyClass', 
                                 description="add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker",
@@ -704,12 +704,12 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerOutput', cName='PyGetMa
                                 )
 
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #LOAD
 pb.CppCode("\n//        LOADS:\n")
-pb.DefLatexStartClass(classStr+': Load', '', subSection=True, labelName='sec:mainsystem:load')
+pb.DefStartClass(classStr+': Load', '', subSection=True, labelName='sec:mainsystem:load')
 
 pb.AddDocu('This section provides functions for adding, reading and modifying operating loads. '+
             'Loads are used to act on the quantities which are dual to the primal kinematic quantities, '+
@@ -726,7 +726,7 @@ mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
 """)
 
-pb.DefLatexStartTable(classStr+':loads')
+pb.DefStartTable(classStr+':loads')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='AddMainLoadPyClass', 
                                 description="add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load",
@@ -798,12 +798,12 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetLoadParameter', cName='PySetL
                                 returnType='None',
                                 )
 
-pb.DefLatexFinishTable()
+pb.DefFinishTable()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #SENSORS
 pb.CppCode("\n//        SENSORS:\n")
-pb.DefLatexStartClass(classStr+': Sensor', '', subSection=True, labelName='sec:mainsystem:sensor')
+pb.DefStartClass(classStr+': Sensor', '', subSection=True, labelName='sec:mainsystem:sensor')
 
 pb.AddDocu('This section provides functions for adding, reading and modifying operating sensors. '+
             'Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.')
@@ -825,7 +825,7 @@ from exudyn.plot import PlotSensor
 PlotSensor(mbs, sMP, components=[0,1,2])
 """)
 
-pb.DefLatexStartTable(classStr+':sensors')
+pb.DefStartTable(classStr+':sensors')
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='AddMainSensorPyClass',
                                 description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor",
@@ -906,7 +906,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetSensorParameter', cName='PySe
                                 returnType='None',
                                 )
 
-pb.DefLatexFinishTable() #Sensors
+pb.DefFinishTable() #Sensors
 
 #now finalize pybind class, but do nothing on latex side (sL1 ignored)
 pb.CppFinishClass('MainSystem') #finalize the pybind class only; nothing on the documentation side

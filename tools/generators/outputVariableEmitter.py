@@ -7,7 +7,7 @@
 #
 #           Before this existed, four places were kept in step by hand - the enum and its bit
 #           positions, GetOutputVariableTypeString(), IsOutputVariableTypeForReferenceConfiguration()
-#           and 31 literal plr.AddEnumValue(...) calls - and the header said so itself:
+#           and 31 literal writer.AddEnumValue(...) calls - and the header said so itself:
 #           "keep this list synchronized with function GetOutputVariableTypeString(...) !!!".
 #           They had drifted: CoordinatesTotal had no string (issue #2408) and the two energies
 #           never reached Python.

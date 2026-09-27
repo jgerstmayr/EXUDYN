@@ -92,7 +92,7 @@ print('mc8=',mc)
 
 """)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.CppCode('        .def(py::init<const py::object&>(), py::arg("matrix"))\n') #constructor with numpy array or list of lists
 
@@ -217,7 +217,7 @@ SC.renderer.materials[9].name == "emission"   #light yellow
 """) #keep empty line for RST
 
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                         description="reset materials to 10 default materials",
@@ -323,7 +323,7 @@ Usage:
 
 """, subSection=True)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.CppCode('        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n') #constructor with numpy array or list of lists
 
@@ -404,7 +404,7 @@ Usage:
 
 """, subSection=True)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.CppCode('        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n') #constructor with numpy array or list of lists
 
@@ -474,7 +474,7 @@ Usage:
 
 """, subSection=True)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.CppCode('        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n') #constructor with numpy array or list of lists
 
@@ -549,7 +549,7 @@ Usage:
 
 """, subSection=True)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.CppCode('        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n') #constructor with numpy array or list of lists
 
@@ -611,7 +611,7 @@ Usage:
 
 """, subSection=True)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.CppCode('        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n') #constructor with numpy array or list of lists
 

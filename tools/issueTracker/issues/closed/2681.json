@@ -2,12 +2,16 @@
   "number": 2681,
   "title": "The generator API still says Latex where it writes Markdown",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-09-26: DefLatexDataAccess and similar Latex commands need to be renamed consistently; search for latex, rename where it is clear (Markdown) and suggest options where it is not. Measured the same day over tools/generators/ and definitions/: 28 files carry the word. The declaration API every definition file uses - DefLatexDataAccess (64 uses), DefLatexStartTable (32), DefLatexFinishTable (27), DefLatexOperator (17), DefLatexStartClass (13) - writes Markdown and has done since RG3.14; PyLatexRST (18 uses) writes Python, a stub and Markdown and neither LaTeX nor RST. Names that describe real LaTeX stay: GetTypesStringLatex and Str2Latex feed mathematics and C++ comments, and latexToMarkdown.py is named after what it converts from. The open kind is latexSymbol and its family, the dollar-symbol of an item parameter, which IS LaTeX inside Markdown. A rename of 64 call sites changes no output, so the gate is that the regeneration stays a no-op.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "tools/generators/pybindEmitter.py"
+  "dateResolved": "2026-09-27 08:12",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/pybindEmitter.py",
+  "releaseNotes": "The generator API no longer says Latex where it writes Markdown: the declaration calls the definition files are written in are DefDataAccess, DefStartTable, DefFinishTable, DefOperator and DefStartClass, the class that collects the pybind code, the stub and the documentation of one declaration run is DeclarationWriter, and GetTypesStringLatex and Latex2RSTlabel are GetTypesStringDocu and MarkdownLabelName - 184 occurrences. What is named after real LaTeX keeps its name: Str2Doxygen, latexToMarkdown.py, LatexText2Markdown, ToLatex, CleanLatex, RemoveLatexCommands. Reading every occurrence also removed 55 lines that nothing runs - a dead function writing LaTeX lists, commented-out longtables, three unread locals - and corrected a field name in definitions/README.md that exists nowhere in the code. The regeneration writes byte-identical files, which was the gate. The latexSymbol family is not renamed: it names a real dollar-sign symbol and the options go to the maintainer (revision2026b step RG3.24.4).",
+  "resolvedInVersion": "1.12.110"
 }

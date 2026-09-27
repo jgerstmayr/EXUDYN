@@ -31,7 +31,7 @@ from userFunctionModel import ReadUserFunction, CheckAgainstCpp, PythonType     
 from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
                        IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
                        possibleTypes)
-from autoGenerateHelper import (GetTypesStringLatex,                                # noqa: E402
+from autoGenerateHelper import (GetTypesStringDocu,                                # noqa: E402
                                 SplitSummaryDescription, GoogleDocstringRenderer,
                                 CleanStringForPyiDescription)
 
@@ -151,15 +151,15 @@ def ItemDocstrings(definition):
             thisDataDocString['inputs'].append({'name': member['pythonName'],
                                                 'description': description.strip()})
         elif member['pythonName'] == 'GetRequestedMarkerType':
-            requestedMarkerString = GetTypesStringLatex(im.DefaultValueString(member), 'Marker',
+            requestedMarkerString = GetTypesStringDocu(im.DefaultValueString(member), 'Marker',
                                                         possibleTypes['Marker'], ' +')
         elif member['pythonName'] == 'GetRequestedNodeType':
-            requestedNodeString = GetTypesStringLatex(im.DefaultValueString(member), 'Node',
+            requestedNodeString = GetTypesStringDocu(im.DefaultValueString(member), 'Node',
                                                       possibleTypes['Node'], ' +')
         elif member['pythonName'] == 'GetType':
             searchType = classType
             if classType == 'Object': searchType += 'Type'
-            itemTypeString = GetTypesStringLatex(im.DefaultValueString(member), searchType,
+            itemTypeString = GetTypesStringDocu(im.DefaultValueString(member), searchType,
                                                  possibleTypes[classType])
 
     pythonShortName = definition.get('pythonShortName', '') or ''

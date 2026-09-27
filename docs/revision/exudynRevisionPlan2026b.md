@@ -2038,7 +2038,10 @@ package).
     same mechanism ... but I don't know if this needs an improvement right now."*
 
 <a id="rg3-24"></a>
-**RG3.24** *(group RG3; maintainer 2026-09-26)* **The generator API still says "Latex"** (#2681).
+**RG3.24** *(group RG3; maintainer 2026-09-26)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-24) — **The generator API still says "Latex"** (#2681).
+    Done in three passes, each gated by a regeneration that changed nothing: the declaration API and
+    its class, the local names, and the dead LaTeX the reading found. **RG3.24.4 is the one question
+    left** and it is the maintainer's.
     *"DefLatexDataAccess and similar Latex commands need to be just renamed consistently. Search for
     latex and see where it still makes sense, rename where clear (Markdown) or suggest options when
     unclear."*
@@ -2145,6 +2148,24 @@ package).
       constants were corrected to it: this step removes corruption, it does not re-word the manual.
       Whether the default column should read `exudyn.InvalidIndex()` instead of `invalid (-1)` is a
       decision, and it is a small one now that there is one place to make it.
+
+    - **RG3.24.4** *(the question RG3.24 reserved; maintainer's choice)* **what the `latexSymbol`
+      family should be called.** `latexSymbol` (12 uses in `itemDocsEmitter`, `itemHeaderEmitter`,
+      `itemInterfaceEmitter` and `typesEmitter`), `ExtractLatexSymbol` (`itemModel`, 9), and inside it
+      `stringLatexSymbol` and `addLatexSign`. It is the `$...$` that a parameter description may open
+      with - `$\theta$ rotation angle` - which the emitters split off and put into its own column of
+      the parameter table.
+
+      **Why it was not renamed by rule**: the thing it names *is* LaTeX, so `latexSymbol` is not
+      wrong the way `DefLatexDataAccess` was wrong. The options:
+
+      | option | what it costs | what it buys |
+      |---|---|---|
+      | **A** leave it | nothing | the name says the markup, which is true |
+      | **B** `mathSymbol`, `ExtractMathSymbol`, `mathSymbolString`, `mathSign` *(recommended)* | one mechanical rename, 24 occurrences in five files, gated by a no-op regeneration | the name says what it *is* - the symbol of the parameter - and the markup stays the converter's business |
+      | **C** rename the function by what it does, `SplitLeadingMathSymbol(description)`, and leave the variables | the same rename plus a docstring | the function name says that only a **leading** `$...$` is split off, which is the rule nothing states today and which its error message does not name either |
+
+      B and C are compatible: C is B plus a better name for the function.
 
 <a id="rg12-13"></a>
 **RG12.13** **DONE 2026-09-26** (#2686) — [log](exudynRevisionLog2026b.md#rg12-13) —
@@ -2363,7 +2384,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
-| RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
+| RG3.24.4 | - | what the latexSymbol family should be called - three options for the maintainer |
 | RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |

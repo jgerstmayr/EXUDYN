@@ -178,7 +178,7 @@ def _DefaultEntries(value):
     return None
 
 
-#the parameters of PyLatexRST.DefPyFunctionAccess, in order (tools/generators/autoGenerateHelper.py)
+#the parameters of DeclarationWriter.DefPyFunctionAccess, in order (tools/generators/autoGenerateHelper.py)
 pybindFunctionParameters = ['cClass', 'pyName', 'cName', 'description', 'argList', 'defaultArgs', 'example',
                             'options', 'isLambdaFunction', 'argTypes', 'returnType', 'addDocu']
 pybindBeginEnd = {'BeginCppWrittenByHand': 'EndCppWrittenByHand', 'BeginNoStub': 'EndNoStub'}

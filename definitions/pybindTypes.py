@@ -14,10 +14,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #the declaration calls; each writes C++ binding code, stub text and documentation (see
-#PyLatexRST in src/pythonGenerator/autoGenerateHelper.py)
+#DeclarationWriter in src/pythonGenerator/autoGenerateHelper.py)
 declarationCalls = ['AddDocu', 'AddDocuCodeBlock', 'AddDocuList', 'AddEnumValue', 'CreateNewRSTfile',
-                    'DefLatexDataAccess', 'DefLatexFinishTable', 'DefLatexOperator', 'DefLatexStartClass',
-                    'DefLatexStartTable', 'DefPyFinishClass', 'DefPyFunctionAccess', 'DefPyStartClass',
+                    'DefDataAccess', 'DefFinishTable', 'DefOperator', 'DefStartClass',
+                    'DefStartTable', 'DefPyFinishClass', 'DefPyFunctionAccess', 'DefPyStartClass',
                     'DefStartEnumClass']
 
 #the calls which only steer where the output goes

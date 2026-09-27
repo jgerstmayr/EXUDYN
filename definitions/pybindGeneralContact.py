@@ -63,7 +63,7 @@ gContact.AddSphereWithMarker(...) #use appropriate arguments
 gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree if needed.
 """)
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
                                 description="convert member variables of GeneralContact into dictionary; use this for debug only!",
@@ -78,98 +78,98 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset',
                                 )
 
 pb.CppCode('        .def_readwrite("isActive", &PyGeneralContact::isActive, py::return_value_policy::reference)\n') 
-pb.DefLatexDataAccess('isActive','default = True (compute contact); if isActive=False, no contact computation is performed for this contact set ',
+pb.DefDataAccess('isActive','default = True (compute contact); if isActive=False, no contact computation is performed for this contact set ',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_readwrite("verboseMode", &PyGeneralContact::verboseMode, py::return_value_policy::reference)\n') 
-pb.DefLatexDataAccess('verboseMode','default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation ',
+pb.DefDataAccess('verboseMode','default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation ',
                        dataType='int',
                        )
 
 pb.CppCode('        .def_readwrite("visualization", &PyGeneralContact::visualization, py::return_value_policy::reference)\n') 
-pb.DefLatexDataAccess('visualization','access visualization data structure ',
+pb.DefDataAccess('visualization','access visualization data structure ',
                        dataType='VisuGeneralContact',
                        )
 
 pb.CppCode('        .def_property("resetSearchTreeInterval", &PyGeneralContact::GetResetSearchTreeInterval, &PyGeneralContact::SetResetSearchTreeInterval)\n') 
-pb.DefLatexDataAccess('resetSearchTreeInterval','(default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more ',
+pb.DefDataAccess('resetSearchTreeInterval','(default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more ',
                        dataType='int',
                        )
 
 pb.CppCode('        .def_property("sphereSphereContact", &PyGeneralContact::GetSphereSphereContact, &PyGeneralContact::SetSphereSphereContact)\n') 
-pb.DefLatexDataAccess('sphereSphereContact','activate/deactivate contact between spheres ',
+pb.DefDataAccess('sphereSphereContact','activate/deactivate contact between spheres ',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("sphereSphereFrictionRecycle", &PyGeneralContact::GetSphereSphereFrictionRecycle, &PyGeneralContact::SetSphereSphereFrictionRecycle)\n') 
-pb.DefLatexDataAccess('sphereSphereFrictionRecycle','False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction ',
+pb.DefDataAccess('sphereSphereFrictionRecycle','False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction ',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("minRelDistanceSpheresTriangles", &PyGeneralContact::GetMinRelDistanceSpheresTriangles, &PyGeneralContact::SetMinRelDistanceSpheresTriangles)\n') 
-pb.DefLatexDataAccess('minRelDistanceSpheresTriangles','(default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles ',
+pb.DefDataAccess('minRelDistanceSpheresTriangles','(default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles ',
                        dataType='float',
                        )
 
 pb.CppCode('        .def_property("frictionProportionalZone", &PyGeneralContact::GetFrictionProportionalZone, &PyGeneralContact::SetFrictionProportionalZone)\n') 
-pb.DefLatexDataAccess('frictionProportionalZone',r"""(default=0.001) velocity $v_{\mu,reg}$ upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force """,
+pb.DefDataAccess('frictionProportionalZone',r"""(default=0.001) velocity $v_{\mu,reg}$ upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force """,
                        dataType='float',
                        )
 
-# pb.DefLatexDataAccess('frictionVelocityPenalty','(default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k_{\mu,reg}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force ',
+# pb.DefDataAccess('frictionVelocityPenalty','(default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k_{\mu,reg}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force ',
 #                        dataType='float',
 #                        )
 
 pb.CppCode('        .def_property("excludeOverlappingTrigSphereContacts", &PyGeneralContact::GetExcludeOverlappingTrigSphereContacts, &PyGeneralContact::SetExcludeOverlappingTrigSphereContacts)\n') 
-pb.DefLatexDataAccess('excludeOverlappingTrigSphereContacts','(default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) ',
+pb.DefDataAccess('excludeOverlappingTrigSphereContacts','(default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) ',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("excludeDuplicatedTrigSphereContactPoints", &PyGeneralContact::GetExcludeDuplicatedTrigSphereContactPoints, &PyGeneralContact::SetExcludeDuplicatedTrigSphereContactPoints)\n') 
-pb.DefLatexDataAccess('excludeDuplicatedTrigSphereContactPoints','(default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts ',
+pb.DefDataAccess('excludeDuplicatedTrigSphereContactPoints','(default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts ',
                        dataType='bool',
                        )
 pb.CppCode('        .def_property("computeExactStaticTriangleBins", &PyGeneralContact::GetComputeExactStaticTriangleBins, &PyGeneralContact::SetComputeExactStaticTriangleBins)\n') 
-pb.DefLatexDataAccess('computeExactStaticTriangleBins','(default=True) if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree',
+pb.DefDataAccess('computeExactStaticTriangleBins','(default=True) if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("computeContactForces", &PyGeneralContact::GetComputeContactForces, &PyGeneralContact::SetComputeContactForces)\n') 
-pb.DefLatexDataAccess('computeContactForces','(default=False) if True, additional system vector is computed which contains all contact force and torque contributions. In order to recover forces on a single rigid body, the respective LTG-vector has to be used and forces need to be extracted from this system vector; may slow down computations.',
+pb.DefDataAccess('computeContactForces','(default=False) if True, additional system vector is computed which contains all contact force and torque contributions. In order to recover forces on a single rigid body, the respective LTG-vector has to be used and forces need to be extracted from this system vector; may slow down computations.',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("ancfCableUseExactMethod", &PyGeneralContact::GetAncfCableUseExactMethod, &PyGeneralContact::SetAncfCableUseExactMethod)\n') 
-pb.DefLatexDataAccess('ancfCableUseExactMethod','(default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles ',
+pb.DefDataAccess('ancfCableUseExactMethod','(default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles ',
                        dataType='bool',
                        )
 
 pb.CppCode('        .def_property("ancfCableNumberOfContactSegments", &PyGeneralContact::GetAncfCableNumberOfContactSegments, &PyGeneralContact::SetAncfCableNumberOfContactSegments)\n') 
-pb.DefLatexDataAccess('ancfCableNumberOfContactSegments','(default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 ',
+pb.DefDataAccess('ancfCableNumberOfContactSegments','(default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 ',
                        dataType='int',
                        )
 
 pb.CppCode('        .def_property("ancfCableMeasuringSegments", &PyGeneralContact::GetAncfCableMeasuringSegments, &PyGeneralContact::SetAncfCableMeasuringSegments)\n') 
-pb.DefLatexDataAccess('ancfCableMeasuringSegments','(default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 ',
+pb.DefDataAccess('ancfCableMeasuringSegments','(default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 ',
                        dataType='int',
                        )
 #+++++++++++++++++
 #parallel:
 pb.CppCode('        .def_property("parallelTaskSplit", &PyGeneralContact::GetParallelTaskSplit, &PyGeneralContact::SetParallelTaskSplit)\n') 
-pb.DefLatexDataAccess('parallelTaskSplit','(default=12) general number of tasks per thread (min)',
+pb.DefDataAccess('parallelTaskSplit','(default=12) general number of tasks per thread (min)',
                        dataType='int',
                        )
 pb.CppCode('        .def_property("parallelTaskSplitBoundingBoxes", &PyGeneralContact::GetParallelTaskSplitBoundingBoxes, &PyGeneralContact::SetParallelTaskSplitBoundingBoxes)\n') 
-pb.DefLatexDataAccess('parallelTaskSplitBoundingBoxes','(default=48) number of tasks per thread for bounding box computations',
+pb.DefDataAccess('parallelTaskSplitBoundingBoxes','(default=48) number of tasks per thread for bounding box computations',
                        dataType='int',
                        )
 pb.CppCode('        .def_property("parallelTaskSplitThreshold", &PyGeneralContact::GetParallelTaskSplitThreshold, &PyGeneralContact::SetParallelTaskSplitThreshold)\n') 
-pb.DefLatexDataAccess('parallelTaskSplitThreshold','(default=12) general threshold below which only one task per thread is used',
+pb.DefDataAccess('parallelTaskSplitThreshold','(default=12) general threshold below which only one task per thread is used',
                        dataType='int',
                        )
 pb.CppCode('        .def_property("parallelTaskSplitBoundingBoxesThreshold", &PyGeneralContact::GetParallelTaskSplitBoundingBoxesThreshold, &PyGeneralContact::SetParallelTaskSplitBoundingBoxesThreshold)\n') 
-pb.DefLatexDataAccess('parallelTaskSplitBoundingBoxesThreshold','(default=400) threshold below which only one task per thread is used, for bounding box computations',
+pb.DefDataAccess('parallelTaskSplitBoundingBoxesThreshold','(default=400) threshold below which only one task per thread is used, for bounding box computations',
                        dataType='int',
                        )
 #+++++++++++++++++
@@ -334,18 +334,18 @@ pb.DefPyStartClass(classStr, pyClassStr, 'This structure may contains some visua
                     'Currently, all visualization settings are controlled via SC.visualizationSettings', 
                     subSection=True, labelName='sec:GeneralContact:visualization')
 
-pb.DefLatexStartTable(pyClassStr)
+pb.DefStartTable(pyClassStr)
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                         description="reset visualization parameters to default values",
                         returnType='None',
                         )
 
-# pb.DefLatexDataAccess('spheresMarkerBasedDraw','default = False; if True, markerBased spheres are drawn with given resolution and color ')
+# pb.DefDataAccess('spheresMarkerBasedDraw','default = False; if True, markerBased spheres are drawn with given resolution and color ')
 
-# pb.DefLatexDataAccess('spheresMarkerBasedResolution','default = 4; integer value for number of triangles per circumference of markerBased spheres; higher values leading to smoother spheres but higher graphics costs ')
+# pb.DefDataAccess('spheresMarkerBasedResolution','default = 4; integer value for number of triangles per circumference of markerBased spheres; higher values leading to smoother spheres but higher graphics costs ')
 
-# pb.DefLatexDataAccess('spheresMarkerBasedColor','vector with 4 floats (Float4) for color of markerBased spheres ')
+# pb.DefDataAccess('spheresMarkerBasedColor','vector with 4 floats (Float4) for color of markerBased spheres ')
 
 #++++++++++++++++
 pb.DefPyFinishClass('GeneralContact')

@@ -51,7 +51,7 @@ mbs.SolveDynamic()
 SC.renderer.Stop()
 """)
 
-pb.DefLatexStartTable(classStr)
+pb.DefStartTable(classStr)
 
 #+++++++++++++++++++++++++++++++++
 #General functions:
@@ -204,10 +204,10 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetRenderCount', cName='GetRedra
 
 pb.CppCode('        .def_readwrite("materials", &MainRenderer::materials, py::return_value_policy::reference);\n')
 
-pb.DefLatexDataAccess('materials','GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously',
+pb.DefDataAccess('materials','GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously',
                         dataType='GraphicsMaterialList', isTopLevel = False)
 
 pb.DefPyFinishClass('Renderer')
-#pb.DefLatexFinishTable() #only finalize latex table
+#pb.DefFinishTable() #only finalize latex table
 
 pb.EndStubSection()

@@ -27,7 +27,7 @@ if toolsDirectory not in sys.path:
 import copy #for deep copies
 
 import generatorPaths as paths                                                  # noqa: E402
-from autoGenerateHelper import RemoveIndentation, Latex2RSTlabel, \
+from autoGenerateHelper import RemoveIndentation, MarkdownLabelName, \
           DocStringGoogleFromPlainText                                          # noqa: E402
 
 ADD_DOCSTRINGS = True
@@ -565,9 +565,9 @@ def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
 
 
 def ModuleNames(fileName):
-    """(moduleName, moduleNameLatex, moduleNamePython) of a file in filesParsed"""
+    """(moduleName, moduleNameDocu, moduleNamePython) of a file in filesParsed"""
     moduleName = fileName[:-3]
-    moduleNameLatex = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
+    moduleNameDocu = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
     
     moduleNamePython = moduleName.split('/')[-1]
-    return (moduleName, moduleNameLatex, moduleNamePython)
+    return (moduleName, moduleNameDocu, moduleNamePython)

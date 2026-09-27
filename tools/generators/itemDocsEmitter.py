@@ -26,8 +26,8 @@ if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
 
 from autoGenerateHelper import ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
-    GenerateHeader, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
-    PyLatexRST, FileNameLower, RemoveIndentation
+    GenerateHeader, Str2Doxygen, GetDateStr, GetTypesStringDocu, \
+    DeclarationWriter, FileNameLower, RemoveIndentation
 
 
 from autoGenerateHelper import KeywordExamplesMarkdown, MarkdownLabel, MarkdownHeading
@@ -152,7 +152,7 @@ def WriteFile(parseInfo, parameterList):
     #print('class type=',classTypeStr, ', class=', classStr)
     #************************************
     #Latex doc:
-    plr = PyLatexRST()
+    writer = DeclarationWriter()
 
 
     hasPybindInterface = False
@@ -172,37 +172,22 @@ def WriteFile(parseInfo, parameterList):
         
         descriptionStr = parseInfo['classDescription']
 
-        plr.AddDocu(text=descriptionStr,
+        writer.AddDocu(text=descriptionStr,
                     section=parseInfo['class'],
                     sectionLevel=1,
                     sectionLabel='sec:item:' + parseInfo['class'])
 
 
-        cPLR = PyLatexRST()
-        vPLR = PyLatexRST()
+        cWriter = DeclarationWriter()
+        vWriter = DeclarationWriter()
 
-        cPLR.AddDocu('The item \\mybold{' + parseInfo['class'] + "} with type = '"+
+        cWriter.AddDocu('The item \\mybold{' + parseInfo['class'] + "} with type = '"+
                      sTypeName + "' has the following parameters:")
-        vPLR.AddDocu('The item V' + parseInfo['class'] + ' has the following parameters:')
+        vWriter.AddDocu('The item V' + parseInfo['class'] + ' has the following parameters:')
 
-        cPLR.DefItemStartTable(classStr=parseInfo['class'])        
-        vPLR.DefItemStartTable(classStr=parseInfo['class'])        
+        cWriter.DefItemStartTable(classStr=parseInfo['class'])        
+        vWriter.DefItemStartTable(classStr=parseInfo['class'])        
         
-        # cLatex  = '\\vspace{12pt} \\noindent The item {\\bf ' + parseInfo['class'] + "} with type = '"
-        # cLatex += sTypeName + "' has the following parameters:\\vspace{-1cm}\\\\ \n"
-        
-        # vLatex  = 'The item V' + parseInfo['class'] + ' has the following parameters:\\vspace{-1cm}\\\\ \n'
-        
-        # sTemp   = '%reference manual TABLE\n'
-        # sTemp  += '\\begin{center}\n'
-        # sTemp  += '  \\footnotesize\n'
-        # sTemp  += '  \\begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}\n'
-        # sTemp  += space4+'\\hline\n'
-        # sTemp  += space4+'\\bf Name & \\bf type & \\bf size & \\bf default value & \\bf description \\\\ \\hline\n'
-        
-        # cLatex += sTemp
-        # vLatex += sTemp
-    
         requestedMarkerString = ''
         itemTypeString = '' #string containing type of item (out of possibleTypes dict)
         requestedNodeString = ''
@@ -236,11 +221,11 @@ def WriteFile(parseInfo, parameterList):
                     parameterDefaultValueStr = '\\tabnewline ' + parameterDefaultValueStr 
 
                 if parameter['destination'].find('V') != -1: #visualization
-                    thisPLR = vPLR
+                    thisWriter = vWriter
                 else:
-                    thisPLR = cPLR
+                    thisWriter = cWriter
 
-                thisPLR.ItemInterfaceWriteRow(pythonName = parameter['pythonName'], 
+                thisWriter.ItemInterfaceWriteRow(pythonName = parameter['pythonName'], 
                                               typeName = parameterTypeStr, 
                                               sSize = parameterSizeStr,
                                               sDefaultVal = sString+parameterDefaultValueStr+sString, 
@@ -248,23 +233,21 @@ def WriteFile(parseInfo, parameterList):
                                               description = parameterDescription)
 
             elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
-                requestedMarkerString = GetTypesStringLatex(parameter['defaultValue'],'Marker', possibleTypes['Marker'],' +')
+                requestedMarkerString = GetTypesStringDocu(parameter['defaultValue'],'Marker', possibleTypes['Marker'],' +')
             elif (parameter['pythonName'] == 'GetRequestedNodeType'):
-                requestedNodeString = GetTypesStringLatex(parameter['defaultValue'],'Node', possibleTypes['Node'],' +')
+                requestedNodeString = GetTypesStringDocu(parameter['defaultValue'],'Node', possibleTypes['Node'],' +')
             elif (parameter['pythonName'] == 'GetType'):
                 searchType = parseInfo['classType']
                 if parseInfo['classType']=='Object': searchType += 'Type'
-                itemTypeString = GetTypesStringLatex(parameter['defaultValue'],searchType, possibleTypes[parseInfo['classType']])
+                itemTypeString = GetTypesStringDocu(parameter['defaultValue'],searchType, possibleTypes[parseInfo['classType']])
                 #print(parseInfo['classType']+':'+itemTypeString)
 
-        #cPLR.sLatex += space4+'visualization & V' + parseInfo['class'] + ' & & & parameters for visualization of item \\\\ \\hline\n'
-
-        cPLR.ItemInterfaceWriteRow(pythonName = 'visualization', 
+        cWriter.ItemInterfaceWriteRow(pythonName = 'visualization', 
                                    typeName = 'V' + parseInfo['class'], sSize = '', sDefaultVal = '',
                                    description = 'parameters for visualization of item')
 
-        cPLR.DefLatexFinishTable()
-        vPLR.DefLatexFinishTable()
+        cWriter.DefFinishTable()
+        vWriter.DefFinishTable()
 
         #now assemble visualization and computation tables:
 
@@ -272,11 +255,11 @@ def WriteFile(parseInfo, parameterList):
             pluralAuthors = ''
             if ',' in parseInfo['author']:
                 pluralAuthors ='s'
-            plr.AddDocu('Author'+pluralAuthors+': ' + parseInfo['author'] + '\n')
+            writer.AddDocu('Author'+pluralAuthors+': ' + parseInfo['author'] + '\n')
 
         if len(requestedMarkerString) + len(itemTypeString) + len(parseInfo['pythonShortName']) !=0:
             lstAdd = []
-            plr.AddDocu('\\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
+            writer.AddDocu('\\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
             if len(itemTypeString) != 0:
                 lstAdd += ['This \\texttt{' + parseInfo['classType'] + '} has/provides the following types = ' + itemTypeString]
 
@@ -291,10 +274,10 @@ def WriteFile(parseInfo, parameterList):
                 lstAdd += ['{\\bf Short name} for Python = \\texttt{' + parseInfo['pythonShortName'] + '}']
                 lstAdd += ['{\\bf Short name} for Python visualization object = \\texttt{V' + parseInfo['pythonShortName'] + '}']
 
-            plr.AddDocuList(lstAdd)
+            writer.AddDocuList(lstAdd)
 
-        plr += cPLR
-        plr += vPLR
+        writer += cWriter
+        writer += vWriter
 
 #        if len(parseInfo['outputVariables']) != 0:
 #            dictOV = eval(parseInfo['outputVariables']) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
@@ -303,14 +286,13 @@ def WriteFile(parseInfo, parameterList):
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #input parameters: only in latex table
-        #addLatex = '' 
-        plrAdd = PyLatexRST() #only added if non-empty
+        writerAdd = DeclarationWriter() #only added if non-empty
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #process outputVariables, including symbols
         if len(parseInfo['outputVariables']) != 0:
-            plrAdd.AddDocu('\\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:')
-            plrAdd.DefLatexStartTable3(['output variable','symbol','description'])        
+            writerAdd.AddDocu('\\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:')
+            writerAdd.DefStartTable3(['output variable','symbol','description'])        
 
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
@@ -321,11 +303,9 @@ def WriteFile(parseInfo, parameterList):
                 oVariable = outputVariables[0]
                 description = outputVariables[1]
                 [description, latexSymbol] = ExtractLatexSymbol(description)
-                if len(latexSymbol) != 0: 
-                    latexSymbol = latexSymbol
-                plrAdd.Table3WriteRow(cols=[oVariable, latexSymbol, description])
+                writerAdd.Table3WriteRow(cols=[oVariable, latexSymbol, description])
             
-            plrAdd.DefLatexFinishTable()
+            writerAdd.DefFinishTable()
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #the equations; everything before the %%RSTCOMPATIBLE marker is what the web
@@ -336,33 +316,33 @@ def WriteFile(parseInfo, parameterList):
         #so an item without one published no description at all. The whole text is published
         #now and the markers are gone (revision2026b step RG3.14.7.5, #2655).
         if len(parseInfo['equations']) != 0:
-            plrAdd.sMarkdown += LatexText2Markdown(
+            writerAdd.sMarkdown += LatexText2Markdown(
                 RemoveIndentation2(parseInfo['equations'], removeAllSpaces=False)) + '\n\n'
 
         #the user functions of the item, in the order of the parameters; a parameter that carries a
         #Python def has its block generated instead of written (revision2026b step RG12.4, #2664)
         for parameter in parameterList:
             if 'userFunction' in parameter:
-                plrAdd.sMarkdown += LatexText2Markdown(
+                writerAdd.sMarkdown += LatexText2Markdown(
                     UserFunctionDocumentation(parameter)) + '\n\n'
 
         if len(parseInfo['miniExample']) != 0:
-            plrAdd.AddDocu('', section='MINI EXAMPLE for ' + parseInfo['class'], sectionLevel=3, 
+            writerAdd.AddDocu('', section='MINI EXAMPLE for ' + parseInfo['class'], sectionLevel=3, 
                         sectionLabel='miniExample_'+parseInfo['class'], preNewLine = True)
-            plrAdd.AddDocuCodeBlock(parseInfo['miniExample'])
+            writerAdd.AddDocuCodeBlock(parseInfo['miniExample'])
 
-        plrAdd.sMarkdown += KeywordExamplesMarkdown(parseInfo['classType'],
+        writerAdd.sMarkdown += KeywordExamplesMarkdown(parseInfo['classType'],
                                                     parseInfo['class'],
                                                     parseInfo['pythonShortName'])
 
         #the equations, the output variables, the mini example and the examples, under their own
         #DESCRIPTION heading
-        if len(plrAdd.sMarkdown.strip()) != 0:
-            plr.sMarkdown += '\n' + MarkdownLabel('description_'+parseInfo['class']) + '\n'
-            plr.sMarkdown += MarkdownHeading('DESCRIPTION of ' + parseInfo['class'], 2) + '\n\n'
-            plr.sMarkdown += plrAdd.sMarkdown
+        if len(writerAdd.sMarkdown.strip()) != 0:
+            writer.sMarkdown += '\n' + MarkdownLabel('description_'+parseInfo['class']) + '\n'
+            writer.sMarkdown += MarkdownHeading('DESCRIPTION of ' + parseInfo['class'], 2) + '\n\n'
+            writer.sMarkdown += writerAdd.sMarkdown
 
-    return [classTypeStr, plr.sMarkdown]
+    return [classTypeStr, writer.sMarkdown]
 
 
 #%%**********************************************
@@ -385,7 +365,7 @@ def ItemTypeFileName(key):
     return FileNameLower(key.replace('(', '').replace(')', '').replace(' ', '')) + 'Index'
 
 
-def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros, latexIntro):
+def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros, intro):
     markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'items')
     os.makedirs(markdownDir, exist_ok=True)
 
@@ -400,7 +380,7 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
                  + MarkdownLabel('sec:item:reference:manual') + '\n'
                  '# Items reference manual\n\n'
                  'Reference manual for: objects, nodes, markers, loads and sensors\n\n'
-                 + LatexText2Markdown(latexIntro) + '\n\n'
+                 + LatexText2Markdown(intro) + '\n\n'
                  '```{toctree}\n:maxdepth: 2\n\n')
     for key in folderDict:
         indexText += ItemTypeFileName(key) + '\n'
@@ -470,7 +450,7 @@ def main():
                  'author':'',           #mentioned in C++ and in .tex files
                  'addIncludesMain':'',     #code added at includes section (e.g. special base class)
                  'classType':'',        #type of class: Object, Node, Sensor, Marker, Load, Sensor
-                 'objectType':'',       #type of object, see sLatexObjectClass
+                 'objectType':'',       #type of object, see objectClassNames
                  'outputVariables':'',  #definition of output variables and description given as dictionary "{'OutputVariableType':'description ...', ...}"
                  'miniExample':'',      #mini python example (without headers and typical setup); code in separate lines, ended with '/end' in separate line
                  'equations':'',        #latex style equations, direct latex code; latex code in separate lines, ended with '/end' in separate line
@@ -497,15 +477,12 @@ def main():
     continueOperation = True #flag to signal that operation shall be terminated
 
     #++++++++++++++++++++++++++    
-    sLatexObjectClass = ['Body','SuperElement','FiniteElement','Joint','Connector','Constraint','Object']
+    objectClassNames = ['Body','SuperElement','FiniteElement','Joint','Connector','Constraint','Object']
     sPythonGlobalNames = ['Node','Object','Marker','Load','Sensor']  #global python interface class types
-    nObjectTypes = len(sLatexObjectClass)
-    nPythonGlobal = len(sPythonGlobalNames)
-    nLatexGlobal = nPythonGlobal+nObjectTypes
-    sLatexGlobal = ['']*nLatexGlobal        #gobal Latex string; 'Node','Object','Marker','Load','Sensor'
+    nObjectTypes = len(objectClassNames)
     
-    #... convert to dictionary, in or to be safe w.r.t. relation to sLatexGlobalNames
-    sLatexGlobalItemIntros={'Nodes':                   'Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.',
+    #... convert to dictionary, in or to be safe w.r.t. relation to globalPageNames
+    globalItemIntros={'Nodes':                   'Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.',
                             'Objects (Body)':          'A Body is a special Object, which has physical properties such as mass. A localPosition can be measured w.r.t.\\ the reference point of the body',
                             'Objects (SuperElement)':  'A SuperElement is a special Object which acts on a set of nodes. Essentially, SuperElements can be linked with special SuperElement markers. SuperElements may represent complex flexible bodies, based on finite element formulations.',
                             'Objects (FiniteElement)': 'A FiniteElement is a special Object and Body, which is used to define deformable bodies, such as beams or solid finite elements. FiniteElements are usually linked to two or more nodes.',
@@ -518,8 +495,7 @@ def main():
                             'Sensors':                 'A Sensor is used to measure quantities during simulation. Sensors may be attached to Nodes, Objects, Markers or Loads. Sensor values may be directly read via mbs or can be continuously written to files or SensorRecorder during simulation. The exudyn.plot Python utility function PlotSensor(...) can be conveniently used to show Sensor values over time.',
                             }
 
-    latexGlobalFromPython = [0,1,nObjectTypes+1,nObjectTypes+2,nObjectTypes+3]
-    sLatexGlobalNames = ['Nodes']
+    globalPageNames = ['Nodes']
     objectClassDict = {} #convert objectType to objectClass number
     symbolicUserFunctionSet = [] #for both set and transfer of symbolic user functions 
 
@@ -543,11 +519,11 @@ def main():
         globalItemsDict[item] = {}
     
     #other lists for documentation:
-    for oi, oClass in enumerate(sLatexObjectClass):
-        sLatexGlobalNames += ['Objects ('+oClass+')']
+    for oi, oClass in enumerate(objectClassNames):
+        globalPageNames += ['Objects ('+oClass+')']
         objectClassDict[oClass] = oi
 
-    sLatexGlobalNames += ['Markers','Loads','Sensors']
+    globalPageNames += ['Markers','Loads','Sensors']
 
     #++++++++++++++++++++++++++    
     #Latex and RST
@@ -610,9 +586,6 @@ def main():
                     sRSTtypeConversion[sRSTtype] = sRSTtype2 #conversion from singular to plural
                 sRSTfolderDict[sRSTtype] += [parseInfo['class']]
 
-            # print('item=',parseInfo['class'], ', typeInd=',typeInd,',objType=', oType, ', indexGlobal=', indexLatexGlobal)
-
-
         #++++++++++++++++++++++++++++++
         #++++++++++++++++++++++++++++++
     
@@ -624,8 +597,6 @@ def main():
     print("parsed a total of", linecnt, "lines")
 
 
-#    sLatexItemList = '\n\\mysubsection{List of Items}\nThe following items are available in \codeName:\n\\begin{itemize}\n' + sLatexItemList
-#    sLatexItemList += '\\end{itemize}\n'
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     print('total number of lines generated =',totalNumberOfLines)
     print('total number of files changed =',totalNumberOfFilesChanged)
@@ -634,7 +605,7 @@ def main():
     #docs/theDoc/itemDefinition.tex is not written; the LaTeX
     #string is still built, and dies with the LaTeX branch in R7.1.7
 
-    sLatexIntro=r"""
+    itemsIntro=r"""
 This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors (\mybold{= items}).
 For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{NumpyMatrix}), see \refSection{sec:typesDescriptions}.
 
@@ -647,7 +618,7 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
     #and the chapter index, which carries the chapter label. docs/RST/items/ is gone with this
     #step; the RST strings are still built and die with the RST branch in R7.1.7.
     WriteMarkdownPages(sMarkdownItemList, sRSTfolderDict, sRSTtypeConversion,
-                       sLatexGlobalItemIntros, sLatexIntro)
+                       globalItemIntros, itemsIntro)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

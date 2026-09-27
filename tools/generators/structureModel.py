@@ -29,7 +29,7 @@ import copy
 import generatorPaths as paths                                          # noqa: E402,F401
 import definitionLoader                                                 # noqa: E402
 from autoGenerateHelper import CountLines, Str2Doxygen, GetDateStr, \
-                               PyLatexRST, WriteTextIfDifferent, DocStringGoogleFromPlainText  # noqa: E402,F401
+                               DeclarationWriter, WriteTextIfDifferent, DocStringGoogleFromPlainText  # noqa: E402,F401
 
 sortStructures = True
 ADD_DOCSTRINGS = True
@@ -255,25 +255,6 @@ def DParameter2VersionExpiration(parameter):
 def ParameterDescription(parameter):
     IDP = IsDeprecatedParameter(parameter)
     return 'DEPRECATED; Instead use '*IDP + Description(parameter)
-
-def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
-    if len(parameterChangesList):
-        text = '\nThe following parameter changes have been made:\n'
-        latexStr += text
-        rstStr += text+'\n'
-        latexStr += '\\bi\n'
-        for param in parameterChangesList:
-            latexStr += '  \\item '
-            latexStr += param[0].replace('visualizationSettings.','')+' $\\ra$ '
-            latexStr += param[1].replace('visualizationSettings.','')
-            text = ' (changed in version '+param[2]+', expires: '+param[3]+')\n'
-            latexStr += text
-            rstStr += '  - ' + param[0]+' → '+param[1]+text
-        latexStr += '\\ei\n'
-        rstStr += '\n'
-        # print(rstStr[-200:])
-    return (latexStr, rstStr)
-
 
 def ParameterChanges2Markdown(parameterChangesList):
     """the deprecated parameters of a structure, as a Markdown list"""
