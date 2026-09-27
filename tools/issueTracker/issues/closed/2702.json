@@ -1,0 +1,16 @@
+{
+  "number": 2702,
+  "title": "the PDF lacks the chapter on performance and errors, and orders its user manual differently from the HTML",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Measured for #2697: revision2026b step RG3.15 (#2657, #2661) restructured the user manual in index.md - a new chapter performanceErrors, and the command line and the results monitor moved under Advanced topics - and pdfIndex.md was not changed with it. So the PDF has no chapter 'Performance, errors and solver failures', lists the command line and the results monitor as chapters of their own, and puts Advanced topics before the Tutorial. This is the part of #2697 that is a defect rather than a decision: pdfIndex.md takes the user-manual order of index.md, and what remains different is what is meant to (README, the examples and test models, the front page). How to keep the two from drifting again stays #2697. revision2026b step RG3.26.1.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 11:21",
+  "resolvedAuthor": "Claude-JG",
+  "file": "pdfIndex.md",
+  "releaseNotes": "The PDF documentation has the chapter 'Performance, errors and solver failures' again, and its user manual is in the same order as the HTML one, with the command line and the results monitor under Advanced topics.",
+  "resolvedInVersion": "1.12.115"
+}

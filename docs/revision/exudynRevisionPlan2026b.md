@@ -2416,6 +2416,12 @@ package).
     - **Option C**: accept the difference and say so at the top of both files. The least work and the
       least protection.
 
+    - **RG3.26.1** **DONE 2026-09-27** (#2702) — [log](exudynRevisionLog2026b.md#rg3-26-1) — **the
+      part that is a defect, not a decision.** The drift has a date: RG3.15 restructured the user
+      manual in `index.md` on 2026-09-25 and `pdfIndex.md` was not changed with it. `pdfIndex.md` now
+      takes the user-manual order of `index.md`; what differs is what is meant to - `README`, the
+      examples and test models, the front page - and **the choice among A, B and C is still open**.
+
 <a id="rg12-21"></a>
 **RG12.21** **DONE 2026-09-27** (#2695) — [log](exudynRevisionLog2026b.md#rg12-21) — **`python -m exudyn info` prints the home directory** - and the command exists to be pasted into an issue, so it carries an account name with it.
     The home directory is shown as `%USERPROFILE%` or `~`, which is what a reader would type anyway, and
@@ -2479,7 +2485,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG3.26 | #2697 | index.md and pdfIndex.md are two tables of contents that must agree |
+| RG3.26 | #2697 | index.md and pdfIndex.md: how to keep them from drifting - options A, B, C (RG3.26.1 fixed the drift) |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 
 ### Raised by the current work, and not yet a step

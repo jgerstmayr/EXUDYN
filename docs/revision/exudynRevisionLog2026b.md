@@ -5480,3 +5480,29 @@ have none.
 
 **Gates**: the wheel, 11/11 checks, the full suite, pytest, the strict HTML build; the regeneration
 changed the three paragraphs of `Symbolic.md` and nothing else.
+
+<a id="rg3-26-1"></a>
+### RG3.26.1 — the PDF gets its missing chapter back (2026-09-27, #2702)
+
+**The drift has a date.** RG3.15 (2026-09-25) carried out the maintainer's table of contents in
+`index.md`: a new chapter *Performance, errors and solver failures*, and the command line and the
+results monitor moved from chapters of their own into *Advanced topics*. `pdfIndex.md` was not
+touched, so the PDF built since then had **no performance chapter at all**, listed the command line
+and the results monitor as chapters, and put *Advanced topics* before the *Tutorial*. Nothing failed,
+because every page was still in *some* toctree.
+
+`pdfIndex.md` takes the user-manual toctree of `index.md` without `README`. Measured afterwards with
+the same script as for #2697: **22 shared entries in the same order**; only in `index.md` are
+`README`, the examples index and the test-models index - the three differences the PDF means to have.
+Nothing is only in `pdfIndex.md`.
+
+**Checked in the PDF itself**, from the LaTeX source of `exudev docs --pdf`: `\chapter{Performance,
+errors and solver failures}` is there once, between *Renderer, graphics and visualization* and
+*Advanced topics*, and the command line and the results monitor are sections of *Advanced topics*, as
+in the HTML.
+
+**What is not done, deliberately**: how the two files are kept from drifting again - generate one
+(A), check them against a declared difference (B), or say so at the top (C) - is the maintainer's
+choice and stays #2697. This step only removed the drift that had already happened.
+
+**Gates**: the HTML and the PDF build (xelatex), 11/11 checks, the full suite, pytest.

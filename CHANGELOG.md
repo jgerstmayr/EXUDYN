@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 112 | 1.12.114 |
+| 1.12 | Metheney | 113 | 1.12.115 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.115** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the PDF lacks the chapter on performance and errors, and orders its user manual differently from the HTML (#2702)
+  - description: Measured for \#2697: revision2026b step RG3.15 (\#2657, \#2661) restructured the user manual in index.md - a new chapter performanceErrors, and the command line and the results monitor moved under Advanced topics - and pdfIndex.md was not changed with it. So the PDF has no chapter 'Performance, errors and solver failures', lists the command line and the results monitor as chapters of their own, and puts Advanced topics before the Tutorial. This is the part of \#2697 that is a defect rather than a decision: pdfIndex.md takes the user-manual order of index.md, and what remains different is what is meant to (README, the examples and test models, the front page). How to keep the two from drifting again stays \#2697. revision2026b step RG3.26.1.
+  - **notes:** The PDF documentation has the chapter 'Performance, errors and solver failures' again, and its user manual is in the same order as the HTML one, with the command line and the results monitor under Advanced topics.
+  - date resolved: **2026-09-27 11:21**, date raised: 2026-09-27
 - **1.12.114** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual (#2683)
   - description: Three descriptions of definitions/pybindSymbolic.py contain a TAB followed by 'exttt{...}' where 'texttt' was meant: someone wrote a backslash-t in a string that was not raw, and the tab is now in the source. The Symbolic page of the reference manual prints it as it is, on lines 11, 179 and 271 of docs/generated/cInterface/Symbolic.md: 'turing on recording by using \<tab\>exttt{exudyn.symbolic.SetRecording(True)}'. Inline code in a description is a backtick span (definitions/README.md, 'Writing a description'), so the fix is \`exudyn.symbolic.SetRecording(True)\`. Two typos are in the same sentences and in the paragraph above them: 'turing' for 'turning', three times, and 'veryfy' for 'verify'. Why no check caught it: checkDefinitions rejects a LaTeX command outside mathematics by looking for a backslash, and there is no backslash left - the tab ate it. A check for a raw tab inside a description would find this class of defect; that is the part worth deciding rather than just fixing the three lines.
   - **notes:** The Symbolic page of the reference manual no longer shows 'exttt{exudyn.symbolic.SetRecording(True)}' in the introductions of Real, Vector and Matrix: it is a code span, and four typos in the same paragraphs are corrected. tools/checkDefinitions.py rejects a TAB in a description, which is what a backslash-t in a literal that was not raw turns into - and which the check for LaTeX commands cannot see, because the backslash is gone with it.
