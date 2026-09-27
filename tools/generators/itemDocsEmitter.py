@@ -169,7 +169,7 @@ def WriteFile(parseInfo, parameterList):
             localListItemNames.append('V'+parseInfo['pythonShortName'])
             
         
-        descriptionStr = parseInfo['classDescription']
+        descriptionStr = parseInfo['overallDescription']
 
         writer.AddDocu(text=descriptionStr,
                     section=parseInfo['class'],
@@ -314,9 +314,9 @@ def WriteFile(parseInfo, parameterList):
         #and it decided more than it said: this emission sat inside "if the marker is present",
         #so an item without one published no description at all. The whole text is published
         #now and the markers are gone (#2655).
-        if len(parseInfo['equations']) != 0:
+        if len(parseInfo['detailedDescription']) != 0:
             writerAdd.sMarkdown += LatexText2Markdown(
-                RemoveIndentation2(parseInfo['equations'], removeAllSpaces=False)) + '\n\n'
+                RemoveIndentation2(parseInfo['detailedDescription'], removeAllSpaces=False)) + '\n\n'
 
         #the user functions of the item, in the order of the parameters; a parameter that carries a
         #Python def has its block generated instead of written (#2664)
@@ -452,8 +452,8 @@ def main():
                  'objectType':'',       #type of object, see objectClassNames
                  'outputVariables':'',  #definition of output variables and description given as dictionary "{'OutputVariableType':'description ...', ...}"
                  'miniExample':'',      #mini python example (without headers and typical setup); code in separate lines, ended with '/end' in separate line
-                 'equations':'',        #latex style equations, direct latex code; latex code in separate lines, ended with '/end' in separate line
-                 'classDescription':''} #add a (brief, one line) description of class
+                 'detailedDescription':'', #the full description of the page, after the generated part: Markdown with LaTeX mathematics (definitions/README.md)
+                 'overallDescription':''} #the brief description: the class, the docstring, the paragraph under the heading
     #this defines the columns of the line, which is then filled into this structure
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'destination',    #M ... Main object, C ... computational object, V ... visualization object; P ... parameter structure

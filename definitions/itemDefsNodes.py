@@ -36,9 +36,9 @@ definitions = []
 definitions.append(ItemDefinition(
     className='NodePoint',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
+    overallDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
     Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.
@@ -128,9 +128,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodePoint2D',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
+    overallDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
     Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist.
 
@@ -226,9 +226,9 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr bool useNodeAE = true;//AUTO: decide old/new mode for EP constraints; will be always true in future
 """,
     cParentClass=ParentClassCNodeRigidBody,
-    classDescription=r"""A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).""",
+    overallDescription=r"""A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).""",
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The first 3 equations are residuals of translational forces in global coordinates,
     while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
@@ -400,9 +400,9 @@ definitions.append(ItemDefinition(
     static constexpr Index nDisplacementCoordinates = 3;
 """,
     cParentClass=ParentClassCNodeRigidBody,
-    classDescription=r"""A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.""",
+    overallDescription=r"""A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.""",
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position 
@@ -547,9 +547,9 @@ definitions.append(ItemDefinition(
 """,
     author=r'Gerstmayr Johannes, Holzinger Stefan',
     cParentClass=ParentClassCNodeRigidBody,
-    classDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
+    overallDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     For a detailed description on the rigid body dynamics formulation using this node, 
     see Holzinger and Gerstmayr [CITE:HolzingerGerstmayr2020].
 
@@ -693,9 +693,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeRigidBody2D',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
+    overallDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     The node provides 2 displacement coordinates (displacement of ABRV:COM, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
     The node leads to 3 ODE2 equations of motions, where the first 2 equations are
     residuals of global translational forces, and the third equation is the residual of the
@@ -798,9 +798,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='Node1D',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
+    overallDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
     classType=ClassTypeNode,
-    equations=r"""    **Detailed information:**
+    detailedDescription=r"""    **Detailed information:**
     The current position/rotation coordinate of the 1D node is computed from
 
 
@@ -880,7 +880,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodePoint2DSlope1',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.""",
+    overallDescription=r"""A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -963,7 +963,7 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr Index nODE2coordinates = 6;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.""",
+    overallDescription=r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1040,7 +1040,7 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.""",
+    overallDescription=r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1128,7 +1128,7 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.""",
+    overallDescription=r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1214,7 +1214,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericODE2',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
+    overallDescription=r"""A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1286,7 +1286,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericODE1',
     cParentClass=ParentClassCNodeODE1,
-    classDescription=r"""A node containing a number of ABRV:ODE1 variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
+    overallDescription=r"""A node containing a number of ABRV:ODE1 variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1342,7 +1342,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericAE',
     cParentClass=ParentClassCNodeAE,
-    classDescription=r"""A node containing a number of ABRV:AE variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
+    overallDescription=r"""A node containing a number of ABRV:AE variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1396,7 +1396,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodeGenericData',
     cParentClass=ParentClassCNodeData,
-    classDescription=r'A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).',
+    overallDescription=r'A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).',
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
@@ -1445,7 +1445,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='NodePointGround',
     cParentClass=ParentClassCNodeODE2,
-    classDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
+    overallDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[

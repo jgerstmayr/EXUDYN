@@ -2731,14 +2731,49 @@ What depends on it: the graphics regression test takes every item through its Mi
     - **RG13.4.0** **STARTED 2026-09-27** - [itemDefinitionsDev.md](itemDefinitionsDev.md): what is
       common - how a reader meets an item (through Create functions), the frame text of the
       generator, the types and what they should say, the order of every page.
-    - **RG13.4.1** **STARTED 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md).
+    - **RG13.4.1** **DONE 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md). The
+      maintainer: *"the table with the coordinates is exactly what I was missing"*; the one-sentence
+      rule is right for the generic nodes; for the slope nodes, the interpretation of the slopes
+      belongs in the detailed description of each node.
     - **RG13.4.2** **STARTED 2026-09-27** - [objectDefinitionsDev.md](objectDefinitionsDev.md).
     - **RG13.4.3** **STARTED 2026-09-27** - [markerDefinitionsDev.md](markerDefinitionsDev.md).
-    - **RG13.4.4** **STARTED 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md).
-    - **RG13.4.5** **STARTED 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md).
+    - **RG13.4.4** **DONE 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md). The
+      maintainer: the generalized forces must not lose their frames - a load is given in local or
+      global coordinates, so the transformation is part of the equation; added from
+      `CSystem::ComputeODE2SingleLoad`, which also corrected the document on the static load factor
+      (it does not apply to a load with a user function, #603).
+    - **RG13.4.5** **DONE 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md) - *"good
+      to go"*.
     - **RG13.4.6** the documents, once agreed, folded into `docs/dev/` and removed.
 
     Each document ends with the questions it leaves to the maintainer.
+
+<a id="rg13-5"></a>
+**RG13.5** *(group RG13; maintainer 2026-09-27)* **The documentation of the items, written by the
+    documents of RG13.4** (#2725) - *"start a new step RG13.5, which adds according documentation for
+    these types, again adding 13.5.1 for nodes, .2 for objects, ..."*. A kind is written when its
+    document of RG13.4 is agreed: nodes, loads and sensors now, objects and markers after them.
+
+    - **RG13.5.0** **the frame the pages are written into**, first (maintainer's decision,
+      2026-09-27):
+      - **RG13.5.0.1** **DONE 2026-09-27** (#2724) — [log](exudynRevisionLog2026b.md#rg13-5-0-1) -
+        the fields of an item: `classDescription` is `overallDescription` - the brief text, used for
+        the class, the docstring and the paragraph under the heading - and `equations` is
+        `detailedDescription`, the full text after the generated part of the page. Items only; the
+        structures keep `classDescription`.
+      - **RG13.5.0.2** the general section of each kind of item, in a new definitions file
+        `definitions/itemKindDefinitions.py` (maintainer's decision), with an `overallDescription` -
+        today's paragraph of the index page - and a `detailedDescription`, written by .1 to .5.
+      - **RG13.5.0.3** the generated frame of every item page: *Interface* instead of *Additional
+        information*, the types in words (which markers, nodes, connectors and loads fit), the Python
+        names on one line, headings of their own for parameters, output variables and the detailed
+        description; `requestedNodeTypes` declared for the node markers.
+    - **RG13.5.1** nodes - the table of coordinates, the frame and interpretation, the action on the
+      equations of motion, constraints, singularities; the slopes of the slope nodes.
+    - **RG13.5.2** objects - after `objectDefinitionsDev.md` is agreed.
+    - **RG13.5.3** markers - after `markerDefinitionsDev.md` is agreed.
+    - **RG13.5.4** loads - the load, its frame, the generalized forces with the transformation.
+    - **RG13.5.5** sensors - the general sensor section, and each sensor with what is its own.
 
 ## Next steps recommended
 
@@ -2779,7 +2814,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.4 | #2721 | the development documents per item type, `docs/revision/<itemType>DefinitionsDev.md` - drafted |
+| RG13.4 | #2721 | the development documents per item type: objects and markers open; nodes, loads, sensors agreed |
+| RG13.5 | #2725 | the documentation of the items, by kind; .0 the frame, .1 nodes, .4 loads, .5 sensors first |
 
 ### Raised by the current work, and not yet a step
 

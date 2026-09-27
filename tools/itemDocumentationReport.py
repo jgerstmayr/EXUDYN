@@ -6,8 +6,8 @@
 # Every item - node, object, marker, load, sensor - is documented by what its definition in
 # definitions/itemDefs*.py carries, because its reference manual page is generated from it. This
 # reads the definitions and the scripts of the repository and says, per item:
-#   - the words of the class description, and of the description of the equations ('equations'),
-#     and how many sections that one has;
+#   - the words of the overall description ('overallDescription') and of the detailed description
+#     ('detailedDescription'), and how many sections that one has;
 #   - whether the page shows a figure of the item;
 #   - how many of its parameters have no description, or one of fewer than three words;
 #   - how many output variables it declares, and how many of those have no description;
@@ -83,8 +83,8 @@ def Measure(definition, scripts, library):
                    if m['pythonName'] != 'name' and Words(m.get('description', '')) < 3]
     outputs = [entry.get('description', '') for entry in (definition.get('outputVariables') or [])
                if isinstance(entry, dict)]
-    equations = definition.get('equations') or ''
-    allText = (definition.get('classDescription') or '') + equations
+    equations = definition.get('detailedDescription') or ''
+    allText = (definition.get('overallDescription') or '') + equations
     className = definition['className']
     itemType = definition.get('classType', '')
     shortName = definition.get('pythonShortName', '')
@@ -98,7 +98,7 @@ def Measure(definition, scripts, library):
     return {
         'item': className if className.startswith(itemType) else itemType + className,
         'kind': Kind(definition),
-        'classWords': Words(definition.get('classDescription')),
+        'classWords': Words(definition.get('overallDescription')),
         'equationWords': Words(equations),
         'sections': len(re.findall(r'(?m)^\s*#{2,}\s', equations)),
         'figure': ('addExampleImage' in allText or '{figure}' in allText or '{image}' in allText
@@ -132,7 +132,7 @@ def main():
 
     print('<!-- written by tools/itemDocumentationReport.py - run it again rather than editing this -->')
     print('')
-    print('| kind | items | no equations text | no figure | no MiniExample | parameters without a real '
+    print('| kind | items | no detailed description | no figure | no MiniExample | parameters without a real '
           'description | output variables without one | used in no script | ... nor in the package |')
     print('|---|---|---|---|---|---|---|---|---|')
     for kind in kinds + ['**all**']:
@@ -151,7 +151,7 @@ def main():
         return 0
 
     print('')
-    print('| item | kind | class description (words) | equations (words, sections) | figure | '
+    print('| item | kind | overall description (words) | detailed description (words, sections) | figure | '
           'parameters: without a real description | output variables (undescribed) | MiniExample | '
           'used in scripts | used in the package |')
     print('|---|---|---|---|---|---|---|---|---|---|')

@@ -36,7 +36,7 @@ definitions = []
 definitions.append(ItemDefinition(
     className='MarkerBodyMass',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).',
+    overallDescription=r'A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -81,9 +81,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerBodyPosition',
     cParentClass=ParentClassCMarker,
-    classDescription=r"""A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.""",
+    overallDescription=r"""A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.""",
     classType=ClassTypeMarker,
-    equations=r"""    The body position marker provides an interface to a object of type body 
+    detailedDescription=r"""    The body position marker provides an interface to a object of type body 
     (`ObjectGround`, `ObjectMassPoint`, `ObjectRigidBody`, ...)
     and provides access to kinematic quantities such as **position** and **velocity** 
     and to the **position jacobian**, using a `localPosition` $\pLocB$ which is defined within the 
@@ -178,7 +178,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerBodyRigid',
     cParentClass=ParentClassCMarker,
-    classDescription=r"""A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.""",
+    overallDescription=r"""A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.""",
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -233,9 +233,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodePosition',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
+    overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
-    equations=r"""    The node position marker provides an interface to a node which contains a position
+    detailedDescription=r"""    The node position marker provides an interface to a node which contains a position
     (`NodePoint`, `NodePoint2D`, `NodeRigidBodyEP`, `NodePointSlope`, ...)
     and accesses **position**, **velocity** and the **position jacobian**.
     The position and velocity are computed according to the definition of output variables in the respective nodes.
@@ -300,9 +300,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeRigid',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.',
+    overallDescription=r'A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.',
     classType=ClassTypeMarker,
-    equations=r"""    The node rigid body marker provides an interface to a node which contains a position and an orientation
+    detailedDescription=r"""    The node rigid body marker provides an interface to a node which contains a position and an orientation
     (`NodeRigidBodyEP`, `NodeRigidBody2D`, ...)
     and provides access to kinematic quantities such as **position**, **velocity**, **orientation** (rotation matrix),
     **angular velocity**. It also provides the **position jacobian** and the **rotation jacobian**.
@@ -379,7 +379,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeCoordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinate`.""",
+    overallDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinate`.""",
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -429,7 +429,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeCoordinates',
     cParentClass=ParentClassCMarker,
-    classDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
+    overallDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -473,7 +473,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeODE1Coordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A node-Marker attached to a ABRV:ODE1 coordinate of a node.',
+    overallDescription=r'A node-Marker attached to a ABRV:ODE1 coordinate of a node.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -523,7 +523,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeRotationCoordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.',
+    overallDescription=r'A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -574,9 +574,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerBodiesRelativeTranslationCoordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis. This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.',
+    overallDescription=r'A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis. This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.',
     classType=ClassTypeMarker,
-    equations=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
+    detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
     and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
     The global axis is computed as 
@@ -671,9 +671,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerBodiesRelativeRotationCoordinate',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A coordinate-based Marker attached to two rigid bodies or beams which computes the relative rotation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only rotate about the given axis (e.g., constrained by a revolute joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.',
+    overallDescription=r'A coordinate-based Marker attached to two rigid bodies or beams which computes the relative rotation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only rotate about the given axis (e.g., constrained by a revolute joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.',
     classType=ClassTypeMarker,
-    equations=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
+    detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
     and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
     From the given axis `axis0`, we compute an orthonormal basis (orthonormal to axis0) relative to marker $m_0$,
@@ -799,9 +799,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerSuperElementPosition',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.',
+    overallDescription=r'A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.',
     classType=ClassTypeMarker,
-    equations=r"""    **Definition of marker quantities**:
+    detailedDescription=r"""    **Definition of marker quantities**:
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -931,9 +931,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerSuperElementRigid',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
+    overallDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
     classType=ClassTypeMarker,
-    equations=r"""    **Definition of marker quantities**:
+    detailedDescription=r"""    **Definition of marker quantities**:
     <!--\rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} + -->
     <!--\LU{0r}{\Rot} \left(\sum_i (w_i \cdot \LU{r}{\vv^{(i)}}) + \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\uv^{(i)}}) \right)$} -->
     <!--
@@ -1262,9 +1262,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerKinematicTreeRigid',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A position and orientation (rigid-body) marker attached to a kinematic tree. The marker is attached to the ObjectKinematicTree object and additionally needs a link number as well as a local position, similar to the SensorKinematicTree. The marker allows to attach loads (LoadForceVector and LoadTorqueVector) at arbitrary links or position. It also allows to attach connectors (e.g., spring dampers or actuators) to the kinematic tree. Finally, joint constraints can be attached, which allows for realization of closed loop structures. NOTE, however, that it is less efficient to attach many markers to a kinematic tree, therefor for forces or joint control use the structures available in kinematic tree whenever possible.',
+    overallDescription=r'A position and orientation (rigid-body) marker attached to a kinematic tree. The marker is attached to the ObjectKinematicTree object and additionally needs a link number as well as a local position, similar to the SensorKinematicTree. The marker allows to attach loads (LoadForceVector and LoadTorqueVector) at arbitrary links or position. It also allows to attach connectors (e.g., spring dampers or actuators) to the kinematic tree. Finally, joint constraints can be attached, which allows for realization of closed loop structures. NOTE, however, that it is less efficient to attach many markers to a kinematic tree, therefor for forces or joint control use the structures available in kinematic tree whenever possible.',
     classType=ClassTypeMarker,
-    equations=r"""    <!--
+    detailedDescription=r"""    <!--
         **Definition of marker quantities**:
         \startTable{intermediate variables}{symbol}{description}
         \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}
@@ -1347,7 +1347,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerObjectODE2Coordinates',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.',
+    overallDescription=r'A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -1400,7 +1400,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
 """,
     cParentClass=ParentClassCMarker,
-    classDescription=r'A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.',
+    overallDescription=r'A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -1454,7 +1454,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerBodyCable2DCoordinates',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
+    overallDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -1500,7 +1500,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerBodyBeamShape',
     cParentClass=ParentClassCMarker,
-    classDescription=r'A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.',
+    overallDescription=r'A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,

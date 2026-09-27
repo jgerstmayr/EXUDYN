@@ -235,7 +235,7 @@ booleanHeaderKeys = set(['writePybindIncludes', 'appendToFile', 'addDictionaryAc
 #the old item parser turned every literal backslash-n into a newline - except inside the
 #multi-line blocks; the structure parser did so only for three header keys. The definitions store
 #the readable form, so the generators get the parser's form back.
-mangleRules = {'items':      {'all': True, 'keys': set(), 'verbatim': set(['equations',
+mangleRules = {'items':      {'all': True, 'keys': set(), 'verbatim': set(['detailedDescription',
                                                                            'miniExample'])},
                 'structures': {'all': False, 'verbatim': set(),
                                'keys': set(['classDescription', 'sectionText', 'cppText'])}}
@@ -400,8 +400,8 @@ def Description(member):
     return Mangle(member.get('description', '') or '', 'parameterDescription', 'items')
 
 
-def ClassDescription(definition):
-    return Mangle(str(definition.get('classDescription', '') or ''), 'classDescription', 'items')
+def OverallDescription(definition):
+    return Mangle(str(definition.get('overallDescription', '') or ''), 'overallDescription', 'items')
 
 
 def FunctionImplementation(definition, pythonName):

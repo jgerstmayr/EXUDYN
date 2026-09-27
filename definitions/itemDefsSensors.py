@@ -36,7 +36,7 @@ definitions = []
 definitions.append(ItemDefinition(
     className='SensorNode',
     cParentClass=ParentClassCSensor,
-    classDescription=r"""A sensor attached to a ABRV:ODE2 or ABRV:ODE1 node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    overallDescription=r"""A sensor attached to a ABRV:ODE2 or ABRV:ODE1 node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -101,7 +101,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorObject',
     cParentClass=ParentClassCSensor,
-    classDescription=r'A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc). As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
+    overallDescription=r'A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc). As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -167,7 +167,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorBody',
     cParentClass=ParentClassCSensor,
-    classDescription=r"""A sensor attached to a body-object with local position $\pLocB$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    overallDescription=r"""A sensor attached to a body-object with local position $\pLocB$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -241,7 +241,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorSuperElement',
     cParentClass=ParentClassCSensor,
-    classDescription=r'A sensor attached to a SuperElement-object with mesh node number. As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
+    overallDescription=r'A sensor attached to a SuperElement-object with mesh node number. As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -315,7 +315,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorKinematicTree',
     cParentClass=ParentClassCSensor,
-    classDescription=r"""A sensor attached to a KinematicTree with local position $\pLocB$ and link number $n_l$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    overallDescription=r"""A sensor attached to a KinematicTree with local position $\pLocB$ and link number $n_l$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -397,7 +397,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorMarker',
     cParentClass=ParentClassCSensor,
-    classDescription=r'A sensor attached to a marker. The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file',
+    overallDescription=r'A sensor attached to a marker. The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file',
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -463,7 +463,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorLoad',
     cParentClass=ParentClassCSensor,
-    classDescription=r'A sensor attached to a load. The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
+    overallDescription=r'A sensor attached to a load. The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
     classType=ClassTypeSensor,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
@@ -543,9 +543,9 @@ def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, sensorNumber
 definitions.append(ItemDefinition(
     className='SensorUserFunction',
     cParentClass=ParentClassCSensor,
-    classDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
+    overallDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
     classType=ClassTypeSensor,
-    equations=r"""    The sensor collects data via a user function, which completely describes the output itself.
+    detailedDescription=r"""    The sensor collects data via a user function, which completely describes the output itself.
     Note that the sensorNumbers and factors need to be consistent. 
     The return value of the user function is a list of `float` numbers which cast to a `std::vector` in pybind.
     This list can have arbitrary dimension, but should be kept constant during simulation.

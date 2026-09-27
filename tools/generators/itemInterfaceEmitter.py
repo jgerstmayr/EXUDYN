@@ -129,7 +129,7 @@ def ItemDocstrings(definition):
     className = definition['className']
     classType = definition.get('classType', '')
     (pyiSummary, pyiDescription) = SplitSummaryDescription(CleanStringForPyiDescription(
-        im.ClassDescription(definition)))
+        im.OverallDescription(definition)))
     dataDocstring = {'kind': 'classFunction', 'notes': [], 'inputs': [], 'argTypes': False}
     dataDocstring['summary'] = pyiSummary
     dataDocstring['description'] = pyiDescription

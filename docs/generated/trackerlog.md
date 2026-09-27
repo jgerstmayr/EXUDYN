@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.133.dev1
+- Exudyn version = 1.12.134.dev1
 - last change = 2026-09-27
-- Number of issues = 2724
-- Number of resolved issues = 2447 (133 in current version)
+- Number of issues = 2726
+- Number of resolved issues = 2448 (134 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` `HUGE EFF` `raised by: Claude-JG` RG13.5: the documentation of the items, written by the development documents of RG13.4 - nodes, objects, markers, loads, sensors (#2725)
+  - description: The maintainer, 2026-09-27, after reading the node, load and sensor documents of RG13.4: those three are complete; 'start a new step RG13.5, which adds according documentation for these types, again adding 13.5.1 for nodes, .2 for objects, ...'. For loads the generalized forces keep their frames: a load is given in global or local coordinates, and the transformation belongs in the equation. For the slope nodes, the interpretation of the slopes goes into the detailed description of each node. RG13.5.0 is the generated frame and the general section per kind (definitions/itemKindDefinitions.py), before the pages are written. revision2026b step RG13.5.
+  - date raised: 2026-09-27
 - `DOCU` `HIGH EFF` `raised by: Claude-JG` RG13: the development documents per item type - what the documentation of a node, object, marker, load and sensor must contain (#2721)
   - description: The maintainer, 2026-09-27: evaluate on a textual level, from representative examples - the tutorials, and the Create functions that hide the items behind them - what a reader needs to know about a node, marker, load, object and sensor and how they relate; check the text the generator writes around the generated information (e.g. 'This Node has/provides the following types = Position', which could say which markers it allows, and could be generated); make the interpretation of node coordinates systematic; group the objects - rigid bodies, flexible bodies (nonlinear finite elements), connectors acting on two or more markers; a general section per kind, above all for sensors, loads and markers. Written first as temporary documents docs/revision/\<itemType\>DefinitionsDev.md, which are folded into the developer documentation - what documentation an item needs, what it contains and how it is structured - and then removed. revision2026b step RG13.4.
   - date raised: 2026-09-27

@@ -59,9 +59,9 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 0;
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription='A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.',
+    overallDescription='A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.',
     classType=ClassTypeObject,
-    equations=r"""    #### Equations
+    detailedDescription=r"""    #### Equations
 
     ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. 
     The object does not move (in general) and forces or torques do not have an effect.
@@ -200,9 +200,9 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 3;
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'A 3D mass point which is attached to a position-based node, usually NodePoint.',
+    overallDescription=r'A 3D mass point which is attached to a position-based node, usually NodePoint.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -335,9 +335,9 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 2;
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'A 2D mass point which is attached to a position-based 2D node.',
+    overallDescription=r'A 2D mass point which is attached to a position-based 2D node.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -472,9 +472,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectMass1D',
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'A 1D (translational) mass which is attached to Node1D. Note, that the mass does not need to have the interpretation as a translational mass.',
+    overallDescription=r'A 1D (translational) mass which is attached to Node1D. Note, that the mass does not need to have the interpretation as a translational mass.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -622,9 +622,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectRotationalMass1D',
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'A 1D rotational inertia (mass) which is attached to Node1D.',
+    overallDescription=r'A 1D rotational inertia (mass) which is attached to Node1D.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -797,14 +797,14 @@ definitions.append(ItemDefinition(
     static constexpr Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and `CreateRigidBody(...)`, see [](#sec-mainsystemextensions-createrigidbody), of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass. 
+    overallDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and `CreateRigidBody(...)`, see [](#sec-mainsystemextensions-createrigidbody), of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass. 
 
 ```{image} /docs/figures/ObjectRigidBody.png
 :width: 400
 ```
 """,
     classType=ClassTypeObject,
-    equations=r"""    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    detailedDescription=r"""    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
     #### Definition of quantities
 
@@ -1108,9 +1108,9 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 3;
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.',
+    overallDescription=r'A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -1377,9 +1377,9 @@ definitions.append(ItemDefinition(
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""A system of $n$ second order ordinary differential equations (ABRV:ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.""",
+    overallDescription=r"""A system of $n$ second order ordinary differential equations (ABRV:ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Additional output variables for superelement node access
+    detailedDescription=r"""    #### Additional output variables for superelement node access
 
     Functions like `GetObjectOutputSuperElement(...)`, see [](#sec-mainsystem-object), 
     or `SensorSuperElement`, see [](#sec-mainsystem-sensor), directly access special output variables
@@ -1705,9 +1705,9 @@ typedef py::array_t<Real> NumpyMatrix;
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObject,
-    classDescription=r"""A system of $n$ ABRV:ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ABRV:ODE1 systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.""",
+    overallDescription=r"""A system of $n$ ABRV:ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ABRV:ODE1 systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Equations of motion
+    detailedDescription=r"""    #### Equations of motion
 
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
@@ -1920,9 +1920,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     addPublicC=r"""    static constexpr Index noParent = -1;//AUTO: number which defines that this link has no parent
 """,
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.""",
+    overallDescription=r"""A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.""",
     classType=ClassTypeObject,
-    equations=r"""    <!-- -->
+    detailedDescription=r"""    <!-- -->
 
     (sec-kinematictree-additionaloutput)=
     #### SensorKinematicTree output variables
@@ -2501,9 +2501,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""This object is used to represent equations modelled by the ABRV:FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the ABRV:FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
+    overallDescription=r"""This object is used to represent equations modelled by the ABRV:FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the ABRV:FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Additional output variables for superelement node access
+    detailedDescription=r"""    #### Additional output variables for superelement node access
 
     Functions like `GetObjectOutputSuperElement(...)`, see [](#sec-mainsystem-object), 
     or `SensorSuperElement`, see [](#sec-mainsystem-sensor), directly access special output variables
@@ -3011,9 +3011,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     author=r'Gerstmayr Johannes, Zwölfer Andreas',
     cParentClass=ParentClassCObjectSuperElement,
-    classDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in [](#sec-fem-feminterface---init--). It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions).""",
+    overallDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in [](#sec-fem-feminterface---init--). It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions).""",
     classType=ClassTypeObject,
-    equations=r"""    <!--+++++++++++++++++++++++++++++++++++++ -->
+    detailedDescription=r"""    <!--+++++++++++++++++++++++++++++++++++++ -->
 
     (sec-objectffrfreducedorder-superelementoutput)=
     #### Super element output variables
@@ -3582,9 +3582,9 @@ definitions.append(ItemDefinition(
     static constexpr Index nNodalCoordinates = 6; //!< number of nodal coordinates
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
+    overallDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
     classType=ClassTypeObject,
-    equations=r"""
+    detailedDescription=r"""
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable
@@ -3883,9 +3883,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     static constexpr Index nNodalCoordinates = 4; //!< number of nodal coordinates
 """,
     cParentClass=ParentClassCObjectANCFCable2DBase,
-    classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
+    overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--
     \rowTable{}{$\LU{0}{\fv} $}{}
@@ -4375,9 +4375,9 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation
 """,
     cParentClass=ParentClassCObjectANCFCable2DBase,
-    classDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
+    overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    equations=r"""    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
+    detailedDescription=r"""    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
     The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
     In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
     The parameter `physicsMovingMassFactor` allows to control the amount of mass, which moves with
@@ -4546,9 +4546,9 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation (should be in protected area, but needs nODE2perNode)
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$. NOTE: Requires further development and tests!""",
+    overallDescription=r"""A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$. NOTE: Requires further development and tests!""",
     classType=ClassTypeObject,
-    equations=r"""    Detailed description coming later.
+    detailedDescription=r"""    Detailed description coming later.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
@@ -4748,9 +4748,9 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<maxODE2coordinates*maxODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
+    overallDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    equations=r"""    See paper of Simo and Vu-Quoc (1986).
+    detailedDescription=r"""    See paper of Simo and Vu-Quoc (1986).
     Detailed description coming later.
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -4930,9 +4930,9 @@ definitions.append(ItemDefinition(
     addIncludesMain=r"""#include "Autogenerated/PyStructuralElementsDataStructures.h"
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes. NOTE: Requires further development and tests!',
+    overallDescription=r'A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes. NOTE: Requires further development and tests!',
     classType=ClassTypeObject,
-    equations=r"""    Detailed description coming later.
+    detailedDescription=r"""    Detailed description coming later.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
@@ -5058,9 +5058,9 @@ definitions.append(ItemDefinition(
     static constexpr Index nnc = 9; //!< number of node coordinates
 """,
     cParentClass=ParentClassCObjectBody,
-    classDescription=r'OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.',
+    overallDescription=r'OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.',
     classType=ClassTypeObject,
-    equations=r"""    Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
+    detailedDescription=r"""    Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #to be done
@@ -5296,9 +5296,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'An simple spring-damper element with additional force, connecting to position-based markers.',
+    overallDescription=r'An simple spring-damper element with additional force, connecting to position-based markers.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -5649,9 +5649,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.',
+    overallDescription=r'An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -5957,9 +5957,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)',
+    overallDescription=r'An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | input parameter | symbol | description |
     |---|---|---|
@@ -6219,9 +6219,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system. It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.',
+    overallDescription=r'An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system. It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--
     \rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
@@ -6445,9 +6445,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (`OutputVariableType.Rotation`).""",
+    overallDescription=r"""An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (`OutputVariableType.Rotation`).""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | input parameter | symbol | description |
     |---|---|---|
@@ -6682,9 +6682,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
+    overallDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -6907,9 +6907,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.""",
+    overallDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -7227,9 +7227,9 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStatic
 definitions.append(ItemDefinition(
     className='ObjectConnectorGravity',
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.',
+    overallDescription=r'A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -7444,9 +7444,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the `MainSystem` `PreStepUserFunction(...)`.""",
+    overallDescription=r"""A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the `MainSystem` `PreStepUserFunction(...)`.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -7791,9 +7791,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .""",
+    overallDescription=r"""A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .""",
     classType=ClassTypeObject,
-    equations=r"""    <!--
+    detailedDescription=r"""    <!--
     #### Definition of quantities
     \startTable{input parameter}{symbol}{description}
     \rowTable{stiffness}{$\kv \in \mathbb{R}^{6\times 6}$}{stiffness in $J0$ coordinates}
@@ -8074,9 +8074,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectConnectorDistance',
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'Connector which enforces constant or prescribed distance between two bodies/nodes.',
+    overallDescription=r'Connector which enforces constant or prescribed distance between two bodies/nodes.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -8266,9 +8266,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.',
+    overallDescription=r'A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -8516,9 +8516,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects ABRV:LTG-lists to build the according coordinate mappings.""",
+    overallDescription=r"""A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects ABRV:LTG-lists to build the according coordinate mappings.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
@@ -8719,9 +8719,9 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
+    overallDescription=r'A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
@@ -9082,9 +9082,9 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
 """,
     author=r'Manzl Peter',
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A contact connector representing a convex roll (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
+    overallDescription=r'A contact connector representing a convex roll (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
@@ -9358,7 +9358,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
 definitions.append(ItemDefinition(
     className='ObjectContactCoordinate',
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
+    overallDescription=r"""A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
@@ -9462,9 +9462,9 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""constexpr Index CObjectContactCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
+    overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Connector equations
+    detailedDescription=r"""    #### Connector equations
 
     Geometry and equations are very similar to `ObjectContactFrictionCircleCable2D`, while friction is not used and no torque
     is transferred to the circle object.
@@ -9592,9 +9592,9 @@ definitions.append(ItemDefinition(
     static const Index absValueSlipCase = 1; //AUTO: slip may be +-1 !
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r"""A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.""",
+    overallDescription=r"""A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{} -->
 
@@ -10174,9 +10174,9 @@ definitions.append(ItemDefinition(
 """,
     author=r'Gerstmayr Johannes, Weyrer Sebastian',
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.',
+    overallDescription=r'A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -10534,9 +10534,9 @@ definitions.append(ItemDefinition(
 """,
     author=r'Gerstmayr Johannes',
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).',
+    overallDescription=r'A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -10707,9 +10707,9 @@ definitions.append(ItemDefinition(
 """,
     author=r'Gerstmayr Johannes',
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.',
+    overallDescription=r'A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -10875,9 +10875,9 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     static constexpr Index dataIndexVtangent = 2; //!< index in data node (per segment) representing tangent velocity
 """,
     cParentClass=ParentClassCObjectConnector,
-    classDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]',
+    overallDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -11104,14 +11104,14 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 6;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. 
+    overallDescription=r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. 
 
 ```{image} /docs/figures/UniversalJoint.png
 :width: 400
 ```
 """,
     classType=ClassTypeObject,
-    equations=r"""    (sec-objectjointgeneric-definitionofquantities)=
+    detailedDescription=r"""    (sec-objectjointgeneric-definitionofquantities)=
     #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -11360,7 +11360,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). 
+    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/RevoluteJointZ.png
 :width: 400
@@ -11372,7 +11372,7 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
-    equations=r"""    (sec-objectjointrevolutez-definitionofquantities)=
+    detailedDescription=r"""    (sec-objectjointrevolutez-definitionofquantities)=
     #### Definition of quantities
 
 
@@ -11566,14 +11566,14 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). 
+    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/PrismaticJointX.png
 :width: 400
 ```
 """,
     classType=ClassTypeObject,
-    equations=r"""    (sec-objectjointprismaticx-definitionofquantities)=
+    detailedDescription=r"""    (sec-objectjointprismaticx-definitionofquantities)=
     #### Definition of quantities
 
 
@@ -11751,14 +11751,14 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 3;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A spherical joint, which constrains the relative translation between two position based markers. 
+    overallDescription=r"""A spherical joint, which constrains the relative translation between two position based markers. 
 
 ```{image} /docs/figures/SphericalJoint.png
 :width: 400
 ```
 """,
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -11928,9 +11928,9 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 3;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!',
+    overallDescription=r'A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
 
     | intermediate variables | symbol | description |
@@ -12130,7 +12130,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectJointRevolute2D',
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers',
+    overallDescription=r'A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers',
     classType=ClassTypeObject,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
@@ -12200,9 +12200,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectJointPrismatic2D',
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.',
+    overallDescription=r'A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.',
     classType=ClassTypeObject,
-    equations=r"""    #### Geometric relations
+    detailedDescription=r"""    #### Geometric relations
 
     The vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis.
     The vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis.
@@ -12307,9 +12307,9 @@ definitions.append(ItemDefinition(
     static constexpr Index torquesStartIndex = 4; //!< starting index of alqebraic coordinates for torques (if existing)
 """,
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
+    overallDescription=r'A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--
     
@@ -12598,9 +12598,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectJointSliding2D',
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
+    overallDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!-- -->
 
@@ -12905,9 +12905,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectJointALEMoving2D',
     cParentClass=ParentClassCObjectConstraint,
-    classDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
+    overallDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,
-    equations=r"""    #### Definition of quantities
+    detailedDescription=r"""    #### Definition of quantities
 
     <!--
     

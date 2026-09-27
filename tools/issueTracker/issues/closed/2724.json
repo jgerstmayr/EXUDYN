@@ -1,0 +1,16 @@
+{
+  "number": 2724,
+  "title": "item definitions: classDescription becomes overallDescription and equations becomes detailedDescription",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'the classDescription and the equations fields in the items should be replaced into overallDescription (brief description, summary) and detailedDescription. The reason for the split is that the overall descr. is used for class, etc., while the full description goes into the docs. And there is some auto-generated part before the details.' Items only; the structures keep classDescription, which has no detailed counterpart there. A rename in the five item definition files, the generators that read them, the item report and definitions/README.md; the generated files do not change. revision2026b step RG13.5.0.1.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 23:45",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions",
+  "releaseNotes": "The item definitions call their two description fields overallDescription (the brief text: the class, the docstring, the paragraph under the heading) and detailedDescription (the full text of the page after its generated part); they were classDescription and equations. The structures keep classDescription.",
+  "resolvedInVersion": "1.12.134"
+}

@@ -6063,3 +6063,24 @@ size only if it did not, or if `sizeInches` was given in the script - the rule o
 the render window: the script wins over what is stored. A figure with sub plots, which does not
 place a window, is unchanged. A test places a stub Qt window with a stored size and a stub tkinter
 window without one; on the screen it is for the maintainer to see.
+
+<a id="rg13-5-0-1"></a>
+### RG13.5.0.1 — overallDescription and detailedDescription (2026-09-27, #2724)
+
+The maintainer: *"the classDescription and the equations fields in the items should be replaced into
+overallDescription (brief description, summary) and detailedDescription. The reason for the split is
+that the overall descr. is used for class, etc., while the full description goes into the docs. And
+there is some auto-generated part before the details."*
+
+The rename: 97 `overallDescription` and 69 `detailedDescription` in the five item definition files,
+the keys the generators read (`itemDocsEmitter`, `itemHeaderEmitter`, `itemModel` - its mangling
+rule and `OverallDescription()` - and `itemInterfaceEmitter`), the item report, and the field table
+of `definitions/README.md`. **The regeneration is a no-op**, which is the proof that nothing else
+moved. The structures keep `classDescription` (maintainer's decision): they have no detailed text
+beside it.
+
+With it, RG13.4 is complete for three kinds - nodes, loads and sensors are agreed - and RG13.5 is the
+step that writes them. For loads the maintainer asked that the generalized forces keep their frames;
+reading `CSystem::ComputeODE2SingleLoad` for that also showed that the static solver's load factor
+multiplies every load **except** one with a user function (#603), which `loadDefinitionsDev.md` had
+put the other way round.

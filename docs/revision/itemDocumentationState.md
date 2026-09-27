@@ -1,6 +1,6 @@
 <!-- written by tools/itemDocumentationReport.py - run it again rather than editing this -->
 
-| kind | items | no equations text | no figure | no MiniExample | parameters without a real description | output variables without one | used in no script | ... nor in the package |
+| kind | items | no detailed description | no figure | no MiniExample | parameters without a real description | output variables without one | used in no script | ... nor in the package |
 |---|---|---|---|---|---|---|---|---|
 | Node | 16 | 9 | 16 | 16 | 0 of 101 | 0 of 137 | 3 | 2 |
 | Object (Body) | 7 | 0 | 6 | 2 | 0 of 46 | 0 of 59 | 0 | 0 |
@@ -15,7 +15,7 @@
 | Sensor | 8 | 7 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
 | **all** | 97 | 29 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
 
-| item | kind | class description (words) | equations (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
+| item | kind | overall description (words) | detailed description (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
 |---|---|---|---|---|---|---|---|---|---|
 | NodePoint | Node | 18 | 88, 0 | - | 0 of 7 | 12 | - | 40 | 4 |
 | NodePoint2D | Node | 18 | 73, 0 | - | 0 of 7 | 12 | - | 19 | 3 |

@@ -33,8 +33,10 @@ Textual findings:
   body or at a node"* - what `bodyFixed` means on a **node** (a rigid body node rotates, a point node
   does not) is what a reader asks next, and no page says it.
 - The static case is on the user function argument (*"WARNING: this parameter does not work in
-  combination with static computation, as it is changed by the solver over step time"*) - a property
-  of every load in a static solve, not of that argument.
+  combination with static computation, as it is changed by the solver over step time"*). What the
+  code does (`CSystem::ComputeODE2SingleLoad`): a load is multiplied by the static solver's load
+  factor, **except** a load with a user function, whose value is taken as it is (#603) - a rule of
+  every load, which belongs in the general section, not on one argument.
 - `LoadMassProportional` gives the example $[0,-g,0]$ in its class description; its load is a force
   per mass, $\fv = \int_V \rho\, \bv \,dV$ - the equation a reader needs to know that it is the
   **distributed** body load, not a point force at the centre of mass.
@@ -44,7 +46,7 @@ Textual findings:
 | section | contents |
 |---|---|
 | **Load** | the load vector or scalar, its frame (global / body-fixed), the formula: $\fv$, $\tauv$, $\rho\bv$, or the scalar $f$ |
-| **Generalized forces** | $\Qm = \Jm_{pos}\tp\fv$ (force), $\Jm_{rot}\tp\tauv$ (torque), $\int \rho \Jm\tp \bv\,dV$ (mass proportional), $f$ on one coordinate - one line each |
+| **Generalized forces** | with the frames, as `CSystem::ComputeODE2SingleLoad` computes them: the load is transformed to the global frame first, $\LU{0}{\fv} = \LU{0m}{\Rot}\,\LU{m}{\fv}$ if `bodyFixed = True` (with the rotation matrix of the marker, which must provide an orientation) and $\LU{0}{\fv}$ as given otherwise; then $\Qm = \LU{0}{\Jm_{pos}}\tp\,\LU{0}{\fv}$ (force), $\Qm = \LU{0}{\Jm_{rot}}\tp\,\LU{0}{\tauv}$ with $\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}/\partial \dot\qv$ (torque, the same transformation), $\Qm = \int_V \rho\, \LU{0}{\Jm_{pos}}\tp\,dV\; \LU{0}{\bv}$ (mass proportional, the Jacobian of `MarkerBodyMass`; never body-fixed, because that marker has no orientation), $\Qm = \Jm\tp f$ on the marked coordinate (coordinate load). All of them multiplied by the static solver's load factor, except a load with a user function (#603) |
 | **Marker** | the requested marker type and the markers that provide it (generated) |
 | **User function** | generated |
 | **MiniExample** | written - the three missing ones are short |
@@ -56,6 +58,6 @@ Before the first load, replacing today's paragraph of the index page:
 - a load acts through a marker, and the marker's Jacobian takes it to the coordinates - once;
 - global and body-fixed loads, on bodies and on nodes;
 - time-dependent loads: the user function of the load, or `preStepUserFunction`;
-- loads in static solves: the load factor and the load steps (`staticSolver`), which apply to every
-  load, with or without a user function;
+- loads in static solves: the load factor and the load steps (`staticSolver`), which multiply every
+  load that has no user function; a user function gets the time and is responsible itself;
 - `CreateForce` and `CreateTorque`, and what they add.

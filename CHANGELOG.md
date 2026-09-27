@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 130 | 1.12.133 |
+| 1.12 | Metheney | 131 | 1.12.134 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.134** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item definitions: classDescription becomes overallDescription and equations becomes detailedDescription (#2724)
+  - description: The maintainer, 2026-09-27: 'the classDescription and the equations fields in the items should be replaced into overallDescription (brief description, summary) and detailedDescription. The reason for the split is that the overall descr. is used for class, etc., while the full description goes into the docs. And there is some auto-generated part before the details.' Items only; the structures keep classDescription, which has no detailed counterpart there. A rename in the five item definition files, the generators that read them, the item report and definitions/README.md; the generated files do not change. revision2026b step RG13.5.0.1.
+  - **notes:** The item definitions call their two description fields overallDescription (the brief text: the class, the docstring, the paragraph under the heading) and detailedDescription (the full text of the page after its generated part); they were classDescription and equations. The structures keep classDescription.
+  - date resolved: **2026-09-27 23:45**, date raised: 2026-09-27
 - **1.12.133** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotSensor does not apply the stored window size: the default sizeInches overwrites it (#2723)
   - description: The maintainer, 2026-09-27, V1.12.132: the size of a PlotSensor window is stored correctly by store positions, but a new PlotSensor opens at the default size. \_\_PlacePlotWindow resizes the window to the stored size, and PlotSensor then calls fig.set\_size\_inches(sizeInches, forward=True) with the default 6.4 x 4.8 inches, which resizes the window again. A size given in the script (sizeInches=...) still wins, as for the dialogs and the render window. revision2026b step RG12.28.
   - **notes:** PlotSensor opens a window at the size stored for it by store positions; before, the default sizeInches overwrote it. A sizeInches given in the script still wins.

@@ -78,8 +78,9 @@ These are the fields that are descriptions, and all of them are converted the sa
 
 | field | where | becomes |
 |---|---|---|
-| `classDescription` | `ItemDefinition`, `StructureDefinition` | the paragraph under the item's or structure's heading |
-| `equations` | `ItemDefinition` | the *DESCRIPTION of \<item\>* part of the item page - the long text, with its own headings |
+| `overallDescription` | `ItemDefinition` | the brief description of an item: the paragraph under its heading, the docstring of its Python class and the comment of its C++ classes |
+| `detailedDescription` | `ItemDefinition` | the full description of an item, after the generated part of its page - the long text, with its own headings |
+| `classDescription` | `StructureDefinition` | the paragraph under the structure's heading |
 | `description` | `ItemParameter`, `ItemFunction`, `StructureParameter`, `StructureFunction` | one cell of the parameter table |
 | `description` | the `pb....(...)` calls of the `pybind*.py` files | the text of the Python-C++ interface pages, and the docstring of the function |
 | `sectionText` | `StructureDefinition` | the heading and the paragraph that open the section a group of structures forms |
@@ -104,7 +105,7 @@ not in the list below reaches the page as itself and is a defect.
   and `$$`; several aligned equations go inside `\begin{aligned} ... \end{aligned}`. A label goes
   after the closing `$$`, `$$ (eq-objectground-position)`, and is referenced as any other target.
 - **A heading** is the Markdown heading it becomes, and the level is fixed by the page it lands in:
-  `#### Equations of motion` inside `equations`, which sits under the item's *DESCRIPTION* heading,
+  `#### Equations of motion` inside `detailedDescription`, which sits under the item's *DESCRIPTION* heading,
   and `## Title` inside `sectionText`, which sits under the page title. Where something refers to a
   heading, the MyST target goes on the line above it: `(sec-objectjointgeneric-quantities)=`.
   Use the recurring title where it fits - the list is `RECURRING_HEADINGS` in
