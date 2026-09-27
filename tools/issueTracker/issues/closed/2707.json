@@ -1,0 +1,16 @@
+{
+  "number": 2707,
+  "title": "the first page of the PDF shows the Exudyn logo twice",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'The PDF docs has twice the exudyn logo on page 1. just remove the first one and make the second as wide as the piston engine image (the third image on page 1).' The second logo and the piston engine are one file, intro2.jpg, so they cannot have one width until they are two files. revision2026b step RG3.3.2.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "pdfIndex.md",
+  "releaseNotes": "The first page of the PDF documentation shows the Exudyn logo once, as wide as the picture of the piston engine below it.",
+  "resolvedInVersion": "1.12.122"
+}

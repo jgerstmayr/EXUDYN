@@ -1136,6 +1136,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
         ax = fig.add_subplot(projection='3d') #fig.gca(projection=...) is gone since matplotlib 3.6 (#2701)
         plotData = []
         colors = []
+        triangle_vertices = []
         from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
         for i, line3D in enumerate(linePoints):
@@ -1162,7 +1163,6 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
 
         ##Poly3DCollection seems not to work!
         if len(triangles) != 0:
-            triangle_vertices = []
             colors = []
             #from mpl_toolkits.mplot3d import Axes3D
             from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -1193,14 +1193,29 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
             ax.set_aspect('auto') 
             ax.set_box_aspect([1,1,1])
 
-        ax.autoscale()
+        #THE LIMITS COME FROM EVERYTHING THAT IS DRAWN (#2706): ax.autoscale() of a 3D axes sees the
+        #lines and not a Poly3DCollection, so a model of triangles was drawn into the limits of its
+        #few lines - a marker basis a millimetre wide - and looked empty
+        allPoints = [point for segment in plotData for point in segment]
+        allPoints += [point for vertices in triangle_vertices for point in vertices]
+        if len(allPoints) != 0:
+            allPoints = np.array(allPoints, dtype=float)
+            (low, high) = (allPoints.min(axis=0), allPoints.max(axis=0))
+            center = 0.5*(low + high)
+            half = 0.5*(high - low)
+            if axesEqual:
+                half[:] = max(half.max(), 1e-12)     #a cube, so that the box aspect [1,1,1] is to scale
+            half = np.maximum(half, 1e-12)
+            ax.set_xlim(center[0]-half[0], center[0]+half[0])
+            ax.set_ylim(center[1]-half[1], center[1]+half[1])
+            ax.set_zlim(center[2]-half[2], center[2]+half[2])
     #end 3D plotting
 
     if title!='':
         plt.title(title)
 
-    plt.autoscale()
-    # plt.margins(0.1)
+    if not plot3D:
+        plt.autoscale()                     #3D sets its limits itself, from everything drawn
 
     plt.tight_layout() #not needed
     #'agg' is the non-interactive backend, used when the figures are only saved (#2477)

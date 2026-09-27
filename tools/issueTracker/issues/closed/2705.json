@@ -1,0 +1,16 @@
+{
+  "number": 2705,
+  "title": "the import note about ~/.exudyn/config.json is too long, and the file cannot switch it off",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'NOTE: 0 setting(s) from %USERPROFILE%/.exudyn/config.json, and 8 visualizationSettings for every such structure that is created (exudyn.misc.overrideSettings.Print() for the list; EXUDYN_NO_USER_SETTINGS=1 to ignore them) => this is too long; 0 setting(s) => leave this away; ... => and 8 visualizationSettings read from ~/.exudyn/config.json - everything else I would not like to see in the module import output. There shall be a further flag suppressOverrideSettingsWarning in config.json, per default not existing. Also mention in docs.' revision2026b step RG12.10.1.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/__init__.py",
+  "releaseNotes": "import exudyn prints one short line when ~/.exudyn/config.json holds settings, e.g. 'NOTE: 8 visualizationSettings read from ~/.exudyn/config.json'; a count of 0 is left out and the home directory is shown as ~. \"suppressOverrideSettingsWarning\": true in the file switches the note off; a setting that cannot be applied is still reported.",
+  "resolvedInVersion": "1.12.120"
+}

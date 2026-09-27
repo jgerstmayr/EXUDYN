@@ -599,3 +599,41 @@ def test_everyGeometryStringAWindowManagerReports(settingsFile, geometry, expect
     settingsFile({})
     StoreWindowGeometry({'geometry': geometry}, 'dialog')
     assert settings.DialogGeometry('dialog') == expected
+
+
+#the note `import exudyn` prints (#2705): one short line, nothing that is 0, and a flag of the file
+#that switches it off. It is printed at import, so it is seen in a fresh interpreter
+def ImportOutput(tmp_path, content):
+    import subprocess
+    import sys
+    fileName = tmp_path / 'config.json'
+    fileName.write_text(json.dumps(content), encoding='utf-8')
+    environment = dict(os.environ)
+    environment.pop('EXUDYN_NO_USER_SETTINGS', None)
+    environment['EXUDYN_CONFIG_FILE'] = str(fileName)
+    result = subprocess.run([sys.executable, '-c', 'import exudyn'], env=environment,
+                            capture_output=True, text=True, timeout=120)
+    return [line for line in result.stdout.splitlines() + result.stderr.splitlines()
+            if str(fileName.name) in line or 'config.json' in line]
+
+
+def testTheImportNoteIsOneShortLineWithoutZeros(tmp_path):
+    lines = ImportOutput(tmp_path, {'version': settings.fileFormatVersion,
+                                    'visualizationSettings': {'openGL.multiSampling': 4,
+                                                              'nodes.basisSize': 0.5}})
+    assert len(lines) == 1
+    assert lines[0].startswith('NOTE: 2 visualizationSettings read from ')
+    assert 'config settings' not in lines[0]                 #a count that is 0 is not printed
+    assert 'Print()' not in lines[0] and 'EXUDYN_NO_USER_SETTINGS' not in lines[0]
+
+
+def testTheFileCanSwitchTheNoteOff(tmp_path):
+    lines = ImportOutput(tmp_path, {'version': settings.fileFormatVersion,
+                                    'suppressOverrideSettingsWarning': True,
+                                    'visualizationSettings': {'openGL.multiSampling': 4}})
+    assert lines == []                                        #and no 'unknown section' either
+
+
+def testTheShownFileNameHidesTheHomeDirectory(monkeypatch):
+    monkeypatch.delenv('EXUDYN_CONFIG_FILE', raising=False)
+    assert settings.ShownFileName() == '~/.exudyn/config.json'

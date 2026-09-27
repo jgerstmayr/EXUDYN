@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 117 | 1.12.119 |
+| 1.12 | Metheney | 120 | 1.12.122 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.122** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the first page of the PDF shows the Exudyn logo twice (#2707)
+  - description: The maintainer, 2026-09-27: 'The PDF docs has twice the exudyn logo on page 1. just remove the first one and make the second as wide as the piston engine image (the third image on page 1).' The second logo and the piston engine are one file, intro2.jpg, so they cannot have one width until they are two files. revision2026b step RG3.3.2.
+  - **notes:** The first page of the PDF documentation shows the Exudyn logo once, as wide as the picture of the piston engine below it.
+  - date resolved: **2026-09-27 15:15**, date raised: 2026-09-27
+- **1.12.121** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotImage(plot3D=True, trianglesAsLines=False) draws a model of triangles into the limits of its lines (#2706)
+  - description: Reported by the maintainer with serialRobotKinematicTree.py: GetGraphicsData() and PlotImage produce a PDF of the line drawing, but with trianglesAsLines=False the 3D model is not visible - 'a zoom problem or so; also check the coordinates stored in triangles'. Measured: the triangle coordinates are right (the robot spans -0.39..0.69 m); the 30 lines are marker and sensor bases of +-1.5 mm, and the axes limits were +-1.7 mm. ax.autoscale() of a 3D axes takes the lines and not a Poly3DCollection, and plt.autoscale() afterwards would have undone any limits set in the 3D branch. revision2026b step RG2.3.4.
+  - **notes:** exudyn.plot.PlotImage(..., plot3D=True) sets the limits of the plot from everything it draws, triangles included, so a model drawn with trianglesAsLines=False is visible and to scale instead of being zoomed onto its few lines.
+  - date resolved: **2026-09-27 15:15**, date raised: 2026-09-27
+- **1.12.120** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the import note about ~/.exudyn/config.json is too long, and the file cannot switch it off (#2705)
+  - description: The maintainer, 2026-09-27: 'NOTE: 0 setting(s) from %USERPROFILE%/.exudyn/config.json, and 8 visualizationSettings for every such structure that is created (exudyn.misc.overrideSettings.Print() for the list; EXUDYN\_NO\_USER\_SETTINGS=1 to ignore them) =\> this is too long; 0 setting(s) =\> leave this away; ... =\> and 8 visualizationSettings read from ~/.exudyn/config.json - everything else I would not like to see in the module import output. There shall be a further flag suppressOverrideSettingsWarning in config.json, per default not existing. Also mention in docs.' revision2026b step RG12.10.1.
+  - **notes:** import exudyn prints one short line when ~/.exudyn/config.json holds settings, e.g. 'NOTE: 8 visualizationSettings read from ~/.exudyn/config.json'; a count of 0 is left out and the home directory is shown as ~. "suppressOverrideSettingsWarning": true in the file switches the note off; a setting that cannot be applied is still reported.
+  - date resolved: **2026-09-27 15:15**, date raised: 2026-09-27
 - **1.12.119** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` 88 bare plan step numbers are left in comments and docstrings, without the word revision2026 (#2703)
   - description: Measured 2026-09-27 at the end of revision2026b step RG3.13.1 (\#2649), which removed every mention of 'revision2026' from the comments and docstrings of src/, tools/, python/ and definitions/: the same rule (CLAUDE.md rule 8, code cites the issue, not the plan step) is broken 88 more times in 39 files by step numbers written WITHOUT the plan's name - 'step R6.3.8', 'the rule RG6.2.11 wrote down', 'dies with the LaTeX branch in R7.1.7', 'measured before RG9.1'. They were out of RG3.13.1's measure, which counted 'revision2026'. The same three passes apply - a parenthetical keeps its issue, a two-line reference is rejoined, the rest gets a sentence - with the same proof that no code changed: the Python AST without docstrings and the C++ tokens without comments are identical. revision2026b step RG3.13.2.
   - **notes:** The comments and docstrings no longer cite revision plan steps by bare number: 87 of them cite the issue or nothing, and a dozen that promised work the plan had already done describe what is there. Only comments, docstrings and nothing else changed.

@@ -259,6 +259,10 @@ NOT cover, and about the testing that no suite can do.
       (`python/testing/graphicsReferences/` is the proposal). The low-resolution images of RG2.3 - the
       human half - stay a separate step.
 
+    - **RG2.3.4** **DONE 2026-09-27** (#2706) — [log](exudynRevisionLog2026b.md#rg2-3-4) —
+      **`PlotImage` in 3D shows the triangles**: its limits come from everything drawn, not from the
+      lines alone.
+
 ## RG3 — Docs
 
 The documentation is Markdown, built with Sphinx and published for every release since
@@ -294,6 +298,10 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     only, everything except the source listings of the examples and test models, and the
     issue history is in, because a reader who searches it gets the reason for each change
     with it. 1159 pages. The three defects it uncovered are RG3.6, RG3.7 and RG3.8.
+
+
+    - **RG3.3.2** **DONE 2026-09-27** (#2707) — [log](exudynRevisionLog2026b.md#rg3-3-2) — **the
+      first page of the PDF shows the logo once**, and as wide as the piston engine below it.
 
 <a id="rg3-3-1"></a>
 **RG3.3.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-3-1) —
@@ -2079,6 +2087,12 @@ package).
     `SettingsFileName` is gone, and the old name is gone from the documentation.
     **`overrideSettings.StoreSection(name, values)` is the one writer of a section**, which the
     dialogs, the monitor and `Store` all go through.
+
+
+    - **RG12.10.1** **DONE 2026-09-27** (#2705) — [log](exudynRevisionLog2026b.md#rg12-10-1) — **the
+      import note is one short line, and the file can switch it off.** *"NOTE: 8 visualizationSettings
+      read from ~/.exudyn/config.json"* - a count of 0 is not printed - and
+      `"suppressOverrideSettingsWarning": true` in the file keeps it quiet.
 
 <a id="rg12-11"></a>
 **RG12.11** **DONE 2026-09-26** (#2685) — [log](exudynRevisionLog2026b.md#rg12-11) —

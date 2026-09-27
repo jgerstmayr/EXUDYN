@@ -32,11 +32,13 @@
 import json
 import os
 
-__all__ = ['fileFormatVersion', 'sectionNames', 'plainTypes', 'structureDefaults',
-           'FileName', 'Ignoring', 'Settings', 'Load', 'Save',
-           'Clear', 'Reload', 'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig',
-           'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry', 'StoreDialogGeometry',
-           'PositionIsReachable', 'Store']
+#public API of this module; kept complete by tools/checkAll.py (#2444)
+__all__ = [
+    'fileFormatVersion', 'sectionNames', 'flagNames', 'plainTypes', 'structureDefaults', 'FileName',
+    'ShownFileName', 'NoteSuppressed', 'Ignoring', 'Settings', 'Load', 'Save', 'Clear', 'Reload',
+    'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings',
+    'DialogKey', 'DialogGeometry', 'StoreDialogGeometry', 'PositionIsReachable', 'Store',
+    ]
 
 #THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
 #(#2690). It is a plain integer and it is bumped BY HAND, and only
@@ -55,6 +57,12 @@ fileFormatVersion = 1
 #so that this module does not warn about it
 sectionNames = ['config', 'visualizationSettings', 'dialogs', 'resultsMonitor',
                 'plotSensor']
+
+#the keys of the file that are flags of the file itself rather than sections, like 'version'.
+#'suppressOverrideSettingsWarning': true keeps `import exudyn` from printing the one note that
+#says how many settings it took from the file (#2705); a setting that could not be applied is
+#still reported, because that is a defect and not information
+flagNames = ['suppressOverrideSettingsWarning']
 
 #what may be stored: a plain value, or a list of plain values. Everything else - graphics data, a
 #user function, a matrix container - is a thing that a JSON file cannot carry honestly
@@ -86,6 +94,29 @@ def FileName():
     if given.strip() != '':
         return os.path.abspath(given.strip())
     return os.path.join(os.path.expanduser('~'), '.exudyn', 'config.json')
+
+
+def ShownFileName():
+    """The file name as it is printed: the home directory as `~` and forward slashes, so that the
+    import note says `~/.exudyn/config.json` and not an account's path.
+
+    Returns:
+        str
+    """
+    fileName = FileName().replace('\\', '/')
+    home = os.path.expanduser('~').replace('\\', '/')
+    if home != '' and fileName.startswith(home + '/'):
+        return '~' + fileName[len(home):]
+    return fileName
+
+
+def NoteSuppressed():
+    """True if the file says `"suppressOverrideSettingsWarning": true` (#2705)
+
+    Returns:
+        bool
+    """
+    return Settings().get('suppressOverrideSettingsWarning', False) is True
 
 
 def Ignoring():
@@ -142,7 +173,7 @@ def Load():
         return {}
 
     for name in settings:
-        if name not in sectionNames:
+        if name not in sectionNames and name not in flagNames:
             print('WARNING: ' + fileName + ': unknown section "' + name + '"; known sections are '
                   + ', '.join(sectionNames))
     return settings

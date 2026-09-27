@@ -182,3 +182,27 @@ def testPlotImageTranslatesEachCoordinateByItsOwnComponent():
     HT[0:3, 3] = [0., 5., 0.]
     (x1, y1) = Extent(HT)
     assert abs(x1 - x0) < 1e-6 and abs(y1 - y0 - 5.) < 1e-6
+
+
+def testPlotImageIn3DShowsTheTrianglesNotOnlyTheLines():
+    """the limits of a 3D plot come from the triangles too (#2706): a model of triangles with one
+    tiny marker basis was drawn into the millimetre the lines took"""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from exudyn.plot import PlotImage
+    empty = {'items': np.zeros((0, 3), dtype=int), 'points': np.zeros((0, 3)), 'colors': np.zeros((0, 4)),
+             'radius': np.zeros(0), 'numberOfSegments': np.zeros(0, dtype=int)}
+    data = {'formatVersion': 1, 'circles': empty,
+            'lines': {'items': np.zeros((1, 3), dtype=int), 'points': np.array([[[-1e-3, 0, 0], [1e-3, 0, 0]]]),
+                      'colors': np.ones((1, 2, 4))},
+            'triangles': {'items': np.zeros((1, 3), dtype=int),
+                          'points': np.array([[[0., 0., 0.], [2., 0., 0.], [0., 1., 0.5]]]),
+                          'normals': np.zeros((1, 3, 3)), 'colors': np.ones((1, 3, 4))}}
+    PlotImage(data, plot3D=True, trianglesAsLines=False, closeAll=True)
+    ax = plt.gcf().axes[0]
+    (x0, x1) = ax.get_xlim()
+    assert x0 <= -1e-3 + 1e-9 and x1 >= 2. - 1e-9               #the whole triangle, and the line
+    (y0, y1) = ax.get_ylim()
+    assert (y1 - y0) == pytest.approx(x1 - x0)               #to scale: a cube, as axesEqual says
+    plt.close('all')

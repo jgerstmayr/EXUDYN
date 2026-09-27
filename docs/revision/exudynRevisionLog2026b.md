@@ -5610,3 +5610,72 @@ said *"passing it on is step R6.3.8"* where the code does not pass it on; they s
 are unchanged in all 39 files; one C++ file was read by eye because its comment holds a quote.
 
 **Gates**: the wheel, 12/12 checks, the full suite, pytest, the strict HTML build.
+
+<a id="rg12-10-1"></a>
+### RG12.10.1 — the import note is one short line (2026-09-27, #2705)
+
+The maintainer, on what `import exudyn` printed with a settings file of eight visualization
+settings:
+
+```
+NOTE: 0 setting(s) from %USERPROFILE%\.exudyn\config.json, and 8 visualizationSettings for every such
+structure that is created (exudyn.misc.overrideSettings.Print() for the list; EXUDYN_NO_USER_SETTINGS=1
+to ignore them)
+```
+
+*"this is too long"*. It is now
+
+```
+NOTE: 8 visualizationSettings read from ~/.exudyn/config.json
+```
+
+- a count that is 0 is not printed (*"2 config settings and 8 visualizationSettings"* when both are
+  there);
+- the file name is `overrideSettings.ShownFileName()`: the home directory as `~`, forward slashes -
+  the same privacy rule `python -m exudyn info` follows since #2695;
+- the pointers to `Print()` and to `EXUDYN_NO_USER_SETTINGS` are in the documentation, not in the
+  import output.
+
+**`"suppressOverrideSettingsWarning": true`** in the file switches the note off. It is a flag of the
+file beside `version`, not a section: `overrideSettings.flagNames` lists it, so `Load()` does not call
+it an unknown section, and it stays in the store, so `Store(...)` does not drop it when it rewrites the
+file. It does not exist unless a user writes it. **It suppresses the note only**: a setting that could
+not be applied is still reported - that is a defect, not information - and those warnings now name the
+file too.
+
+Three tests, the first two in a fresh interpreter because the note is printed by `import exudyn`: a
+file of two visualization settings gives exactly one line, with no `config settings` and no
+`Print()` in it; the flag gives no line at all and no *unknown section*; the shown name of the default
+file is `~/.exudyn/config.json`. The documentation of the override settings shows the new note and the
+flag.
+
+<a id="rg2-3-4"></a>
+### RG2.3.4 — PlotImage in 3D shows the triangles (2026-09-27, #2706)
+
+Reported by the maintainer with `serialRobotKinematicTree.py`: the line drawing came out as a PDF,
+and with `trianglesAsLines=False` the 3D model was not there - *"a zoom problem or so; also check the
+coordinates stored in triangles"*.
+
+**The coordinates were right**, measured: 2428 triangles of two items spanning -0.39 to 0.69 m,
+global and current. **The limits were not**: ±1.7 mm. The only lines of the model are the bases of one
+marker and two sensors, ±1.5 mm around the origin, and `ax.autoscale()` of a 3D axes takes lines into
+account and not a `Poly3DCollection`. A second call, `plt.autoscale()` after the 3D branch, would have
+undone any limits set there.
+
+The 3D branch now sets its limits from **every point drawn**, lines and triangles, as a cube when
+`axesEqual` (so the box aspect of 1:1:1 is to scale); `plt.autoscale()` runs for 2D only. The robot is
+drawn, at ±0.44 m around its centre. One test with a triangle of 2 m and a line of 2 mm: the limits hold
+both, and x and y have the same range.
+
+<a id="rg3-3-2"></a>
+### RG3.3.2 — the logo once on the first page of the PDF (2026-09-27, #2707)
+
+The first page of the PDF carried `ExudynLOGO1.9.jpg`, and then `intro2.jpg` - which is **two pictures
+in one file**, the gear logo generated with ChatGPT above the piston engine. The maintainer: *"remove the
+first one and make the second as wide as the piston engine image"*. Two pictures in one file cannot have
+one width, so the file was cut into `titleLogo.jpg` (1024 × 664) and `titleEngine.jpg` (1986 × 1129)
+along the white band between them, found by measurement, and `pdfIndex.md` shows both at 370 px - the
+width the engine had inside `intro2.jpg`. Checked in the built PDF.
+
+`intro2.jpg` is referenced by nothing now. It stays until the maintainer says whether it goes: deleting
+a tracked file is theirs to decide. `ExudynLOGO1.9.jpg` stays - `README.rst` uses it.

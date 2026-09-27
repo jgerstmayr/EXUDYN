@@ -310,14 +310,18 @@ def _ApplyUserSettings(reload=False):
     applied = _settings.Applied()
     later = len(stored.get('visualizationSettings') or {})
     ignored = _settings.Ignored()
-    if len(applied) != 0 or later != 0 or len(ignored) != 0:
-        print('NOTE: ' + str(len(applied)) + ' setting(s) from ' + _settings.FileName()
-              + ('' if later == 0 else ', and ' + str(later)
-                 + ' visualizationSettings for every such structure that is created')
-              + ' (exudyn.misc.overrideSettings.Print() for the list;'
-              + ' EXUDYN_NO_USER_SETTINGS=1 to ignore them)')
-        for (path, reason) in ignored:
-            print('  WARNING: ' + path + ' was not applied - ' + reason)
+    #ONE SHORT LINE, and only what is there (#2705): a count that is 0 is not printed, and the file
+    #can switch the note off with "suppressOverrideSettingsWarning": true
+    counts = []
+    if len(applied) != 0:
+        counts.append(str(len(applied)) + ' config settings')
+    if later != 0:
+        counts.append(str(later) + ' visualizationSettings')
+    if len(counts) != 0 and not _settings.NoteSuppressed():
+        print('NOTE: ' + ' and '.join(counts) + ' read from ' + _settings.ShownFileName())
+    for (path, reason) in ignored:
+        print('WARNING: ' + path + ' from ' + _settings.ShownFileName() + ' was not applied - '
+              + reason)
 
 
 try:

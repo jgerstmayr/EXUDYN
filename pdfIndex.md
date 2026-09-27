@@ -1,13 +1,13 @@
 (sec-pdfindex)=
 # Exudyn
 
-```{image} /docs/figures/ExudynLOGO1.9.jpg
-:width: 300px
+```{image} /docs/figures/titleLogo.jpg
+:width: 370px
 :align: center
 ```
 
-```{image} /docs/figures/intro2.jpg
-:width: 400px
+```{image} /docs/figures/titleEngine.jpg
+:width: 370px
 :align: center
 ```
 

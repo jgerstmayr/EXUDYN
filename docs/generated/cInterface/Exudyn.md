@@ -117,14 +117,27 @@ moves on every resolved issue. Store your settings again to write a current file
 **one note** naming how many settings it took:
 
 ```
-NOTE: 1 setting(s) from %USERPROFILE%/.exudyn/config.json, and 2 visualizationSettings for every
-      SystemContainer (exudyn.misc.overrideSettings.Print() for the list;
-      EXUDYN_NO_USER_SETTINGS=1 to ignore them)
+NOTE: 1 config settings and 2 visualizationSettings read from ~/.exudyn/config.json
 ```
 
-`overrideSettings.Print()` lists what came from the file, which is the answer to *why does this
-script behave differently here*, and `overrideSettings.Applied()` gives the same as a list, for a
-script that wants to print it into its own output.
+A count that is 0 is left out. `overrideSettings.Print()` lists what came from the file, which
+is the answer to *why does this script behave differently here*, `overrideSettings.Applied()` gives
+the same as a list, for a script that wants to print it into its own output, and
+`EXUDYN_NO_USER_SETTINGS=1` runs a script as if there were no file.
+
+**A file that should stay quiet** says so itself, beside its `version`:
+
+```
+{
+  "version": 1,
+  "suppressOverrideSettingsWarning": true,
+  "visualizationSettings": {"openGL.multiSampling": 4}
+}
+```
+
+The key does not exist unless it is written, and without it the note is printed. It suppresses the
+note only: a setting that could not be applied is still reported, because that is a defect and not
+information.
 
 **What happens, in order:**
 

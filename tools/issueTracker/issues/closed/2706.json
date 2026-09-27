@@ -1,0 +1,16 @@
+{
+  "number": 2706,
+  "title": "PlotImage(plot3D=True, trianglesAsLines=False) draws a model of triangles into the limits of its lines",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Reported by the maintainer with serialRobotKinematicTree.py: GetGraphicsData() and PlotImage produce a PDF of the line drawing, but with trianglesAsLines=False the 3D model is not visible - 'a zoom problem or so; also check the coordinates stored in triangles'. Measured: the triangle coordinates are right (the robot spans -0.39..0.69 m); the 30 lines are marker and sensor bases of +-1.5 mm, and the axes limits were +-1.7 mm. ax.autoscale() of a 3D axes takes the lines and not a Poly3DCollection, and plt.autoscale() afterwards would have undone any limits set in the 3D branch. revision2026b step RG2.3.4.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/plot.py",
+  "releaseNotes": "exudyn.plot.PlotImage(..., plot3D=True) sets the limits of the plot from everything it draws, triangles included, so a model drawn with trianglesAsLines=False is visible and to scale instead of being zoomed onto its few lines.",
+  "resolvedInVersion": "1.12.121"
+}
