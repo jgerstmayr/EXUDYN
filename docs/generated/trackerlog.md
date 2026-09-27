@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.123.dev1
+- Exudyn version = 1.12.126.dev1
 - last change = 2026-09-27
-- Number of issues = 2711
-- Number of resolved issues = 2437 (123 in current version)
+- Number of issues = 2717
+- Number of resolved issues = 2440 (126 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` RG13: what the ideal documentation of an item contains, per kind of item (#2716)
+  - description: The maintainer, 2026-09-27, the second step of RG13: find the ideal documentation that definitions/itemDefs\*.py shall contain - per item type (node, object, marker, load, sensor) and per kind of object (body, connector, constraint, and the other object types) - and from it write a detailed plan that makes it work for every item. revision2026b step RG13.2.
+  - date raised: 2026-09-27
+- `DOCU` `HIGH EFF` `raised by: Claude-JG` RG13: the state of the documentation and the MiniExample of every item (#2715)
+  - description: The maintainer, 2026-09-27: each item needs a full documentation and a MiniExample - more than fits into RG3, so a group of its own, RG13, and one of the most important steps before Exudyn 1.13. RG13.1 evaluates the current state: per item, what its definition in definitions/itemDefs\*.py carries (class description, the description of the equations, parameters described, output variables, a MiniExample, an image, examples and test models that use it) and what is missing. revision2026b step RG13.1.
+  - date raised: 2026-09-27
+- `FIX` `LOW EFF` `raised by: Claude-JG` the repository's own examples and test models use what exudev scripts reports: 54 findings in 17 files (#2714)
+  - description: Measured 2026-09-27 with exudev scripts (\#2712) over python/Examples, python/TestModels and python/MiniExamples, 342 scripts that import exudyn: 54 findings in 17 files. Four are real breaks of scripts that are in no suite - NGsolveGeometry.py, humanRobotInteraction.py and stlFileImport.py call AddEdgesAndSmoothenNormals without graphics., and nMassOscillatorEigenmodes.py uses graphics without importing it. The rest are deprecated forms that still work: exu.StartRenderer/StopRenderer (21), general.drawWorldBasis and other relocated settings (about 20), exu.SolveStatic/SolveDynamic (6), SC.GetRenderState/SetRenderState, renderer.Detach. The examples are what users copy, so they should show the current forms. revision2026b step RG10.1.2.
+  - date raised: 2026-09-27
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudev scripts runs the user scripts too: copies in a local space, with a timeout (#2713)
+  - description: The maintainer, 2026-09-27, the future half of RG10.1: copy the scripts into a local space and execute them, as the examples are run, with a timeout. Before a script is run it has to be checked for paths that do not travel - absolute ones such as 'C:\\' and relative ones such as '../' or '..\\' - because a copied script with such a path reads or writes somewhere else, or fails for a reason that is not the Exudyn version. revision2026b step RG10.1.1.
+  - date raised: 2026-09-27
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` evaluate the geometry of a curved triangle (or quad) and the features of a sphere for GraphicsData (#2710)
   - description: The preliminary sub-step of RG6.7 (maintainer, 2026-09-27): which features the Sphere gets and - more important - what the underlying geometry of the curved triangle is. Ideally it represents curved geometry with smooth tangents not only at the nodes but also along the boundaries; quads are acceptable if they are better and work in the degenerated case. How many and which nodes it has is part of the decision. The result is a short comparison of candidates for the maintainer, with what each costs in the OpenGL renderer, the raytracer and GetGraphicsData(). revision2026b step RG6.7.1.
   - date raised: 2026-09-27
@@ -7593,9 +7605,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-22
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` simulationSettings has no deprecation mechanism (#2588)
   - description: A member of visualizationSettings can be marked deprecated in the definitions - Deprecated(since, expires) plus the SFDeprecated flag, 93 members carry it today - and a user who sets the old name gets a message that names the new one. simulationSettings uses none of it, although the mechanism is the same generator and the same structure machinery: a renamed solver setting simply disappears. Apply it there.
-  - date raised: 2026-09-22
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` the renderer extraction functions are not shaped for testing (#2583)
-  - description: SC.renderer.RedrawAndGetImage() and GetRenderState() exist and are what a graphics test has to build on, but they were written for interactive use: the image comes back as a full-resolution array, there is no way to ask for a summary of the graphics data (triangles, lines, texts per item) without rendering, and the raytracer path and the GLFW path differ in what they update. Revise them into an API a test can use: a documented headless call that updates the graphics data and returns counts, plus an image call with a resolution argument. The data is in VisualizationSystemData and the update path is MainRenderer::RedrawAndGetImage -\> VSC.UpdateGraphicsDataNow/UpdateGraphicsData.
   - date raised: 2026-09-22
 - `TESTING` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` a graphics regression suite: several models, several visualization settings (#2582)
   - description: The drawing code is exercised by exactly one model (\#2562): raytracerNOGLFWtest.py, one set of visualization settings, one checksum. A checksum changes with any visualization change and does not say what changed, so it can only ever be "different" or "equal". What is wanted is a suite over several models and several settings - show/hide of nodes, markers, loads and sensors, different colours and text settings - comparing either low-resolution reference images that a human can also look at, or counts extracted from the graphics data (triangles, lines, texts per item), or both: the counts say WHAT changed, the images say whether it still looks right. Needs the extraction API of the issue filed beside this one.

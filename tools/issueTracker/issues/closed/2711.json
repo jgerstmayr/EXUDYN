@@ -1,0 +1,16 @@
+{
+  "number": 2711,
+  "title": "PlotImage writes its figure beside the script instead of into exudyn.config.outputDirectory",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'the PlotImage should also get the output directory added.' PlotSensor saves its figure through OutputFilePath (#2454), so a figure goes where every other output of a run goes; PlotImage wrote fileName exactly as given, so serialRobotKinematicTree.py wrote solution/... into python/Examples/ even under a runner that sets the output directory. revision2026b step RG2.3.5.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 16:45",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/plot.py",
+  "releaseNotes": "exudyn.plot.PlotImage saves its figure inside exudyn.config.outputDirectory, like PlotSensor and every other output of a run.",
+  "resolvedInVersion": "1.12.125"
+}

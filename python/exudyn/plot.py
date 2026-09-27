@@ -1061,7 +1061,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
         orthogonalProjection: if True, projection is orthogonal with no perspective view
         title: optional string representing plot title
         figureName: optional name for figure, if newFigure=True
-        fileName: if this string is non-empty, figure will be saved to given path and filename (use figName.pdf to safe as PDF or figName.png to save as PNG image); use matplotlib.use('Agg') in order not to open figures if you just want to save them
+        fileName: if this string is non-empty, the figure is saved under this name, inside exudyn.config.outputDirectory like every output of a run (use figName.pdf to save as PDF or figName.png to save as PNG image)
         fontSize: change general fontsize of axis, labels, etc. (matplotlib default is 12, default in PlotSensor: 16)
         closeAll: if True, close all figures before opening new one (do this only in first PlotSensor command!)
         azim, elev: for 3D plots: the initial angles for the 3D view in degrees
@@ -1223,6 +1223,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
         plt.show()
     
     if fileName != '':
+        fileName = OutputFilePath(fileName, 'PlotImage') #a saved figure is an output of the run (#2711)
         CreateDirectoryForFile(fileName) #(#2493)
         plt.savefig(fileName)
 

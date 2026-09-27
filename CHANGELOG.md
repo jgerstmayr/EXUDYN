@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 121 | 1.12.123 |
+| 1.12 | Metheney | 123 | 1.12.126 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.126** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a static checker for user scripts after the API changes: exudev scripts \<folder\> (#2712)
+  - description: The maintainer, 2026-09-27: RG10.1 is next, needed for teaching next week - 'a command-line exudev tool for now, only a static checker of folders, looking at all .py files where exudyn is imported'. It parses and never runs, and reports per file and line: names a star import from exudyn no longer provides (np, sin, graphics, ...) with the import line, removed names with their replacement (the vector helpers, the GraphicsData aliases, LoadImage), deprecated functions and settings read from definitions/ with what to use instead, removed settings and arguments, and submodules used as exu.\<submodule\> that import exudyn does not load. revision2026b step RG10.1.
+  - **notes:** exudev scripts \<folder\> checks the Exudyn scripts in a folder for what changed in Exudyn, without running them: names that a star import from exudyn no longer provides (np, sin, graphics, ...) with the import line to add, removed names and settings with their replacement, deprecated functions and settings with what to use instead, and submodules used through exu.\<submodule\> without their import. A maintainer tool for now (tools/checkUserScripts.py).
+  - date resolved: **2026-09-27 16:45**, date raised: 2026-09-27
+- **1.12.125** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotImage writes its figure beside the script instead of into exudyn.config.outputDirectory (#2711)
+  - description: The maintainer, 2026-09-27: 'the PlotImage should also get the output directory added.' PlotSensor saves its figure through OutputFilePath (\#2454), so a figure goes where every other output of a run goes; PlotImage wrote fileName exactly as given, so serialRobotKinematicTree.py wrote solution/... into python/Examples/ even under a runner that sets the output directory. revision2026b step RG2.3.5.
+  - **notes:** exudyn.plot.PlotImage saves its figure inside exudyn.config.outputDirectory, like PlotSensor and every other output of a run.
+  - date resolved: **2026-09-27 16:45**, date raised: 2026-09-27
 - **1.12.123** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the mass-spring-damper tutorial is the last tutorial in the documentation, and should be the first (#2708)
   - description: The maintainer, 2026-09-27: 'The mass-spring-damper tutorial shall be the first tutorial in the docs, not the last one.' It is the section of docs/manual/tutorial.md itself, and the toctree of the other four tutorials stands above it, so it comes after them (4.5 of the PDF). It becomes a page of its own, tutorialSpringDamper.md, first in that toctree. revision2026b step RG3.27.
   - **notes:** The mass-spring-damper tutorial is the first tutorial of the documentation, on a page of its own.

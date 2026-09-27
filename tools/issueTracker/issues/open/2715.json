@@ -1,0 +1,12 @@
+{
+  "number": 2715,
+  "title": "RG13: the state of the documentation and the MiniExample of every item",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "HIGH",
+  "description": "The maintainer, 2026-09-27: each item needs a full documentation and a MiniExample - more than fits into RG3, so a group of its own, RG13, and one of the most important steps before Exudyn 1.13. RG13.1 evaluates the current state: per item, what its definition in definitions/itemDefs*.py carries (class description, the description of the equations, parameters described, output variables, a MiniExample, an image, examples and test models that use it) and what is missing. revision2026b step RG13.1.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "definitions"
+}

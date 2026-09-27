@@ -5692,3 +5692,48 @@ text is moved unchanged, and its heading is the page title.
 
 With it, on the maintainer's answer to RG3.3.2: `docs/figures/intro2.jpg` is deleted - the two
 pictures it held are `titleLogo.jpg` and `titleEngine.jpg` (#2707).
+
+<a id="rg2-3-5"></a>
+### RG2.3.5 — PlotImage saves into the output directory (2026-09-27, #2711)
+
+The maintainer: *"the PlotImage should also get the output directory added."* `PlotSensor` has sent
+its saved figure through `OutputFilePath` since #2454; `PlotImage` wrote the name as given, so the
+maintainer's `serialRobotKinematicTree.py` wrote `solution/...` into `python/Examples/` even under a
+runner that sets the output directory. One line, the docstring says where the file goes, and a test
+that sets `exudyn.config.outputDirectory` to a temporary folder and finds the PDF there.
+
+<a id="rg10-1"></a>
+### RG10.1 — exudev scripts: what an old script has to change (2026-09-27, #2712)
+
+Asked for by the maintainer for teaching next week: *"a command-line exudev tool for now, only a static
+checker of folders, looking at all .py files where exudyn is imported"*. `exudev scripts <folder>`
+runs `tools/checkUserScripts.py`, which **parses and never runs**, and says per file and line:
+
+| finding | where the list comes from |
+|---|---|
+| a name a star import from exudyn no longer provides - `np`, `sin`, `graphics`, 12 names - with the import line | measured on the sources before `__all__` (#2444), statically: the names every module of the `exudyn.utilities` chain had imported for itself - exactly the 12 of the API change table |
+| a removed name with its replacement: the 11 vector helpers, the 24 `GraphicsData...` aliases, `LoadImage` | the removal commits (#2442, #2443) and #2700 |
+| a deprecated function or setting, with what to use instead | **read from `definitions/` each time**: 22 functions marked DEPRECATED in the pybind definitions, 94 deprecated settings with the path that replaces them |
+| a removed setting or argument: `saveImageAsText...`, `openVR`, `fontScalingMacOS`, `rBoundingSphere` | the steps that removed them |
+| `exu.robotics` and the other submodules `import exudyn` does not load | asked of the installed package |
+
+**Two things the first run got wrong, and why they matter for a teacher's folder**:
+
+- a function parameter called `np` made `np` look imported for the whole file. Names are now resolved
+  **per scope** - module, function, class, lambda - so a parameter binds only its function;
+- `window.renderWindowSize` was reported 109 times in the repository, because `window` is a deprecated
+  member at the top of the visualization settings **and** the current member of every view. A
+  deprecated setting now also names the structure it sits in, and `view0.window` is not a finding.
+
+**Run over the repository's own 342 scripts: 54 findings in 17 files, in 1.5 s.** Four are real breaks
+in scripts that no suite runs - three examples call `AddEdgesAndSmoothenNormals` without `graphics.`,
+one uses `graphics` without importing it - and the rest are deprecated forms. That is RG10.1.2 (#2714);
+running the scripts, after a check for paths that do not travel, is RG10.1.1 (#2713).
+
+A script that does not parse - Python 2 is the usual case in an old folder - is reported as such and
+not checked; a `.py` file that does not import exudyn is counted and skipped. `--check` fails if
+anything was found, and the paths are printed relative to where `exudev` was started. Nine tests
+(`test_checkUserScripts.py`), among them the two false findings above as cases that must stay silent.
+
+**Also in this commit, on the maintainer's word**: RG6.3 (#2583) closed as superseded; RG10.10 moved
+to where its number belongs; RG12.5.2 given the measurement it lacked; RG13 created.

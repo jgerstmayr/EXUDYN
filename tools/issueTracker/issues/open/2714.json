@@ -1,0 +1,12 @@
+{
+  "number": 2714,
+  "title": "the repository's own examples and test models use what exudev scripts reports: 54 findings in 17 files",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Measured 2026-09-27 with exudev scripts (#2712) over python/Examples, python/TestModels and python/MiniExamples, 342 scripts that import exudyn: 54 findings in 17 files. Four are real breaks of scripts that are in no suite - NGsolveGeometry.py, humanRobotInteraction.py and stlFileImport.py call AddEdgesAndSmoothenNormals without graphics., and nMassOscillatorEigenmodes.py uses graphics without importing it. The rest are deprecated forms that still work: exu.StartRenderer/StopRenderer (21), general.drawWorldBasis and other relocated settings (about 20), exu.SolveStatic/SolveDynamic (6), SC.GetRenderState/SetRenderState, renderer.Detach. The examples are what users copy, so they should show the current forms. revision2026b step RG10.1.2.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "python/Examples"
+}

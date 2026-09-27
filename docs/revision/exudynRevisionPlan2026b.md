@@ -57,6 +57,7 @@ hand-maintained one is wrong the next day (the rule of RG3.9).
 | **RG10** Tooling and process | exudev, the issue tracker, the generators, CI |
 | **RG11** Misc | what has no group yet; three of a kind become a group |
 | **RG12** Python interface | the shape of the Python API itself: deprecation, settings, what a script sees |
+| **RG13** Item documentation | a full documentation and a MiniExample for every item |
 
 ## RG1 — Release and publication
 
@@ -280,6 +281,9 @@ NOT cover, and about the testing that no suite can do.
     - **RG2.3.4** **DONE 2026-09-27** (#2706) — [log](exudynRevisionLog2026b.md#rg2-3-4) —
       **`PlotImage` in 3D shows the triangles**: its limits come from everything drawn, not from the
       lines alone.
+
+    - **RG2.3.5** **DONE 2026-09-27** (#2711) — [log](exudynRevisionLog2026b.md#rg2-3-5) —
+      **`PlotImage` saves into `exudyn.config.outputDirectory`**, like every other output of a run.
 
 ## RG3 — Docs
 
@@ -1434,7 +1438,10 @@ This group is that revision and what has to happen before it can start.
     it was written**. A premise that decides the order of three steps is measured, not read.
 
 <a id="rg6-3"></a>
-**RG6.3** *(group RG6; maintainer 2026-09-22)* **The renderer extraction functions are not shaped
+**RG6.3** *(group RG6; maintainer 2026-09-22)* **CLOSED 2026-09-27, superseded** (#2583) - the
+    maintainer: replaced by the new ways to go. The headless call is `SC.renderer.GetGraphicsData()`
+    (#2700), which returns the data itself; the low-resolution images are RG2.3.3.4. The step as it
+    was: **The renderer extraction functions are not shaped
     for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a
     graphics test has to build on, but they were written for interactive use: the image comes
     back at full resolution, nothing returns a **summary** of the graphics data without
@@ -1613,8 +1620,10 @@ Open in the tracker for this group: **#2541** (`exudyn.config` and `exudyn.speci
 file, so an editor cannot complete them).
 
 <a id="rg10-1"></a>
-**RG10.1** *(group RG10; maintainer request 2026-09-15; revision2026 step R8.6)* **Checker for user scripts
-    after the 1.12 API changes.** Teaching folders and user projects hold Exudyn scripts written
+**RG10.1** *(group RG10; maintainer request 2026-09-15; revision2026 step R8.6)* **DONE 2026-09-27**
+    (#2712) — [log](exudynRevisionLog2026b.md#rg10-1) — `exudev scripts <folder>`, a maintainer tool
+    for now, as the maintainer decided for teaching; whether it later ships in the package is open.
+    **Checker for user scripts after the 1.12 API changes.** Teaching folders and user projects hold Exudyn scripts written
     against 1.x. A static checker (parses, never runs) reports per file and line: names the script
     uses but no longer gets from a star import (`np`, `sin`, `graphics`, ...; revision2026 step R4.22.3), removed
     names with their replacement (revision2026 step R4.22.1, revision2026 step R4.22.2), and submodules used without their import, with the
@@ -1626,14 +1635,19 @@ file, so an editor cannot complete them).
     finds the places. Worth having before the 1.13 release (RG1.4), which is when users meet
     the changes.
 
+    - **RG10.1.1** *(maintainer 2026-09-27)* **running the scripts too** (#2713): copy them into a
+      local space and execute them as the examples are run, with a timeout. A script is checked
+      first for paths that do not travel - absolute ones such as `C:\`, relative ones such as `../`
+      or `..\` - because a copied script with such a path reads or writes elsewhere, or fails for a
+      reason that is not the Exudyn version.
+    - **RG10.1.2** **the repository's own scripts** (#2714): the checker reports 54 findings in 17 of
+      the 342 examples, test models and mini examples. **Four are real breaks** in scripts that no
+      suite runs - `NGsolveGeometry.py`, `humanRobotInteraction.py` and `stlFileImport.py` call
+      `AddEdgesAndSmoothenNormals` without `graphics.`, `nMassOscillatorEigenmodes.py` uses
+      `graphics` without importing it - and the rest are deprecated forms that still work
+      (`exu.StartRenderer`, `general.drawWorldBasis`, `exu.SolveDynamic`, ...). The examples are
+      what users copy.
 
-<a id="rg10-10"></a>
-**RG10.10** **DONE 2026-09-25** (#2653) — [log](exudynRevisionLog2026b.md#rg10-10) —
-    **The header of `definitionLoader.py` read like the file was dead** *(maintainer question,
-    2026-09-25)*. It is live - three generators stop working without it - and what made it look
-    dead was a header that opened with what the old parser produced and ended with two promises
-    about its own removal. It says what it is and who uses it. `itemModel.LegacyItems()`, found
-    while checking, really was dead and is gone.
 
 <a id="rg10-2"></a>
 **RG10.2** **DONE 2026-09-23** (#2600) — [log](exudynRevisionLog2026b.md#rg10-2) —
@@ -1709,6 +1723,24 @@ file, so an editor cannot complete them).
     - **RG10.6.8** — [log](exudynRevisionLog2026b.md#rg10-6-8) — the seven performance models,
       `AddTiming` into `exu.sys['testTimings']`, and `ExudynTestStructure` deleted.
 
+<a id="rg10-7"></a>
+**RG10.7** **DONE 2026-09-24** (#2638) — [log](exudynRevisionLog2026b.md#rg10-7) —
+    **The plan carried the full text of the steps that are finished** *(maintainer,
+    2026-09-24)*: 971 of its 1391 lines, against its own rule that a done step keeps status,
+    date, outcome and a link. A step that ended in *"the original text follows"* is cut there -
+    that text is the issue as it was raised, and the tracker has it - and the rest were
+    rewritten to the outcome. 1391 lines to 939, with no anchor, step number or group heading
+    lost. The review of `GUI.py` was the one piece of analysis that lived only here and is now
+    a [log entry](exudynRevisionLog2026b.md#rg6-2-review).
+
+<a id="rg10-7-1"></a>
+**RG10.7.1** **DONE 2026-09-24** (#2642) — [log](exudynRevisionLog2026b.md#rg10-7-1) —
+    **The plan did not say what to do next** *(maintainer, 2026-09-24)*. The open steps are
+    spread over twelve groups and were read by scrolling. The last section, **Next steps
+    recommended**, names them with their issue and a short title, lists what the current work
+    raised without making it a step, and recommends an order with the reason for it. It copies
+    nothing and is updated from time to time.
+
 <a id="rg10-8"></a>
 **RG10.8** **DONE 2026-09-24** (#2644) — [log](exudynRevisionLog2026b.md#rg10-8) —
     **`exudev` is needed on linux and macOS too** *(maintainer, 2026-09-24)*. Measured by
@@ -1729,27 +1761,17 @@ file, so an editor cannot complete them).
     *"illegal file"* and writing nothing.
 
 
-<a id="rg10-7"></a>
-**RG10.7** **DONE 2026-09-24** (#2638) — [log](exudynRevisionLog2026b.md#rg10-7) —
-    **The plan carried the full text of the steps that are finished** *(maintainer,
-    2026-09-24)*: 971 of its 1391 lines, against its own rule that a done step keeps status,
-    date, outcome and a link. A step that ended in *"the original text follows"* is cut there -
-    that text is the issue as it was raised, and the tracker has it - and the rest were
-    rewritten to the outcome. 1391 lines to 939, with no anchor, step number or group heading
-    lost. The review of `GUI.py` was the one piece of analysis that lived only here and is now
-    a [log entry](exudynRevisionLog2026b.md#rg6-2-review).
+<a id="rg10-10"></a>
+**RG10.10** **DONE 2026-09-25** (#2653) — [log](exudynRevisionLog2026b.md#rg10-10) —
+    **The header of `definitionLoader.py` read like the file was dead** *(maintainer question,
+    2026-09-25)*. It is live - three generators stop working without it - and what made it look
+    dead was a header that opened with what the old parser produced and ended with two promises
+    about its own removal. It says what it is and who uses it. `itemModel.LegacyItems()`, found
+    while checking, really was dead and is gone.
 
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
-
-<a id="rg10-7-1"></a>
-**RG10.7.1** **DONE 2026-09-24** (#2642) — [log](exudynRevisionLog2026b.md#rg10-7-1) —
-    **The plan did not say what to do next** *(maintainer, 2026-09-24)*. The open steps are
-    spread over twelve groups and were read by scrolling. The last section, **Next steps
-    recommended**, names them with their issue and a short title, lists what the current work
-    raised without making it a step, and recommends an order with the reason for it. It copies
-    nothing and is updated from time to time.
 
 <a id="rg10-2"></a>
 **RG10.2** *(group RG10; from #2541)* **`exudyn.config` and `exudyn.special` reach a stub file.**
@@ -2042,6 +2064,18 @@ package).
       `ItemType` - is stored honestly as its name, and `settingsUtilities` already converts between
       the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
       enums, which is why they were left out of .1 rather than guessed at.
+
+      **Measured 2026-09-27, on the maintainer's question**: the two are
+      `contour.outputVariable` (`OutputVariableType`) and `interactive.highlightItemType`
+      (`ItemType`). **What does not work**: `Store(SC)` with `contour.outputVariable = StressLocal`
+      writes the other changed settings and **drops the enum without a word** - `Ignored()` is empty;
+      and a file that holds it by name, `"contour.outputVariable": "StressLocal"`, is refused at
+      import with *"the setting holds a OutputVariableType, which a settings file cannot carry"*.
+      **The solution**: write an enum as the name of its value (`"StressLocal"`), read it back
+      through `ConvertString2Value`, report an unknown name as not applied, and name everything
+      `Store` leaves out. `interactive.highlightItemType` is the state of an interactive highlight
+      rather than a preference, so it is proposed to stay out of the file altogether - the only enum
+      a user would store is `contour.outputVariable`.
     - **RG12.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-3) - the dialogs
       section, which is **RG6.2.29** (#2675) built: `visualizationSettings.dialogs.
       storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
@@ -2556,6 +2590,30 @@ package).
     handler cannot do.
 
 
+## RG13 — Item documentation
+
+*(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
+MiniExample** - node, object, marker, load and sensor - which is more than fits into RG3, and **one of
+the most important steps before Exudyn 1.13**: the reference manual of the items is what users read
+most, and it is generated from `definitions/itemDefs*.py`, so what a definition does not carry, no
+page shows.
+
+What depends on it: the graphics regression test takes every item through its MiniExample
+(RG2.3.3.5), and the image of each item on its page can be written by the same run.
+
+<a id="rg13-1"></a>
+**RG13.1** *(group RG13; maintainer 2026-09-27)* **The state of the documentation, item by item**
+    (#2715). Per item, measured from its definition and not estimated: the class description, the
+    description of its equations, which parameters and output variables are described and which are
+    not, whether it has a MiniExample and whether that one runs, an image, the examples and test
+    models that use it. The deliverable is the table, and what it says about the kinds of items.
+
+<a id="rg13-2"></a>
+**RG13.2** *(group RG13; maintainer 2026-09-27)* **What the ideal documentation of an item contains**
+    (#2716), per item type - node, object, marker, load, sensor - and per kind of object - body,
+    connector, constraint, and the other object types. From that and the table of RG13.1: **a
+    detailed plan that makes it work** for every item, as further steps of this group.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2588,9 +2646,11 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG6.3 | #2583 | give the renderer a headless call that returns counts and an image at a given resolution |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG10.1 | - | a checker for user scripts after the 1.12 API changes |
+| RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
+| RG10.1.2 | #2714 | the repository's own scripts: 54 findings of exudev scripts, 4 of them real breaks |
+| RG13.1 | #2715 | the state of the documentation of every item, measured |
+| RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
 | RG10.2 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |

@@ -1,0 +1,12 @@
+{
+  "number": 2713,
+  "title": "exudev scripts runs the user scripts too: copies in a local space, with a timeout",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-09-27, the future half of RG10.1: copy the scripts into a local space and execute them, as the examples are run, with a timeout. Before a script is run it has to be checked for paths that do not travel - absolute ones such as 'C:\\' and relative ones such as '../' or '..\\' - because a copied script with such a path reads or writes somewhere else, or fails for a reason that is not the Exudyn version. revision2026b step RG10.1.1.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "tools/checkUserScripts.py"
+}

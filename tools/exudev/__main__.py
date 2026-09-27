@@ -348,6 +348,17 @@ def BuildParsers():
     docs.add_argument('--open', action='store_true', help='open _build/index.html afterwards')
     docs.set_defaults(function=commands.Docs)
 
+    scripts = subParsers.add_parser('scripts', parents=[globalParser, versionParser],
+        help='check user scripts for what changed in Exudyn (static; never runs them)',
+        description='Parses every .py file under the given folders that imports exudyn and reports, '
+                    'per file and line, what an earlier Exudyn let it do and this one does not: names '
+                    'that a star import no longer provides, removed names and settings, deprecated '
+                    'functions and settings with their replacement, submodules used without their '
+                    'import. Nothing is run and nothing is changed (#2712).')
+    scripts.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
+    scripts.add_argument('--check', action='store_true', help='fail if anything was found')
+    scripts.set_defaults(function=commands.Scripts)
+
     linux = subParsers.add_parser('linux', parents=[globalParser, versionParser, fastParser],
         help='build the linux wheels through WSL',
         description='The manylinux wheels are built in the docker image quay.io/pypa/'

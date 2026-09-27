@@ -881,6 +881,20 @@ def CollectDocumentationPdf():
     return 0
 
 
+def Scripts(options):
+    """User scripts checked for what changed in Exudyn: tools/checkUserScripts.py, which parses them
+    and never runs them (#2712). The paths are made absolute here, because the tool runs from the
+    repository root and the folders are named from wherever the driver was started."""
+    root = runner.RepositoryRoot()
+    environment = options.env or runner.generatorEnvironment
+    argv = ['python', 'tools/checkUserScripts.py'] + [os.path.abspath(path) for path in options.paths]
+    argv += ['--base', os.getcwd()]      #the report names the files as the user named the folders
+    if options.check:
+        argv += ['--check']
+    return [Step('check user scripts (' + environment + ')',
+                 argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+
 def Docs(options):
     """The html documentation, and with --pdf the printable one as well."""
     root = runner.RepositoryRoot()

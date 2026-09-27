@@ -1,0 +1,12 @@
+{
+  "number": 2716,
+  "title": "RG13: what the ideal documentation of an item contains, per kind of item",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-09-27, the second step of RG13: find the ideal documentation that definitions/itemDefs*.py shall contain - per item type (node, object, marker, load, sensor) and per kind of object (body, connector, constraint, and the other object types) - and from it write a detailed plan that makes it work for every item. revision2026b step RG13.2.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "definitions"
+}

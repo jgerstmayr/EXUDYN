@@ -206,3 +206,19 @@ def testPlotImageIn3DShowsTheTrianglesNotOnlyTheLines():
     (y0, y1) = ax.get_ylim()
     assert (y1 - y0) == pytest.approx(x1 - x0)               #to scale: a cube, as axesEqual says
     plt.close('all')
+
+
+def testPlotImageWritesIntoTheOutputDirectory(tmp_path):
+    """a saved figure is an output of the run, like a sensor file or a PlotSensor figure (#2711)"""
+    import matplotlib
+    matplotlib.use('Agg')
+    import os
+    from exudyn.plot import PlotImage
+    (SC, mbs, oGround, oBody) = Pendulum()
+    previous = exu.config.outputDirectory
+    exu.config.outputDirectory = str(tmp_path)
+    try:
+        PlotImage(SC.renderer.GetGraphicsData(), fileName='figures/model.pdf', closeAll=True)
+    finally:
+        exu.config.outputDirectory = previous
+    assert os.path.getsize(os.path.join(str(tmp_path), 'figures', 'model.pdf')) > 0
