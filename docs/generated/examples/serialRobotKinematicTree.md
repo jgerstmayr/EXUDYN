@@ -399,4 +399,19 @@ if True:
         mbs.PlotSensor(sensorNumbers=sListTorques, components=sTorqueComponents, 
                        title='joint torques')
     #sListJointAngles
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# test export of graphics data
+from exudyn.plot import PlotImage
+data = SC.renderer.GetGraphicsData() #the drawing elements; no render window needed
+
+#note: that basically works, but the drawing capabilities of matplotlib are limited, 
+#      so some hidden triangles occur, etc.; ideally draw outer edges (like of cylinders) and triangle faces
+PlotImage(data, 
+          triangleEdgeWidths=0, 
+          plot3D=True,
+          trianglesAsLines=False,
+          fileName='solution/serialRobotKinematicTree_PlotImage.pdf'
+          )
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ```
