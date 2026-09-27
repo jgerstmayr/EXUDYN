@@ -5908,3 +5908,49 @@ run again at any time, which is how the progress of RG13 will be measured.
 **What the table cannot say** is whether a description is **right** - that is RG13.3, the one-time
 synchronization with the implementation. What it can say is what is missing, per item, and that is
 what RG13.2 needs to decide what the ideal page contains.
+
+<a id="rg12-25"></a>
+### RG12.25 — store positions stores every open window (2026-09-27, #2719)
+
+The maintainer tested 1.12.128 with the solution viewer, the settings dialog, the render window and two
+sensor plots open, pressed **store positions**, and got one line: the settings dialog. The button
+stored *"where this dialog is"* - which is what it said, and not what a user means by it.
+
+It lists and stores now:
+
+- **this dialog**, as before;
+- **the other interactive dialogs** - `exudyn.interactive.openDialogs`, a list every
+  `InteractiveDialog` joins when it opens and leaves when it closes, so the SolutionViewer is stored
+  while it is open and not only when it closes with `storeDialogPositions` on;
+- **the PlotSensor windows**, through the new `exudyn.plot.PlotWindowGeometries()`, under the names
+  their sequence gives them;
+- **the render window where it is**: the render state's `currentWindowSize` and
+  `currentWindowPosition`, not what `view0.window` says - the difference the maintainer found. They
+  go into the `visualizationSettings` section of the file as `view0.window.renderWindowSize` and
+  `renderWindowPosition`, merged with what is there, **and into the dialog**, through the same path an
+  edit takes, so that the settings on screen, a later *store settings* and the file agree.
+
+The window that opens before anything is written lists all of them. A test presses the button on a
+settings dialog in a withdrawn Tk root, with a stub viewer and a stub plot window, and finds both in
+the file under their names; the render window part needs a running renderer and is for the
+maintainer's hands.
+
+<a id="rg12-26"></a>
+### RG12.26 — the SolutionViewer follows its window, and can be given a size (2026-09-27, #2720)
+
+Three things the maintainer found, in `InteractiveDialog`, which the SolutionViewer, the mode shapes
+and interactive simulations all are:
+
+- **the sliders did not follow the width**: every widget was placed sticky, but no column had a
+  weight, so a wider window added empty space on the right. The columns right of the first - the
+  sliders - take the width now, the first column keeps the width of its labels, and the Run button
+  spans all columns;
+- **the size could not be given**: `SolutionViewer(..., windowSize=[w, h])` and the same argument of
+  `InteractiveDialog`. A size given in the script wins over a stored one, as it does for the render
+  window. Stored it is by store positions (RG12.25) or when it closes with `storeDialogPositions` on;
+- **"t = 1.0" above the Run button**: the label shows the time of the dialog's own time integration,
+  which the viewer does not run, so it said 1.0 whatever row was shown. The viewer has no time label;
+  the time of the row is in the render window.
+
+The GUI chapter says both. What no test can do is look at a window: the columns and the size are for
+the maintainer to see.

@@ -279,6 +279,13 @@ NOT cover, and about the testing that no suite can do.
 
       When GraphicsData gets its sphere and curved triangles (RG6.7, #2709), the test grows with it.
 
+      **The maintainer on RG2.3.3.1 (2026-09-27)**: *"The described approach sounds good - good to
+      go."* On the 32-item limit: *"why not put more graphics into the same item? otherwise, the test
+      could be split among two files."* Both work, and they differ in what a difference names: several
+      graphics in one item give one line for the item, so a new function goes into the item of **its
+      family** - one for the transforms, one for the machine parts - where the family still says what
+      changed; a case that outgrows 32 families goes into a second case, in the same file or another.
+
     - **RG2.3.4** **DONE 2026-09-27** (#2706) — [log](exudynRevisionLog2026b.md#rg2-3-4) —
       **`PlotImage` in 3D shows the triangles**: its limits come from everything drawn, not from the
       lines alone.
@@ -2608,6 +2615,19 @@ package).
     script any more. The other way the maintainer named - the output directory set in Spyder - is
     documented beside the environment variables.
 
+<a id="rg12-25"></a>
+**RG12.25** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2719) —
+    [log](exudynRevisionLog2026b.md#rg12-25) — **store positions stores every open window**: the
+    settings dialog, the other interactive dialogs (the SolutionViewer), the PlotSensor windows, and the
+    render window where it is, which becomes `view0.window.renderWindowSize/Position` in the file and
+    in the dialog.
+
+<a id="rg12-26"></a>
+**RG12.26** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2720) —
+    [log](exudynRevisionLog2026b.md#rg12-26) — **the SolutionViewer**: its sliders and the Run
+    button follow the width of the window, `windowSize=[w, h]` gives it a size, it is stored with the
+    other windows, and the label *t = 1.0* is gone.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
@@ -2634,6 +2654,24 @@ What depends on it: the graphics regression test takes every item through its Mi
     (#2716), per item type - node, object, marker, load, sensor - and per kind of object - body,
     connector, constraint, and the other object types. From that and the table of RG13.1: **a
     detailed plan that makes it work** for every item, as further steps of this group.
+
+    **The maintainer's direction (2026-09-27)**, from the table of RG13.1 - the item documentation is
+    incomplete, and the priorities differ by kind:
+
+    | kind | what "equations" means for it |
+    |---|---|
+    | **objects** | the most important; they really need their equations |
+    | **nodes** | the coordinates, and how the node acts on the equations of motion - for Euler parameters, the equations are the global ones, projected with the velocity transformation |
+    | **markers, loads** | short equations |
+    | **sensors** | none; the equations text is a more detailed description where one is needed |
+
+    **And a general section per kind of item**, which every item of that kind can refer to - above all
+    for sensors and markers, where all items of a kind behave alike and the page of each should say
+    only what is its own.
+
+    *Also from the maintainer*: an item that no script uses may be used by the **package** -
+    ObjectContactSphereTorus is part of the bearings. The report counts the package separately since:
+    of the 7 items no example or test model uses, 3 are used by the package, and 4 by nothing.
 
 <a id="rg13-3"></a>
 **RG13.3** *(group RG13; maintainer 2026-09-27)* **Each description synchronized once with its

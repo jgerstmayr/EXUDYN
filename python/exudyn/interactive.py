@@ -21,9 +21,14 @@ from exudyn.misc.extensionRegistry import extends
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#THE INTERACTIVE DIALOGS THAT ARE OPEN - the SolutionViewer, the mode shapes, an interactive
+#simulation - so that the store positions button of the settings dialog can store them with the
+#other windows while they are open (#2720); a dialog removes itself when it closes
+openDialogs = []
+
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'InteractiveDialog', 'AnimateModes', 'SolutionViewer', 'ConvertImages2Video',
+    'openDialogs', 'InteractiveDialog', 'AnimateModes', 'SolutionViewer', 'ConvertImages2Video',
     'InteractiveImages2Video',
     ]
 
@@ -88,7 +93,8 @@ class InteractiveDialog:
                  title='',  showTime=False, fontSize = 12,
                  doTimeIntegration = True, runOnStart = False, 
                  addLabelStringVariables=False, addSliderVariables=False, 
-                 checkRenderEngineStopFlag = True, userOnChange=None, useSysVariables=False):
+                 checkRenderEngineStopFlag = True, userOnChange=None, useSysVariables=False,
+                 windowSize=None):
         """initialize an InteractiveDialog
 
         Args:
@@ -110,6 +116,7 @@ class InteractiveDialog:
             checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
             userOnChange: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
             useSysVariables: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
+            windowSize: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout if nothing is stored. A size given here wins over a stored one, as a position given in a script wins for the render window
 
         Note:
             detailed description of dialogItems and plots list/dictionary is given in commented the example below
@@ -335,13 +342,22 @@ class InteractiveDialog:
             self.currentTime.set('t = ')
             widget.grid(column=0, sticky=tkinter.W)
 
+        #THE COLUMNS TAKE THE WIDTH OF THE WINDOW (#2720): every widget is placed sticky in all
+        #directions, but a column without a weight keeps the width of its widest widget, so a
+        #wider window only added empty space on the right. The first column holds the labels when
+        #there are more, and keeps its width; the columns right of it - the sliders - take the rest
+        (nColumns, nRows) = self.tkWindow.grid_size()
+        for column in range(max(1, nColumns)):
+            self.tkWindow.columnconfigure(column, weight=0 if (column == 0 and nColumns > 1) else 1)
+
         #add run button into last row:
         self.RunButtonText = tkinter.StringVar()
         self.Run = tkinter.Button(self.tkWindow, textvariable=self.RunButtonText,
                                   borderwidth = self.itemBorder, font=defaultFont)
         self.RunButtonText.set('Run')
         
-        self.Run.grid(column=0, sticky=tkinterNESW)#, row=maxRow+1)
+        #across all columns, so that it follows the width of the window as the sliders do
+        self.Run.grid(column=0, columnspan=max(1, nColumns), sticky=tkinterNESW)
         self.Run['command'] = self.StartSimulation
         self.Run.focus_set() #does not work
         
@@ -363,10 +379,14 @@ class InteractiveDialog:
         self.dialogName = title
         try:
             RestoreWindowGeometry(self.tkWindow, self.dialogName)
+            if windowSize is not None:               #given in the script: it wins over a stored size
+                self.tkWindow.geometry(str(int(windowSize[0])) + 'x' + str(int(windowSize[1])))
             self.recordedGeometry = RememberWindowGeometry(self.tkWindow, self.dialogName)
         except Exception as error:                                           # noqa: BLE001
             self.recordedGeometry = {}
             exudyn.Print('WARNING: InteractiveDialog could not restore its window: ' + str(error))
+
+        openDialogs.append(self)
 
         self.InitializeSolver() #solver gets ready to be called repeatedly
         self.InitializePlots()  #set up all structures for plots
@@ -392,6 +412,8 @@ class InteractiveDialog:
             StoreWindowGeometry(self.recordedGeometry, self.dialogName)
         except Exception as error:                                           # noqa: BLE001
             exudyn.Print('WARNING: InteractiveDialog could not store its window: ' + str(error))
+        if self in openDialogs:
+            openDialogs.remove(self)
         #del exudyn.sys['tkinterRoot'] #this is not thread safe, but interuption should not happen ...
         self.tkWindow.quit()
         self.tkWindow.destroy()
@@ -819,7 +841,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
-                   fontSize=12, title='', checkRenderEngineStopFlag=True):
+                   fontSize=12, title='', checkRenderEngineStopFlag=True, windowSize=None):
     """open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
 
     Args:
@@ -832,6 +854,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         fontSize: define font size for labels in InteractiveDialog
         title: if empty, it uses default; otherwise define specific title
         checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+        windowSize: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout
 
     Returns:
         :None: updates current visualization state, renders the scene continuously (after pressing button 'Run')
@@ -981,7 +1004,10 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
                       dialogItems=dialogItems,
                       fontSize=fontSize,title=dialogTitle,
                       doTimeIntegration=False, period=timeout,
-                      showTime=True, runOnStart=runOnStart, 
+                      #no time label: it shows the time of the dialog's own time integration, which
+                      #the viewer does not run, so it said t = 1.0 whatever row was shown (#2720);
+                      #the time of the row is in the render window
+                      showTime=False, runOnStart=runOnStart, windowSize=windowSize,
                       checkRenderEngineStopFlag=checkRenderEngineStopFlag,
                       useSysVariables=True, #use mbs.sys, not to bloat the mbs.variables of the user
                       )

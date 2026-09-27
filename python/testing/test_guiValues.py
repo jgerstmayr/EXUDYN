@@ -803,3 +803,42 @@ def testTheFontSizeCannotBeScrolledAwayInEitherDirection(tkRoot):
     dialog.fontFactor = 3.9
     dialog.ChangeFontSize(1.1)
     assert dialog.fontFactor == pytest.approx(4.), 'the ceiling'
+
+
+def testStorePositionsStoresEveryOpenWindow(tkRoot, tmp_path, monkeypatch):
+    """the store positions button lists and stores every open window, not only its own dialog: the
+    other interactive dialogs and the PlotSensor windows (#2719); the render window is added when a
+    renderer is running, which a test does not have"""
+    import json
+    import types
+    from exudyn.misc import overrideSettings
+    import exudyn.interactive as interactive
+    import exudyn.plot as plot
+
+    fileName = str(tmp_path / 'config.json')
+    monkeypatch.setenv('EXUDYN_CONFIG_FILE', fileName)
+    monkeypatch.delenv('EXUDYN_NO_USER_SETTINGS', raising=False)
+    with open(fileName, 'w', encoding='utf-8') as file:
+        json.dump({'version': overrideSettings.fileFormatVersion}, file)
+    overrideSettings.Settings().clear()
+
+    viewer = types.SimpleNamespace(dialogName='Solution Viewer',
+                                   tkWindow=types.SimpleNamespace(geometry=lambda: '500x300+20+30'))
+    monkeypatch.setattr(interactive, 'openDialogs', [viewer])
+    monkeypatch.setattr(plot, 'PlotWindowGeometries', lambda: [('PlotSensor 1', '640x480+700+30')])
+
+    dialog = TreeDialogOrSkip(tkRoot)
+    shown = {}
+
+    def Capture(title, lines, description, confirm=None):
+        shown['lines'] = [line for (_, line) in lines]
+        confirm[1]()                                   #press "store"
+    monkeypatch.setattr(dialog, 'ShowCodeLines', Capture)
+    dialog.OnStorePositions()
+
+    assert any('Solution Viewer: 500x300+20+30' in line for line in shown['lines'])
+    assert any('PlotSensor 1: 640x480+700+30' in line for line in shown['lines'])
+    dialogs = overrideSettings.Load()['dialogs']
+    assert dialogs[overrideSettings.DialogKey('Solution Viewer')] == {'size': [500, 300], 'position': [20, 30]}
+    assert dialogs[overrideSettings.DialogKey('PlotSensor 1')] == {'size': [640, 480], 'position': [700, 30]}
+    overrideSettings.Settings().clear()

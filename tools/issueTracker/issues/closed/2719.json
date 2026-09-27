@@ -1,0 +1,16 @@
+{
+  "number": 2719,
+  "title": "store positions stores only the settings dialog, not the render window where it is, the solution viewer or the plot windows",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Reported by the maintainer against 1.12.128: the store positions button of the visualization settings dialog, pressed with the solution viewer, the settings dialog, the render window and two sensor plots open, wrote only the settings dialog's geometry. It does not read where the render window IS - the render state - so the file keeps what view0.window says, which should be updated in the dialog and in ~/.exudyn/config.json; and the plot windows are not stored at all. revision2026b step RG12.25.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 19:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The store positions button of the settings dialog stores every window that is open: the dialog itself, the other interactive dialogs such as the SolutionViewer, the PlotSensor windows, and the render window where it currently is - which is written as view0.window.renderWindowSize and renderWindowPosition into ~/.exudyn/config.json and into the settings the dialog shows.",
+  "resolvedInVersion": "1.12.130"
+}

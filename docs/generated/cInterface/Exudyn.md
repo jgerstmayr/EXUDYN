@@ -249,8 +249,9 @@ from exudyn.plot import StorePlotWindowGeometry
 StorePlotWindowGeometry()          #returns how many windows it stored
 ```
 
-This is the call to use, because the plots are usually made after `SC.renderer.Stop()`, when the
-settings dialog and its **store positions** button are gone. `PlotSensorDefaults().storeWindowPositions
+This is the call to use when the plots are made after `SC.renderer.Stop()`, when the settings dialog
+is gone; while it is open, its **store positions** button stores the plot windows together with the
+other windows. `PlotSensorDefaults().storeWindowPositions
 = True` in addition stores each window when it closes, one window at a time, which asks nothing but
 also keeps whatever a window happened to be when it was closed.
 

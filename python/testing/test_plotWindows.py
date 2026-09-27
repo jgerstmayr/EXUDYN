@@ -117,3 +117,20 @@ def testStoringTwiceKeepsTheLatestAndNothingElse(settingsFile):
 def testTheGateForTheAutomaticStoringIsOff():
     """storing when a window closes is a choice; asking for it explicitly always works"""
     assert plot.PlotSensorDefaults().storeWindowPositions is False
+
+
+def testTheOpenPlotWindowsAreListedWithTheirGeometry(settingsFile):
+    """what the store positions button of the settings dialog lists and stores (#2719)"""
+    plot.__plotWindowFigures.clear()
+    plot.__plotWindowFigures.append((1, StubFigure(StubWindow('640x480+10+20'))))
+    plot.__plotWindowFigures.append((2, StubFigure(None)))                      #closed
+    assert plot.PlotWindowGeometries() == [('PlotSensor 1', '640x480+10+20')]
+
+
+def testTheInteractiveDialogsAreKnownWhileTheyAreOpen():
+    """the SolutionViewer and the other interactive dialogs are listed while open (#2720)"""
+    import inspect
+    import exudyn.interactive as interactive
+    assert interactive.openDialogs == []
+    assert 'windowSize' in inspect.signature(interactive.SolutionViewer).parameters
+    assert 'windowSize' in inspect.signature(interactive.InteractiveDialog.__init__).parameters

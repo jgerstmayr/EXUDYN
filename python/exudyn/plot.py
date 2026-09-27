@@ -23,9 +23,9 @@ import copy
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'StorePlotWindowGeometry', 'listMarkerStyles', 'listMarkerStylesFilled', 'componentNorm',
-    'ParseOutputFileHeader', 'PlotSensorDefaults', 'PlotSensor', 'PlotFFT', 'FileStripSpaces',
-    'DataArrayFromSensorList', 'PlotImage',
+    'StorePlotWindowGeometry', 'PlotWindowGeometries', 'listMarkerStyles', 'listMarkerStylesFilled',
+    'componentNorm', 'ParseOutputFileHeader', 'PlotSensorDefaults', 'PlotSensor', 'PlotFFT',
+    'FileStripSpaces', 'DataArrayFromSensorList', 'PlotImage',
     ]
 
 #++++++++++++++++++++++++++++++++
@@ -143,6 +143,28 @@ def StorePlotWindowGeometry():
                          + ': ' + str(error))
     __plotWindowFigures[:] = alive
     return stored
+
+
+def PlotWindowGeometries():
+    """The plot windows that are open, with where they are.
+
+    Returns:
+        a list of (name, 'WIDTHxHEIGHT+X+Y'), one per open PlotSensor window, under the name its
+        geometry is stored by - which is how the store positions button of the settings dialog lists
+        and stores them together with the other windows (#2719)
+    """
+    result = []
+    for (number, figure) in __plotWindowFigures:
+        window = __PlotWindowOf(figure)
+        try:
+            if window is not None and hasattr(window, 'geometry'):          #tkinter
+                result.append((__PlotWindowName(number), window.geometry()))
+            elif window is not None and hasattr(window, 'x'):              #Qt
+                result.append((__PlotWindowName(number), str(window.width()) + 'x' + str(window.height())
+                               + '+' + str(window.x()) + '+' + str(window.y())))
+        except Exception:                                    # noqa: BLE001
+            pass                                             #a window that is going away
+    return result
 
 
 def __PlacePlotWindow(fig):

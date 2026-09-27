@@ -121,8 +121,10 @@ dialog opens, so that a model's own settings can be told from the rest. Four but
 - **store settings** writes the settings that differ from the defaults into that file, so that every
   run starts with them — including the size and position of the render window, which are ordinary
   settings (`view*.window.renderWindowSize` and `renderWindowPosition`).
-- **store positions** writes the size and position of *this dialog*, so that it opens where you left
-  it.
+- **store positions** writes the size and position of every window that is open, so that each opens
+  where you left it: this dialog, the other interactive dialogs such as the `SolutionViewer`, the
+  `PlotSensor` windows, and the render window - where it *is*, which becomes
+  `view0.window.renderWindowSize` and `renderWindowPosition` in the file and in this dialog.
 
 Both storing buttons show exactly what they will write, and ask, before anything is written; see
 [](#sec-overridesettings). A geometry that **is** stored is used whenever a dialog opens, whatever
@@ -438,7 +440,11 @@ The `SolutionViewer` adds a `tkinter` interactive dialog, which lets you interac
 - In the 'Continuous run' mode, the player runs in an infinite loop
 - In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for **creating animations**, see {ref}`sec-overview-basics-animations` and works together with the visualization settings dialog.
 - In the 'Record animation' mode, the player records frames that are shown in the render window; before pressing on 'Record animation', press 'Stop' and switch to 'One cycle'. Then put the solution steps slider to the first frame and press 'Record animation', which stores images in the current subfolder 'images' as 'frame00001.png' with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.
-- Since Exudyn V1.9.83, the button 'Make mp4' allows to directly generate animation files, see next section.
+- The button 'Make mp4' allows to directly generate animation files, see next section.
+- The sliders follow the width of the window. `SolutionViewer(..., windowSize=[width, height])` gives
+  the window a size; otherwise it opens at the size stored for it in `~/.exudyn/config.json` - by
+  **store positions** of the settings dialog, or when it closes while
+  `visualizationSettings.dialogs.storeDialogPositions` is on.
 
 The solution should be loaded with
 `LoadSolutionFile('solution/coordinatesSolution.txt')`, where 'solution/coordinatesSolution.txt' is the default solution file,

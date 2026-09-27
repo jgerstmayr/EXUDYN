@@ -1118,18 +1118,57 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         itself when it closes and this is a user asking.
         """
         fileName = self.SettingsFileName()
-        geometry = self.parentFrame.geometry()
-        name = self.parentFrame.title()
-        lines = [('', '#the size and the position of "' + name + '" will be stored in ' + fileName),
-                 ('', '#under "dialogs": ' + geometry)]
+
+        #EVERY WINDOW THAT IS OPEN, not only this dialog (#2719): the other interactive dialogs -
+        #the SolutionViewer among them - the PlotSensor windows, and the render window
+        windows = [(self.parentFrame.title(), self.parentFrame.geometry())]
+        try:
+            if 'exudyn.interactive' in sys.modules:
+                for dialog in list(sys.modules['exudyn.interactive'].openDialogs):
+                    windows.append((dialog.dialogName, dialog.tkWindow.geometry()))
+            if 'exudyn.plot' in sys.modules:
+                windows += sys.modules['exudyn.plot'].PlotWindowGeometries()
+        except Exception as error:                                           # noqa: BLE001
+            exudyn.Print('WARNING: the positions of the other windows could not be read: ' + str(error))
+
+        #THE RENDER WINDOW, where it IS - the render state - and not what the settings say. It is
+        #stored as settings of the view, view0.window.renderWindowSize and renderWindowPosition, and
+        #written into this dialog as well, so that the settings it shows and a later "store settings"
+        #agree with the file
+        renderValues = {}
+        try:
+            SC = GetRendererSystemContainer()
+            if SC is not None and SC.renderer.IsActive() and \
+                    CompiledSettingsClass(self.settingsStructure).__name__ == 'VisualizationSettings':
+                state = SC.renderer.GetState()
+                size = [int(v) for v in state['currentWindowSize']]
+                position = [int(v) for v in state['currentWindowPosition']]
+                if size[0] > 0 and size[1] > 0:
+                    renderValues = {'view0.window.renderWindowSize': size,
+                                    'view0.window.renderWindowPosition': position}
+        except Exception as error:                                           # noqa: BLE001
+            exudyn.Print('WARNING: the render window position could not be read: ' + str(error))
+
+        lines = [('', '#the size and the position of these windows will be stored in ' + fileName)]
+        lines += [('', '#under "dialogs": ' + name + ': ' + geometry) for (name, geometry) in windows]
+        for (path, value) in renderValues.items():
+            lines.append(('', '#under "visualizationSettings": ' + path + ' = ' + str(value)))
 
         def Store():
-            if StoreGeometryString(geometry, name):
-                exudyn.Print('stored the position of "' + name + '" in ' + fileName)
+            stored = sum(1 for (name, geometry) in windows if StoreGeometryString(geometry, name))
+            if renderValues:
+                from exudyn.misc import overrideSettings                     # noqa: PLC0415
+                section = dict(overrideSettings.Load().get('visualizationSettings') or {})
+                section.update(renderValues)
+                overrideSettings.StoreSection('visualizationSettings', section)
+                self.ApplyValues({path: str(value) for (path, value) in renderValues.items()})
+                stored += 1
+            exudyn.Print('stored the positions of ' + str(stored) + ' window(s) in ' + fileName)
 
         self.ShowCodeLines('store positions in ' + fileName, lines,
-                           'where this dialog is, so that it opens here next time; the settings it'
-                           ' shows are the "store settings" button',
+                           'where the open windows are - this dialog, the other dialogs, the plot'
+                           ' windows and the render window - so that they open there next time;'
+                           ' the settings this dialog shows are the "store settings" button',
                            confirm=('store', Store))
 
     def OnShowSessionChanges(self):

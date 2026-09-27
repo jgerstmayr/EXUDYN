@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 126 | 1.12.129 |
+| 1.12 | Metheney | 128 | 1.12.131 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.131** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the SolutionViewer: sliders and buttons do not follow the window width, its size cannot be given, and it shows t = 1.0 (#2720)
+  - description: Reported by the maintainer against 1.12.128: the SolutionViewer - an InteractiveDialog - does not resize the width of its buttons and sliders with the window; its size cannot be set when it is started, and should be storable in ~/.exudyn/config.json; and a label 't = 1.0' stands above the Start/Stop button whatever is shown. revision2026b step RG12.26.
+  - **notes:** The SolutionViewer and every InteractiveDialog: the sliders and the Run button follow the width of the window, SolutionViewer(..., windowSize=\[width, height\]) gives it a size, and the viewer no longer shows a time label that stayed at t = 1.0.
+  - date resolved: **2026-09-27 19:36**, date raised: 2026-09-27
+- **1.12.130** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` store positions stores only the settings dialog, not the render window where it is, the solution viewer or the plot windows (#2719)
+  - description: Reported by the maintainer against 1.12.128: the store positions button of the visualization settings dialog, pressed with the solution viewer, the settings dialog, the render window and two sensor plots open, wrote only the settings dialog's geometry. It does not read where the render window IS - the render state - so the file keeps what view0.window says, which should be updated in the dialog and in ~/.exudyn/config.json; and the plot windows are not stored at all. revision2026b step RG12.25.
+  - **notes:** The store positions button of the settings dialog stores every window that is open: the dialog itself, the other interactive dialogs such as the SolutionViewer, the PlotSensor windows, and the render window where it currently is - which is written as view0.window.renderWindowSize and renderWindowPosition into ~/.exudyn/config.json and into the settings the dialog shows.
+  - date resolved: **2026-09-27 19:36**, date raised: 2026-09-27
 - **1.12.129** `DOCU` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RG13: the state of the documentation and the MiniExample of every item (#2715)
   - description: The maintainer, 2026-09-27: each item needs a full documentation and a MiniExample - more than fits into RG3, so a group of its own, RG13, and one of the most important steps before Exudyn 1.13. RG13.1 evaluates the current state: per item, what its definition in definitions/itemDefs\*.py carries (class description, the description of the equations, parameters described, output variables, a MiniExample, an image, examples and test models that use it) and what is missing. revision2026b step RG13.1.
   - **notes:** The state of the documentation of every item is measured by tools/itemDocumentationReport.py and written down in docs/revision/itemDocumentationState.md: the parameters and output variables are described almost without exception, 29 of 97 items have no text on their equations (mostly nodes, markers and sensors), 84 show no figure, and 74 have no MiniExample.
