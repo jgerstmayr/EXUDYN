@@ -58,7 +58,7 @@ from itemModel import possibleTypes, useNewUserFunctions, pyFunctionTypeConversi
     IsASafelyVector, IsAVector, \
     IsASimpleMatrix, IsAMatrixVectorSpecial, IsAArrayIndex, IsASetSafelyParameter, \
     GetSetSafelyFunctionName, IsInternalSetGetParameter, IsTypeWithRangeCheck, \
-    IsItemIndex, ExtractLatexSymbol
+    IsItemIndex, ExtractMathSymbol
 
 
 def RemoveIndentation2(text, addSpaces = '', removeAllSpaces = True, removeIndentation = True):
@@ -200,11 +200,11 @@ def WriteFile(parseInfo, parameterList):
                     sString="'"
                 #write latex doc:
                 parameterDescription = parameter['parameterDescription']
-                [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
+                [parameterDescription, mathSymbol] = ExtractMathSymbol(parameterDescription)
                 if parameter['cFlags'].find('Q') != -1: #CFMustBeGiven: the default is only a placeholder
                     parameterDescription += '; \mybold{must be given}: the default is only a placeholder'
-                if latexSymbol.count('\\n'):
-                    print('WARNING: found \\n in latexSymbol: '
+                if mathSymbol.count('\\n'):
+                    print('WARNING: found \\n in mathSymbol: '
                           +parseInfo['class']+':'+parameter['pythonName'])
                 
                 parameterTypeStr = parameter['type']
@@ -229,7 +229,7 @@ def WriteFile(parseInfo, parameterList):
                                               typeName = parameterTypeStr, 
                                               sSize = parameterSizeStr,
                                               sDefaultVal = sString+parameterDefaultValueStr+sString, 
-                                              sSymbol = latexSymbol.replace('\n','\\n'), #correct e.g. \nu
+                                              sSymbol = mathSymbol.replace('\n','\\n'), #correct e.g. \nu
                                               description = parameterDescription)
 
             elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
@@ -302,8 +302,8 @@ def WriteFile(parseInfo, parameterList):
                 #which is why it went unnoticed (revision2026b step RG3.14.14, #2677)
                 oVariable = outputVariables[0]
                 description = outputVariables[1]
-                [description, latexSymbol] = ExtractLatexSymbol(description)
-                writerAdd.Table3WriteRow(cols=[oVariable, latexSymbol, description])
+                [description, mathSymbol] = ExtractMathSymbol(description)
+                writerAdd.Table3WriteRow(cols=[oVariable, mathSymbol, description])
             
             writerAdd.DefFinishTable()
 

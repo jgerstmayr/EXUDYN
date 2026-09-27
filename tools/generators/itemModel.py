@@ -192,38 +192,38 @@ def IsItemIndex(parameterType):
     else:
         return False
 
-#extract a latex $...$ code / symbol out of a string
-#return [stringWithoutSymbol, stringLatexSymbol]
-def ExtractLatexSymbol(s):
-    stringLatexSymbol=""
+#split the symbol of a parameter - a $...$ span at the very START of its description - off the
+#description; return [descriptionWithoutSymbol, mathSymbolString], the symbol '' if there is none
+def ExtractMathSymbol(s):
+    mathSymbolString=""
     stringWithoutSymbol=""
     if s[0]=='$':
         splitString = s.split('$')
         n = len(splitString)
         
         if n == 3: #one symbol + text
-            stringLatexSymbol = "$" + splitString[1] + "$"
+            mathSymbolString = "$" + splitString[1] + "$"
             stringWithoutSymbol=splitString[2]
         elif n%2 != 1:
             print("ERROR: did not find closing $ for description/variable; str =", s)
         else: #several symbols, but one leading
-            stringLatexSymbol = "$" + splitString[1] + "$"
-            addLatexSign=''
+            mathSymbolString = "$" + splitString[1] + "$"
+            mathSign=''
             for i in range(2,n):
                 if i%2 == 1:
                     sAdd = splitString[i]
                 else:
                     sAdd = splitString[i]
-                stringWithoutSymbol+=addLatexSign+sAdd
-                addLatexSign = '$'
+                stringWithoutSymbol+=mathSign+sAdd
+                mathSign = '$'
 
 #        print("splitString=",splitString)
-#        print("stringLatexSymbol=",stringLatexSymbol)
+#        print("mathSymbolString=",mathSymbolString)
 #        print("stringWithoutSymbol=",stringWithoutSymbol)
     else:
         stringWithoutSymbol=s
 
-    return [stringWithoutSymbol, stringLatexSymbol]
+    return [stringWithoutSymbol, mathSymbolString]
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

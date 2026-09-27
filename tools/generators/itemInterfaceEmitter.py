@@ -29,7 +29,7 @@ import typeModel as tm                                                          
 import publicApi                                                                     # noqa: E402
 from userFunctionModel import ReadUserFunction, CheckAgainstCpp, PythonType          # noqa: E402
 from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
-                       IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
+                       IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractMathSymbol,
                        possibleTypes)
 from autoGenerateHelper import (GetTypesStringDocu,                                # noqa: E402
                                 SplitSummaryDescription, GoogleDocstringRenderer,
@@ -142,7 +142,7 @@ def ItemDocstrings(definition):
     requestedNodeString = ''
     for member in definition['members']:
         if im.IsInterfaceParameter(member) and not im.IsReadOnly(member): #the __init__ arguments
-            [parameterDescription, latexSymbol] = ExtractLatexSymbol(im.Description(member))
+            [parameterDescription, mathSymbol] = ExtractMathSymbol(im.Description(member))
             thisDataDocString = dataDocstringV if 'V' in im.Destination(member) else dataDocstring
             typeHint = tm.Render(im.TypeName(member), 'pyTyping', 'items')
             description = CleanStringForPyiDescription(parameterDescription).strip()

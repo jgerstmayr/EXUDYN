@@ -295,7 +295,7 @@ def ItemCppHeaders(definition):
                 insertSpaces = ' '*(alignment-nChar)
 
             parameterDescription = Description(parameter) #remove symbol from parameter description
-            [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
+            [parameterDescription, mathSymbol] = ExtractMathSymbol(parameterDescription)
 
             lineStr = temp + insertSpaces + '//!< AUTO: ' + tm.ConstraintNote(TypeName(parameter)) + Str2Doxygen(parameterDescription) + '\n'
 

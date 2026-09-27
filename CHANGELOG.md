@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 109 | 1.12.111 |
+| 1.12 | Metheney | 110 | 1.12.112 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.112** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the latexSymbol family of the generators is called mathSymbol (#2699)
+  - description: The maintainer, 2026-09-27, chose option B of revision2026b step RG3.24.4: latexSymbol, ExtractLatexSymbol, stringLatexSymbol and addLatexSign become mathSymbol, ExtractMathSymbol, mathSymbolString and mathSign. The name says what the thing is - the symbol of a parameter, the leading dollar-sign span of its description - and the markup stays the converter's business. Gate: the regeneration is a no-op. revision2026b step RG3.24.4.
+  - **notes:** The generator names for the symbol of an item parameter are mathSymbol, ExtractMathSymbol, mathSymbolString and mathSign: they name what the thing is, the leading dollar-sign span of a parameter description, rather than its markup. The generated code and documentation are unchanged.
+  - date resolved: **2026-09-27 10:54**, date raised: 2026-09-27
 - **1.12.111** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
   - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
   - **notes:** The two sections that introduce a settings structure now say how to look a setting up: the Simulation settings section of Exudyn Basics names 'python -m exudyn dialogs sim' with CTRL-F to find a setting and copy line to take the statement that sets it, and the visualization settings dialog section names 'python -m exudyn dialogs vis' beside the V key, which needs a running render loop. Both link to the command line chapter.

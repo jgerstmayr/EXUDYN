@@ -2213,8 +2213,9 @@ package).
       Whether the default column should read `exudyn.InvalidIndex()` instead of `invalid (-1)` is a
       decision, and it is a small one now that there is one place to make it.
 
-    - **RG3.24.4** *(the question RG3.24 reserved; maintainer's choice)* **what the `latexSymbol`
-      family should be called.** `latexSymbol` (12 uses in `itemDocsEmitter`, `itemHeaderEmitter`,
+    - **RG3.24.4** *(the question RG3.24 reserved; maintainer's choice)* **DONE 2026-09-27** (#2699)
+      — [log](exudynRevisionLog2026b.md#rg3-24-4) — **what the `latexSymbol` family should be
+      called.** The maintainer chose **B**, `mathSymbol`. `latexSymbol` (12 uses in `itemDocsEmitter`, `itemHeaderEmitter`,
       `itemInterfaceEmitter` and `typesEmitter`), `ExtractLatexSymbol` (`itemModel`, 9), and inside it
       `stringLatexSymbol` and `addLatexSign`. It is the `$...$` that a parameter description may open
       with - `$\theta$ rotation angle` - which the emitters split off and put into its own column of
@@ -2448,7 +2449,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3.1 | #2582 | the drawing elements as data (JSON, renderer inactive) - the suite's oracle |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.24.4 | - | what the latexSymbol family should be called - three options for the maintainer |
 | RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |

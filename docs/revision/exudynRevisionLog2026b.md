@@ -5393,3 +5393,16 @@ them: **CTRL-F** to find a setting and *copy line* to take the statement that se
 what makes the browsing useful rather than merely possible.
 
 **Gates**: the strict HTML build, and the two references resolve.
+
+<a id="rg3-24-4"></a>
+### RG3.24.4 — the latexSymbol family is mathSymbol (2026-09-27, #2699)
+
+The maintainer chose option B: `latexSymbol` → `mathSymbol` (9), `ExtractLatexSymbol` →
+`ExtractMathSymbol` (9), `stringLatexSymbol` → `mathSymbolString` (7), `addLatexSign` → `mathSign`
+(3), in `itemModel` and the four item emitters. The comment above the function now says the rule
+option C wanted in its name - only a `$...$` at the very **start** of a description is split off - so
+the half of C that cost nothing came along.
+
+**Gate**: the regeneration wrote byte-identical files; the only generated file that moved was the
+tracker log, because the issue was raised in the same run. With this the generator API has no name
+left that says LaTeX where it does not mean it.

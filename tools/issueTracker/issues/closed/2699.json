@@ -1,0 +1,16 @@
+{
+  "number": 2699,
+  "title": "the latexSymbol family of the generators is called mathSymbol",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27, chose option B of revision2026b step RG3.24.4: latexSymbol, ExtractLatexSymbol, stringLatexSymbol and addLatexSign become mathSymbol, ExtractMathSymbol, mathSymbolString and mathSign. The name says what the thing is - the symbol of a parameter, the leading dollar-sign span of its description - and the markup stays the converter's business. Gate: the regeneration is a no-op. revision2026b step RG3.24.4.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 10:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemModel.py",
+  "releaseNotes": "The generator names for the symbol of an item parameter are mathSymbol, ExtractMathSymbol, mathSymbolString and mathSign: they name what the thing is, the leading dollar-sign span of a parameter description, rather than its markup. The generated code and documentation are unchanged.",
+  "resolvedInVersion": "1.12.112"
+}

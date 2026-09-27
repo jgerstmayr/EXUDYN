@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.111.dev1
+- Exudyn version = 1.12.112.dev1
 - last change = 2026-09-27
-- Number of issues = 2699
-- Number of resolved issues = 2425 (111 in current version)
+- Number of issues = 2701
+- Number of resolved issues = 2426 (112 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` the graphics data can be read as a dictionary without a window, and the TXT image export is removed (#2700)
+  - description: The maintainer, 2026-09-27: 'yes do that and totally remove the .txt graphics export'. SC.renderer.GetGraphicsData() returns the drawing elements of the scene - lines, spheres, circles, texts and triangles, each with the item that drew it - built with the renderer inactive, the path RedrawAndGetImage(True) already uses, so a test can ask for it with no window. It is the oracle of the graphics regression suite (RG2.3, \#2582): counts per item are exact, coordinates are compared with a tolerance. The TXT export of exportImages (saveImageFormat='TXT' and the four saveImageAsText\* settings) needed the running OpenGL renderer, dropped the item of every primitive, spheres and texts, and is removed together with its reader exudyn.plot.LoadImage. revision2026b step RG2.3.1.
+  - date raised: 2026-09-27
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` index.md and pdfIndex.md are two hand-written tables of contents that must agree (#2697)
   - description: The maintainer, 2026-09-27: 'index.md and pdfIndex.md: I see that there are two files, which have different structure. Maybe this is necessary, but it is really brittle and requires a clear indication to sync the toctrees. The main difference - if I remember correctly - are the examples/models/etc. not to be included in PDF, and a different front page. The rest should be practically identical, if possible.' Measured on 2026-09-27, and it is more than that: index.md has 25 toctree entries and pdfIndex.md has 23. Only in index.md: README, docs/manual/performanceErrors, docs/generated/examples/examplesIndex, docs/generated/testModels/testModelsIndex. Only in pdfIndex.md: docs/manual/commandLine, docs/manual/resultsMonitor - which in the HTML are nested under introductionAdvanced instead. And the ORDER of the entries they share is not the same. So the examples and the front page are the intended differences; performanceErrors missing from the PDF and the different nesting and order are not, and nothing tells anybody when they drift again. Options for the step: generate pdfIndex.md from index.md with a declared list of exclusions (then one file is the truth and the other is a build product, which also needs a rule for the front page); or keep both and add a check to tools/ that compares the two entry lists against a declared difference, which is cheap and catches drift on the next commit; or accept the difference and document it at the top of both files. revision2026b step RG3.26.
   - date raised: 2026-09-27

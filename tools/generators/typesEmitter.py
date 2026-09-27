@@ -27,7 +27,7 @@ if toolsDirectory not in sys.path:
 
 import itemModel as im                                                              # noqa: E402
 import typeModel as tm                                                              # noqa: E402
-from itemModel import ExtractLatexSymbol                                            # noqa: E402
+from itemModel import ExtractMathSymbol                                            # noqa: E402
 from autoGenerateHelper import CleanStringForPyiDescription                        # noqa: E402
 
 #the C++ enum whose values GetType returns, per item kind
@@ -71,7 +71,7 @@ def TypeNames(definition):
 
 
 def Parameter(member):
-    [description, latexSymbol] = ExtractLatexSymbol(im.Description(member))
+    [description, mathSymbol] = ExtractMathSymbol(im.Description(member))
     typeName = im.TypeName(member)
     return {'type': typeName,
             'size': im.Size(member),
