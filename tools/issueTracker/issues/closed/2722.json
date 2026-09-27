@@ -1,0 +1,16 @@
+{
+  "number": 2722,
+  "title": "store positions fails with Qt plot windows (QRect is not a geometry string), so no PlotSensor window is stored; the SolutionViewer loses its button column when narrower than its slider",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27, V1.12.131 in Spyder (QtAgg): pressing store positions in the settings dialog with two PlotSensor windows open raised 'TypeError: can only concatenate str (not QRect) to str' in OnStorePositions, and no window opened, so nothing was stored. A Qt window has geometry() too, returning a QRect, and PlotWindowGeometries and the storing of a plot window took any window with geometry() for tkinter. Second: the SolutionViewer, resized narrower than its 1200-pixel slider asks for, lost its third column (Static, Make mp4): Tk takes the missing width from the weighted columns, down to nothing, and every column right of the first was weighted. revision2026b step RG12.27.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 22:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/plot.py",
+  "releaseNotes": "The store positions button of the settings dialog lists and stores PlotSensor windows of the Qt backend (Spyder); before, it failed with a TypeError and stored nothing. An interactive dialog that is narrower than its sliders ask for keeps its button and label columns; only the sliders give. The sliders of the SolutionViewer and of AnimateModes reach the last column.",
+  "resolvedInVersion": "1.12.132"
+}

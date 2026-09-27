@@ -89,21 +89,26 @@ def __PlotWindowOf(figure):
         return None
 
 
+def __WindowGeometry(window):
+    """'WIDTHxHEIGHT+X+Y' of a backend window, or None if the backend does not say.
+    tkinter is told by wm_geometry: a Qt window has a geometry() as well, which returns a QRect
+    (#2722)"""
+    if window is None:
+        return None
+    if hasattr(window, 'wm_geometry'):                              #tkinter, matplotlib TkAgg
+        return str(window.geometry())
+    if all(hasattr(window, name) for name in ['x', 'y', 'width', 'height']):     #Qt
+        return (str(window.width()) + 'x' + str(window.height()) + '+' + str(window.x())
+                + '+' + str(window.y()))
+    return None
+
+
 def __StorePlotWindow(figure, name):
     """store where one plot window is; True if it was stored"""
-    from exudyn.misc import overrideSettings                                 # noqa: PLC0415
     from exudyn.misc.GUI import StoreGeometryString                          # noqa: PLC0415
 
-    window = __PlotWindowOf(figure)
-    if window is None:
-        return False
-    if hasattr(window, 'geometry'):          #'WIDTHxHEIGHT+X+Y', as a tkinter dialog gives it
-        return StoreGeometryString(window.geometry(), name)
-    if hasattr(window, 'x'):                 #Qt
-        overrideSettings.StoreDialogGeometry(name, [window.width(), window.height()],
-                                             [window.x(), window.y()])
-        return True
-    return False
+    geometry = __WindowGeometry(__PlotWindowOf(figure))
+    return geometry is not None and StoreGeometryString(geometry, name)
 
 
 def StorePlotWindowGeometry():
@@ -155,13 +160,10 @@ def PlotWindowGeometries():
     """
     result = []
     for (number, figure) in __plotWindowFigures:
-        window = __PlotWindowOf(figure)
         try:
-            if window is not None and hasattr(window, 'geometry'):          #tkinter
-                result.append((__PlotWindowName(number), window.geometry()))
-            elif window is not None and hasattr(window, 'x'):              #Qt
-                result.append((__PlotWindowName(number), str(window.width()) + 'x' + str(window.height())
-                               + '+' + str(window.x()) + '+' + str(window.y())))
+            geometry = __WindowGeometry(__PlotWindowOf(figure))
+            if geometry is not None:
+                result.append((__PlotWindowName(number), geometry))
         except Exception:                                    # noqa: BLE001
             pass                                             #a window that is going away
     return result

@@ -2,7 +2,7 @@
 (sec-mainsystemextensions-solutionviewer)=
 #### Function: SolutionViewer
 
-[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L843)
+[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L869)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics) - NOTE that this function is added to MainSystem via Python function SolutionViewer.
 - **input**:
@@ -37,7 +37,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-mainsystemextensions-plotsensor)=
 #### Function: PlotSensor
 
-[`PlotSensor(mbs, sensorNumbers = [], components = 0, xLabel = None, yLabel = None, labels = [], colorCodeOffset = 0, newFigure = True, closeAll = False, componentsX = [], title = '', figureName = '', fontSize = None, colors = None, lineStyles = None, lineWidths = None, markerStyles = None, markerSizes = None, markerDensity = None, rangeX = [], rangeY = [], majorTicksX = None, majorTicksY = None, offsets = [], factors = [], subPlot = [], sizeInches = None, fileName = '', useXYZcomponents = True, legendArgs = None, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L363)
+[`PlotSensor(mbs, sensorNumbers = [], components = 0, xLabel = None, yLabel = None, labels = [], colorCodeOffset = 0, newFigure = True, closeAll = False, componentsX = [], title = '', figureName = '', fontSize = None, colors = None, lineStyles = None, lineWidths = None, markerStyles = None, markerSizes = None, markerDensity = None, rangeX = [], rangeY = [], majorTicksX = None, majorTicksY = None, offsets = [], factors = [], subPlot = [], sizeInches = None, fileName = '', useXYZcomponents = True, legendArgs = None, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L365)
 
 - **function description**: Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage. - NOTE that this function is added to MainSystem via Python function PlotSensor.
 - **input**:

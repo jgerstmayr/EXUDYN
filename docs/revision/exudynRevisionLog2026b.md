@@ -6018,3 +6018,32 @@ of 18 markers without text beyond the class description (`MarkerBodyRigid`, used
 among them); sensors, whose class descriptions repeat the same three sentences eight times. Content
 errors met on the way are listed in the documents and not fixed (e.g. `NodePointSlope1` gives a 3D
 slope vector with two components).
+
+<a id="rg12-27"></a>
+### RG12.27 — store positions with Qt plot windows; the SolutionViewer when it is narrow (2026-09-27, #2722)
+
+The maintainer tested 1.12.131 in Spyder with `tmp/experimenting/rigidBodyTutorial3.py`: renderer,
+two `PlotSensor` windows, the SolutionViewer, then the settings dialog with *V* and **store
+positions**. Two findings:
+
+- **The button raised `TypeError: can only concatenate str (not "QRect") to str`** and opened
+  nothing, so no plot window was ever stored - the `config.json` had the two dialogs and the render
+  window, and no `PlotSensor`. Spyder's backend is QtAgg, and a Qt window has a `geometry()` as well,
+  which returns a `QRect`: `PlotWindowGeometries()` and the storing of one plot window both asked
+  *"has it a geometry()?"* first and took the Qt window for a tkinter one. Both now go through one
+  function that tells tkinter by `wm_geometry` - as the placing of a window already did - and
+  reads a Qt window by `x, y, width, height`. The automatic storing when a window closes had the same
+  fault. The listing in the button writes each entry with `str()`, so that a window that reports
+  something unexpected cannot stop the others. The test of the plot windows has a Qt stub now; the
+  tkinter stub answers `wm_geometry`.
+- **The SolutionViewer lost its third column** (*Static*, *Make mp4*) when it was narrower than its
+  slider asks for - 1200 pixels at 500 steps and more. Tk takes the missing width from the weighted
+  columns, down to nothing, and since RG12.26 every column right of the first was weighted.
+  `ConfigureDialogColumns` (in `exudyn.interactive`) weights only the columns in which a slider
+  starts, and gives every column the width of its buttons and labels as a minimum, so that only a
+  slider gives. The sliders of the SolutionViewer and of the mode shapes span to the last column,
+  which removes the empty cells right of them. A test lays out the viewer's grid in a withdrawn window
+  700 pixels wide and finds all three button columns with a width - the same grid measured 0 for two
+  of them before.
+
+The window positions themselves are for the maintainer's hands again: the fix is tested on stubs.

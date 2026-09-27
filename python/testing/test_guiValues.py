@@ -842,3 +842,28 @@ def testStorePositionsStoresEveryOpenWindow(tkRoot, tmp_path, monkeypatch):
     assert dialogs[overrideSettings.DialogKey('Solution Viewer')] == {'size': [500, 300], 'position': [20, 30]}
     assert dialogs[overrideSettings.DialogKey('PlotSensor 1')] == {'size': [640, 480], 'position': [700, 30]}
     overrideSettings.Settings().clear()
+
+
+def testANarrowDialogKeepsItsButtonColumns():
+    """the SolutionViewer's layout at a width below what its slider asks for: the column of the
+    Static / Make mp4 buttons kept its width, the slider column gave (#2722)"""
+    import tkinter as tk                                                        # noqa: PLC0415
+    from exudyn.interactive import ConfigureDialogColumns                       # noqa: PLC0415
+    root = TkRootOrSkip()
+    window = tk.Toplevel(root)
+    window.withdraw()
+    try:
+        tk.Label(window, text='Solution steps:').grid(row=1, column=0, sticky='nesw')
+        tk.Scale(window, from_=0, to=100, length=1200, orient=tk.HORIZONTAL).grid(
+            row=1, column=1, columnspan=2, sticky='nesw')
+        for (column, text) in enumerate(['Continuous run', 'One cycle', 'Static']):
+            tk.Radiobutton(window, text=text, indicatoron=0).grid(row=4, column=column, sticky='nesw')
+        assert ConfigureDialogColumns(window) == 3
+
+        window.geometry('700x300')
+        window.update_idletasks()
+        window.update()
+        widths = [window.grid_bbox(column, 4)[2] for column in range(3)]
+        assert widths[0] > 0 and widths[2] > 0 and widths[1] > 0
+    finally:
+        window.destroy()

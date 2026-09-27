@@ -41,6 +41,30 @@ class StubWindow:
             self.storedGeometry = newGeometry
         return self.storedGeometry
 
+    wm_geometry = geometry
+
+
+class StubQtWindow:
+    """what a Qt window answers (QtAgg): a geometry() that is a QRect, not a string (#2722)"""
+
+    def __init__(self, width, height, x, y):
+        (self._width, self._height, self._x, self._y) = (width, height, x, y)
+
+    def geometry(self):
+        return object()                                 #a QRect, which is no 'WxH+X+Y'
+
+    def width(self):
+        return self._width
+
+    def height(self):
+        return self._height
+
+    def x(self):
+        return self._x
+
+    def y(self):
+        return self._y
+
 
 class StubFigure:
     """a figure whose canvas.manager has a window, or has none because it was closed"""
@@ -134,3 +158,15 @@ def testTheInteractiveDialogsAreKnownWhileTheyAreOpen():
     assert interactive.openDialogs == []
     assert 'windowSize' in inspect.signature(interactive.SolutionViewer).parameters
     assert 'windowSize' in inspect.signature(interactive.InteractiveDialog.__init__).parameters
+
+
+def testAQtWindowIsListedAndStoredByItsSize(settingsFile):
+    """a Qt window has a geometry() as well, returning a QRect; it must not be taken for tkinter's"""
+    plot.__plotWindowFigures.clear()
+    plot.__plotWindowFigures.append((1, StubFigure(StubQtWindow(640, 480, 10, 20))))
+
+    assert plot.PlotWindowGeometries() == [('PlotSensor 1', '640x480+10+20')]
+    assert plot.StorePlotWindowGeometry() == 1
+    dialogs = overrideSettings.Load()['dialogs']
+    assert dialogs[overrideSettings.DialogKey('PlotSensor 1')] == {'size': [640, 480],
+                                                                  'position': [10, 20]}

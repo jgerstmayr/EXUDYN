@@ -1150,7 +1150,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             exudyn.Print('WARNING: the render window position could not be read: ' + str(error))
 
         lines = [('', '#the size and the position of these windows will be stored in ' + fileName)]
-        lines += [('', '#under "dialogs": ' + name + ': ' + geometry) for (name, geometry) in windows]
+        lines += [('', '#under "dialogs": ' + str(name) + ': ' + str(geometry)) for (name, geometry) in windows]
         for (path, value) in renderValues.items():
             lines.append(('', '#under "visualizationSettings": ' + path + ' = ' + str(value)))
 

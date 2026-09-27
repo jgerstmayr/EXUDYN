@@ -26,10 +26,42 @@ from exudyn.misc.extensionRegistry import extends
 #other windows while they are open (#2720); a dialog removes itself when it closes
 openDialogs = []
 
+#THE COLUMNS OF A DIALOG TAKE THE WIDTH OF THE WINDOW (#2720): every widget is placed sticky in
+#all directions, but a column without a weight keeps the width of its widest widget, so a wider
+#window only added empty space on the right. Only the columns in which a slider starts take the
+#width - and give it back when the window is narrower than the dialog asks for, which Tk takes
+#from the weighted columns only: a weighted column of buttons was squeezed to nothing (#2722). A
+#dialog without sliders stretches all columns but the first. And no column becomes narrower than
+#the buttons and labels in it: Tk takes the missing width from a weighted column down to nothing,
+#and a slider that spans into the next columns is what asks for the width, so the columns get the
+#widths of their other widgets as their minimum
+def ConfigureDialogColumns(tkWindow):
+    """give the columns of a dialog's grid their weights and minimum widths; returns the number of
+    columns"""
+    import tkinter                                                          # noqa: PLC0415
+    tkWindow.update_idletasks()                                             #the requested widths
+    (nColumns, nRows) = tkWindow.grid_size()
+    sliderColumns = set()
+    minimumWidths = [0]*max(1, nColumns)
+    for widget in tkWindow.grid_slaves():
+        info = widget.grid_info()
+        column = int(info['column'])
+        if isinstance(widget, tkinter.Scale):
+            sliderColumns.add(column)
+        elif int(info.get('columnspan', 1)) == 1:
+            minimumWidths[column] = max(minimumWidths[column], widget.winfo_reqwidth())
+    for column in range(max(1, nColumns)):
+        if sliderColumns:
+            weight = 1 if column in sliderColumns else 0
+        else:
+            weight = 0 if (column == 0 and nColumns > 1) else 1
+        tkWindow.columnconfigure(column, weight=weight, minsize=minimumWidths[column])
+    return nColumns
+
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'openDialogs', 'InteractiveDialog', 'AnimateModes', 'SolutionViewer', 'ConvertImages2Video',
-    'InteractiveImages2Video',
+    'openDialogs', 'ConfigureDialogColumns', 'InteractiveDialog', 'AnimateModes', 'SolutionViewer',
+    'ConvertImages2Video', 'InteractiveImages2Video',
     ]
 
 class InteractiveDialog:
@@ -342,13 +374,7 @@ class InteractiveDialog:
             self.currentTime.set('t = ')
             widget.grid(column=0, sticky=tkinter.W)
 
-        #THE COLUMNS TAKE THE WIDTH OF THE WINDOW (#2720): every widget is placed sticky in all
-        #directions, but a column without a weight keeps the width of its widest widget, so a
-        #wider window only added empty space on the right. The first column holds the labels when
-        #there are more, and keeps its width; the columns right of it - the sliders - take the rest
-        (nColumns, nRows) = self.tkWindow.grid_size()
-        for column in range(max(1, nColumns)):
-            self.tkWindow.columnconfigure(column, weight=0 if (column == 0 and nColumns > 1) else 1)
+        nColumns = ConfigureDialogColumns(self.tkWindow)
 
         #add run button into last row:
         self.RunButtonText = tkinter.StringVar()
@@ -701,7 +727,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     #use interactive dialog:
     dialogItems = [
                    {'type':'label', 'text':'Mode shape:', 'grid':(1,0)},
-                   {'type':'slider', 'range':(0, numberOfModes-1), 'value':0, 'steps':numberOfModes, 'variable':'modeShapeModeNumber', 'grid':(1,1)},
+                   {'type':'slider', 'range':(0, numberOfModes-1), 'value':0, 'steps':numberOfModes, 'variable':'modeShapeModeNumber', 'grid':(1,1,3)},
                    {'type':'label', 'text':'Contour plot:', 'grid':(2,0)},
                    {'type':'radio', 'textValueList':[('None',int(exudyn.OutputVariableType._None)),
                                                      ('DisplacementLocal',int(exudyn.OutputVariableType.DisplacementLocal)),
@@ -710,12 +736,12 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
                                                       ('StrainLocal',int(exudyn.OutputVariableType.StrainLocal))], 
                     'value':int(exudyn.OutputVariableType.DisplacementLocal), 'variable':'modeShapeOutputVariable', 'grid': [(3,0),(3,1),(3,2),(3,3),(3,4)]},
                    {'type':'label', 'text':'Contour Component (use -1 for norm):', 'grid':(4,0)},
-                   {'type':'slider', 'range':(-1, 5), 'value':0, 'steps':7, 'variable':'modeShapeComponent', 'grid':(4,1)},
+                   {'type':'slider', 'range':(-1, 5), 'value':0, 'steps':7, 'variable':'modeShapeComponent', 'grid':(4,1,3)},
                    {'type':'label', 'text':'Amplitude:', 'grid':(5,0)},
                    {'type':'slider', 'range':(0, 1), 'value':0.05, 'steps':501, 'variable':'modeShapeAmplitude', 'grid':(5,1)},
                    {'type':'radio', 'textValueList':[('positive',1), ('negative',-1)],'value':1, 'variable':'modeSignAmplitude', 'grid': [(5,2),(5,3)]},
                    {'type':'label', 'text':'update period:', 'grid':(6,0)},
-                   {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1)},
+                   {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1,3)},
                    {'type':'radio', 'textValueList':[('Continuous run',0), ('Static continuous',1), ('One cycle',2), ('Static once',3)],'value':runMode, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2),(7,3)]},
                    {'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
                    {'type':'radio', 'textValueList':[('Record frames',0), ('No recording',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
@@ -930,11 +956,11 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     
     dialogItems = [
                    {'type':'label', 'text':'Solution steps:', 'grid':(1,0)},
-                   {'type':'slider', 'range':(0, nSteps-1), 'value':0, 'steps':maxNSteps, 'variable':'solutionViewerStep','resolution': resolution, 'grid':(1,1)},
+                   {'type':'slider', 'range':(0, nSteps-1), 'value':0, 'steps':maxNSteps, 'variable':'solutionViewerStep','resolution': resolution, 'grid':(1,1,2)},
                    {'type':'label', 'text':'Increment:', 'grid':(2,0)},
-                   {'type':'slider', 'range':(1, 200), 'value':rowIncrement, 'steps':200, 'variable':'solutionViewerRowIncrement', 'grid':(2,1)},
+                   {'type':'slider', 'range':(1, 200), 'value':rowIncrement, 'steps':200, 'variable':'solutionViewerRowIncrement', 'grid':(2,1,2)},
                    {'type':'label', 'text':'update period:', 'grid':(3,0)},
-                   {'type':'slider', 'range':(0.005, 1), 'value':timeout, 'steps':200, 'variable':'solutionViewerPeriod', 'grid':(3,1)},
+                   {'type':'slider', 'range':(0.005, 1), 'value':timeout, 'steps':200, 'variable':'solutionViewerPeriod', 'grid':(3,1,2)},
                    {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'solutionViewerRunModus', 'grid': [(4,0),(4,1),(4,2)]},
                    {'type':'radio', 'textValueList':[('Record frames',0), ('No recording',1)],'value':1, 'variable':'solutionViewerSaveImages', 'grid': [(5,0),(5,1)]},
                    {'type':'button', 'text':'Make mp4', 'callFunction':UFmakeMP4, 'grid': (5,2)},

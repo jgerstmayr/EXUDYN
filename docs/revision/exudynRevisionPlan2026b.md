@@ -2633,6 +2633,14 @@ package).
     button follow the width of the window, `windowSize=[w, h]` gives it a size, it is stored with the
     other windows, and the label *t = 1.0* is gone.
 
+<a id="rg12-27"></a>
+**RG12.27** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2722) —
+    [log](exudynRevisionLog2026b.md#rg12-27) — **store positions with Qt plot windows, and the
+    SolutionViewer when it is narrow**: the plot windows of Spyder's Qt backend are listed and stored
+    (a `QRect` was taken for tkinter's geometry string, and the button failed before it showed
+    anything); the button and label columns of a dialog keep their width, and only the slider column
+    gives when the window is narrower than the dialog asks for.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
