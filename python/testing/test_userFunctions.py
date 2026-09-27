@@ -82,7 +82,7 @@ def test_protocolAndRegistryAgreeOnTheArguments():
 def test_noArgumentIsStillCalledArgN():
     """every argument of an item's user function is named, not arg0
 
-    Before RG12.4 the registry knew the types and not the names, so it filled in arg0, arg1, ...
+    Before #2664 the registry knew the types and not the names, so it filled in arg0, arg1, ...
     Every item's user function is a def now, so nothing should be left."""
     unnamed = [key for key in ItemEntries()
                if any(name.startswith('arg') and name[3:].isdigit()
@@ -115,7 +115,7 @@ def test_everyProtocolHasADocstring():
 def test_anItemAcceptsAFunctionForItsUserFunction():
     """the item class takes a Python function where its user function is, and keeps it
 
-    The parameter is annotated with the Protocol since RG12.4.4; an annotation must not turn into a
+    The parameter is annotated with the Protocol (#2664); an annotation must not turn into a
     check that rejects an ordinary function, which is exactly what a wrong annotation would do."""
     def UserFunction(*arguments):
         return 0

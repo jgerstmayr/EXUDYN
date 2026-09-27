@@ -333,19 +333,19 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 	failCounter += lest::run(avxVector_specific_test, arglist_lest, stringStream);
 
 	//the matrix classes the solver uses - ResizableMatrix, ConstSizeMatrix, LinkedDataMatrix and
-	//MatrixContainer; AllMatrixUnitTests.h above covers only the base class (step R5.4.1, #2472)
+	//MatrixContainer; AllMatrixUnitTests.h above covers only the base class (#2472)
 	failCounter += lest::run(matrixVariants_specific_test, arglist_lest, stringStream);
 
 	//rotations, geometry, bounding boxes and the search tree: property tests, and the search tree
-	//is checked against a brute-force scan over the same data (step R5.4.1, #2472)
+	//is checked against a brute-force scan over the same data (#2472)
 	failCounter += lest::run(rigidBodyMath_specific_test, arglist_lest, stringStream);
 
 	//the symbolic expression TREE - what symbolicModuleTest.py cannot reach: Diff, the value
-	//accessors, the non-recording path and the reference counting (step R5.4.2, #2479)
+	//accessors, the non-recording path and the reference counting (#2479)
 	failCounter += lest::run(symbolic_specific_test, arglist_lest, stringStream);
 
 	//the dense and the sparse system matrix behind one interface: one system solved by all four
-	//variants, and the places where they deliberately differ (step R5.4.3, #2479)
+	//variants, and the places where they deliberately differ (#2479)
 	failCounter += lest::run(linearSolver_specific_test, arglist_lest, stringStream);
 
 #endif

@@ -678,7 +678,7 @@ def ItemCppHeaders(definition):
     sList[3] += space4+'{\n        '
     sList[3] += parameterReadStr
     #a parameter name that does not exist on this item: a string of the right kind with the wrong
-    #value (#2528, step R6.3.6). 97 items x 2 = 194 generated sites follow this one line
+    #value (#2528). 97 items x 2 = 194 generated sites follow this one line
     sList[3] += '{PyError(STDstring("' + classStr + '::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user\n'
     sList[3] += space8+'return py::object();\n'
 #        if Header(definition, 'classType') == 'Object': #if parameters have changed, some functions may be necessary to be reset

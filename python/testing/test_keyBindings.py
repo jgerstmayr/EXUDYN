@@ -86,7 +86,7 @@ def testTheGeneratedTablesAreInStepWithTheTable(emitter):
 #the third copy: the implementation, which cannot be generated and is therefore compared
 
 #keys GlfwClient.cpp handles that are deliberately not documented. The list is meant to STAY
-#EMPTY: a key a user can press and finds nowhere is the defect RG6.2.6 exists for.
+#EMPTY: a key a user can press and finds nowhere is the defect #2591 exists for.
 undocumentedOnPurpose = []
 
 

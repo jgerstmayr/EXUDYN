@@ -400,7 +400,7 @@ def DefaultSettingsDictionary(settingsStructure):
     AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() ->
     DetachFromRenderEngine), so a temporary container opened for a moment takes the render window
     away from the container that owns it - the window closes (#2625). The settings a container
-    initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where
+    initialises are listed in containerInitialisedSettings above, and #2626 moves them where
     this function can see them.
 
     AND NOT BY CONSTRUCTING ANYTHING when the override settings are in use: the constructor

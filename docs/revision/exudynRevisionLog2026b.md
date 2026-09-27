@@ -5589,3 +5589,24 @@ were asked for, and a translation of `HT` by `[0, 5, 0]` moves the drawn y by 5 
 slip that no default `HT` could show.
 
 **Gates**: the wheel, 12/12 checks, the full suite, pytest, the strict HTML build.
+
+<a id="rg3-13-2"></a>
+### RG3.13.2 — the bare step numbers (2026-09-27, #2703)
+
+**87 of the 88 are gone**, in 38 files, by hand: 82 edits, one of them the same comment six times in
+`PyMatrixVector.h`. Every step number was looked up in the two plans for its issue, and where the
+plan names one the comment cites it - *"the rule RG6.2.11 wrote down"* is *"the rule of #2608"*,
+*"step R6.8"* is *#2538*. **The one that stays** is `issueStore.py`'s description of the `planStep`
+field, whose value IS a step number: it reads *"the step of the revision plan, e.g. "R5.4.5""*.
+
+**A dozen of them were not only history but wrong.** Comments that promised a future the plan had
+already delivered: *"the LaTeX string is still built, and dies with the LaTeX branch in R7.1.7"*,
+*"the figures of an item live with the LaTeX chapters until R7.1.7 moves them"*, *"the LaTeX and RST
+branches above go in R7.1.7"*, and a docstring naming *"the LaTeX and RST twin below"* of a function
+that has had no twin since RG3.24. They say what is there now. Six comments in `PyMatrixVector.h`
+said *"passing it on is step R6.3.8"* where the code does not pass it on; they say that.
+
+**The same proof as RG3.13.1**: the Python AST without docstrings and the C++ tokens without comments
+are unchanged in all 39 files; one C++ file was read by eye because its comment holds a quote.
+
+**Gates**: the wheel, 12/12 checks, the full suite, pytest, the strict HTML build.

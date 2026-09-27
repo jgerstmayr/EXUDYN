@@ -128,7 +128,7 @@ def StructureDocs(parseInfo, parameterList):
                     
                 #the document rendering the definition carries; the String/FileName exception
                 #that stood here - "don't do this for file names, because 'f' is erased!" -
-                #was a workaround for the converter that is gone (RG3.24.3, #2682)
+                #was a workaround for the converter that is gone (#2682)
                 defaultValueStr = parameter['defaultValueDocument']
 
                 writer.SystemStructuresWriteDefRow(pythonName, typeName, parameter['size'], 

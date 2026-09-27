@@ -13,7 +13,7 @@
 #     dict in tools/generators/examplesDocsEmitter.py, which also writes
 #     docs/generated/abbreviations.md, so the key and its target cannot drift apart.
 #   - a description holds no LaTeX outside its mathematics. This is the rule the whole of
-#     RG3.14 was for, and until it existed a macro the converter did not know reached the page.
+#     #2655 was for, and until it existed a macro the converter did not know reached the page.
 #   - a comment is <!-- ... --> ; a '%' is a comment only inside mathematics, where the engine
 #     reads it, because this converter strips a '%' before the mathematics is protected.
 #   - a reference to an equation is the {eq} role: a Markdown link to one leaves the PDF as an
@@ -188,7 +188,7 @@ def CheckEquationReferences(paths):
     Both render the same number in the HTML. The LaTeX writer, however, gives a link to an equation
     the anchor "<document>:equation-<label>" while it labels the equation itself
     "equation:<document>:<label>" - so every such link left the PDF as an undefined reference, 42 of
-    them, and only the PDF said so (#2655, RG3.14.3)."""
+    them, and only the PDF said so (#2655)."""
     labels = set()
     for path in paths:
         labels |= set(equationLabel.findall(io.open(path, encoding='utf-8').read()))
@@ -211,7 +211,7 @@ mathSpan = [r'(?<!\\)\$\$.*?\$\$', r'(?<!\\)\$(?:\\.|[^$\\])*\$']
 
 
 def CheckPercentComments(paths):
-    """a comment is <!-- ... --> ; a '%' is a comment only INSIDE mathematics (#2663, RG3.17)
+    """a comment is <!-- ... --> ; a '%' is a comment only INSIDE mathematics (#2663)
 
     The reason is StripComments: it runs before the mathematics is protected, so a '%' it took for a
     comment truncated the rest of its line whatever that line was - which is how the marker velocity
@@ -248,9 +248,9 @@ structuralMacro = re.compile(r'(?<!\\)\\([A-Za-z]+)')
 
 
 def CheckNoLatex(paths):
-    """a backslash command in a description, outside mathematics, is an error (#2655, RG3.14.7.6)
+    """a backslash command in a description, outside mathematics, is an error (#2655)
 
-    This is the rule the whole of RG3.14 was for: the description of an item, a structure or a pybind
+    This is the rule the whole of #2655 was for: the description of an item, a structure or a pybind
     call is Markdown, the mathematics inside it is LaTeX, and nothing else is. Until now a macro the
     converter did not know was carried through to the page as itself; a ReportUnknown that
     would have found them sat in latexToMarkdown and was called by nothing, and is deleted.
@@ -279,7 +279,7 @@ def CheckRawStrings(paths):
 
     Python reads '\\theta' as a tab followed by "heta", and nothing says so: the page shows the tab
     and the formula is gone. The writers of definitions/ paid for this by hand - 158 literals held
-    a DOUBLED backslash before RG3.14.9 - which works and is unreadable. The rule has no exception,
+    a DOUBLED backslash before this check - which works and is unreadable. The rule has no exception,
     so the check is a rule about the source text, not about the value: the literal's own spelling."""
     findings = []
     for path in paths:

@@ -602,7 +602,7 @@ def testTheModuleNamespaceIsNotTheModelNamespace():
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the columns are fractions of the dialog width (#2667) and Ctrl with the
-#wheel changes the font size (RG12.7, #2668). Both are tested in a WITHDRAWN root: the widgets are
+#wheel changes the font size (#2668). Both are tested in a WITHDRAWN root: the widgets are
 #real, no window is ever mapped
 def testTheColumnFractionsAreWhatWasConfigured():
     assert gui.ColumnWidthFractions([0.31, 0.18, 0.11]) == (0.31, 0.18, 0.11)
@@ -648,7 +648,7 @@ def tkRoot():
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #A STORED GEOMETRY IS USED (#2686). RestoreWindowGeometry asked
-#dialogs.storeDialogPositions first, so what the store button of RG12.11 wrote was never read back.
+#dialogs.storeDialogPositions first, so what the store button (#2685) wrote was never read back.
 #A withdrawn window reports 1x1+0+0 whatever it was given, so what is tested is what the function
 #ASKS the window manager for
 def RequestedGeometry(name, width, height):
@@ -724,7 +724,7 @@ def testAStoredSizeIsCutDownToThisScreen(storedGeometry):
 
 
 def testAnUnreachablePositionIsStillRefused(storedGeometry):
-    """the rule of RG6.2.11 stands: the size comes back, the position only if it is reachable"""
+    """the rule of #2608 stands: the size comes back, the position only if it is reachable"""
     name = storedGeometry([600, 500], [-30000, -30000])
     (requested, _) = RequestedGeometry(name, 900, 700)
     assert requested == '600x500'                       #the size, and no position

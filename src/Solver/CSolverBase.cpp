@@ -551,7 +551,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 //! twelve call sites and left the 1100+ CHECKandTHROW sites writing nothing at all - so the last
 //! message of a run could be missing from exactly the file someone opens to find out why it ended.
 //! It is written HERE, once, because SolveSystem is the only place that holds the file. The block
-//! is the same one the pout log file gets (ErrorMessageBlock, step R6.3.10), so the two files
+//! is the same one the pout log file gets (ErrorMessageBlock, #2530), so the two files
 //! cannot tell different stories about the same run.
 void WriteErrorToSolverFile(std::ofstream& solverFile, const char* message)
 {

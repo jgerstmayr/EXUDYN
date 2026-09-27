@@ -64,7 +64,7 @@ def ModuleUsesAVX2():
     """
     True if the loaded C++ module carries the AVX2 (or AVX-512) vector extensions, which move
     results in the last digits and therefore need their own reference values
-    (AVX2ReferenceSolutionUpdate()). Since step R2.10 only
+    (AVX2ReferenceSolutionUpdate()). Since #2466 only
     exudynCPPfast is built with them, but ASK THE MODULE rather than its name: a build with
     --no-avx2 has a fast module without them, and one with --avx512 reports AVX512.
 
@@ -641,7 +641,7 @@ def KnownExampleFailures():
     """
     return {
         #the three package/file cases that used to sit here are gone: ExampleSkipReason() now
-        #decides them by what the environment HAS (#2507, step R5.18.2), so pymeshlabFileImport.py
+        #decides them by what the environment HAS (#2507), so pymeshlabFileImport.py
         #is skipped where pymeshlab is missing and RUNS where it is installed, and the two that
         #need files nothing produces are permanent skips by name.
         #What is left are two real failures with causes of their own:
@@ -976,7 +976,7 @@ def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfPro
     """
     Run the test models in parallel, each in its own interpreter.
 
-    The models write into separate directories (step R5.13), which is what makes this safe; the
+    The models write into separate directories (#2492), which is what makes this safe; the
     order of the RESULTS is the order of fileNames, independent of the order they finish in, so the
     log and the exit code do not depend on the scheduling.
 

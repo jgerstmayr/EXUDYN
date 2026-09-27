@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.118.dev1
+- Exudyn version = 1.12.119.dev1
 - last change = 2026-09-27
 - Number of issues = 2704
-- Number of resolved issues = 2432 (118 in current version)
+- Number of resolved issues = 2433 (119 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `DOCU` `LOW EFF` `raised by: Claude-JG` 88 bare plan step numbers are left in comments and docstrings, without the word revision2026 (#2703)
-  - description: Measured 2026-09-27 at the end of revision2026b step RG3.13.1 (\#2649), which removed every mention of 'revision2026' from the comments and docstrings of src/, tools/, python/ and definitions/: the same rule (CLAUDE.md rule 8, code cites the issue, not the plan step) is broken 88 more times in 39 files by step numbers written WITHOUT the plan's name - 'step R6.3.8', 'the rule RG6.2.11 wrote down', 'dies with the LaTeX branch in R7.1.7', 'measured before RG9.1'. They were out of RG3.13.1's measure, which counted 'revision2026'. The same three passes apply - a parenthetical keeps its issue, a two-line reference is rejoined, the rest gets a sentence - with the same proof that no code changed: the Python AST without docstrings and the C++ tokens without comments are identical. revision2026b step RG3.13.2.
-  - date raised: 2026-09-27
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - date raised: 2026-09-26

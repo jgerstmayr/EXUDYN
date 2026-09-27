@@ -38,8 +38,8 @@ repositoryRoot = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(_
 sourceRoot = os.path.join(repositoryRoot, 'src')
 
 #the sources that legitimately speak to Python themselves: a user function, a PyMatrixContainer
-#or a numpy array in their own generated header. Measured 2026-09-23: 52 of 52 before RG9.1, 19
-#after it, and 11 after RG9.2 removed an include fourteen sources did not use. The number is
+#or a numpy array in their own generated header. Measured 2026-09-23: 52 of 52 before #2622, 19
+#after it, and 11 after #2628 removed an include fourteen sources did not use. The number is
 #allowed to FALL without touching this file; it may not rise unnoticed.
 maximumItemSourcesWithPybind = 11
 
@@ -89,7 +89,7 @@ def ItemSources():
                                     'Graphics/VisualizationSystemContainer.h',
                                     'Graphics/VisualizationSystem.h'])
 def testTheGraphicsHeadersDoNotReachPybind(header):
-    """the point of RG9.1: an item that draws must not have to read pybind11 for that"""
+    """the point of #2622: an item that draws must not have to read pybind11 for that"""
     path = ResolveInclude(header)
     assert path is not None, header + ' does not exist any more'
     chain = PybindChain(path)

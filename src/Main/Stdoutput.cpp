@@ -376,7 +376,7 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< 
 	switch (errorType)
 	{
 	//These were py::type_error and py::value_error - pybind11 builtins, which become the PLAIN
-	//Python TypeError and ValueError - from step R6.7 until step R6.3.6 (#2528). They now throw the
+	//Python TypeError and ValueError (#2432, #2528). They now throw the
 	//Exudyn classes, which derive from those built-ins AND from exudyn.ExudynError: an existing
 	//"except TypeError" keeps working and "except exudyn.ExudynError" starts working. That is the
 	//maintainer's decision of 2026-09-18, "wrap everything as ExudynError".
@@ -438,7 +438,7 @@ std::string ErrorMessageWithLocation(const std::string& message, const std::stri
 //! the block a log file records. Both channels - the pout log file and an explicit ofstream such as
 //! the solver file - write exactly this text, so a run cannot be reconstructed differently depending
 //! on which file is read (#2530). It replaces the old file-only sentence "Exudyn: parsing of Python
-//! file terminated due to python (user) error", which was the same fixed line that step R6.3.5 took
+//! file terminated due to python (user) error", which was the same fixed line that #2527 took
 //! out of the exception for saying nothing.
 std::string ErrorMessageBlock(const char* heading, const std::string& message,
 	const std::string& fileName, Index lineNumber)

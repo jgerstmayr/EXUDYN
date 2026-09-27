@@ -160,7 +160,7 @@ Helper functions and classes for graphical interaction with Exudyn
   - `width`: the width it would otherwise get, in pixels; None leaves the size to the layout when nothing is stored, which is what a dialog whose size is computed from its widgets needs
   - `height`: the height it would otherwise get, or None
 - **output**: None
-- **notes**: The **size** is restored always and the **position** only when the window would still be reachable on the current screen. A monitor that is gone, a resolution that changed, a laptop that was undocked: each of them would otherwise put the dialog where nobody can close it. A GEOMETRY THAT IS STORED IS USED, whatever `dialogs.storeDialogPositions` says (#2686). That flag decides whether a dialog stores ITSELF when it closes; this function only reads what is there, and it is there because the flag was on, or because the store button of the dialog wrote it, or because a script did. Asking the flag here is what made the store button of RG12.11 write something that nothing read back.
+- **notes**: The **size** is restored always and the **position** only when the window would still be reachable on the current screen. A monitor that is gone, a resolution that changed, a laptop that was undocked: each of them would otherwise put the dialog where nobody can close it. A GEOMETRY THAT IS STORED IS USED, whatever `dialogs.storeDialogPositions` says (#2686). That flag decides whether a dialog stores ITSELF when it closes; this function only reads what is there, and it is there because the flag was on, or because the store button of the dialog wrote it, or because a script did. Asking the flag here is what made the store button (#2685) write something that nothing read back.
 
 
 (sec-gui-rememberwindowgeometry)=
@@ -280,7 +280,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 [`Show(self, text, x, y)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L387)
 
-- **class function description**: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer's (#2614): a description that appears the moment the pointer crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a setting any more.
+- **class function description**: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer's (#2614): a description that appears the moment the pointer crosses a row is annoying, and with the find (#2607) nobody has to sweep the tree to find a setting any more.
 
 
 (sec-gui-tooltip-cancel)=

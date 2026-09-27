@@ -182,7 +182,7 @@ def test_theStoreIsEmptyUnderTheRunners():
 def test_theApplyFunctionsTakeTheStoreWhenNothingIsGiven(monkeypatch):
     """settings=None means exudyn.special.overrideSettings, not a second read of the file
 
-    Before RG12.9 each of them called Load() again, so a file that changed during a run was read
+    Before #2679 each of them called Load() again, so a file that changed during a run was read
     several times and the dialogs could disagree with the settings."""
     monkeypatch.setitem(exu.special.overrideSettings, 'config', {'outputPrecision': 11})
     monkeypatch.setattr(settings, '_applied', [])
@@ -577,7 +577,7 @@ def test_ageometryThatIsNotTwoNumbersIsIgnored(settingsFile):
     ([0, -50], False),                  #above the screen: the title bar is not there
     ])
 def test_aStoredPositionIsUsedOnlyWhenItIsReachable(position, reachable):
-    """the rule of RG6.2.11: the size always, the position only when the window can be reached"""
+    """the rule of #2608: the size always, the position only when the window can be reached"""
     assert settings.PositionIsReachable(position, [0, 0, 1920, 1080]) == reachable
 
 

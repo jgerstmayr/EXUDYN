@@ -49,7 +49,7 @@ def ProtocolText(className, pythonName, userFunction):
     """the Protocol of one user function: what an editor completes and checks a function against
 
     It costs nothing at runtime - a Protocol is never instantiated and nothing inherits from it - and
-    it is the part of RG12.4 a user feels: with the parameter annotated, an editor completes the
+    it is the part of #2664 a user feels: with the parameter annotated, an editor completes the
     arguments of the function that is being written and marks a wrong one (#2664)."""
     arguments = [(name, PythonType(annotation)) for (name, annotation) in userFunction.arguments]
     docstring = {'kind': 'class',

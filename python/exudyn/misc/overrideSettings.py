@@ -470,7 +470,7 @@ def PositionIsReachable(position, screen, margin=80):
         True if a window placed there can be reached with the mouse
 
     Note:
-        This is the rule RG6.2.11 wrote down and did not build: **the size is restored always, the
+        This is the rule of #2608: **the size is restored always, the
         position only when it is still reachable**. A monitor that is unplugged, a laptop
         undocked, a resolution changed - each of them would otherwise put a dialog where nobody
         can close it, and a modal settings dialog that cannot be closed is a stuck session.

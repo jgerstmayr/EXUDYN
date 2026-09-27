@@ -5,8 +5,7 @@
 #           (@extends(exudyn.MainSystem)): MainSystemExt.md and MainSystemCreateExt.md in
 #           tools/generators/generated/ (read by pybindEmitter.py, so this runs first), and
 #           stubAutoBindingsExt.pyi (read by createStubFiles.py). Moved out of
-#           utilitiesDocuGenerator.py; the .tex
-#           files went and the .rst ones in R7.1.7.
+#           utilitiesDocuGenerator.py.
 #
 # Usage:    python tools/generators/mainSystemExtensionDocsEmitter.py
 #
@@ -80,7 +79,7 @@ def main():
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #WRITE, which is what this file stopped doing between 2026-09-14 and 2026-09-19 (#2526). The
-    #split of step R4.3 part 2e carried the loop across and not the writes, so the generator ran,
+    #split into emitters carried the loop across and not the writes, so the generator ran,
     #exited 0 and produced nothing - and the regeneration gate could not see it, because a
     #generator that writes nothing always agrees with the commit.
     written = []

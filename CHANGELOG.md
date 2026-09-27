@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 116 | 1.12.118 |
+| 1.12 | Metheney | 117 | 1.12.119 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.119** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` 88 bare plan step numbers are left in comments and docstrings, without the word revision2026 (#2703)
+  - description: Measured 2026-09-27 at the end of revision2026b step RG3.13.1 (\#2649), which removed every mention of 'revision2026' from the comments and docstrings of src/, tools/, python/ and definitions/: the same rule (CLAUDE.md rule 8, code cites the issue, not the plan step) is broken 88 more times in 39 files by step numbers written WITHOUT the plan's name - 'step R6.3.8', 'the rule RG6.2.11 wrote down', 'dies with the LaTeX branch in R7.1.7', 'measured before RG9.1'. They were out of RG3.13.1's measure, which counted 'revision2026'. The same three passes apply - a parenthetical keeps its issue, a two-line reference is rejoined, the rest gets a sentence - with the same proof that no code changed: the Python AST without docstrings and the C++ tokens without comments are identical. revision2026b step RG3.13.2.
+  - **notes:** The comments and docstrings no longer cite revision plan steps by bare number: 87 of them cite the issue or nothing, and a dozen that promised work the plan had already done describe what is there. Only comments, docstrings and nothing else changed.
+  - date resolved: **2026-09-27 13:51**, date raised: 2026-09-27
 - **1.12.118** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotImage(plot3D=True) fails with every current matplotlib, and its 2D and 3D coordinates are shifted wrongly (#2701)
   - description: Found in revision2026b step RG2.3.1 (\#2700), measured with matplotlib 3.11.0: PlotImage(..., plot3D=True) raises TypeError: FigureBase.gca() got an unexpected keyword argument 'projection' - fig.gca(projection='3d') was removed in matplotlib 3.6, so the 3D mode, which is the only one that draws triangles, has not worked for years; both NGsolve examples that use it do so in an if False block. Two more defects in the same function: the 2D branch adds the translation p0\[0\] to y and z as well as to x, and the 3D branch ends every line segment at z\[j\] instead of z\[j+1\]. Neither shows with the default HT, which is why nobody saw them. Fix: fig.add\_subplot(projection='3d'), p0\[1\] and p0\[2\], z\[j+1\], and a test that draws in 3D. revision2026b step RG2.3.2.
   - **notes:** exudyn.plot.PlotImage(..., plot3D=True) works with current matplotlib again and uses the azim and elev it is given; a translation in HT moves each coordinate by its own component; and a figure drawn with the non-interactive Agg backend is no longer shown.

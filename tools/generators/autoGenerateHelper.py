@@ -775,11 +775,9 @@ def ExampleKeywords(itemType, itemName, itemShortName=''):
 
 
 def KeywordExamplesMarkdown(itemType, itemName, itemShortName=''):
-    """The examples and test models that use this item or function, as a Markdown line of links
-. The LaTeX and RST twin below does the same for the formats that
-    go away in R7.1.7; both search the same keywords and stop after the same number of files -
-    an item that appears in fifty examples would otherwise push its own description off the
-    page."""
+    """The examples and test models that use this item or function, as a Markdown line of links.
+    It stops after a fixed number of files - an item that appears in fifty examples would otherwise
+    push its own description off the page."""
     keywords = ExampleKeywords(itemType, itemName, itemShortName)
     maxExamples = 5 if itemType == 'UtilityFunction' else 12
 

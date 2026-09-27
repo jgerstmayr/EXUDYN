@@ -297,7 +297,7 @@ def DefaultValueString(member):
 
 
 def _DefaultValueRendering(member, Literal):
-    """the Python or the document rendering of a member's default value (#2682, RG3.24.3): the
+    """the Python or the document rendering of a member's default value (#2682): the
     same three cases as DefaultValueString, so that the three renderings cannot drift apart"""
     if 'Function' in member['kind']:
         return ''                    #a function's implementation is C++ and is never a default

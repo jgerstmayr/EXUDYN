@@ -9,7 +9,7 @@
 #           This is not cosmetic. A tool that reads the tree assuming UTF-8 either raises
 #           UnicodeDecodeError in the middle of a run, or - worse - reads with a fallback and
 #           writes back UTF-8, rewriting every byte of a file it was asked to touch in one place.
-#           Both happened while step R6.3.6 was mapping the error sites.
+#           Both happened while the error sites were mapped (#2528).
 #
 #           Binary files that happen to carry a text extension are exempt by name, not by guessing.
 #

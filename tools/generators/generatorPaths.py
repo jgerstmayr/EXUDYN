@@ -41,7 +41,7 @@ toolsGeneratorsDir = repositoryRoot + 'tools/generators/'
 #because two generators build such links - the item pages ("Relevant Examples
 #and TestModels") and the utility documentation (one link per function) - and a prefix that lives
 #in two files is a prefix that will disagree with itself.
-#It said 'main/pythonDev/' until 2026-09-18, which was the layout before steps R3.1, R3.8 and R3.9
+#It said 'main/pythonDev/' until 2026-09-18, the layout before the repository was flattened (#2513)
 #moved the tree to python/. That directory is gone, so EVERY one of those links was dead.
 #NOTE the branch: these URLs are right once this work reaches master, and the old ones were right
 #only until then. That is one string to change at the release, not a generator to edit.

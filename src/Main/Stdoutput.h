@@ -83,7 +83,7 @@ public:
 
 //! which Python exception an error becomes. A wrong TYPE and a wrong VALUE are told apart
 //! (#2432), and the Exudyn exception
-//! classes of #2516 are named here as well (#2521, step R6.3.3). The classes themselves are in
+//! classes of #2516 are named here as well (#2521). The classes themselves are in
 //! ReleaseAssert.h; this enum exists because PyError and SysError are compiled functions and
 //! cannot be templated on the class the way the CHECKandTHROW macros are.
 enum class PyErrorType

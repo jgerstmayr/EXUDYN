@@ -189,7 +189,7 @@ void PyMatrixContainer::SetWithSparseMatrix(const py::object& sparseMatrix, Inde
 				if (numberOfRowsInit == EXUstd::InvalidIndex || numberOfColumnsInit == EXUstd::InvalidIndex) 
 				{ 
 					//the ONE site converted (#2516), to prove that a C++ throw
-					//arrives in Python as the class it names and not as its base; the triage of step R6.3.2
+					//arrives in Python as the class it names and not as its base; tools/errorTriage.py (#2520)
 					//decides the other 2248. A user passing one of the two is not making an Exudyn bug happen.
 					if (numberOfRowsInit != numberOfColumnsInit)
 					{

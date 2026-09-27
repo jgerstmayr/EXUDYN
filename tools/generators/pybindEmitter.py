@@ -213,8 +213,7 @@ def main():
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #MARKDOWN: the same pages, in docs/generated/ where emitter output
-    #belongs (decision D10). docs/theDoc/manual_interfaces.tex and docs/RST/cInterface/ go away
-    #with this step; the LaTeX and RST branches above go in R7.1.7.
+    #belongs.
     WriteMarkdownPages(writer)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -8,10 +8,9 @@
 # written in the project's LaTeX macros, and the documentation is
 # Markdown.
 #
-# It was tools/tex2md.py, the one-shot tool that converted the nine hand-written chapters in step
-# R7.1.5, and it kept the property that made it usable there: it knows the macros THIS
-# documentation uses and reports the ones it does not know instead of guessing. The file-conversion
-# half went with the .tex files in step R7.1.7; ConvertText is what the emitters call.
+# It converted the nine hand-written chapters once (#2549), and it kept the property that made it
+# usable there: it knows the macros THIS documentation uses and reports the ones it does not know
+# instead of guessing. ConvertText is what the emitters call.
 #
 # Math is NOT converted: conf.py declares the document's macros to MathJax (mathjax3_config), so
 # $...$ carries over verbatim - which is why this file is 500 lines and not 3000. Every macro used

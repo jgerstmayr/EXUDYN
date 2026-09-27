@@ -394,8 +394,8 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
         for (classType, className, text) in markdownItemList:
             if classType != key:
                 continue
-            #the figures of an item live with the LaTeX chapters until R7.1.7 moves them to
-            #docs/figures/; a leading slash resolves against the documentation source directory
+            #the figures of an item are in docs/figures/; a leading slash resolves against the
+            #documentation source directory
             text = text.replace('](docs/figures/', '](/docs/figures/')
             #the page opened with "# ObjectGround" and then "## ObjectGround"; the second one
             #carried sec:item:<Item>, which every item reference points at, so the label moves to
@@ -601,8 +601,7 @@ def main():
     print('total number of files changed =',totalNumberOfFilesChanged)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #docs/theDoc/itemDefinition.tex is not written; the LaTeX
-    #string is still built, and dies with the LaTeX branch in R7.1.7
+    #the introduction of the items chapter, converted by LatexText2Markdown
 
     itemsIntro=r"""
 This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors (\mybold{= items}).
@@ -614,8 +613,7 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write the Markdown pages: one per item, one index per item type
-    #and the chapter index, which carries the chapter label. docs/RST/items/ is gone with this
-    #step; the RST strings are still built and die with the RST branch in R7.1.7.
+    #and the chapter index, which carries the chapter label.
     WriteMarkdownPages(sMarkdownItemList, sRSTfolderDict, sRSTtypeConversion,
                        globalItemIntros, itemsIntro)
 

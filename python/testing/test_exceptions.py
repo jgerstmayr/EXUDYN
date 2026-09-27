@@ -64,7 +64,7 @@ def test_noBuiltinIsShadowed(name):
 
 
 def test_aCppThrowKeepsItsType():
-    """the one converted call site of step R6.3.1: a MatrixContainer filled with one of the two
+    """the one converted call site of #2516: a MatrixContainer filled with one of the two
     sizes is a user's value mistake, not an Exudyn bug, and must arrive as such"""
     scipySparse = pytest.importorskip('scipy.sparse')
     import numpy as np
@@ -96,14 +96,14 @@ def test_typedCheckMacros():
 
 
 def test_theOnlyPlainRuntimeErrorLeftIsTheAddWrapper():
-    """The last move of step R6.3.6 turned the UNTYPED macro form into ExudynInternalError, so a
+    """The UNTYPED macro form is ExudynInternalError (#2528), so a
     check written without a class now states "this is an Exudyn bug". After that, exactly one
     path still reports a plain RuntimeError, and it does so on purpose: the catch(...) at the end
     of mbs.AddNode/AddObject/AddMarker/AddLoad/AddSensor, which restates an exception it caught
     without knowing its type. Naming a type there would be a guess.
 
     This test replaces test_untypedCheckStillWorks, whose claim - that the untyped form gives a
-    bare RuntimeError - stopped being true with the flip. It moved three times while R6.3.6 ran,
+    bare RuntimeError - stopped being true with the flip. It moved three times while #2528 was worked on,
     each time because the area it pointed at had just been mapped."""
     from exudyn.itemInterface import NodeGenericODE2, ObjectKinematicTree
 
@@ -161,7 +161,7 @@ def _SystemWithAFailingUserFunction():
 
 def test_theCauseIsTheOriginalException():
     """a user function that raises ZeroDivisionError must arrive as an Exudyn exception whose
-    __cause__ IS that ZeroDivisionError - the object, not the words. Until step R6.3.8 the
+    __cause__ IS that ZeroDivisionError - the object, not the words. Until #2537 the
     original survived only inside the message string."""
     (mbs, simulationSettings) = _SystemWithAFailingUserFunction()
 
@@ -236,7 +236,7 @@ def test_deprecationIsReportedOncePerLocation():
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#an error that ends a solver run is in the solver file, whatever raised it (step R6.8, #2538)
+#an error that ends a solver run is in the solver file, whatever raised it (#2538)
 
 def _SolveAndReadTheSolverFile(tmp_path, buildSystem):
     """run a solve that fails, with a solver information file, and return (exception, fileText)"""
@@ -256,7 +256,7 @@ def _SolveAndReadTheSolverFile(tmp_path, buildSystem):
 
 
 def test_aMacroErrorReachesTheSolverFile(tmp_path):
-    """THE point of step R6.8. PyError and SysError could write to the solver file themselves;
+    """THE point of #2538. PyError and SysError could write to the solver file themselves;
     CHECKandTHROW could not, and it is 1100+ call sites - so the message that ended a run could
     be missing from exactly the file someone opens to find out why. The one writer is now
     CSolverBase::SolveSystem, which catches it where the file is known."""
@@ -290,14 +290,14 @@ def test_aMacroErrorReachesTheSolverFile(tmp_path):
 
     (caught, fileText) = _SolveAndReadTheSolverFile(tmp_path, BuildSystem)
 
-    assert isinstance(caught, exu.ExudynValueError)   #the type step R6.3.6 gave that check
+    assert isinstance(caught, exu.ExudynValueError)   #the type #2528 gave that check
     assert "forceUserFunction" in fileText            #and the message is IN THE FILE
     assert "=====" in fileText                        #as the same block every other channel gets
 
 
 def test_aSolverFailureReachesTheSolverFile(tmp_path):
     """the other half: a SysError used to write the file through an ofstream overload that step
-    R6.8 removed, so this path now depends on the same single writer"""
+    #2538 removed, so this path now depends on the same single writer"""
     from exudyn.itemInterface import (NodePoint, ObjectMassPoint, MarkerNodeCoordinate,
                                       LoadCoordinate)
 

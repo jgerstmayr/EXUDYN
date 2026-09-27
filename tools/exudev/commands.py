@@ -148,7 +148,7 @@ def RegenerationVerdict(environment, options):
     regenerate.py fails on tier 1 drift only with --check, and the step of "generate
     --all-checks" cannot pass it: regenerating after an intended change produces drift by
     design. Without this, a generated API file could change and the step still said ok - which
-    is how python/exudyn/types/items.py silently lost two item types in step R11.4.5 (#2563).
+    is how python/exudyn/types/items.py silently lost two item types (#2563).
 
     So the comparison runs once more, without the generators (--no-run), and its exit code
     becomes part of the verdict. The run is NOT stopped: the drift may well be what was
@@ -231,7 +231,7 @@ def StalePackageCopies():
 
     They are the reason for #2560: a module DELETED from python/exudyn stays in build/lib.*,
     setuptools copies it into the wheel, and the wheel then ships a file that the source does not
-    have. That shipped a removed exudyn/resultsMonitor.py in step R11.4.1 and masked a broken
+    have. That shipped a removed exudyn/resultsMonitor.py (#2552) and masked a broken
     import in exudyn/__init__.py for half a day. Only the .py copies are removed here; the C++
     objects live in build/temp.* and stay, so the one-minute wheel is unaffected."""
     root = runner.RepositoryRoot()
@@ -323,7 +323,7 @@ def Build(options):
         steps += Clean(OptionsWith(options, dist=False, linux=False, all=False))
 
     #ALWAYS, not only with --clean: a module deleted from python/exudyn survives in build/lib.* and
-    #is copied into the wheel from there (#2560, step R5.18.8)
+    #is copied into the wheel from there (#2560)
     steps += [ClearStalePackageCopyStep()]
 
     buildEnvironment = BuildEnvironment(options)

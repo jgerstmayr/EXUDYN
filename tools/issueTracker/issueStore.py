@@ -58,10 +58,10 @@ issueFields = [
     'line',
     'releaseNotes',     #written when it closes; PUBLISHED in the release notes
     'workingRemarks',   #what the work knows meanwhile; cleared when it closes
-    'planStep',         #"R5.4.5" - prose inside the notes until this step
+    'planStep',         #the step of the revision plan, e.g. "R5.4.5"
     'component',        #solver / linalg / python / build / docs
     'duplicateOf',      #the issue this one repeats
-    'resolvedInVersion',#the version the resolution produced; R7.4 renders CHANGELOG.md from it
+    'resolvedInVersion',#the version the resolution produced; CHANGELOG.md is rendered from it
     'resolvedCommit',   #the hash
     ]
 

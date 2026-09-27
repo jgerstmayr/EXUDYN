@@ -25,7 +25,7 @@
 #           tools/ci/stubtestBaseline.txt is the generated backlog, which is meant to shrink.
 #           Which allowlist entries are USED depends on the wheel - a build without the fast module
 #           has no exudynCPPfast to disagree about - so unused entries are not an error; the
-#           backlog is compared against the current findings here instead (step R5.5.7, #2515).
+#           backlog is compared against the current findings here instead (#2515).
 #           NOTE this checks the INSTALLED package, not python/exudyn/ - install before believing it.
 #
 # Usage:    python tools/checkPython.py             report

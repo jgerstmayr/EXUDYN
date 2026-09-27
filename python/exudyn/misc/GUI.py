@@ -388,7 +388,7 @@ class Tooltip:
         """show the tooltip after the delay, at the screen position (x, y)
 
         The delay is the maintainer's (#2614): a description that appears the moment the pointer
-        crosses a row is annoying, and since RG6.2.10 nobody has to sweep the tree to find a
+        crosses a row is annoying, and with the find (#2607) nobody has to sweep the tree to find a
         setting any more.
         """
         self.Cancel()
@@ -597,7 +597,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                     command=self.OnCopyCodeLine)
         self.copyButton.grid(row=0, column=1, padx=(2, 4))
 
-        #THE BUTTON ROW (#2614): the two windows of RG6.2.9 on the
+        #THE BUTTON ROW (#2614): the two windows of #2606 on the
         #left, and what a user does with a dialog - take it back, or leave it - on the right.
         #Every button says what it does in a tooltip; none of them fits in two words.
         self.buttonFrame = tk.Frame(self)
@@ -1113,7 +1113,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def OnStorePositions(self):
         """write the size and the position of this dialog to the override settings file
 
-        The other half of RG12.19: where the window is, and nothing about what is in it. It stores
+        The other half of #2693: where the window is, and nothing about what is in it. It stores
         whatever `dialogs.storeDialogPositions` says, because that flag is about a dialog remembering
         itself when it closes and this is a user asking.
         """
@@ -1146,7 +1146,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         """remember the WHOLE state before a change, which is what makes undo always work
 
         A single edited value, a reset and a revert all go through this, so undo takes any of
-        them back, and a chain of them one by one (maintainer, 2026-09-23, RG6.2.21). The state
+        them back, and a chain of them one by one (#2627). The state
         is ~470 short strings, which costs nothing next to the redraw it triggers.
         """
         self.undoStack.append(self.CurrentValueStrings())
@@ -1821,7 +1821,7 @@ def RestoreWindowGeometry(tkWindow, name, width=None, height=None):
         (#2686). That flag decides whether a dialog stores ITSELF when
         it closes; this function only reads what is there, and it is there because the flag was on,
         or because the store button of the dialog wrote it, or because a script did. Asking the flag
-        here is what made the store button of RG12.11 write something that nothing read back.
+        here is what made the store button (#2685) write something that nothing read back.
     """
     from exudyn.misc import overrideSettings as userSettings
 

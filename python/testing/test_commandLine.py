@@ -34,7 +34,7 @@ def testTheTableHoldsTheCommandsTheUsageListsPrints():
 
 
 def testTheTableIsAFreshDictionary():
-    """the docstring promises a caller may extend it without changing it (plugins, R9.6)"""
+    """the docstring promises a caller may extend it without changing it (plugins)"""
     first = commandLine.CommandTable()
     first['somethingElse'] = [print, 'not a real command']
     assert 'somethingElse' not in commandLine.CommandTable()

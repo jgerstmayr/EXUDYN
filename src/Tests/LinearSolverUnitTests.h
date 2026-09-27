@@ -3,7 +3,7 @@
 * @brief		Unit tests for LinearSolver.h: the dense and the sparse (Eigen) system matrix
 *				behind the one GeneralMatrix interface.
 * @details		Details:
-*				- the same shape as MatrixContainer in R5.4.1, and the same kind of test: one
+*				- the same shape as the MatrixContainer tests (#2472), and the same kind of test: one
 *				  system is solved by all FOUR variants - EXUdense, Eigen PartialPivLU, Eigen
 *				  FullPivLU and EigenSparse - and they must agree. The check is the property
 *				  A*x == rhs, not a recorded solution vector, so it survives a rewrite.

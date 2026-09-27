@@ -15,11 +15,11 @@
 #                                 reading a log from a run they cannot reproduce
 #                       UNPLACED  the rules do not decide it; it is listed, not guessed
 #             kind      index / size / arithmetic / notImplemented / solver / deprecation /
-#                       illegal / other - what Python type the site should end up with (R6.3.6)
+#                       illegal / other - what Python type the site should end up with (#2528)
 #
 #           The rules are text patterns over the message and the path. They are not a judgement
 #           about what the code does and they are not always right; what they are is REPEATABLE, so
-#           a number in the plan can be re-derived, and progress through R6.3.6 can be measured
+#           a number in the plan can be re-derived, and progress through #2528 can be measured
 #           rather than claimed.
 #
 # Usage:    python tools/errorTriage.py                summary tables

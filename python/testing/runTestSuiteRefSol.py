@@ -352,7 +352,7 @@ def UnresolvedOnLinux():
         #the six above, BUT it may equally be the numpy-version effect of #2502 (fact 28) rather
         #than a platform difference: this leg runs numpy 2.5.3 and the model builds its contact
         #through the Create* helpers whose setup arithmetic that issue is about. Resolve it with
-        #R5.9.2 before spending time on it as a Linux question.
+        ##2502 before spending time on it as a Linux question.
         'createSphereTriangleContact.py',       #rel. 1.2e-11
         ])
 
@@ -477,7 +477,7 @@ def PerformanceTestsReferenceSolution():
 #the SECOND reference set: what changes when the module carries the AVX2 vector extensions
 #(#2470).
 #
-#Since step R2.10 the regular module exudynCPP is compiled for the baseline instruction set and
+#The regular module exudynCPP is compiled for the baseline instruction set (#2466) and
 #the values above are ITS values; exudynCPPfast additionally carries AVX2, and the AVX branches of
 #Use_avx.h sum in a different order, which moves results. This dict is an UPDATE to the values
 #above, not a copy of them: only the models that move by more than their tolerance appear here, so
@@ -497,12 +497,12 @@ def AVX2ReferenceSolutionUpdate():
         'generalContactCylinderTest.py':          12.246626442545603,        #drift 4.2e-05
         'sphereTriangleTest2.py':                 4.356119232231812,         #drift 3.6e-05
         'generalContactImplicit1.py':             0.775815593379039,         #drift 5.3e-08
-        'ANCFbeltDrive.py':                       -0.0011715990134242293,    #drift 1.0e-08; added 2026-09-17 with #2495, the model entered the suite in R5.12
+        'ANCFbeltDrive.py':                       -0.0011715990134242293,    #drift 1.0e-08; added 2026-09-17 with #2495
         'contactSphereSphereTest.py':             0.5348463536059522,        #drift 3.3e-09
         'rollingDiscTangentialForces.py':         1.0342017388721547,        #drift 1.6e-09
         'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,       #drift 1.4e-09
         'coordinateSpringDamperExt.py':           17.084935539925155,        #drift 5.8e-10
-        #re-measured 2026-09-18 with the deterministic joint setup of step R5.9.2 (#2502);
+        #re-measured 2026-09-18 with the deterministic joint setup of #2502;
         #the Python-side change moves the fast module exactly as it moves the regular one
         'sliderCrank3Dbenchmark.py':              7.256859912756364,         #drift 2.9e-10
         'rigidBodySpringDamperIntrinsic.py':      0.5472368463500469,        #drift 5.2e-11

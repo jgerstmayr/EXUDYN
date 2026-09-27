@@ -109,7 +109,7 @@ public:
 			{
 				//a user's array, reported to the user: PyError, not SysError, so the printed block says
 				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
-				//is the exception that was caught here, and passing it on is step R6.3.8
+				//is the exception that was caught here, which is not passed on (#2537)
 				PyError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 
@@ -117,14 +117,14 @@ public:
 			{
 				//a user's array, reported to the user: PyError, not SysError, so the printed block says
 				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
-				//is the exception that was caught here, and passing it on is step R6.3.8
+				//is the exception that was caught here, which is not passed on (#2537)
 				PyError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 			catch (...) //any other exception
 			{
 				//a user's array, reported to the user: PyError, not SysError, so the printed block says
 				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
-				//is the exception that was caught here, and passing it on is step R6.3.8
+				//is the exception that was caught here, which is not passed on (#2537)
 				PyError("Error in Vector" + EXUstd::ToString(dataSize) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
 			}
 
@@ -240,7 +240,7 @@ public:
 			{
 				//a user's array, reported to the user: PyError, not SysError, so the printed block says
 				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
-				//is the exception that was caught here, and passing it on is step R6.3.8
+				//is the exception that was caught here, which is not passed on (#2537)
 				PyError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 
@@ -248,14 +248,14 @@ public:
 			{
 				//a user's array, reported to the user: PyError, not SysError, so the printed block says
 				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
-				//is the exception that was caught here, and passing it on is step R6.3.8
+				//is the exception that was caught here, which is not passed on (#2537)
 				PyError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]'" + STDstring(ex.what()) + "; check your Python code!", PyErrorType::runtimeError);
 			}
 			catch (...) //any other exception
 			{
 				//a user's array, reported to the user: PyError, not SysError, so the printed block says
 				//"User ERROR" and not "SYSTEM ERROR" (#2528). The TYPE stays what it was: the real one
-				//is the exception that was caught here, and passing it on is step R6.3.8
+				//is the exception that was caught here, which is not passed on (#2537)
 				PyError("Error in Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList::SetItem operator[]; check your Python code!", PyErrorType::runtimeError);
 			}
 

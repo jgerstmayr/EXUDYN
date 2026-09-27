@@ -59,7 +59,7 @@ stages = [
     Stage('tools/generators/miniExampleEmitter.py', ['definitions'], ['python/MiniExamples']),
     Stage('tools/generators/itemDocsEmitter.py', ['definitions'],
           #Markdown; confHelperItems.py is not documentation but
-          #data for conf.py, and lives with the other generator data since R7.1.7
+          #data for conf.py, and lives with the other generator data
           ['docs/generated/items', G + 'confHelperItems.py']),
     Stage('tools/generators/structureHeaderEmitter.py', ['definitions'],
           [A + 'SimulationSettings.h', A + 'VisualizationSettings.h', A + 'CSolverStructures.h',
@@ -73,14 +73,14 @@ stages = [
           [G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
           #Markdown; confHelperPyUtilities.py is not documentation
-          #but data for conf.py, and lives with the other generator data since R7.1.7
+          #but data for conf.py, and lives with the other generator data
           ['docs/generated/pythonUtilities', G + 'confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
           ['definitions', G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
            G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
            #Markdown; confHelper.py is not documentation but data
-           #for conf.py, and lives with the other generator data since R7.1.7
+           #for conf.py, and lives with the other generator data
            'docs/generated/cInterface', G + 'confHelper.py']),
     Stage('tools/generators/createStubFiles.py',
           ['tools/generators/stubHeader.pyi', G + 'stubEnums.pyi', G + 'stubSystemStructures.pyi',

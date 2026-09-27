@@ -11,7 +11,7 @@
 #           Reading them is the point - a user who wants to know where the roll touches the
 #           ground has no other way - and writing them was a no-op that looked like it worked:
 #           SetObjectParameter ends in ParametersHaveChanged(), which recomputes what was just
-#           written. rBoundingSphere is read-only since RG4.2, so it raises instead.
+#           written. rBoundingSphere is read-only (#2413), so it raises instead.
 #
 #           These are the FFRF-computed-member pattern, which the maintainer asked pContact to
 #           follow: readable, documented as computed, and not settable.
@@ -90,7 +90,7 @@ def test_bothAreInTheDictionary(rollSystem):
 def test_aComputedParameterCannotBeWritten(rollSystem, name):
     """writing it used to be accepted and undone at once; it raises now
 
-    That is the whole of RG4.2: a value the core recomputes must not look settable."""
+    That is the whole of #2413: a value the core recomputes must not look settable."""
     (mbs, roll) = rollSystem
     with pytest.raises(Exception):
         mbs.SetObjectParameter(roll, name, mbs.GetObjectParameter(roll, name))

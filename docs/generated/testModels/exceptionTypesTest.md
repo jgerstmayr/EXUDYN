@@ -197,7 +197,7 @@ else:
     exu.Print('-' * 110)
 
     #the ONLY thing this model asserts: every case must raise something. Which class and which
-    #message are printed above and are what R6.3.5 and R6.3.6 change
+    #message are printed above (#2527, #2528)
     exu.sys['testResult'] = silent
     exu.Print('exceptionTypesTest: cases that raised nothing = ' + str(silent))
 ```
